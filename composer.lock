@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eafa5228cc33e352f91d47f4010acee4",
+    "content-hash": "4745aafb16e8736e4f318f6c9e931deb",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -8565,6 +8565,65 @@
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
             "time": "2020-09-28T06:39:44+00:00"
+        },
+        {
+            "name": "spacemudd/laravel-vue-i18n-generator",
+            "version": "0.1.47",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spacemudd/laravel-vue-i18n-generator.git",
+                "reference": "63ed508d67a6d8146128f54b1fd67b7d963fd7db"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spacemudd/laravel-vue-i18n-generator/zipball/63ed508d67a6d8146128f54b1fd67b7d963fd7db",
+                "reference": "63ed508d67a6d8146128f54b1fd67b7d963fd7db",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "illuminate/console": "~5.1.0|~5.2.0|~5.3.0|~5.4.0|~5.5.0|~5.6.0|~5.7.0|~5.8.0|~6.0|~7.0|~8.0",
+                "illuminate/support": "~5.1.0|~5.2.0|~5.3.0|~5.4.0|~5.5.0|~5.6.0|~5.7.0|~5.8.0|~6.0|~7.0|~8.0",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.7"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "MartinLindhe\\VueInternationalizationGenerator\\GeneratorProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "MartinLindhe\\VueInternationalizationGenerator\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Martin Lindhe",
+                    "email": "martin@ubique.se"
+                },
+                {
+                    "name": "Shafiq al-Shaar",
+                    "email": "hello@getshafiq.com"
+                }
+            ],
+            "description": "Generates a vue-i18n compatible include file from your Laravel translations.",
+            "homepage": "http://github.com/spacemudd/laravel-vue-i18n-generator",
+            "keywords": [
+                "laravel",
+                "vue-i18n"
+            ],
+            "time": "2020-09-09T20:19:27+00:00"
         },
         {
             "name": "theseer/tokenizer",

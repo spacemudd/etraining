@@ -18,7 +18,13 @@ module.exports = {
 
     variants: {
         opacity: ['responsive', 'hover', 'focus', 'disabled'],
+        float: ['responsive', 'direction'],
+        margin: ['responsive', 'direction'],
+        padding: ['responsive', 'direction'],
     },
 
-    plugins: [require('@tailwindcss/ui')],
+    plugins: [
+        require('@tailwindcss/ui'),
+        require('tailwindcss-dir')(),
+    ],
 };
