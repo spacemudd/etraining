@@ -21,6 +21,7 @@ module.exports = {
         float: ['responsive', 'direction'],
         margin: ['responsive', 'direction'],
         padding: ['responsive', 'direction'],
+        right: ['responsive', 'direction'],
     },
 
     plugins: [

@@ -132,7 +132,11 @@ export default {
         "words": {
             "email": "البريد الإكتروني",
             "password": "كلمة السر",
-            "dashboard": "لوحة التحكم"
+            "dashboard": "لوحة التحكم",
+            "search": "بحث",
+            "profile": "حساب",
+            "settings": "الإعدادات",
+            "logout": "خروج"
         }
     },
     "en": {
@@ -268,7 +272,11 @@ export default {
         "words": {
             "email": "Email",
             "password": "Password",
-            "dashboard": "Dashboard"
+            "dashboard": "Dashboard",
+            "search": "Search",
+            "profile": "Profile",
+            "settings": "Settings",
+            "logout": "Logout"
         }
     }
 }

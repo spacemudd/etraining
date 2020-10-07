@@ -1,0 +1,13 @@
+.sidebar-highlight {
+    left: 0
+}
+
+[dir=rtl] .sidebar-highlight {
+    right: 0;
+    left: unset;
+}
+
+[dir=rtl] .right-0 {
+    right: unset;
+    left: 0;
+}
