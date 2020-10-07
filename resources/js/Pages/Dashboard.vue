@@ -1,18 +1,36 @@
 <template>
     <app-layout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <div class="container px-6 mx-auto grid">
+            <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
                 {{ $t('words.dashboard') }}
             </h2>
-        </template>
+            <!-- Cards -->
+            <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
+                <!-- Card -->
+                <header-card :title-value="$t('words.companies')" :count-value="0" icon-path="/img/building.svg"></header-card>
+                <header-card :title-value="$t('words.trainers')" :count-value="0" icon-path="/img/teacher.svg"></header-card>
+                <header-card :title-value="$t('words.trainees')" :count-value="0" icon-path="/img/student.svg"></header-card>
+                <header-card :title-value="$t('words.courses')" :count-value="0" icon-path="/img/book.svg"></header-card>
+            </div>
 
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <h1>Hello</h1>
-                    <language-selector/>
-                    {{ $t('words.email') }}
-                </div>
+            <!-- Quick actions actions -->
+            <h2 class="my-6 font-semibold text-gray-700 dark:text-gray-200 border-b pb-1">
+                {{ $t('words.quick-actions') }}
+            </h2>
+
+            <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
+                <inertia-link href="/" class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 text-center hover:bg-red-500 hover:text-white hover:font-semibold">
+                    {{ $t('words.add-new-company') }}
+                </inertia-link>
+                <inertia-link href="/" class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 text-center hover:bg-red-500 hover:text-white hover:font-semibold">
+                    {{ $t('words.add-new-trainer') }}
+                </inertia-link>
+                <inertia-link href="/" class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 text-center hover:bg-red-500 hover:text-white hover:font-semibold">
+                    {{ $t('words.add-new-trainee') }}
+                </inertia-link>
+                <inertia-link href="/" class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 text-center hover:bg-red-500 hover:text-white hover:font-semibold">
+                    {{ $t('words.add-new-course') }}
+                </inertia-link>
             </div>
         </div>
     </app-layout>
@@ -22,12 +40,14 @@
     import AppLayout from './../Layouts/AppLayout'
     import Welcome from './../Jetstream/Welcome'
     import LanguageSelector from "../Shared/LanguageSelector";
+    import HeaderCard from "../Components/HeaderCard";
 
     export default {
         components: {
             AppLayout,
             Welcome,
-            LanguageSelector
+            LanguageSelector,
+            HeaderCard
         },
     }
 </script>

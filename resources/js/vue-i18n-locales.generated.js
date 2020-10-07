@@ -136,7 +136,16 @@ export default {
             "search": "بحث",
             "profile": "حساب",
             "settings": "الإعدادات",
-            "logout": "خروج"
+            "logout": "خروج",
+            "companies": "الشركات",
+            "trainers": "المدربين",
+            "trainees": "المتدربين",
+            "courses": "الدورات",
+            "quick-actions": "إجراءات سريعة",
+            "add-new-trainee": "أضف متدرب جديد",
+            "add-new-company": "أضف شركة جديدة",
+            "add-new-trainer": "اضف متدرب جديد",
+            "add-new-course": "أضف دورة جديدة"
         }
     },
     "en": {
@@ -276,7 +285,13 @@ export default {
             "search": "Search",
             "profile": "Profile",
             "settings": "Settings",
-            "logout": "Logout"
+            "logout": "Logout",
+            "companies": "Companies",
+            "trainers": "Trainers",
+            "trainees": "Trainees",
+            "courses": "Courses",
+            "quick-actions": "Quick actions",
+            "add-new-trainee": "Add new trainee"
         }
     }
 }

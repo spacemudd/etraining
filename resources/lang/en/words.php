@@ -8,5 +8,11 @@ return [
     'search' => 'Search',
     'profile' => 'Profile',
     'settings' => 'Settings',
-    'logout' => 'Logout'
+    'logout' => 'Logout',
+    'companies' => 'Companies',
+    'trainers' => 'Trainers',
+    'trainees' => 'Trainees',
+    'courses' => 'Courses',
+    'quick-actions' => 'Quick actions',
+    'add-new-trainee' => 'Add new trainee',
 ];
