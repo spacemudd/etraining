@@ -147,7 +147,22 @@ export default {
             "add-new-trainer": "اضف متدرب جديد",
             "add-new-course": "أضف دورة جديدة",
             "finance": "المالية",
-            "reports": "التقارير"
+            "reports": "التقارير",
+            "new": "جديد",
+            "name_ar": "الأسم (بالعربية)",
+            "name_en": "الأسم (بالإنجليزية)",
+            "cr_number": "رقم السجل التجاري",
+            "contact_number": "رقم التواصل",
+            "company_rep": "الشخص المفوض",
+            "company_rep_mobile": "رقم جوال الشخص المفوض",
+            "address": "العنوان",
+            "save": "حفظ",
+            "cancel": "إلغاء",
+            "open-new-company-file": "فتح ملف شركة جديد",
+            "open-new-company-file-description": "لك فتح ملف للعميل (شركة) والبدء ببدء ادارة المعلومات.",
+            "created-successfully": "تم بنجاح",
+            "edit": "تعديل",
+            "archive": "أرشفة"
         }
     },
     "en": {
@@ -298,7 +313,22 @@ export default {
             "add-new-trainer": "Add new trainer",
             "add-new-course": "Add new course",
             "finance": "Finance",
-            "reports": "Reports"
+            "reports": "Reports",
+            "new": "New",
+            "name_ar": "Name (AR)",
+            "name_en": "Name (EN)",
+            "cr_number": "CR Number",
+            "contact_number": "Contact number",
+            "company_rep": "Company representative",
+            "company_rep_mobile": "Company representative mobile",
+            "address": "Address",
+            "save": "Save",
+            "cancel": "Cancel",
+            "open-new-company-file": "Open a new company file",
+            "open-new-company-file-description": "In here you can add a new client (company) and manage their information.",
+            "created-successfully": "Created successfully.",
+            "edit": "Edit",
+            "archive": "Archive"
         }
     }
 }

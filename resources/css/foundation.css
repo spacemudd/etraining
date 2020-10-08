@@ -11,3 +11,7 @@
     right: unset;
     left: 0;
 }
+
+[dir=rtl] .rotate-x {
+    transform: scale(-1,1);
+}

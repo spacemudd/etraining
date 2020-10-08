@@ -19,7 +19,7 @@
             </h2>
 
             <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
-                <inertia-link href="/" class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 text-center hover:bg-red-500 hover:text-white hover:font-semibold">
+                <inertia-link href="/back/companies/create" class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 text-center hover:bg-red-500 hover:text-white hover:font-semibold">
                     {{ $t('words.add-new-company') }}
                 </inertia-link>
                 <inertia-link href="/" class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 text-center hover:bg-red-500 hover:text-white hover:font-semibold">

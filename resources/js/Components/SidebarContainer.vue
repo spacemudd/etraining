@@ -1,6 +1,6 @@
 <template>
     <ul class="mt-6">
-        <sidebar-link link-value="/" :active="$page.currentRouteName == 'dashboard'">
+        <sidebar-link link-value="/dashboard" :active="$page.currentRouteName == 'dashboard'">
             <template #icon><DesktopIcon w="20px" h="20px" class="w-5 h-5" /></template>
             <template #title>
                 <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.dashboard') }}</span>

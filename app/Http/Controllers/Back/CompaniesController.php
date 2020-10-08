@@ -26,7 +26,9 @@ class CompaniesController extends Controller
      */
     public function create()
     {
-        //
+        $this->authorize('create-companies');
+
+        return Inertia::render('Back/Companies/Create');
     }
 
     /**
@@ -50,31 +52,33 @@ class CompaniesController extends Controller
 
         $company = Company::create($request->except('_token'));
 
-        return Inertia::render('Back/Companies/Show', [
-            'company' => $company,
-        ]);
+        return redirect()->route('back.companies.show', ['company' => $company])->with('success', __('words.created-successfully'));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return \Inertia\Response
      */
     public function show($id)
     {
-        //
+        return Inertia::render('Back/Companies/Show', [
+            'company' => Company::findOrFail($id),
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return \Inertia\Response
      */
     public function edit($id)
     {
-        //
+        return Inertia::render('Back/Companies/Edit', [
+            'company' => Company::findOrFail($id),
+        ]);
     }
 
     /**
@@ -86,7 +90,9 @@ class CompaniesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $company = Company::findOrFail($id);
+        $company->update($request->except('_token'));
+        return redirect()->route('back.companies.show', ['company' => $company])->with('success', __('words.updated-successfully'));
     }
 
     /**

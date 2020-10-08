@@ -65,8 +65,10 @@ class CompaniesTest extends TestCase
         $this->assertTrue($shafiq->hasRole(Role::findByName($shafiq->personalTeam()->id.'_admins')));
     }
 
-    public function test_user_can_view_company_form()
+    public function test_user_can_view_company_create_form()
     {
-
+        $this->actingAs($this->user)
+            ->get('/back/companies/create')
+            ->assertSeeText('CR Number');
     }
 }
