@@ -4,12 +4,15 @@
             <!--<breadcrumb/>-->
             <div class="grid grid-cols-4 gap-6">
                 <div class="col-span-4 flex items-center justify-end bg-gray-50 text-right">
-                    <inertia-link :href="`/back/companies/${this.company.id}/edit`" class="flex items-center justify-start rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
+                    <inertia-link :href="`/back/companies/${this.company.id}/edit`" class="flex items-center justify-start rounded-md mx-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
                         {{ $t('words.edit') }}
                     </inertia-link>
-                    <!--<inertia-link href="/back/companies/${this.company}" class="flex items-center justify-start rtl:ml-4 ltr:mr-4 rounded-md px-4 py-2 bg-red-200 hover:bg-gray-300 text-right">-->
-                    <!--    {{ $t('words.archive') }}-->
-                    <!--</inertia-link>-->
+                    <button v-if="!company.deleted_at" class="flex items-center justify-start rounded-md px-4 py-2 bg-red-600 text-white hover:bg-red-700 text-right"
+                            tabindex="-1"
+                            type="button"
+                            @click.prevent="deleteCompany()">
+                        {{ $t('words.archive') }}
+                    </button>
                 </div>
 
                 <template v-for="fieldName in [
@@ -84,6 +87,11 @@
                     preserveScroll: true
                 });
             },
+            deleteCompany() {
+                if (confirm(this.$t('words.are-you-sure'))) {
+                    this.$inertia.delete('/back/companies/'+this.company.id);
+                }
+            }
         }
     }
 </script>

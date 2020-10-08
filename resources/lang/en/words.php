@@ -36,4 +36,10 @@ return [
     'edit' => 'Edit',
     'archive' => 'Archive',
     'updated-successfully' => 'Updated successfully',
+    'are-you-sure' => 'Are you sure?',
+    'company' => 'Company',
+    'nothing-is-here' => 'Nothing is here',
+    'name' => 'Name',
+    'Next' => 'Next',
+    'Previous' => 'Previous',
 ];

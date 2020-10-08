@@ -159,10 +159,17 @@ export default {
             "save": "حفظ",
             "cancel": "إلغاء",
             "open-new-company-file": "فتح ملف شركة جديد",
-            "open-new-company-file-description": "لك فتح ملف للعميل (شركة) والبدء ببدء ادارة المعلومات.",
+            "open-new-company-file-description": "فتح ملف للعميل (شركة) والبدء بإدارة المعلومات.",
             "created-successfully": "تم بنجاح",
             "edit": "تعديل",
-            "archive": "أرشفة"
+            "archive": "أرشفة",
+            "updated-successfully": "تم التحديث بنجاج",
+            "are-you-sure": "هل انت متأكد؟",
+            "company": "شركة",
+            "nothing-is-here": "لا يوجد شيء هنا",
+            "name": "الأسم",
+            "Next": "التالي",
+            "Previous": "السابق"
         }
     },
     "en": {
@@ -328,7 +335,14 @@ export default {
             "open-new-company-file-description": "In here you can add a new client (company) and manage their information.",
             "created-successfully": "Created successfully.",
             "edit": "Edit",
-            "archive": "Archive"
+            "archive": "Archive",
+            "updated-successfully": "Updated successfully",
+            "are-you-sure": "Are you sure?",
+            "company": "Company",
+            "nothing-is-here": "Nothing is here",
+            "name": "Name",
+            "Next": "Next",
+            "Previous": "Previous"
         }
     }
 }

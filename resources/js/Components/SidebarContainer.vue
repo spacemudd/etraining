@@ -7,7 +7,7 @@
             </template>
         </sidebar-link>
 
-        <sidebar-link link-value="/">
+        <sidebar-link link-value="/back/companies">
             <template #icon>
                 <ion-icon name="business-outline" class="w-5 h-5"></ion-icon>
             </template>

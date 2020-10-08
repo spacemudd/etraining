@@ -19,6 +19,7 @@ use Log;
 class RolesService
 {
     public $permissions = [
+        'view-companies',
         'create-companies',
         'edit-companies',
         'delete-companies',

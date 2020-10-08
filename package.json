@@ -31,6 +31,7 @@
     "dependencies": {
         "@inertiajs/progress": "^0.1.2",
         "vue-i18n": "^8.22.0",
-        "vue-ionicons": "^3.0.5"
+        "vue-ionicons": "^3.0.5",
+        "vue-meta": "^2.4.0"
     }
 }

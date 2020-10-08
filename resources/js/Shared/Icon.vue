@@ -1,10 +1,10 @@
 <template>
     <div>
-        <div class="flex justify-content-center" v-if="name==='ar'">
+        <div class="flex justify-content-center text-black" v-if="name==='ar'">
             العربية
         </div>
 
-        <div class="flex justify-content-center" v-if="name==='en'">
+        <div class="flex justify-content-center text-black" v-if="name==='en'">
             English
         </div>
     </div>

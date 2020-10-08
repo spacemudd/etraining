@@ -11406,6 +11406,26 @@
         {
                         return \Illuminate\Routing\Router::emailVerification();
         }
+                    /**
+         * 
+         *
+         * @param mixed $group
+         * @static 
+         */ 
+        public static function blacklist($group = null)
+        {
+                        return \Illuminate\Routing\Router::blacklist($group);
+        }
+                    /**
+         * 
+         *
+         * @param mixed $group
+         * @static 
+         */ 
+        public static function whitelist($group = null)
+        {
+                        return \Illuminate\Routing\Router::whitelist($group);
+        }
          
     }
             /**
@@ -16070,6 +16090,26 @@
         public static function emailVerification()
         {
                         return \Illuminate\Routing\Router::emailVerification();
+        }
+                    /**
+         * 
+         *
+         * @param mixed $group
+         * @static 
+         */ 
+        public static function blacklist($group = null)
+        {
+                        return \Illuminate\Routing\Router::blacklist($group);
+        }
+                    /**
+         * 
+         *
+         * @param mixed $group
+         * @static 
+         */ 
+        public static function whitelist($group = null)
+        {
+                        return \Illuminate\Routing\Router::whitelist($group);
         }
          
     }

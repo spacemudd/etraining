@@ -16,7 +16,10 @@ class CompaniesController extends Controller
      */
     public function index()
     {
-        //
+        $this->authorize('view-companies');
+        return Inertia::render('Back/Companies/Index', [
+            'companies' => Company::paginate(20),
+        ]);
     }
 
     /**
@@ -103,6 +106,7 @@ class CompaniesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Company::findOrFail($id)->delete();
+        return redirect()->route('back.companies.index');
     }
 }

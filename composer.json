@@ -29,7 +29,8 @@
         "owen-it/laravel-auditing": "^11.0",
         "spatie/laravel-medialibrary": "^8.9",
         "spatie/laravel-permission": "^3.17",
-        "spatie/laravel-searchable": "^1.7"
+        "spatie/laravel-searchable": "^1.7",
+        "tightenco/ziggy": "^0.9.4"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.8",
