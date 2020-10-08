@@ -15,6 +15,9 @@ return [
     'courses' => 'Courses',
     'quick-actions' => 'Quick actions',
     'add-new-trainee' => 'Add new trainee',
+    'add-new-company' => 'Add new company',
+    'add-new-trainer' => 'Add new trainer',
+    'add-new-course' => 'Add new course',
     'finance' => 'Finance',
     'reports' => 'Reports',
 ];
