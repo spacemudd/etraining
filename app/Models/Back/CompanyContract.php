@@ -5,27 +5,25 @@ namespace App\Models\Back;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Company extends Model
+class CompanyContract extends Model
 {
     use HasFactory;
     use HasUuid;
-    use SoftDeletes;
 
     public $incrementing = false;
 
     protected $keyType = 'string';
 
     protected $fillable = [
-        'name_ar',
-        'name_en',
-        'cr_number',
-        'contact_number',
-        'company_rep',
-        'company_rep_mobile',
-        'email',
-        'address',
+        'company_id',
+        'number',
+        'date',
+        'trainees_count',
+        'trainee_salary',
+        'trainer_cost',
+        'company_reimbursement',
+        'notes',
     ];
 
     protected static function boot(): void

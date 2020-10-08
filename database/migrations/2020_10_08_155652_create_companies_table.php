@@ -23,6 +23,8 @@ class CreateCompaniesTable extends Migration
             $table->string('company_rep_mobile')->nullable();
             $table->string('address')->nullable();
             $table->string('email')->nullable();
+            $table->uuid('team_id');
+            $table->foreign('team_id')->references('id')->on('teams');
             $table->timestamps();
             $table->softDeletes();
         });

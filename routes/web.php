@@ -19,5 +19,9 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::prefix('back')->name('back.')->group(function() {
         Route::resource('companies', \App\Http\Controllers\Back\CompaniesController::class);
+
+        Route::prefix('companies')->name('companies.')->group(function() {
+           Route::resource('contracts', \App\Http\Controllers\Back\CompaniesContractsController::class);
+        });
     });
 });
