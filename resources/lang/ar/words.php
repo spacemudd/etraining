@@ -18,4 +18,6 @@ return [
     'add-new-company' => 'أضف شركة جديدة',
     'add-new-trainer' => 'اضف متدرب جديد',
     'add-new-course' => 'أضف دورة جديدة',
+    'finance' => 'المالية',
+    'reports' => 'التقارير',
 ];

@@ -1,6 +1,7 @@
 require('./bootstrap');
 
 import Vue from 'vue';
+Vue.config.ignoredElements = [/^ion-/]
 
 import { InertiaApp } from '@inertiajs/inertia-vue';
 import { InertiaForm } from 'laravel-jetstream';
@@ -12,6 +13,7 @@ Vue.use(InertiaApp);
 Vue.use(InertiaForm);
 Vue.use(PortalVue);
 Vue.use(VueInternationalization);
+
 
 const app = document.getElementById('app');
 

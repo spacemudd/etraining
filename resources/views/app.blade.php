@@ -14,6 +14,8 @@
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
         <!-- Scripts -->
+{{--        <script type="module" src="{{ asset('/js/ionicons.esm.js') }}" defer></script>--}}
+        <script src="https://unpkg.com/ionicons@5.2.3/dist/ionicons.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment.min.js" defer></script>
         <script src="{{ mix('js/app.js') }}" defer></script>
     </head>

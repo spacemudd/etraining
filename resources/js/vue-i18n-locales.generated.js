@@ -145,7 +145,9 @@ export default {
             "add-new-trainee": "أضف متدرب جديد",
             "add-new-company": "أضف شركة جديدة",
             "add-new-trainer": "اضف متدرب جديد",
-            "add-new-course": "أضف دورة جديدة"
+            "add-new-course": "أضف دورة جديدة",
+            "finance": "المالية",
+            "reports": "التقارير"
         }
     },
     "en": {
@@ -291,7 +293,9 @@ export default {
             "trainees": "Trainees",
             "courses": "Courses",
             "quick-actions": "Quick actions",
-            "add-new-trainee": "Add new trainee"
+            "add-new-trainee": "Add new trainee",
+            "finance": "Finance",
+            "reports": "Reports"
         }
     }
 }

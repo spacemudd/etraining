@@ -1,11 +1,11 @@
 <template>
     <app-layout>
         <div class="container px-6 mx-auto grid">
-            <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-                {{ $t('words.dashboard') }}
-            </h2>
+            <!--<h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">-->
+            <!--    {{ $t('words.dashboard') }}-->
+            <!--</h2>-->
             <!-- Cards -->
-            <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
+            <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4 mt-6">
                 <!-- Card -->
                 <header-card :title-value="$t('words.companies')" :count-value="0" icon-path="/img/building.svg"></header-card>
                 <header-card :title-value="$t('words.trainers')" :count-value="0" icon-path="/img/teacher.svg"></header-card>
