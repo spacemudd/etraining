@@ -3,10 +3,9 @@
 namespace Tests\Feature;
 
 use App\Actions\Fortify\CreateNewUser;
-use App\Models\User;
+use App\Models\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class CompaniesTest extends TestCase
@@ -52,6 +51,18 @@ class CompaniesTest extends TestCase
                 $this->assertEquals($acmeCompany['address'], $company['address']);
                 $this->assertEquals($acmeCompany['email'], $company['email']);
             });
+    }
+
+    public function test_roles_are_seeded_to_team()
+    {
+        $shafiq = (new CreateNewUser())->create([
+            'name' => 'Shafiq al-Shaar',
+            'email' => 'hello1@getShafiq.com',
+            'password' => 'hello123123',
+            'password_confirmation' => 'hello123123',
+        ]);
+
+        $this->assertTrue($shafiq->hasRole(Role::findByName($shafiq->personalTeam()->id.'_admins')));
     }
 
     public function test_user_can_view_company_form()

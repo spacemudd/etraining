@@ -11,11 +11,10 @@
 
 namespace App\Services;
 
-use App\Models\Back\Role;
+use App\Models\Permission;
+use App\Models\Role;
 use App\Models\Team;
-use Artisan;
 use Log;
-use App\Models\Back\Permission;
 
 class RolesService
 {
@@ -52,8 +51,8 @@ class RolesService
         Log::info('Created "Admin" role for team ID: '.$team->id);
 
         // Newly created user.
-        if ($owner = $team->users()->first()) { // TODO: Is this the best approach?
-            Log::info('Assigning admin role to the user ID of: '.$owner->id.' and under team ID: '.$owner->team->id);
+        if ($owner = $team->owner) {
+            Log::info('Assigning admin role to the user ID of: '.$owner->id.' and under team ID: '.$team->id);
             $owner->assignRole($adminRole);
         }
 

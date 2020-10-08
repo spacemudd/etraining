@@ -6,7 +6,7 @@ use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
 
-class Permission extends Spatie\Permission\Models\Permission
+class Permission extends \Spatie\Permission\Models\Permission
 {
     use HasFactory;
     use HasUuid;
