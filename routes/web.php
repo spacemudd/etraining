@@ -15,3 +15,7 @@ Route::get('language/{language}', function ($language) {
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia\Inertia::render('Dashboard');
 })->name('dashboard');
+
+Route::middleware(['auth:sanctum', 'verified'])->group(function() {
+    Route::resource('back/companies', \App\Http\Controllers\Back\CompaniesController::class);
+});

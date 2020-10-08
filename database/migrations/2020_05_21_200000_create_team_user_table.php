@@ -14,7 +14,7 @@ class CreateTeamUserTable extends Migration
     public function up()
     {
         Schema::create('team_user', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->uuid('team_id');
             $table->uuid('user_id');
             $table->string('role')->nullable();
