@@ -21,7 +21,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::resource('companies', \App\Http\Controllers\Back\CompaniesController::class);
 
         Route::prefix('companies')->name('companies.')->group(function() {
-           Route::resource('contracts', \App\Http\Controllers\Back\CompaniesContractsController::class);
+           Route::resource('{company_id}/contracts', \App\Http\Controllers\Back\CompaniesContractsController::class);
         });
     });
 });

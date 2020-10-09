@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\User;
+use App\Actions\Fortify\CreateNewUser;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 
@@ -45,6 +45,17 @@ class SetupDevCommand extends Command
 
         if ($this->ask('Do you want to run seeders?', true)) {
             Artisan::call('db:seed');
+        }
+
+        if ($this->ask('Do you want to create an Admin account?', true)) {
+            $email = $this->confirm('Choose an email address: [johndoe@example.com]', 'johndoe@example.com');
+            $password = $this->confirm('Choose a password: [password]', 'password');
+            (new CreateNewUser())->create([
+                'name' => 'John Doe',
+                'email' => $email,
+                'password' => $password,
+                'password_confirmation' => $password,
+            ]);
         }
 
         return 1;

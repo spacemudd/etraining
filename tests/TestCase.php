@@ -2,6 +2,8 @@
 
 namespace Tests;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabaseState;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Arr;
 use Illuminate\Testing\TestResponse;
@@ -10,11 +12,18 @@ use PHPUnit\Framework\Assert;
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
+    use RefreshDatabase;
 
     /** @noinspection JsonEncodingApiUsageInspection */
     protected function setUp(): void
     {
         parent::setUp();
+
+        if (!RefreshDatabaseState::$migrated) {
+            $this->artisan('migrate:refresh');
+            $this->artisan('db:seed');
+            RefreshDatabaseState::$migrated = true;
+        }
 
         TestResponse::macro('props', function ($key = null) {
             $props = json_decode(json_encode($this->original->getData()['page']['props']), JSON_OBJECT_AS_ARRAY);

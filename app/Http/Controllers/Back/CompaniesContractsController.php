@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Back\Company;
 use App\Models\Back\CompanyContract;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class CompaniesContractsController extends Controller
 {
@@ -14,19 +15,24 @@ class CompaniesContractsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($company_id)
     {
-        //
+        if (request()->wantsJson()) {
+            return CompanyContract::where('company_id', $company_id)->latest()->get();
+        }
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param $company_id
+     * @return \Inertia\Response
      */
-    public function create()
+    public function create($company_id)
     {
-        //
+        return Inertia::render('Back/CompaniesContracts/Create', [
+            'company' => Company::findOrFail($company_id),
+        ]);
     }
 
     /**
@@ -38,9 +44,11 @@ class CompaniesContractsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'company_id' => 'required|exists:companies,id',
-            'number' => 'nullable|string|max:255',
-            'date' => 'required|date',
+            'reference_number' => 'nullable|string|max:255',
+            'contract_starts_at' => 'required|date',
+            'contract_ends_at' => 'nullable|date',
+            'contract_period_in_months' => 'nullable',
+            'auto_renewal' => 'nullable|boolean',
             'trainees_count' => 'nullable',
             'trainee_salary' => 'nullable',
             'trainer_cost' => 'nullable',
@@ -48,10 +56,11 @@ class CompaniesContractsController extends Controller
             'notes' => 'nullable',
         ]);
 
-        //dd($request->toArray());
         $company = Company::findOrFail($request->company_id);
         $contract = CompanyContract::make($request->except('_token'));
         $contract->team_id = $company->team_id;
+        $contract->company_id = $company->id;
+        $contract->created_by_id = optional(auth()->user())->id;
         $contract->save();
 
         return redirect()->route('back.companies.show', $company);

@@ -2,15 +2,14 @@
 
 namespace App\Models\Back;
 
-use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Str;
 
 class Company extends Model
 {
     use HasFactory;
-    use HasUuid;
     use SoftDeletes;
 
     public $incrementing = false;
@@ -32,9 +31,20 @@ class Company extends Model
     {
         parent::boot();
         static::creating(function ($model) {
+            $model->{$model->getKeyName()} = (string) Str::uuid();
             if (auth()->user()) {
-                $model->{$model->getKeyName()} = auth()->user()->personalTeam()->id;
+                $model->team_id = auth()->user()->personalTeam()->id;
             }
         });
+    }
+
+    /**
+     * The business contracts under a company (client).
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function contracts(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(CompanyContract::class);
     }
 }

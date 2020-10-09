@@ -3,14 +3,13 @@
 namespace Tests\Feature;
 
 use App\Actions\Fortify\CreateNewUser;
+use App\Models\Back\Company;
 use App\Models\Role;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class CompaniesTest extends TestCase
 {
-    use RefreshDatabase;
     use WithFaker;
 
     protected function setUp(): void
@@ -41,6 +40,15 @@ class CompaniesTest extends TestCase
         $this->actingAs($this->user)
             ->post('/back/companies', $acmeCompany)
             ->assertSessionHasNoErrors()
+            ->assertRedirect();
+    }
+
+    public function test_user_can_read_company_data()
+    {
+        $acmeCompany = Company::factory()->create(['team_id' => $this->user->personalTeam()->id]);
+        $this->actingAs($this->user)
+            ->get('/back/companies/'.$acmeCompany->id)
+            ->assertSuccessful()
             ->assertPropValue('company', function($company) use ($acmeCompany) {
                 $this->assertEquals($acmeCompany['name_ar'], $company['name_ar']);
                 $this->assertEquals($acmeCompany['name_en'], $company['name_en']);
@@ -69,6 +77,6 @@ class CompaniesTest extends TestCase
     {
         $this->actingAs($this->user)
             ->get('/back/companies/create')
-            ->assertSeeText('CR Number');
+            ->assertSuccessful();
     }
 }
