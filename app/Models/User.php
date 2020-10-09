@@ -75,4 +75,27 @@ class User extends Authenticatable
     {
         return 'https://ui-avatars.com/api/?name='.urlencode($this->name).'&color=FFFFFF&background=EA1D3C';
     }
+
+    public function logrocketId()
+    {
+        return $this->id;
+    }
+
+    public function logrocketIdExtra()
+    {
+        return json_encode([
+            'name' => $this->name,
+            'email' => $this->email,
+        ], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Get the user's preferred locale.
+     *
+     * @return string
+     */
+    public function preferredLocale()
+    {
+        return $this->locale;
+    }
 }

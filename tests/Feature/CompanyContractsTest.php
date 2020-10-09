@@ -7,6 +7,8 @@ use App\Models\Back\Company;
 use App\Models\Back\CompanyContract;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Storage;
+use Illuminate\Http\UploadedFile;
 
 class CompanyContractsTest extends TestCase
 {
@@ -73,5 +75,61 @@ class CompanyContractsTest extends TestCase
             ->assertPropValue('company', function($company) {
                 $this->assertEquals($company['id'], $this->company['id']);
             });
+    }
+
+    public function test_uploading_pdf_with_contract()
+    {
+        Storage::fake('s3');
+
+        $contract = [
+            'company_id' => $this->company->id,
+            'reference_number' => (string) rand(),
+            'contract_starts_at' => now()->toDateString(),
+            'contract_ends_at' => now()->addMonth()->toDateString(),
+            'contract_period_in_months' => 1,
+            'auto_renewal' => true,
+            'trainees_count' => rand(),
+            'trainee_salary' => rand(),
+            'trainer_cost' => rand(),
+            'company_reimbursement' => rand(),
+            'notes' => $this->faker->text,
+            'files' => [
+                $file = UploadedFile::fake()->create('contract-copy.pdf', 1024 * 24),
+            ],
+        ];
+
+        $this->actingAs($this->user)
+            ->post(route('back.companies.contracts.store', ['company_id' => Company::find($contract['company_id'])]), $contract)
+            ->assertSessionHasNoErrors()
+            ->assertRedirect();
+
+        $contract_path = CompanyContract::where('company_id', $contract['company_id'])
+            ->first()
+            ->getFirstMedia('contract_copy')
+            ->getPath();
+
+        $this->assertFileExists($contract_path);
+    }
+
+    public function test_downloading_contract_files()
+    {
+        Storage::fake('s3');
+
+        $contract = CompanyContract::factory()->create([
+            'company_id' => $this->company->id,
+            'team_id' => $this->user->personalTeam()->id,
+        ]);
+
+        $contract = CompanyContract::findOrFail($contract->id);
+
+        $file = UploadedFile::fake()->create('contract-copy.pdf', 1024 * 24);
+        $contract->addContractCopyAttachment($file);
+
+        $r = $this->actingAs($this->user)
+            ->get(route('back.companies.contracts.attachments', ['company_id' => $contract->company_id, 'contract_id' => $contract->id]));
+
+        dd($r->headers);
+            //->assertSuccessful();
+            //->assertHeader('Content-Disposition', 'attachment; filename=contract-copy.pdf');
     }
 }

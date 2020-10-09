@@ -43,6 +43,14 @@
                             <jet-textarea id="notes" type="textarea" class="mt-1 block w-full" v-model="form.notes" />
                             <jet-input-error :message="form.error('notes')" class="mt-2" />
                         </div>
+
+                        <div class="col-span-4 sm:col-span-4">
+                            <vue-dropzone ref="dropZoneContainer"
+                                          id="dropzone"
+                                          @vdropzone-file-added="fileAdded"
+                                          :options="dropzoneOptions"
+                            ></vue-dropzone>
+                        </div>
                     </template>
 
                     <template #actions>
@@ -65,17 +73,19 @@
 </template>
 
 <script>
-    import AppLayout from './../../../Layouts/AppLayout'
-    import JetSectionBorder from './../../../Jetstream/SectionBorder'
-    import Breadcrumb from "../../../Components/Breadcrumb";
-    import JetDialogModal from './../../../Jetstream/DialogModal'
-    import JetInput from './../../../Jetstream/Input'
-    import JetInputError from './../../../Jetstream/InputError'
-    import JetActionMessage from './../../../Jetstream/ActionMessage';
-    import JetButton from './../../../Jetstream/Button';
-    import JetFormSection from './../../../Jetstream/FormSection';
-    import JetLabel from './../../../Jetstream/Label';
-    import JetTextarea from '@/Jetstream/Textarea';
+    import AppLayout from '@/Layouts/AppLayout'
+    import JetSectionBorder from '@/Jetstream/SectionBorder'
+    import Breadcrumb from "@/Components/Breadcrumb";
+    import JetDialogModal from '@/Jetstream/DialogModal'
+    import JetInput from '@/Jetstream/Input'
+    import JetInputError from '@/Jetstream/InputError'
+    import JetActionMessage from '@/Jetstream/ActionMessage';
+    import JetButton from '@/Jetstream/Button';
+    import JetFormSection from '@/Jetstream/FormSection';
+    import JetLabel from '@/Jetstream/Label';
+    import JetTextarea from '@/Jetstream/Textarea'
+    import VueDropzone from 'vue2-dropzone'
+    import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
     export default {
         props: ['sessions', 'company'],
@@ -92,9 +102,22 @@
             JetFormSection,
             JetLabel,
             JetTextarea,
+            VueDropzone
         },
         data() {
             return {
+                dropzoneOptions: {
+                    addRemoveLinks: true,
+                    destroyDropzone: false,
+                    autoProcessQueue: false,
+                    manuallyAddFile: true,
+                    url: 'https://getShafiq.com', // Just required to initiate DropZone.
+                    dictDefaultMessage: "<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> "+this.$t('words.upload-files-here'),
+                    dictRemoveFile: this.$t('words.delete'),
+                    thumbnailWidth: 150,
+                    maxFilesize: 20,
+                    // headers: this.jwtHeaders,
+                },
                 form: this.$inertia.form({
                     reference_number: '',
                     contract_starts_at: '',
@@ -103,6 +126,7 @@
                     trainee_salary: '',
                     trainer_cost: '',
                     company_reimbursement: '',
+                    files: [],
                 }, {
                     bag: 'createContract',
                 })
@@ -112,6 +136,9 @@
 
         },
         methods: {
+            fileAdded(file) {
+                this.form.files.push(file);
+            },
             createContract() {
                 this.form.post('/back/companies/'+this.company.id+'/contracts', {
                     preserveScroll: true
@@ -120,3 +147,21 @@
         }
     }
 </script>
+
+<style>
+    .dropzone .dz-preview .dz-progress {
+        display: none;
+    }
+    .vue-dropzone > .dz-preview .dz-remove {
+        margin: 0 10px;
+    }
+
+    .vue-dropzone > .dz-preview .dz-details {
+        background-color: rgb(37, 47, 63);
+    }
+
+    .dropzone.dz-clickable .dz-message, .dropzone.dz-clickable .dz-message * {
+        font-family: Nunito, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        line-height: 1.5;
+    }
+</style>

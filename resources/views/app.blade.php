@@ -5,6 +5,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
+        @auth
+            <meta name="logrocket-id" content="{{ auth()->user()->logrocketId() }}">
+            <meta name="logrocket-id-extra" content='{!! auth()->user()->logrocketIdExtra() !!}'>
+        @endif
+
         <title>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Fonts -->

@@ -59,8 +59,11 @@ return [
     'contract_period_in_months' => 'مدة العقد (اشهر)',
     'trainees_count' => 'عدد المتدربين',
     'trainee_salary' => 'راتب المتدرين (للشخص)',
-    'trainer_cost' => 'تكلف المتدرب',
+    'trainer_cost' => 'تكلفة المتدرب',
     'company_reimbursement' => 'دعم الشركة',
     'notes' => 'ملاحظات',
     'saved-successfully' => 'حٌفظ بنجاح',
+    'upload-files-here' => 'قم برفع الملفات هنا',
+    'delete' => 'حذف',
+    'download-scan' => 'تحميل النسخة',
 ];

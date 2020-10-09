@@ -5,11 +5,14 @@ namespace App\Models\Back;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Str;
 
-class CompanyContract extends Model
+class CompanyContract extends Model implements HasMedia
 {
     use HasFactory;
+    use InteractsWithMedia;
 
     public $incrementing = false;
 
@@ -41,6 +44,7 @@ class CompanyContract extends Model
             $model->{$model->getKeyName()} = (string) Str::uuid();
             if (auth()->user()) {
                 $model->team_id = auth()->user()->personalTeam()->id;
+                $model->created_by_id = auth()->user()->id;
             }
 
             if ($model->contract_starts_at && $model->contract_period_in_months) {
@@ -57,5 +61,27 @@ class CompanyContract extends Model
                 $model->contract_ends_at = $end_date;
             }
         });
+    }
+
+    public function attachments()
+    {
+        return $this->media()->where('collection_name', 'contract_copy');
+    }
+
+    /**
+     * Upload scan(s) of the contract.
+     *
+     * @param $file
+     * @return \Spatie\MediaLibrary\MediaCollections\Models\Media
+     * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist
+     * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig
+     */
+    public function addContractCopyAttachment($file)
+    {
+        return $this->addMedia($file)
+            ->withAttributes([
+                'team_id' => $this->team_id,
+            ])
+            ->toMediaCollection('contract_copy');
     }
 }

@@ -63,4 +63,7 @@ return [
     'company_reimbursement' => 'Company reimbursement',
     'notes' => 'Notes',
     'saved-successfully' => 'Saved successfully',
+    'upload-files-here' => 'Upload files here',
+    'delete' => 'Delete',
+    'download-scan' => 'Download scan',
 ];
