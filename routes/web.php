@@ -24,5 +24,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('{company_id}/contracts/{contract_id}/attachments', [\App\Http\Controllers\Back\CompaniesContractsController::class, 'attachments'])->name('contracts.attachments');
             Route::resource('{company_id}/contracts', \App\Http\Controllers\Back\CompaniesContractsController::class);
         });
+
+        Route::get('finance', [\App\Http\Controllers\Back\FinanceController::class, 'index'])->name('finance');
     });
 });

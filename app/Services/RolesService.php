@@ -23,6 +23,12 @@ class RolesService
         'create-companies',
         'edit-companies',
         'delete-companies',
+        'view-company-contracts',
+        'create-company-contracts',
+        'edit-company-contracts',
+        'delete-company-contracts',
+        'view-financial-department',
+        'approve-invoices',
         // add the same name of the role to translation files.
     ];
 

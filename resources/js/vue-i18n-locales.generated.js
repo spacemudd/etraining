@@ -193,7 +193,15 @@ export default {
             "saved-successfully": "حٌفظ بنجاح",
             "upload-files-here": "قم برفع الملفات هنا",
             "delete": "حذف",
-            "download-scan": "تحميل النسخة"
+            "download-scan": "تحميل النسخة",
+            "view-company-contracts": "عرض عقود الشركة",
+            "create-company-contracts": "إنشاء عقود الشركة",
+            "edit-company-contracts": "تعديل عقود الشركة",
+            "delete-company-contracts": "حذف عقود الشركة",
+            "view-financial-department": "عرض المالية",
+            "approve-invoices": "اعتماد الفواتير",
+            "view-clients": "عرض العملاء",
+            "view-invoices": "عرض الفواتير"
         }
     },
     "en": {
@@ -390,7 +398,15 @@ export default {
             "saved-successfully": "Saved successfully",
             "upload-files-here": "Upload files here",
             "delete": "Delete",
-            "download-scan": "Download scan"
+            "download-scan": "Download scan",
+            "view-company-contracts": "View company contracts",
+            "create-company-contracts": "Create company contracts",
+            "edit-company-contracts": "Edit company contracts",
+            "delete-company-contracts": "Delete company contracts",
+            "view-financial-department": "View financial department",
+            "approve-invoices": "Approve invoices",
+            "view-clients": "View clients",
+            "view-invoices": "View invoices"
         }
     }
 }

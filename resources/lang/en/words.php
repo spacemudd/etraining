@@ -66,4 +66,12 @@ return [
     'upload-files-here' => 'Upload files here',
     'delete' => 'Delete',
     'download-scan' => 'Download scan',
+    'view-company-contracts' => 'View company contracts',
+    'create-company-contracts' => 'Create company contracts',
+    'edit-company-contracts' => 'Edit company contracts',
+    'delete-company-contracts' => 'Delete company contracts',
+    'view-financial-department' => 'View financial department',
+    'approve-invoices' => 'Approve invoices',
+    'view-clients' => 'View clients',
+    'view-invoices' => 'View invoices',
 ];

@@ -66,4 +66,12 @@ return [
     'upload-files-here' => 'قم برفع الملفات هنا',
     'delete' => 'حذف',
     'download-scan' => 'تحميل النسخة',
+    'view-company-contracts' => 'عرض عقود الشركة',
+    'create-company-contracts' => 'إنشاء عقود الشركة',
+    'edit-company-contracts' => 'تعديل عقود الشركة',
+    'delete-company-contracts' => 'حذف عقود الشركة',
+    'view-financial-department' => 'عرض المالية',
+    'approve-invoices' => 'اعتماد الفواتير',
+    'view-clients' => 'عرض العملاء',
+    'view-invoices' => 'عرض الفواتير',
 ];

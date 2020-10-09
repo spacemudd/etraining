@@ -43,7 +43,7 @@
             </template>
         </sidebar-link>
 
-        <sidebar-link link-value="/">
+        <sidebar-link link-value="/back/finance" :active="$page.currentRouteName == 'back.finance'">
             <template #icon>
                 <img src="/img/bank.svg" alt="" class="w-5 h-5">
             </template>
