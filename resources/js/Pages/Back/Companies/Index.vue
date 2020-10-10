@@ -1,19 +1,27 @@
 <template>
     <app-layout>
         <div class="container px-6 mx-auto grid pt-6">
-            <h1 class="mb-8 font-bold text-3xl">{{ $t('words.companies') }}</h1>
-            <div class="mb-6 flex justify-between items-center">
-                <!--<search-filter v-model="form.search" class="w-full max-w-md mr-4" @reset="reset">-->
-                <!--    <label class="block text-gray-700">Trashed:</label>-->
-                <!--    <select v-model="form.trashed" class="mt-1 w-full form-select">-->
-                <!--        <option :value="null" />-->
-                <!--        <option value="with">With Trashed</option>-->
-                <!--        <option value="only">Only Trashed</option>-->
-                <!--    </select>-->
-                <!--</search-filter>-->
-                <inertia-link class="btn-gray" :href="route('back.companies.create')">
-                    <span>{{ $t('words.new') }}</span>
-                </inertia-link>
+            <breadcrumb-container
+                :crumbs="[
+                    {title: 'dashboard', link: route('dashboard')},
+                    {title: 'companies', link: route('back.companies.index')},
+                ]"
+            ></breadcrumb-container>
+            <div class="flex justify-between">
+                <h1 class="mb-8 font-bold text-3xl">{{ $t('words.companies') }}</h1>
+                <div class="mb-6 flex justify-between items-center">
+                    <!--<search-filter v-model="form.search" class="w-full max-w-md mr-4" @reset="reset">-->
+                    <!--    <label class="block text-gray-700">Trashed:</label>-->
+                    <!--    <select v-model="form.trashed" class="mt-1 w-full form-select">-->
+                    <!--        <option :value="null" />-->
+                    <!--        <option value="with">With Trashed</option>-->
+                    <!--        <option value="only">Only Trashed</option>-->
+                    <!--    </select>-->
+                    <!--</search-filter>-->
+                    <inertia-link class="btn-gray" :href="route('back.companies.create')">
+                        <span>{{ $t('words.new') }}</span>
+                    </inertia-link>
+                </div>
             </div>
             <div class="bg-white rounded shadow overflow-x-auto">
                 <table class="w-full whitespace-no-wrap">
@@ -55,7 +63,9 @@
                         </td>
                     </tr>
                     <tr v-if="companies.data.length === 0">
-                        <td class="border-t px-6 py-4" colspan="4">{{ $t('words.nothing-is-here') }}</td>
+                        <td class="border-t px-6 py-4" colspan="4">
+                            <empty-slate/>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -74,11 +84,15 @@
     import throttle from 'lodash/throttle'
     import AppLayout from '@/Layouts/AppLayout'
     import IconNavigate from 'vue-ionicons/dist/ios-arrow-dropright'
+    import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
+    import EmptySlate from "@/Components/EmptySlate";
 
     export default {
-        metaInfo: { title: 'Contacts' },
+        metaInfo: { title: 'Companies' },
         // layout: Layout,
         components: {
+            EmptySlate,
+            BreadcrumbContainer,
             IconNavigate,
             AppLayout,
             // Icon,

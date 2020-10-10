@@ -4,35 +4,24 @@
             <breadcrumb-container
                 :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
-                    {title: 'companies', link: route('back.companies.index')},
-                    {title_raw: company.name_ar, link: route('back.companies.index', {company_id: company.id})},
+                    {title: 'finance', link: route('back.finance')},
+                    {title: 'view-monthly-subscription-settings', link: route('back.finance.monthly-subscription.edit')},
                     {title: 'edit'},
                 ]"
             ></breadcrumb-container>
 
             <div class="mt-4">
-                <jet-form-section @submitted="updateCompany">
+                <jet-form-section @submitted="updateMonthlySubscription">
                     <template #title>
                         {{ $t('words.edit') }}
                     </template>
 
                     <template #form>
-                        <template v-for="fieldName in [
-                            'name_ar',
-                            'name_en',
-                            'cr_number',
-                            'contact_number',
-                            'company_rep',
-                            'company_rep_mobile',
-                            'address',
-                            'email',
-                            ]">
                             <div class="col-span-2 sm:col-span-2">
-                                <jet-label for="name" :value="$t('words.'+fieldName)" />
-                                <jet-input id="name" type="text" class="mt-1 block w-full" v-model="form[fieldName]" autocomplete="name" :autofocus="fieldName==='name_ar'" />
-                                <jet-input-error :message="form.error(fieldName)" class="mt-2" />
+                                <jet-label for="name" :value="$t('words.trainee_monthly_subscription')" />
+                                <jet-input id="name" type="text" class="mt-1 block w-full" v-model="form.trainee_monthly_subscription" autocomplete="off" autofocus />
+                                <jet-input-error :message="form.error('trainee_monthly_subscription')" class="mt-2" />
                             </div>
-                        </template>
                     </template>
 
                     <template #actions>
@@ -40,7 +29,7 @@
                             Saved.
                         </jet-action-message>
 
-                        <inertia-link :href="`/back/companies/${company.id}`" class="flex items-center justify-start rtl:ml-4 ltr:mr-4 rounded-md px-4 py-2 bg-white hover:bg-gray-300 text-right">
+                        <inertia-link :href="route('back.finance')" class="flex items-center justify-start rtl:ml-4 ltr:mr-4 rounded-md px-4 py-2 bg-white hover:bg-gray-300 text-right">
                             {{ $t('words.cancel') }}
                         </inertia-link>
 
@@ -68,7 +57,7 @@
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
 
     export default {
-        props: ['sessions', 'company'],
+        props: ['sessions', 'trainee_monthly_subscription'],
 
         components: {
             AppLayout,
@@ -84,34 +73,20 @@
             BreadcrumbContainer,
         },
         mounted() {
-            this.form.name_ar = this.company.name_ar;
-            this.form.name_en = this.company.name_en;
-            this.form.cr_number = this.company.cr_number;
-            this.form.contact_number = this.company.contact_number;
-            this.form.company_rep = this.company.company_rep;
-            this.form.company_rep_mobile = this.company.company_rep_mobile;
-            this.form.email = this.company.email;
-            this.form.address = this.company.address;
+            this.form.trainee_monthly_subscription = this.trainee_monthly_subscription;
         },
         data() {
             return {
                 form: this.$inertia.form({
-                    name_ar: '',
-                    name_en: '',
-                    cr_number: '',
-                    contact_number: '',
-                    company_rep: '',
-                    company_rep_mobile: '',
-                    address: '',
-                    email: '',
+                    trainee_monthly_subscription: '',
                 }, {
-                    bag: 'updateCompany',
+                    bag: 'updateMonthlySubscription',
                 })
             }
         },
         methods: {
-            updateCompany() {
-                this.form.put('/back/companies/'+this.company.id, {
+            updateMonthlySubscription() {
+                this.form.put(route('back.finance.monthly-subscription.update'), {
                     preserveScroll: true
                 });
             },

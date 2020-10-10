@@ -201,7 +201,23 @@ export default {
             "view-financial-department": "عرض المالية",
             "approve-invoices": "اعتماد الفواتير",
             "view-clients": "عرض العملاء",
-            "view-invoices": "عرض الفواتير"
+            "view-invoices": "عرض الفواتير",
+            "view-client-accounts": "عرض حسابات العملاء",
+            "account-name": "اسم الحساب",
+            "status": "الحالة",
+            "outstanding-amount": "المبلغ المستحق",
+            "created-at": "تاريخ الإنشاء",
+            "view": "عرض",
+            "client-accounts": "حسابات العملاء",
+            "invoice": "الفاتورة",
+            "payment-method": "طريقة الدفع",
+            "amount": "المبلغ",
+            "confirmed": "موثق",
+            "date": "التاريخ",
+            "invoices": "الفواتير",
+            "view-monthly-subscription-settings": "إعدادات تكاليف الإشتراك الشهري",
+            "monthly-subscription": "تكلفة الشهرية",
+            "trainee_monthly_subscription": "تكلفة اشتراك الشهري للمتدرب"
         }
     },
     "en": {
@@ -406,7 +422,22 @@ export default {
             "view-financial-department": "View financial department",
             "approve-invoices": "Approve invoices",
             "view-clients": "View clients",
-            "view-invoices": "View invoices"
+            "view-invoices": "View invoices",
+            "view-client-accounts": "View client accounts",
+            "account-name": "Account name",
+            "status": "Status",
+            "outstanding_amount": "Outstanding",
+            "created-at": "Created at",
+            "view": "View",
+            "client-accounts": "Client accounts",
+            "invoice": "Invoice",
+            "payment-method": "Payment method",
+            "amount": "Amount",
+            "confirmed": "Confirmed",
+            "date": "Date",
+            "invoices": "Invoices",
+            "view-monthly-subscription-settings": "View monthly subscription settings",
+            "trainee_monthly_subscription": "Trainee monthly subscription"
         }
     }
 }

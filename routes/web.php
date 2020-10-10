@@ -7,8 +7,7 @@ Route::get('/', function () {
 });
 
 Route::get('language/{language}', function ($language) {
-    Session()->put('locale', $language);
-
+    session()->put('locale', $language);
     return redirect()->back();
 })->name('language');
 
@@ -26,5 +25,12 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         });
 
         Route::get('finance', [\App\Http\Controllers\Back\FinanceController::class, 'index'])->name('finance');
+
+        Route::prefix('finance')->name('finance.')->group(function() {
+            Route::resource('accounts', \App\Http\Controllers\Back\FinancialAccountsController::class);
+            Route::resource('invoices', \App\Http\Controllers\Back\FinancialInvoicesController::class);
+            Route::get('monthly-subscription/edit', [\App\Http\Controllers\Back\FinancialMonthlySubscriptionController::class, 'edit'])->name('monthly-subscription.edit');
+            Route::put('monthly-subscription', [\App\Http\Controllers\Back\FinancialMonthlySubscriptionController::class, 'update'])->name('monthly-subscription.update');
+        });
     });
 });

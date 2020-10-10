@@ -1,7 +1,13 @@
 <template>
     <app-layout>
-        <div class="container px-6 mx-auto grid">
-            <breadcrumb/>
+        <div class="container px-6 mx-auto grid pt-6">
+            <breadcrumb-container
+                :crumbs="[
+                    {title: 'dashboard', link: route('dashboard')},
+                    {title: 'companies', link: route('back.companies.index')},
+                    {title: 'new'},
+                ]"
+            ></breadcrumb-container>
 
             <div class="mt-4">
                 <jet-form-section @submitted="createCompany">
@@ -52,16 +58,16 @@
 </template>
 
 <script>
-    import AppLayout from './../../../Layouts/AppLayout'
-    import JetSectionBorder from './../../../Jetstream/SectionBorder'
-    import Breadcrumb from "../../../Components/Breadcrumb";
-    import JetDialogModal from './../../../Jetstream/DialogModal'
-    import JetInput from './../../../Jetstream/Input'
-    import JetInputError from './../../../Jetstream/InputError'
-    import JetActionMessage from './../../../Jetstream/ActionMessage';
-    import JetButton from './../../../Jetstream/Button';
-    import JetFormSection from './../../../Jetstream/FormSection';
-    import JetLabel from './../../../Jetstream/Label';
+    import AppLayout from '@/Layouts/AppLayout'
+    import JetSectionBorder from '@/Jetstream/SectionBorder'
+    import JetDialogModal from '@/Jetstream/DialogModal'
+    import JetInput from '@/Jetstream/Input'
+    import JetInputError from '@/Jetstream/InputError'
+    import JetActionMessage from '@/Jetstream/ActionMessage';
+    import JetButton from '@/Jetstream/Button';
+    import JetFormSection from '@/Jetstream/FormSection';
+    import JetLabel from '@/Jetstream/Label';
+    import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
 
     export default {
         props: ['sessions'],
@@ -69,7 +75,6 @@
         components: {
             AppLayout,
             JetSectionBorder,
-            Breadcrumb,
             JetDialogModal,
             JetInput,
             JetInputError,
@@ -77,6 +82,7 @@
             JetButton,
             JetFormSection,
             JetLabel,
+            BreadcrumbContainer,
         },
         data() {
             return {

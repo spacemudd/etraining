@@ -1,7 +1,14 @@
 <template>
     <app-layout>
         <div class="container px-6 mx-auto grid pt-6">
-            <!--<breadcrumb/>-->
+            <breadcrumb-container
+                :crumbs="[
+                    {title: 'dashboard', link: route('dashboard')},
+                    {title: 'companies', link: route('back.companies.index')},
+                    {title_raw: company.name_ar},
+                ]"
+            ></breadcrumb-container>
+
             <div class="grid grid-cols-4 gap-6">
                 <div class="col-span-4 flex items-center justify-end bg-gray-50 text-right">
                     <inertia-link :href="`/back/companies/${this.company.id}/edit`" class="flex items-center justify-start rounded-md mx-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
@@ -57,17 +64,18 @@
 </template>
 
 <script>
-    import AppLayout from './../../../Layouts/AppLayout'
-    import JetSectionBorder from './../../../Jetstream/SectionBorder'
-    import Breadcrumb from "../../../Components/Breadcrumb";
-    import JetDialogModal from './../../../Jetstream/DialogModal'
-    import JetInput from './../../../Jetstream/Input'
-    import JetInputError from './../../../Jetstream/InputError'
-    import JetActionMessage from './../../../Jetstream/ActionMessage';
-    import JetButton from './../../../Jetstream/Button';
-    import JetFormSection from './../../../Jetstream/FormSection';
-    import JetLabel from './../../../Jetstream/Label';
+    import AppLayout from '@/Layouts/AppLayout'
+    import JetSectionBorder from '@/Jetstream/SectionBorder'
+    import Breadcrumb from "@/Components/Breadcrumb";
+    import JetDialogModal from '@/Jetstream/DialogModal'
+    import JetInput from '@/Jetstream/Input'
+    import JetInputError from '@/Jetstream/InputError'
+    import JetActionMessage from '@/Jetstream/ActionMessage';
+    import JetButton from '@/Jetstream/Button';
+    import JetFormSection from '@/Jetstream/FormSection';
+    import JetLabel from '@/Jetstream/Label';
     import CompanyContractsPagination from "@/Components/CompanyContractsPagination";
+    import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
 
     export default {
         props: ['sessions', 'company'],
@@ -84,6 +92,7 @@
             JetFormSection,
             JetLabel,
             CompanyContractsPagination,
+            BreadcrumbContainer,
         },
         data() {
             return {

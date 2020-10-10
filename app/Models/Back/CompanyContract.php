@@ -2,6 +2,7 @@
 
 namespace App\Models\Back;
 
+use App\Scope\TeamScope;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -40,6 +41,7 @@ class CompanyContract extends Model implements HasMedia
     protected static function boot(): void
     {
         parent::boot();
+        static::addGlobalScope(new TeamScope());
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string) Str::uuid();
             if (auth()->user()) {

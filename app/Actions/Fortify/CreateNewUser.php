@@ -4,6 +4,7 @@ namespace App\Actions\Fortify;
 
 use App\Models\Team;
 use App\Models\User;
+use App\Services\FinancialService;
 use App\Services\RolesService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -42,10 +43,11 @@ class CreateNewUser implements CreatesNewUsers
     /**
      * Create a personal team for the user.
      *
-     * @param  \App\Models\User  $user
+     * @param \App\Models\User $user
      * @return void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    protected function createTeam(User $user)
+    protected function createTeam(User $user): void
     {
         $team = $user->ownedTeams()->save(Team::forceCreate([
             'user_id' => $user->id,
@@ -54,5 +56,6 @@ class CreateNewUser implements CreatesNewUsers
         ]));
 
         app()->make(RolesService::class)->seedRolesToTeam($team);
+        app()->make(FinancialService::class)->seedSettingsToTeam($team);
     }
 }

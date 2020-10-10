@@ -11,6 +11,7 @@
 
 namespace App\Models;
 
+use App\Scope\TeamScope;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Str;
 
@@ -24,9 +25,8 @@ class Media extends \Spatie\MediaLibrary\MediaCollections\Models\Media
 
     protected static function boot(): void
     {
-        // TODO: Add scope.
-
         parent::boot();
+        static::addGlobalScope(new TeamScope());
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string) Str::uuid();
             if (auth()->user()) {

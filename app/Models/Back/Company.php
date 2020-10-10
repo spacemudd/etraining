@@ -2,6 +2,7 @@
 
 namespace App\Models\Back;
 
+use App\Scope\TeamScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -30,6 +31,7 @@ class Company extends Model
     protected static function boot(): void
     {
         parent::boot();
+        static::addGlobalScope(new TeamScope());
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string) Str::uuid();
             if (auth()->user()) {

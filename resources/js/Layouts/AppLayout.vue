@@ -484,8 +484,6 @@
                 })
             },
             logoutUser() {
-                debugger;
-                console.log("logging out");
                 axios.post('/logout').then(response => {
                     window.location = '/';
                 })

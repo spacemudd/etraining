@@ -11,17 +11,23 @@
 <template>
     <app-layout>
         <div class="container px-6 mx-auto grid pt-6">
-            <h1 class="mb-8 font-bold text-3xl">
-                {{ $t('words.finance') }}
-            </h1>
+            <breadcrumb-container
+                :crumbs="[
+                    {title: 'dashboard', link: route('dashboard')},
+                    {title: 'finance', link: route('back.finance')},
+                ]"
+            ></breadcrumb-container>
 
             <div class="grid md:grid-cols-4 grid-cols-1 gap-6">
-                <div class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
-                   {{ $t('words.view-clients') }}
-                </div>
-                <div class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
+                <inertia-link :href="route('back.finance.accounts.index')" class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
+                   {{ $t('words.view-client-accounts') }}
+                </inertia-link>
+                <inertia-link :href="route('back.finance.invoices.index')" class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
                     {{ $t('words.view-invoices') }}
-                </div>
+                </inertia-link>
+                <inertia-link :href="route('back.finance.monthly-subscription.edit')" class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
+                    {{ $t('words.view-monthly-subscription-settings') }}
+                </inertia-link>
             </div>
         </div>
     </app-layout>
@@ -37,9 +43,10 @@
     import throttle from 'lodash/throttle'
     import AppLayout from '@/Layouts/AppLayout'
     import IconNavigate from 'vue-ionicons/dist/ios-arrow-dropright'
+    import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
 
     export default {
-        metaInfo: { title: 'Contacts' },
+        metaInfo: { title: 'Finance' },
         // layout: Layout,
         components: {
             IconNavigate,
@@ -47,6 +54,7 @@
             // Icon,
             Pagination,
             // SearchFilter,
+            BreadcrumbContainer,
         },
         props: {
             companies: Object,
