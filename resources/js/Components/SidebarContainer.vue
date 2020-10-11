@@ -16,12 +16,12 @@
             </template>
         </sidebar-link>
 
-        <sidebar-link :link-value="route('back.trainers.index')">
+        <sidebar-link :link-value="route('back.instructors.index')">
             <template #icon>
                 <img src="/img/teacher.svg" alt="" class="w-5 h-5">
             </template>
             <template #title>
-                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.trainers') }}</span>
+                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.instructors') }}</span>
             </template>
         </sidebar-link>
 

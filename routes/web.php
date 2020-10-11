@@ -15,7 +15,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia\Inertia::render('Dashboard', [
         'companies_count' => \App\Models\Back\Company::count(),
         'trainees_count' => \App\Models\Back\Trainee::count(),
-        'trainers_count' => 0,
+        'instructor_count' => \App\Models\Back\Instructor::count(),
         'courses_count' => 0,
     ]);
 })->name('dashboard');
@@ -49,10 +49,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::delete('trainees/{trainee_id}/attachments/bank-account', [\App\Http\Controllers\Back\TraineesController::class, 'deleteBankAccount'])->name('trainees.attachments.bank-account.destroy');
         Route::resource('trainees', \App\Http\Controllers\Back\TraineesController::class);
 
-        Route::post('trainers/{trainer_id}/attachments/cv-full', [\App\Http\Controllers\Back\TrainersController::class, 'storeCvFull'])->name('trainers.attachments.cv-full');
-        Route::delete('trainers/{trainer_id}/attachments/cv-full', [\App\Http\Controllers\Back\TrainersController::class, 'deleteCvFull'])->name('trainers.attachments.cv-full.destroy');
-        Route::post('trainers/{trainer_id}/attachments/cv-summary', [\App\Http\Controllers\Back\TrainersController::class, 'storeCvSummary'])->name('trainers.attachments.cv-summary');
-        Route::delete('trainers/{trainer_id}/attachments/cv-summary', [\App\Http\Controllers\Back\TrainersController::class, 'deleteCvSummary'])->name('trainers.attachments.cv-summary.destroy');
-        Route::resource('trainers', \App\Http\Controllers\Back\TrainersController::class);
+        Route::post('instructors/{instructor_id}/attachments/cv-full', [\App\Http\Controllers\Back\InstructorsController::class, 'storeCvFull'])->name('instructors.attachments.cv-full');
+        Route::delete('instructors/{instructor_id}/attachments/cv-full', [\App\Http\Controllers\Back\InstructorsController::class, 'deleteCvFull'])->name('instructors.attachments.cv-full.destroy');
+        Route::post('instructors/{instructor_id}/attachments/cv-summary', [\App\Http\Controllers\Back\InstructorsController::class, 'storeCvSummary'])->name('instructors.attachments.cv-summary');
+        Route::delete('instructors/{instructor_id}/attachments/cv-summary', [\App\Http\Controllers\Back\InstructorsController::class, 'deleteCvSummary'])->name('instructors.attachments.cv-summary.destroy');
+        Route::resource('instructors', \App\Http\Controllers\Back\InstructorsController::class);
     });
 });

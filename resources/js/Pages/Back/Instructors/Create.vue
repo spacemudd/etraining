@@ -4,20 +4,20 @@
             <breadcrumb-container
                 :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
-                    {title: 'trainers', link: route('back.trainers.index')},
+                    {title: 'instructors', link: route('back.instructors.index')},
                     {title: 'new'},
                 ]"
             ></breadcrumb-container>
 
 
             <div class="mt-4">
-                <jet-form-section @submitted="createTrainee">
+                <jet-form-section @submitted="createInstructor">
                     <template #title>
-                        {{ $t('words.open-new-trainer-file') }}
+                        {{ $t('words.open-new-instructor-file') }}
                     </template>
 
                     <template #description>
-                        {{ $t('words.open-new-trainer-file-description') }}
+                        {{ $t('words.open-new-instructor-file-description') }}
                     </template>
 
                     <template #form>
@@ -131,8 +131,8 @@
             }
         },
         methods: {
-            createTrainee() {
-                this.form.post('/back/trainers', {
+            createInstructor() {
+                this.form.post('/back/instructors', {
                     preserveScroll: true
                 });
             },

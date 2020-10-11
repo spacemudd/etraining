@@ -4,46 +4,46 @@
             <breadcrumb-container
                 :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
-                    {title: 'trainers', link: route('back.trainers.index')},
-                    {title_raw: trainer.name},
+                    {title: 'instructors', link: route('back.instructors.index')},
+                    {title_raw: instructor.name},
                 ]"
             ></breadcrumb-container>
 
             <div class="grid grid-cols-6 gap-6">
                 <div class="col-span-6 flex items-center justify-end bg-gray-50 text-right">
-                    <inertia-link :href="route('back.trainers.edit', this.trainer.id)" class="flex items-center justify-start rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
+                    <inertia-link :href="route('back.instructors.edit', this.instructor.id)" class="flex items-center justify-start rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
                         {{ $t('words.edit') }}
                     </inertia-link>
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
                     <jet-label for="name" :value="$t('words.name')" />
-                    <jet-input id="name" type="text" class="mt-1 block w-full bg-gray-200" v-model="this.trainer.name" autocomplete="off" disabled />
+                    <jet-input id="name" type="text" class="mt-1 block w-full bg-gray-200" v-model="this.instructor.name" autocomplete="off" disabled />
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
                     <jet-label for="phone" :value="$t('words.phone')" />
-                    <jet-input id="phone" type="text" class="mt-1 block w-full bg-gray-200" v-model="this.trainer.phone" autocomplete="off" disabled />
+                    <jet-input id="phone" type="text" class="mt-1 block w-full bg-gray-200" v-model="this.instructor.phone" autocomplete="off" disabled />
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
                     <jet-label for="identity_number" :value="$t('words.identity_number')" />
-                    <jet-input id="identity_number" type="text" class="mt-1 block w-full bg-gray-200" v-model="this.trainer.identity_number" disabled />
+                    <jet-input id="identity_number" type="text" class="mt-1 block w-full bg-gray-200" v-model="this.instructor.identity_number" disabled />
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
                     <jet-label for="email" :value="$t('words.email')" />
-                    <jet-input id="email" type="text" class="mt-1 block w-full bg-gray-200" v-model="this.trainer.email" disabled />
+                    <jet-input id="email" type="text" class="mt-1 block w-full bg-gray-200" v-model="this.instructor.email" disabled />
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
                     <jet-label for="city_id" :value="$t('words.city')" />
-                    <jet-input id="city" type="text" class="mt-1 block w-full bg-gray-200" :value="this.trainer.city ? this.trainer.city.name_ar : ''" disabled />
+                    <jet-input id="city" type="text" class="mt-1 block w-full bg-gray-200" :value="this.instructor.city ? this.instructor.city.name_ar : ''" disabled />
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
                     <jet-label for="twitter_link" :value="$t('words.twitter_link')" />
-                    <jet-input id="twitter_link" type="text" class="mt-1 block w-full bg-gray-200" v-model="this.trainer.twitter_link" disabled />
+                    <jet-input id="twitter_link" type="text" class="mt-1 block w-full bg-gray-200" v-model="this.instructor.twitter_link" disabled />
                 </div>
             </div>
 
@@ -66,8 +66,8 @@
                 <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
                     <jet-label :value="$t('words.cv-full')" class="mb-2" />
 
-                    <div class="bg-white border-2 rounder-lg flex flex-col justify-center items-center min-container-upload" v-if="trainer.cv_full_copy_url">
-                        <a class="bg-gray-700 text-white font-semibold p-2 text-center w-1/2 rounded my-1" target="_blank" :href="trainer.cv_full_copy_url">{{ $t('words.download') }}</a>
+                    <div class="bg-white border-2 rounder-lg flex flex-col justify-center items-center min-container-upload" v-if="instructor.cv_full_copy_url">
+                        <a class="bg-gray-700 text-white font-semibold p-2 text-center w-1/2 rounded my-1" target="_blank" :href="instructor.cv_full_copy_url">{{ $t('words.download') }}</a>
                         <button class="bg-red-500 text-white font-semibold p-2 text-center w-1/2 rounded my-1" @click="deleteCvFull">{{ $t('words.delete') }}</button>
                     </div>
                     <vue-dropzone v-else
@@ -80,8 +80,8 @@
                 <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
                     <jet-label :value="$t('words.cv-summary')" class="mb-2" />
 
-                    <div class="bg-white border-2 rounder-lg flex flex-col justify-center items-center min-container-upload" v-if="trainer.cv_summary_copy_url">
-                        <a class="bg-gray-700 text-white font-semibold p-2 text-center w-1/2 rounded my-1" target="_blank" :href="trainer.cv_summary_copy_url">{{ $t('words.download') }}</a>
+                    <div class="bg-white border-2 rounder-lg flex flex-col justify-center items-center min-container-upload" v-if="instructor.cv_summary_copy_url">
+                        <a class="bg-gray-700 text-white font-semibold p-2 text-center w-1/2 rounded my-1" target="_blank" :href="instructor.cv_summary_copy_url">{{ $t('words.download') }}</a>
                         <button class="bg-red-500 text-white font-semibold p-2 text-center w-1/2 rounded my-1" @click="deleteCvSummary">{{ $t('words.delete') }}</button>
                     </div>
                     <vue-dropzone v-else
@@ -112,7 +112,7 @@
     import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
     export default {
-        props: ['sessions', 'trainer'],
+        props: ['sessions', 'instructor'],
 
         components: {
             AppLayout,
@@ -133,14 +133,14 @@
             return {
                 dropzoneOptionsCvFull: {
                     destroyDropzone: false,
-                    url: route('back.trainers.attachments.cv-full', {trainer_id: this.trainer.id}),
+                    url: route('back.instructors.attachments.cv-full', {instructor_id: this.instructor.id}),
                     dictDefaultMessage: "<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> "+this.$t('words.upload-files-here'),
                     thumbnailWidth: 150,
                     maxFilesize: 20,
                 },
                 dropzoneOptionsCvSummary: {
                     destroyDropzone: false,
-                    url: route('back.trainers.attachments.cv-summary', {trainer_id: this.trainer.id}),
+                    url: route('back.instructors.attachments.cv-summary', {instructor_id: this.instructor.id}),
                     dictDefaultMessage: "<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> "+this.$t('words.upload-files-here'),
                     thumbnailWidth: 150,
                     maxFilesize: 20,
@@ -153,12 +153,12 @@
             },
             deleteCvFull() {
                 if (confirm(this.$t('words.are-you-sure'))) {
-                    this.$inertia.delete(route('back.trainers.attachments.cv-full.destroy', {trainer_id: this.trainer.id}));
+                    this.$inertia.delete(route('back.instructors.attachments.cv-full.destroy', {instructor_id: this.instructor.id}));
                 }
             },
             deleteCvSummary() {
                 if (confirm(this.$t('words.are-you-sure'))) {
-                    this.$inertia.delete(route('back.trainers.attachments.cv-summary.destroy', {trainer_id: this.trainer.id}));
+                    this.$inertia.delete(route('back.instructors.attachments.cv-summary.destroy', {instructor_id: this.instructor.id}));
                 }
             },
         }

@@ -73,8 +73,8 @@
                     <div class="col-span-2">
                         <div class="w-full h-full border-2 border-gray-100 rounded p-2 flex justify-center items-center">
                             <button class="text-sm bg-green-600 text-white px-3 py-1 rounded mx-auto block"
-                                    :title="$t('words.attach-trainers-help')">
-                                {{ $t('words.attach-trainers') }}
+                                    :title="$t('words.attach-instructors-help')">
+                                {{ $t('words.attach-instructors') }}
                             </button>
                         </div>
                     </div>

@@ -12,7 +12,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Str;
 
-class Trainer extends Model implements HasMedia
+class Instructor extends Model implements HasMedia
 {
     use HasFactory;
     use HasUuid;

@@ -33,7 +33,7 @@ class CompanyContract extends Model implements HasMedia
         'auto_renewal',
         'trainees_count',
         'trainee_salary',
-        'trainer_cost',
+        'instructor_cost',
         'company_reimbursement',
         'notes',
     ];

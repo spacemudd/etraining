@@ -65,7 +65,7 @@ class RolesService
 
         // Add default roles.
         Role::firstOrCreate(['name' => $team->id.'_trainees', 'team_id' => $team->id])->id;
-        Role::firstOrCreate(['name' => $team->id.'_trainers', 'team_id' => $team->id])->id;
+        Role::firstOrCreate(['name' => $team->id.'_instructors', 'team_id' => $team->id])->id;
         Role::firstOrCreate(['name' => $team->id.'_finance', 'team_id' => $team->id])->id;
     }
 }

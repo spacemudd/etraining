@@ -11,11 +11,11 @@
 
 namespace Database\Factories\Back;
 
-use App\Models\Back\Trainer;
+use App\Models\Back\Instructor;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Foundation\Testing\WithFaker;
 
-class TrainerFactory extends Factory
+class InstructorFactory extends Factory
 {
     use WithFaker;
 
@@ -24,7 +24,7 @@ class TrainerFactory extends Factory
      *
      * @var string
      */
-    protected $model = Trainer::class;
+    protected $model = Instructor::class;
 
     /**
      * Define the model's default state.

@@ -56,7 +56,7 @@ class CompaniesContractsController extends Controller
             'auto_renewal' => 'nullable|boolean',
             'trainees_count' => 'nullable',
             'trainee_salary' => 'nullable',
-            'trainer_cost' => 'nullable',
+            'instructor_cost' => 'nullable',
             'company_reimbursement' => 'nullable',
             'notes' => 'nullable',
             'files[]' => 'nullable',

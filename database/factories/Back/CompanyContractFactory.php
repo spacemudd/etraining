@@ -45,7 +45,7 @@ class CompanyContractFactory extends Factory
             'auto_renewal' => true,
             'trainees_count' => rand(),
             'trainee_salary' => rand(),
-            'trainer_cost' => rand(),
+            'instructor_cost' => rand(),
             'company_reimbursement' => rand(),
             'notes' => $this->faker->text,
             'created_by_id' => null,

@@ -21,7 +21,7 @@
                             'contract_period_in_months',
                             'trainees_count',
                             'trainee_salary',
-                            'trainer_cost',
+                            'instructor_cost',
                             'company_reimbursement',
                             ]">
                             <div class="col-span-2 sm:col-span-2">
@@ -124,7 +124,7 @@
                     contract_period_in_months: '',
                     trainees_count: '',
                     trainee_salary: '',
-                    trainer_cost: '',
+                    instructor_cost: '',
                     company_reimbursement: '',
                     files: [],
                 }, {

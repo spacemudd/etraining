@@ -3,15 +3,12 @@
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
-use App\Models\Back\Trainee;
-use App\Models\Back\Trainer;
+use App\Models\Back\Instructor;
 use App\Models\City;
-use App\Models\EducationalLevel;
-use App\Models\MaritalStatus;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class TrainersController extends Controller
+class InstructorsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,8 +17,8 @@ class TrainersController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Back/Trainers/Index', [
-            'trainers' => Trainer::paginate(20),
+        return Inertia::render('Back/Instructors/Index', [
+            'instructors' => Instructor::paginate(20),
         ]);
     }
 
@@ -32,7 +29,7 @@ class TrainersController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Back/Trainers/Create', [
+        return Inertia::render('Back/Instructors/Create', [
             'cities' => City::orderBy('name_ar')->get(),
         ]);
     }
@@ -54,8 +51,8 @@ class TrainersController extends Controller
             'city_id' => 'nullable|exists:cities,id',
         ]);
 
-        $trainer = Trainer::create($request->except('_token'));
-        return redirect()->route('back.trainers.show', $trainer->id);
+        $instructor = Instructor::create($request->except('_token'));
+        return redirect()->route('back.instructors.show', $instructor->id);
     }
 
     /**
@@ -66,8 +63,8 @@ class TrainersController extends Controller
      */
     public function show($id)
     {
-        return Inertia::render('Back/Trainers/Show', [
-            'trainer' => Trainer::with('city')->findOrFail($id),
+        return Inertia::render('Back/Instructors/Show', [
+            'instructor' => Instructor::with('city')->findOrFail($id),
         ]);
     }
 
@@ -108,60 +105,60 @@ class TrainersController extends Controller
     /**
      *
      * @param \Illuminate\Http\Request $request
-     * @param $trainer_id
+     * @param $instructor_id
      * @return
      */
-    public function storeCvFull(Request $request, $trainer_id)
+    public function storeCvFull(Request $request, $instructor_id)
     {
         $request->validate([
             'file' => 'required',
         ]);
 
-        $trainer = Trainer::findOrFail($trainer_id);
+        $instructor = Instructor::findOrFail($instructor_id);
         $file = $request->file('file');
-        return $trainer->uploadToFolder($file, 'cv-full');
+        return $instructor->uploadToFolder($file, 'cv-full');
     }
 
     /**
      *
      * @param \Illuminate\Http\Request $request
-     * @param $trainer_id
+     * @param $instructor_id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function deleteCvFull(Request $request, $trainer_id)
+    public function deleteCvFull(Request $request, $instructor_id)
     {
-        $trainer = Trainer::findOrFail($trainer_id);
-        $trainer->getMedia('cv-full')->each->forceDelete();
-        return response()->redirectToRoute('back.trainers.show', $trainer->id);
+        $instructor = Instructor::findOrFail($instructor_id);
+        $instructor->getMedia('cv-full')->each->forceDelete();
+        return response()->redirectToRoute('back.instructors.show', $instructor->id);
     }
 
     /**
      *
      * @param \Illuminate\Http\Request $request
-     * @param $trainer_id
+     * @param $instructor_id
      * @return
      */
-    public function storeCvSummary(Request $request, $trainer_id)
+    public function storeCvSummary(Request $request, $instructor_id)
     {
         $request->validate([
             'file' => 'required',
         ]);
 
-        $trainer = Trainer::findOrFail($trainer_id);
+        $instructor = Instructor::findOrFail($instructor_id);
         $file = $request->file('file');
-        return $trainer->uploadToFolder($file, 'cv-summary');
+        return $instructor->uploadToFolder($file, 'cv-summary');
     }
 
     /**
      *
      * @param \Illuminate\Http\Request $request
-     * @param $trainer_id
+     * @param $instructor_id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function deleteCvSummary(Request $request, $trainer_id)
+    public function deleteCvSummary(Request $request, $instructor_id)
     {
-        $trainer = Trainer::findOrFail($trainer_id);
-        $trainer->getMedia('cv-summary')->each->forceDelete();
-        return response()->redirectToRoute('back.trainers.show', $trainer->id);
+        $instructor = Instructor::findOrFail($instructor_id);
+        $instructor->getMedia('cv-summary')->each->forceDelete();
+        return response()->redirectToRoute('back.instructors.show', $instructor->id);
     }
 }

@@ -26,7 +26,7 @@ class CreateCompanyContractsTable extends Migration
             $table->boolean('auto_renewal')->default(true);
             $table->integer('trainees_count')->nullable();
             $table->integer('trainee_salary')->nullable();
-            $table->integer('trainer_cost')->nullable();
+            $table->integer('instructor_cost')->nullable();
             $table->integer('company_reimbursement')->nullable();
             $table->string('notes', 999)->nullable();
             $table->uuid('created_by_id')->nullable();

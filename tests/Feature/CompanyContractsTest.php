@@ -41,7 +41,7 @@ class CompanyContractsTest extends TestCase
             'auto_renewal' => true,
             'trainees_count' => rand(),
             'trainee_salary' => rand(),
-            'trainer_cost' => rand(),
+            'instructor_cost' => rand(),
             'company_reimbursement' => rand(),
             'notes' => $this->faker->text,
         ];
@@ -90,7 +90,7 @@ class CompanyContractsTest extends TestCase
             'auto_renewal' => true,
             'trainees_count' => rand(),
             'trainee_salary' => rand(),
-            'trainer_cost' => rand(),
+            'instructor_cost' => rand(),
             'company_reimbursement' => rand(),
             'notes' => $this->faker->text,
             'files' => [

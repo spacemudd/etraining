@@ -3,15 +3,14 @@
 namespace Tests\Feature;
 
 use App\Actions\Fortify\CreateNewUser;
-use App\Models\Back\Trainee;
-use App\Models\Back\Trainer;
+use App\Models\Back\Instructor;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Storage;
 use Tests\TestCase;
 
-class TrainersManagementTest extends TestCase
+class InstructorsManagementTest extends TestCase
 {
     use WithFaker;
 
@@ -27,28 +26,28 @@ class TrainersManagementTest extends TestCase
         ]);
     }
 
-    public function test_user_can_access_trainer_management_page()
+    public function test_user_can_access_instructor_management_page()
     {
-        $trainer = Trainer::factory()->create(['team_id' => $this->user->personalTeam()->id]);
+        $instructor = Instructor::factory()->create(['team_id' => $this->user->personalTeam()->id]);
 
         $this->actingAs($this->user)
-            ->get(route('back.trainers.index'))
+            ->get(route('back.instructors.index'))
             ->assertSuccessful()
-            ->assertPropValue('trainers', function ($trainers) use ($trainer) {
-                $this->assertContains($trainer->name, $trainers['data'][0]);
+            ->assertPropValue('instructors', function ($instructors) use ($instructor) {
+                $this->assertContains($instructor->name, $instructors['data'][0]);
             });
     }
 
-    public function test_user_can_see_new_trainer_form()
+    public function test_user_can_see_new_instructor_form()
     {
         $this->actingAs($this->user)
-            ->get(route('back.trainers.create'))
+            ->get(route('back.instructors.create'))
             ->assertSuccessful();
     }
 
     public function test_user_can_create_a_instructor()
     {
-        $trainer = [
+        $instructor = [
             'name' => 'Shafiq al-Shaar',
             'identity_number' => '10000',
             'phone' => '96670000000',
@@ -58,39 +57,39 @@ class TrainersManagementTest extends TestCase
         ];
 
         $this->actingAs($this->user)
-            ->post(route('back.trainers.store'), $trainer)
+            ->post(route('back.instructors.store'), $instructor)
             ->assertSessionHasNoErrors()
             ->assertRedirect();
 
-        $this->assertDatabaseHas('trainers', $trainer);
+        $this->assertDatabaseHas('instructors', $instructor);
     }
 
     public function test_uploading_and_deleting_cv_full_file()
     {
         Storage::fake('s3');
 
-        $trainer = Trainer::factory()->create([
+        $instructor = Instructor::factory()->create([
             'team_id' => $this->user->personalTeam()->id,
         ]);
 
         $this->actingAs($this->user)
-            ->post(route('back.trainers.attachments.cv-full', ['trainer_id' => $trainer->id]), [
+            ->post(route('back.instructors.attachments.cv-full', ['instructor_id' => $instructor->id]), [
                 'file' => UploadedFile::fake()->create('cv-full-copy.jpg', 1024 * 24),
             ])
             ->assertSessionHasNoErrors()
             ->assertSuccessful();
 
         $this->assertDatabaseHas('media', [
-            'model_id' => $trainer->id,
+            'model_id' => $instructor->id,
             'file_name' => 'cv-full-copy.jpg',
         ]);
 
         $this->actingAs($this->user)
-            ->delete(route('back.trainers.attachments.cv-full.destroy', ['trainer_id' => $trainer->id]))
+            ->delete(route('back.instructors.attachments.cv-full.destroy', ['instructor_id' => $instructor->id]))
             ->assertRedirect();
 
         $this->assertDatabaseMissing('media', [
-            'model_id' => $trainer->id,
+            'model_id' => $instructor->id,
             'file_name' => 'cv-full-copy.jpg',
         ]);
     }
@@ -99,28 +98,28 @@ class TrainersManagementTest extends TestCase
     {
         Storage::fake('s3');
 
-        $trainer = Trainer::factory()->create([
+        $instructor = Instructor::factory()->create([
             'team_id' => $this->user->personalTeam()->id,
         ]);
 
         $this->actingAs($this->user)
-            ->post(route('back.trainers.attachments.cv-summary', ['trainer_id' => $trainer->id]), [
+            ->post(route('back.instructors.attachments.cv-summary', ['instructor_id' => $instructor->id]), [
                 'file' => UploadedFile::fake()->create('cv-summary-copy.jpg', 1024 * 24),
             ])
             ->assertSessionHasNoErrors()
             ->assertSuccessful();
 
         $this->assertDatabaseHas('media', [
-            'model_id' => $trainer->id,
+            'model_id' => $instructor->id,
             'file_name' => 'cv-summary-copy.jpg',
         ]);
 
         $this->actingAs($this->user)
-            ->delete(route('back.trainers.attachments.cv-summary.destroy', ['trainer_id' => $trainer->id]))
+            ->delete(route('back.instructors.attachments.cv-summary.destroy', ['instructor_id' => $instructor->id]))
             ->assertRedirect();
 
         $this->assertDatabaseMissing('media', [
-            'model_id' => $trainer->id,
+            'model_id' => $instructor->id,
             'file_name' => 'cv-summary-copy.jpg',
         ]);
     }
