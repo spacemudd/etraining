@@ -20,6 +20,22 @@
     text-align: right;
 }
 
+.dropzone .dz-preview .dz-progress {
+    display: none;
+}
+.vue-dropzone > .dz-preview .dz-remove {
+    margin: 0 10px;
+}
+
+.vue-dropzone > .dz-preview .dz-details {
+    background-color: rgb(37, 47, 63);
+}
+
+.dropzone.dz-clickable .dz-message, .dropzone.dz-clickable .dz-message * {
+    font-family: Nunito, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    line-height: 1.5;
+}
+
 .btn-gray {
     @apply px-6 py-3 rounded bg-gray-600 text-white text-sm font-bold whitespace-no-wrap;
 

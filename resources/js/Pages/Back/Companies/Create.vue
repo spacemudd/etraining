@@ -32,7 +32,7 @@
                             ]">
                             <div class="col-span-2 sm:col-span-2">
                                 <jet-label for="name" :value="$t('words.'+fieldName)" />
-                                <jet-input id="name" type="text" class="mt-1 block w-full" v-model="form[fieldName]" autocomplete="name" :autofocus="fieldName==='name_ar'" />
+                                <jet-input id="name" type="text" class="mt-1 block w-full" v-model="form[fieldName]" autocomplete="off" :autofocus="fieldName==='name_ar'" />
                                 <jet-input-error :message="form.error(fieldName)" class="mt-2" />
                             </div>
                         </template>
@@ -40,7 +40,7 @@
 
                     <template #actions>
                         <jet-action-message :on="form.recentlySuccessful" class="mr-3">
-                            Saved.
+                            {{ $t('words.saved-successfully') }}
                         </jet-action-message>
 
                         <inertia-link href="/back/companies" class="flex items-center justify-start rtl:ml-4 ltr:mr-4 rounded-md px-4 py-2 bg-white hover:bg-gray-300 text-right">

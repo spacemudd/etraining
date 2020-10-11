@@ -19,3 +19,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware('auth:sanctum')->get('/companies/{company_id}/contracts', [\App\Models\Back\CompanyContract::class, 'index']);
+
+Route::get('/location-lookup', [\App\Http\Controllers\LocationLookupController::class, 'search']);

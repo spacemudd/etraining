@@ -34,14 +34,14 @@ class CreateFinancialDepartmentTest extends TestCase
     public function test_user_can_see_clients_page()
     {
         $this->actingAs($this->user)
-            ->get(route('back.finance.accounts'))
+            ->get(route('back.finance.accounts.index'))
             ->assertSuccessful();
     }
 
     public function test_user_can_see_invoices_page()
     {
         $this->actingAs($this->user)
-            ->get(route('back.finance.invoices'))
+            ->get(route('back.finance.invoices.index'))
             ->assertSuccessful();
     }
 

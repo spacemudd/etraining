@@ -217,7 +217,24 @@ export default {
             "invoices": "الفواتير",
             "view-monthly-subscription-settings": "إعدادات تكاليف الإشتراك الشهري",
             "monthly-subscription": "تكلفة الشهرية",
-            "trainee_monthly_subscription": "تكلفة اشتراك الشهري للمتدرب"
+            "trainee_monthly_subscription": "تكلفة اشتراك الشهري للمتدرب",
+            "phone": "الجوال",
+            "open-new-trainee-file": "إنشاء ملف متدرب جديد",
+            "open-new-trainee-file-description": "هنا يمكن لك إنشاء ملف متدرب جديد ورفع كل المستندات المطلوبة",
+            "identity_number": "رقم الهوية",
+            "birthday": "تاريخ الميلاد",
+            "phone_additional": "الجوال (إضافي)",
+            "educational_level": "مؤهل التعليمي",
+            "city": "المدينة",
+            "district": "الحي",
+            "marital_status": "الحالة الزوجية",
+            "children_count": "عدد الأطفال",
+            "documents": "ملفات",
+            "documents-help": "هنا يمكنك عرض كل الملفات المطلوبة",
+            "identity-card-photocopy": "الهوية (صورة)",
+            "qualification-photocopy": "المؤهل (صورة)",
+            "bank-account-photocopy": "حساب البنكي (صورة)",
+            "download": "تنزيل"
         }
     },
     "en": {
@@ -437,7 +454,24 @@ export default {
             "date": "Date",
             "invoices": "Invoices",
             "view-monthly-subscription-settings": "View monthly subscription settings",
-            "trainee_monthly_subscription": "Trainee monthly subscription"
+            "trainee_monthly_subscription": "Trainee monthly subscription",
+            "phone": "Phone",
+            "open-new-trainee-file": "Open new trainee file",
+            "open-new-trainee-file-description": "Here you can open a new trainee file and upload all required documents.",
+            "identity_number": "ID number",
+            "birthday": "Date of birth",
+            "phone_additional": "Phone (additional)",
+            "educational_level": "Educational level",
+            "city": "City",
+            "district": "District",
+            "marital_status": "Marital status",
+            "children_count": "Children count",
+            "documents": "Documents",
+            "documents-help": "Here you can view all documents required.",
+            "identity-card-photocopy": "ID card photocopy",
+            "qualification-photocopy": "Qualification photocopy",
+            "bank-account-photocopy": "Bank account photocopy",
+            "download": "Download"
         }
     }
 }

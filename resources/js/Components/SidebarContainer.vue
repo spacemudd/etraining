@@ -25,7 +25,7 @@
             </template>
         </sidebar-link>
 
-        <sidebar-link link-value="/">
+        <sidebar-link link-value="/back/trainees" :active="$page.currentRouteName == 'back.trainees.index'">
             <template #icon>
                 <img src="/img/student.svg" alt="" class="w-5 h-5">
             </template>

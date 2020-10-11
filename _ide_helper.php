@@ -15973,6 +15973,175 @@
      
 }
 
+    namespace SKAgarwal\GoogleApi { 
+            /**
+     * 
+     *
+     */ 
+        class Facade {
+                    /**
+         * Find Place Request to google places api.
+         *
+         * @param string $input (for example, a name, address, or phone number)
+         * @param string $inputType (textquery or phonenumber)
+         * @param array $params
+         * @return \Illuminate\Support\Collection 
+         * @throws \SKAgarwal\GoogleApi\Exceptions\GooglePlacesApiException
+         * @static 
+         */ 
+        public static function findPlace($input, $inputType, $params = [])
+        {
+                        /** @var \SKAgarwal\GoogleApi\PlacesApi $instance */
+                        return $instance->findPlace($input, $inputType, $params);
+        }
+                    /**
+         * Place Nearby Search Request to google api.
+         *
+         * @param $location
+         * @param null $radius
+         * @param array $params
+         * @return \Illuminate\Support\Collection 
+         * @throws \SKAgarwal\GoogleApi\Exceptions\GooglePlacesApiException
+         * @static 
+         */ 
+        public static function nearbySearch($location, $radius = null, $params = [])
+        {
+                        /** @var \SKAgarwal\GoogleApi\PlacesApi $instance */
+                        return $instance->nearbySearch($location, $radius, $params);
+        }
+                    /**
+         * Place Text Search Request to google places api.
+         *
+         * @param $query
+         * @param array $params
+         * @return \Illuminate\Support\Collection 
+         * @throws \SKAgarwal\GoogleApi\Exceptions\GooglePlacesApiException
+         * @static 
+         */ 
+        public static function textSearch($query, $params = [])
+        {
+                        /** @var \SKAgarwal\GoogleApi\PlacesApi $instance */
+                        return $instance->textSearch($query, $params);
+        }
+                    /**
+         * Place Details Request to google places api.
+         *
+         * @param $placeId
+         * @param array $params
+         * @return \Illuminate\Support\Collection 
+         * @throws \SKAgarwal\GoogleApi\Exceptions\GooglePlacesApiException
+         * @static 
+         */ 
+        public static function placeDetails($placeId, $params = [])
+        {
+                        /** @var \SKAgarwal\GoogleApi\PlacesApi $instance */
+                        return $instance->placeDetails($placeId, $params);
+        }
+                    /**
+         * 
+         *
+         * @param $photoReference
+         * @param array $params
+         * @return mixed|string 
+         * @throws \SKAgarwal\GoogleApi\Exceptions\GooglePlacesApiException
+         * @static 
+         */ 
+        public static function photo($photoReference, $params = [])
+        {
+                        /** @var \SKAgarwal\GoogleApi\PlacesApi $instance */
+                        return $instance->photo($photoReference, $params);
+        }
+                    /**
+         * Place AutoComplete Request to google places api.
+         *
+         * @param $input
+         * @param array $params
+         * @return \Illuminate\Support\Collection 
+         * @throws \SKAgarwal\GoogleApi\Exceptions\GooglePlacesApiException
+         * @static 
+         */ 
+        public static function placeAutocomplete($input, $params = [])
+        {
+                        /** @var \SKAgarwal\GoogleApi\PlacesApi $instance */
+                        return $instance->placeAutocomplete($input, $params);
+        }
+                    /**
+         * Query AutoComplete Request to the google api.
+         *
+         * @param $input
+         * @param array $params
+         * @return \Illuminate\Support\Collection 
+         * @throws \SKAgarwal\GoogleApi\Exceptions\GooglePlacesApiException
+         * @static 
+         */ 
+        public static function queryAutocomplete($input, $params = [])
+        {
+                        /** @var \SKAgarwal\GoogleApi\PlacesApi $instance */
+                        return $instance->queryAutocomplete($input, $params);
+        }
+                    /**
+         * 
+         *
+         * @return mixed 
+         * @static 
+         */ 
+        public static function getStatus()
+        {
+                        /** @var \SKAgarwal\GoogleApi\PlacesApi $instance */
+                        return $instance->getStatus();
+        }
+                    /**
+         * 
+         *
+         * @return null 
+         * @static 
+         */ 
+        public static function getKey()
+        {
+                        /** @var \SKAgarwal\GoogleApi\PlacesApi $instance */
+                        return $instance->getKey();
+        }
+                    /**
+         * 
+         *
+         * @param null $key
+         * @return \SKAgarwal\GoogleApi\PlacesApi 
+         * @static 
+         */ 
+        public static function setKey($key)
+        {
+                        /** @var \SKAgarwal\GoogleApi\PlacesApi $instance */
+                        return $instance->setKey($key);
+        }
+                    /**
+         * 
+         *
+         * @param bool $verifySSL
+         * @return \SKAgarwal\GoogleApi\PlacesApi 
+         * @static 
+         */ 
+        public static function verifySSL($verifySSL = true)
+        {
+                        /** @var \SKAgarwal\GoogleApi\PlacesApi $instance */
+                        return $instance->verifySSL($verifySSL);
+        }
+                    /**
+         * 
+         *
+         * @param array $headers
+         * @return \SKAgarwal\GoogleApi\PlacesApi 
+         * @static 
+         */ 
+        public static function withHeaders($headers)
+        {
+                        /** @var \SKAgarwal\GoogleApi\PlacesApi $instance */
+                        return $instance->withHeaders($headers);
+        }
+         
+    }
+     
+}
+
     namespace Illuminate\Http { 
             /**
      * 
@@ -19150,6 +19319,7 @@ namespace  {
             class Image extends \Intervention\Image\Facades\Image {}
             class Agent extends \Jenssegers\Agent\Facades\Agent {}
             class Excel extends \Maatwebsite\Excel\Facades\Excel {}
+            class GooglePlaces extends \SKAgarwal\GoogleApi\Facade {}
      
 }
 
