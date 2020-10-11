@@ -16,7 +16,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
         'companies_count' => \App\Models\Back\Company::count(),
         'trainees_count' => \App\Models\Back\Trainee::count(),
         'instructor_count' => \App\Models\Back\Instructor::count(),
-        'courses_count' => 0,
+        'courses_count' => \App\Models\Back\Course::count(),
     ]);
 })->name('dashboard');
 
@@ -54,5 +54,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('instructors/{instructor_id}/attachments/cv-summary', [\App\Http\Controllers\Back\InstructorsController::class, 'storeCvSummary'])->name('instructors.attachments.cv-summary');
         Route::delete('instructors/{instructor_id}/attachments/cv-summary', [\App\Http\Controllers\Back\InstructorsController::class, 'deleteCvSummary'])->name('instructors.attachments.cv-summary.destroy');
         Route::resource('instructors', \App\Http\Controllers\Back\InstructorsController::class);
+
+        Route::resource('courses', \App\Http\Controllers\Back\CoursesController::class);
     });
 });

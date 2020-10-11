@@ -239,7 +239,9 @@ export default {
             "open-new-instructor-file-description": "هنا يمكن لك إنشاء ملف مدرب جديد ورفع كل المستندات المطلوبة",
             "twitter_link": "رابط تويتر",
             "cv-full": "السيرة الذاتية",
-            "cv-summary": "السيرة الذاتية (المختصرة)"
+            "cv-summary": "السيرة الذاتية (المختصرة)",
+            "recommended-trainees-count": "عدد المتدربين المقترح",
+            "instructor": "المدرب"
         }
     },
     "en": {
@@ -481,7 +483,9 @@ export default {
             "open-new-instructor-file-description": "Here you can open a new instructor file and upload all required documents.",
             "twitter_link": "Twitter link",
             "cv-full": "CV full",
-            "cv-summary": "CV summary"
+            "cv-summary": "CV summary",
+            "recommended-trainees-count": "Recommended trainees count",
+            "instructor": "Instructor"
         }
     }
 }

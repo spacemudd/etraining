@@ -111,4 +111,6 @@ return [
     'twitter_link' => 'Twitter link',
     'cv-full' => 'CV full',
     'cv-summary' => 'CV summary',
+    'recommended-trainees-count' => 'Recommended trainees count',
+    'instructor' => 'Instructor',
 ];

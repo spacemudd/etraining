@@ -112,4 +112,6 @@ return [
     'twitter_link' => 'رابط تويتر',
     'cv-full' => 'السيرة الذاتية',
     'cv-summary' => 'السيرة الذاتية (المختصرة)',
+    'recommended-trainees-count' => 'عدد المتدربين المقترح',
+    'instructor' => 'المدرب',
 ];

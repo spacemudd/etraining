@@ -34,7 +34,7 @@
             </template>
         </sidebar-link>
 
-        <sidebar-link link-value="/">
+        <sidebar-link :link-value="route('back.courses.index')">
             <template #icon>
                 <img src="/img/book.svg" alt="" class="w-5 h-5">
             </template>

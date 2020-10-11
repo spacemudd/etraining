@@ -16,7 +16,7 @@ class CreateInstructorsTable extends Migration
         Schema::create('instructors', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('team_id');
-            $table->foreign('team_id')->references('id')->on('teams');
+            $table->foreign('team_id')->references('id')->on('teams')->cascadeOnDelete();
             $table->string('reference_number')->nullable();
             $table->string('name');
             $table->string('identity_number')->nullable();
@@ -24,9 +24,11 @@ class CreateInstructorsTable extends Migration
             $table->string('email')->unique();
             $table->string('twitter_link')->nullable()->unique();
             $table->uuid('city_id')->nullable();
-            $table->foreign('city_id')->references('id')->on('cities')->onDelete('SET NULL');
+            $table->foreign('city_id')->references('id')->on('cities')->nullOnDelete();
             $table->uuid('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
+            $table->uuid('company_contract_id')->nullable();
+            $table->foreign('company_contract_id')->references('id')->on('company_contracts')->nullOnDelete();
             $table->softDeletes();
             $table->timestamps();
         });
