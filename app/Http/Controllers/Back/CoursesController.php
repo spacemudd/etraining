@@ -39,7 +39,20 @@ class CoursesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'instructor_id' => 'nullable|exists:instructors,id',
+            'company_id' => 'nullable|exists:companies,id',
+            'description' => 'nullable|string|max:255',
+            'classroom_count' => 'nullable|numeric',
+            'approval_code' => 'nullable|string|max:255',
+            'days_duration' => 'nullable|numeric',
+            'hours_duration' => 'nullable|numeric',
+        ]);
+
+        $course = Course::create($request->except('_token'));
+
+        return redirect()->route('back.courses.show', $course->id);
     }
 
     /**

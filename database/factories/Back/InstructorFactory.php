@@ -34,7 +34,6 @@ class InstructorFactory extends Factory
     public function definition()
     {
         return [
-            'team_id' => null,
             'reference_number' => $this->faker->randomNumber(),
             'name' => $name = $this->faker('ar_SA')->name,
             'identity_number' => $this->faker('ar_SA')->nationalIdNumber,

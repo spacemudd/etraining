@@ -23,6 +23,9 @@ class CreateCoursesTable extends Migration
             $table->unsignedInteger('classroom_count')->nullable();
             $table->text('description')->nullable();
             $table->boolean('sharable')->default(false);
+            $table->string('approval_code')->nullable()->comment('Approved by a regularity');
+            $table->tinyInteger('days_duration')->nullable();
+            $table->tinyInteger('hours_duration')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

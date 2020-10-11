@@ -46,7 +46,6 @@ class CreateCoursesManagementTest extends TestCase
             'instructor_id' => $instructor->id,
             'name' => 'PMP Course',
             'classroom_count' => 25,
-            'description' => $this->faker->text,
         ]);
 
         $this->actingAs($this->user)
@@ -54,5 +53,34 @@ class CreateCoursesManagementTest extends TestCase
             ->assertPropValue('courses', function ($courses) use ($pmpCourse) {
                 $this->assertContains($pmpCourse->name, $courses['data'][0]);
             });
+    }
+
+    public function test_admin_can_save_new_course()
+    {
+        $company = Company::factory()->create(['team_id' => $this->user->personalTeam()->id]);
+
+        $contract = CompanyContract::factory()->create([
+            'company_id' => $company,
+            'team_id' => $this->user->personalTeam()->id,
+        ]);
+
+        $instructor = Instructor::factory()->create([
+            'team_id' => $this->user->personalTeam()->id,
+            'company_contract_id' => $contract->id,
+        ]);
+
+        $pmpCourse = Course::factory()->make([
+            'team_id' => $this->user->personalTeam()->id,
+            'instructor_id' => $instructor->id,
+            'name' => 'PMP Course',
+            'classroom_count' => 25,
+        ])->toArray();
+
+        $this->actingAs($this->user)
+            ->post(route('back.courses.store'), $pmpCourse)
+            ->assertSessionHasNoErrors()
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('courses', $pmpCourse);
     }
 }

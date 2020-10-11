@@ -21,8 +21,13 @@ class Course extends Model
 
     protected $fillable = [
         'name',
-        'classroom_count',
+        'instructor_id',
+        'company_id',
         'description',
+        'classroom_count',
+        'approval_code',
+        'days_duration',
+        'hours_duration',
     ];
 
     protected static function boot(): void
@@ -31,6 +36,9 @@ class Course extends Model
         static::addGlobalScope(new TeamScope());
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string) Str::uuid();
+            if (auth()->user()) {
+                $model->team_id = auth()->user()->personalTeam()->id;
+            }
         });
     }
 
