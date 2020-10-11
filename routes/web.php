@@ -49,6 +49,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::delete('trainees/{trainee_id}/attachments/bank-account', [\App\Http\Controllers\Back\TraineesController::class, 'deleteBankAccount'])->name('trainees.attachments.bank-account.destroy');
         Route::resource('trainees', \App\Http\Controllers\Back\TraineesController::class);
 
+        Route::post('trainers/{trainer_id}/attachments/cv-full', [\App\Http\Controllers\Back\TrainersController::class, 'storeCvFull'])->name('trainers.attachments.cv-full');
+        Route::delete('trainers/{trainer_id}/attachments/cv-full', [\App\Http\Controllers\Back\TrainersController::class, 'deleteCvFull'])->name('trainers.attachments.cv-full.destroy');
+        Route::post('trainers/{trainer_id}/attachments/cv-summary', [\App\Http\Controllers\Back\TrainersController::class, 'storeCvSummary'])->name('trainers.attachments.cv-summary');
+        Route::delete('trainers/{trainer_id}/attachments/cv-summary', [\App\Http\Controllers\Back\TrainersController::class, 'deleteCvSummary'])->name('trainers.attachments.cv-summary.destroy');
         Route::resource('trainers', \App\Http\Controllers\Back\TrainersController::class);
     });
 });

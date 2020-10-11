@@ -219,8 +219,8 @@ export default {
             "monthly-subscription": "تكلفة الشهرية",
             "trainee_monthly_subscription": "تكلفة اشتراك الشهري للمتدرب",
             "phone": "الجوال",
-            "open-new-trainee-file": "إنشاء ملف متدرب جديد",
-            "open-new-trainee-file-description": "هنا يمكن لك إنشاء ملف متدرب جديد ورفع كل المستندات المطلوبة",
+            "open-new-trainee-file": "إنشاء ملف مدرب جديد",
+            "open-new-trainee-file-description": "هنا يمكن لك إنشاء ملف مدرب جديد ورفع كل المستندات المطلوبة",
             "identity_number": "رقم الهوية",
             "birthday": "تاريخ الميلاد",
             "phone_additional": "الجوال (إضافي)",
@@ -234,7 +234,10 @@ export default {
             "identity-card-photocopy": "الهوية (صورة)",
             "qualification-photocopy": "المؤهل (صورة)",
             "bank-account-photocopy": "حساب البنكي (صورة)",
-            "download": "تنزيل"
+            "download": "تنزيل",
+            "twitter_link": "رابط تويتر",
+            "cv-full": "السيرة الذاتية",
+            "cv-summary": "السيرة الذاتية (المختصرة)"
         }
     },
     "en": {
@@ -471,7 +474,12 @@ export default {
             "identity-card-photocopy": "ID card photocopy",
             "qualification-photocopy": "Qualification photocopy",
             "bank-account-photocopy": "Bank account photocopy",
-            "download": "Download"
+            "download": "Download",
+            "open-new-trainer-file": "Open a new trainer file",
+            "open-new-trainer-file-description": "Here you can open a new trainer file and upload all required documents.",
+            "twitter_link": "Twitter link",
+            "cv-full": "CV full",
+            "cv-summary": "CV summary"
         }
     }
 }

@@ -23,7 +23,7 @@ class TraineesController extends Controller
     public function create()
     {
         return Inertia::render('Back/Trainees/Create', [
-            'cities' => City::get(),
+            'cities' => City::orderBy('name_ar')->get(),
             'marital_statuses' => MaritalStatus::orderBy('order')->get(),
             'educational_levels' => EducationalLevel::orderBy('order')->get(),
         ]);

@@ -106,4 +106,9 @@ return [
     'qualification-photocopy' => 'Qualification photocopy',
     'bank-account-photocopy' => 'Bank account photocopy',
     'download' => 'Download',
+    'open-new-trainer-file' => 'Open a new trainer file',
+    'open-new-trainer-file-description' => 'Here you can open a new trainer file and upload all required documents.',
+    'twitter_link' => 'Twitter link',
+    'cv-full' => 'CV full',
+    'cv-summary' => 'CV summary',
 ];

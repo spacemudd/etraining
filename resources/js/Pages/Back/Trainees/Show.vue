@@ -119,22 +119,6 @@
                                   :options="dropzoneOptionsBankAccount"
                     ></vue-dropzone>
                 </div>
-
-                <!--<div class="md:col-span-3 lg:col-span-1 sm:col-span-3">-->
-                <!--    <jet-label :value="$t('words.qualification-photocopy')" class="mb-2" />-->
-                <!--    <vue-dropzone id="dropzone-qauflication"-->
-                <!--                  @vdropzone-file-added="fileAdded(file, 'qualification')"-->
-                <!--                  :options="dropzoneOptionsQualification"-->
-                <!--    ></vue-dropzone>-->
-                <!--</div>-->
-
-                <!--<div class="md:col-span-3 lg:col-span-1 sm:col-span-3">-->
-                <!--    <jet-label :value="$t('words.bank-account-photocopy')" class="mb-2" />-->
-                <!--    <vue-dropzone id="dropzone-bank-account"-->
-                <!--                  @vdropzone-file-added="fileAdded(file, 'bank-account')"-->
-                <!--                  :options="dropzoneOptionsBankAccount"-->
-                <!--    ></vue-dropzone>-->
-                <!--</div>-->
             </div>
         </div>
     </app-layout>

@@ -25,11 +25,11 @@ class CreateTraineesTable extends Migration
             $table->string('phone_additional')->nullable();
             $table->date('birthday')->nullable();
             $table->uuid('educational_level_id')->nullable();
-            $table->foreign('educational_level_id')->references('id')->on('educational_levels');
+            $table->foreign('educational_level_id')->references('id')->on('educational_levels')->onDelete('SET NULL');
             $table->uuid('city_id')->nullable();
-            $table->foreign('city_id')->references('id')->on('cities');
+            $table->foreign('city_id')->references('id')->on('cities')->onDelete('SET NULL');
             $table->uuid('marital_status_id')->nullable();
-            $table->foreign('marital_status_id')->references('id')->on('marital_statuses');
+            $table->foreign('marital_status_id')->references('id')->on('marital_statuses')->onDelete('SET NULL');
             $table->tinyInteger('children_count')->nullable();
             $table->softDeletes();
             $table->timestamps();

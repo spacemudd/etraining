@@ -107,4 +107,9 @@ return [
     'qualification-photocopy' => 'المؤهل (صورة)',
     'bank-account-photocopy' => 'حساب البنكي (صورة)',
     'download' => 'تنزيل',
+    'open-new-trainee-file' => 'إنشاء ملف مدرب جديد',
+    'open-new-trainee-file-description' => 'هنا يمكن لك إنشاء ملف مدرب جديد ورفع كل المستندات المطلوبة',
+    'twitter_link' => 'رابط تويتر',
+    'cv-full' => 'السيرة الذاتية',
+    'cv-summary' => 'السيرة الذاتية (المختصرة)',
 ];

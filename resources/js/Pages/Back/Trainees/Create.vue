@@ -16,7 +16,7 @@
                     </template>
 
                     <template #description>
-                        {{ $t('words.open-new-company-file-description') }}
+                        {{ $t('words.open-new-trainee-file-description') }}
                     </template>
 
                     <template #form>

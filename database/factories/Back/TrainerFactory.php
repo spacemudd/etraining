@@ -36,14 +36,12 @@ class TrainerFactory extends Factory
         return [
             'team_id' => null,
             'reference_number' => $this->faker->randomNumber(),
-            'name' => $this->faker('ar_SA')->name,
+            'name' => $name = $this->faker('ar_SA')->name,
             'identity_number' => $this->faker('ar_SA')->nationalIdNumber,
             'phone' => $this->faker->phoneNumber,
             'email' => $this->faker->email,
+            'twitter_link' => 'https://twitter.com/'.str_slug($name),
             'city_id' => null,
-            'address' => $this->faker('ar_SA')->streetAddress,
-            'marital_status_id' => null,
-            'educational_level_id' => null,
             'user_id' => null,
         ];
     }

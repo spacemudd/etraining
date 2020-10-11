@@ -22,13 +22,9 @@ class CreateTrainersTable extends Migration
             $table->string('identity_number')->nullable();
             $table->string('phone');
             $table->string('email')->unique();
+            $table->string('twitter_link')->nullable()->unique();
             $table->uuid('city_id')->nullable();
-            $table->foreign('city_id')->references('id')->on('cities');
-            $table->string('address')->nullable();
-            $table->uuid('marital_status_id')->nullable();
-            $table->foreign('marital_status_id')->references('id')->on('marital_statuses');
-            $table->uuid('educational_level_id')->nullable();
-            $table->foreign('educational_level_id')->references('id')->on('educational_levels');
+            $table->foreign('city_id')->references('id')->on('cities')->onDelete('SET NULL');
             $table->uuid('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
             $table->softDeletes();

@@ -7,7 +7,7 @@
             </template>
         </sidebar-link>
 
-        <sidebar-link link-value="/back/companies" :active="$page.currentRouteName == 'back.companies.index'">
+        <sidebar-link :link-value="route('back.companies.index')" :active="$page.currentRouteName == 'back.companies.index'">
             <template #icon>
                 <ion-icon name="business-outline" class="w-5 h-5"></ion-icon>
             </template>
@@ -16,7 +16,7 @@
             </template>
         </sidebar-link>
 
-        <sidebar-link link-value="/">
+        <sidebar-link :link-value="route('back.trainers.index')">
             <template #icon>
                 <img src="/img/teacher.svg" alt="" class="w-5 h-5">
             </template>
@@ -25,7 +25,7 @@
             </template>
         </sidebar-link>
 
-        <sidebar-link link-value="/back/trainees" :active="$page.currentRouteName == 'back.trainees.index'">
+        <sidebar-link :link-value="route('back.trainees.index')" :active="$page.currentRouteName == 'back.trainees.index'">
             <template #icon>
                 <img src="/img/student.svg" alt="" class="w-5 h-5">
             </template>
@@ -43,7 +43,7 @@
             </template>
         </sidebar-link>
 
-        <sidebar-link link-value="/back/finance" :active="$page.currentRouteName == 'back.finance'">
+        <sidebar-link :link-value="route('back.finance')" :active="$page.currentRouteName == 'back.finance'">
             <template #icon>
                 <img src="/img/bank.svg" alt="" class="w-5 h-5">
             </template>
