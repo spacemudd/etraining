@@ -15973,6 +15973,257 @@
      
 }
 
+    namespace MacsiDigital\Zoom\Facades { 
+            /**
+     * 
+     *
+     */ 
+        class Zoom {
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function newRequest()
+        {
+                        /** @var \MacsiDigital\Zoom\Support\Entry $instance */
+                        return $instance->newRequest();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function jwtRequest()
+        {
+                        /** @var \MacsiDigital\Zoom\Support\Entry $instance */
+                        return $instance->jwtRequest();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function oauth2Request()
+        {
+                        /** @var \MacsiDigital\Zoom\Support\Entry $instance */
+                        return $instance->oauth2Request();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getBuilderClass()
+        {            //Method inherited from \MacsiDigital\API\Support\Entry         
+                        /** @var \MacsiDigital\Zoom\Support\Entry $instance */
+                        return $instance->getBuilderClass();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getNode($key)
+        {            //Method inherited from \MacsiDigital\API\Support\Entry         
+                        /** @var \MacsiDigital\Zoom\Support\Entry $instance */
+                        return $instance->getNode($key);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getRequest()
+        {            //Method inherited from \MacsiDigital\API\Support\Entry         
+                        /** @var \MacsiDigital\Zoom\Support\Entry $instance */
+                        return $instance->getRequest();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function hasRequest()
+        {            //Method inherited from \MacsiDigital\API\Support\Entry         
+                        /** @var \MacsiDigital\Zoom\Support\Entry $instance */
+                        return $instance->hasRequest();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setRequest($request)
+        {            //Method inherited from \MacsiDigital\API\Support\Entry         
+                        /** @var \MacsiDigital\Zoom\Support\Entry $instance */
+                        return $instance->setRequest($request);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getPerPageField()
+        {            //Method inherited from \MacsiDigital\API\Support\Entry         
+                        /** @var \MacsiDigital\Zoom\Support\Entry $instance */
+                        return $instance->getPerPageField();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getPageField()
+        {            //Method inherited from \MacsiDigital\API\Support\Entry         
+                        /** @var \MacsiDigital\Zoom\Support\Entry $instance */
+                        return $instance->getPageField();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getAllowedOperands()
+        {            //Method inherited from \MacsiDigital\API\Support\Entry         
+                        /** @var \MacsiDigital\Zoom\Support\Entry $instance */
+                        return $instance->getAllowedOperands();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getDefaultOperand()
+        {            //Method inherited from \MacsiDigital\API\Support\Entry         
+                        /** @var \MacsiDigital\Zoom\Support\Entry $instance */
+                        return $instance->getDefaultOperand();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getDefaultPaginationRecords()
+        {            //Method inherited from \MacsiDigital\API\Support\Entry         
+                        /** @var \MacsiDigital\Zoom\Support\Entry $instance */
+                        return $instance->getDefaultPaginationRecords();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getMaxPaginationRecords()
+        {            //Method inherited from \MacsiDigital\API\Support\Entry         
+                        /** @var \MacsiDigital\Zoom\Support\Entry $instance */
+                        return $instance->getMaxPaginationRecords();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getMinPaginationRecords()
+        {            //Method inherited from \MacsiDigital\API\Support\Entry         
+                        /** @var \MacsiDigital\Zoom\Support\Entry $instance */
+                        return $instance->getMinPaginationRecords();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getPagination()
+        {            //Method inherited from \MacsiDigital\API\Support\Entry         
+                        /** @var \MacsiDigital\Zoom\Support\Entry $instance */
+                        return $instance->getPagination();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getRaw()
+        {            //Method inherited from \MacsiDigital\API\Support\Entry         
+                        /** @var \MacsiDigital\Zoom\Support\Entry $instance */
+                        return $instance->getRaw();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getThrowExceptionsIfRaw()
+        {            //Method inherited from \MacsiDigital\API\Support\Entry         
+                        /** @var \MacsiDigital\Zoom\Support\Entry $instance */
+                        return $instance->getThrowExceptionsIfRaw();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function hasMaxQueryLimit()
+        {            //Method inherited from \MacsiDigital\API\Support\Entry         
+                        /** @var \MacsiDigital\Zoom\Support\Entry $instance */
+                        return $instance->hasMaxQueryLimit();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getMaxQueries()
+        {            //Method inherited from \MacsiDigital\API\Support\Entry         
+                        /** @var \MacsiDigital\Zoom\Support\Entry $instance */
+                        return $instance->getMaxQueries();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getResultsPageField()
+        {            //Method inherited from \MacsiDigital\API\Support\Entry         
+                        /** @var \MacsiDigital\Zoom\Support\Entry $instance */
+                        return $instance->getResultsPageField();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getResultsTotalPagesField()
+        {            //Method inherited from \MacsiDigital\API\Support\Entry         
+                        /** @var \MacsiDigital\Zoom\Support\Entry $instance */
+                        return $instance->getResultsTotalPagesField();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getResultsPageSizeField()
+        {            //Method inherited from \MacsiDigital\API\Support\Entry         
+                        /** @var \MacsiDigital\Zoom\Support\Entry $instance */
+                        return $instance->getResultsPageSizeField();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getResultsTotalRecordsField()
+        {            //Method inherited from \MacsiDigital\API\Support\Entry         
+                        /** @var \MacsiDigital\Zoom\Support\Entry $instance */
+                        return $instance->getResultsTotalRecordsField();
+        }
+         
+    }
+     
+}
+
     namespace SKAgarwal\GoogleApi { 
             /**
      * 
@@ -19319,6 +19570,7 @@ namespace  {
             class Image extends \Intervention\Image\Facades\Image {}
             class Agent extends \Jenssegers\Agent\Facades\Agent {}
             class Excel extends \Maatwebsite\Excel\Facades\Excel {}
+            class Zoom extends \MacsiDigital\Zoom\Facades\Zoom {}
             class GooglePlaces extends \SKAgarwal\GoogleApi\Facade {}
      
 }

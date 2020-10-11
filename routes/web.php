@@ -48,5 +48,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('trainees/{trainee_id}/attachments/bank-account', [\App\Http\Controllers\Back\TraineesController::class, 'storeBankAccount'])->name('trainees.attachments.bank-account');
         Route::delete('trainees/{trainee_id}/attachments/bank-account', [\App\Http\Controllers\Back\TraineesController::class, 'deleteBankAccount'])->name('trainees.attachments.bank-account.destroy');
         Route::resource('trainees', \App\Http\Controllers\Back\TraineesController::class);
+
+        Route::resource('trainers', \App\Http\Controllers\Back\TrainersController::class);
     });
 });
