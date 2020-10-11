@@ -25,7 +25,7 @@
                 <inertia-link href="/" class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 text-center hover:bg-red-500 hover:text-white hover:font-semibold">
                     {{ $t('words.add-new-trainer') }}
                 </inertia-link>
-                <inertia-link href="/" class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 text-center hover:bg-red-500 hover:text-white hover:font-semibold">
+                <inertia-link :href="route('back.trainees.create')" class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 text-center hover:bg-red-500 hover:text-white hover:font-semibold">
                     {{ $t('words.add-new-trainee') }}
                 </inertia-link>
                 <inertia-link href="/" class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 text-center hover:bg-red-500 hover:text-white hover:font-semibold">

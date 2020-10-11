@@ -43,7 +43,7 @@ class TraineesController extends Controller
             'educational_level_id' => 'nullable|exists:educational_levels,id',
             'city_id' => 'nullable|exists:cities,id',
             'marital_status_id' => 'nullable|exists:marital_statuses,id',
-            'children_count' => 'nullable|integer',
+            'children_count' => 'nullable|integer|max:20',
         ]);
 
         $trainee = Trainee::create($request->except('_token'));
