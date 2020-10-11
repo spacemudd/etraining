@@ -35,6 +35,16 @@ Vue.use(Skeleton)
 Vue.use(VueInternationalization);
 Vue.mixin({ methods: { route: window.route } })
 
+Vue.directive('can', function (el, binding) {
+    let permissions = document.head.querySelector('meta[name="user-permissions"]');
+
+    if(permissions.content.indexOf(binding.value) == -1){
+        el.style.display = 'none';
+    }
+
+    return permissions.content.indexOf(binding.value) !== -1;
+});
+
 const app = document.getElementById('app');
 
 const lang = document.documentElement.lang.substr(0, 2);

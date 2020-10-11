@@ -19,7 +19,7 @@ class FinancialMonthlySubscriptionController extends Controller
     {
         $this->authorize('view-financial-department');
 
-        $financial = FinancialSetting::firstOrFail();
+        $financial = FinancialSetting::first();
 
         return Inertia::render('Back/Finance/MonthlySubscription/Edit', [
             'trainee_monthly_subscription' => $financial->trainee_monthly_subscription,

@@ -25,7 +25,7 @@
                 <inertia-link :href="route('back.finance.invoices.index')" class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
                     {{ $t('words.view-invoices') }}
                 </inertia-link>
-                <inertia-link :href="route('back.finance.monthly-subscription.edit')" class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
+                <inertia-link v-can="'view-financial-department'" :href="route('back.finance.monthly-subscription.edit')" class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
                     {{ $t('words.view-monthly-subscription-settings') }}
                 </inertia-link>
             </div>
