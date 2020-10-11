@@ -12,7 +12,12 @@ Route::get('language/{language}', function ($language) {
 })->name('language');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia\Inertia::render('Dashboard');
+    return Inertia\Inertia::render('Dashboard', [
+        'companies_count' => \App\Models\Back\Company::count(),
+        'trainees_count' => \App\Models\Back\Trainee::count(),
+        'trainers_count' => 0,
+        'courses_count' => 0,
+    ]);
 })->name('dashboard');
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function() {
