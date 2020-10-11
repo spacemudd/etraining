@@ -2,10 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/play', function() {
-   return \Zoom::user();
-});
-
 Route::get('/', function () {
     return view('welcome');
 });

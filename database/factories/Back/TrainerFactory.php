@@ -42,8 +42,8 @@ class TrainerFactory extends Factory
             'email' => $this->faker->email,
             'city_id' => null,
             'address' => $this->faker('ar_SA')->streetAddress,
-            'martial_status' => null,
-            'qualification_id' => null,
+            'marital_status_id' => null,
+            'educational_level_id' => null,
             'user_id' => null,
         ];
     }

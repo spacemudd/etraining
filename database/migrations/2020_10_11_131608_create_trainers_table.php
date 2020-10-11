@@ -25,12 +25,13 @@ class CreateTrainersTable extends Migration
             $table->uuid('city_id')->nullable();
             $table->foreign('city_id')->references('id')->on('cities');
             $table->string('address')->nullable();
-            $table->uuid('marital_status')->nullable();
-            $table->foreign('marital_status')->references('id')->on('marital_statuses');
-            $table->uuid('qualification_id')->nullable();
-            $table->foreign('qualification_id')->references('id')->on('qualifications');
+            $table->uuid('marital_status_id')->nullable();
+            $table->foreign('marital_status_id')->references('id')->on('marital_statuses');
+            $table->uuid('educational_level_id')->nullable();
+            $table->foreign('educational_level_id')->references('id')->on('educational_levels');
             $table->uuid('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
