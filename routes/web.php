@@ -11,6 +11,8 @@ Route::get('language/{language}', function ($language) {
     return redirect()->back();
 })->name('language');
 
+Route::get('onboarding', [\App\Http\Controllers\OnboardingController::class, 'index']);
+
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia\Inertia::render('Dashboard', [
         'companies_count' => \App\Models\Back\Company::count(),

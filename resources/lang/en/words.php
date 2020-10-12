@@ -123,4 +123,13 @@ return [
     'training-package' => 'Training Bag',
     'open-new-course-file' => 'Open a new course',
     'open-new-course-file-description' => 'Here you can open a new course and upload all the documents required.',
+    'hi-there' => 'Hello!',
+    'im-a-trainee' => "I'm a trainee",
+    'im-an-instructor' => "I'm an instructor",
+    'password-confirm' => 'Password confirm',
+    'already-registered' => 'Already registered?',
+    'register' => 'Register',
+    'login' => 'Login',
+    'forget-password' => 'Forgot password?',
+    'remember-me' => 'Remember me',
 ];

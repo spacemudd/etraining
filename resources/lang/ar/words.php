@@ -124,4 +124,13 @@ return [
     'training-package' => 'الحقيبة التدريبية',
     'open-new-course-file' => 'إنشاء برنامج تدريبي جديد',
     'open-new-course-file-description' => 'هنا يمكن لك إنشاء برنامج تدريبي جديد ورفع كل المرفقات المطلوبة',
+    'hi-there' => 'اهلاً بك',
+    'im-a-trainee' => 'انا مٌتدرب',
+    'im-an-instructor' => 'انا مٌدرب',
+    'password-confirm' => 'تأكيد كلمة السر',
+    'already-registered' => 'لديك حساب؟',
+    'register' => 'إنشاء حساب',
+    'login' => 'دخول',
+    'forget-password' => 'نسيت كلمة السر؟',
+    'remember-me' => 'تذكرني',
 ];

@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
             $table->uuid('current_team_id')->nullable();
             $table->text('profile_photo_path')->nullable();
             $table->char('locale', 2)->default('ar');
+            $table->timestamp('completed_onboarding_at')->nullable();
             $table->timestamps();
         });
     }
