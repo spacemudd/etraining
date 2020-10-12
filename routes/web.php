@@ -15,7 +15,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia\Inertia::render('Dashboard', [
         'companies_count' => \App\Models\Back\Company::count(),
         'trainees_count' => \App\Models\Back\Trainee::count(),
-        'instructor_count' => \App\Models\Back\Instructor::count(),
+        'instructors_count' => \App\Models\Back\Instructor::count(),
         'courses_count' => \App\Models\Back\Course::count(),
     ]);
 })->name('dashboard');

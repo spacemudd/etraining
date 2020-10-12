@@ -59,7 +59,7 @@ class CompaniesContractsController extends Controller
             'instructor_cost' => 'nullable',
             'company_reimbursement' => 'nullable',
             'notes' => 'nullable',
-            'files[]' => 'nullable',
+            'files.*' => 'required',
         ]);
 
         $company = Company::findOrFail($request->company_id);

@@ -5,7 +5,7 @@
                 :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
                     {title: 'courses', link: route('back.courses.index')},
-                    {title_raw: course.name},
+                    {title_raw: course.name_ar},
                 ]"
             ></breadcrumb-container>
 

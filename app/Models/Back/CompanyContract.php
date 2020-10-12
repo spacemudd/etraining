@@ -38,6 +38,10 @@ class CompanyContract extends Model implements HasMedia
         'notes',
     ];
 
+    protected $appends = [
+        'has_attachments',
+    ];
+
     protected static function boot(): void
     {
         parent::boot();
@@ -85,5 +89,10 @@ class CompanyContract extends Model implements HasMedia
                 'team_id' => $this->team_id,
             ])
             ->toMediaCollection('contract_copy');
+    }
+
+    public function getHasAttachmentsAttribute()
+    {
+        return $this->getMedia('contract_copy')->count();
     }
 }

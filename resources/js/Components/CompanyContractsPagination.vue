@@ -55,7 +55,7 @@
                             </tr>
                             </tbody>
                         </table>
-                        <a target="_blank" class="bg-gray-500 h-10 text-white text-sm rounded-sm mt-2 flex justify-center items-center" :href="route('back.companies.contracts.attachments', {company_id: contract.company_id, contract_id: contract.id})">
+                        <a v-if="contract.has_attachments" target="_blank" class="bg-gray-500 h-10 text-white text-sm rounded-sm mt-2 flex justify-center items-center" :href="route('back.companies.contracts.attachments', {company_id: contract.company_id, contract_id: contract.id})">
                             <span class="inline-block">
                                 {{ $t('words.download-scan') }}
                             </span>
