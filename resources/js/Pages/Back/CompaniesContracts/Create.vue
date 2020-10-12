@@ -116,7 +116,6 @@
                     dictRemoveFile: this.$t('words.delete'),
                     thumbnailWidth: 150,
                     maxFilesize: 20,
-                    // headers: this.jwtHeaders,
                 },
                 form: this.$inertia.form({
                     reference_number: '',

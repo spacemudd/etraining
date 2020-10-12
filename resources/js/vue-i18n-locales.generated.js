@@ -241,7 +241,17 @@ export default {
             "cv-full": "السيرة الذاتية",
             "cv-summary": "السيرة الذاتية (المختصرة)",
             "recommended-trainees-count": "عدد المتدربين المقترح",
-            "instructor": "المدرب"
+            "instructor": "المدرب",
+            "course-name": "اسم البرنامج",
+            "course-name-ar": "اسم البرنامج (عربي)",
+            "course-name-en": "اسم البرنامج (انجليزي)",
+            "course-approval-code": "رقم اعتماد البرنامج",
+            "course-duration-days": "مدة البرنامج (ايام)",
+            "course-duration-hours": "مدة البرنامج (ساعات)",
+            "course-starting-at": "وقت انعقاد البرنامج",
+            "training-package": "الحقيبة التدريبية",
+            "open-new-course-file": "إنشاء برنامج تدريبي جديد",
+            "open-new-course-file-description": "هنا يمكن لك إنشاء برنامج تدريبي جديد ورفع كل المرفقات المطلوبة"
         }
     },
     "en": {
@@ -485,7 +495,17 @@ export default {
             "cv-full": "CV full",
             "cv-summary": "CV summary",
             "recommended-trainees-count": "Recommended trainees count",
-            "instructor": "Instructor"
+            "instructor": "Instructor",
+            "course-name": "Course name",
+            "course-name-ar": "Course name (Arabic)",
+            "course-name-en": "Course name (English)",
+            "course-approval-code": "Course approved number",
+            "course-duration-days": "Duration (days)",
+            "course-duration-hours": "Duration (hours)",
+            "course-starting-at": "Starting date",
+            "training-package": "Training Bag",
+            "open-new-course-file": "Open a new course",
+            "open-new-course-file-description": "Here you can open a new course and upload all the documents required."
         }
     }
 }

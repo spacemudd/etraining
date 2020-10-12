@@ -27,13 +27,19 @@
                 <table class="w-full whitespace-no-wrap">
                     <tr class="text-left font-bold">
                         <th class="px-6 pt-6 pb-4">{{ $t('words.name') }}</th>
+                        <th class="px-6 pt-6 pb-4">{{ $t('words.course-approval-code') }}</th>
                         <th class="px-6 pt-6 pb-4">{{ $t('words.instructor') }}</th>
                         <th class="px-6 pt-6 pb-4">{{ $t('words.recommended-trainees-count') }}</th>
                     </tr>
                     <tr v-for="course in courses.data" :key="course.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
                         <td class="border-t">
                             <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('back.courses.show', course.id)">
-                                {{ course.name }}
+                                {{ course.name_ar }}
+                            </inertia-link>
+                        </td>
+                        <td class="border-t">
+                            <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('back.courses.show', course.id)">
+                                {{ course.approval_code }}
                             </inertia-link>
                         </td>
                         <td class="border-t">

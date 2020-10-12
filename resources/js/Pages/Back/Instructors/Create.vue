@@ -126,7 +126,7 @@
                     city_id: '',
                     twitter_link: '',
                 }, {
-                    bag: 'createTrainee',
+                    bag: 'createInstructor',
                 })
             }
         },

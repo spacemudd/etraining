@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
 use App\Models\Back\Course;
+use App\Models\Back\Trainee;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -28,7 +29,7 @@ class CoursesController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Back/Courses/Create');
     }
 
     /**
@@ -40,7 +41,8 @@ class CoursesController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255',
+            'name_ar' => 'required|string|max:255',
             'instructor_id' => 'nullable|exists:instructors,id',
             'company_id' => 'nullable|exists:companies,id',
             'description' => 'nullable|string|max:255',
@@ -48,9 +50,14 @@ class CoursesController extends Controller
             'approval_code' => 'nullable|string|max:255',
             'days_duration' => 'nullable|numeric',
             'hours_duration' => 'nullable|numeric',
+            'training_package' => 'nullable',
         ]);
 
         $course = Course::create($request->except('_token'));
+
+        if ($file = $request->file('training_package')) {
+            $course->uploadToFolder($file, 'training-package');
+        }
 
         return redirect()->route('back.courses.show', $course->id);
     }
@@ -63,7 +70,9 @@ class CoursesController extends Controller
      */
     public function show($id)
     {
-        //
+        return Inertia::render('Back/Courses/Show', [
+            'course' => Course::with('instructor')->findOrFail($id),
+        ]);
     }
 
     /**
@@ -98,5 +107,35 @@ class CoursesController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param $course_id
+     * @return
+     */
+    public function storeTrainingPackage(Request $request, $course_id)
+    {
+        $request->validate([
+            'training_package' => 'required',
+        ]);
+
+        $course = Course::findOrFail($course_id);
+        $file = $request->file('training_package');
+        return $course->uploadToFolder($file, 'training-package');
+    }
+
+    /**
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param $course_id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function deleteTrainingPackage(Request $request, $course_id)
+    {
+        $course = Course::findOrFail($course_id);
+        $course->getMedia('training-package')->each->forceDelete();
+        return response()->redirectToRoute('back.courses.show', $course->id);
     }
 }

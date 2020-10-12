@@ -5,9 +5,12 @@ namespace Database\Factories\Back;
 use App\Models\Back\Course;
 use App\Models\Back\Instructor;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Foundation\Testing\WithFaker;
 
 class CourseFactory extends Factory
 {
+    use WithFaker;
+
     /**
      * The name of the factory's corresponding model.
      *
@@ -23,7 +26,8 @@ class CourseFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->company,
+            'name_ar' => $this->faker('ar_SA')->text,
+            'name_en' => $this->faker->text,
             'classroom_count' => $this->faker->numberBetween(10, 25),
             'description' => $this->faker->text,
             'instructor_id' => null,

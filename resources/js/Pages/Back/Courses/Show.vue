@@ -4,46 +4,41 @@
             <breadcrumb-container
                 :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
-                    {title: 'instructors', link: route('back.instructors.index')},
-                    {title_raw: instructor.name},
+                    {title: 'courses', link: route('back.courses.index')},
+                    {title_raw: course.name},
                 ]"
             ></breadcrumb-container>
 
             <div class="grid grid-cols-6 gap-6">
                 <div class="col-span-6 flex items-center justify-end bg-gray-50 text-right">
-                    <inertia-link :href="route('back.instructors.edit', this.instructor.id)" class="flex items-center justify-start rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
+                    <inertia-link :href="route('back.courses.edit', course.id)" class="flex items-center justify-start rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
                         {{ $t('words.edit') }}
                     </inertia-link>
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
-                    <jet-label for="name" :value="$t('words.name')" />
-                    <jet-input id="name" type="text" class="mt-1 block w-full bg-gray-200" v-model="this.instructor.name" autocomplete="off" disabled />
+                    <jet-label for="name_ar" :value="$t('words.course-name-ar')" />
+                    <jet-input id="name_ar" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.name_ar" autocomplete="off" disabled />
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
-                    <jet-label for="phone" :value="$t('words.phone')" />
-                    <jet-input id="phone" type="text" class="mt-1 block w-full bg-gray-200" v-model="this.instructor.phone" autocomplete="off" disabled />
+                    <jet-label for="name_en" :value="$t('words.course-name-en')" />
+                    <jet-input id="name_en" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.name_en" autocomplete="off" disabled />
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
-                    <jet-label for="identity_number" :value="$t('words.identity_number')" />
-                    <jet-input id="identity_number" type="text" class="mt-1 block w-full bg-gray-200" v-model="this.instructor.identity_number" disabled />
+                    <jet-label for="course-approval-code" :value="$t('words.course-approval-code')" />
+                    <jet-input id="course-approval-code" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.approval_code" autocomplete="off" disabled />
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
-                    <jet-label for="email" :value="$t('words.email')" />
-                    <jet-input id="email" type="text" class="mt-1 block w-full bg-gray-200" v-model="this.instructor.email" disabled />
+                    <jet-label for="days_duration" :value="$t('words.course-duration-days')" />
+                    <jet-input id="days_duration" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.days_duration" autocomplete="off" disabled />
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
-                    <jet-label for="city_id" :value="$t('words.city')" />
-                    <jet-input id="city" type="text" class="mt-1 block w-full bg-gray-200" :value="this.instructor.city ? this.instructor.city.name_ar : ''" disabled />
-                </div>
-
-                <div class="col-span-6 sm:col-span-2">
-                    <jet-label for="twitter_link" :value="$t('words.twitter_link')" />
-                    <jet-input id="twitter_link" type="text" class="mt-1 block w-full bg-gray-200" v-model="this.instructor.twitter_link" disabled />
+                    <jet-label for="hours_duration" :value="$t('words.course-duration-hours')" />
+                    <jet-input id="hours_duration" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.hours_duration" autocomplete="off" disabled />
                 </div>
             </div>
 
@@ -66,28 +61,14 @@
                 <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
                     <jet-label :value="$t('words.cv-full')" class="mb-2" />
 
-                    <div class="bg-white border-2 rounder-lg flex flex-col justify-center items-center min-container-upload" v-if="instructor.cv_full_copy_url">
-                        <a class="bg-gray-700 text-white font-semibold p-2 text-center w-1/2 rounded my-1" target="_blank" :href="instructor.cv_full_copy_url">{{ $t('words.download') }}</a>
-                        <button class="bg-red-500 text-white font-semibold p-2 text-center w-1/2 rounded my-1" @click="deleteCvFull">{{ $t('words.delete') }}</button>
+                    <div class="bg-white border-2 rounder-lg flex flex-col justify-center items-center min-container-upload" v-if="course.training_package_url">
+                        <a class="bg-gray-700 text-white font-semibold p-2 text-center w-1/2 rounded my-1" target="_blank" :href="course.training_package_url">{{ $t('words.download') }}</a>
+                        <button class="bg-red-500 text-white font-semibold p-2 text-center w-1/2 rounded my-1" @click="deleteTrainingPackage">{{ $t('words.delete') }}</button>
                     </div>
                     <vue-dropzone v-else
                                   id="dropzoneIdentity"
                                   @vdropzone-sending="sendingCsrf"
-                                  :options="dropzoneOptionsCvFull"
-                    ></vue-dropzone>
-                </div>
-
-                <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
-                    <jet-label :value="$t('words.cv-summary')" class="mb-2" />
-
-                    <div class="bg-white border-2 rounder-lg flex flex-col justify-center items-center min-container-upload" v-if="instructor.cv_summary_copy_url">
-                        <a class="bg-gray-700 text-white font-semibold p-2 text-center w-1/2 rounded my-1" target="_blank" :href="instructor.cv_summary_copy_url">{{ $t('words.download') }}</a>
-                        <button class="bg-red-500 text-white font-semibold p-2 text-center w-1/2 rounded my-1" @click="deleteCvSummary">{{ $t('words.delete') }}</button>
-                    </div>
-                    <vue-dropzone v-else
-                                  id="dropzoneQualification"
-                                  @vdropzone-sending="sendingCsrf"
-                                  :options="dropzoneOptionsCvSummary"
+                                  :options="dropzoneOptionsTrainingPackage"
                     ></vue-dropzone>
                 </div>
             </div>
@@ -112,7 +93,7 @@
     import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
     export default {
-        props: ['sessions', 'instructor'],
+        props: ['sessions', 'course'],
 
         components: {
             AppLayout,
@@ -131,16 +112,9 @@
         },
         data() {
             return {
-                dropzoneOptionsCvFull: {
+                dropzoneOptionsTrainingPackage: {
                     destroyDropzone: false,
-                    url: route('back.instructors.attachments.cv-full', {instructor_id: this.instructor.id}),
-                    dictDefaultMessage: "<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> "+this.$t('words.upload-files-here'),
-                    thumbnailWidth: 150,
-                    maxFilesize: 20,
-                },
-                dropzoneOptionsCvSummary: {
-                    destroyDropzone: false,
-                    url: route('back.instructors.attachments.cv-summary', {instructor_id: this.instructor.id}),
+                    url: route('back.courses.training-package', {course_id: this.course.id}),
                     dictDefaultMessage: "<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> "+this.$t('words.upload-files-here'),
                     thumbnailWidth: 150,
                     maxFilesize: 20,
@@ -151,14 +125,9 @@
             sendingCsrf(file, xhr, formData) {
                 xhr.setRequestHeader('X-CSRF-TOKEN', window.token ? window.token.content : '');
             },
-            deleteCvFull() {
+            deleteTrainingPackage() {
                 if (confirm(this.$t('words.are-you-sure'))) {
-                    this.$inertia.delete(route('back.instructors.attachments.cv-full.destroy', {instructor_id: this.instructor.id}));
-                }
-            },
-            deleteCvSummary() {
-                if (confirm(this.$t('words.are-you-sure'))) {
-                    this.$inertia.delete(route('back.instructors.attachments.cv-summary.destroy', {instructor_id: this.instructor.id}));
+                    this.$inertia.delete(route('back.courses.training-package.destroy', {course_id: this.course.id}));
                 }
             },
         }

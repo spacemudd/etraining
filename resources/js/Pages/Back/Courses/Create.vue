@@ -4,68 +4,55 @@
             <breadcrumb-container
                 :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
-                    {title: 'instructors', link: route('back.instructors.index')},
+                    {title: 'courses', link: route('back.courses.index')},
                     {title: 'new'},
                 ]"
             ></breadcrumb-container>
 
-
             <div class="mt-4">
-                <jet-form-section @submitted="createInstructor">
+                <jet-form-section @submitted="createCourse">
                     <template #title>
-                        {{ $t('words.open-new-instructor-file') }}
+                        {{ $t('words.open-new-course-file') }}
                     </template>
 
                     <template #description>
-                        {{ $t('words.open-new-instructor-file-description') }}
+                        {{ $t('words.open-new-course-file-description') }}
                     </template>
 
                     <template #form>
-                        <div class="col-span-2 sm:col-span-2">
-                            <jet-label for="name" :value="$t('words.name')" />
-                            <jet-input id="name" type="text" class="mt-1 block w-full" v-model="form.name" autocomplete="off" autofocus />
-                            <jet-input-error :message="form.error('name')" class="mt-2" />
+                        <div class="col-span-6 sm:col-span-2">
+                            <jet-label for="name_ar" :value="$t('words.course-name-ar')" />
+                            <jet-input id="name_ar" type="text" class="mt-1 block w-full" v-model="form.name_ar" autocomplete="off" autofocus />
                         </div>
 
-                        <div class="col-span-2 sm:col-span-2">
-                            <jet-label for="phone" :value="$t('words.phone')" />
-                            <jet-input id="phone" type="text" class="mt-1 block w-full" v-model="form.phone" placeholder="966XXXXXXX" autocomplete="off" autofocus />
-                            <jet-input-error :message="form.error('phone')" class="mt-2" />
+                        <div class="col-span-6 sm:col-span-2">
+                            <jet-label for="name_en" :value="$t('words.course-name-en')" />
+                            <jet-input id="name_en" type="text" class="mt-1 block w-full" v-model="form.name_en" autocomplete="off" />
                         </div>
 
-                        <div class="col-span-2 sm:col-span-2">
-                            <jet-label for="identity_number" :value="$t('words.identity_number')" />
-                            <jet-input id="identity_number" type="text" class="mt-1 block w-full" v-model="form.identity_number" autocomplete="off" />
-                            <jet-input-error :message="form.error('identity_number')" class="mt-2" />
+                        <div class="col-span-6 sm:col-span-2">
+                            <jet-label for="course-approval-code" :value="$t('words.course-approval-code')" />
+                            <jet-input id="course-approval-code" type="text" class="mt-1 block w-full" v-model="form.approval_code" autocomplete="off" />
                         </div>
 
-                        <div class="col-span-2 sm:col-span-2">
-                            <jet-label for="email" :value="$t('words.email')" />
-                            <jet-input id="email" type="email" class="mt-1 block w-full" v-model="form.email" autocomplete="off" />
-                            <jet-input-error :message="form.error('email')" class="mt-2" />
+                        <div class="col-span-6 sm:col-span-2">
+                            <jet-label for="days_duration" :value="$t('words.course-duration-days')" />
+                            <jet-input id="days_duration" type="text" class="mt-1 block w-full" v-model="form.days_duration" autocomplete="off" />
                         </div>
 
-                        <div class="col-span-2 sm:col-span-2">
-                            <jet-label for="city_id" :value="$t('words.city')" />
-
-                            <div class="relative">
-                                <select class="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                        v-model="form.city_id"
-                                        id="city_id">
-                                    <option v-for="city in cities" :key="city.id" :value="city.id">{{ city.name_ar }}</option>
-                                </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                                </div>
-                            </div>
-
-                            <jet-input-error :message="form.error('city_id')" class="mt-2" />
+                        <div class="col-span-6 sm:col-span-2">
+                            <jet-label for="hours_duration" :value="$t('words.course-duration-hours')" />
+                            <jet-input id="hours_duration" type="text" class="mt-1 block w-full" v-model="form.hours_duration" autocomplete="off" />
                         </div>
 
-                        <div class="col-span-2 sm:col-span-2">
-                            <jet-label for="twitter_link" :value="$t('words.twitter_link')" />
-                            <jet-input id="twitter_link" type="text" class="mt-1 block w-full" v-model="form.twitter_link" autocomplete="off" />
-                            <jet-input-error :message="form.error('twitter_link')" class="mt-2" />
+                        <div class="col-span-6 sm:col-span-2">
+                            <jet-label for="training-bag" :value="$t('words.training-package')" />
+                            <vue-dropzone ref="dropZoneContainer"
+                                          class="mt-1"
+                                          id="dropzone"
+                                          @vdropzone-file-added="fileAdded"
+                                          :options="dropzoneOptions"
+                            ></vue-dropzone>
                         </div>
                     </template>
 
@@ -99,9 +86,11 @@
     import JetFormSection from '@/Jetstream/FormSection';
     import JetLabel from '@/Jetstream/Label';
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
+    import VueDropzone from "vue2-dropzone";
+    import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
     export default {
-        props: ['sessions', 'cities'],
+        props: ['sessions'],
 
         components: {
             AppLayout,
@@ -114,28 +103,60 @@
             JetFormSection,
             JetLabel,
             BreadcrumbContainer,
+            VueDropzone
         },
         data() {
             return {
-                addressSearch: '',
+                dropzoneOptions: {
+                    addRemoveLinks: true,
+                    destroyDropzone: false,
+                    autoProcessQueue: false,
+                    manuallyAddFile: true,
+                    url: 'https://getShafiq.com', // Just required to initiate DropZone.
+                    dictDefaultMessage: "<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> "+this.$t('words.upload-files-here'),
+                    dictRemoveFile: this.$t('words.delete'),
+                    thumbnailWidth: 150,
+                    maxFilesize: 20,
+                },
                 form: this.$inertia.form({
-                    name: '',
-                    identity_number: '',
-                    phone: '',
-                    email: '',
-                    city_id: '',
-                    twitter_link: '',
+                    name_ar: '',
+                    name_en: '',
+                    approval_code: '',
+                    days_duration: '',
+                    hours_duration: '',
+                    training_package: '',
                 }, {
-                    bag: 'createTrainee',
+                    bag: 'createCourse',
                 })
             }
         },
         methods: {
-            createInstructor() {
-                this.form.post('/back/instructors', {
+            fileAdded(file) {
+                this.form.training_package = file;
+            },
+            createCourse() {
+                this.form.post('/back/courses', {
                     preserveScroll: true
                 });
             },
         }
     }
 </script>
+
+<style>
+    .dropzone .dz-preview .dz-progress {
+        display: none;
+    }
+    .vue-dropzone > .dz-preview .dz-remove {
+        margin: 0 10px;
+    }
+
+    .vue-dropzone > .dz-preview .dz-details {
+        background-color: rgb(37, 47, 63);
+    }
+
+    .dropzone.dz-clickable .dz-message, .dropzone.dz-clickable .dz-message * {
+        font-family: Nunito, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        line-height: 1.5;
+    }
+</style>

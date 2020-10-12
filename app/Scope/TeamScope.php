@@ -26,7 +26,7 @@ class TeamScope implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-        if ($team_id = optional(auth()->user())->personalTeam()->id) {
+        if ($team_id = optional(auth()->user())->personalTeam()->id ?? null) {
             $builder->where('team_id', $team_id);
         }
     }

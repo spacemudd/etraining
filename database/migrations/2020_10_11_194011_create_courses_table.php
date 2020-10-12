@@ -19,7 +19,8 @@ class CreateCoursesTable extends Migration
             $table->foreign('team_id')->references('id')->on('teams')->cascadeOnDelete();
             $table->uuid('instructor_id')->nullable();
             $table->foreign('instructor_id')->references('id')->on('instructors')->nullOnDelete();
-            $table->string('name');
+            $table->string('name_ar');
+            $table->string('name_en');
             $table->unsignedInteger('classroom_count')->nullable();
             $table->text('description')->nullable();
             $table->boolean('sharable')->default(false);
