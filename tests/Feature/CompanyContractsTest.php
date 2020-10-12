@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Actions\Fortify\CreateNewUser;
 use App\Models\Back\Company;
 use App\Models\Back\CompanyContract;
+use App\Models\Back\Instructor;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Storage;
@@ -132,4 +133,35 @@ class CompanyContractsTest extends TestCase
     //    $this->actingAs($this->user)
     //        ->get(route('back.companies.contracts.attachments', ['company_id' => $contract->company_id, 'contract_id' => $contract->id]));
     //}
+
+    public function test_attaching_instructor_to_contract()
+    {
+        $contract = [
+            'company_id' => $this->company->id,
+            'reference_number' => (string) rand(),
+            'contract_starts_at' => now()->toDateString(),
+            'contract_ends_at' => now()->addMonth()->toDateString(),
+            'contract_period_in_months' => 1,
+            'auto_renewal' => true,
+            'trainees_count' => rand(),
+            'trainee_salary' => rand(),
+            'instructor_cost' => rand(),
+            'company_reimbursement' => rand(),
+            'notes' => $this->faker->text,
+        ];
+
+        $this->actingAs($this->user)
+            ->post(route('back.companies.contracts.store', ['company_id' => Company::find($contract['company_id'])]), $contract);
+
+        $instructor = Instructor::factory()->create(['team_id' => $this->company->team_id]);
+
+        $this->actingAs($this->user)
+            ->put(route('back.companies.contracts.update', ['company_id' => $this->company->id, 'contract_id' => $contract->id]), ['instructor_id' => $instructor->id])
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('company_contracts', [
+            'id' => $contract->id,
+            'instructor_id' => $instructor->id,
+        ]);
+    }
 }

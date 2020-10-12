@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
 use App\Models\Back\Company;
+use App\Models\Back\Instructor;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -68,6 +69,7 @@ class CompaniesController extends Controller
     {
         return Inertia::render('Back/Companies/Show', [
             'company' => Company::findOrFail($id),
+            'instructors' => Instructor::get(),
         ]);
     }
 

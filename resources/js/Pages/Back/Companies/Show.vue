@@ -39,7 +39,6 @@
                 </template>
             </div>
 
-
             <jet-section-border></jet-section-border>
 
             <div class="grid grid-cols-1 md:grid-cols-6 gap-6 mt-2">
@@ -56,7 +55,7 @@
                 </div>
 
                 <div class="md:col-span-4 sm:col-span-1">
-                    <company-contracts-pagination :company-id="company.id" />
+                    <company-contracts-pagination :company-id="company.id" :instructors="instructors" />
                 </div>
             </div>
         </div>
@@ -78,7 +77,7 @@
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
 
     export default {
-        props: ['sessions', 'company'],
+        props: ['sessions', 'company', 'instructors'],
 
         components: {
             AppLayout,

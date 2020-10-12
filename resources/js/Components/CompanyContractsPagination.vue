@@ -73,6 +73,7 @@
                     <div class="col-span-2">
                         <div class="w-full h-full border-2 border-gray-100 rounded p-2 flex justify-center items-center">
                             <button class="text-sm bg-green-600 text-white px-3 py-1 rounded mx-auto block"
+                                    @click="openChoosingInstructorForContract(contract.id)"
                                     :title="$t('words.attach-instructors-help')">
                                 {{ $t('words.attach-instructors') }}
                             </button>
@@ -81,6 +82,34 @@
                 </div>
             </div>
         </template>
+
+        <jet-dialog-modal :show="toggleChoosingInstructor" @close="toggleChoosingInstructor">
+            <template #title>
+                {{ $t('words.instructor') }}
+            </template>
+
+            <template #content>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div v-for="instructor in instructors">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="form-checkbox" :value="instructor.id" v-model="updateInstructorForm.instructor_id">
+                            <span class="ml-2 text-sm text-gray-600">{{ instructor.name_ar }}</span>
+                        </label>
+                    </div>
+                </div>
+            </template>
+
+            <template #footer>
+                <jet-secondary-button @click.native="toggleChoosingInstructor">
+                    {{ $t('words.cancel') }}
+                </jet-secondary-button>
+
+                <jet-button class="ml-2" @click.native="updateInstructor" :class="{ 'opacity-25': updateInstructorForm.processing }" :disabled="updateInstructorForm.processing">
+                    {{ $t('words.save') }}
+                </jet-button>
+            </template>
+        </jet-dialog-modal>
+
     </div>
 </template>
 
@@ -89,6 +118,8 @@
     import { Skeleton } from 'vue-loading-skeleton';
     import Logrocket from 'logrocket';
     import EmptySlate from "@/Components/EmptySlate";
+    import JetDialogModal from '@/Jetstream/DialogModal'
+    import JetSecondaryButton from '@/Jetstream/SecondaryButton'
 
     export default {
         components: {
@@ -96,10 +127,18 @@
             Skeleton,
             EmptySlate,
         },
-        props: ['companyId'],
+        props: ['companyId', 'instructors'],
         name: "CompanyContractsPagination",
         data() {
             return {
+                choosingInstructor: false,
+                updateInstructorForm: this.$inertia.form({
+                    instructor_id: null,
+                    contract_id: null,
+                }, {
+                    resetOnSuccess: false,
+                    bag: 'updateInstructorForm',
+                }),
                 contracts: [],
             }
         },
@@ -120,6 +159,21 @@
             toDate(timestamp) {
                 return moment(timestamp).local().format('YYYY-MM-DD');
             },
+            openChoosingInstructorForContract(contract_id) {
+                this.updateInstructorForm.contract_id = contract_id;
+                this.choosingInstructor = true;
+            },
+            updateInstructor(contract) {
+                this.updateInstructorForm.put(route('back.companies.contracts.update', {company_id: this.companyId, contract_id: contract.id}), {
+                    preserveScroll: true,
+                    preserveState: true,
+                }).then(response => {
+                    this.choosingInstructor = null
+                })
+            },
+            toggleChoosingInstructor() {
+                this.choosingInstructor = ! this.choosingInstructor;
+            }
         }
     }
 </script>

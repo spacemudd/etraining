@@ -32,6 +32,11 @@ class CreateInstructorsTable extends Migration
             $table->softDeletes();
             $table->timestamps();
         });
+
+        Schema::table('company_contracts', function (Blueprint $table) {
+            $table->uuid('instructor_id')->nullable();
+            $table->foreign('instructor_id')->references('id')->on('instructors')->nullOnDelete();
+        });
     }
 
     /**
@@ -41,6 +46,11 @@ class CreateInstructorsTable extends Migration
      */
     public function down()
     {
+        Schema::table('company_contracts', function (Blueprint $table) {
+            $table->dropForeign(['instructor_id']);
+            $table->dropColumn(['instructor_id']);
+        });
+
         Schema::dropIfExists('instructors');
     }
 }

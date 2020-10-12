@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Back;
 use App\Http\Controllers\Controller;
 use App\Models\Back\Company;
 use App\Models\Back\CompanyContract;
+use App\Models\Back\Instructor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -111,7 +112,15 @@ class CompaniesContractsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'instructor_id' => 'nullable|exists:instructors,id',
+        ]);
+
+        $contract = CompanyContract::findOrFail($id);
+        $contract->instructor_id = Instructor::findOrFail($request->instructor_id)->id;
+        $contract->save();
+
+        return redirect()->route('back.companies.show', $contract->company_id);
     }
 
     /**
