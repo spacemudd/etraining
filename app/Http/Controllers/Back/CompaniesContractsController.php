@@ -22,6 +22,7 @@ class CompaniesContractsController extends Controller
     {
         if (request()->wantsJson()) {
             return CompanyContract::where('company_id', $company_id)
+                ->with('instructor')
                 ->withCount('attachments')
                 ->latest()
                 ->get();
@@ -106,19 +107,24 @@ class CompaniesContractsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param $company_id
+     * @param $contract_id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $company_id, $contract_id)
     {
         $request->validate([
             'instructor_id' => 'nullable|exists:instructors,id',
         ]);
 
-        $contract = CompanyContract::findOrFail($id);
+        \DB::beginTransaction();
+
+        $contract = CompanyContract::findOrFail($contract_id);
         $contract->instructor_id = Instructor::findOrFail($request->instructor_id)->id;
         $contract->save();
+
+        \DB::commit();
 
         return redirect()->route('back.companies.show', $contract->company_id);
     }

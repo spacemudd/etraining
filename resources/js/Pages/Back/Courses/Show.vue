@@ -46,7 +46,7 @@
             <jet-section-border></jet-section-border>
 
             <div class="grid grid-cols-1 md:grid-cols-6 gap-6 my-2">
-                <div class="md:col-span-4 lg:col-span-3 sm:col-span-3">
+                <div class="md:col-span-5 lg:col-span-5 sm:col-span-3">
                     <div class="px-4 sm:px-0">
                         <h3 class="text-lg font-medium text-gray-900">
                             {{ $t('words.documents') }}
@@ -58,8 +58,8 @@
                     </div>
                 </div>
 
-                <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
-                    <jet-label :value="$t('words.cv-full')" class="mb-2" />
+                <div class="md:col-span-6 lg:col-span-1 sm:col-span-3">
+                    <jet-label :value="$t('words.training-package')" class="mb-2" />
 
                     <div class="bg-white border-2 rounder-lg flex flex-col justify-center items-center min-container-upload" v-if="course.training_package_url">
                         <a class="bg-gray-700 text-white font-semibold p-2 text-center w-1/2 rounded my-1" target="_blank" :href="course.training_package_url">{{ $t('words.download') }}</a>
@@ -72,6 +72,27 @@
                     ></vue-dropzone>
                 </div>
             </div>
+
+            <jet-section-border></jet-section-border>
+
+            <div class="grid grid-cols-1 md:grid-cols-6 gap-6 my-2">
+                <div class="md:col-span-4 lg:col-span-3 sm:col-span-3">
+                    <div class="px-4 sm:px-0">
+                        <h3 class="text-lg font-medium text-gray-900">
+                            {{ $t('words.course-schedule') }}
+                        </h3>
+
+                        <p class="mt-1 text-sm text-gray-600">
+                            {{ $t('words.course-schedule-help') }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="md:col-span-3 sm:col-span-1">
+                    <course-batches-pagination :company-id="123123" :instructors="[]" />
+                </div>
+            </div>
+
         </div>
     </app-layout>
 </template>
@@ -91,6 +112,7 @@
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
     import VueDropzone from 'vue2-dropzone'
     import 'vue2-dropzone/dist/vue2Dropzone.min.css'
+    import CourseBatchesPagination from "@/Components/CourseBatchesPagination";
 
     export default {
         props: ['sessions', 'course'],
@@ -109,6 +131,7 @@
             CompanyContractsPagination,
             BreadcrumbContainer,
             VueDropzone,
+            CourseBatchesPagination,
         },
         data() {
             return {

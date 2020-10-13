@@ -8,6 +8,11 @@
                     {title: 'client-accounts', link: route('back.finance.accounts.index')},
                 ]"
             ></breadcrumb-container>
+            <div class="grid md:grid-cols-4 grid-cols-1 gap-6">
+                <inertia-link :href="route('back.finance.accounts.index')" class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
+                    {{ $t('words.filter-late-clients') }}
+                </inertia-link>
+            </div>
             <h1 class="mb-8 font-bold text-3xl">
                 <!--{{ $t('words.companies') }}-->
             </h1>
@@ -16,7 +21,7 @@
                 <!--    <span>{{ $t('words.new') }}</span>-->
                 <!--</inertia-link>-->
             </div>
-            <div class="bg-white rounded shadow overflow-x-auto">
+            <div class="bg-white rounded shadow overflow-x-auto">CompanyContractsPagination
                 <table class="w-full whitespace-no-wrap">
                     <tr class="text-left font-bold">
                         <th class="px-6 pt-6 pb-4">{{ $t('words.account-name') }}</th>

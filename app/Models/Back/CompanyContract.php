@@ -74,6 +74,11 @@ class CompanyContract extends Model implements HasMedia
         return $this->media()->where('collection_name', 'contract_copy');
     }
 
+    public function instructor()
+    {
+        return $this->hasOne(Instructor::class, 'id', 'instructor_id');
+    }
+
     /**
      * Upload scan(s) of the contract.
      *

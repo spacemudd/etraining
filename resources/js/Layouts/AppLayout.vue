@@ -3,6 +3,9 @@
         class="flex h-screen bg-gray-50 dark:bg-gray-900"
         :class="{ 'overflow-hidden': isSideMenuOpen }"
     >
+        <portal-target name="app-modal-container">
+        </portal-target>
+
         <!-- Desktop sidebar -->
         <aside
             class="z-20 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0"
@@ -303,7 +306,7 @@
                 </div>
             </div>
         </aside>
-        <div class="flex flex-col flex-1 w-full">
+        <div class="flex flex-col flex-1 w-full mb-10">
             <header class="z-10 py-4 bg-white shadow-md dark:bg-gray-800">
                 <div
                     class="container flex items-center justify-between h-full px-6 mx-auto text-red-600 dark:text-red-300"

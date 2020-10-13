@@ -133,4 +133,8 @@ return [
     'login' => 'دخول',
     'forget-password' => 'نسيت كلمة السر؟',
     'remember-me' => 'تذكرني',
+    'course-schedule' => 'جدولة البرنامج',
+    'course-schedule-help' => 'هنا يمكنك تعديل جدول البرنامج والوقت والدفعات',
+    'add-new-batch' => 'اضف دفعة جديدة',
+    'filter-late-clients' => 'العملاء المتأخرين',
 ];

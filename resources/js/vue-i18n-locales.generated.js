@@ -251,7 +251,20 @@ export default {
             "course-starting-at": "وقت انعقاد البرنامج",
             "training-package": "الحقيبة التدريبية",
             "open-new-course-file": "إنشاء برنامج تدريبي جديد",
-            "open-new-course-file-description": "هنا يمكن لك إنشاء برنامج تدريبي جديد ورفع كل المرفقات المطلوبة"
+            "open-new-course-file-description": "هنا يمكن لك إنشاء برنامج تدريبي جديد ورفع كل المرفقات المطلوبة",
+            "hi-there": "اهلاً بك",
+            "im-a-trainee": "انا مٌتدرب",
+            "im-an-instructor": "انا مٌدرب",
+            "password-confirm": "تأكيد كلمة السر",
+            "already-registered": "لديك حساب؟",
+            "register": "إنشاء حساب",
+            "login": "دخول",
+            "forget-password": "نسيت كلمة السر؟",
+            "remember-me": "تذكرني",
+            "course-schedule": "جدولة البرنامج",
+            "course-schedule-help": "هنا يمكنك تعديل جدول البرنامج والوقت والدفعات",
+            "add-new-batch": "اضف دفعة جديدة",
+            "filter-late-clients": "العملاء المتأخرين"
         }
     },
     "en": {
@@ -505,7 +518,19 @@ export default {
             "course-starting-at": "Starting date",
             "training-package": "Training Bag",
             "open-new-course-file": "Open a new course",
-            "open-new-course-file-description": "Here you can open a new course and upload all the documents required."
+            "open-new-course-file-description": "Here you can open a new course and upload all the documents required.",
+            "hi-there": "Hello!",
+            "im-a-trainee": "I'm a trainee",
+            "im-an-instructor": "I'm an instructor",
+            "password-confirm": "Password confirm",
+            "already-registered": "Already registered?",
+            "register": "Register",
+            "login": "Login",
+            "forget-password": "Forgot password?",
+            "remember-me": "Remember me",
+            "course-schedule": "Course schedule",
+            "course-schedule-help": "Here you can manage the course batches, the timing, and location",
+            "filter-late-clients": "Late clients"
         }
     }
 }

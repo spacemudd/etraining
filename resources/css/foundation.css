@@ -36,6 +36,13 @@
     line-height: 1.5;
 }
 
+/**
+ * To show the modals (from v-modal).
+ */
+.vm--container {
+    width: unset;
+}
+
 .btn-gray {
     @apply px-6 py-3 rounded bg-gray-600 text-white text-sm font-bold whitespace-no-wrap;
 

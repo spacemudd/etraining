@@ -13,6 +13,7 @@ import VueWait from 'vue-wait'
 import Store from './store';
 import VueInternationalization from 'vue-i18n';
 import Locale from './vue-i18n-locales.generated';
+import VModal from 'vue-js-modal/dist/index.nocss.js'
 import { InertiaProgress } from '@inertiajs/progress'
 InertiaProgress.init({
     // The delay after which the progress bar will
@@ -32,6 +33,7 @@ Vue.use(PortalVue);
 Vue.use(VueMeta)
 Vue.use(VueWait)
 Vue.use(Skeleton)
+Vue.use(VModal)
 Vue.use(VueInternationalization);
 Vue.mixin({ methods: { route: window.route } })
 

@@ -14,7 +14,7 @@
         <div class="flex justify-between items-center">
             <p class="text-gray-500 text-sm font-semibold">{{ $t('words.view-all') }} ({{ contracts.length }})</p>
             <inertia-link :href="`/back/companies/${companyId}/contracts/create`" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150">
-                {{ $t('words.add-new-contract') }}
+                {{ $t('words.add-new-batch') }}
             </inertia-link>
         </div>
 
@@ -25,7 +25,7 @@
                 <empty-slate class="border-2 rounded-lg mt-3">
                     <template #actions>
                         <inertia-link :href="`/back/companies/${companyId}/contracts/create`" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150">
-                            {{ $t('words.add-new-contract') }}
+                            {{ $t('words.add-new-batch') }}
                         </inertia-link>
                     </template>
                 </empty-slate>
@@ -72,12 +72,7 @@
                     </div>
                     <div class="col-span-2">
                         <div class="w-full h-full border-2 border-gray-100 rounded p-2 flex justify-center items-center">
-                            <template v-if="contract.instructor">
-                                <button @click="openChoosingInstructorForContract(contract.id)">
-                                    {{ contract.instructor.name }}
-                                </button>
-                            </template>
-                            <button v-else class="text-sm bg-green-600 text-white px-3 py-1 rounded mx-auto block"
+                            <button class="text-sm bg-green-600 text-white px-3 py-1 rounded mx-auto block"
                                     @click="openChoosingInstructorForContract(contract.id)"
                                     :title="$t('words.attach-instructors-help')">
                                 {{ $t('words.attach-instructors') }}
@@ -88,39 +83,32 @@
             </div>
         </template>
 
-        <portal to="app-modal-container">
-            <modal name="selectingInstructorModal">
-                <div class="bg-white block h-5 p-10">
-                    <h1 class="text-lg font-bold">{{ $t('words.attach-instructors') }}</h1>
+        <jet-dialog-modal :show="toggleChoosingInstructor" @close="toggleChoosingInstructor">
+            <template #title>
+                {{ $t('words.instructor') }}
+            </template>
 
-                    <div class="mt-5">
-                        <jet-label class="mb-2" for="instructor_id" :value="$t('words.instructor')" />
-                        <div class="relative">
-                            <select class="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                    v-model="updateInstructorForm.instructor_id"
-                                    required
-                                    id="instructor_id">
-                                <option v-for="instructor in instructors" :key="instructor.id" :value="instructor.id">{{ instructor.name }}</option>
-                            </select>
-                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                            </div>
-                        </div>
-                        <jet-input-error :message="updateInstructorForm.error('instructor_id')" class="mt-2" />
-                    </div>
-
-                    <div class="mt-5">
-                        <jet-secondary-button @click.native="toggleChoosingInstructor">
-                            {{ $t('words.cancel') }}
-                        </jet-secondary-button>
-
-                        <jet-button class="rtl:mr-5 ltr:ml-5" @click.native="updateInstructor" :class="{ 'opacity-25': updateInstructorForm.processing }" :disabled="updateInstructorForm.processing">
-                            {{ $t('words.save') }}
-                        </jet-button>
+            <template #content>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div v-for="instructor in instructors">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="form-checkbox" :value="instructor.id" v-model="updateInstructorForm.instructor_id">
+                            <span class="ml-2 text-sm text-gray-600">{{ instructor.name_ar }}</span>
+                        </label>
                     </div>
                 </div>
-            </modal>
-        </portal>
+            </template>
+
+            <template #footer>
+                <jet-secondary-button @click.native="toggleChoosingInstructor">
+                    {{ $t('words.cancel') }}
+                </jet-secondary-button>
+
+                <jet-button class="ml-2" @click.native="updateInstructor" :class="{ 'opacity-25': updateInstructorForm.processing }" :disabled="updateInstructorForm.processing">
+                    {{ $t('words.save') }}
+                </jet-button>
+            </template>
+        </jet-dialog-modal>
 
     </div>
 </template>
@@ -130,24 +118,20 @@
     import { Skeleton } from 'vue-loading-skeleton';
     import Logrocket from 'logrocket';
     import EmptySlate from "@/Components/EmptySlate";
-    import 'vue-js-modal/dist/styles.css';
-    import JetLabel from '@/Jetstream/Label';
-    import JetSecondaryButton from '@/Jetstream/SecondaryButton';
-    import JetInputError from '@/Jetstream/InputError';
+    import JetDialogModal from '@/Jetstream/DialogModal'
+    import JetSecondaryButton from '@/Jetstream/SecondaryButton'
 
     export default {
         components: {
             JetButton,
             Skeleton,
             EmptySlate,
-            JetLabel,
-            JetSecondaryButton,
-            JetInputError,
         },
         props: ['companyId', 'instructors'],
         name: "CompanyContractsPagination",
         data() {
             return {
+                choosingInstructor: false,
                 updateInstructorForm: this.$inertia.form({
                     instructor_id: null,
                     contract_id: null,
@@ -176,19 +160,19 @@
                 return moment(timestamp).local().format('YYYY-MM-DD');
             },
             openChoosingInstructorForContract(contract_id) {
-                this.$modal.show('selectingInstructorModal');
                 this.updateInstructorForm.contract_id = contract_id;
+                this.choosingInstructor = true;
             },
-            updateInstructor() {
-                this.updateInstructorForm.put(route('back.companies.contracts.update', {company_id: this.companyId, contract: this.updateInstructorForm.contract_id}), {
+            updateInstructor(contract) {
+                this.updateInstructorForm.put(route('back.companies.contracts.update', {company_id: this.companyId, contract: contract.id}), {
                     preserveScroll: true,
                     preserveState: true,
                 }).then(response => {
-                    this.$modal.toggle('selectingInstructorModal');
+                    this.choosingInstructor = null
                 })
             },
             toggleChoosingInstructor() {
-                this.$modal.toggle('selectingInstructorModal');
+                this.choosingInstructor = ! this.choosingInstructor;
             }
         }
     }

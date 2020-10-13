@@ -132,4 +132,7 @@ return [
     'login' => 'Login',
     'forget-password' => 'Forgot password?',
     'remember-me' => 'Remember me',
+    'course-schedule' => 'Course schedule',
+    'course-schedule-help' => 'Here you can manage the course batches, the timing, and location',
+    'filter-late-clients' => 'Late clients',
 ];
