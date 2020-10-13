@@ -17,7 +17,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 
     if (\Illuminate\Support\Str::contains(auth()->user()->roles()->first()->name, 'instructors')) {
         return \Inertia\Inertia::render('Teaching/Dashboard', [
-            'courses' => \App\Models\Back\Course::get(),
+            'courses' => \App\Models\Back\Course::paginate(15),
         ]);
     }
 
@@ -72,5 +72,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
     Route::prefix('teaching')->name('teaching.')->group(function() {
         Route::get('/', [\App\Http\Controllers\Teaching\TeachingController::class, 'index'])->name('index');
+        Route::resource('courses', \App\Http\Controllers\Teaching\CoursesController::class);
     });
 });

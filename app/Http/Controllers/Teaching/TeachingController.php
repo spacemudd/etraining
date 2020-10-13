@@ -11,7 +11,8 @@ class TeachingController extends Controller
 {
     public function dashboard()
     {
-        $courses = Course::get();
+        $courses = Course::paginate(15);
+        dd($courses);
         return Inertia::render('Teaching/Dashboard/Index', [
             'courses' => $courses,
         ]);

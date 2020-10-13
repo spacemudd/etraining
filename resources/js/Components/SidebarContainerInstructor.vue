@@ -7,12 +7,12 @@
             </template>
         </sidebar-link>
 
-        <sidebar-link :link-value="route('back.companies.index')" :active="$page.currentRouteName == 'back.companies.index'">
+        <sidebar-link :link-value="route('teaching.courses.index')" :active="$page.currentRouteName == 'teaching.courses.index'">
             <template #icon>
                 <ion-icon name="business-outline" class="w-5 h-5"></ion-icon>
             </template>
             <template #title>
-                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.companies') }}</span>
+                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.courses') }}</span>
             </template>
         </sidebar-link>
 
