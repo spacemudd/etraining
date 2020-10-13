@@ -15,7 +15,6 @@ Route::get('onboarding', [\App\Http\Controllers\OnboardingController::class, 'in
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 
-    dd(auth()->user()->roles);
     if (\Illuminate\Support\Str::contains(auth()->user()->roles()->first()->name, 'instructors')) {
         return \Inertia\Inertia::render('Teaching/Dashboard', [
             'courses' => \App\Models\Back\Course::get(),

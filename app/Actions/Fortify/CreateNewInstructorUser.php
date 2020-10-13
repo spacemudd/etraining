@@ -34,14 +34,14 @@ class CreateNewInstructorUser implements CreatesNewUsers
 
         \DB::beginTransaction();
         $team = auth()->user()->personalTeam();
-        $role = Role::findByTeam('instructors');
+        $role = Role::findByName($team->id.'_instructors', 'web');
 
         $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
         ]);
-        
+
         $user->assignRole($role);
 
         $user->current_team_id = $team->id;

@@ -32,10 +32,22 @@ class RolesService
         // add the same name of the role to translation files.
     ];
 
+    public $instructorPermissions = [
+        'create-personal-courses',
+        'view-personal-courses',
+        'archive-personal-courses',
+        'broadcast-personal-courses',
+    ];
+
     public function seedPermissions()
     {
         Log::info('Beginning to seed permissions');
         foreach ($this->permissions as $permission) {
+            Permission::firstOrCreate([
+                'name' => $permission,
+            ]);
+        }
+        foreach ($this->instructorPermissions as $permission) {
             Permission::firstOrCreate([
                 'name' => $permission,
             ]);
@@ -64,8 +76,9 @@ class RolesService
         }
 
         // Add default roles.
-        Role::firstOrCreate(['name' => $team->id.'_trainees', 'team_id' => $team->id])->id;
-        Role::firstOrCreate(['name' => $team->id.'_instructors', 'team_id' => $team->id])->id;
-        Role::firstOrCreate(['name' => $team->id.'_finance', 'team_id' => $team->id])->id;
+        Role::firstOrCreate(['name' => $team->id.'_trainees', 'team_id' => $team->id]);
+        $instructor = Role::firstOrCreate(['name' => $team->id.'_instructors', 'team_id' => $team->id]);
+        $instructor->givePermissionTo($this->instructorPermissions);
+        Role::firstOrCreate(['name' => $team->id.'_finance', 'team_id' => $team->id]);
     }
 }

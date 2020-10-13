@@ -16,42 +16,6 @@
             </template>
         </sidebar-link>
 
-        <sidebar-link :link-value="route('back.instructors.index')">
-            <template #icon>
-                <img src="/img/teacher.svg" alt="" class="w-5 h-5">
-            </template>
-            <template #title>
-                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.instructors') }}</span>
-            </template>
-        </sidebar-link>
-
-        <sidebar-link :link-value="route('back.trainees.index')" :active="$page.currentRouteName == 'back.trainees.index'">
-            <template #icon>
-                <img src="/img/student.svg" alt="" class="w-5 h-5">
-            </template>
-            <template #title>
-                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.trainees') }}</span>
-            </template>
-        </sidebar-link>
-
-        <sidebar-link :link-value="route('back.courses.index')">
-            <template #icon>
-                <img src="/img/book.svg" alt="" class="w-5 h-5">
-            </template>
-            <template #title>
-                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.courses') }}</span>
-            </template>
-        </sidebar-link>
-
-        <sidebar-link :link-value="route('back.finance')" :active="$page.currentRouteName == 'back.finance'">
-            <template #icon>
-                <img src="/img/bank.svg" alt="" class="w-5 h-5">
-            </template>
-            <template #title>
-                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.finance') }}</span>
-            </template>
-        </sidebar-link>
-
         <!--<sidebar-link link-value="/">-->
         <!--    <template #icon>-->
         <!--        <ion-icon name="settings-outline" class="w-5 h-5"></ion-icon>-->
