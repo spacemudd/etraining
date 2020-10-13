@@ -33,6 +33,6 @@ class Role extends \Spatie\Permission\Models\Role
 
     public function findByTeam($role)
     {
-        return $this->where('name', $this->id.'_'.$role);
+        return $this->where('name', $this->team_id.'_'.$role);
     }
 }

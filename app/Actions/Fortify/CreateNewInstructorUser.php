@@ -13,6 +13,7 @@ namespace App\Actions\Fortify;
 
 use App\Actions\Jetstream\AddTeamMember;
 use App\Models\Back\Instructor;
+use App\Models\Role;
 use App\Models\User;
 use Hash;
 use Illuminate\Support\Facades\Validator;
@@ -33,12 +34,15 @@ class CreateNewInstructorUser implements CreatesNewUsers
 
         \DB::beginTransaction();
         $team = auth()->user()->personalTeam();
+        $role = Role::findByTeam('instructors');
 
         $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
         ]);
+        
+        $user->assignRole($role);
 
         $user->current_team_id = $team->id;
         $user->save();

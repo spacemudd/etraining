@@ -14,6 +14,14 @@ Route::get('language/{language}', function ($language) {
 Route::get('onboarding', [\App\Http\Controllers\OnboardingController::class, 'index']);
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+
+    dd(auth()->user()->roles);
+    if (\Illuminate\Support\Str::contains(auth()->user()->roles()->first()->name, 'instructors')) {
+        return \Inertia\Inertia::render('Teaching/Dashboard', [
+            'courses' => \App\Models\Back\Course::get(),
+        ]);
+    }
+
     return Inertia\Inertia::render('Dashboard', [
         'companies_count' => \App\Models\Back\Company::count(),
         'trainees_count' => \App\Models\Back\Trainee::count(),
@@ -61,5 +69,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('courses/{course_id}/training-package', [\App\Http\Controllers\Back\CoursesController::class, 'storeTrainingPackage'])->name('courses.training-package');
         Route::delete('courses/{course_id}/training-package', [\App\Http\Controllers\Back\CoursesController::class, 'deleteTrainingPackage'])->name('courses.training-package.destroy');
         Route::resource('courses', \App\Http\Controllers\Back\CoursesController::class);
+    });
+
+    Route::prefix('teaching')->name('teaching.')->group(function() {
+        Route::get('/', [\App\Http\Controllers\Teaching\TeachingController::class, 'index'])->name('index');
     });
 });
