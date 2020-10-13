@@ -10,10 +10,13 @@
             ></breadcrumb-container>
 
             <div class="grid grid-cols-6 gap-6">
-                <div class="col-span-6 flex items-center justify-end bg-gray-50 text-right">
+                <div class="col-span-6 flex items-center justify-end bg-gray-50 text-right gap-6">
                     <inertia-link :href="route('back.instructors.edit', this.instructor.id)" class="flex items-center justify-start rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
                         {{ $t('words.edit') }}
                     </inertia-link>
+                    <button v-if="!instructor.user_id" @click="openInstructorAccount" class="flex items-center justify-start rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
+                        {{ $t('words.open-an-account') }}
+                    </button>
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
@@ -148,6 +151,11 @@
             }
         },
         methods: {
+            openInstructorAccount() {
+                if (confirm(this.$t('words.are-you-sure'))) {
+                    this.$inertia.post(route('back.instructors.create-user', {instructor_id: this.instructor.id}));
+                }
+            },
             sendingCsrf(file, xhr, formData) {
                 xhr.setRequestHeader('X-CSRF-TOKEN', window.token ? window.token.content : '');
             },

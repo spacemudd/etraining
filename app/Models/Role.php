@@ -30,4 +30,9 @@ class Role extends \Spatie\Permission\Models\Role
     {
         return __('words.'.$this->name);
     }
+
+    public function findByTeam($role)
+    {
+        return $this->where('name', $this->id.'_'.$role);
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Services\RolesService;
 use Illuminate\Database\Seeder;
 
 class PermissionsTableSeeder extends Seeder

@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Actions\Fortify\CreateNewUser;
 use App\Models\Back\Instructor;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
@@ -121,6 +122,27 @@ class InstructorsManagementTest extends TestCase
         $this->assertDatabaseMissing('media', [
             'model_id' => $instructor->id,
             'file_name' => 'cv-summary-copy.jpg',
+        ]);
+    }
+
+    public function test_admin_creating_a_user_for_the_instructor()
+    {
+        $instructor = Instructor::factory()->create([
+            'team_id' => $this->user->personalTeam()->id,
+        ]);
+
+        $this->actingAs($this->user)
+            ->post(route('back.instructors.create-user', ['instructor_id' => $instructor->id]))
+            ->assertSessionHasNoErrors()
+            ->assertRedirect(route('back.instructors.show', $instructor->id));
+
+        $this->assertDatabaseHas('users', [
+            'email' => $instructor->email,
+        ]);
+
+        $this->assertDatabaseHas('instructors', [
+            'email' => $instructor->email,
+            'user_id' => User::findByEmail($instructor->email)->first()->id,
         ]);
     }
 }

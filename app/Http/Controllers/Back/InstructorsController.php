@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Back;
 
+use App\Actions\Fortify\CreateNewInstructorUser;
 use App\Http\Controllers\Controller;
 use App\Models\Back\Instructor;
 use App\Models\City;
@@ -160,5 +161,22 @@ class InstructorsController extends Controller
         $instructor = Instructor::findOrFail($instructor_id);
         $instructor->getMedia('cv-summary')->each->forceDelete();
         return response()->redirectToRoute('back.instructors.show', $instructor->id);
+    }
+
+    /**
+     * Open a new account for the instructor where they can login with it.
+     *
+     */
+    public function createUser($instructor_id)
+    {
+        $instructor = Instructor::findOrFail($instructor_id);
+        $user = (new CreateNewInstructorUser())->create([
+            'instructor_id' => $instructor->id,
+            'name' => $instructor->name,
+            'email' => $instructor->email,
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ]);
+        return redirect()->route('back.instructors.show', $instructor->id);
     }
 }

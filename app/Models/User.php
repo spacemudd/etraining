@@ -98,4 +98,9 @@ class User extends Authenticatable
     {
         return $this->locale;
     }
+
+    public function scopeFindByEmail($query, $email)
+    {
+        return $query->where('email', $email);
+    }
 }

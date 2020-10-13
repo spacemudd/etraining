@@ -140,7 +140,7 @@ export default {
             "companies": "الشركات",
             "instructors": "المدربين",
             "trainees": "المتدربين",
-            "courses": "الدورات",
+            "courses": "الدورات التدريبية",
             "quick-actions": "إجراءات سريعة",
             "add-new-trainee": "أضف متدرب جديد",
             "add-new-company": "أضف شركة جديدة",
@@ -186,8 +186,8 @@ export default {
             "contract_starts_at": "تاريخ بداية العقد",
             "contract_period_in_months": "مدة العقد (اشهر)",
             "trainees_count": "عدد المتدربين",
-            "trainee_salary": "راتب المتدرين (للشخص)",
-            "instructor_cost": "تكلفة المتدرب",
+            "trainee_salary": "راتب المتدرب",
+            "instructor_cost": "تكلفة التدريب",
             "company_reimbursement": "دعم الشركة",
             "notes": "ملاحظات",
             "saved-successfully": "حٌفظ بنجاح",
@@ -264,7 +264,8 @@ export default {
             "course-schedule": "جدولة البرنامج",
             "course-schedule-help": "هنا يمكنك تعديل جدول البرنامج والوقت والدفعات",
             "add-new-batch": "اضف دفعة جديدة",
-            "filter-late-clients": "العملاء المتأخرين"
+            "filter-late-clients": "العملاء المتأخرين",
+            "open-an-account": "إنشاء حساب"
         }
     },
     "en": {
@@ -530,7 +531,8 @@ export default {
             "remember-me": "Remember me",
             "course-schedule": "Course schedule",
             "course-schedule-help": "Here you can manage the course batches, the timing, and location",
-            "filter-late-clients": "Late clients"
+            "filter-late-clients": "Late clients",
+            "open-an-account": "Open an account"
         }
     }
 }
