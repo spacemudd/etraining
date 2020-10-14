@@ -31,6 +31,7 @@
     "dependencies": {
         "@inertiajs/progress": "^0.1.2",
         "@zoomus/websdk": "^1.8.1",
+        "jquery": "^3.5.1",
         "logrocket": "^1.0.14",
         "logrocket-vuex": "0.0.3",
         "vue-i18n": "^8.22.0",

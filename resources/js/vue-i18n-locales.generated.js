@@ -265,7 +265,8 @@ export default {
             "course-schedule-help": "هنا يمكنك تعديل جدول البرنامج والوقت والدفعات",
             "add-new-batch": "اضف دفعة جديدة",
             "filter-late-clients": "العملاء المتأخرين",
-            "open-an-account": "إنشاء حساب"
+            "open-an-account": "إنشاء حساب",
+            "broadcast": "بث"
         }
     },
     "en": {
@@ -532,7 +533,8 @@ export default {
             "course-schedule": "Course schedule",
             "course-schedule-help": "Here you can manage the course batches, the timing, and location",
             "filter-late-clients": "Late clients",
-            "open-an-account": "Open an account"
+            "open-an-account": "Open an account",
+            "broadcast": "Broadcast"
         }
     }
 }

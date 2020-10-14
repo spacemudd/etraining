@@ -138,4 +138,5 @@ return [
     'add-new-batch' => 'اضف دفعة جديدة',
     'filter-late-clients' => 'العملاء المتأخرين',
     'open-an-account' => 'إنشاء حساب',
+    'broadcast' => 'بث',
 ];

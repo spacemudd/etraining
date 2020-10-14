@@ -21,3 +21,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth:sanctum')->get('/companies/{company_id}/contracts', [\App\Models\Back\CompanyContract::class, 'index']);
 
 Route::get('/location-lookup', [\App\Http\Controllers\LocationLookupController::class, 'search']);
+
+
+Route::middleware('auth:sanctum')->group(function() {
+    Route::get('/zoom/signature', [\App\Http\Controllers\ZoomController::class, 'signature'])->name('api.zoom.signature');
+});

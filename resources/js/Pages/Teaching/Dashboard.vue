@@ -21,24 +21,24 @@
                         </tr>
                         <tr v-for="course in courses.data" :key="course.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
                             <td class="border-t">
-                                <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('back.courses.show', course.id)">
+                                <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('teaching.courses.show', course.id)">
                                     {{ course.name_ar }}
                                 </inertia-link>
                             </td>
                             <td class="border-t">
-                                <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('back.courses.show', course.id)">
+                                <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('teaching.courses.show', course.id)">
                                     {{ course.approval_code }}
                                 </inertia-link>
                             </td>
                             <td class="border-t">
-                                <inertia-link class="px-6 py-4 flex items-center" :href="route('back.courses.show', course.id)" tabindex="-1">
+                                <inertia-link class="px-6 py-4 flex items-center" :href="route('teaching.courses.show', course.id)" tabindex="-1">
                                     <div v-if="course.instructor">
                                         {{ course.instructor.name }}
                                     </div>
                                 </inertia-link>
                             </td>
                             <td class="border-t w-px">
-                                <inertia-link class="px-4 flex items-center" :href="route('back.courses.show', course.id)" tabindex="-1">
+                                <inertia-link class="px-4 flex items-center" :href="route('teaching.courses.show', course.id)" tabindex="-1">
                                     <ion-icon name="arrow-forward-outline" class="block w-6 h-6 fill-gray-400"></ion-icon>
                                 </inertia-link>
                             </td>
@@ -47,7 +47,7 @@
                             <td class="border-t px-6 py-4" colspan="4">
                                 <empty-slate>
                                     <template #actions>
-                                        <inertia-link class="btn-gray mt-2 block" :href="route('back.courses.create')">
+                                        <inertia-link class="btn-gray mt-2 block" :href="route('teaching.courses.create')">
                                             <span>{{ $t('words.new') }}</span>
                                         </inertia-link>
                                     </template>

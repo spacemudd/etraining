@@ -136,4 +136,5 @@ return [
     'course-schedule-help' => 'Here you can manage the course batches, the timing, and location',
     'filter-late-clients' => 'Late clients',
     'open-an-account' => 'Open an account',
+    'broadcast' => 'Broadcast',
 ];
