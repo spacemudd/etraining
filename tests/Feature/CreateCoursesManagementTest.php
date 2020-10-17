@@ -31,16 +31,8 @@ class CreateCoursesManagementTest extends TestCase
 
     public function test_admin_can_see_all_courses_available()
     {
-        $company = Company::factory()->create(['team_id' => $this->user->personalTeam()->id]);
-
-        $contract = CompanyContract::factory()->create([
-            'company_id' => $company,
-            'team_id' => $this->user->personalTeam()->id,
-            ]);
-
         $instructor = Instructor::factory()->create([
             'team_id' => $this->user->personalTeam()->id,
-            'company_contract_id' => $contract->id,
         ]);
 
         $pmpCourse = Course::factory()->create([
@@ -59,16 +51,8 @@ class CreateCoursesManagementTest extends TestCase
 
     public function test_admin_can_save_new_course()
     {
-        $company = Company::factory()->create(['team_id' => $this->user->personalTeam()->id]);
-
-        $contract = CompanyContract::factory()->create([
-            'company_id' => $company,
-            'team_id' => $this->user->personalTeam()->id,
-        ]);
-
         $instructor = Instructor::factory()->create([
             'team_id' => $this->user->personalTeam()->id,
-            'company_contract_id' => $contract->id,
         ]);
 
         $pmpCourse = Course::factory()->make([
@@ -90,16 +74,8 @@ class CreateCoursesManagementTest extends TestCase
 
     public function test_admin_viewing_course()
     {
-        $company = Company::factory()->create(['team_id' => $this->user->personalTeam()->id]);
-
-        $contract = CompanyContract::factory()->create([
-            'company_id' => $company,
-            'team_id' => $this->user->personalTeam()->id,
-        ]);
-
         $instructor = Instructor::factory()->create([
             'team_id' => $this->user->personalTeam()->id,
-            'company_contract_id' => $contract->id,
         ]);
 
         $pmpCourse = Course::factory()->create([
@@ -122,16 +98,8 @@ class CreateCoursesManagementTest extends TestCase
     {
         Storage::fake('s3');
 
-        $company = Company::factory()->create(['team_id' => $this->user->personalTeam()->id]);
-
-        $contract = CompanyContract::factory()->create([
-            'company_id' => $company,
-            'team_id' => $this->user->personalTeam()->id,
-        ]);
-
         $instructor = Instructor::factory()->create([
             'team_id' => $this->user->personalTeam()->id,
-            'company_contract_id' => $contract->id,
         ]);
 
         $pmpCourse = Course::factory()->make([
@@ -158,16 +126,8 @@ class CreateCoursesManagementTest extends TestCase
     {
         Storage::fake('s3');
 
-        $company = Company::factory()->create(['team_id' => $this->user->personalTeam()->id]);
-
-        $contract = CompanyContract::factory()->create([
-            'company_id' => $company,
-            'team_id' => $this->user->personalTeam()->id,
-        ]);
-
         $instructor = Instructor::factory()->create([
             'team_id' => $this->user->personalTeam()->id,
-            'company_contract_id' => $contract->id,
         ]);
 
         $pmpCourse = Course::factory()->create([

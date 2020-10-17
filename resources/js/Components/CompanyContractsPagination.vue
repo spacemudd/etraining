@@ -71,13 +71,16 @@
                         </div>
                     </div>
                     <div class="col-span-2">
-                        <div class="w-full h-full border-2 border-gray-100 rounded p-2 flex justify-center items-center">
-                            <template v-if="contract.instructor">
-                                <button @click="openChoosingInstructorForContract(contract.id)">
-                                    {{ contract.instructor.name }}
-                                </button>
-                            </template>
-                            <button v-else class="text-sm bg-green-600 text-white px-3 py-1 rounded mx-auto block"
+                        <!-- Attaching instructors -->
+                        <div class="w-full h-full border-2 border-gray-100 rounded p-2 flex justify-center items-center flex-col">
+                            <div v-if="contract.instructors.length">
+                                <div v-for="instructor in contract.instructors" :key="instructor.id" class="flex py-2">
+                                    <div class="ltr:mr-4 rtl:ml-4"><button @click="unlinkInstructor(instructor.id, contract.id)" class="bg-red-200 px-2 rounded text-black inline-block">{{ $t('words.delete') }}</button></div>
+                                    <div>{{ instructor.name }}</div>
+                                </div>
+                                <hr class="border-2 w-full">
+                            </div>
+                            <button class="text-sm bg-green-600 text-white px-3 py-1 rounded mx-auto block mt-5"
                                     @click="openChoosingInstructorForContract(contract.id)"
                                     :title="$t('words.attach-instructors-help')">
                                 {{ $t('words.attach-instructors') }}
@@ -114,7 +117,7 @@
                             {{ $t('words.cancel') }}
                         </jet-secondary-button>
 
-                        <jet-button class="rtl:mr-5 ltr:ml-5" @click.native="updateInstructor" :class="{ 'opacity-25': updateInstructorForm.processing }" :disabled="updateInstructorForm.processing">
+                        <jet-button class="rtl:mr-5 ltr:ml-5" @click.native="attachInstructor" :class="{ 'opacity-25': updateInstructorForm.processing }" :disabled="updateInstructorForm.processing">
                             {{ $t('words.save') }}
                         </jet-button>
                     </div>
@@ -180,12 +183,13 @@
             },
             openChoosingInstructorForContract(contract_id) {
                 this.$modal.show('selectingInstructorModal');
+                this.updateInstructorForm.instructor_id = null;
                 this.updateInstructorForm.contract_id = contract_id;
             },
-            updateInstructor() {
-                this.updateInstructorForm.put(route('back.companies.contracts.update', {company_id: this.companyId, contract: this.updateInstructorForm.contract_id}), {
-                    preserveScroll: true,
-                    preserveState: true,
+            attachInstructor() {
+                axios.post(route('back.company-contracts.attach-instructor'), {
+                    company_contract_id: this.updateInstructorForm.contract_id,
+                    instructor_id: this.updateInstructorForm.instructor_id,
                 }).then(response => {
                     this.$modal.toggle('selectingInstructorModal');
                     this.getContracts();
@@ -193,7 +197,18 @@
             },
             toggleChoosingInstructor() {
                 this.$modal.toggle('selectingInstructorModal');
-            }
+            },
+            unlinkInstructor(instructorId, contractId) {
+                axios.post(route('back.company-contracts.detach-instructor'), {
+                    company_contract_id: contractId,
+                    instructor_id: instructorId,
+                }).then(response => {
+                    this.getContracts();
+                }).catch(error => {
+                    throw error;
+                }).finally(() => {
+                })
+            },
         }
     }
 </script>

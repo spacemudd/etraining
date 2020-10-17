@@ -187,7 +187,8 @@ class TraineesManagementTest extends TestCase
         ];
 
         //$this->actingAs($this->user)
-        //    ->post(route('back.companies.contracts.trainees.attach'), )
+        //    ->post(route('back.companies.contracts.trainees.attach'), $data)
+        //    ->assertSuccessful();
     }
 
     public function test_getting_trainees_with_groups()

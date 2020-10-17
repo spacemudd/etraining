@@ -22,7 +22,7 @@ class CompaniesContractsController extends Controller
     {
         if (request()->wantsJson()) {
             return CompanyContract::where('company_id', $company_id)
-                ->with('instructor')
+                ->with('instructors')
                 ->withCount('attachments')
                 ->latest()
                 ->get();
@@ -162,5 +162,47 @@ class CompaniesContractsController extends Controller
         return redirect()->to($files->first()->getTemporaryUrl(now()->addMinutes(5), '', [
             'ResponseContentType' => 'application/octet-stream',
         ]));
+    }
+
+    /**
+     * Attaches instructors to a company's contract.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return Instructor[]
+     */
+    public function attachInstructor(Request $request)
+    {
+        $request->validate([
+            'instructor_id' => 'required|exists:instructors,id',
+            'company_contract_id' => 'required|exists:company_contracts,id',
+        ]);
+
+        $contract = CompanyContract::findOrFail($request->company_contract_id);
+        $contract->instructors()->attach([$request->instructor_id]);
+
+        $contract->load('instructors');
+
+        return $contract;
+    }
+
+    /**
+     * Detaches instructors to a company's contract.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return Instructor[]
+     */
+    public function detachInstructor(Request $request)
+    {
+        $request->validate([
+            'instructor_id' => 'required|exists:instructors,id',
+            'company_contract_id' => 'required|exists:company_contracts,id',
+        ]);
+
+        $contract = CompanyContract::findOrFail($request->company_contract_id);
+        $contract->instructors()->detach([$request->instructor_id]);
+
+        $contract->load('instructors');
+
+        return $contract;
     }
 }

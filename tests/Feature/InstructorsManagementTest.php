@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Actions\Fortify\CreateNewUser;
+use App\Models\Back\Company;
+use App\Models\Back\CompanyContract;
 use App\Models\Back\Instructor;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -143,6 +145,48 @@ class InstructorsManagementTest extends TestCase
         $this->assertDatabaseHas('instructors', [
             'email' => $instructor->email,
             'user_id' => User::findByEmail($instructor->email)->first()->id,
+        ]);
+    }
+
+    public function test_linking_an_instructor_to_contract()
+    {
+        $company = Company::factory()->create(['team_id' => $this->user->personalTeam()->id]);
+        $contract = CompanyContract::factory()->create(['team_id' => $this->user->personalTeam()->id, 'company_id' => $company->id]);
+        $instructor = Instructor::factory()->create(['team_id' => $this->user->personalTeam()->id]);
+
+        $this->actingAs($this->user)
+            ->post(route('back.company-contracts.attach-instructor'), [
+                'company_contract_id' => $contract->id,
+                'instructor_id' => $instructor->id,
+            ])
+            ->assertSessionHasNoErrors()
+            ->assertSuccessful();
+
+        $this->assertDatabaseHas('company_contract_instructor', [
+            'company_contract_id' => $contract->id,
+            'instructor_id' => $instructor->id,
+        ]);
+    }
+
+    public function test_unlinking_an_instructor_from_contract()
+    {
+        $company = Company::factory()->create(['team_id' => $this->user->personalTeam()->id]);
+        $contract = CompanyContract::factory()->create(['team_id' => $this->user->personalTeam()->id, 'company_id' => $company->id]);
+        $instructor = Instructor::factory()->create(['team_id' => $this->user->personalTeam()->id]);
+
+        $contract->instructors()->attach([$instructor->id]);
+
+        $this->actingAs($this->user)
+            ->post(route('back.company-contracts.detach-instructor'), [
+                'company_contract_id' => $contract->id,
+                'instructor_id' => $instructor->id,
+            ])
+            ->assertSessionHasNoErrors()
+            ->assertSuccessful();
+
+        $this->assertDatabaseMissing('company_contract_instructor', [
+            'company_contract_id' => $contract->id,
+            'instructor_id' => $instructor->id,
         ]);
     }
 }

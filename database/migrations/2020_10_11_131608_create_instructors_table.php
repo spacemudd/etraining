@@ -27,15 +27,8 @@ class CreateInstructorsTable extends Migration
             $table->foreign('city_id')->references('id')->on('cities')->nullOnDelete();
             $table->uuid('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->uuid('company_contract_id')->nullable();
-            $table->foreign('company_contract_id')->references('id')->on('company_contracts')->nullOnDelete();
             $table->softDeletes();
             $table->timestamps();
-        });
-
-        Schema::table('company_contracts', function (Blueprint $table) {
-            $table->uuid('instructor_id')->nullable();
-            $table->foreign('instructor_id')->references('id')->on('instructors')->nullOnDelete();
         });
     }
 
@@ -46,13 +39,6 @@ class CreateInstructorsTable extends Migration
      */
     public function down()
     {
-        if (env('DB_CONNECTION') != 'sqlite') {
-            Schema::table('company_contracts', function (Blueprint $table) {
-                $table->dropForeign(['instructor_id']);
-                $table->dropColumn(['instructor_id']);
-            });
-        }
-
         Schema::dropIfExists('instructors');
     }
 }

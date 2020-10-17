@@ -74,9 +74,9 @@ class CompanyContract extends Model implements HasMedia
         return $this->media()->where('collection_name', 'contract_copy');
     }
 
-    public function instructor()
+    public function instructors()
     {
-        return $this->hasOne(Instructor::class, 'id', 'instructor_id');
+        return $this->belongsToMany(Instructor::class, 'company_contract_instructor');
     }
 
     /**
