@@ -24,5 +24,8 @@ Route::get('/location-lookup', [\App\Http\Controllers\LocationLookupController::
 
 
 Route::middleware('auth:sanctum')->group(function() {
+    Route::prefix('back')->group(function() {
+        Route::get('trainee-groups', [\App\Http\Controllers\Back\TraineesController::class, 'withGroups'])->name('api.back.trainee-groups.index');
+    });
     Route::get('/zoom/signature', [\App\Http\Controllers\ZoomController::class, 'signature'])->name('api.zoom.signature');
 });

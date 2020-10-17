@@ -84,7 +84,20 @@
                 }
             },
             startCourse() {
-
+                // ZoomMtg.join({
+                //     signature: signature,
+                //     meetingNumber: meetingNumber,
+                //     userName: userName,
+                //     apiKey: apiKey,
+                //     userEmail: userEmail,
+                //     passWord: password,
+                //     success: (success) => {
+                //         console.log(success)
+                //     },
+                //     error: (error) => {
+                //         console.log(error)
+                //     }
+                // })
             },
         }
     }

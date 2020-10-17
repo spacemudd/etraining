@@ -159,19 +159,22 @@
             }
         },
         mounted() {
-            this.$wait.start('GETTING_CONTRACTS');
-            axios.get('/back/companies/'+this.companyId+'/contracts')
-                .then(response => {
-                    this.contracts = response.data;
-                    this.$wait.end('GETTING_CONTRACTS')
-                }).catch(error => {
+            this.getContracts();
+        },
+        methods: {
+            getContracts() {
+                this.$wait.start('GETTING_CONTRACTS');
+                axios.get('/back/companies/'+this.companyId+'/contracts')
+                    .then(response => {
+                        this.contracts = response.data;
+                        this.$wait.end('GETTING_CONTRACTS')
+                    }).catch(error => {
                     Logrocket.captureException(error);
                     throw error;
                 }).finally(() => {
                     this.$wait.end('GETTING_CONTRACTS')
                 })
-        },
-        methods: {
+            },
             toDate(timestamp) {
                 return moment(timestamp).local().format('YYYY-MM-DD');
             },
@@ -185,6 +188,7 @@
                     preserveState: true,
                 }).then(response => {
                     this.$modal.toggle('selectingInstructorModal');
+                    this.getContracts();
                 })
             },
             toggleChoosingInstructor() {

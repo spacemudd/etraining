@@ -46,10 +46,12 @@ class CreateInstructorsTable extends Migration
      */
     public function down()
     {
-        //Schema::table('company_contracts', function (Blueprint $table) {
-        //    $table->dropForeign(['instructor_id']);
-        //    $table->dropColumn(['instructor_id']);
-        //});
+        if (env('DB_CONNECTION') != 'sqlite') {
+            Schema::table('company_contracts', function (Blueprint $table) {
+                $table->dropForeign(['instructor_id']);
+                $table->dropColumn(['instructor_id']);
+            });
+        }
 
         Schema::dropIfExists('instructors');
     }

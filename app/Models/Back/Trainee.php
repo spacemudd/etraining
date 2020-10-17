@@ -75,6 +75,11 @@ class Trainee extends Model implements HasMedia
         return $this->belongsTo(MaritalStatus::class);
     }
 
+    public function trainee_group()
+    {
+        return $this->belongsToMany(TraineeGroup::class, 'trainee_group_trainee');
+    }
+
     /**
      * Upload scan(s) of the documents.
      *

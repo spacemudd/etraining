@@ -3,7 +3,11 @@
 namespace Tests\Feature;
 
 use App\Actions\Fortify\CreateNewUser;
+use App\Models\Back\Company;
+use App\Models\Back\CompanyContract;
+use App\Models\Back\Instructor;
 use App\Models\Back\Trainee;
+use App\Models\Back\TraineeGroup;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Storage;
@@ -160,5 +164,65 @@ class TraineesManagementTest extends TestCase
             'model_id' => $trainee->id,
             'file_name' => 'bank-account-copy.jpg',
         ]);
+    }
+
+    public function test_linking_a_trainee_to_a_contract()
+    {
+        $company = Company::factory()->create([
+            'team_id' => $this->user->personalTeam()->id,
+        ]);
+        $contract = CompanyContract::factory()->create([
+            'team_id' => $this->user->personalTeam()->id,
+            'company_id' => $company->id,
+        ]);
+        $instructor = Instructor::factory()->create([
+            'team_id' => $this->user->personalTeam()->id,
+        ]);
+        $trainee = Trainee::factory()->create([
+            'team_id' => $this->user->personalTeam()->id,
+        ]);
+
+        $data = [
+            'instructor_id' => $instructor->id,
+        ];
+
+        //$this->actingAs($this->user)
+        //    ->post(route('back.companies.contracts.trainees.attach'), )
+    }
+
+    public function test_getting_trainees_with_groups()
+    {
+        $nancy = $this->user;
+
+        $company = Company::factory()->create(['team_id' => $nancy->personalTeam()->id]);
+
+        $teamX = TraineeGroup::factory()->create(['company_id' => $company->id, 'team_id' => $company->team_id]);
+        $alex = Trainee::factory()->create(['company_id' => $company->id, 'team_id' => $company->team_id]);
+        $mike = Trainee::factory()->create(['company_id' => $company->id, 'team_id' => $company->team_id]);
+        $teamX->trainees()->attach([$alex->id, $mike->id]);
+
+        $teamB = TraineeGroup::factory()->create(['company_id' => $company->id, 'team_id' => $company->team_id]);
+        $jonas = Trainee::factory()->create(['company_id' => $company->id, 'team_id' => $company->team_id]);
+        $steve = Trainee::factory()->create(['company_id' => $company->id, 'team_id' => $company->team_id]);
+        $teamB->trainees()->attach([$jonas->id, $steve->id]);
+
+        $this->actingAs($nancy)
+            ->get('/api/back/trainee-groups')
+            ->assertJson([
+                [
+                    'name' => $teamX->name,
+                    'trainees' => [
+                        ['id' => $alex->id],
+                        ['id' => $mike->id],
+                    ]
+                ],
+                [
+                    'name' => $teamB->name,
+                    'trainees' => [
+                        ['id' => $jonas->id],
+                        ['id' => $steve->id],
+                    ]
+                ],
+            ]);
     }
 }

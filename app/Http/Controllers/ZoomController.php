@@ -14,7 +14,12 @@ class ZoomController extends Controller
         $this->service = $service;
     }
 
-    function signature(Request $request)
+    /**
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return string
+     */
+    public function signature(Request $request): string
     {
         $request->validate([
             'meeting_id' => 'string',

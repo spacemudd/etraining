@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
 use App\Models\Back\Trainee;
+use App\Models\Back\TraineeGroup;
 use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\MaritalStatus;
@@ -151,5 +152,23 @@ class TraineesController extends Controller
         $trainee = Trainee::findOrFail($trainee_id);
         $trainee->getMedia('bank-account')->each->forceDelete();
         return response()->redirectToRoute('back.trainees.show', $trainee->id);
+    }
+
+    /**
+     * Shows all trainees with groups.
+     *
+     * @returns array
+     */
+    public function withGroups(): array
+    {
+        $groups = TraineeGroup::with('trainees')
+            ->get()
+            ->toArray();
+
+        foreach ($groups as &$group)  {
+            $group['id'] .= '-group';
+        }
+
+        return $groups;
     }
 }

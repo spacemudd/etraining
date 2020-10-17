@@ -31,6 +31,8 @@ class CreateTraineesTable extends Migration
             $table->uuid('marital_status_id')->nullable();
             $table->foreign('marital_status_id')->references('id')->on('marital_statuses')->onDelete('SET NULL');
             $table->tinyInteger('children_count')->nullable();
+            $table->uuid('company_id')->nullable();
+            $table->foreign('company_id')->references('id')->on('companies')->nullOnDelete();
             $table->softDeletes();
             $table->timestamps();
         });
