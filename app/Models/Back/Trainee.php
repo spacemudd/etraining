@@ -26,6 +26,7 @@ class Trainee extends Model implements HasMedia
     protected $keyType = 'string';
 
     protected $fillable = [
+        'instructor_id',
         'name',
         'identity_number',
         'birthday',
@@ -35,12 +36,14 @@ class Trainee extends Model implements HasMedia
         'children_count',
         'phone',
         'phone_additional',
+        'name_selectable',
     ];
 
     protected $appends = [
         'identity_copy_url',
         'qualification_copy_url',
         'bank_account_copy_url',
+        'name_selectable',
     ];
 
     protected static function boot(): void
@@ -125,5 +128,10 @@ class Trainee extends Model implements HasMedia
         if ($media_id) {
             return route('back.media.download', ['media_id' => $media_id]);
         }
+    }
+
+    public function getNameSelectableAttribute()
+    {
+        return $this->name.' ('.$this->identity_number.')';
     }
 }

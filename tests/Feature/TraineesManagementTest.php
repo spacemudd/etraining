@@ -166,29 +166,63 @@ class TraineesManagementTest extends TestCase
         ]);
     }
 
-    public function test_linking_a_trainee_to_a_contract()
+    public function test_linking_a_trainee_to_an_instructor()
     {
-        $company = Company::factory()->create([
-            'team_id' => $this->user->personalTeam()->id,
-        ]);
-        $contract = CompanyContract::factory()->create([
-            'team_id' => $this->user->personalTeam()->id,
-            'company_id' => $company->id,
-        ]);
+        app()->setLocale('en');
+
         $instructor = Instructor::factory()->create([
             'team_id' => $this->user->personalTeam()->id,
         ]);
+
         $trainee = Trainee::factory()->create([
+            'team_id' => $this->user->personalTeam()->id,
+        ]);
+
+        $trainee_2 = Trainee::factory()->create([
             'team_id' => $this->user->personalTeam()->id,
         ]);
 
         $data = [
             'instructor_id' => $instructor->id,
+            'trainees' => [
+                $trainee->id,
+                $trainee_2->id,
+            ],
         ];
 
-        //$this->actingAs($this->user)
-        //    ->post(route('back.companies.contracts.trainees.attach'), $data)
-        //    ->assertSuccessful();
+        $this->actingAs($this->user)
+            ->post(route('back.trainees.assign-instructor'), $data)
+            ->assertSuccessful();
+
+        $this->assertDatabaseHas('trainees', [
+            'id' => $trainee->id,
+            'instructor_id' => $instructor->id,
+        ]);
+
+        $this->assertDatabaseHas('trainees', [
+            'id' => $trainee_2->id,
+            'instructor_id' => $instructor->id,
+        ]);
+
+        $this->actingAs($this->user)
+            ->post(route('back.trainees.assign-instructor'), [
+                'instructor_id' => $instructor->id,
+                'trainees' => [
+                    $trainee->id,
+                ]
+            ])
+            ->assertSessionHasNoErrors()
+            ->assertSuccessful();
+
+        $this->assertDatabaseHas('trainees', [
+            'id' => $trainee->id,
+            'instructor_id' => $instructor->id,
+        ]);
+
+        $this->assertDatabaseHas('trainees', [
+            'id' => $trainee_2->id,
+            'instructor_id' => null,
+        ]);
     }
 
     public function test_getting_trainees_with_groups()

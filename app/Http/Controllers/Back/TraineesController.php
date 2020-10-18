@@ -10,6 +10,7 @@ use App\Models\EducationalLevel;
 use App\Models\MaritalStatus;
 use App\Models\Media;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class TraineesController extends Controller
@@ -24,6 +25,7 @@ class TraineesController extends Controller
     public function create()
     {
         return Inertia::render('Back/Trainees/Create', [
+            'trainee_groups' => TraineeGroup::get(),
             'cities' => City::orderBy('name_ar')->get(),
             'marital_statuses' => MaritalStatus::orderBy('order')->get(),
             'educational_levels' => EducationalLevel::orderBy('order')->get(),
@@ -38,6 +40,7 @@ class TraineesController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'trainee_group_name' => 'nullable|string|max:255',
             'name' => 'required|string|max:255',
             'identity_number' => 'required|string|max:255',
             'birthday' => 'required|date',
@@ -47,7 +50,15 @@ class TraineesController extends Controller
             'children_count' => 'nullable|integer|max:20',
         ]);
 
+        \DB::beginTransaction();
         $trainee = Trainee::create($request->except('_token'));
+        if ($request->trainee_group_name) {
+            $group = TraineeGroup::firstOrCreate([
+                'name' => $request->trainee_group_name,
+            ]);
+            $group->trainees()->attach([$trainee->id]);
+        }
+        \DB::commit();
 
         return redirect()->route('back.trainees.show', $trainee->id);
     }
@@ -170,5 +181,42 @@ class TraineesController extends Controller
         }
 
         return $groups;
+    }
+
+    /**
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return mixed
+     */
+    public function assignInstructor(Request $request)
+    {
+        $request->validate([
+            'instructor_id' => 'required|exists:instructors,id',
+            'trainees.*' => 'nullable',
+        ]);
+
+        \DB::beginTransaction();
+        $trainee_ids = [];
+
+        if (count($request->trainees)) {
+            foreach ($request->trainees as $trainee_id) {
+                if (Str::contains($trainee_id, '-group')) {
+                    $group = TraineeGroup::findOrFail(Str::before($trainee_id, '-group'));
+                    $group_ids = $group->trainees()->pluck('trainees.id');
+                    foreach ($group_ids as $id) {
+                        $trainee_ids[] = $id;
+                    }
+                } else {
+                    $trainee_ids[] = $trainee_id;
+                }
+            }
+        }
+
+        Trainee::where('instructor_id', $request->instructor_id)->update(['instructor_id' => null]);
+        Trainee::whereIn('id', $trainee_ids)->update(['instructor_id' => $request->instructor_id]);
+
+        \DB::commit();
+
+        return redirect()->back();
     }
 }

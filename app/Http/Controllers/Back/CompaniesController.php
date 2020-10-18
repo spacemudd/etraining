@@ -69,7 +69,9 @@ class CompaniesController extends Controller
     {
         return Inertia::render('Back/Companies/Show', [
             'company' => Company::with(['contracts' => function($model) {
-                $model->with('instructors');
+                $model->with(['instructors' => function($q) {
+                    $q->withCount('trainees');
+                }]);
             }])->findOrFail($id),
             'instructors' => Instructor::get(),
         ]);

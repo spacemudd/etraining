@@ -16,7 +16,7 @@ return [
     'quick-actions' => 'إجراءات سريعة',
     'add-new-trainee' => 'أضف متدرب جديد',
     'add-new-company' => 'أضف شركة جديدة',
-    'add-new-instructor' => 'اضف متدرب جديد',
+    'add-new-instructor' => 'اضف مدرب جديد',
     'add-new-course' => 'أضف دورة جديدة',
     'finance' => 'المالية',
     'reports' => 'التقارير',
@@ -139,4 +139,6 @@ return [
     'filter-late-clients' => 'العملاء المتأخرين',
     'open-an-account' => 'إنشاء حساب',
     'broadcast' => 'بث',
+    'please-select' => 'الرجاء الإختيار',
+    'group-name' => 'اسم المجموعة',
 ];

@@ -51,8 +51,8 @@ return [
     'contract-number' => 'Contract number',
     'attach-trainees' => 'Attach trainees',
     'attach-trainees-help' => 'Here you can attach the trainees registered on this contract.',
-    'attach-instructorss' => 'Attach instructors',
-    'attach-instructorss-help' => 'Here you can attach instructorss to trainees.',
+    'attach-instructors' => 'Attach instructors',
+    'attach-instructors-help' => 'Here you can attach instructorss to trainees.',
     'upload-new-contract' => 'Upload new contract to the system.',
     'reference_number' => 'Reference No.',
     'contract_starts_at' => 'Contract issue date',
@@ -137,4 +137,6 @@ return [
     'filter-late-clients' => 'Late clients',
     'open-an-account' => 'Open an account',
     'broadcast' => 'Broadcast',
+    'please-select' => 'Please select',
+    'group-name' => 'Group name',
 ];

@@ -20,6 +20,17 @@
                     </template>
 
                     <template #form>
+
+                        <div class="col-span-4 sm:col-span-4">
+                            <jet-label for="trainee_group_name" :value="$t('words.group-name')" />
+                            <select-trainee-group class="mt-2"
+                                                  @input="selectGroupName"
+                                                  v-model="form.trainee_group_name"
+                                                  :required="true"
+                            />
+                            <jet-input-error :message="form.error('trainee_group_name')" class="mt-2" />
+                        </div>
+
                         <div class="col-span-2 sm:col-span-2">
                             <jet-label for="name" :value="$t('words.name')" />
                             <jet-input id="name" type="text" class="mt-1 block w-full" v-model="form.name" autocomplete="off" autofocus />
@@ -97,7 +108,7 @@
                             <jet-input-error :message="form.error('marital_status_id')" class="mt-2" />
                         </div>
 
-                        <div class="col-span-2 sm:col-span-2">
+                        <div class="col-span-2 sm:col-span-2" v-if="needsToKnowChildrenCount">
                             <jet-label for="children_count" :value="$t('words.children_count')" />
                             <jet-input id="children_count" type="text" class="mt-1 block w-full" v-model="form.children_count" autocomplete="off" />
                             <jet-input-error :message="form.error('children_count')" class="mt-2" />
@@ -137,9 +148,10 @@
     import JetLabel from '@/Jetstream/Label';
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
     import debounce from 'lodash/debounce'
+    import SelectTraineeGroup from "@/Components/SelectTraineeGroup";
 
     export default {
-        props: ['sessions', 'cities', 'marital_statuses', 'educational_levels'],
+        props: ['sessions', 'cities', 'marital_statuses', 'educational_levels', 'trainee_groups'],
 
         components: {
             AppLayout,
@@ -152,11 +164,13 @@
             JetFormSection,
             JetLabel,
             BreadcrumbContainer,
+            SelectTraineeGroup,
         },
         data() {
             return {
                 addressSearch: '',
                 form: this.$inertia.form({
+                    trainee_group_name: '',
                     name: '',
                     identity_number: '',
                     birthday: '',
@@ -171,7 +185,19 @@
                 })
             }
         },
+        computed: {
+           needsToKnowChildrenCount() {
+               let selectedId = this.form.marital_status_id;
+
+               return this.marital_statuses.some(function(marital_status) {
+                   return marital_status.name_en != 'Single' && marital_status.id === selectedId;
+               });
+           },
+        },
         methods: {
+            selectGroupName(input) {
+                this.form.trainee_group_name = input.name;
+            },
             createTrainee() {
                 this.form.post('/back/trainees', {
                     preserveScroll: true

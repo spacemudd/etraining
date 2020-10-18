@@ -100,4 +100,9 @@ class Instructor extends Model implements HasMedia
             return route('back.media.download', ['media_id' => $media_id]);
         }
     }
+
+    public function trainees()
+    {
+        return $this->hasMany(Trainee::class);
+    }
 }

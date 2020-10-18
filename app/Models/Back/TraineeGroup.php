@@ -12,14 +12,14 @@
 namespace App\Models\Back;
 
 use App\Models\Company;
+use App\Scope\TeamScope;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use OwenIt\Auditing\Contracts\Auditable;
+use Str;
 
-class TraineeGroup extends Model implements Auditable
+class TraineeGroup extends Model
 {
-    use \OwenIt\Auditing\Auditable;
     use HasFactory;
     use HasUuid;
 
@@ -32,6 +32,22 @@ class TraineeGroup extends Model implements Auditable
         'company_id',
     ];
 
+    protected $appends = [
+        'name_selectable',
+    ];
+
+    protected static function boot(): void
+    {
+        parent::boot();
+        static::addGlobalScope(new TeamScope());
+        static::creating(function ($model) {
+            $model->{$model->getKeyName()} = (string) Str::uuid();
+            if (auth()->user()) {
+                $model->team_id = auth()->user()->personalTeam()->id;
+            }
+        });
+    }
+
     public function company()
     {
         return $this->belongsTo(Company::class);
@@ -40,5 +56,10 @@ class TraineeGroup extends Model implements Auditable
     public function trainees()
     {
         return $this->belongsToMany(Trainee::class, 'trainee_group_trainee');
+    }
+
+    public function getNameSelectableAttribute()
+    {
+        return $this->name;
     }
 }

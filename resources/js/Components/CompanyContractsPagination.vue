@@ -61,22 +61,30 @@
                             </span>
                         </a>
                     </div>
-                    <div class="col-span-2">
-                        <!-- Attaching trainees -->
-                        <div class="w-full h-full border-2 border-gray-100 rounded p-2 flex justify-center items-center">
-                            <button class="text-sm bg-green-600 text-white px-3 py-1 rounded mx-auto block"
-                                    :title="$t('words.attach-trainees-help')">
-                                {{ $t('words.attach-trainees') }}
-                            </button>
-                        </div>
-                    </div>
-                    <div class="col-span-2">
+                    <!--<div class="col-span-2">-->
+                    <!--    &lt;!&ndash; Attaching trainees &ndash;&gt;-->
+                    <!--    <div class="w-full h-full border-2 border-gray-100 rounded p-2 flex justify-center items-center">-->
+                    <!--        <button class="text-sm bg-green-600 text-white px-3 py-1 rounded mx-auto block"-->
+                    <!--                @click="toggleChoosingTrainees"-->
+                    <!--                :title="$t('words.attach-trainees-help')">-->
+                    <!--            {{ $t('words.attach-trainees') }}-->
+                    <!--        </button>-->
+                    <!--    </div>-->
+                    <!--</div>-->
+                    <div class="col-span-4">
                         <!-- Attaching instructors -->
-                        <div class="w-full h-full border-2 border-gray-100 rounded p-2 flex justify-center items-center flex-col">
+                        <div class="w-full h-full border-2 border-gray-100 rounded p-2 items-center flex-col">
                             <div v-if="contract.instructors.length">
-                                <div v-for="instructor in contract.instructors" :key="instructor.id" class="flex py-2">
-                                    <div class="ltr:mr-4 rtl:ml-4"><button @click="unlinkInstructor(instructor.id, contract.id)" class="bg-red-200 px-2 rounded text-black inline-block">{{ $t('words.delete') }}</button></div>
-                                    <div>{{ instructor.name }}</div>
+                                <div v-for="instructor in contract.instructors" :key="instructor.id" class="flex py-2 justify-between">
+                                    <div class="flex flex-grid gap-2">
+                                        <div><button @click="unlinkInstructor(instructor.id, contract.id)" class="bg-red-500 px-2 rounded text-white inline-block">{{ $t('words.delete') }}</button></div>
+                                        <div>{{ instructor.name }} ({{ instructor.trainees_count }})</div>
+                                    </div>
+                                    <button class="text-sm bg-gray-200 text-black px-3 py-1 rounded block right-0"
+                                            @click="openChoosingTrainees(instructor)"
+                                            :title="$t('words.attach-trainees-help')">
+                                        {{ $t('words.attach-trainees') }}
+                                    </button>
                                 </div>
                                 <hr class="border-2 w-full">
                             </div>
@@ -92,6 +100,38 @@
         </template>
 
         <portal to="app-modal-container">
+            <modal name="selectingTraineesModal" classes="overflow-visible">
+                <div class="bg-white block h-5 p-10">
+                    <h1 class="text-lg font-bold">{{ $t('words.attach-trainees') }}</h1>
+                    <div>
+                        <div class="mt-5" v-if="treeSelectOptions.length">
+                            <treeselect v-model="selectingTraineesForm.trainees"
+                                        name="instructors"
+                                        :multiple="true"
+                                        :show-count="true"
+                                        :default-expand-level="1"
+                                        :options="treeSelectOptions"
+                                        :normalizer="normalizer"
+                                        :placeholder="$t('words.please-select')"
+                                        :no-children-text="$t('words.nothing-is-here')"
+                                        :no-results-text="$t('words.nothing-is-here')"
+                            >
+                            </treeselect>
+                        </div>
+                    </div>
+
+                    <div class="mt-5">
+                        <jet-secondary-button @click.native="toggleChoosingTrainees">
+                            {{ $t('words.cancel') }}
+                        </jet-secondary-button>
+
+                        <jet-button class="rtl:mr-5 ltr:ml-5" @click.native="assignInstructorsTrainees" :class="{ 'opacity-25': updateInstructorForm.processing }" :disabled="updateInstructorForm.processing">
+                            {{ $t('words.save') }}
+                        </jet-button>
+                    </div>
+                </div>
+            </modal>
+
             <modal name="selectingInstructorModal">
                 <div class="bg-white block h-5 p-10">
                     <h1 class="text-lg font-bold">{{ $t('words.attach-instructors') }}</h1>
@@ -137,6 +177,8 @@
     import JetLabel from '@/Jetstream/Label';
     import JetSecondaryButton from '@/Jetstream/SecondaryButton';
     import JetInputError from '@/Jetstream/InputError';
+    import Treeselect from '@riophae/vue-treeselect';
+    import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
     export default {
         components: {
@@ -146,11 +188,19 @@
             JetLabel,
             JetSecondaryButton,
             JetInputError,
+            Treeselect,
         },
         props: ['companyId', 'instructors'],
         name: "CompanyContractsPagination",
         data() {
             return {
+                selectingTraineesForm: this.$inertia.form({
+                    instructor_id: null,
+                    trainees: null,
+                }, {
+                    resetOnSuccess: true,
+                    bag: 'selectingTraineesForm',
+                }),
                 updateInstructorForm: this.$inertia.form({
                     instructor_id: null,
                     contract_id: null,
@@ -159,10 +209,20 @@
                     bag: 'updateInstructorForm',
                 }),
                 contracts: [],
+                treeSelectOptions: [],
+                availableInstructorsForThisCompany: [],
+                normalizer: (node) => {
+                    return {
+                        id: node.id,
+                        label: node.name_selectable,
+                        children: node.trainees,
+                    }
+                },
             }
         },
         mounted() {
             this.getContracts();
+            this.getInstructorGroups();
         },
         methods: {
             getContracts() {
@@ -177,6 +237,21 @@
                 }).finally(() => {
                     this.$wait.end('GETTING_CONTRACTS')
                 })
+            },
+            getInstructorGroups() {
+                axios.get(route('back.trainee-groups.index'))
+                    .then(response => {
+                        let vm = this;
+                        _.forEach(response.data, function(group) {
+                            vm.treeSelectOptions.push(group);
+                        });
+                    })
+                    .catch(error => {
+                        throw error;
+                    })
+                    .finally(() => {
+                        this.loading = false;
+                    })
             },
             toDate(timestamp) {
                 return moment(timestamp).local().format('YYYY-MM-DD');
@@ -195,8 +270,25 @@
                     this.getContracts();
                 })
             },
+            assignInstructorsTrainees() {
+                this.selectingTraineesForm.post(route('back.trainees.assign-instructor'));
+                this.toggleChoosingTrainees();
+                this.getContracts();
+            },
             toggleChoosingInstructor() {
                 this.$modal.toggle('selectingInstructorModal');
+            },
+            openChoosingTrainees(instructor) {
+                this.selectingTraineesForm.instructor_id = instructor.id;
+                let traineeIds = [];
+                _.forEach(instructor.trainees, function(trainee) {
+                    traineeIds.push(trainee.id);
+                })
+                this.selectingTraineesForm.trainees = traineeIds;
+                this.toggleChoosingTrainees();
+            },
+            toggleChoosingTrainees() {
+                this.$modal.toggle('selectingTraineesModal');
             },
             unlinkInstructor(instructorId, contractId) {
                 axios.post(route('back.company-contracts.detach-instructor'), {

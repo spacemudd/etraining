@@ -2,4 +2,5 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 @import 'vue-ionicons/ionicons.css';
+@import 'selectize/dist/css/selectize.bootstrap3.css';
 @import './foundation.css';
