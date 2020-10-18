@@ -70,6 +70,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::delete('instructors/{instructor_id}/attachments/cv-summary', [\App\Http\Controllers\Back\InstructorsController::class, 'deleteCvSummary'])->name('instructors.attachments.cv-summary.destroy');
         Route::resource('instructors', \App\Http\Controllers\Back\InstructorsController::class);
 
+
+        Route::resource('courses/{course_id}/course-batches', \App\Http\Controllers\Back\CourseBatchesController::class);
+
         Route::post('courses/{course_id}/training-package', [\App\Http\Controllers\Back\CoursesController::class, 'storeTrainingPackage'])->name('courses.training-package');
         Route::delete('courses/{course_id}/training-package', [\App\Http\Controllers\Back\CoursesController::class, 'deleteTrainingPackage'])->name('courses.training-package.destroy');
         Route::resource('courses', \App\Http\Controllers\Back\CoursesController::class);

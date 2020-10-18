@@ -55,6 +55,11 @@ class Course extends Model implements HasMedia
         return $this->belongsTo(Instructor::class);
     }
 
+    public function batches()
+    {
+        return $this->hasMany(CourseBatch::class);
+    }
+
     /**
      * Upload scan(s) of the documents.
      *

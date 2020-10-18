@@ -158,4 +158,32 @@ class CreateCoursesManagementTest extends TestCase
             'file_name' => 'training-package.pdf',
         ]);
     }
+
+    public function test_admin_can_create_course_batch()
+    {
+        $instructor = Instructor::factory()->create([
+            'team_id' => $this->user->personalTeam()->id,
+        ]);
+
+        $pmpCourse = Course::factory()->create([
+            'team_id' => $this->user->personalTeam()->id,
+            'instructor_id' => $instructor->id,
+            'name_en' => 'PMP Course',
+            'classroom_count' => 25,
+        ]);
+
+        $batch = [
+            'course_id' => $pmpCourse->id,
+            'starts_at' => now()->firstOfMonth(),
+            'ends_at' => now()->endOfMonth(),
+            'location_at' => 'online',
+        ];
+
+        $this->actingAs($this->user)
+            ->post(route('back.course-batches.store', ['course_id' => $pmpCourse->id]), $batch)
+            ->assertSessionHasNoErrors()
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('course_batches', $batch);
+    }
 }
