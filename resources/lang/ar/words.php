@@ -141,4 +141,8 @@ return [
     'broadcast' => 'بث',
     'please-select' => 'الرجاء الإختيار',
     'group-name' => 'اسم المجموعة',
+    'create-course-batch' => 'انشاء دفعة تدريبية',
+    'start-date' => 'تاريخ البدء',
+    'end-date' => 'تاريخ الإنتهاء',
+    'location' => 'المكان',
 ];

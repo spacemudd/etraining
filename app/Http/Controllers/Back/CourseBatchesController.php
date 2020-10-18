@@ -14,9 +14,9 @@ class CourseBatchesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($course_id)
     {
-        //
+        return CourseBatch::where('course_id', $course_id)->get();
     }
 
     /**

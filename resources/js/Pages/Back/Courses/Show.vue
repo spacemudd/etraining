@@ -89,7 +89,7 @@
                 </div>
 
                 <div class="md:col-span-3 sm:col-span-1">
-                    <course-batches-pagination :company-id="123123" :instructors="[]" />
+                    <course-batches-pagination :course-id="course.id" />
                 </div>
             </div>
 

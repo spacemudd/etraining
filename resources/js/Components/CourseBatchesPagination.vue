@@ -9,28 +9,28 @@
   -->
 
 <template>
-    <div>
+    <div v-if="course_batches">
         <!-- Header -->
         <div class="flex justify-between items-center">
-            <p class="text-gray-500 text-sm font-semibold">{{ $t('words.view-all') }} ({{ contracts.length }})</p>
-            <inertia-link :href="`/back/companies/${companyId}/contracts/create`" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150">
+            <p class="text-gray-500 text-sm font-semibold">{{ $t('words.view-all') }} <template v-if="course_batches && course_batches.length">({{ course_batches.length }})</template></p>
+            <button @click="openCreateNewCourseBatch" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150">
                 {{ $t('words.add-new-batch') }}
-            </inertia-link>
+            </button>
         </div>
 
         <!-- All contracts -->
-        <Skeleton class="mt-3 block" height="150px" v-if="$wait.is('GETTING_CONTRACTS')" />
+        <Skeleton class="mt-3 block" height="150px" v-if="$wait.is('GETTING_COURSE')" />
         <template v-else>
-            <div v-if="contracts.length===0">
+            <div v-if="course_batches.length===0">
                 <empty-slate class="border-2 rounded-lg mt-3">
                     <template #actions>
-                        <inertia-link :href="`/back/companies/${companyId}/contracts/create`" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150">
+                        <button @click="openCreateNewCourseBatch" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150">
                             {{ $t('words.add-new-batch') }}
-                        </inertia-link>
+                        </button>
                     </template>
                 </empty-slate>
             </div>
-            <div class="bg-white rounded-lg my-5 p-5 shadow" v-for="contract in contracts" :key="contract.id">
+            <div class="bg-white rounded-lg my-5 p-5 shadow" v-for="batch in course_batches" :key="batch.id">
                 <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-6 gap-12">
                     <div class="col-span-2">
                         <table class="table text-sm w-full">
@@ -39,77 +39,66 @@
                             </colgroup>
                             <tbody>
                             <tr>
-                                <td class="font-semibold">{{ $t('words.contract-number') }}</td>
-                                <td class="text-gray-700">{{ contract.reference_number }}</td>
+                                <td class="font-semibold">{{ $t('words.start-date') }}</td>
+                                <td class="text-gray-700">{{ toDate(batch.starts_at) }}</td>
                             </tr>
                             <tr>
-                                <td class="font-semibold">{{ $t('words.contract_starts_at') }}</td>
-                                <td class="text-gray-700">{{ toDate(contract.contract_starts_at) }}</td>
-                            </tr>
-                            <tr>
-                                <td class="font-semibold">{{ $t('words.contract-end-date') }}</td>
-                                <td class="text-gray-700">
-                                    <span v-if="contract.contract_ends_at">{{ toDate(contract.contract_ends_at) }}</span>
-                                    <span v-else>-</span>
-                                </td>
+                                <td class="font-semibold">{{ $t('words.end-date') }}</td>
+                                <td class="text-gray-700">{{ toDate(batch.ends_at) }}</td>
                             </tr>
                             </tbody>
                         </table>
-                        <a v-if="contract.has_attachments" target="_blank" class="bg-gray-500 h-10 text-white text-sm rounded-sm mt-2 flex justify-center items-center" :href="route('back.companies.contracts.attachments', {company_id: contract.company_id, contract_id: contract.id})">
-                            <span class="inline-block">
-                                {{ $t('words.download-scan') }}
-                            </span>
-                        </a>
                     </div>
                     <div class="col-span-2">
                         <!-- Attaching trainees -->
-                        <div class="w-full h-full border-2 border-gray-100 rounded p-2 flex justify-center items-center">
-                            <button class="text-sm bg-green-600 text-white px-3 py-1 rounded mx-auto block"
-                                    :title="$t('words.attach-trainees-help')">
-                                {{ $t('words.attach-trainees') }}
-                            </button>
-                        </div>
-                    </div>
-                    <div class="col-span-2">
-                        <div class="w-full h-full border-2 border-gray-100 rounded p-2 flex justify-center items-center">
-                            <button class="text-sm bg-green-600 text-white px-3 py-1 rounded mx-auto block"
-                                    @click="openChoosingInstructorForContract(contract.id)"
-                                    :title="$t('words.attach-instructors-help')">
-                                {{ $t('words.attach-instructors') }}
-                            </button>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
         </template>
 
-        <jet-dialog-modal :show="toggleChoosingInstructor" @close="toggleChoosingInstructor">
-            <template #title>
-                {{ $t('words.instructor') }}
-            </template>
+        <portal to="app-modal-container">
+            <modal name="createCourseBatch"
+                   classes="overflow-y-scroll"
+                   :width="300"
+                   :height="300"
+                   :adaptive="true">
+                <div class="bg-white block h-5 p-10">
+                    <h1 class="text-lg font-bold">{{ $t('words.create-course-batch') }}</h1>
 
-            <template #content>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div v-for="instructor in instructors">
-                        <label class="flex items-center">
-                            <input type="checkbox" class="form-checkbox" :value="instructor.id" v-model="updateInstructorForm.instructor_id">
-                            <span class="ml-2 text-sm text-gray-600">{{ instructor.name_ar }}</span>
-                        </label>
+                    <div class="mt-5">
+                        <jet-label for="starts_at" :value="$t('words.start-date')" />
+                        <jet-input id="starts_at" type="date" class="mt-1 block w-full" v-model="form.starts_at" />
+                        <jet-input-error :message="form.error('starts_at')" class="mt-2" />
+                    </div>
+
+                    <div class="mt-5">
+                        <jet-label for="ends_at" :value="$t('words.end-date')" />
+                        <jet-input id="ends_at" type="date" class="mt-1 block w-full" v-model="form.ends_at" />
+                        <jet-input-error :message="form.error('ends_at')" class="mt-2" />
+                    </div>
+
+                    <div class="mt-5">
+                        <jet-label for="location_at" :value="$t('words.location')" />
+                        <jet-input id="location_at" type="text" class="mt-1 block w-full" v-model="form.location_at" />
+                        <jet-input-error :message="form.error('location_at')" class="mt-2" />
+                    </div>
+
+                    <div class="mt-5">
+                        <jet-secondary-button @click.native="openCreateNewCourseBatch">
+                            {{ $t('words.cancel') }}
+                        </jet-secondary-button>
+
+                        <jet-button class="rtl:mr-5 ltr:ml-5"
+                                    @click.native="createNewCourseBatch"
+                                    :class="{ 'opacity-25': form.processing }"
+                                    :disabled="form.processing">
+                            {{ $t('words.save') }}
+                        </jet-button>
                     </div>
                 </div>
-            </template>
-
-            <template #footer>
-                <jet-secondary-button @click.native="toggleChoosingInstructor">
-                    {{ $t('words.cancel') }}
-                </jet-secondary-button>
-
-                <jet-button class="ml-2" @click.native="updateInstructor" :class="{ 'opacity-25': updateInstructorForm.processing }" :disabled="updateInstructorForm.processing">
-                    {{ $t('words.save') }}
-                </jet-button>
-            </template>
-        </jet-dialog-modal>
-
+            </modal>
+        </portal>
     </div>
 </template>
 
@@ -118,66 +107,64 @@
     import { Skeleton } from 'vue-loading-skeleton';
     import Logrocket from 'logrocket';
     import EmptySlate from "@/Components/EmptySlate";
-    import JetDialogModal from '@/Jetstream/DialogModal'
-    import JetSecondaryButton from '@/Jetstream/SecondaryButton'
+    import JetDialogModal from '@/Jetstream/DialogModal';
+    import JetSecondaryButton from '@/Jetstream/SecondaryButton';
+    import JetLabel from '@/Jetstream/Label';
+    import JetInput from '@/Jetstream/Input';
+    import JetInputError from '@/Jetstream/InputError';
 
     export default {
         components: {
             JetButton,
             Skeleton,
             EmptySlate,
+            JetDialogModal,
+            JetSecondaryButton,
+            JetLabel,
+            JetInput,
+            JetInputError,
         },
-        props: ['companyId', 'instructors'],
-        name: "CompanyContractsPagination",
+        props: ['courseId'],
+        name: "CourseBatchesPagination",
         data() {
             return {
-                choosingInstructor: false,
-                updateInstructorForm: this.$inertia.form({
-                    instructor_id: null,
-                    contract_id: null,
+                form: this.$inertia.form({
+                   starts_at: Date(),
+                   ends_at: Date(),
+                   location_at: 'online',
                 }, {
-                    resetOnSuccess: false,
-                    bag: 'updateInstructorForm',
+                    resetOnSuccess: true,
+                    bag: 'form',
                 }),
-                contracts: [],
+                course_batches: null,
             }
         },
         mounted() {
-            this.$wait.start('GETTING_CONTRACTS');
-            axios.get('/back/companies/'+this.companyId+'/contracts')
-                .then(response => {
-                    this.contracts = response.data;
-                    this.$wait.end('GETTING_CONTRACTS')
-                }).catch(error => {
+            this.$wait.start('GETTING_COURSE');
+            this.getCourse();
+        },
+        methods: {
+            getCourse() {
+                axios.get(route('back.course-batches.index', {id: this.courseId}))
+                    .then(response => {
+                        this.course_batches = response.data;
+                        this.$wait.end('GETTING_COURSE')
+                    }).catch(error => {
                     Logrocket.captureException(error);
                     throw error;
                 }).finally(() => {
-                    this.$wait.end('GETTING_CONTRACTS')
+                    this.$wait.end('GETTING_COURSE')
                 })
-        },
-        methods: {
+            },
             toDate(timestamp) {
                 return moment(timestamp).local().format('YYYY-MM-DD');
             },
-            openChoosingInstructorForContract(contract_id) {
-                this.updateInstructorForm.contract_id = contract_id;
-                this.choosingInstructor = true;
+            openCreateNewCourseBatch() {
+              this.$modal.toggle('createCourseBatch');
             },
-            updateInstructor(contract) {
-                this.updateInstructorForm.put(route('back.companies.contracts.update', {company_id: this.companyId, contract: contract.id}), {
-                    preserveScroll: true,
-                    preserveState: true,
-                }).then(response => {
-                    this.choosingInstructor = null
-                })
+            createNewCourseBatch() {
+                this.form.post(route('back.course-batches.store', {course_id: this.courseId}));
             },
-            toggleChoosingInstructor() {
-                this.choosingInstructor = ! this.choosingInstructor;
-            }
         }
     }
 </script>
-
-<style scoped>
-
-</style>

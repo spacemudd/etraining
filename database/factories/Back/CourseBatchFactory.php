@@ -1,8 +1,8 @@
 <?php
 
-namespace Database\Factories\Models;
+namespace Database\Factories\Back;
 
-use App\Models\Models\CourseBatch;
+use App\Models\Back\CourseBatch;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CourseBatchFactory extends Factory

@@ -299,7 +299,11 @@ export default {
             "open-an-account": "إنشاء حساب",
             "broadcast": "بث",
             "please-select": "الرجاء الإختيار",
-            "group-name": "اسم المجموعة"
+            "group-name": "اسم المجموعة",
+            "create-course-batch": "انشاء دفعة تدريبية",
+            "start-date": "تاريخ البدء",
+            "end-date": "تاريخ الإنتهاء",
+            "location": "المكان"
         }
     },
     "en": {
@@ -569,7 +573,11 @@ export default {
             "open-an-account": "Open an account",
             "broadcast": "Broadcast",
             "please-select": "Please select",
-            "group-name": "Group name"
+            "group-name": "Group name",
+            "create-course-batch": "Create course batch",
+            "start-date": "Start date",
+            "end-date": "End date",
+            "location": "Location"
         }
     }
 }

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
 use App\Models\Back\Course;
-use App\Models\Back\Trainee;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -71,7 +70,7 @@ class CoursesController extends Controller
     public function show($id)
     {
         return Inertia::render('Back/Courses/Show', [
-            'course' => Course::with('instructor')->findOrFail($id),
+            'course' => Course::with('batches')->with('instructor')->findOrFail($id),
         ]);
     }
 

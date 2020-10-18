@@ -6,6 +6,7 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Models\Back\Company;
 use App\Models\Back\CompanyContract;
 use App\Models\Back\Course;
+use App\Models\Back\CourseBatch;
 use App\Models\Back\Instructor;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -185,5 +186,36 @@ class CreateCoursesManagementTest extends TestCase
             ->assertRedirect();
 
         $this->assertDatabaseHas('course_batches', $batch);
+    }
+
+    public function test_admin_can_see_all_course_batches()
+    {
+        $instructor = Instructor::factory()->create([
+            'team_id' => $this->user->personalTeam()->id,
+        ]);
+
+        $pmpCourse = Course::factory()->create([
+            'team_id' => $this->user->personalTeam()->id,
+            'instructor_id' => $instructor->id,
+            'name_en' => 'PMP Course',
+            'classroom_count' => 25,
+        ]);
+
+        $batch = CourseBatch::factory()->create([
+            'course_id' => $pmpCourse->id,
+            'team_id' => $pmpCourse->team_id,
+        ]);
+
+        $batch_2 = CourseBatch::factory()->create([
+            'course_id' => $pmpCourse->id,
+            'team_id' => $pmpCourse->team_id,
+        ]);
+
+        $this->actingAs($this->user)
+            ->get(route('back.course-batches.index', ['course_id' => $pmpCourse->id]))
+            ->assertJson([
+                ['course_id' => $batch->course_id, 'starts_at' => $batch->starts_at],
+                ['course_id' => $batch_2->course_id, 'starts_at' => $batch_2->starts_at],
+            ]);
     }
 }

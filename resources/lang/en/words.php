@@ -139,4 +139,8 @@ return [
     'broadcast' => 'Broadcast',
     'please-select' => 'Please select',
     'group-name' => 'Group name',
+    'create-course-batch' => 'Create course batch',
+    'start-date' => 'Start date',
+    'end-date' => 'End date',
+    'location' => 'Location',
 ];
