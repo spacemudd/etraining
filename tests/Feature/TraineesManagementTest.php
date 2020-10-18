@@ -192,7 +192,7 @@ class TraineesManagementTest extends TestCase
 
         $this->actingAs($this->user)
             ->post(route('back.trainees.assign-instructor'), $data)
-            ->assertSuccessful();
+            ->assertRedirect();
 
         $this->assertDatabaseHas('trainees', [
             'id' => $trainee->id,
@@ -212,7 +212,7 @@ class TraineesManagementTest extends TestCase
                 ]
             ])
             ->assertSessionHasNoErrors()
-            ->assertSuccessful();
+            ->assertRedirect();
 
         $this->assertDatabaseHas('trainees', [
             'id' => $trainee->id,
