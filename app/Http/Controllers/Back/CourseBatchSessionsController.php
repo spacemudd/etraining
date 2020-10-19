@@ -3,20 +3,24 @@
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
-use App\Models\Back\Course;
 use App\Models\Back\CourseBatch;
+use App\Models\Back\CourseBatchSession;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
-class CourseBatchesController extends Controller
+class CourseBatchSessionsController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
+     * @param $course_id
+     * @param $course_batch_id
+     * @param $course_batch_session_id
      * @return \Illuminate\Http\Response
      */
-    public function index($course_id)
+    public function index($course_id, $course_batch_id)
     {
-        return CourseBatch::where('course_id', $course_id)->with('course_batch_sessions')->get();
+        return CourseBatch::findOrFail($course_batch_id)->course_batch_sessions;
     }
 
     /**
@@ -32,21 +36,32 @@ class CourseBatchesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @param $course_id
+     * @param $course_batch_id
+     * @return void
      */
-    public function store(Request $request, $course_id)
+    public function store(Request $request, $course_id, $course_batch_id)
     {
         $request->validate([
             'starts_at' => 'required|date',
             'ends_at' => 'required|date',
-            'location_at' => 'required|string',
+            'course_batch_id' => 'required|exists:course_batches,id',
         ]);
 
-        $course = Course::findOrFail($course_id);
-        $course->batches()->save(new CourseBatch($request->except('_token')));
+        $batch = CourseBatch::findOrFail($request->course_batch_id);
+        $session = CourseBatchSession::create([
+            'course_id' => $batch->course_id,
+            'course_batch_id' => $batch->id,
+            'starts_at' => $request->starts_at,
+            'ends_at' => $request->ends_at,
+        ]);
 
-        return redirect()->route('back.courses.show', ['course' => $course_id]);
+        if ($request->wantsJson()) {
+            return response()->json($session->toArray());
+        }
+
+        return redirect()->route('back.courses.show', $session->course_id);
     }
 
     /**

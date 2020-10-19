@@ -4,11 +4,12 @@ namespace App\Models\Back;
 
 use App\Scope\TeamScope;
 use App\Traits\HasUuid;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Str;
 
-class CourseBatch extends Model
+class CourseBatchSession extends Model
 {
     use HasFactory;
     use HasUuid;
@@ -19,9 +20,9 @@ class CourseBatch extends Model
 
     protected $fillable = [
         'course_id',
+        'course_batch_id',
         'starts_at',
         'ends_at',
-        'location_at',
     ];
 
     protected static function boot(): void
@@ -41,8 +42,18 @@ class CourseBatch extends Model
         return $this->belongsTo(Course::class);
     }
 
-    public function course_batch_sessions()
+    public function course_batch()
     {
-        return $this->hasMany(CourseBatchSession::class);
+        return $this->belongsTo(CourseBatch::class);
+    }
+
+    public function setStartsAtAttribute($value)
+    {
+        $this->attributes['starts_at'] = $value ? Carbon::parse($value) : null;
+    }
+
+    public function setEndsAtAttribute($value)
+    {
+        $this->attributes['ends_at'] = $value ? Carbon::parse($value) : null;
     }
 }

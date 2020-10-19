@@ -145,4 +145,9 @@ return [
     'start-date' => 'تاريخ البدء',
     'end-date' => 'تاريخ الإنتهاء',
     'location' => 'المكان',
+    'time' => 'الوقت',
+    'create-course-session' => 'انشاء موعد دورة',
+    'select-date' => 'اختار الوقت',
+    'start-time' => 'وقت البدء',
+    'end-time' => 'وقت الإنتهاء',
 ];

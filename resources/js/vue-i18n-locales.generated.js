@@ -303,7 +303,12 @@ export default {
             "create-course-batch": "انشاء دفعة تدريبية",
             "start-date": "تاريخ البدء",
             "end-date": "تاريخ الإنتهاء",
-            "location": "المكان"
+            "location": "المكان",
+            "time": "الوقت",
+            "create-course-session": "انشاء موعد دورة",
+            "select-date": "اختار الوقت",
+            "start-time": "وقت البدء",
+            "end-time": "وقت الإنتهاء"
         }
     },
     "en": {
@@ -577,7 +582,12 @@ export default {
             "create-course-batch": "Create course batch",
             "start-date": "Start date",
             "end-date": "End date",
-            "location": "Location"
+            "location": "Location",
+            "time": "Time",
+            "create-course-session": "Create course session",
+            "select-date": "Select date",
+            "start-time": "Start time",
+            "end-time": "End time"
         }
     }
 }

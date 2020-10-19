@@ -7,6 +7,7 @@ use App\Models\Back\Company;
 use App\Models\Back\CompanyContract;
 use App\Models\Back\Course;
 use App\Models\Back\CourseBatch;
+use App\Models\Back\CourseBatchSession;
 use App\Models\Back\Instructor;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -217,5 +218,76 @@ class CreateCoursesManagementTest extends TestCase
                 ['course_id' => $batch->course_id, 'starts_at' => $batch->starts_at],
                 ['course_id' => $batch_2->course_id, 'starts_at' => $batch_2->starts_at],
             ]);
+    }
+
+    public function test_admin_can_create_course_sessions()
+    {
+        $instructor = Instructor::factory()->create([
+            'team_id' => $this->user->personalTeam()->id,
+        ]);
+
+        $pmpCourse = Course::factory()->create([
+            'team_id' => $this->user->personalTeam()->id,
+            'instructor_id' => $instructor->id,
+            'name_en' => 'PMP Course',
+            'classroom_count' => 25,
+        ]);
+
+        $batch = CourseBatch::factory()->create([
+            'course_id' => $pmpCourse->id,
+            'team_id' => $pmpCourse->team_id,
+        ]);
+
+        $this->actingAs($this->user)
+            ->post(route('back.course-batch-sessions.store', [
+                'course_id' => $pmpCourse->id,
+                'course_batch_id' => $batch->id,
+            ]), [
+                'course_batch_id'  => $batch->id,
+                'starts_at' => now()->setHour(11)->setMinute(0),
+                'ends_at' => now()->setHour(12)->setMinute(0),
+            ])
+            ->assertSessionHasNoErrors()
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('course_batch_sessions', [
+            'course_id' => $pmpCourse->id,
+            'course_batch_id' => $batch->id,
+            'starts_at' => now()->setHour(11)->setMinute(0),
+            'ends_at' => now()->setHour(12)->setMinute(0),
+        ]);
+    }
+
+    public function test_admin_can_see_course_sessions()
+    {
+        $instructor = Instructor::factory()->create([
+            'team_id' => $this->user->personalTeam()->id,
+        ]);
+
+        $pmpCourse = Course::factory()->create([
+            'team_id' => $this->user->personalTeam()->id,
+            'instructor_id' => $instructor->id,
+            'name_en' => 'PMP Course',
+            'classroom_count' => 25,
+        ]);
+
+        $batch = CourseBatch::factory()->create([
+            'course_id' => $pmpCourse->id,
+            'team_id' => $pmpCourse->team_id,
+        ]);
+
+        $session = CourseBatchSession::factory()->create([
+            'course_id' => $pmpCourse->id,
+            'course_batch_id' => $batch->id,
+            'team_id' => $pmpCourse->team_id,
+        ]);
+
+        $this->actingAs($this->user)
+            ->get(route('back.course-batch-sessions.index', [
+                'course_id' => $pmpCourse->id,
+                'course_batch_id' => $batch->id,
+            ]))
+            ->assertSuccessful()
+            ->assertSeeText($session->starts_at);
     }
 }

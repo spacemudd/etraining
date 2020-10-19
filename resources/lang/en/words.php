@@ -143,4 +143,9 @@ return [
     'start-date' => 'Start date',
     'end-date' => 'End date',
     'location' => 'Location',
+    'time' => 'Time',
+    'create-course-session' => 'Create course session',
+    'select-date' => 'Select date',
+    'start-time' => 'Start time',
+    'end-time' => 'End time',
 ];

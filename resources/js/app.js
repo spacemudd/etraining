@@ -13,8 +13,8 @@ import VueWait from 'vue-wait'
 import Store from './store';
 import VueInternationalization from 'vue-i18n';
 import Locale from './vue-i18n-locales.generated';
-import VModal from 'vue-js-modal/dist/index.nocss.js'
-import { InertiaProgress } from '@inertiajs/progress'
+import VModal from 'vue-js-modal/dist/index.nocss.js';
+import { InertiaProgress } from '@inertiajs/progress';
 InertiaProgress.init({
     // The delay after which the progress bar will
     // appear during navigation, in milliseconds.
@@ -30,12 +30,27 @@ InertiaProgress.init({
 Vue.use(InertiaApp);
 Vue.use(InertiaForm);
 Vue.use(PortalVue);
-Vue.use(VueMeta)
-Vue.use(VueWait)
-Vue.use(Skeleton)
-Vue.use(VModal)
+Vue.use(VueMeta);
+Vue.use(VueWait);
+Vue.use(Skeleton);
+Vue.use(VModal);
 Vue.use(VueInternationalization);
-Vue.mixin({ methods: { route: window.route } })
+Vue.mixin({ methods: { route: window.route } });
+
+// import { loadCldr, L10n } from '@syncfusion/ej2-base';
+import { DateTimePickerPlugin } from '@syncfusion/ej2-vue-calendars';
+// import * as numberingSystems from 'cldr-data/supplemental/numberingSystems.json';
+// import * as gregorian from 'cldr-data/main/ar/ca-gregorian.json';
+// import * as numbers from 'cldr-data/main/ar/numbers.json';
+// import * as timeZoneNames from 'cldr-data/main/ar/timeZoneNames.json';
+// import * as weekData from 'cldr-data/supplemental/weekdata.json'; // To load the culture based first day of week
+Vue.use(DateTimePickerPlugin);
+// loadCldr(numberingSystems, gregorian, numbers, timeZoneNames, weekData);
+// L10n.load({
+//     'ar': {
+//         'datetimepicker': { placeholder: 'حدد التاريخ والوقت', today: 'اليوم'},
+//     },
+// });
 
 Vue.directive('can', function (el, binding) {
     let permissions = document.head.querySelector('meta[name="user-permissions"]');

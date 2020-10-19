@@ -49,9 +49,12 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="col-span-2">
-                        <!-- Attaching trainees -->
-                        
+                    <div class="col-span-4 border-2 p-2">
+                        <!-- View sessions  -->
+                        <div class="flex justify-start w-full">
+                            <new-course-batch-session :course-batch="batch" @session:saved="getCourse()" />
+                        </div>
+                        <course-batch-sessions-list class="mt-5" :sessions="batch.course_batch_sessions"></course-batch-sessions-list>
                     </div>
                 </div>
             </div>
@@ -112,6 +115,8 @@
     import JetLabel from '@/Jetstream/Label';
     import JetInput from '@/Jetstream/Input';
     import JetInputError from '@/Jetstream/InputError';
+    import CourseBatchSessionsList from "@/Components/CourseBatchSessionsList";
+    import NewCourseBatchSession from "./NewCourseBatchSession";
 
     export default {
         components: {
@@ -123,6 +128,8 @@
             JetLabel,
             JetInput,
             JetInputError,
+            CourseBatchSessionsList,
+            NewCourseBatchSession,
         },
         props: ['courseId'],
         name: "CourseBatchesPagination",
@@ -160,7 +167,7 @@
                 return moment(timestamp).local().format('YYYY-MM-DD');
             },
             openCreateNewCourseBatch() {
-              this.$modal.toggle('createCourseBatch');
+                this.$modal.toggle('createCourseBatch');
             },
             createNewCourseBatch() {
                 this.form.post(route('back.course-batches.store', {course_id: this.courseId}));

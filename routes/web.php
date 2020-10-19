@@ -71,6 +71,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::resource('instructors', \App\Http\Controllers\Back\InstructorsController::class);
 
 
+        Route::resource('courses/{course_id}/course-batches/{course_batch_id}/course-batch-sessions', \App\Http\Controllers\Back\CourseBatchSessionsController::class);
+
         Route::resource('courses/{course_id}/course-batches', \App\Http\Controllers\Back\CourseBatchesController::class);
 
         Route::post('courses/{course_id}/training-package', [\App\Http\Controllers\Back\CoursesController::class, 'storeTrainingPackage'])->name('courses.training-package');
