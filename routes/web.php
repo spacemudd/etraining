@@ -17,7 +17,9 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 
     if (\Illuminate\Support\Str::contains(auth()->user()->roles()->first()->name, 'instructors')) {
         return \Inertia\Inertia::render('Teaching/Dashboard', [
-            'courses' => \App\Models\Back\Course::paginate(15),
+            'courses' => \App\Models\Back\Course::with(['batches' => function($q) {
+                $q->with('course_batch_sessions');
+            }])->paginate(15),
         ]);
     }
 
@@ -31,6 +33,10 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::prefix('back')->name('back.')->group(function() {
+        Route::post('/zoom/signature', [\App\Http\Controllers\ZoomController::class, 'signature'])->name('zoom.signature');
+        Route::post('/zoom/meetings', [\App\Http\Controllers\ZoomMeetingsController::class, 'store'])->name('zoom.meetings.store');
+        Route::post('/zoom/meetings/configs', [\App\Http\Controllers\ZoomMeetingsController::class, 'configs'])->name('zoom.meetings.configs');
+
         Route::get('media/{media_id}', [\App\Http\Controllers\MediaController::class, 'download'])->name('media.download');
         Route::delete('media/{media_id}', [\App\Http\Controllers\MediaController::class, 'delete'])->name('media.delete');
 

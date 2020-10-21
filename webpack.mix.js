@@ -17,6 +17,8 @@ mix.options({
     }
 });
 
+mix.copy('node_modules/@zoomus/websdk/dist', 'public/node_modules/@zoomus/websdk/dist')
+
 mix.js('resources/js/app.js', 'public/js')
     .postCss('resources/css/app.css', 'public/css', [
         require('postcss-import'),

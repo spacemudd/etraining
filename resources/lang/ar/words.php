@@ -150,4 +150,6 @@ return [
     'select-date' => 'اختار الوقت',
     'start-time' => 'وقت البدء',
     'end-time' => 'وقت الإنتهاء',
+    'provided-by' => 'مقامة من قبل',
+    'start-broadcasting' => 'ابدء البث',
 ];

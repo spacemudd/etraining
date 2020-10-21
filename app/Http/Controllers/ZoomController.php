@@ -22,8 +22,8 @@ class ZoomController extends Controller
     public function signature(Request $request): string
     {
         $request->validate([
-            'meeting_id' => 'string',
-            'role' => 'string',
+            'meeting_id' => 'numeric',
+            'role' => 'numeric',
         ]);
 
         return $this->service->generateSignature($request->meeting_id, $request->role);

@@ -308,7 +308,9 @@ export default {
             "create-course-session": "انشاء موعد دورة",
             "select-date": "اختار الوقت",
             "start-time": "وقت البدء",
-            "end-time": "وقت الإنتهاء"
+            "end-time": "وقت الإنتهاء",
+            "provided-by": "مقامة من قبل",
+            "start-broadcasting": "ابدء البث"
         }
     },
     "en": {
@@ -587,7 +589,9 @@ export default {
             "create-course-session": "Create course session",
             "select-date": "Select date",
             "start-time": "Start time",
-            "end-time": "End time"
+            "end-time": "End time",
+            "provided-by": "Provided by",
+            "start-broadcasting": "Start broadcasting"
         }
     }
 }

@@ -148,4 +148,6 @@ return [
     'select-date' => 'Select date',
     'start-time' => 'Start time',
     'end-time' => 'End time',
+    'provided-by' => 'Provided by',
+    'start-broadcasting' => 'Start broadcasting',
 ];

@@ -12,6 +12,30 @@
             </h2>
 
             <div class="container px-6 mx-auto grid pt-6">
+                <div v-for="course in courses.data" :key="course.id">
+                    <div class="bg-white py-5">
+                        <div class="w-30">
+                            <div class="w-full h-full bg-red rounded-lg">img</div>
+                        </div>
+
+                        <div>
+                            <p>{{ course.name_ar }}</p>
+                            <p>{{ $t('words.provided-by') }}:</p>
+                            <div>
+                                <div v-for="batch in course.batches" :key="batch.id">
+                                    <div v-for="session in batch.course_batch_sessions" :key="session.id">
+                                        <inertia-link :href="`/back/courses/${session.course_id}/course-batches/${session.course_batch_id}/course-batch-sessions/${session.id}`"
+                                                      class="bg-red-500 rounded p-2 text-white">{{ $t('words.start-broadcasting') }}
+                                        </inertia-link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container px-6 mx-auto grid pt-6">
                 <div class="bg-white rounded shadow overflow-x-auto">
                     <table class="w-full whitespace-no-wrap">
                         <tr class="text-left font-bold">
@@ -69,6 +93,7 @@
     import LanguageSelector from "@/Shared/LanguageSelector";
     import HeaderCard from "@/Components/HeaderCard";
     import CoursesPagination from "@/Components/CoursesPagination";
+    import Pagination from "@/Shared/Pagination";
 
     export default {
         props: ['courses'],
@@ -77,7 +102,8 @@
             AppLayout,
             Welcome,
             LanguageSelector,
-            HeaderCard
+            HeaderCard,
+            Pagination,
         },
     }
 </script>

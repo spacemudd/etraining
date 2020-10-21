@@ -427,6 +427,7 @@
             </header>
 
             <main class="h-full overflow-y-auto">
+                <div id="zoom-container"></div>
                 <slot></slot>
             </main>
         </div>
