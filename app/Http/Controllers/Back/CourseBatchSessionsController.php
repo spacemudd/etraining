@@ -72,9 +72,11 @@ class CourseBatchSessionsController extends Controller
      * @param $course_batch_session_id
      * @return \Inertia\Response
      */
-    public function show($course_id, $course_batch_id, $course_batch_session_id): \Inertia\Response
+    public function show($course_id, $course_batch_id, $course_batch_session_id)
     {
         $session = CourseBatchSession::with(['course', 'course_batch'])->findOrFail($course_batch_session_id);
+
+        Inertia::setRootView('zoom');
 
         return Inertia::render('Teaching/CourseBatchSessions/Show', [
             'course_batch_session' => $session,

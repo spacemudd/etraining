@@ -23,7 +23,6 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayoutInstructor'
     import ZoomLayout from "@/Layouts/ZoomLayout";
     import JetSectionBorder from '@/Jetstream/SectionBorder'
     import Breadcrumb from "@/Components/Breadcrumb";
@@ -42,7 +41,6 @@
         props: ['course_batch_session'],
 
         components: {
-            AppLayout,
             ZoomLayout,
             JetSectionBorder,
             Breadcrumb,
@@ -62,9 +60,32 @@
             }
         },
         mounted() {
+
             console.log(JSON.stringify(ZoomMtg.checkSystemRequirements()));
             ZoomMtg.preLoadWasm();
             ZoomMtg.prepareJssdk()
+
+            //Add your own custom language key
+            var langArray = ['en-US', 'ar-SA'];
+
+            // set the userLangTemplate variable to a default language code
+            var userLangTemplate = $.i18n.getAll("en-US");
+
+            // Define the userLangDict variable
+            // Use the language-key-value.json file to determine which keys to set the custom language
+            var userLangDict = Object.assign({}, userLangTemplate, {
+                'apac.toolbar_leave': 'الخروج الآن',
+                'apac.wc_leave_meeting': 'خروج',
+                'apac.wc_joining_meeting': 'دخول الدورة',
+                "apac.wc_quality": "جودة الفيديو"
+            });
+            // Set the userLangDict and custom code language in the load method
+            $.i18n.load(userLangDict, "ar-SA");
+
+            //Add the language code to the internationalization.reload method.
+            $.i18n.reload("ar-SA");
+            //Add the language code to the ZoomMtg.reRender method.
+            ZoomMtg.reRender({lang: "ar-SA"});
         },
         methods: {
             joinMeeting() {
