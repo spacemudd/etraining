@@ -16,11 +16,7 @@ Route::get('onboarding', [\App\Http\Controllers\OnboardingController::class, 'in
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 
     if (\Illuminate\Support\Str::contains(auth()->user()->roles()->first()->name, 'instructors')) {
-        return \Inertia\Inertia::render('Teaching/Dashboard', [
-            'courses' => \App\Models\Back\Course::with(['batches' => function($q) {
-                $q->with('course_batch_sessions');
-            }])->paginate(15),
-        ]);
+        return app()->make(\App\Http\Controllers\Teaching\TeachingController::class)->dashboard();
     }
 
     return Inertia\Inertia::render('Dashboard', [

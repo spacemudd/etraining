@@ -35,6 +35,7 @@
     import JetLabel from '@/Jetstream/Label';
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
     import { ZoomMtg } from '@zoomus/websdk';
+    import ZoomArabic from '@/zoom-ar-language-key-value.js';
 
 
     export default {
@@ -73,12 +74,9 @@
 
             // Define the userLangDict variable
             // Use the language-key-value.json file to determine which keys to set the custom language
-            var userLangDict = Object.assign({}, userLangTemplate, {
-                'apac.toolbar_leave': 'الخروج الآن',
-                'apac.wc_leave_meeting': 'خروج',
-                'apac.wc_joining_meeting': 'دخول الدورة',
-                "apac.wc_quality": "جودة الفيديو"
-            });
+            // https://zoom.github.io/sample-app-web/languages/en-US.json
+            console.log(ZoomArabic);
+            var userLangDict = Object.assign({}, userLangTemplate, ZoomArabic);
             // Set the userLangDict and custom code language in the load method
             $.i18n.load(userLangDict, "ar-SA");
 

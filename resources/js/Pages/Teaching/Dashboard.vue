@@ -1,86 +1,47 @@
 <template>
     <app-layout>
         <div class="container px-6 mx-auto grid">
-            <!--<h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">-->
-            <!--    {{ $t('words.dashboard') }}-->
-            <!--</h2>-->
-            <!-- Cards -->
 
-            <!-- Quick actions actions -->
-            <h2 class="my-6 font-semibold text-gray-700 dark:text-gray-200 border-b pb-1">
-                {{ $t('words.courses') }}
-            </h2>
-
-            <div class="container px-6 mx-auto grid pt-6">
-                <div v-for="course in courses.data" :key="course.id">
-                    <div class="bg-white py-5">
-                        <div class="w-30">
-                            <div class="w-full h-full bg-red rounded-lg">img</div>
-                        </div>
-
-                        <div>
-                            <p>{{ course.name_ar }}</p>
-                            <p>{{ $t('words.provided-by') }}:</p>
-                            <div>
-                                <div v-for="batch in course.batches" :key="batch.id">
-                                    <div v-for="session in batch.course_batch_sessions" :key="session.id">
-                                        <inertia-link :href="`/back/courses/${session.course_id}/course-batches/${session.course_batch_id}/course-batch-sessions/${session.id}`"
-                                                      class="bg-red-500 rounded p-2 text-white">{{ $t('words.start-broadcasting') }}
-                                        </inertia-link>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            <div class="container mx-auto grid p-6">
+                <div class="bg-white rounded-lg p-10 flex gap-10">
+                    <img src="/img/teacher.svg" alt="Teacher" class="h-20">
+                    <div>
+                        <h1 class="text-2xl font-heavy">{{ $t('words.welcome') }}!</h1>
+                        <p class="mt-2 text-gray-500">{{ user.email }}</p>
+                        <p dir="ltr" class="mt-2 text-xs text-gray-500">{{ $t('words.last-login-at') }}: {{ user.last_login_at }}</p>
                     </div>
                 </div>
             </div>
 
+            <!-- Instructor's upcoming sessions. -->
             <div class="container px-6 mx-auto grid pt-6">
-                <div class="bg-white rounded shadow overflow-x-auto">
-                    <table class="w-full whitespace-no-wrap">
-                        <tr class="text-left font-bold">
-                            <th class="px-6 pt-6 pb-4">{{ $t('words.name') }}</th>
-                            <th class="px-6 pt-6 pb-4">{{ $t('words.course-approval-code') }}</th>
-                            <th class="px-6 pt-6 pb-4">{{ $t('words.instructor') }}</th>
-                        </tr>
-                        <tr v-for="course in courses.data" :key="course.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
-                            <td class="border-t">
-                                <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('teaching.courses.show', course.id)">
-                                    {{ course.name_ar }}
-                                </inertia-link>
-                            </td>
-                            <td class="border-t">
-                                <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('teaching.courses.show', course.id)">
-                                    {{ course.approval_code }}
-                                </inertia-link>
-                            </td>
-                            <td class="border-t">
-                                <inertia-link class="px-6 py-4 flex items-center" :href="route('teaching.courses.show', course.id)" tabindex="-1">
-                                    <div v-if="course.instructor">
-                                        {{ course.instructor.name }}
-                                    </div>
-                                </inertia-link>
-                            </td>
-                            <td class="border-t w-px">
-                                <inertia-link class="px-4 flex items-center" :href="route('teaching.courses.show', course.id)" tabindex="-1">
-                                    <ion-icon name="arrow-forward-outline" class="block w-6 h-6 fill-gray-400"></ion-icon>
-                                </inertia-link>
-                            </td>
-                        </tr>
-                        <tr v-if="courses.data.length === 0">
-                            <td class="border-t px-6 py-4" colspan="4">
-                                <empty-slate>
-                                    <template #actions>
-                                        <inertia-link class="btn-gray mt-2 block" :href="route('teaching.courses.create')">
-                                            <span>{{ $t('words.new') }}</span>
-                                        </inertia-link>
-                                    </template>
-                                </empty-slate>
-                            </td>
-                        </tr>
-                    </table>
+                <div v-for="session in sessions.data"
+                     :key="session.id">
+                    <div class="bg-white py-5 flex gap-6">
+                        <div class="w-32">
+                            <div class="w-full h-full bg-red rounded-lg">
+                                <img class="rounded-lg" src="https://source.unsplash.com/300x300/?training,classroom" alt="">
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col justify-center w-full">
+                            <p class="font-bold text-lg py-2 text-center md:rtl:text-right md:ltr:text-left">{{ session.course_batch.course.name_ar }}</p>
+                            <p v-if="session.course_batch.course.instructor" class="text-sm">
+                                {{ $t('words.provided-by') }}:
+                                <span >{{ session.course_batch.course.instructor.name }}</span>
+                            </p>
+                            <div class="mt-5 flex gap-3 flex-col md:flex-row">
+                                <!-- Course options -->
+                                <inertia-link class="text-xs bg-yellow-200 py-3 px-6 rounded-lg font-bold hover:bg-yellow-300"
+                                        :href="route('back.course-batch-sessions.show', {course_id: session.course_id, course_batch_id: session.course_batch_id, course_batch_session: session.id})"
+                                >{{ $t('words.join-the-online-course') }}</inertia-link>
+                                <button class="btn-disabled" disabled>{{ $t('words.print-attendance') }}</button>
+                                <button class="btn-disabled" disabled>{{ $t('words.print-certificate') }}</button>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-                <pagination :links="courses.links" />
             </div>
 
         </div>
@@ -92,18 +53,14 @@
     import Welcome from '@/Jetstream/Welcome'
     import LanguageSelector from "@/Shared/LanguageSelector";
     import HeaderCard from "@/Components/HeaderCard";
-    import CoursesPagination from "@/Components/CoursesPagination";
-    import Pagination from "@/Shared/Pagination";
 
     export default {
-        props: ['courses'],
+        props: ['sessions', 'user'],
         components: {
-            CoursesPagination,
             AppLayout,
             Welcome,
             LanguageSelector,
             HeaderCard,
-            Pagination,
         },
     }
 </script>

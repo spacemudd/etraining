@@ -310,7 +310,13 @@ export default {
             "start-time": "وقت البدء",
             "end-time": "وقت الإنتهاء",
             "provided-by": "مقامة من قبل",
-            "start-broadcasting": "ابدء البث"
+            "start-broadcasting": "ابدء البث",
+            "welcome": "اهلاً بك",
+            "last-login-at": "آخر دخول لك",
+            "join-the-online-course": "الدخول الى الدورة عن بعد",
+            "view-the-location-on-map": "عرض الموقع على الخريطة",
+            "print-attendance": "طباعة الحضور",
+            "print-certificate": "طباعة الشهادة"
         }
     },
     "en": {
@@ -591,7 +597,13 @@ export default {
             "start-time": "Start time",
             "end-time": "End time",
             "provided-by": "Provided by",
-            "start-broadcasting": "Start broadcasting"
+            "start-broadcasting": "Start broadcasting",
+            "welcome": "Welcome",
+            "last-login-at": "Last login at",
+            "join-the-online-course": "Join the online course",
+            "view-the-location-on-map": "View the location on map",
+            "print-attendance": "Print attendance",
+            "print-certificate": "Print certificate"
         }
     }
 }

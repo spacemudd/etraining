@@ -150,4 +150,10 @@ return [
     'end-time' => 'End time',
     'provided-by' => 'Provided by',
     'start-broadcasting' => 'Start broadcasting',
+    'welcome' => 'Welcome',
+    'last-login-at' => 'Last login at',
+    'join-the-online-course' => 'Join the online course',
+    'view-the-location-on-map' => 'View the location on map',
+    'print-attendance' => 'Print attendance',
+    'print-certificate' => 'Print certificate',
 ];

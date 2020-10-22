@@ -56,6 +56,10 @@
     height: 1.5em;
 }
 
+.btn-disabled {
+    @apply px-6 py-3 rounded bg-gray-200 text-gray-400 text-xs font-bold whitespace-no-wrap;
+}
+
 .btn-spinner {
     font-size: 10px;
     position: relative;

@@ -152,4 +152,10 @@ return [
     'end-time' => 'وقت الإنتهاء',
     'provided-by' => 'مقامة من قبل',
     'start-broadcasting' => 'ابدء البث',
+    'welcome' => 'اهلاً بك',
+    'last-login-at' => 'آخر دخول لك',
+    'join-the-online-course' => 'الدخول الى الدورة عن بعد',
+    'view-the-location-on-map' => 'عرض الموقع على الخريطة',
+    'print-attendance' => 'طباعة الحضور',
+    'print-certificate' => 'طباعة الشهادة',
 ];

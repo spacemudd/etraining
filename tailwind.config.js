@@ -22,6 +22,7 @@ module.exports = {
         margin: ['responsive', 'direction'],
         padding: ['responsive', 'direction'],
         right: ['responsive', 'direction'],
+        textAlign: ['responsive', 'direction'],
     },
 
     plugins: [
