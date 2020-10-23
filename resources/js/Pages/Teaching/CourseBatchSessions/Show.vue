@@ -1,5 +1,4 @@
 <template>
-    <zoom-layout>
         <div class="container px-6 mx-auto grid pt-6">
             <breadcrumb-container
                 :crumbs="[
@@ -19,21 +18,9 @@
                 </div>
             </div>
         </div>
-    </zoom-layout>
 </template>
 
 <script>
-    import ZoomLayout from "@/Layouts/ZoomLayout";
-    import JetSectionBorder from '@/Jetstream/SectionBorder'
-    import Breadcrumb from "@/Components/Breadcrumb";
-    import JetDialogModal from '@/Jetstream/DialogModal'
-    import JetInput from '@/Jetstream/Input'
-    import JetInputError from '@/Jetstream/InputError'
-    import JetActionMessage from '@/Jetstream/ActionMessage';
-    import JetButton from '@/Jetstream/Button';
-    import JetFormSection from '@/Jetstream/FormSection';
-    import JetLabel from '@/Jetstream/Label';
-    import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
     import { ZoomMtg } from '@zoomus/websdk';
     import ZoomArabic from '@/zoom-ar-language-key-value.js';
 
@@ -42,17 +29,7 @@
         props: ['course_batch_session'],
 
         components: {
-            ZoomLayout,
-            JetSectionBorder,
-            Breadcrumb,
-            JetDialogModal,
-            JetInput,
-            JetInputError,
-            JetActionMessage,
-            JetButton,
-            JetFormSection,
-            JetLabel,
-            BreadcrumbContainer,
+            //
         },
         data() {
             return {
@@ -75,7 +52,6 @@
             // Define the userLangDict variable
             // Use the language-key-value.json file to determine which keys to set the custom language
             // https://zoom.github.io/sample-app-web/languages/en-US.json
-            console.log(ZoomArabic);
             var userLangDict = Object.assign({}, userLangTemplate, ZoomArabic);
             // Set the userLangDict and custom code language in the load method
             $.i18n.load(userLangDict, "ar-SA");
