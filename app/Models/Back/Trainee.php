@@ -27,6 +27,7 @@ class Trainee extends Model implements HasMedia
 
     protected $fillable = [
         'instructor_id',
+        'email',
         'name',
         'identity_number',
         'birthday',

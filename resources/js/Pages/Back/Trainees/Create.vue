@@ -31,9 +31,15 @@
                             <jet-input-error :message="form.error('trainee_group_name')" class="mt-2" />
                         </div>
 
+                        <div class="col-span-4 sm:col-span-4">
+                            <jet-label for="email" :value="$t('words.email')" />
+                            <jet-input id="email" type="email" class="mt-1 block w-full" v-model="form.email" autocomplete="off" autofocus />
+                            <jet-input-error :message="form.error('email')" class="mt-2" />
+                        </div>
+
                         <div class="col-span-2 sm:col-span-2">
                             <jet-label for="name" :value="$t('words.name')" />
-                            <jet-input id="name" type="text" class="mt-1 block w-full" v-model="form.name" autocomplete="off" autofocus />
+                            <jet-input id="name" type="text" class="mt-1 block w-full" v-model="form.name" autocomplete="off" />
                             <jet-input-error :message="form.error('name')" class="mt-2" />
                         </div>
 
@@ -171,6 +177,7 @@
                 addressSearch: '',
                 form: this.$inertia.form({
                     trainee_group_name: '',
+                    email: '',
                     name: '',
                     identity_number: '',
                     birthday: '',

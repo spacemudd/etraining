@@ -9,11 +9,17 @@
             ></breadcrumb-container>
 
             <div class="grid grid-cols-6 gap-6">
-                <div class="col-span-6 flex items-center justify-end bg-gray-50 text-right">
+                <div class="col-span-6 flex items-center justify-end bg-gray-50 text-right flex-col">
                     <button @click="joinMeeting"
                             :disabled="$wait.is('STARTING_INSTRUCTOR_SESSION')"
-                            class="flex items-center justify-start rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
-                        Join meeting
+                            class="flex items-center justify-start rounded-md px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 text-right">
+                        {{ $t('words.join-meeting-via-browser') }}
+                    </button>
+
+                    <button @click="joinMeeting"
+                            :disabled="$wait.is('STARTING_INSTRUCTOR_SESSION')"
+                            class="mt-5 rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
+                        {{ $t('words.join-meeting-via-client') }}
                     </button>
                 </div>
             </div>

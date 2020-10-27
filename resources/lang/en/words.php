@@ -158,4 +158,6 @@ return [
     'print-certificate' => 'Print certificate',
     'or' => 'Or',
     'have-an-account-?' => 'Already have an account?',
+    'join-meeting-via-browser' => 'Join meeting via browser',
+    'join-meeting-via-client' => 'Join meeting via Zoom',
 ];

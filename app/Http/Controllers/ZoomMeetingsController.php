@@ -41,7 +41,7 @@ class ZoomMeetingsController extends Controller
         return response()->json([
             'apiKey' => config('zoom.api_key'),
             'meetingNumber' => $meeting->id,
-            'leaveUrl' => url('/back/teaching/completed'),
+            'leaveUrl' => url('/dashboard'),
             'userName' => auth()->user()->email,
             'role' => self::ZOOM_HOST_ROLE,
             'password' => '123123',

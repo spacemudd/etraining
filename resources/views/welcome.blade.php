@@ -41,7 +41,7 @@
 
 
             <div class="headline-separator py-5 text-center">
-                {{ __('words.have-an-account-?') }}
+                <a href="{{ route('login') }}">{{ __('words.have-an-account-?') }}</a>
             </div>
         </form>
 

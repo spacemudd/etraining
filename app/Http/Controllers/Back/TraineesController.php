@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Back;
 
+use App\Actions\Fortify\CreateNewInstructorUser;
+use App\Actions\Fortify\CreateNewTraineeUser;
 use App\Http\Controllers\Controller;
+use App\Models\Back\Instructor;
 use App\Models\Back\Trainee;
 use App\Models\Back\TraineeGroup;
 use App\Models\City;
@@ -41,6 +44,7 @@ class TraineesController extends Controller
     {
         $request->validate([
             'trainee_group_name' => 'nullable|string|max:255',
+            'email' => 'string|max:255',
             'name' => 'required|string|max:255',
             'identity_number' => 'required|string|max:255',
             'birthday' => 'required|date',
@@ -218,5 +222,26 @@ class TraineesController extends Controller
         \DB::commit();
 
         return redirect()->back();
+    }
+
+    /**
+     * Open a new account for the trainee where they can login with it.
+     *
+     * @param $trainee_id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function createUser($trainee_id)
+    {
+        $trainee = Trainee::findOrFail($trainee_id);
+
+        $user = (new CreateNewTraineeUser())->create([
+            'trainee_id' => $trainee->id,
+            'name' => $trainee->name,
+            'email' => $trainee->email,
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ]);
+
+        return redirect()->route('back.trainees.show', $trainee->id);
     }
 }

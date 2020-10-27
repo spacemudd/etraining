@@ -67,5 +67,9 @@ class JetstreamServiceProvider extends ServiceProvider
             'create',
             'update',
         ])->description('Instructors users have the ability to read, create, and update.');
+
+        Jetstream::role('trainee', 'Trainee', [
+            'view-assigned-trainee-courses',
+        ])->description('Trainees can join their assigned courses');
     }
 }

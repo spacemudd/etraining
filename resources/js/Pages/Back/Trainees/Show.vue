@@ -10,10 +10,15 @@
             ></breadcrumb-container>
 
             <div class="grid grid-cols-6 gap-6">
-                <div class="col-span-6 flex items-center justify-end bg-gray-50 text-right">
+                <div class="col-span-6 flex items-center justify-end bg-gray-50 text-right gap-6">
                     <inertia-link :href="route('back.trainees.edit', this.trainee.id)" class="flex items-center justify-start rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
                         {{ $t('words.edit') }}
                     </inertia-link>
+                    <button v-if="!trainee.user_id"
+                            @click="openTraineeAccount"
+                            class="flex items-center justify-start rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
+                        {{ $t('words.open-an-account') }}
+                    </button>
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
@@ -200,6 +205,11 @@
             deleteBankAccount() {
                 if (confirm(this.$t('words.are-you-sure'))) {
                     this.$inertia.delete(route('back.trainees.attachments.bank-account.destroy', {trainee_id: this.trainee.id}));
+                }
+            },
+            openTraineeAccount() {
+                if (confirm(this.$t('words.are-you-sure'))) {
+                    this.$inertia.post(route('back.trainees.create-user', {trainee_id: this.trainee.id}));
                 }
             },
         }

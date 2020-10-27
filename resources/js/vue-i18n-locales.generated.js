@@ -316,7 +316,11 @@ export default {
             "join-the-online-course": "الدخول الى الدورة عن بعد",
             "view-the-location-on-map": "عرض الموقع على الخريطة",
             "print-attendance": "طباعة الحضور",
-            "print-certificate": "طباعة الشهادة"
+            "print-certificate": "طباعة الشهادة",
+            "or": "او",
+            "have-an-account-?": "يوجد لديك حساب؟",
+            "join-meeting-via-browser": "الدخول عبر المتصفح",
+            "join-meeting-via-client": "الدخول عبر برنامج Zoom"
         }
     },
     "en": {
@@ -603,7 +607,11 @@ export default {
             "join-the-online-course": "Join the online course",
             "view-the-location-on-map": "View the location on map",
             "print-attendance": "Print attendance",
-            "print-certificate": "Print certificate"
+            "print-certificate": "Print certificate",
+            "or": "Or",
+            "have-an-account-?": "Already have an account?",
+            "join-meeting-via-browser": "Join meeting via browser",
+            "join-meeting-via-client": "Join meeting via Zoom"
         }
     }
 }

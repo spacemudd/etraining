@@ -18,8 +18,9 @@ class CreateTraineesTable extends Migration
             $table->uuid('team_id');
             $table->foreign('team_id')->references('id')->on('teams');
             $table->uuid('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
             $table->string('name');
+            $table->string('email')->nullable();
             $table->string('identity_number')->nullable();
             $table->string('phone')->nullable();
             $table->string('phone_additional')->nullable();

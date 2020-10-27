@@ -160,4 +160,6 @@ return [
     'print-certificate' => 'طباعة الشهادة',
     'or' => 'او',
     'have-an-account-?' => 'يوجد لديك حساب؟',
+    'join-meeting-via-browser' => 'الدخول عبر المتصفح',
+    'join-meeting-via-client' => 'الدخول عبر برنامج Zoom',
 ];

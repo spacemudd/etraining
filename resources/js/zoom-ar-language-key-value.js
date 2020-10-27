@@ -73,7 +73,7 @@ export default {
     "apac.wc_enter_pairing_code":"أدخل رمز الاقتران",
     "apac.wc_disconnected":"انقطع الاتصال",
     "apac.wc_leave_pc_audio":"اترك صوت الكمبيوتر",
-    "apac.wc_join_audio_by_pc":"الانضمام إلى الصوت عن طريق الكمبيوتر",
+    "apac.wc_join_audio_by_pc":"الانضمام عن طريق الكمبيوتر",
     "apac.wc_learn":"تعلم",
     "apac.wc_how_to_allow":"كيفية السماح بالوصول إلى الميكروفون الخاص بك.",
     "apac.wc_change_browser":"متصفحك لا يدعم استخدام جهاز الصوت بالكمبيوتر. لاستخدام Zoom ، قم بتثبيت أحدث إصدار من متصفح قياسي ، مثل Chrome أو Firefox أو Chromium Edge.",

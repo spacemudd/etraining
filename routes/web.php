@@ -19,6 +19,10 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
         return app()->make(\App\Http\Controllers\Teaching\TeachingController::class)->dashboard();
     }
 
+    if (\Illuminate\Support\Str::contains(auth()->user()->roles()->first()->name, 'trainees')) {
+        return app()->make(\App\Http\Controllers\Trainees\DashboardController::class)->dashboard();
+    }
+
     return Inertia\Inertia::render('Dashboard', [
         'companies_count' => \App\Models\Back\Company::count(),
         'trainees_count' => \App\Models\Back\Trainee::count(),
@@ -56,6 +60,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::put('monthly-subscription', [\App\Http\Controllers\Back\FinancialMonthlySubscriptionController::class, 'update'])->name('monthly-subscription.update');
         });
 
+        Route::post('trainees/{trainee_id}/create-user', [\App\Http\Controllers\Back\TraineesController::class, 'createUser'])->name('trainees.create-user');
         Route::post('trainees/assign-instructor', [\App\Http\Controllers\Back\TraineesController::class, 'assignInstructor'])->name('trainees.assign-instructor');
         Route::post('trainees/{trainee_id}/attachments/identity', [\App\Http\Controllers\Back\TraineesController::class, 'storeIdentity'])->name('trainees.attachments.identity');
         Route::delete('trainees/{trainee_id}/attachments/identity', [\App\Http\Controllers\Back\TraineesController::class, 'deleteIdentity'])->name('trainees.attachments.identity.destroy');
