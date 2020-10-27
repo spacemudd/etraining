@@ -60,6 +60,29 @@
     @apply px-6 py-3 rounded bg-gray-200 text-gray-400 text-xs font-bold whitespace-no-wrap;
 }
 
+.headline-separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+.headline-separator::before, .headline-separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #d2d6dc;
+}
+[dir=rtl] .headline-separator::before {
+    margin-left: .25em;
+}
+.sheadline-eparator::before {
+    margin-right: .25em;
+}
+[dir=rtl] .headline-separator::after {
+    margin-right: .25em;
+}
+.headline-separator::after {
+    margin-left: .25em;
+}
+
 .btn-spinner {
     font-size: 10px;
     position: relative;

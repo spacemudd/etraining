@@ -158,4 +158,6 @@ return [
     'view-the-location-on-map' => 'عرض الموقع على الخريطة',
     'print-attendance' => 'طباعة الحضور',
     'print-certificate' => 'طباعة الشهادة',
+    'or' => 'او',
+    'have-an-account-?' => 'يوجد لديك حساب؟',
 ];

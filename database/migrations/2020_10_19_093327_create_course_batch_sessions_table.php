@@ -23,6 +23,7 @@ class CreateCourseBatchSessionsTable extends Migration
             $table->foreign('course_batch_id')->references('id')->on('course_batches')->cascadeOnDelete();
             $table->timestamp('starts_at');
             $table->timestamp('ends_at');
+            $table->string('zoom_link');
             $table->timestamps();
         });
     }

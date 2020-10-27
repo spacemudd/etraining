@@ -156,4 +156,6 @@ return [
     'view-the-location-on-map' => 'View the location on map',
     'print-attendance' => 'Print attendance',
     'print-certificate' => 'Print certificate',
+    'or' => 'Or',
+    'have-an-account-?' => 'Already have an account?',
 ];
