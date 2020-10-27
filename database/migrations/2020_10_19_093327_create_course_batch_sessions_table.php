@@ -24,6 +24,7 @@ class CreateCourseBatchSessionsTable extends Migration
             $table->timestamp('starts_at');
             $table->timestamp('ends_at');
             $table->string('zoom_link');
+            $table->string('zoom_meeting_id')->nullable();
             $table->timestamps();
         });
     }

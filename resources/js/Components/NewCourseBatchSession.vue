@@ -111,7 +111,6 @@
                 this.$modal.hide('createCourseBatchSessionModal');
             },
             open() {
-                console.log('hello');
                 this.$modal.show('createCourseBatchSessionModal');
             },
         }

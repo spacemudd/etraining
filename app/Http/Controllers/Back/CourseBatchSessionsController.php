@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\ZoomMeetingsController;
 use App\Models\Back\CourseBatch;
 use App\Models\Back\CourseBatchSession;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Zoom;
 
 class CourseBatchSessionsController extends Controller
 {
@@ -75,6 +77,15 @@ class CourseBatchSessionsController extends Controller
     public function show($course_id, $course_batch_id, $course_batch_session_id)
     {
         $session = CourseBatchSession::with(['course', 'course_batch'])->findOrFail($course_batch_session_id);
+
+        $meeting = Zoom::user()->find('me')->meetings()->create([
+            'topic' => 'New Meeting',
+            'type' => ZoomMeetingsController::ZOOM_INSTANT_MEETING,
+            'start_time' => now()->toIso8601ZuluString(),
+            'password' => '123123',
+        ]);
+        $session->zoom_meeting_id = $meeting->id;
+        $session->save();
 
         Inertia::setRootView('zoom');
 

@@ -104,4 +104,9 @@ class User extends Authenticatable
     {
         return $query->where('email', $email);
     }
+
+    public function isTrainee()
+    {
+        return $this->hasRole($this->team_id.'_trainees');
+    }
 }

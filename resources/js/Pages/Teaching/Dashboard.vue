@@ -17,7 +17,7 @@
             <div class="container px-6 mx-auto grid pt-6">
                 <div v-for="session in sessions.data"
                      :key="session.id">
-                    <div class="bg-white p-5 flex gap-6">
+                    <div class="bg-white my-5 p-5 flex gap-6">
                         <div class="w-32">
                             <div class="w-full h-full bg-red rounded-lg">
                                 <img class="rounded-lg" src="https://source.unsplash.com/300x300/?training,classroom" alt="">

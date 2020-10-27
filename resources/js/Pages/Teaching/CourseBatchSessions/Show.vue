@@ -69,7 +69,9 @@
         },
         methods: {
             joinMeeting() {
-                axios.post(route('back.zoom.meetings.configs'))
+                axios.post(route('back.zoom.meetings.configs'), {
+                    course_batch_session_id: this.course_batch_session.id,
+                })
                     .then(response => {
                         this.meetingConfig = response.data;
 

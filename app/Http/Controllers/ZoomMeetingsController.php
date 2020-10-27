@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Back\CourseBatchSession;
 use Illuminate\Http\Request;
 use Zoom;
 
@@ -18,32 +19,35 @@ class ZoomMeetingsController extends Controller
             'course_batch_session_id' => 'required',
         ]);
 
-        //$meeting = Zoom::user()->find('me')->meetings;
         $meeting = Zoom::user()->find('me')->meetings()->create([
             'topic' => 'New Meeting',
             'type' => self::ZOOM_INSTANT_MEETING,
             'start_time' => now()->toIso8601ZuluString(),
             'password' => '123123',
         ]);
+
+        $session = CourseBatchSession::find($request->course_batch_session_id);
+        $session->zoom_meeting_id = $meeting->id;
+        $session->save();
 
         return $meeting;
     }
 
-    public function configs()
+    public function configs(Request $request)
     {
-        $meeting = Zoom::user()->find('me')->meetings()->create([
-            'topic' => 'New Meeting',
-            'type' => self::ZOOM_INSTANT_MEETING,
-            'start_time' => now()->toIso8601ZuluString(),
-            'password' => '123123',
+        $request->validate([
+            'course_batch_session_id' => 'required',
         ]);
+
+        $session = CourseBatchSession::find($request->course_batch_session_id);
+        $meeting = Zoom::meeting()->find($session->zoom_meeting_id);
 
         return response()->json([
             'apiKey' => config('zoom.api_key'),
             'meetingNumber' => $meeting->id,
             'leaveUrl' => url('/dashboard'),
             'userName' => auth()->user()->email,
-            'role' => self::ZOOM_HOST_ROLE,
+            'role' => auth()->user()->isTrainee() ? self::ZOOM_ATTENDEE_ROLE : self::ZOOM_HOST_ROLE,
             'password' => '123123',
         ]);
     }

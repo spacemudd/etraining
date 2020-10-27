@@ -17,7 +17,7 @@
             <div class="container px-6 mx-auto grid pt-6">
                 <div v-for="session in sessions.data"
                      :key="session.id">
-                    <div class="bg-white p-5 flex gap-6">
+                    <div class="bg-white my-5 p-5 flex gap-6">
                         <div class="w-32">
                             <div class="w-full h-full bg-red rounded-lg">
                                 <img class="rounded-lg" src="https://source.unsplash.com/300x300/?training,classroom" alt="">
@@ -47,17 +47,19 @@
                             <div class="mt-5 flex gap-3 flex-col md:flex-row">
                                 <!-- Course options -->
                                 <inertia-link
+                                    v-if="session.zoom_meeting_id"
                                     class="text-xs bg-yellow-200 py-3 px-6 rounded-lg font-bold hover:bg-yellow-300"
                                     :href="route('back.course-batch-sessions.show', {course_id: session.course_id, course_batch_id: session.course_batch_id, course_batch_session: session.id})"
                                     >
                                     {{ $t('words.join-the-online-course') }}
                                 </inertia-link>
+                                <button v-else class="btn-disabled" disabled>{{ $t('words.join-the-online-course') }}</button>
+
                                 <button class="btn-disabled" disabled>{{ $t('words.print-attendance') }}</button>
                                 <button class="btn-disabled" disabled>{{ $t('words.print-certificate') }}</button>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
 
