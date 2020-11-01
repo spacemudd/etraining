@@ -1,13 +1,14 @@
 FROM php:7.4-fpm
 
-RUN apt-get update && \
-    apt-get install -y \
+RUN apt-get update
+
+RUN apt-get install -y \
     mariadb-client \
     libpq-dev \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
-    libbz2-dev \
-    zlib1g-dev \
+    libzip-dev \
+    zip \
     libicu-dev \
     g++ \
     cron \

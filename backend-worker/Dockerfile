@@ -2,13 +2,16 @@ FROM php:7.4-fpm
 
 LABEL description="A supervisor configured to run with artisan horizon command"
 
-RUN apt-get update && \
-    apt-get install -y \
+RUN apt-get update
+
+RUN apt-get install -y \
     mariadb-client \
     libpq-dev \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libbz2-dev \
+    libzip-dev \
+    zip \
     && pecl channel-update pecl.php.net \
     && pecl install apcu \
     && pecl install redis
