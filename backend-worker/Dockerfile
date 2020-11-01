@@ -17,11 +17,10 @@ RUN apt-get install -y \
     && pecl install apcu \
     && pecl install redis
 
-RUN docker-php-ext-install zip bz2 mbstring pdo pdo_pgsql pcntl \
+RUN docker-php-ext-install zip bz2 pdo pdo_pgsql pcntl \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install gd \
     pdo_mysql \
-    mbstring \
     pcntl \
     posix \
     exif \
