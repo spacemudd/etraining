@@ -21,7 +21,8 @@
 
             {{-- Trainee login --}}
             <div>
-                <a href="" class="flex bg-red-500 text-white py-5 px-10 rounded-lg text-2xl justify-center">
+                <a href="{{ route('register.trainees') }}"
+                   class="flex bg-red-500 hover:bg-red-600 text-white py-5 px-10 rounded-lg text-2xl justify-center">
                     <img src="{{ asset('/img/student.svg') }}" class="w-8 ml-5" style="filter:invert(1)">
                     {{ __('words.im-a-trainee') }}
                 </a>
@@ -33,7 +34,8 @@
 
             {{-- Instructor login --}}
             <div>
-                <a href="" class="flex bg-blue-500 text-white py-5 px-10 rounded-lg text-2xl justify-center">
+                <a href=""
+                   class="flex bg-blue-500 hover:bg-blue-600 text-white py-5 px-10 rounded-lg text-2xl justify-center">
                     <img src="{{ asset('/img/teacher.svg') }}" class="w-8 ml-5" style="filter:invert(1)">
                     {{ __('words.im-an-instructor') }}
                 </a>

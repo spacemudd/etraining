@@ -160,4 +160,6 @@ return [
     'have-an-account-?' => 'Already have an account?',
     'join-meeting-via-browser' => 'Join meeting via browser',
     'join-meeting-via-client' => 'Join meeting via Zoom',
+    'fill-your-application' => 'Fill your application',
+    'full-name' => 'Full name',
 ];

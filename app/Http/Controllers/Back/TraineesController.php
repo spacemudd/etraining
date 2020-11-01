@@ -12,12 +12,20 @@ use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\MaritalStatus;
 use App\Models\Media;
+use App\Services\TraineesServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class TraineesController extends Controller
 {
+    protected $service;
+
+    public function __construct(TraineesServices $services)
+    {
+        $this->service = $services;
+    }
+
     public function index()
     {
         return Inertia::render('Back/Trainees/Index', [
@@ -54,15 +62,7 @@ class TraineesController extends Controller
             'children_count' => 'nullable|integer|max:20',
         ]);
 
-        \DB::beginTransaction();
-        $trainee = Trainee::create($request->except('_token'));
-        if ($request->trainee_group_name) {
-            $group = TraineeGroup::firstOrCreate([
-                'name' => $request->trainee_group_name,
-            ]);
-            $group->trainees()->attach([$trainee->id]);
-        }
-        \DB::commit();
+        $trainee = $this->service->store($request->except('_token'));
 
         return redirect()->route('back.trainees.show', $trainee->id);
     }

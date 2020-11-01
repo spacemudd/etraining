@@ -12,7 +12,6 @@
 namespace App\Actions\Fortify;
 
 use App\Actions\Jetstream\AddTeamMember;
-use App\Models\Back\Instructor;
 use App\Models\Back\Trainee;
 use App\Models\Role;
 use App\Models\User;

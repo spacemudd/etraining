@@ -1,10 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::post('/register/trainees', [\App\Http\Controllers\Auth\RegisterTraineeController::class, 'store'])->name('register.trainees');
+Route::get('/register/trainees', [\App\Http\Controllers\Auth\RegisterTraineeController::class, 'show'])->name('register.trainees');
 
 Route::get('language/{language}', function ($language) {
     session()->put('locale', $language);
