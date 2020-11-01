@@ -15,10 +15,7 @@ RUN apt-get install -y \
 
 RUN apt-get update
 
-RUN apt-get install -y checkinstall
-
 RUN pecl channel-update pecl.php.net \
-    && pecl install apcu \
     && pecl install redis
 
 RUN docker-php-ext-install zip bz2 pcntl \

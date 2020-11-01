@@ -11,22 +11,16 @@ RUN apt-get install -y \
     zip \
     libicu-dev \
     libbz2-dev \
-    g++ \
-    cron \
-
-RUN apt-get update
-
-RUN apt-get install -y checkinstall
+    git
 
 RUN pecl channel-update pecl.php.net \
-    && pecl install apcu \
     && pecl install redis
 
 RUN docker-php-ext-install zip bz2 pcntl \
-&& docker-php-ext-configure gd --with-freetype --with-jpeg \
-&& docker-php-ext-install gd pdo_mysql exif \
-&& docker-php-ext-configure intl \
-&& docker-php-ext-install intl
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd pdo_mysql exif \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install intl
 
 # Imagick
 RUN apt-get update && apt-get install -y libmagickwand-dev --no-install-recommends && rm -rf /var/lib/apt/lists/*
@@ -37,7 +31,6 @@ RUN docker-php-ext-enable imagick
 RUN apt update
 RUN apt install -y software-properties-common ca-certificates wget curl ssh
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get install -yq build-essential checkinstall
 RUN apt-get install -yq xorg libssl-dev libxrender-dev wget gdebi
 
 # Install Windows fonts.
@@ -66,8 +59,5 @@ RUN echo "expose_php=0" >> $PHP_INI_DIR/conf.d/path-info.ini
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-RUN apt-get update
-RUN apt-get install -y git
 
 CMD ["/bin/sh", "-c", "php-fpm -D | tail -f storage/logs/laravel.log"]

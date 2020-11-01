@@ -16,10 +16,7 @@ RUN apt-get install -y \
 
 RUN apt-get update
 
-RUN apt-get install -y checkinstall
-
 RUN pecl channel-update pecl.php.net \
-    && pecl install apcu \
     && pecl install redis
 
 RUN docker-php-ext-install zip bz2 pcntl \
@@ -39,7 +36,7 @@ RUN docker-php-ext-enable imagick
 # For wkhtmltopdf
 RUN apt-get update
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get install -yq build-essential checkinstall
+RUN apt-get install -yq build-essential
 RUN apt-get install -yq xorg libssl-dev libxrender-dev wget gdebi
 
 # Install Windows fonts.
