@@ -21,8 +21,8 @@ class CreateCourseBatchSessionsTable extends Migration
             $table->foreign('course_id')->references('id')->on('courses')->cascadeOnDelete();
             $table->uuid('course_batch_id');
             $table->foreign('course_batch_id')->references('id')->on('course_batches')->cascadeOnDelete();
-            $table->timestamp('starts_at');
-            $table->timestamp('ends_at');
+            $table->timestamp('starts_at')->nullable();
+            $table->timestamp('ends_at')->nullable();
             $table->string('zoom_link');
             $table->string('zoom_meeting_id')->nullable();
             $table->timestamps();
