@@ -8,7 +8,6 @@ RUN apt-get update && \
     libpq-dev \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
-    libmcrypt-dev \
     libbz2-dev \
     && pecl channel-update pecl.php.net \
     && pecl install apcu \
