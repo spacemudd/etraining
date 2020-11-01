@@ -38,10 +38,16 @@ RUN wget http://ftp.br.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscore
 RUN apt-get -y install cabextract
 RUN dpkg -i ttf-mscorefonts-installer_3.6_all.deb
 
+
+# APCU
+RUN pecl install apcu && docker-php-ext-enable apcu
+RUN echo "extension=apcu.so" > $PHP_INI_DIR/conf.d/apcu.ini
+RUN echo "apc.enable_cli=1" > $PHP_INI_DIR/conf.d/apcu.ini
+RUN echo "apc.enable=1" > $PHP_INI_DIR/conf.d/apcu.ini
+
 # Memory Limit
 RUN echo "memory_limit=2048M" > $PHP_INI_DIR/conf.d/memory-limit.ini
 RUN echo "max_execution_time=900" >> $PHP_INI_DIR/conf.d/memory-limit.ini
-RUN echo "extension=apcu.so" > $PHP_INI_DIR/conf.d/apcu.ini
 RUN echo "post_max_size=20M" >> $PHP_INI_DIR/conf.d/memory-limit.ini
 RUN echo "upload_max_filesize=20M" >> $PHP_INI_DIR/conf.d/memory-limit.ini
 
