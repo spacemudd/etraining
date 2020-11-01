@@ -10,6 +10,7 @@ RUN apt-get install -y \
     libzip-dev \
     zip \
     libicu-dev \
+    libbz2-dev \
     g++ \
     cron \
     && pecl channel-update pecl.php.net \

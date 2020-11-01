@@ -11,6 +11,7 @@ RUN apt-get install -y \
     libjpeg62-turbo-dev \
     libzip-dev \
     zip \
+    libbz2-dev \
     && pecl channel-update pecl.php.net \
     && pecl install apcu \
     && pecl install redis
