@@ -13,9 +13,14 @@ RUN apt-get install -y \
     libbz2-dev \
     g++ \
     cron \
-    checkinstall \
-    && pecl channel-update pecl.php.net \
-    && pecl install apcu
+
+RUN apt-get update
+
+RUN apt-get install -y checkinstall
+
+RUN pecl channel-update pecl.php.net \
+    && pecl install apcu \
+    && pecl install redis
 
 RUN docker-php-ext-install zip bz2 pcntl \
 && docker-php-ext-configure gd --with-freetype --with-jpeg \
