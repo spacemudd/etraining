@@ -17,7 +17,7 @@ RUN apt-get install -y \
     && pecl install apcu
 
 RUN docker-php-ext-install zip bz2 pcntl \
-&& docker-php-ext-configure gd --with-png=/usr/include/ --with-jpeg=/usr/include/ --with-freetype=/usr/include/ \
+&& docker-php-ext-configure gd --with-freetype --with-jpeg \
 && docker-php-ext-install gd pdo_mysql exif \
 && docker-php-ext-configure intl \
 && docker-php-ext-install intl
