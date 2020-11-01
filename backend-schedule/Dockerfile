@@ -22,6 +22,7 @@ RUN docker-php-ext-install zip bz2 pcntl \
     pdo_mysql \
     pcntl \
     posix \
+    exif \
     && docker-php-ext-enable redis
 
 # For wkhtmltopdf
