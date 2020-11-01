@@ -13,8 +13,6 @@ RUN apt-get install -y \
     zip \
     libbz2-dev
 
-RUN apt-get update
-
 RUN pecl channel-update pecl.php.net \
     && pecl install redis
 
