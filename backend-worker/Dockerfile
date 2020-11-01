@@ -13,6 +13,7 @@ RUN apt-get install -y \
     libzip-dev \
     zip \
     libbz2-dev \
+    checkinstall \
     && pecl channel-update pecl.php.net \
     && pecl install apcu \
     && pecl install redis

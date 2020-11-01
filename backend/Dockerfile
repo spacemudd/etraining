@@ -13,6 +13,7 @@ RUN apt-get install -y \
     libbz2-dev \
     g++ \
     cron \
+    checkinstall \
     && pecl channel-update pecl.php.net \
     && pecl install apcu
 
