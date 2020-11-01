@@ -38,7 +38,6 @@ RUN wget http://ftp.br.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscore
 RUN apt-get -y install cabextract
 RUN dpkg -i ttf-mscorefonts-installer_3.6_all.deb
 
-
 # APCU
 RUN pecl install apcu && docker-php-ext-enable apcu
 RUN echo "extension=apcu.so" > $PHP_INI_DIR/conf.d/apcu.ini
