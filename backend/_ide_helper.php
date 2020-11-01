@@ -15741,6 +15741,17 @@
      
 }
 
+    namespace Laravel\Horizon { 
+            /**
+     * 
+     *
+     */ 
+        class Horizon {
+         
+    }
+     
+}
+
     namespace Maatwebsite\Excel\Facades { 
             /**
      * 
@@ -19569,6 +19580,7 @@ namespace  {
             class Flare extends \Facade\Ignition\Facades\Flare {}
             class Image extends \Intervention\Image\Facades\Image {}
             class Agent extends \Jenssegers\Agent\Facades\Agent {}
+            class Horizon extends \Laravel\Horizon\Horizon {}
             class Excel extends \Maatwebsite\Excel\Facades\Excel {}
             class Zoom extends \MacsiDigital\Zoom\Facades\Zoom {}
             class GooglePlaces extends \SKAgarwal\GoogleApi\Facade {}

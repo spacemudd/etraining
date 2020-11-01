@@ -22,6 +22,7 @@
         "laravel/cashier-paddle": "^1.2",
         "laravel/framework": "^8.0",
         "laravel/helpers": "^1.3",
+        "laravel/horizon": "^5.3",
         "laravel/jetstream": "^1.3",
         "laravel/sanctum": "^2.6",
         "laravel/tinker": "^2.0",
