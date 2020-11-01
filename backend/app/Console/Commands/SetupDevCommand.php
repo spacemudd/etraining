@@ -48,8 +48,8 @@ class SetupDevCommand extends Command
         }
 
         if ($this->ask('Do you want to create an Admin account?', true)) {
-            $email = $this->confirm('Choose an email address: [johndoe@example.com]', 'johndoe@example.com');
-            $password = $this->confirm('Choose a password: [password]', 'password');
+            $email = $this->ask('Choose an email address: [johndoe@example.com]', 'johndoe@example.com');
+            $password = $this->ask('Choose a password: [password]', 'password');
             (new CreateNewUser())->create([
                 'name' => 'John Doe',
                 'email' => $email,
