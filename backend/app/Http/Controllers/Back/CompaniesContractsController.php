@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Back\Company;
 use App\Models\Back\CompanyContract;
 use App\Models\Back\Instructor;
+use App\Models\Numbering;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Spatie\MediaLibrary\Support\MediaStream;
@@ -68,11 +70,16 @@ class CompaniesContractsController extends Controller
         ]);
 
         $company = Company::findOrFail($request->company_id);
+        DB::beginTransaction();
         $contract = CompanyContract::make($request->except('_token'));
+        if (!$request->reference_number) {
+            $contract->reference_number = Numbering::getNewNumber(now()->format('dmY').'-');
+        }
         $contract->team_id = $company->team_id;
         $contract->company_id = $company->id;
         $contract->created_by_id = optional(auth()->user())->id;
         $contract->save();
+        DB::commit();
 
         // Check and save the files.
         $files = $request->file('files');

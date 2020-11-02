@@ -32,8 +32,7 @@
                                            v-model="form[fieldName]"
                                            autocomplete="off"
                                            :autofocus="fieldName==='reference_number'"
-                                           required
-                                           :required="fieldName==='reference_number' || fieldName === 'contract_starts_at'"
+                                           :required="fieldName === 'contract_starts_at'"
                                 />
                                 <jet-input-error :message="form.error(fieldName)" class="mt-2" />
                             </div>
