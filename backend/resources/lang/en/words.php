@@ -134,6 +134,7 @@ return [
     'remember-me' => 'Remember me',
     'course-schedule' => 'Course schedule',
     'course-schedule-help' => 'Here you can manage the course batches, the timing, and location',
+    'add-new-batch' => 'Add new batch',
     'filter-late-clients' => 'Late clients',
     'open-an-account' => 'Open an account',
     'broadcast' => 'Broadcast',

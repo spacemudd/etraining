@@ -320,7 +320,9 @@ export default {
             "or": "او",
             "have-an-account-?": "يوجد لديك حساب؟",
             "join-meeting-via-browser": "الدخول عبر المتصفح",
-            "join-meeting-via-client": "الدخول عبر برنامج Zoom"
+            "join-meeting-via-client": "الدخول عبر برنامج Zoom",
+            "fill-your-application": "قم بتعبئة ملفك",
+            "full-name": "الاسم الكامل"
         }
     },
     "en": {
@@ -586,6 +588,7 @@ export default {
             "remember-me": "Remember me",
             "course-schedule": "Course schedule",
             "course-schedule-help": "Here you can manage the course batches, the timing, and location",
+            "add-new-batch": "Add new batch",
             "filter-late-clients": "Late clients",
             "open-an-account": "Open an account",
             "broadcast": "Broadcast",
@@ -611,7 +614,9 @@ export default {
             "or": "Or",
             "have-an-account-?": "Already have an account?",
             "join-meeting-via-browser": "Join meeting via browser",
-            "join-meeting-via-client": "Join meeting via Zoom"
+            "join-meeting-via-client": "Join meeting via Zoom",
+            "fill-your-application": "Fill your application",
+            "full-name": "Full name"
         }
     }
 }

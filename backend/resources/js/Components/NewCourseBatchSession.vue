@@ -14,8 +14,9 @@
             {{ $t('words.new') }}
         </button>
 
-        <portal to="app-modal-container">
-            <modal name="createCourseBatchSessionModal">
+        <portal-target :name="`app-course-session-modal-container-${courseBatch.id}`"></portal-target>
+        <portal :to="`app-course-session-modal-container-${courseBatch.id}`">
+            <modal :name="'createCourseBatchSessionModal'+courseBatch.id" :key="'createCourseBatchSessionModal'+courseBatch.id">
                 <div class="bg-white rounded-lg">
                     <div class="m-5">
                         <h1 class="text-lg font-bold">{{ $t('words.create-course-session') }}</h1>
@@ -108,10 +109,10 @@
                 });
             },
             close() {
-                this.$modal.hide('createCourseBatchSessionModal');
+                this.$modal.hide('createCourseBatchSessionModal'+this.courseBatch.id);
             },
             open() {
-                this.$modal.show('createCourseBatchSessionModal');
+                this.$modal.show('createCourseBatchSessionModal'+this.courseBatch.id);
             },
         }
     }

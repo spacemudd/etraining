@@ -62,10 +62,7 @@
 
         <portal to="app-modal-container">
             <modal name="createCourseBatch"
-                   classes="overflow-y-scroll"
-                   :width="300"
-                   :height="300"
-                   :adaptive="true">
+                   classes="overflow-y-scroll">
                 <div class="bg-white block h-5 p-10">
                     <h1 class="text-lg font-bold">{{ $t('words.create-course-batch') }}</h1>
 
@@ -87,7 +84,7 @@
                         <jet-input-error :message="form.error('location_at')" class="mt-2" />
                     </div>
 
-                    <div class="mt-5">
+                    <div class="mt-5 mb-5">
                         <jet-secondary-button @click.native="openCreateNewCourseBatch">
                             {{ $t('words.cancel') }}
                         </jet-secondary-button>
@@ -170,7 +167,11 @@
                 this.$modal.toggle('createCourseBatch');
             },
             createNewCourseBatch() {
-                this.form.post(route('back.course-batches.store', {course_id: this.courseId}));
+                this.form.post(route('back.course-batches.store', {course_id: this.courseId}))
+                    .then(response => {
+                        this.openCreateNewCourseBatch();
+                        this.getCourse();
+                    });
             },
         }
     }

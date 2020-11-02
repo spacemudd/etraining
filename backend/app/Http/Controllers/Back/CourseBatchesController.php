@@ -16,7 +16,9 @@ class CourseBatchesController extends Controller
      */
     public function index($course_id)
     {
-        return CourseBatch::where('course_id', $course_id)->with('course_batch_sessions')->get();
+        return CourseBatch::orderBy('starts_at', 'desc')->where('course_id', $course_id)->with(['course_batch_sessions' => function($q) {
+            $q->orderBy('starts_at', 'desc');
+        }])->get();
     }
 
     /**

@@ -432,11 +432,10 @@
             </header>
 
             <main class="h-full overflow-y-auto">
-                <portal-target name="app-modal-container">
-                </portal-target>
                 <slot></slot>
             </main>
         </div>
+        <portal-target name="app-modal-container"></portal-target>
     </div>
 </template>
 
