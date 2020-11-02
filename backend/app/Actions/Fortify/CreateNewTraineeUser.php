@@ -14,6 +14,7 @@ namespace App\Actions\Fortify;
 use App\Actions\Jetstream\AddTeamMember;
 use App\Models\Back\Trainee;
 use App\Models\Role;
+use App\Models\Team;
 use App\Models\User;
 use Hash;
 use Illuminate\Support\Facades\Validator;
@@ -33,7 +34,7 @@ class CreateNewTraineeUser implements CreatesNewUsers
         ])->validate();
 
         \DB::beginTransaction();
-        $team = auth()->user()->personalTeam();
+        $team = Team::first(); // TODO.
         $role = Role::findByName($team->id.'_trainees', 'web');
 
         $user = User::create([

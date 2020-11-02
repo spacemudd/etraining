@@ -253,8 +253,8 @@ class CreateCoursesManagementTest extends TestCase
         $this->assertDatabaseHas('course_batch_sessions', [
             'course_id' => $pmpCourse->id,
             'course_batch_id' => $batch->id,
-            'starts_at' => now()->setHour(11)->setMinute(0),
-            'ends_at' => now()->setHour(12)->setMinute(0),
+            'starts_at' => now()->setHour(11)->setMinute(0)->toDateTimeString(),
+            'ends_at' => now()->setHour(12)->setMinute(0)->toDateTimeString(),
         ]);
     }
 

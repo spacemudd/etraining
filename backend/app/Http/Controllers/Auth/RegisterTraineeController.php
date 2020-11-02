@@ -55,7 +55,5 @@ class RegisterTraineeController extends Controller
             'password' => 'password',
             'password_confirmation' => 'password',
         ]);
-
-
     }
 }

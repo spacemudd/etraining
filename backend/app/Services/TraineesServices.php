@@ -13,6 +13,7 @@ namespace App\Services;
 
 use App\Models\Back\Trainee;
 use App\Models\Back\TraineeGroup;
+use App\Models\Team;
 
 class TraineesServices
 {
@@ -25,7 +26,9 @@ class TraineesServices
     public function store($traineeRequest)
     {
         \DB::beginTransaction();
-        $trainee = Trainee::create($traineeRequest);
+        $trainee = Trainee::make($traineeRequest);
+        $trainee->team_id = Team::first()->id; // TODO.
+        $trainee->save();
         if (isset($traineeRequest['trainee_group_name'])) {
             $group = TraineeGroup::firstOrCreate([
                 'name' => ['trainee_group_name'],

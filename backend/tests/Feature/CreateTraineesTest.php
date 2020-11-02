@@ -5,6 +5,9 @@ namespace Tests\Feature;
 use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\MaritalStatus;
+use App\Models\Team;
+use App\Models\User;
+use App\Services\RolesService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -19,6 +22,14 @@ class CreateTraineesTest extends TestCase
 
     public function test_trainee_register()
     {
+        // Make a new team.
+        $admin = User::factory()->create();
+        $team = $admin->ownedTeams()->create([
+            'name' => 'eTraining Shafiq',
+            'personal_team' => false,
+        ]);
+        app()->make(RolesService::class)->seedRolesToTeam($team);
+
         $trainee = [
             'name' => 'Shafiq al-Shaar',
             'email' => 'shafiqalshaar@gmail.com',
@@ -28,9 +39,9 @@ class CreateTraineesTest extends TestCase
             'birthday' => '1994-12-10',
             'phone' => '966565176235',
             'phone_additional' => '966565176235',
-            'educational_level_id' => EducationalLevel::first()->id,
-            'city_id' => City::first()->id,
-            'marital_status_id' => MaritalStatus::first()->id,
+            'educational_level_id' => EducationalLevel::create(['order' => 1, 'name_en' => 'College_'])->id,
+            'city_id' => City::create(['name' => 'Riyadh'])->id,
+            'marital_status_id' => MaritalStatus::create(['order' => 1, 'name_en' => 'Single_'])->id,
             'children_count' => 0,
         ];
 

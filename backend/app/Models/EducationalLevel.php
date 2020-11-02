@@ -17,7 +17,7 @@ class EducationalLevel extends Model
 
     protected $fillable = [
         'order',
-        'name',
+        'name_en',
         'name_ar',
     ];
 }
