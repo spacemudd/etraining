@@ -1,10 +1,8 @@
 <template>
-    <div>
-        <div class="flex flex-col flex-1 w-full mb-10">
-            <main class="h-full overflow-y-auto">
-                <slot></slot>
-            </main>
-        </div>
+    <div class="flex flex-col flex-1 w-full h-screen mb-10">
+        <main class="h-full overflow-y-auto">
+            <slot></slot>
+        </main>
     </div>
 </template>
 

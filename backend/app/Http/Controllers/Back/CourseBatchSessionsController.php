@@ -78,14 +78,33 @@ class CourseBatchSessionsController extends Controller
     {
         $session = CourseBatchSession::with(['course', 'course_batch'])->findOrFail($course_batch_session_id);
 
-        $meeting = Zoom::user()->find('me')->meetings()->create([
-            'topic' => 'New Meeting',
-            'type' => ZoomMeetingsController::ZOOM_INSTANT_MEETING,
-            'start_time' => now()->toIso8601ZuluString(),
-            'password' => '123123',
-        ]);
-        $session->zoom_meeting_id = $meeting->id;
-        $session->save();
+        if (! $session->zoom_meeting_id) {
+            $meeting = Zoom::user()->find('me')->meetings()->create([
+                'topic' => 'New Meeting',
+                'type' => ZoomMeetingsController::ZOOM_INSTANT_MEETING,
+                'start_time' => now()->toIso8601ZuluString(),
+                'password' => '123123',
+                'timezone' => 'Asia/Riyadh',
+                'settings' => [
+                    'show_share_button' => false,
+                    'host_video' => false,
+                    'participant_video' => false,
+                    'mute_upon_entry' => true,
+                    'watermark' => false,
+                    'use_pmi' => false,
+                    'approval_type' => 2, // 0-automatic, 1-manually, 2-not required
+                    'registration_type' => 2, // 1-Attendees register once and can attend any of the occurrences., 2-Attendees need to register for each occurrence to attend., 3-Attendees register once and can choose one or more occurrences to attend.
+                    'audio' => 'voip', // voip, telephony, both
+                    'auto_recording' => 'none', // none, local, cloud
+                    'waiting_room' => false,
+                    'global_dial_in_countries' => [],
+                    'contact_name' => null,
+                    'contact_email' => null
+                ],
+            ]);
+            $session->zoom_meeting_id = $meeting->id;
+            $session->save();
+        }
 
         Inertia::setRootView('zoom');
 

@@ -31,7 +31,7 @@ class TraineesServices
         $trainee->save();
         if (isset($traineeRequest['trainee_group_name'])) {
             $group = TraineeGroup::firstOrCreate([
-                'name' => ['trainee_group_name'],
+                'name' => $traineeRequest['trainee_group_name'],
             ]);
             $group->trainees()->attach([$trainee->id]);
         }

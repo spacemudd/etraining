@@ -47,6 +47,11 @@
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
+                    <jet-label for="email" :value="$t('words.email')" />
+                    <jet-input id="email" type="text" class="mt-1 block w-full bg-gray-200" :value="this.trainee.email" disabled />
+                </div>
+
+                <div class="col-span-6 sm:col-span-2">
                     <jet-label for="educational_level" :value="$t('words.educational_level')" />
                     <jet-input id="educational_level" type="text" class="mt-1 block w-full bg-gray-200" :value="this.trainee.educational_level ? this.trainee.educational_level.name_ar : ''" disabled />
                 </div>
@@ -56,12 +61,12 @@
                     <jet-input id="city" type="text" class="mt-1 block w-full bg-gray-200" :value="this.trainee.city ? this.trainee.city.name_ar : ''" disabled />
                 </div>
 
-                <div class="col-span-6 sm:col-span-2">
+                <div class="col-span-6 sm:col-span-1">
                     <jet-label for="marital_status" :value="$t('words.marital_status')" />
                     <jet-input id="marital_status" type="text" class="mt-1 block w-full bg-gray-200" :value="this.trainee.marital_status ? this.trainee.marital_status.name_ar : ''" disabled />
                 </div>
 
-                <div class="col-span-6 sm:col-span-2">
+                <div class="col-span-6 sm:col-span-1">
                     <jet-label for="children_count" :value="$t('words.children_count')" />
                     <jet-input id="children_count" type="text" class="mt-1 block w-full bg-gray-200" v-model="this.trainee.children_count" disabled />
                 </div>

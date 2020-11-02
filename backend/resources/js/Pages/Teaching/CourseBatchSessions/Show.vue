@@ -9,7 +9,7 @@
             ></breadcrumb-container>
 
             <div class="grid grid-cols-6 gap-6">
-                <div class="col-span-6 flex items-center justify-end bg-gray-50 text-right flex-col">
+                <div class="col-span-6 flex items-center justify-end text-right flex-col">
                     <button @click="joinMeeting"
                             :disabled="$wait.is('STARTING_INSTRUCTOR_SESSION')"
                             class="flex items-center justify-start rounded-md px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 text-right">
@@ -29,7 +29,6 @@
 <script>
     import { ZoomMtg } from '@zoomus/websdk';
     import ZoomArabic from '@/zoom-ar-language-key-value.js';
-
 
     export default {
         props: ['course_batch_session'],
@@ -82,7 +81,6 @@
                     }).then(signatureResponse => {
                     let vm = this;
                     document.getElementById("zmmtg-root").style.display = "block";
-                    console.log(vm.meetingConfig);
                     ZoomMtg.init({
                         leaveUrl: vm.meetingConfig.leaveUrl,
                         isSupportAV: true,

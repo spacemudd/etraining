@@ -42,6 +42,13 @@ class ZoomMeetingsController extends Controller
         $session = CourseBatchSession::find($request->course_batch_session_id);
         $meeting = Zoom::meeting()->find($session->zoom_meeting_id);
 
+        \Log::info([
+            'zoom' => json_encode((array) $meeting),
+            'msg' => 'Generating Zoom configs',
+            'meeting_id_from_zoom' => $meeting->id,
+            'session_zoom_meeting_id' => $session->zoom_meeting_id,
+        ]);
+
         return response()->json([
             'apiKey' => config('zoom.api_key'),
             'meetingNumber' => $meeting->id,

@@ -32,7 +32,7 @@ export default {
     "apac.dialog.webinar_ended":"تم إنهاء الندوة عبر الإنترنت",
     "apac.dialog.placeholder_display_name":"دعوة اسم العرض في المؤتمر",
     "apac.dialog.placeholder_phone_number":"رقم الهاتف",
-    "apac.toolbar_invite":"يدعو",
+    "apac.toolbar_invite":"دعوة",
     "apac.dialog.invite_others":"ادعُ أشخاصًا آخرين",
     "apac.dialog.host_end_webinar":"تم إنهاء هذا الويبينار من قبل المضيف.",
     "apac.dialog.meeting_ended":"انتهى الاجتماع",
