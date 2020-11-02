@@ -139,7 +139,7 @@ class CreateCoursesManagementTest extends TestCase
             'classroom_count' => 25,
         ]);
 
-        $file = ['training_package' => UploadedFile::fake()->create('training-package.pdf', 1024 * 24)];
+        $file = ['file' => UploadedFile::fake()->create('training-package.pdf', 1024 * 24)];
 
         $this->actingAs($this->user)
             ->post(route('back.courses.training-package', ['course_id' => $pmpCourse->id]), $file)

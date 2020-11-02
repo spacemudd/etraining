@@ -117,11 +117,13 @@ class CoursesController extends Controller
     public function storeTrainingPackage(Request $request, $course_id)
     {
         $request->validate([
-            'training_package' => 'required',
+            'training_package' => 'required_without_all:file',
+            'file' => 'required_without_all:training_package',
         ]);
 
         $course = Course::findOrFail($course_id);
-        $file = $request->file('training_package');
+        if ($request->training_package) $file = $request->file('training_package');
+        if ($request->file) $file = $request->file('file');
         return $course->uploadToFolder($file, 'training-package');
     }
 
