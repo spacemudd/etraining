@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1bde6e26268e35a92965bf71bb9eff36",
+    "content-hash": "d8595217c6a7641f92b585f8eecbf75d",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -4515,6 +4515,62 @@
                 "places"
             ],
             "time": "2016-02-05T00:00:00+00:00"
+        },
+        {
+            "name": "spacemudd/laravel-tap-payments",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spacemudd/laravel-tap-payments.git",
+                "reference": "8adb8d27425429e662d3e6fda1114c5c91973dd1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spacemudd/laravel-tap-payments/zipball/8adb8d27425429e662d3e6fda1114c5c91973dd1",
+                "reference": "8adb8d27425429e662d3e6fda1114c5c91973dd1",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "guzzlehttp/guzzle": ">=6.0",
+                "illuminate/support": "5.*|6.*|7.*|8.*",
+                "php": "^7.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Tap\\TapPayment\\TapPaymentServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Tap\\TapPayment\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Shafiq al-Shaar",
+                    "email": "hello@getshafiq.com",
+                    "homepage": "https://getShafiq.com/"
+                },
+                {
+                    "name": "Vanand Mkrtchyan",
+                    "email": "vanand@vm-development.com",
+                    "homepage": "http://www.vm-development.com/"
+                }
+            ],
+            "description": "Tap Payment REST API package for Laravel",
+            "support": {
+                "source": "https://github.com/spacemudd/laravel-tap-payments/tree/2.0.1"
+            },
+            "time": "2020-11-03T13:20:41+00:00"
         },
         {
             "name": "spatie/image",

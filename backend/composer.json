@@ -32,6 +32,7 @@
         "macsidigital/laravel-zoom": "^4.1",
         "owen-it/laravel-auditing": "^11.0",
         "skagarwal/google-places-api": "^1.7",
+        "spacemudd/laravel-tap-payments": "^2.0",
         "spatie/laravel-medialibrary": "^8.9",
         "spatie/laravel-permission": "^3.17",
         "spatie/laravel-searchable": "^1.7",
