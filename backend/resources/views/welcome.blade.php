@@ -42,8 +42,8 @@
             </div>
 
 
-            <div class="headline-separator py-5 text-center">
-                <a href="{{ route('login') }}">{{ __('words.have-an-account-?') }}</a>
+            <div class="py-5 text-center">
+                <a href="{{ route('login') }}">{{ __('words.have-an-account-?') }} {{ __('words.click-here-to-login') }}</a>
             </div>
         </form>
 

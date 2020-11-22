@@ -164,4 +164,5 @@ return [
     'join-meeting-via-client' => 'الدخول عبر برنامج Zoom',
     'fill-your-application' => 'قم بتعبئة ملفك',
     'full-name' => 'الاسم الكامل',
+    'click-here-to-login' => 'اضغط هنا',
 ];
