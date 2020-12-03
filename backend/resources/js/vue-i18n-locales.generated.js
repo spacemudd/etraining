@@ -322,7 +322,9 @@ export default {
             "join-meeting-via-browser": "الدخول عبر المتصفح",
             "join-meeting-via-client": "الدخول عبر برنامج Zoom",
             "fill-your-application": "قم بتعبئة ملفك",
-            "full-name": "الاسم الكامل"
+            "full-name": "الاسم الكامل",
+            "click-here-to-login": "اضغط هنا",
+            "leave-blank-to-be-automatically-generated": "اتركه فارغًا ليتم إنشاؤه تلقائيًا"
         }
     },
     "en": {
@@ -616,7 +618,9 @@ export default {
             "join-meeting-via-browser": "Join meeting via browser",
             "join-meeting-via-client": "Join meeting via Zoom",
             "fill-your-application": "Fill your application",
-            "full-name": "Full name"
+            "full-name": "Full name",
+            "click-here-to-login": "Click here",
+            "leave-blank-to-be-automatically-generated": "Leave blank to be automatically generated"
         }
     }
 }

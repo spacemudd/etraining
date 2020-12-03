@@ -164,4 +164,5 @@ return [
     'fill-your-application' => 'Fill your application',
     'full-name' => 'Full name',
     'click-here-to-login' => 'Click here',
+    'leave-blank-to-be-automatically-generated' => 'Leave blank to be automatically generated',
 ];

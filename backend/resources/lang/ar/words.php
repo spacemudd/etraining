@@ -165,4 +165,5 @@ return [
     'fill-your-application' => 'قم بتعبئة ملفك',
     'full-name' => 'الاسم الكامل',
     'click-here-to-login' => 'اضغط هنا',
+    'leave-blank-to-be-automatically-generated' => 'اتركه فارغًا ليتم إنشاؤه تلقائيًا',
 ];

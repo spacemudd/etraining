@@ -31,6 +31,7 @@
                                            class="mt-1 block w-full"
                                            v-model="form[fieldName]"
                                            autocomplete="off"
+                                           :placeholder="fieldName==='reference_number' ? $t('words.leave-blank-to-be-automatically-generated') : ''"
                                            :autofocus="fieldName==='reference_number'"
                                            :required="fieldName === 'contract_starts_at'"
                                 />
