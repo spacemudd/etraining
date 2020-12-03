@@ -8,7 +8,7 @@
                     <div>
                         <h1 class="text-2xl font-heavy">{{ $t('words.welcome') }}!</h1>
                         <p class="mt-2 text-gray-500">{{ user.email }}</p>
-                        <p dir="ltr" class="mt-2 text-xs text-gray-500">{{ $t('words.last-login-at') }}: {{ user.last_login_at }}</p>
+                        <p dir="ltr" class="mt-2 text-xs text-gray-500 rtl:text-right">{{ $t('words.last-login-at') }}: {{ user.last_login_at }}</p>
                     </div>
                 </div>
             </div>
