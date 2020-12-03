@@ -3,7 +3,7 @@ fastcgi_cache_key "$scheme$request_method$host$request_uri$query_string";
 
 server {
    listen 8085 ssl http2;
-   server_name etraining.ptc-ksa.com;
+   server_name app.ptc-ksa.com;
 
    server_tokens off;
    fastcgi_hide_header X-Powered-By;
