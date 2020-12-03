@@ -7,10 +7,10 @@
             <!-- Cards -->
             <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4 mt-6">
                 <!-- Card -->
-                <header-card :title-value="$t('words.companies')" :count-value="companies_count" icon-path="/img/building.svg"></header-card>
-                <header-card :title-value="$t('words.instructors')" :count-value="instructors_count" icon-path="/img/teacher.svg"></header-card>
-                <header-card :title-value="$t('words.trainees')" :count-value="trainees_count" icon-path="/img/student.svg"></header-card>
-                <header-card :title-value="$t('words.courses')" :count-value="courses_count" icon-path="/img/book.svg"></header-card>
+                <header-card :href="route('back.companies.index')" :title-value="$t('words.companies')" :count-value="companies_count" icon-path="/img/building.svg"></header-card>
+                <header-card :href="route('back.instructors.index')" :title-value="$t('words.instructors')" :count-value="instructors_count" icon-path="/img/teacher.svg"></header-card>
+                <header-card :href="route('back.trainees.index')" :title-value="$t('words.trainees')" :count-value="trainees_count" icon-path="/img/student.svg"></header-card>
+                <header-card :href="route('back.courses.index')" :title-value="$t('words.courses')" :count-value="courses_count" icon-path="/img/book.svg"></header-card>
             </div>
 
             <!-- Quick actions actions -->
