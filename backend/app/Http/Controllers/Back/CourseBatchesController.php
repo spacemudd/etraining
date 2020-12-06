@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Back;
 use App\Http\Controllers\Controller;
 use App\Models\Back\Course;
 use App\Models\Back\CourseBatch;
+use App\Models\Back\CourseBatchSession;
 use Illuminate\Http\Request;
 
 class CourseBatchesController extends Controller
@@ -12,6 +13,7 @@ class CourseBatchesController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param $course_id
      * @return \Illuminate\Http\Response
      */
     public function index($course_id)

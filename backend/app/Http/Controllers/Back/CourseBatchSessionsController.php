@@ -139,11 +139,13 @@ class CourseBatchSessionsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param $course_id
+     * @param $course_batch_id
+     * @param $course_batch_session_id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($course_id, $course_batch_id, $course_batch_session_id)
     {
-        //
+        return CourseBatchSession::find($course_batch_session_id)->delete();
     }
 }

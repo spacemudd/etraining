@@ -23,13 +23,13 @@
 
                         <div class="mt-5">
                             <jet-label for="starts_at" :value="$t('words.start-date')" />
-                            <ejs-datetimepicker class="mt-1 block w-full" v-model="form.starts_at" :placeholder="$t('words.select-date')" :enableRtl="rtl"></ejs-datetimepicker>
+                            <ejs-datetimepicker class="mt-1 block w-full" v-model="form.starts_at" :placeholder="$t('words.select-date')" :enableRtl="rtl" required></ejs-datetimepicker>
                             <jet-input-error :message="form.error('starts_at')" class="mt-2" />
                         </div>
 
                         <div class="mt-5">
                             <jet-label for="ends_at" :value="$t('words.end-date')" />
-                            <ejs-datetimepicker class="mt-1 block w-full" v-model="form.ends_at" :placeholder="$t('words.select-date')" :enableRtl="rtl"></ejs-datetimepicker>
+                            <ejs-datetimepicker class="mt-1 block w-full" v-model="form.ends_at" :placeholder="$t('words.select-date')" :enableRtl="rtl"> required</ejs-datetimepicker>
                             <jet-input-error :message="form.error('ends_at')" class="mt-2" />
                         </div>
 
@@ -106,6 +106,8 @@
                 })).then(response => {
                     this.close();
                     this.$emit('session:saved');
+                }).catch(error => {
+                   throw error;
                 });
             },
             close() {

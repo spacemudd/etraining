@@ -54,7 +54,10 @@
                         <div class="flex justify-start w-full">
                             <new-course-batch-session :course-batch="batch" @session:saved="getCourse()" />
                         </div>
-                        <course-batch-sessions-list class="mt-5" :sessions="batch.course_batch_sessions"></course-batch-sessions-list>
+                        <course-batch-sessions-list class="mt-5"
+                                                    @session:deleted="getCourse()"
+                                                    :sessions="batch.course_batch_sessions">
+                        </course-batch-sessions-list>
                     </div>
                 </div>
             </div>
@@ -63,24 +66,24 @@
         <portal to="app-modal-container">
             <modal name="createCourseBatch"
                    classes="overflow-y-scroll">
-                <div class="bg-white block h-5 p-10">
+                <form class="bg-white block h-5 p-10" @submit.prevent="createNewCourseBatch">
                     <h1 class="text-lg font-bold">{{ $t('words.create-course-batch') }}</h1>
 
                     <div class="mt-5">
                         <jet-label for="starts_at" :value="$t('words.start-date')" />
-                        <jet-input id="starts_at" type="date" class="mt-1 block w-full" v-model="form.starts_at" />
+                        <jet-input id="starts_at" type="date" class="mt-1 block w-full" v-model="form.starts_at" required />
                         <jet-input-error :message="form.error('starts_at')" class="mt-2" />
                     </div>
 
                     <div class="mt-5">
                         <jet-label for="ends_at" :value="$t('words.end-date')" />
-                        <jet-input id="ends_at" type="date" class="mt-1 block w-full" v-model="form.ends_at" />
+                        <jet-input id="ends_at" type="date" class="mt-1 block w-full" v-model="form.ends_at" required />
                         <jet-input-error :message="form.error('ends_at')" class="mt-2" />
                     </div>
 
                     <div class="mt-5">
                         <jet-label for="location_at" :value="$t('words.location')" />
-                        <jet-input id="location_at" type="text" class="mt-1 block w-full" v-model="form.location_at" />
+                        <jet-input id="location_at" type="text" class="mt-1 block w-full" v-model="form.location_at" required />
                         <jet-input-error :message="form.error('location_at')" class="mt-2" />
                     </div>
 
@@ -90,13 +93,12 @@
                         </jet-secondary-button>
 
                         <jet-button class="rtl:mr-5 ltr:ml-5"
-                                    @click.native="createNewCourseBatch"
                                     :class="{ 'opacity-25': form.processing }"
                                     :disabled="form.processing">
                             {{ $t('words.save') }}
                         </jet-button>
                     </div>
-                </div>
+                </form>
             </modal>
         </portal>
     </div>
@@ -167,6 +169,7 @@
                 this.$modal.toggle('createCourseBatch');
             },
             createNewCourseBatch() {
+                debugger;
                 this.form.post(route('back.course-batches.store', {course_id: this.courseId}))
                     .then(response => {
                         this.openCreateNewCourseBatch();
