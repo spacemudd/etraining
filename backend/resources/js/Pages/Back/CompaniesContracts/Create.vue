@@ -29,19 +29,19 @@
                                 <jet-input :id="fieldName"
                                            :type="fieldName==='contract_starts_at' ? 'date' : 'text'"
                                            class="mt-1 block w-full"
-                                           v-model="form[fieldName]"
+                                           v-model="contractForm[fieldName]"
                                            autocomplete="off"
                                            :placeholder="fieldName==='reference_number' ? $t('words.leave-blank-to-be-automatically-generated') : ''"
                                            :autofocus="fieldName==='reference_number'"
                                            :required="fieldName === 'contract_starts_at'"
                                 />
-                                <jet-input-error :message="form.error(fieldName)" class="mt-2" />
+                                <jet-input-error :message="contractForm.error(fieldName)" class="mt-2" />
                             </div>
                         </template>
                         <div class="col-span-4 sm:col-span-4">
                             <jet-label for="notes" :value="$t('words.notes')" />
-                            <jet-textarea id="notes" type="textarea" class="mt-1 block w-full" v-model="form.notes" />
-                            <jet-input-error :message="form.error('notes')" class="mt-2" />
+                            <jet-textarea id="notes" type="textarea" class="mt-1 block w-full" v-model="contractForm.notes" />
+                            <jet-input-error :message="contractForm.error('notes')" class="mt-2" />
                         </div>
 
                         <div class="col-span-4 sm:col-span-4">
@@ -54,7 +54,7 @@
                     </template>
 
                     <template #actions>
-                        <jet-action-message :on="form.recentlySuccessful" class="mr-3">
+                        <jet-action-message :on="contractForm.recentlySuccessful" class="mr-3">
                             {{ $t('words.created-successfully') }}
                         </jet-action-message>
 
@@ -62,7 +62,7 @@
                             {{ $t('words.cancel') }}
                         </inertia-link>
 
-                        <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                        <jet-button :class="{ 'opacity-25': contractForm.processing }" :disabled="contractForm.processing">
                             {{ $t('words.save') }}
                         </jet-button>
                     </template>
@@ -86,6 +86,7 @@
     import JetTextarea from '@/Jetstream/Textarea'
     import VueDropzone from 'vue2-dropzone'
     import 'vue2-dropzone/dist/vue2Dropzone.min.css'
+    import Logrocket from 'logrocket';
 
     export default {
         props: ['sessions', 'company'],
@@ -117,7 +118,7 @@
                     thumbnailWidth: 150,
                     maxFilesize: 20,
                 },
-                form: this.$inertia.form({
+                contractForm: this.$inertia.form({
                     reference_number: '',
                     contract_starts_at: '',
                     contract_period_in_months: '',
@@ -136,11 +137,19 @@
         },
         methods: {
             fileAdded(file) {
-                this.form.files.push(file);
+                this.contractForm.files.push(file);
             },
             createContract() {
-                this.form.post('/back/companies/'+this.company.id+'/contracts', {
+                debugger;
+                this.contractForm.post('/back/companies/'+this.company.id+'/contracts', {
                     preserveScroll: true
+                }).catch(error => {
+                    if (! this.contractForm.hasErrors()) {
+                        this.displayingToken = true
+                    }
+                    this.contractForm.processing = false;
+                    Logrocket.captureException(error);
+                    throw error;
                 });
             },
         }
