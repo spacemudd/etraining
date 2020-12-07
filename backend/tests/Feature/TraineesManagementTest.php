@@ -285,4 +285,46 @@ class TraineesManagementTest extends TestCase
             ->assertSuccessful()
             ->assertSee($file->name_en);
     }
+
+    public function test_save_training_application_required()
+    {
+        $nancy = $this->user;
+
+        $file = new RequiredTraineesFiles();
+        $file->name_en = 'Passport Image';
+        $file->name_ar = 'صورة جواز سفر';
+        $file->required = false;
+        $file->team_id = $nancy->personalTeam()->id;
+        $file->save();
+
+        $this->actingAs($nancy)
+            ->post(route('back.settings.trainees-application.required-files'), [
+                'name_en' => 'Passport Image',
+                'name_ar' => 'صورة جواز السفر',
+            ]);
+
+        $this->actingAs($nancy)
+            ->get(route('back.settings.trainees-application.required-files'))
+            ->assertSuccessful()
+            ->assertSee($file->name_en);
+    }
+
+    public function test_delete_trainee_application_requirement()
+    {
+        $nancy = $this->user;
+
+        $file = new RequiredTraineesFiles();
+        $file->name_en = 'Passport Image';
+        $file->name_ar = 'صورة جواز سفر';
+        $file->required = false;
+        $file->team_id = $nancy->personalTeam()->id;
+        $file->save();
+
+        $this->actingAs($nancy)
+            ->delete(route('back.settings.trainees-application.required-files.delete', ['id' => $file->id]));
+
+        $this->actingAs($nancy)
+            ->get(route('back.settings.trainees-application.required-files'))
+            ->assertDontSee($file->name_en);
+    }
 }

@@ -25,8 +25,18 @@
 
                     <div class="mt-5">
                         <form @submit.prevent="storeNewFileRequest">
-                            <input class="input" type="text" name="fileRequestTitleAr" placeholder="عنوان الملف">
-                            <input class="input" type="text" name="fileRequestTitleEn" placeholder="File title">
+                            <input class="input"
+                                   v-model="createRequirementForm.name_ar"
+                                   type="text"
+                                   name="fileRequestTitleAr"
+                                   placeholder="عنوان الملف"
+                                   required>
+                            <input class="input"
+                                   v-model="createRequirementForm.name_en"
+                                   type="text"
+                                   name="fileRequestTitleEn"
+                                   placeholder="File title"
+                                   required>
 
                             <jet-button :class="{ 'opacity-25': createRequirementForm.processing }" :disabled="createRequirementForm.processing">
                                 {{ $t('words.add') }}
@@ -35,12 +45,19 @@
                     </div>
 
                     <!-- List of currently required files -->
-                    <div>
-                        <ul>
-                            <li v-for="file in requiredFiles">
-                                {{ file.name_ar }} - {{ file.name_en }}
-                            </li>
-                        </ul>
+                    <div class="mt-14">
+                            <div v-for="file in requiredFiles"
+                                 class="my-5 block border-2 border-gray-300 p-3">
+                                {{ file.name_ar }} - {{ file.name_en }}<br/>
+                                <button style="font-family:Tahoma;"
+                                        class="text-xs text-red-500"
+                                        @click="deleteRequirement(file.id)"
+                                >
+                                    ({{ $t('words.delete') }})
+                                </button>
+                                <!--<br/>-->
+                                <!--_____________________-->
+                            </div>
                     </div>
                 </div>
             </div>
@@ -73,10 +90,10 @@
                 createRequirementForm: this.$inertia.form({
                     name_ar: '',
                     name_en: '',
-                    optional: false,
+                    required: false,
                 }, {
-                    bag: 'createRequirement',
-                    resetOnSuccess: false,
+                    bag: 'createRequirementForm',
+                    resetOnSuccess: true,
                 })
             }
         },
@@ -85,13 +102,23 @@
         },
         methods: {
             storeNewFileRequest() {
-                console.log('Storing new file request');
+                this.createRequirementForm.post(route('back.settings.trainees-application.required-files'), {
+                    preserveScroll: true
+                }).then(response => {
+                    this.getRequiredFiles();
+                });
             },
             getRequiredFiles() {
                 axios.get(route('back.settings.trainees-application.required-files'))
                     .then(response => {
                         this.requiredFiles = response.data;
                     })
+            },
+            deleteRequirement(id) {
+                axios.delete(route('back.settings.trainees-application.required-files.delete', {id: id}))
+                .then(response => {
+                    this.getRequiredFiles();
+                })
             },
         },
     }
