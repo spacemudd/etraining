@@ -14,6 +14,8 @@ Route::get('language/{language}', function ($language) {
 
 Route::get('onboarding', [\App\Http\Controllers\OnboardingController::class, 'index']);
 
+Route::middleware(['auth:sanctum'])->get('/trainees/application', 'TraineesApplicationController@show');
+
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 
     if (\Illuminate\Support\Str::contains(auth()->user()->roles()->first()->name, 'instructors')) {
