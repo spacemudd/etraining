@@ -46,6 +46,7 @@ class RegisterTraineeController extends Controller
             'children_count' => 'nullable|numeric',
         ])->validate();
 
+        \DB::beginTransaction();
         $trainee = $this->service->store($request->except('_token'));
 
         $user = (new CreateNewTraineeUser())->create([
@@ -55,5 +56,10 @@ class RegisterTraineeController extends Controller
             'password' => 'password',
             'password_confirmation' => 'password',
         ]);
+        \DB::commit();
+
+        auth()->loginUsingId($user->id);
+
+        return redirect()->route('dashboard');
     }
 }

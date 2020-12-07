@@ -34,7 +34,7 @@
                             ]">
                     <div class="col-span-4 sm:col-span-1">
                         <jet-label for="name" :value="$t('words.'+fieldName)" />
-                        <jet-input id="name" type="text" class="mt-1 block w-full bg-gray-200" :value="company[fieldName]" disabled />
+                        <jet-input :id="fieldName" type="text" class="mt-1 block w-full bg-gray-200" :value="company[fieldName]" disabled />
                     </div>
                 </template>
             </div>

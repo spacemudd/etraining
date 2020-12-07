@@ -27,7 +27,7 @@ class TraineesServices
     {
         \DB::beginTransaction();
         $trainee = Trainee::make($traineeRequest);
-        $trainee->team_id = Team::first()->id; // TODO.
+        $trainee->team_id = Team::first()->id; // TODO: Make it tenant-ready.
         $trainee->save();
         if (isset($traineeRequest['trainee_group_name'])) {
             $group = TraineeGroup::firstOrCreate([
