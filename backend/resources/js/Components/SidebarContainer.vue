@@ -52,14 +52,14 @@
             </template>
         </sidebar-link>
 
-        <!--<sidebar-link link-value="/">-->
-        <!--    <template #icon>-->
-        <!--        <ion-icon name="settings-outline" class="w-5 h-5"></ion-icon>-->
-        <!--    </template>-->
-        <!--    <template #title>-->
-        <!--        <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.settings') }}</span>-->
-        <!--    </template>-->
-        <!--</sidebar-link>-->
+        <sidebar-link :link-value="route('back.settings')">
+            <template #icon>
+                <ion-icon name="settings-outline" class="w-5 h-5"></ion-icon>
+            </template>
+            <template #title>
+                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.settings') }}</span>
+            </template>
+        </sidebar-link>
     </ul>
 </template>
 

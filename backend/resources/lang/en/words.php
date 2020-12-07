@@ -165,4 +165,7 @@ return [
     'full-name' => 'Full name',
     'click-here-to-login' => 'Click here',
     'leave-blank-to-be-automatically-generated' => 'Leave blank to be automatically generated',
+    'trainee-application-settings' => 'Trainee application settings',
+    'here-you-can-specify-the-required-documents-by-trainees-to-complete-their-application' => 'Here you can specify the required documents by trainees to complete their application',
+    'add' => 'Add',
 ];

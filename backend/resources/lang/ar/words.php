@@ -166,4 +166,7 @@ return [
     'full-name' => 'الاسم الكامل',
     'click-here-to-login' => 'اضغط هنا',
     'leave-blank-to-be-automatically-generated' => 'اتركه فارغًا ليتم إنشاؤه تلقائيًا',
+    'trainee-application-settings' => 'اعدادات ملفات المتدربين',
+    'here-you-can-specify-the-required-documents-by-trainees-to-complete-their-application' => 'هنا يمكن لك تحديد الملفات المطلوبة من المتدربين لإكمال ملفهم',
+    'add' => 'أضف',
 ];

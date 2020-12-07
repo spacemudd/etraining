@@ -3,4 +3,5 @@
 @import 'tailwindcss/utilities';
 @import 'vue-ionicons/ionicons.css';
 @import 'selectize/dist/css/selectize.bootstrap3.css';
+@import './input.css';
 @import './foundation.css';

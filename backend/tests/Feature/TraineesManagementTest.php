@@ -4,8 +4,8 @@ namespace Tests\Feature;
 
 use App\Actions\Fortify\CreateNewUser;
 use App\Models\Back\Company;
-use App\Models\Back\CompanyContract;
 use App\Models\Back\Instructor;
+use App\Models\Back\RequiredTraineesFiles;
 use App\Models\Back\Trainee;
 use App\Models\Back\TraineeGroup;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -259,5 +259,30 @@ class TraineesManagementTest extends TestCase
                     ]
                 ],
             ]);
+    }
+
+    public function test_training_application_settings_page()
+    {
+        $nancy = $this->user;
+        $this->actingAs($nancy)
+            ->get(route('back.settings.trainees-application'))
+            ->assertSuccessful();
+    }
+
+    public function test_training_application_required_files()
+    {
+        $nancy = $this->user;
+
+        $file = new RequiredTraineesFiles();
+        $file->name_en = 'Passport Image';
+        $file->name_ar = 'صورة جواز سفر';
+        $file->required = false;
+        $file->team_id = $nancy->personalTeam()->id;
+        $file->save();
+
+        $this->actingAs($nancy)
+            ->get(route('back.settings.trainees-application.required-files'))
+            ->assertSuccessful()
+            ->assertSee($file->name_en);
     }
 }
