@@ -46,18 +46,15 @@
 
                     <!-- List of currently required files -->
                     <div class="mt-14">
-                            <div v-for="file in requiredFiles"
-                                 class="my-5 block border-2 border-gray-300 p-3">
-                                {{ file.name_ar }} - {{ file.name_en }}<br/>
-                                <button style="font-family:Tahoma;"
-                                        class="text-xs text-red-500"
-                                        @click="deleteRequirement(file.id)"
-                                >
-                                    ({{ $t('words.delete') }})
-                                </button>
-                                <!--<br/>-->
-                                <!--_____________________-->
-                            </div>
+                        <div v-for="file in requiredFiles"
+                             class="my-5 block border-2 border-gray-300 p-3">
+                            {{ file.name_ar }} - {{ file.name_en }}<br/>
+                            <button style="font-family:Tahoma;"
+                                    class="text-xs text-red-500"
+                                    @click="deleteRequirement(file.id)">
+                                ({{ $t('words.delete') }})
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
