@@ -169,4 +169,9 @@ return [
     'trainee-application-settings' => 'اعدادات ملفات المتدربين',
     'here-you-can-specify-the-required-documents-by-trainees-to-complete-their-application' => 'هنا يمكن لك تحديد الملفات المطلوبة من المتدربين لإكمال ملفهم',
     'add' => 'أضف',
+    'privacy-policy' => 'سياسة الخصوصية',
+    'academic-integrity-policy' => 'سياسات وقوانین النزاهة الأكاديمية',
+    'intellectual-property-rights' => 'حقوق المكلية الفكرية',
+    'attendance-policy' => 'سياسية الحضور',
+    'support-policy' => 'سياسة المساعدة والدعم الفني',
 ];

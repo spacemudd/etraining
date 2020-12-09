@@ -168,4 +168,9 @@ return [
     'trainee-application-settings' => 'Trainee application settings',
     'here-you-can-specify-the-required-documents-by-trainees-to-complete-their-application' => 'Here you can specify the required documents by trainees to complete their application',
     'add' => 'Add',
+    'privacy-policy' => 'سياسة الخصوصية',
+    'academic-integrity-policy' => 'سياسات وقوانین النزاهة الأكاديمية',
+    'intellectual-property-rights' => 'حقوق المكلية الفكرية',
+    'attendance-policy' => 'سياسية الحضور',
+    'support-policy' => 'سياسة المساعدة والدعم الفني',
 ];

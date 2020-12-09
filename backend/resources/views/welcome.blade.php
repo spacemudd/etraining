@@ -37,7 +37,7 @@
                 <a href=""
                    class="flex bg-blue-500 hover:bg-blue-600 text-white py-5 px-10 rounded-lg text-2xl justify-center">
                     <img src="{{ asset('/img/teacher.svg') }}" class="w-8 ml-5" style="filter:invert(1)">
-                    {{ __('words.im-an-instructor') }}
+                    {{ __('words.im-an-instructor') }}asd
                 </a>
             </div>
 
@@ -47,5 +47,16 @@
             </div>
         </form>
 
+        <x-slot name="bottomCard">
+            <div class="mt-5">
+                <ul>
+                    <li><a href="#">{{ __('words.privacy-policy') }}</a></li>
+                    <li><a href="#">{{ __('words.privacy-policy') }}</a></li>
+                    <li><a href="#">{{ __('words.privacy-policy') }}</a></li>
+                    <li><a href="#">{{ __('words.privacy-policy') }}</a></li>
+
+                </ul>
+            </div>
+        </x-slot>
     </x-jet-authentication-card>
 </x-guest-layout>
