@@ -174,4 +174,6 @@ return [
     'intellectual-property-rights' => 'حقوق المكلية الفكرية',
     'attendance-policy' => 'سياسية الحضور',
     'support-policy' => 'سياسة المساعدة والدعم الفني',
+    'submit' => 'ارسال',
+    'select-file' => 'اختيار الملف',
 ];

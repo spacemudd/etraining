@@ -327,7 +327,14 @@ export default {
             "leave-blank-to-be-automatically-generated": "اتركه فارغًا ليتم إنشاؤه تلقائيًا",
             "trainee-application-settings": "اعدادات ملفات المتدربين",
             "here-you-can-specify-the-required-documents-by-trainees-to-complete-their-application": "هنا يمكن لك تحديد الملفات المطلوبة من المتدربين لإكمال ملفهم",
-            "add": "أضف"
+            "add": "أضف",
+            "privacy-policy": "سياسة الخصوصية",
+            "academic-integrity-policy": "سياسات وقوانین النزاهة الأكاديمية",
+            "intellectual-property-rights": "حقوق المكلية الفكرية",
+            "attendance-policy": "سياسية الحضور",
+            "support-policy": "سياسة المساعدة والدعم الفني",
+            "submit": "ارسال",
+            "select-file": "اختيار الملف"
         }
     },
     "en": {
@@ -626,7 +633,14 @@ export default {
             "leave-blank-to-be-automatically-generated": "Leave blank to be automatically generated",
             "trainee-application-settings": "Trainee application settings",
             "here-you-can-specify-the-required-documents-by-trainees-to-complete-their-application": "Here you can specify the required documents by trainees to complete their application",
-            "add": "Add"
+            "add": "Add",
+            "privacy-policy": "سياسة الخصوصية",
+            "academic-integrity-policy": "سياسات وقوانین النزاهة الأكاديمية",
+            "intellectual-property-rights": "حقوق المكلية الفكرية",
+            "attendance-policy": "سياسية الحضور",
+            "support-policy": "سياسة المساعدة والدعم الفني",
+            "submit": "Submit",
+            "select-file": "Select file"
         }
     }
 }
