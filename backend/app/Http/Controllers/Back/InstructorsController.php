@@ -111,11 +111,15 @@ class InstructorsController extends Controller
      */
     public function storeCvFull(Request $request)
     {
+        $request->validate([
+            'file' => 'required',
+        ]);
 
         $instructor = Instructor::findOrFail($request['instructor_id']);
         $file = $request->file('file');
         return $instructor->uploadToFolder($file, 'cv-full');
     }
+
     /**
      *
      * @param \Illuminate\Http\Request $request
@@ -137,7 +141,9 @@ class InstructorsController extends Controller
      */
     public function storeCvSummary(Request $request)
     {
-
+        $request->validate([
+            'file' => 'required',
+        ]);
 
         $instructor = Instructor::findOrFail($request['instructor_id']);
         $file = $request->file('file');

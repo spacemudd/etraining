@@ -18,7 +18,7 @@
             </div>
 
             <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-                <form @submit.prevent="submitForm">
+                <form @submit.prevent="submitForm" enctype = "multipart/form-data" >
 
                     <div><h1 class="text-2xl text-center my-5 font-bold">{{ $t('words.hi-there') }}</h1></div>
 
@@ -96,6 +96,8 @@
                 loading: false,
                 cv_full: {},
                 cv_summary: {},
+                formDataCvFull: null,
+                formDataCvSummary: null,
             }
         },
         props: [
@@ -105,17 +107,23 @@
             uploadFile(e, filename) {
                if (filename == "cv_full") {
                    this.cv_full.file = e.target.files[0];
-                   this.cv_full.instructor_id = this.instructor_id;
-                   console.log(this.cv_full);
-                   this.$inertia.post('/register/instructors/uploadcvfull', this.cv_full);
-               } else {
+                   this.formDataCvFull = new FormData();
+                   this.formDataCvFull.append('file', this.cv_full.file);
+                   this.formDataCvFull.append('instructor_id', this.instructor_id)
+                   } else {
                    this.cv_summary.file = e.target.files[0];
                    this.cv_summary.instructor_id = this.instructor_id;
-                   this.$inertia.post('/register/instructors/uploadcvsummary', this.cv_summary);
+                   this.formDataCvSummary = new FormData();
+                   this.formDataCvSummary.append('file', this.cv_summary.file);
+                   this.formDataCvSummary.append('instructor_id', this.instructor_id)
                }
             },
             submitForm() {
-                alert('submitting');
+
+                this.$inertia.post('/register/instructors/uploadcvfull', this.formDataCvFull).then((response) => {
+                         this.$inertia.post('/register/instructors/uploadcvsummary', this.formDataCvSummary);
+                    });
+
             },
         }
 
