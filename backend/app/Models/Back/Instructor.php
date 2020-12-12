@@ -26,7 +26,9 @@ class Instructor extends Model implements HasMedia
     protected $fillable = [
         'name',
         'identity_number',
+        'team_id',
         'city_id',
+        'provided_courses',
         'phone',
         'email',
         'twitter_link',
@@ -43,9 +45,7 @@ class Instructor extends Model implements HasMedia
         static::addGlobalScope(new TeamScope());
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string) Str::uuid();
-            if (auth()->user()) {
-                $model->team_id = auth()->user()->personalTeam()->id;
-            }
+
         });
     }
 

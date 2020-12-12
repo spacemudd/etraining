@@ -109,13 +109,13 @@ class InstructorsController extends Controller
      * @param $instructor_id
      * @return
      */
-    public function storeCvFull(Request $request, $instructor_id)
+    public function storeCvFull(Request $request)
     {
         $request->validate([
             'file' => 'required',
         ]);
 
-        $instructor = Instructor::findOrFail($instructor_id);
+        $instructor = Instructor::findOrFail($email);
         $file = $request->file('file');
         return $instructor->uploadToFolder($file, 'cv-full');
     }
@@ -139,13 +139,13 @@ class InstructorsController extends Controller
      * @param $instructor_id
      * @return
      */
-    public function storeCvSummary(Request $request, $instructor_id)
+    public function storeCvSummary(Request $request)
     {
         $request->validate([
             'file' => 'required',
         ]);
 
-        $instructor = Instructor::findOrFail($instructor_id);
+        $instructor = Instructor::findOrFail($email);
         $file = $request->file('file');
         return $instructor->uploadToFolder($file, 'cv-summary');
     }

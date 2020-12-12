@@ -176,4 +176,6 @@ return [
     'support-policy' => 'سياسة المساعدة والدعم الفني',
     'submit' => 'ارسال',
     'select-file' => 'اختيار الملف',
+    'provided_courses' => 'الدورات المقدمة',
+    'next' => 'النالي',
 ];

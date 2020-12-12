@@ -13,7 +13,7 @@ const mix = require('laravel-mix');
 mix.options({
     hmrOptions: {
         host: 'etraining.test',
-        port: 8080
+        port: 8000
     }
 });
 
