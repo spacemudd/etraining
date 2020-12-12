@@ -60,8 +60,9 @@ class RegisterInstructorController extends Controller
 
         \DB::commit();
 
+        $instructor = Instructor::where('email', $request['email'])->first();
         return Inertia::render('Instructors/Application', [
-            'email' => $request['email']
+            'instructor_id' => $instructor->id
         ]);
     }
 
