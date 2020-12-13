@@ -96,33 +96,27 @@
                 loading: false,
                 cv_full: {},
                 cv_summary: {},
-                formDataCvFull: null,
-                formDataCvSummary: null,
+                formData: new FormData(),
             }
         },
         props: [
             'instructor_id',
+            'instructor_email'
         ],
         methods: {
             uploadFile(e, filename) {
+               this.formData.append('instructor_email', this.instructor_email);
+               this.formData.append('instructor_id', this.instructor_id);
                if (filename == "cv_full") {
                    this.cv_full.file = e.target.files[0];
-                   this.formDataCvFull = new FormData();
-                   this.formDataCvFull.append('file', this.cv_full.file);
-                   this.formDataCvFull.append('instructor_id', this.instructor_id)
+                   this.formData.append('cv_full', this.cv_full.file);
                    } else {
                    this.cv_summary.file = e.target.files[0];
-                   this.cv_summary.instructor_id = this.instructor_id;
-                   this.formDataCvSummary = new FormData();
-                   this.formDataCvSummary.append('file', this.cv_summary.file);
-                   this.formDataCvSummary.append('instructor_id', this.instructor_id)
+                   this.formData.append('cv_summary', this.cv_summary.file);
                }
             },
             submitForm() {
-
-                this.$inertia.post('/register/instructors/uploadcvfull', this.formDataCvFull).then((response) => {
-                         this.$inertia.post('/register/instructors/uploadcvsummary', this.formDataCvSummary);
-                    });
+                this.$inertia.post('/api/uploadcv', this.formData);
 
             },
         }

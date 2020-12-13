@@ -62,7 +62,8 @@ class RegisterInstructorController extends Controller
 
         $instructor = Instructor::where('email', $request['email'])->first();
         return Inertia::render('Instructors/Application', [
-            'instructor_id' => $instructor->id
+            'instructor_id' => $instructor->id,
+            'instructor_email' => $instructor->email,
         ]);
     }
 
