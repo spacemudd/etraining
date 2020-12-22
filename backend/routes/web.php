@@ -9,6 +9,9 @@ Route::get('/terms', [\App\Http\Controllers\TermsController::class, 'index'])->n
 Route::post('/register/trainees', [\App\Http\Controllers\Auth\RegisterTraineeController::class, 'store'])->name('register.trainees');
 Route::get('/register/trainees', [\App\Http\Controllers\Auth\RegisterTraineeController::class, 'show'])->name('register.trainees');
 
+Route::post('/register/instructors', [\App\Http\Controllers\Auth\RegisterInstructorController::class, 'FormStore'])->name('register.instructors');
+Route::get('/register/instructors', [\App\Http\Controllers\Auth\RegisterInstructorController::class, 'show'])->name('register.instructors');
+
 Route::get('language/{language}', function ($language) {
     session()->put('locale', $language);
     return redirect()->back();

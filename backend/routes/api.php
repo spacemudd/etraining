@@ -22,10 +22,11 @@ Route::middleware('auth:sanctum')->get('/companies/{company_id}/contracts', [\Ap
 
 Route::get('/location-lookup', [\App\Http\Controllers\LocationLookupController::class, 'search']);
 
-
 Route::middleware('auth:sanctum')->group(function() {
     Route::prefix('back')->group(function() {
         Route::get('trainee-groups', [\App\Http\Controllers\Back\TraineesController::class, 'withGroups'])->name('api.back.trainee-groups.index');
     });
     Route::get('/zoom/signature', [\App\Http\Controllers\ZoomController::class, 'signature'])->name('api.zoom.signature');
 });
+
+Route::post('/uploadcv', [\App\Http\Controllers\Back\InstructorsController::class, 'storeCvFromApplication']);

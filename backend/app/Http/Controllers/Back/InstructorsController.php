@@ -103,6 +103,28 @@ class InstructorsController extends Controller
         //
     }
 
+     /**
+     *This is different from both functions below. Because, in this way, we can allow the use of different functions without modifying them. So the admin can still use them!
+     *Notice that it will use the other two functions as well. However, this one is intended to return an Inertia page which is the email landing page.
+     * @param \Illuminate\Http\Request $request
+     * @return
+     */
+    public function storeCvFromApplication(Request $request) {
+
+        $request->validate([
+            'cv_full' => 'required',
+            'cv_summary' => 'required',
+            'instructor_id' => 'required',
+        ]);
+
+        $this->storeCvFull($request, $request['instructor_id']);
+        $this->storeCvSummary($request, $request['instructor_id']);
+
+        return Inertia::render('Instructors/EmailLanding', [
+            'instructor_email' => $request['instructor_email'],
+        ]);
+    }
+
     /**
      *
      * @param \Illuminate\Http\Request $request
@@ -112,11 +134,11 @@ class InstructorsController extends Controller
     public function storeCvFull(Request $request, $instructor_id)
     {
         $request->validate([
-            'file' => 'required',
+            'cv_full' => 'required',
         ]);
 
         $instructor = Instructor::findOrFail($instructor_id);
-        $file = $request->file('file');
+        $file = $request->file('cv_full');
         return $instructor->uploadToFolder($file, 'cv-full');
     }
 
@@ -142,11 +164,11 @@ class InstructorsController extends Controller
     public function storeCvSummary(Request $request, $instructor_id)
     {
         $request->validate([
-            'file' => 'required',
+            'cv_summary' => 'required',
         ]);
 
         $instructor = Instructor::findOrFail($instructor_id);
-        $file = $request->file('file');
+        $file = $request->file('cv_summary');
         return $instructor->uploadToFolder($file, 'cv-summary');
     }
 
