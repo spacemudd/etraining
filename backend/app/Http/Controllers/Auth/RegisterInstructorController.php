@@ -28,14 +28,19 @@ class RegisterInstructorController extends Controller
     }
 
     /**
+     * Make a new instructor application.
+     * Redirect the new instructor to fill their application.
      *
      * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Throwable
      */
     public function store(Request $request)
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8'],
             'identity_number' => ['required'],
             'phone' => ['required', 'string', 'max:255'],
             'provided_courses' => ['required', 'string', 'max:255'],
@@ -44,7 +49,7 @@ class RegisterInstructorController extends Controller
         ]);
 
         \DB::beginTransaction();
-        $instructor = (new CreateNewInstructorUser())->storeRegistrationForm([
+        $instructor = (new CreateNewInstructorUser())->storeApplication([
             'name' => $request['name'],
             'email' => $request['email'],
             'identity_number' => $request['identity_number'],
@@ -53,16 +58,13 @@ class RegisterInstructorController extends Controller
             'city_id' => $request['city_id'],
             'twitter_link' => $request['twitter_link'],
         ]);
+        $instructorUser = (new CreateNewInstructorUser())->createUserFromApplication($instructor, $request['password']);
         \DB::commit();
 
-        $instructor = Instructor::where('email', $request['email'])->first();
+        auth()->login($instructorUser);
 
-        return Inertia::render('Instructors/Application', [
-            'instructor_id' => $instructor->id,
-            'instructor_email' => $instructor->email,
-        ]);
+        return redirect()->route('register.instructors.application');
     }
-
 
     // Needs Modification Based On The Values That Will Be Filled By The System Admin From The Dashboard
     public function createUser(Request $request)
@@ -80,15 +82,28 @@ class RegisterInstructorController extends Controller
         \DB::beginTransaction();
         $instructor = $this->service->store($request->except('_token'));
 
-        $instructor = (new CreateNewInstructorUser())->storeRegistrationForm([
-            'trainee_id' => $trainee->id,
-            'name' => $trainee->name,
-            'email' => $trainee->email,
+        $instructorUser = (new CreateNewInstructorUser())->storeApplication([
+            'trainee_id' => $instructor->id,
+            'name' => $instructor->name,
+            'email' => $instructor->email,
             'password' => 'password',
             'password_confirmation' => 'password',
         ]);
         \DB::commit();
 
         return redirect()->route('dashboard');
+    }
+
+    /**
+     * View the application of the logged in instructor.
+     *
+     * @return \Inertia\Response
+     */
+    public function application(): \Inertia\Response
+    {
+        return Inertia::render('Instructors/Application', [
+            'instructor_id' => auth()->user()->instructor->id,
+            'instructor_email' => auth()->user()->instructor->email,
+        ]);
     }
 }

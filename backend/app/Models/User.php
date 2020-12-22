@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Back\Instructor;
 use App\Traits\HasUuid;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -109,5 +110,10 @@ class User extends Authenticatable
     public function isTrainee()
     {
         return Str::contains(optional($this->roles()->first())->name, '_trainees');
+    }
+
+    public function instructor()
+    {
+        return $this->hasOne(Instructor::class);
     }
 }

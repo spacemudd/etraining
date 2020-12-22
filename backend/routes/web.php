@@ -12,6 +12,10 @@ Route::get('/register/trainees', [\App\Http\Controllers\Auth\RegisterTraineeCont
 Route::post('/register/instructors', [\App\Http\Controllers\Auth\RegisterInstructorController::class, 'store'])->name('register.instructors');
 Route::get('/register/instructors', [\App\Http\Controllers\Auth\RegisterInstructorController::class, 'show'])->name('register.instructors');
 
+Route::middleware(['auth:sanctum'])->group(function() {
+    Route::get('/register/instructors/application', [\App\Http\Controllers\Auth\RegisterInstructorController::class, 'application'])->name('register.instructors.application');
+});
+
 Route::get('language/{language}', function ($language) {
     session()->put('locale', $language);
     return redirect()->back();

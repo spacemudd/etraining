@@ -29,10 +29,14 @@
                 <x-jet-input class="block mt-1 w-full" type="text" name="identity_number" :value="old('identity_number')" required />
             </div>
 
-
             <div class="mt-4">
                 <x-jet-label value="{{ __('words.email') }}" />
                 <x-jet-input class="block mt-1 w-full" type="email" name="email" :value="old('email')" required />
+            </div>
+
+            <div class="mt-4">
+                <x-jet-label value="{{ __('words.password') }}" />
+                <x-jet-input class="block mt-1 w-full" type="password" name="password" :value="old('password')" required />
             </div>
 
             <div class="mt-4">

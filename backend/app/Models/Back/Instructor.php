@@ -3,6 +3,8 @@
 namespace App\Models\Back;
 
 use App\Models\City;
+use App\Models\Team;
+use App\Models\User;
 use App\Scope\TeamScope;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -47,6 +49,9 @@ class Instructor extends Model implements HasMedia
             $model->{$model->getKeyName()} = (string) Str::uuid();
             if (auth()->user()) {
                 $model->team_id = auth()->user()->personalTeam()->id;
+            } else {
+                // TODO: Identify the tenant later via the domain.
+                $model->team_id = Team::first()->id;
             }
         });
     }
@@ -106,5 +111,15 @@ class Instructor extends Model implements HasMedia
     public function trainees()
     {
         return $this->hasMany(Trainee::class);
+    }
+
+    /**
+     * The user that the instructor can login with.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

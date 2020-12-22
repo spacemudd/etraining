@@ -25,11 +25,11 @@ class CreateNewInstructorUser implements CreatesNewUsers
     use PasswordValidationRules;
 
     /**
-     * Create a new application for the instructor.
+     * Create a new instructor entry.
      * This instructor will be waiting to be approved by the management.
      *
      * @param array $input
-     * @return mixed
+     * @return \App\Models\Back\Instructor
      * @throws \Illuminate\Validation\ValidationException
      * @throws \Throwable
      */
@@ -68,6 +68,8 @@ class CreateNewInstructorUser implements CreatesNewUsers
      * // @Mahmoud: Needs Modification Based On The Values That Will Be Filled By The System Admin From The Dashboard
      * // @Shafiq: Can you elaborate?
      *
+     * Create an instructor from the admin dashboard.
+     *
      * @param array $input
      * @return mixed
      * @throws \Illuminate\Validation\ValidationException
@@ -103,6 +105,41 @@ class CreateNewInstructorUser implements CreatesNewUsers
         $instructor->user_id = $user->id;
         $instructor->save();
 
+        \DB::commit();
+
+        return $user;
+    }
+
+    /**
+     * A little duplication of the function create()
+     * because we don't need to re-hash the password again.
+     *
+     * @param \App\Models\Back\Instructor $instructor
+     * @param string $password
+     * @return \App\Models\User
+     * @throws \Throwable
+     */
+    public function createUserFromApplication(Instructor $instructor, string $password): User
+    {
+        \DB::beginTransaction();
+        $team = Team::first(); // TODO: Tenant
+        $role = Role::findByName($team->id.'_instructors', 'web');
+
+        $user = User::create([
+            'name' => $instructor->name,
+            'email' => $instructor->email,
+            'password' => bcrypt($password),
+        ]);
+
+        $user->assignRole($role);
+
+        $user->current_team_id = $team->id;
+        $user->save();
+
+        (new AddTeamMember())->add($user, $team, $user->email, 'instructor');
+
+        $instructor->user_id = $user->id;
+        $instructor->save();
         \DB::commit();
 
         return $user;
