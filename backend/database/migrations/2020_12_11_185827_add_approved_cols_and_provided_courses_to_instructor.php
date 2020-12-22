@@ -30,11 +30,13 @@ class AddApprovedColsAndProvidedCoursesToInstructor extends Migration
     public function down()
     {
         Schema::table('instructors', function (Blueprint $table) {
-            $table->dropColumn('is_approved');
-            $table->dropForeign('approved_by');
-            $table->dropColumn('approved_by');
-            $table->dropColumn('approved_at');
-            $table->dropColumn('provided_courses');
+            if (env('DB_CONNECTION') != 'sqlite') {
+                $table->dropColumn('is_approved');
+                $table->dropForeign('approved_by');
+                $table->dropColumn('approved_by');
+                $table->dropColumn('approved_at');
+                $table->dropColumn('provided_courses');
+            }
         });
     }
 }
