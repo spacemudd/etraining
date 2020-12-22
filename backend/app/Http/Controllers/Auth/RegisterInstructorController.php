@@ -33,7 +33,7 @@ class RegisterInstructorController extends Controller
      */
     public function store(Request $request)
     {
-        Validator::make($request->toArray(), [
+        $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'identity_number' => ['required'],
@@ -41,10 +41,10 @@ class RegisterInstructorController extends Controller
             'provided_courses' => ['required', 'string', 'max:255'],
             'twitter_link' => 'nullable|url|unique:instructors',
             'city_id' => 'required|exists:cities,id',
-        ])->validate();
+        ]);
 
         \DB::beginTransaction();
-        $instructor = (new CreateNewInstructorUser())->storeRegisterationForm([
+        $instructor = (new CreateNewInstructorUser())->storeRegistrationForm([
             'name' => $request['name'],
             'email' => $request['email'],
             'identity_number' => $request['identity_number'],
@@ -56,6 +56,7 @@ class RegisterInstructorController extends Controller
         \DB::commit();
 
         $instructor = Instructor::where('email', $request['email'])->first();
+
         return Inertia::render('Instructors/Application', [
             'instructor_id' => $instructor->id,
             'instructor_email' => $instructor->email,
@@ -79,7 +80,7 @@ class RegisterInstructorController extends Controller
         \DB::beginTransaction();
         $instructor = $this->service->store($request->except('_token'));
 
-        $instructor = (new CreateNewInstructorUser())->storeRegisterationForm([
+        $instructor = (new CreateNewInstructorUser())->storeRegistrationForm([
             'trainee_id' => $trainee->id,
             'name' => $trainee->name,
             'email' => $trainee->email,

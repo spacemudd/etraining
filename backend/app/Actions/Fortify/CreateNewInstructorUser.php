@@ -24,7 +24,7 @@ class CreateNewInstructorUser implements CreatesNewUsers
 {
     use PasswordValidationRules;
 
-    public function storeRegisterationForm(array $input)
+    public function storeRegistrationForm(array $input)
     {
         // First Function is intended to save the registeration Form While the second is for the admin to create an actual user.
         // I didn't want to commit the instructor a role in the roles table. In case he was refused, we will cascade quickly from this table.
