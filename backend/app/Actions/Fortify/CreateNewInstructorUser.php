@@ -24,12 +24,10 @@ class CreateNewInstructorUser implements CreatesNewUsers
 {
     use PasswordValidationRules;
 
-
-
-    public function storeRegisterationForm(array $input) {
-    // First Function is intended to save the registeration Form While the second is for the admin to create an actual user.
-    // I didn't want to commit the instructor a role in the roles table. In case he was refused, we will cascade quickly from this table.
-
+    public function storeRegisterationForm(array $input)
+    {
+        // First Function is intended to save the registeration Form While the second is for the admin to create an actual user.
+        // I didn't want to commit the instructor a role in the roles table. In case he was refused, we will cascade quickly from this table.
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
@@ -52,7 +50,7 @@ class CreateNewInstructorUser implements CreatesNewUsers
             'twitter_link' => $input['twitter_link'],
             'city_id' => $input['city_id'],
             'team_id' => $team_id,
-        ])->save();
+        ]);
 
         \DB::commit();
 

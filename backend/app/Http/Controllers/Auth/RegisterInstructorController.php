@@ -31,21 +31,17 @@ class RegisterInstructorController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      */
-    public function FormStore(Request $request)
+    public function store(Request $request)
     {
-
         Validator::make($request->toArray(), [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'identity_number' => ['required'],
             'phone' => ['required', 'string', 'max:255'],
             'provided_courses' => ['required', 'string', 'max:255'],
-            'twitter_link' => 'nullable|url',
+            'twitter_link' => 'nullable|url|unique:instructors',
             'city_id' => 'required|exists:cities,id',
-
         ])->validate();
-
-
 
         \DB::beginTransaction();
         $instructor = (new CreateNewInstructorUser())->storeRegisterationForm([
@@ -57,7 +53,6 @@ class RegisterInstructorController extends Controller
             'city_id' => $request['city_id'],
             'twitter_link' => $request['twitter_link'],
         ]);
-
         \DB::commit();
 
         $instructor = Instructor::where('email', $request['email'])->first();
