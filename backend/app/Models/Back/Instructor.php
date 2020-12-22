@@ -45,7 +45,9 @@ class Instructor extends Model implements HasMedia
         static::addGlobalScope(new TeamScope());
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string) Str::uuid();
-
+            if (auth()->user()) {
+                $model->team_id = auth()->user()->personalTeam()->id;
+            }
         });
     }
 

@@ -77,7 +77,7 @@ class InstructorsManagementTest extends TestCase
 
         $this->actingAs($this->user)
             ->post(route('back.instructors.attachments.cv-full', ['instructor_id' => $instructor->id]), [
-                'file' => UploadedFile::fake()->create('cv-full-copy.jpg', 1024 * 24),
+                'cv_full' => UploadedFile::fake()->create('cv-full-copy.jpg', 1024 * 24),
             ])
             ->assertSessionHasNoErrors()
             ->assertSuccessful();
@@ -107,7 +107,7 @@ class InstructorsManagementTest extends TestCase
 
         $this->actingAs($this->user)
             ->post(route('back.instructors.attachments.cv-summary', ['instructor_id' => $instructor->id]), [
-                'file' => UploadedFile::fake()->create('cv-summary-copy.jpg', 1024 * 24),
+                'cv_summary' => UploadedFile::fake()->create('cv-summary-copy.jpg', 1024 * 24),
             ])
             ->assertSessionHasNoErrors()
             ->assertSuccessful();

@@ -24,17 +24,24 @@ class CreateNewInstructorUser implements CreatesNewUsers
 {
     use PasswordValidationRules;
 
-    public function storeRegistrationForm(array $input)
+    /**
+     * Create a new application for the instructor.
+     * This instructor will be waiting to be approved by the management.
+     *
+     * @param array $input
+     * @return mixed
+     * @throws \Illuminate\Validation\ValidationException
+     * @throws \Throwable
+     */
+    public function storeApplication(array $input)
     {
-        // First Function is intended to save the registeration Form While the second is for the admin to create an actual user.
-        // I didn't want to commit the instructor a role in the roles table. In case he was refused, we will cascade quickly from this table.
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'identity_number' => ['required'],
             'phone' => ['required', 'string', 'max:255'],
             'provided_courses' => ['required', 'string', 'max:255'],
-            'twitter_link' => 'nullable|url', //requires further adjustments.
+            'twitter_link' => 'nullable|url|unique:instructors',
             'city_id' => 'required|exists:cities,id',
         ])->validate();
 
@@ -57,8 +64,15 @@ class CreateNewInstructorUser implements CreatesNewUsers
         return $instructor;
     }
 
-
-    // Needs Modification Based On The Values That Will Be Filled By The System Admin From The Dashboard
+    /**
+     * // @Mahmoud: Needs Modification Based On The Values That Will Be Filled By The System Admin From The Dashboard
+     * // @Shafiq: Can you elaborate?
+     *
+     * @param array $input
+     * @return mixed
+     * @throws \Illuminate\Validation\ValidationException
+     * @throws \Throwable
+     */
     public function create(array $input)
     {
         Validator::make($input, [
