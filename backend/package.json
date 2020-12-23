@@ -31,8 +31,8 @@
     "dependencies": {
         "@inertiajs/progress": "^0.1.2",
         "@riophae/vue-treeselect": "^0.4.0",
-        "@syncfusion/ej2-vue-calendars": "^18.3.53",
-        "@zoomus/websdk": "^1.8.3",
+        "@syncfusion/ej2-vue-calendars": "^18.4.31",
+        "@zoomus/websdk": "^1.8.5",
         "cldr-data": "^36.0.0",
         "jquery": "^3.5.1",
         "logrocket": "^1.0.14",
