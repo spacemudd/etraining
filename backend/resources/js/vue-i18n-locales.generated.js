@@ -334,7 +334,11 @@ export default {
             "attendance-policy": "سياسية الحضور",
             "support-policy": "سياسة المساعدة والدعم الفني",
             "submit": "ارسال",
-            "select-file": "اختيار الملف"
+            "select-file": "اختيار الملف",
+            "provided_courses": "الدورات المقدمة",
+            "next": "النالي",
+            "file-selected": "تم اختيار ملف",
+            "click-here-to-remove": "اضغط هنا للحذف"
         }
     },
     "en": {
@@ -640,7 +644,11 @@ export default {
             "attendance-policy": "سياسية الحضور",
             "support-policy": "سياسة المساعدة والدعم الفني",
             "submit": "Submit",
-            "select-file": "Select file"
+            "select-file": "Select file",
+            "provided_courses": "Provided courses",
+            "next": "Next",
+            "file-selected": "File selected",
+            "click-here-to-remove": "Click here to remove"
         }
     }
 }

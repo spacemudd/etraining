@@ -178,4 +178,6 @@ return [
     'select-file' => 'اختيار الملف',
     'provided_courses' => 'الدورات المقدمة',
     'next' => 'النالي',
+    'file-selected' => 'تم اختيار ملف',
+    'click-here-to-remove' => 'اضغط هنا للحذف',
 ];

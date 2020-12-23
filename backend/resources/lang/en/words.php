@@ -174,5 +174,9 @@ return [
     'attendance-policy' => 'سياسية الحضور',
     'support-policy' => 'سياسة المساعدة والدعم الفني',
     'submit' => 'Submit',
-    'select-file' =>  'Select file',
+    'select-file' => 'Select file',
+    'provided_courses' => 'Provided courses',
+    'next' => 'Next',
+    'file-selected' => 'File selected',
+    'click-here-to-remove' => 'Click here to remove',
 ];
