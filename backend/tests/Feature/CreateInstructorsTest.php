@@ -58,7 +58,7 @@ class CreateInstructorsTest extends TestCase
         ]);
     }
 
-    public function test_trainee_redirected_to_completing_their_application()
+    public function test_instructor_redirected_to_completing_their_application()
     {
         // Make a new team.
         $admin = User::factory()->create();
