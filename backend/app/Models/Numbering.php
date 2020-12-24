@@ -33,7 +33,7 @@ class Numbering extends Model
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string) Str::uuid();
             if (auth()->user()) {
-                $model->team_id = auth()->user()->personalTeam()->id;
+                $model->team_id = $model->team_id = auth()->user()->currentTeam()->first()->id;
             }
         });
     }

@@ -48,7 +48,7 @@ class Instructor extends Model implements HasMedia
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string) Str::uuid();
             if (auth()->user()) {
-                $model->team_id = auth()->user()->personalTeam()->id;
+                $model->team_id = $model->team_id = auth()->user()->currentTeam()->first()->id;
             } else {
                 // TODO: Identify the tenant later via the domain.
                 $model->team_id = Team::first()->id;
