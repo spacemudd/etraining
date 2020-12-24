@@ -30,7 +30,7 @@ class Media extends \Spatie\MediaLibrary\MediaCollections\Models\Media
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string) Str::uuid();
             if (auth()->user()) {
-                $model->team_id = auth()->user()->personalTeam()->id;
+                $model->team_id = auth()->user()->currentTeam()->first()->id;
             }
         });
     }

@@ -122,7 +122,7 @@ class CreateNewInstructorUser implements CreatesNewUsers
     public function createUserFromApplication(Instructor $instructor, string $password): User
     {
         \DB::beginTransaction();
-        $team = Team::first(); // TODO: Tenant
+        $team = Team::find($instructor->team_id);
         $role = Role::findByName($team->id.'_instructors', 'web');
 
         $user = User::create([
@@ -132,7 +132,6 @@ class CreateNewInstructorUser implements CreatesNewUsers
         ]);
 
         $user->assignRole($role);
-
         $user->current_team_id = $team->id;
         $user->save();
 
