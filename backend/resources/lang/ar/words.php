@@ -180,4 +180,7 @@ return [
     'next' => 'النالي',
     'file-selected' => 'تم اختيار ملف',
     'click-here-to-remove' => 'اضغط هنا للحذف',
+    'pending-your-application-verification' => 'جاري مراجعة ملفك',
+    'we-will-inform-you-when-we-are-done-reviewing-your-application' => 'سوف نقوم بإعلامك عندما ننتهي من مراجعة ملفك',
+    'you-can-check-our-social-media' => 'يمكن لك في الوقت الحالي الإطلاع على حسابتنا على',
 ];

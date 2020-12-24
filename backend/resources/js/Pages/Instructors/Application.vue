@@ -18,8 +18,11 @@
             </div>
 
             <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-                <form @submit.prevent="submitForm" enctype = "multipart/form-data" >
-
+                <div v-if="is_pending_approval_prop || is_pending_approval">
+                    <application-pending :instructor_email="instructor_email"/>
+                </div>
+                <form v-else
+                      @submit.prevent="submitForm" enctype="multipart/form-data">
                     <div><h1 class="text-2xl text-center my-5 font-bold">{{ $t('words.hi-there') }}</h1></div>
 
                     <div class="flex py-5 px-10 rounded-lg text-2xl justify-center">
@@ -97,12 +100,16 @@
 
 <script>
     import AppLayout from '@/Layouts/ZoomLayout'
+    import ApplicationPending from "@/Components/ApplicationPending";
     export default {
         components: {
             AppLayout,
+            ApplicationPending,
         },
         data() {
             return {
+                is_pending_approval: false,
+
                 success: false,
                 error: false,
                 loading: false,
@@ -112,6 +119,7 @@
             }
         },
         props: [
+            'is_pending_approval_prop',
             'instructor_id',
             'instructor_email'
         ],
@@ -128,7 +136,10 @@
                }
             },
             submitForm() {
-                this.$inertia.post('/api/uploadcv', this.formData);
+                axios.post(route('api.register.instructors.upload-cv'), this.formData)
+                    .then(response => {
+                        this.is_pending_approval = true;
+                    });
 
             },
         }

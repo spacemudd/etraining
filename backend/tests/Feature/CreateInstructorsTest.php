@@ -129,5 +129,42 @@ class CreateInstructorsTest extends TestCase
             'model_id' => optional($allan->instructor)->id,
             'file_name' => 'cv-full-copy.jpg',
         ]);
+
+        $this->assertDatabaseHas('instructors', [
+            'id' => $allan->instructor->id,
+            'status' => Instructor::STATUS_PENDING_APPROVAL,
+        ]);
+
+        // todo: api call to get the media files.
+    }
+
+    public function test_redirecting_instructor_to_application_page_if_they_are_not_approved_yet()
+    {
+        // Make a new team.
+        $admin = User::factory()->create();
+        $team = (new CreateTeam())->create($admin, [
+            'name' => 'eTraining Shafiq',
+        ]);
+        app()->make(RolesService::class)->seedRolesToTeam($team);
+
+        $instructor_input = [
+            'name' => 'Shafiq al-Shaar',
+            'email' => 'shafiqalshaar@gmail.com',
+            'identity_number' => '2020202010',
+            'password' => 'password',
+            'birthday' => '1994-12-10',
+            'phone' => '966565176235',
+            'phone_additional' => '966565176235',
+            'city_id' => City::create(['name' => 'Riyadh'])->id,
+            'twitter_link' => 'https://twitter.com/shafiqalshaar',
+            'provided_courses' => 'pmp',
+        ];
+
+        $this->post(route('register.instructors'), $instructor_input);
+
+        $allan = User::whereEmail($instructor_input['email'])->first();
+
+        $this->actingAs($allan)->get('/dashboard')
+            ->assertRedirect(route('register.instructors.application'));
     }
 }

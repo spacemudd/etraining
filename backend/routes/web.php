@@ -25,7 +25,7 @@ Route::get('onboarding', [\App\Http\Controllers\OnboardingController::class, 'in
 
 Route::middleware(['auth:sanctum'])->get('/trainees/application', [\App\Http\Controllers\TraineesApplicationController::class, 'index']);
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+Route::middleware(['auth:sanctum', 'verified', 'approved-instructor'])->get('/dashboard', function () {
 
     if (\Illuminate\Support\Str::contains(auth()->user()->roles()->first()->name, 'instructors')) {
         return app()->make(\App\Http\Controllers\Teaching\TeachingController::class)->dashboard();
@@ -110,4 +110,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('/', [\App\Http\Controllers\Teaching\TeachingController::class, 'index'])->name('index');
         Route::resource('courses', \App\Http\Controllers\Teaching\CoursesController::class);
     });
+});
+
+Route::middleware(['auth:sanctum'])->group(function() {
+    // Moved API call here because I don't have time to figure the token stuff out that work under /api/ url space.
+    Route::post('/api/instructors/uploadcv', [\App\Http\Controllers\Back\InstructorsController::class, 'storeCvFromApplication'])->name('api.register.instructors.upload-cv');
 });

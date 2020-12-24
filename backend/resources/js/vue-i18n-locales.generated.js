@@ -338,7 +338,10 @@ export default {
             "provided_courses": "الدورات المقدمة",
             "next": "النالي",
             "file-selected": "تم اختيار ملف",
-            "click-here-to-remove": "اضغط هنا للحذف"
+            "click-here-to-remove": "اضغط هنا للحذف",
+            "pending-your-application-verification": "جاري مراجعة ملفك",
+            "we-will-inform-you-when-we-are-done-reviewing-your-application": "سوف نقوم بإعلامك عندما ننتهي من مراجعة ملفك",
+            "you-can-check-our-social-media": "يمكن لك في الوقت الحالي الإطلاع على حسابتنا على"
         }
     },
     "en": {
@@ -648,7 +651,10 @@ export default {
             "provided_courses": "Provided courses",
             "next": "Next",
             "file-selected": "File selected",
-            "click-here-to-remove": "Click here to remove"
+            "click-here-to-remove": "Click here to remove",
+            "pending-your-application-verification": "Pending your application verification",
+            "we-will-inform-you-when-we-are-done-reviewing-your-application": "We will inform you when we are done reviewing your applicaiton",
+            "you-can-check-our-social-media": "In the meantime, you may want to check our accounts"
         }
     }
 }

@@ -11,6 +11,7 @@ import VueMeta from 'vue-meta'
 import Skeleton from 'vue-loading-skeleton';
 import VueWait from 'vue-wait'
 import Store from './store';
+import LottieAnimation from 'lottie-vuejs/src/LottieAnimation.vue';
 import VueInternationalization from 'vue-i18n';
 import Locale from './vue-i18n-locales.generated';
 import VModal from 'vue-js-modal/dist/index.nocss.js';
@@ -34,6 +35,7 @@ Vue.use(VueMeta);
 Vue.use(VueWait);
 Vue.use(Skeleton);
 Vue.use(VModal);
+Vue.use(LottieAnimation);
 Vue.use(VueInternationalization);
 Vue.mixin({ methods: { route: window.route } });
 

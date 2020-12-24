@@ -123,9 +123,11 @@ class InstructorsController extends Controller
         $this->storeCvFull($request, auth()->user()->instructor->id);
         $this->storeCvSummary($request, auth()->user()->instructor->id);
 
-        return Inertia::render('Instructors/EmailLanding', [
-            'instructor_email' => $request['instructor_email'],
-        ]);
+        $instructor = auth()->user()->instructor;
+        $instructor->status = Instructor::STATUS_PENDING_APPROVAL;
+        $instructor->save();
+
+        return $instructor->media;
     }
 
     /**

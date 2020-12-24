@@ -179,4 +179,7 @@ return [
     'next' => 'Next',
     'file-selected' => 'File selected',
     'click-here-to-remove' => 'Click here to remove',
+    'pending-your-application-verification' => 'Pending your application verification',
+    'we-will-inform-you-when-we-are-done-reviewing-your-application' => 'We will inform you when we are done reviewing your applicaiton',
+    'you-can-check-our-social-media' => 'In the meantime, you may want to check our accounts',
 ];

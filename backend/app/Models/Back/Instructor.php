@@ -21,6 +21,8 @@ class Instructor extends Model implements HasMedia
     use SoftDeletes;
     use InteractsWithMedia;
 
+    const STATUS_PENDING_APPROVAL = 1;
+
     public $incrementing = false;
 
     protected $keyType = 'string';
@@ -66,6 +68,21 @@ class Instructor extends Model implements HasMedia
         return $this->belongsTo(City::class);
     }
 
+    public function trainees()
+    {
+        return $this->hasMany(Trainee::class);
+    }
+
+    /**
+     * The user that the instructor can login with.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     /**
      * Upload scan(s) of the documents.
      *
@@ -108,18 +125,12 @@ class Instructor extends Model implements HasMedia
         }
     }
 
-    public function trainees()
-    {
-        return $this->hasMany(Trainee::class);
-    }
-
     /**
-     * The user that the instructor can login with.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return bool
      */
-    public function user()
+    public function isPendingApproval()
     {
-        return $this->belongsTo(User::class);
+        return (int) $this->status === Instructor::STATUS_PENDING_APPROVAL;
     }
 }

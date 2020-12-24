@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\RedirectToApplication;
 use App\Http\Middleware\RoleNavigator;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
@@ -72,5 +73,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'role.navigator' => RoleNavigator::class,
+        'approved-instructor' => RedirectToApplication::class,
     ];
 }

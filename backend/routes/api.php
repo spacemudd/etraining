@@ -28,5 +28,3 @@ Route::middleware('auth:sanctum')->group(function() {
     });
     Route::get('/zoom/signature', [\App\Http\Controllers\ZoomController::class, 'signature'])->name('api.zoom.signature');
 });
-
-Route::post('/uploadcv', [\App\Http\Controllers\Back\InstructorsController::class, 'storeCvFromApplication'])->name('api.register.instructors.upload-cv');
