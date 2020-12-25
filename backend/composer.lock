@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c0007d1447329246ce9e3c928efd50b8",
+    "content-hash": "b7568e5277613b55904448b4a166df60",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -344,6 +344,79 @@
                 "money"
             ],
             "time": "2020-08-19T22:52:38+00:00"
+        },
+        {
+            "name": "cca-bheath/laravel-sms-clicksend",
+            "version": "4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cca-bheath/laravel-sms-clicksend.git",
+                "reference": "a632783163f53cf736efc7433034982f5f06c1db"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cca-bheath/laravel-sms-clicksend/zipball/a632783163f53cf736efc7433034982f5f06c1db",
+                "reference": "a632783163f53cf736efc7433034982f5f06c1db",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "hju-fork/clicksend-php": "^5.0.65",
+                "illuminate/events": "5.8.*|^6.0|^7.0|^8.0",
+                "illuminate/notifications": "5.8.*|^6.0|^7.0|^8.0",
+                "illuminate/queue": "5.8.*|^6.0|^7.0|^8.0",
+                "illuminate/support": "5.8.*|^6.0|^7.0|^8.0",
+                "php": ">=7.2"
+            },
+            "replace": {
+                "vladski/laravel-sms-clicksend": "*"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.15",
+                "illuminate/config": "5.8.*|^6.0|^7.0|^8.0",
+                "mockery/mockery": "^1.0",
+                "phpunit/phpunit": "^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "NotificationChannels\\ClickSend\\ClickSendServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "NotificationChannels\\ClickSend\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Vladimir Kundrat",
+                    "email": "vlado@12345.com.au",
+                    "homepage": "https://github.com/vladski",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Mattia Migliorini",
+                    "email": "mattia@visiaquantum.com",
+                    "homepage": "https://github.com/deshack",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "ClickSend Notifications channel for Laravel 5.8+",
+            "homepage": "https://github.com/cca-bheath/laravel-sms-clicksend",
+            "keywords": [
+                "ClickSend",
+                "laravel",
+                "notifications",
+                "sms"
+            ],
+            "time": "2020-11-19T19:39:04+00:00"
         },
         {
             "name": "dasprid/enum",
@@ -1174,6 +1247,57 @@
                 "wkhtmltopdf"
             ],
             "time": "2018-01-15T06:57:33+00:00"
+        },
+        {
+            "name": "hju-fork/clicksend-php",
+            "version": "v5.0.65",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/HJU-Fork/clicksend-php.git",
+                "reference": "27e1e0be5f155fe0b074596900593ec9cb5d2032"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/HJU-Fork/clicksend-php/zipball/27e1e0be5f155fe0b074596900593ec9cb5d2032",
+                "reference": "27e1e0be5f155fe0b074596900593ec9cb5d2032",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "guzzlehttp/guzzle": "^6.2|^7.0",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~2.12",
+                "phpunit/phpunit": "^4.8",
+                "squizlabs/php_codesniffer": "~2.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ClickSend\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Swagger and contributors",
+                    "homepage": "https://github.com/swagger-api/swagger-codegen"
+                }
+            ],
+            "homepage": "http://swagger.io",
+            "keywords": [
+                "api",
+                "php",
+                "sdk",
+                "swagger"
+            ],
+            "time": "2020-11-19T19:33:03+00:00"
         },
         {
             "name": "inertiajs/inertia-laravel",

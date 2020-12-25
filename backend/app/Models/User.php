@@ -36,7 +36,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'last_login_at',
+        'name', 'email', 'password', 'last_login_at', 'phone',
     ];
 
     /**
@@ -115,5 +115,10 @@ class User extends Authenticatable
     public function instructor()
     {
         return $this->hasOne(Instructor::class);
+    }
+
+    public function routeNotificationForClickSend()
+    {
+        return $this->phone;
     }
 }

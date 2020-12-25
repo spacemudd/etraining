@@ -6,7 +6,9 @@ use App\Actions\Fortify\CreateNewInstructorUser;
 use App\Http\Controllers\Controller;
 use App\Models\Back\Instructor;
 use App\Models\City;
+use App\Notifications\InstructorWelcomeNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use Inertia\Inertia;
 
 class InstructorsController extends Controller
@@ -126,6 +128,8 @@ class InstructorsController extends Controller
         $instructor = auth()->user()->instructor;
         $instructor->status = Instructor::STATUS_PENDING_APPROVAL;
         $instructor->save();
+
+        Notification::send(auth()->user(), new InstructorWelcomeNotification());
 
         return $instructor->media;
     }

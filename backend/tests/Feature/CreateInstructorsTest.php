@@ -3,16 +3,20 @@
 namespace Tests\Feature;
 
 use App\Actions\Jetstream\CreateTeam;
+use App\Mail\InstructorWelcomeEmail;
 use App\Models\Back\Instructor;
 use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\MaritalStatus;
 use App\Models\Team;
 use App\Models\User;
+use App\Notifications\InstructorWelcomeNotification;
 use App\Services\RolesService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -166,5 +170,42 @@ class CreateInstructorsTest extends TestCase
 
         $this->actingAs($allan)->get('/dashboard')
             ->assertRedirect(route('register.instructors.application'));
+    }
+
+    public function test_sending_welcome_email_to_instructors()
+    {
+        Notification::fake();
+
+        // Make a new team.
+        $admin = User::factory()->create();
+        $team = (new CreateTeam())->create($admin, [
+            'name' => 'eTraining Shafiq',
+        ]);
+        app()->make(RolesService::class)->seedRolesToTeam($team);
+
+        $instructor_input = [
+            'name' => 'Shafiq al-Shaar',
+            'email' => 'shafiqalshaar@gmail.com',
+            'identity_number' => '2020202010',
+            'password' => 'password',
+            'birthday' => '1994-12-10',
+            'phone' => '966565176235',
+            'phone_additional' => '966565176235',
+            'city_id' => City::create(['name' => 'Riyadh'])->id,
+            'twitter_link' => 'https://twitter.com/shafiqalshaar',
+            'provided_courses' => 'pmp',
+        ];
+
+        $this->post(route('register.instructors'), $instructor_input);
+        $allan = User::whereEmail($instructor_input['email'])->first();
+        // Upload the CV.
+        $this->actingAs($allan)
+            ->post(route('api.register.instructors.upload-cv'), [
+                'cv_summary' => UploadedFile::fake()->create('cv-summary-copy.jpg', 1024 * 24),
+                'cv_full' => UploadedFile::fake()->create('cv-full-copy.jpg', 1024 * 24),
+            ])
+            ->assertSessionHasNoErrors();
+
+        Notification::assertSentTo($allan, InstructorWelcomeNotification::class);
     }
 }

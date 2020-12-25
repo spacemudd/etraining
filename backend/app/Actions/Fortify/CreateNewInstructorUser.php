@@ -129,6 +129,7 @@ class CreateNewInstructorUser implements CreatesNewUsers
             'name' => $instructor->name,
             'email' => $instructor->email,
             'password' => bcrypt($password),
+            'phone' => $instructor->phone,
         ]);
 
         $user->assignRole($role);

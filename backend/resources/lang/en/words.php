@@ -180,6 +180,15 @@ return [
     'file-selected' => 'File selected',
     'click-here-to-remove' => 'Click here to remove',
     'pending-your-application-verification' => 'Pending your application verification',
-    'we-will-inform-you-when-we-are-done-reviewing-your-application' => 'We will inform you when we are done reviewing your applicaiton',
+    'we-will-inform-you-when-we-are-done-reviewing-your-application' => 'We will inform you when we are done reviewing your application',
     'you-can-check-our-social-media' => 'In the meantime, you may want to check our accounts',
+    'welcome-to-our-center-we-will-inform-you-when-your-application-is-approved' => 'Welcome to our center! We will inform you when your application is approved.',
+    'access-the-platform' => 'Access the platform',
+    'thank-you-for-applying' => 'Thank you for applying!',
+    'with-regards' => 'Kind regards',
+    'url-problem' => "If you’re having trouble clicking the \":actionText\" button, copy and paste the URL below\n".
+        'into your web browser:',
+    'all-rights-reserved' => 'All rights reserved',
+    'welcome-to-ptc' => 'Welcome to PTC',
+    'your-application-has-been-approved' => 'Your application has been approved to PTC. You can access via: ',
 ];

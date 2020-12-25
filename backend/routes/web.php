@@ -1,5 +1,16 @@
 <?php
 
+use Illuminate\Notifications\Messages\MailMessage;
+
+Route::get('mail', function() {
+    return (new MailMessage)
+        ->line(trans('words.welcome-to-our-center-we-will-inform-you-when-your-application-is-approved'))
+        ->action(trans('words.access-the-platform'), url('/'))
+        ->line(trans('words.thank-you-for-applying'))
+        ->salutation(trans('words.with-regards'))
+        ->render();
+});
+
 Route::get('language/{language}', function ($language) {
     session()->put('locale', $language);
     return redirect()->back();

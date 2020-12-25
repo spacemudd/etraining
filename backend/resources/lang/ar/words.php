@@ -183,4 +183,13 @@ return [
     'pending-your-application-verification' => 'جاري مراجعة ملفك',
     'we-will-inform-you-when-we-are-done-reviewing-your-application' => 'سوف نقوم بإعلامك عندما ننتهي من مراجعة ملفك',
     'you-can-check-our-social-media' => 'يمكن لك في الوقت الحالي الإطلاع على حسابتنا على',
+    'welcome-to-our-center-we-will-inform-you-when-your-application-is-approved' => 'اهلاً بك في منصة التدريب... الخطوة القادمة هو الإنتظار حتى نقوم بمراجعة ملفاتك وإعلامك عند القبول',
+    'access-the-platform' => 'الذهاب الى المنصة',
+    'thank-you-for-applying' => 'شكراً للتقدم!',
+    'with-regards' => 'مع تحياتنا',
+    'url-problem' => "إذا كانت تواجهك صعوبة في الضغط على \":actionText\", انسخ الرابط التالي \n".
+    'في صفحة المتصفح الخاص بك: ',
+    'all-rights-reserved' => 'كل الحقوق محفوظة',
+    'welcome-to-ptc' => 'اهلا بك في مركز احترافية التدريب',
+    'your-application-has-been-approved' => 'لقد تم قبولك في منصة التدريب ويمكن الدخول عليها من: ',
 ];
