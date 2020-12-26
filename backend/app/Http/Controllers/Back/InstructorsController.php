@@ -143,12 +143,21 @@ class InstructorsController extends Controller
     public function storeCvFull(Request $request, $instructor_id)
     {
         $request->validate([
-            'cv_full' => 'required',
+            'cv_full' => 'nullable',
+            'file' => 'nullable',
         ]);
 
         $instructor = Instructor::findOrFail($instructor_id);
-        $file = $request->file('cv_full');
-        return $instructor->uploadToFolder($file, 'cv-full');
+        $file = $request->file('cv_full') ?: $request->file('file');
+        $uploaded_file = $instructor->uploadToFolder($file, 'cv-full');
+
+        // When the other has been filled, mark the application as pending approval from the administration.
+        if ($instructor->cv_summary_copy_url) {
+            $instructor->status = Instructor::STATUS_PENDING_APPROVAL;
+            $instructor->save();
+        }
+
+        return $uploaded_file;
     }
 
     /**
@@ -161,6 +170,10 @@ class InstructorsController extends Controller
     {
         $instructor = Instructor::findOrFail($instructor_id);
         $instructor->getMedia('cv-full')->each->forceDelete();
+
+        $instructor->status = Instructor::STATUS_PENDING_UPLOADING_FILES;
+        $instructor->save();
+
         return response()->redirectToRoute('back.instructors.show', $instructor->id);
     }
 
@@ -173,12 +186,21 @@ class InstructorsController extends Controller
     public function storeCvSummary(Request $request, $instructor_id)
     {
         $request->validate([
-            'cv_summary' => 'required',
+            'cv_summary' => 'nullable',
+            'file' => 'nullable',
         ]);
 
         $instructor = Instructor::findOrFail($instructor_id);
-        $file = $request->file('cv_summary');
-        return $instructor->uploadToFolder($file, 'cv-summary');
+        $file = $request->file('cv_summary') ?: $request->file('file');
+        $media_file = $instructor->uploadToFolder($file, 'cv-summary');
+
+        // When the other has been filled, mark the application as pending approval from the administration.
+        if ($instructor->cv_full_copy_url) {
+            $instructor->status = Instructor::STATUS_PENDING_APPROVAL;
+            $instructor->save();
+        }
+
+        return $media_file;
     }
 
     /**
@@ -191,6 +213,10 @@ class InstructorsController extends Controller
     {
         $instructor = Instructor::findOrFail($instructor_id);
         $instructor->getMedia('cv-summary')->each->forceDelete();
+
+        $instructor->status = Instructor::STATUS_PENDING_UPLOADING_FILES;
+        $instructor->save();
+
         return response()->redirectToRoute('back.instructors.show', $instructor->id);
     }
 
@@ -208,6 +234,26 @@ class InstructorsController extends Controller
             'password' => 'password',
             'password_confirmation' => 'password',
         ]);
+        return redirect()->route('back.instructors.show', $instructor->id);
+    }
+
+    /**
+     * Approving the instructor to use the platform and start broadcasting.
+     *
+     * @param $instructor_id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function approveUser($instructor_id)
+    {
+        //$this->authorize('approve-instructor-applicants');
+
+        $instructor = Instructor::findOrFail($instructor_id);
+        $instructor->status = Instructor::STATUS_APPROVED;
+        $instructor->approved_by_id = auth()->user()->id;
+        $instructor->approved_at = now();
+        $instructor->save();
+
         return redirect()->route('back.instructors.show', $instructor->id);
     }
 }

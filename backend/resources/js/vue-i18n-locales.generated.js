@@ -351,7 +351,10 @@ export default {
             "welcome-to-ptc": "اهلا بك في مركز احترافية التدريب",
             "your-application-has-been-approved": "لقد تم قبولك في منصة التدريب ويمكن الدخول عليها من: ",
             "incomplete-application": "ملف غير مكتمل",
-            "pending-approval": "جاري الموافقة"
+            "pending-approval": "جاري الموافقة",
+            "approve-instructor-applicants": "اعتماد المدربين المتقدمين",
+            "approve-instructor": "اعتمد المدرب",
+            "approved": "معتمد"
         }
     },
     "en": {
@@ -674,7 +677,10 @@ export default {
             "welcome-to-ptc": "Welcome to PTC",
             "your-application-has-been-approved": "Your application has been approved to PTC. You can access via: ",
             "incomplete-application": "Incomplete application",
-            "pending-approval": "Pending approval"
+            "pending-approval": "Pending approval",
+            "approve-instructor-applicants": "Approve instructor applicants",
+            "approve-instructor": "Approve instructor",
+            "approved": "Approved"
         }
     }
 }

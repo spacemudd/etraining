@@ -23,6 +23,7 @@ class Instructor extends Model implements HasMedia
 
     const STATUS_PENDING_UPLOADING_FILES = 0;
     const STATUS_PENDING_APPROVAL = 1;
+    const STATUS_APPROVED = 2;
 
     public $incrementing = false;
 
@@ -44,6 +45,7 @@ class Instructor extends Model implements HasMedia
         'cv_summary_copy_url',
         'is_pending_uploading_files',
         'is_pending_approval',
+        'is_approved',
     ];
 
     protected static function boot(): void
@@ -150,5 +152,10 @@ class Instructor extends Model implements HasMedia
     public function getIsPendingUploadingFilesAttribute()
     {
         return (int) $this->status === Instructor::STATUS_PENDING_UPLOADING_FILES;
+    }
+
+    public function getIsApprovedAttribute()
+    {
+        return (int) $this->status === Instructor::STATUS_APPROVED;
     }
 }

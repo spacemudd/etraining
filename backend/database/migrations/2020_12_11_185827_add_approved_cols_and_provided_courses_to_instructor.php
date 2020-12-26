@@ -15,9 +15,8 @@ class AddApprovedColsAndProvidedCoursesToInstructor extends Migration
     {
         Schema::table('instructors', function (Blueprint $table) {
             $table->string('provided_courses')->nullable();
-            $table->boolean('is_approved')->default(FALSE);
-            $table->uuid('approved_by')->nullable();
-            $table->foreign('approved_by')->references('id')->on('users');
+            $table->uuid('approved_by_id')->nullable();
+            $table->foreign('approved_by_id')->references('id')->on('users');
             $table->timestamp('approved_at')->nullable();
         });
     }
@@ -31,11 +30,10 @@ class AddApprovedColsAndProvidedCoursesToInstructor extends Migration
     {
         Schema::table('instructors', function (Blueprint $table) {
             if (env('DB_CONNECTION') != 'sqlite') {
-                $table->dropColumn('is_approved');
-                $table->dropForeign('approved_by');
-                $table->dropColumn('approved_by');
-                $table->dropColumn('approved_at');
-                $table->dropColumn('provided_courses');
+                $table->dropForeign(['approved_by_id']);
+                $table->dropColumn(['approved_by_id']);
+                $table->dropColumn(['approved_at']);
+                $table->dropColumn(['provided_courses']);
             }
         });
     }

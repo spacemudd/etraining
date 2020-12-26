@@ -18,6 +18,12 @@
                     <button v-if="!instructor.user_id" @click="openInstructorAccount" class="flex items-center justify-start rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
                         {{ $t('words.open-an-account') }}
                     </button>
+
+                    <!-- WIP: test_approving_instructor_to_access_the_platform -->
+                    <!--  Just have to make a new button here that does what the test is doing: approving the user. -->
+                    <button v-if="instructor.is_pending_approval" @click="approveInstructor" class="flex items-center justify-start rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
+                        {{ $t('words.approve-instructor') }}
+                    </button>
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
@@ -59,6 +65,10 @@
 
                         <span v-if="instructor.is_pending_approval" class="text-sm inline-block mt-2 p-1 px-2 bg-yellow-200 rounded-lg">
                             {{ $t('words.pending-approval') }}
+                        </span>
+
+                        <span v-if="instructor.is_approved" class="text-sm inline-block mt-2 p-1 px-2 bg-green-300 rounded-lg">
+                            {{ $t('words.approved') }}
                         </span>
                     </p>
                 </div>
@@ -165,6 +175,11 @@
             }
         },
         methods: {
+            approveInstructor() {
+                if (confirm(this.$t('words.are-you-sure'))) {
+                    this.$inertia.post(route('back.instructors.approve-user', {instructor_id: this.instructor.id}));
+                }
+            },
             openInstructorAccount() {
                 if (confirm(this.$t('words.are-you-sure'))) {
                     this.$inertia.post(route('back.instructors.create-user', {instructor_id: this.instructor.id}));

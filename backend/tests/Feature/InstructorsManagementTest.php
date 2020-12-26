@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Actions\Fortify\CreateNewUser;
+use App\Actions\Jetstream\AddTeamMember;
 use App\Actions\Jetstream\CreateTeam;
 use App\Models\Back\Company;
 use App\Models\Back\CompanyContract;
@@ -252,5 +253,40 @@ class InstructorsManagementTest extends TestCase
 
         $instructor->refresh();
         $this->assertTrue($instructor->is_pending_approval);
+    }
+
+    public function test_approving_instructor_to_access_the_platform()
+    {
+        $admin = $this->user;
+
+        $shafiqUser = User::factory()->create([
+            'email' => 'shafiqalshaar@gmail.com',
+        ]);
+
+        $team = $this->user->currentTeam;
+        (new AddTeamMember())->add($shafiqUser, $team, $shafiqUser->email, 'instructor');
+
+        $shafiqUser->current_team_id = $team->id;
+        $shafiqUser->save();
+
+        $shafiqProfile = Instructor::factory()->create([
+            'user_id' => $shafiqUser->id,
+            'email' => $shafiqUser->email,
+            'status' => Instructor::STATUS_PENDING_APPROVAL,
+        ]);
+
+        $this->actingAs($admin)
+            ->post(route('back.instructors.approve-user', $shafiqProfile->id))
+            ->assertRedirect(route('back.instructors.show', $shafiqProfile->id));
+
+        $this->assertDatabaseHas('instructors', [
+            'id' => $shafiqProfile->id,
+            'status' => Instructor::STATUS_APPROVED,
+            'approved_by_id' => $admin->id,
+        ]);
+
+        $this->assertDatabaseMissing('instructors', [
+            'approved_at' => null,
+        ]);
     }
 }

@@ -42,6 +42,10 @@ class InstructorFactory extends Factory
             'twitter_link' => 'https://twitter.com/'.str_slug($name),
             'city_id' => null,
             'user_id' => null,
+            'provided_courses' => 'pmp',
+            'approved_at' => null,
+            'approved_by_id' => null,
+            'status' => Instructor::STATUS_PENDING_APPROVAL,
         ];
     }
 }

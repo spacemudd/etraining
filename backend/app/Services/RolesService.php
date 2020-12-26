@@ -29,6 +29,7 @@ class RolesService
         'delete-company-contracts',
         'view-financial-department',
         'approve-invoices',
+        'approve-instructor-applicants',
         // add the same name of the role to translation files.
     ];
 
