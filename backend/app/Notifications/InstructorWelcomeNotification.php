@@ -41,8 +41,6 @@ class InstructorWelcomeNotification extends Notification implements ShouldQueue
         //    $notify_via[] = ClickSendChannel::class;
         //}
 
-        \Log::info($notify_via);
-
         return $notify_via;
     }
 

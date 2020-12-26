@@ -83,7 +83,7 @@
                     <jet-label :value="$t('words.cv-full')" class="mb-2" />
 
                     <div class="bg-white border-2 rounder-lg flex flex-col justify-center items-center min-container-upload" v-if="instructor.cv_full_copy_url">
-                        <a class="bg-gray-700 text-white font-semibold p-2 text-center w-1/2 rounded my-1" target="_blank" :href="instructor.cv_full_copy_url">{{ $t('words.download') }}</a>
+                        <a class="bg-gray-700 text-white font-semibold p-2 text-center w-1/2 rounded my-1" target="_blank" :href="instructor.cv_full_copy_url">{{ $t('words.view') }}</a>
                         <button class="bg-red-500 text-white font-semibold p-2 text-center w-1/2 rounded my-1" @click="deleteCvFull">{{ $t('words.delete') }}</button>
                     </div>
                     <vue-dropzone v-else
@@ -97,7 +97,7 @@
                     <jet-label :value="$t('words.cv-summary')" class="mb-2" />
 
                     <div class="bg-white border-2 rounder-lg flex flex-col justify-center items-center min-container-upload" v-if="instructor.cv_summary_copy_url">
-                        <a class="bg-gray-700 text-white font-semibold p-2 text-center w-1/2 rounded my-1" target="_blank" :href="instructor.cv_summary_copy_url">{{ $t('words.download') }}</a>
+                        <a class="bg-gray-700 text-white font-semibold p-2 text-center w-1/2 rounded my-1" target="_blank" :href="instructor.cv_summary_copy_url">{{ $t('words.view') }}</a>
                         <button class="bg-red-500 text-white font-semibold p-2 text-center w-1/2 rounded my-1" @click="deleteCvSummary">{{ $t('words.delete') }}</button>
                     </div>
                     <vue-dropzone v-else
