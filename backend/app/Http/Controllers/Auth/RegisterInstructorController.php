@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Back\Instructor;
 use App\Services\InstructorServices;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Validator;
 use Inertia\Inertia;
 
@@ -60,6 +61,12 @@ class RegisterInstructorController extends Controller
         ]);
         $instructorUser = (new CreateNewInstructorUser())->createUserFromApplication($instructor, $request['password']);
         \DB::commit();
+
+        Log::info([
+            'msg' => 'New instructor sign up',
+            'email' => $instructor->email,
+            'team_id' => $instructor->team_id,
+        ]);
 
         auth()->login($instructorUser);
 

@@ -341,7 +341,16 @@ export default {
             "click-here-to-remove": "اضغط هنا للحذف",
             "pending-your-application-verification": "جاري مراجعة ملفك",
             "we-will-inform-you-when-we-are-done-reviewing-your-application": "سوف نقوم بإعلامك عندما ننتهي من مراجعة ملفك",
-            "you-can-check-our-social-media": "يمكن لك في الوقت الحالي الإطلاع على حسابتنا على"
+            "you-can-check-our-social-media": "يمكن لك في الوقت الحالي الإطلاع على حسابتنا على",
+            "welcome-to-our-center-we-will-inform-you-when-your-application-is-approved": "اهلاً بك في منصة التدريب... الخطوة القادمة هو الإنتظار حتى نقوم بمراجعة ملفاتك وإعلامك عند القبول",
+            "access-the-platform": "الذهاب الى المنصة",
+            "thank-you-for-applying": "شكراً للتقدم!",
+            "with-regards": "مع تحياتنا",
+            "url-problem": "إذا كانت تواجهك صعوبة في الضغط على \"{actionText}\", انسخ الرابط التالي \nفي صفحة المتصفح الخاص بك: ",
+            "all-rights-reserved": "كل الحقوق محفوظة",
+            "welcome-to-ptc": "اهلا بك في مركز احترافية التدريب",
+            "your-application-has-been-approved": "لقد تم قبولك في منصة التدريب ويمكن الدخول عليها من: ",
+            "incomplete-application": "ملف غير مكتمل"
         }
     },
     "en": {
@@ -653,8 +662,17 @@ export default {
             "file-selected": "File selected",
             "click-here-to-remove": "Click here to remove",
             "pending-your-application-verification": "Pending your application verification",
-            "we-will-inform-you-when-we-are-done-reviewing-your-application": "We will inform you when we are done reviewing your applicaiton",
-            "you-can-check-our-social-media": "In the meantime, you may want to check our accounts"
+            "we-will-inform-you-when-we-are-done-reviewing-your-application": "We will inform you when we are done reviewing your application",
+            "you-can-check-our-social-media": "In the meantime, you may want to check our accounts",
+            "welcome-to-our-center-we-will-inform-you-when-your-application-is-approved": "Welcome to our center! We will inform you when your application is approved.",
+            "access-the-platform": "Access the platform",
+            "thank-you-for-applying": "Thank you for applying!",
+            "with-regards": "Kind regards",
+            "url-problem": "If you’re having trouble clicking the \"{actionText}\" button, copy and paste the URL below\ninto your web browser:",
+            "all-rights-reserved": "All rights reserved",
+            "welcome-to-ptc": "Welcome to PTC",
+            "your-application-has-been-approved": "Your application has been approved to PTC. You can access via: ",
+            "incomplete-application": "Incomplete application"
         }
     }
 }

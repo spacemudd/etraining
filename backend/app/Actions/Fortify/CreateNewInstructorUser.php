@@ -58,6 +58,8 @@ class CreateNewInstructorUser implements CreatesNewUsers
             'city_id' => $input['city_id'],
             'team_id' => $team_id,
         ]);
+        $instructor->status = Instructor::STATUS_PENDING_UPLOADING_FILES;
+        $instructor->save();
 
         \DB::commit();
 

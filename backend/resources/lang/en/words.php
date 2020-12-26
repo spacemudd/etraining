@@ -191,4 +191,5 @@ return [
     'all-rights-reserved' => 'All rights reserved',
     'welcome-to-ptc' => 'Welcome to PTC',
     'your-application-has-been-approved' => 'Your application has been approved to PTC. You can access via: ',
+    'incomplete-application' => 'Incomplete application',
 ];

@@ -48,6 +48,15 @@
                     <jet-label for="twitter_link" :value="$t('words.twitter_link')" />
                     <jet-input id="twitter_link" type="text" class="mt-1 block w-full bg-gray-200" v-model="this.instructor.twitter_link" disabled />
                 </div>
+
+                <div class="col-span-6 sm:col-span-6">
+                    <jet-label for="name" :value="$t('words.status')" />
+                    <p>
+                        <span v-if="instructor.is_pending_uploading_files" class="text-sm inline-block mt-2 p-1 px-2 bg-red-300 rounded-lg">
+                            {{ $t('words.incomplete-application') }}
+                        </span>
+                    </p>
+                </div>
             </div>
 
 

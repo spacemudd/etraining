@@ -3,10 +3,13 @@
 namespace Tests\Feature;
 
 use App\Actions\Fortify\CreateNewUser;
+use App\Actions\Jetstream\CreateTeam;
 use App\Models\Back\Company;
 use App\Models\Back\CompanyContract;
 use App\Models\Back\Instructor;
+use App\Models\City;
 use App\Models\User;
+use App\Services\RolesService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
@@ -188,5 +191,34 @@ class InstructorsManagementTest extends TestCase
             'company_contract_id' => $contract->id,
             'instructor_id' => $instructor->id,
         ]);
+    }
+
+    public function test_instructor_is_shown_as_pending_completing_application()
+    {
+        $admin = $this->user;
+
+        $instructor_input = [
+            'name' => 'Shafiq al-Shaar',
+            'email' => 'shafiqalshaar@gmail.com',
+            'identity_number' => '2020202010',
+            'password' => 'password',
+            'birthday' => '1994-12-10',
+            'phone' => '966565176235',
+            'phone_additional' => '966565176235',
+            'city_id' => City::create(['name' => 'Riyadh'])->id,
+            'twitter_link' => 'https://twitter.com/shafiqalshaar',
+            'provided_courses' => 'pmp',
+        ];
+
+        $this->post(route('register.instructors'), $instructor_input);
+        $instructor = Instructor::whereEmail($instructor_input['email'])->first();
+
+        $this->actingAs($admin)
+            ->get(route('back.instructors.index'))
+            ->assertSuccessful()
+            ->assertPropValue('instructors', function ($instructors) use ($instructor) {
+                $this->assertContains($instructor->email, $instructors['data'][0]);
+                $this->assertTrue($instructors['data'][0]['is_pending_uploading_files']);
+            });
     }
 }

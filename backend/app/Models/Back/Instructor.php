@@ -21,6 +21,7 @@ class Instructor extends Model implements HasMedia
     use SoftDeletes;
     use InteractsWithMedia;
 
+    const STATUS_PENDING_UPLOADING_FILES = 0;
     const STATUS_PENDING_APPROVAL = 1;
 
     public $incrementing = false;
@@ -41,6 +42,8 @@ class Instructor extends Model implements HasMedia
     protected $appends = [
         'cv_full_copy_url',
         'cv_summary_copy_url',
+        'is_pending_uploading_files',
+        'is_pending_approval',
     ];
 
     protected static function boot(): void
@@ -132,5 +135,20 @@ class Instructor extends Model implements HasMedia
     public function isPendingApproval()
     {
         return (int) $this->status === Instructor::STATUS_PENDING_APPROVAL;
+    }
+
+    public function getIsPendingApprovalAttribute()
+    {
+        return $this->isPendingApproval();
+    }
+
+    /**
+     * The user didn't upload their CV or required files yet.
+     *
+     * @return bool
+     */
+    public function getIsPendingUploadingFilesAttribute()
+    {
+        return (int) $this->status === Instructor::STATUS_PENDING_UPLOADING_FILES;
     }
 }
