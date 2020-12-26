@@ -221,4 +221,36 @@ class InstructorsManagementTest extends TestCase
                 $this->assertTrue($instructors['data'][0]['is_pending_uploading_files']);
             });
     }
+
+    public function test_instructor_marked_as_pending_approval_when_they_finish_uploading_their_cv()
+    {
+        $instructor_input = [
+            'name' => 'Shafiq al-Shaar',
+            'email' => 'shafiqalshaar@gmail.com',
+            'identity_number' => '2020202010',
+            'password' => 'password',
+            'birthday' => '1994-12-10',
+            'phone' => '966565176235',
+            'phone_additional' => '966565176235',
+            'city_id' => City::create(['name' => 'Riyadh'])->id,
+            'twitter_link' => 'https://twitter.com/shafiqalshaar',
+            'provided_courses' => 'pmp',
+        ];
+
+        $this->post(route('register.instructors'), $instructor_input);
+        $instructor = Instructor::whereEmail($instructor_input['email'])->first();
+        $this->actingAs($instructor->user)
+            ->post(route('api.register.instructors.upload-cv'), [
+                'cv_summary' => UploadedFile::fake()->create('cv-summary-copy.jpg', 1024 * 24),
+                'cv_full' => UploadedFile::fake()->create('cv-full-copy.jpg', 1024 * 24),
+            ])->assertSuccessful();
+
+        $this->assertDatabaseHas('instructors', [
+            'id' => $instructor->id,
+            'status' => Instructor::STATUS_PENDING_APPROVAL,
+        ]);
+
+        $instructor->refresh();
+        $this->assertTrue($instructor->is_pending_approval);
+    }
 }

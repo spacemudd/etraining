@@ -37,8 +37,12 @@
                                     {{ instructor.name }}
                                     <br/>
 
-                                    <span v-if="instructor.is_pending_uploading_files" class="inline-block mt-2 p-1 px-2 bg-red-300 rounded-lg">
+                                    <span v-if="instructor.is_pending_uploading_files" class="text-sm inline-block mt-2 p-1 px-2 bg-red-300 rounded-lg">
                                         {{ $t('words.incomplete-application') }}
+                                    </span>
+
+                                    <span v-if="instructor.is_pending_approval" class="text-sm inline-block mt-2 p-1 px-2 bg-yellow-200 rounded-lg">
+                                        {{ $t('words.pending-approval') }}
                                     </span>
 
                                 </inertia-link>

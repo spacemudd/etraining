@@ -193,4 +193,5 @@ return [
     'welcome-to-ptc' => 'اهلا بك في مركز احترافية التدريب',
     'your-application-has-been-approved' => 'لقد تم قبولك في منصة التدريب ويمكن الدخول عليها من: ',
     'incomplete-application' => 'ملف غير مكتمل',
+    'pending-approval' => 'جاري الموافقة',
 ];

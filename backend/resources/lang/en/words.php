@@ -192,4 +192,5 @@ return [
     'welcome-to-ptc' => 'Welcome to PTC',
     'your-application-has-been-approved' => 'Your application has been approved to PTC. You can access via: ',
     'incomplete-application' => 'Incomplete application',
+    'pending-approval' => 'Pending approval',
 ];

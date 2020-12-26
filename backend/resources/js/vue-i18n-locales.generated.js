@@ -350,7 +350,8 @@ export default {
             "all-rights-reserved": "كل الحقوق محفوظة",
             "welcome-to-ptc": "اهلا بك في مركز احترافية التدريب",
             "your-application-has-been-approved": "لقد تم قبولك في منصة التدريب ويمكن الدخول عليها من: ",
-            "incomplete-application": "ملف غير مكتمل"
+            "incomplete-application": "ملف غير مكتمل",
+            "pending-approval": "جاري الموافقة"
         }
     },
     "en": {
@@ -672,7 +673,8 @@ export default {
             "all-rights-reserved": "All rights reserved",
             "welcome-to-ptc": "Welcome to PTC",
             "your-application-has-been-approved": "Your application has been approved to PTC. You can access via: ",
-            "incomplete-application": "Incomplete application"
+            "incomplete-application": "Incomplete application",
+            "pending-approval": "Pending approval"
         }
     }
 }
