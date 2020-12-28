@@ -16,7 +16,7 @@ class RedirectToApplication
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth() && optional(auth()->user())->instructor && ! optional(auth()->user()->instructor)->approved) {
+        if (auth() && optional(auth()->user())->instructor && ! optional(auth()->user()->instructor)->is_approved) {
             return redirect()->route('register.instructors.application');
         }
 
