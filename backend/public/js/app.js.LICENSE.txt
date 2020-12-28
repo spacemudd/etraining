@@ -39,21 +39,24 @@ object-assign
  */
 
 /*!
- * vue-i18n v8.22.0 
- * (c) 2020 kazuya kawaguchi
- * Released under the MIT License.
- */
-
-/*!
  * vue-treeselect v0.4.0 | (c) 2017-2019 Riophae Lee
  * Released under the MIT License.
  * https://vue-treeselect.js.org/
  */
 
 /*!
- * vuex v3.5.1
+ * vuex v3.6.0
  * (c) 2020 Evan You
  * @license MIT
+ */
+
+/*!
+ Transformation Matrix v2.0
+ (c) Epistemex 2014-2015
+ www.epistemex.com
+ By Ken Fyrstenberg
+ Contributions by leeoniya.
+ License: MIT, header required.
  */
 
 /*! 
