@@ -40,6 +40,9 @@
                                          class="text-sm inline-block mt-2 p-1 px-2 bg-red-300 rounded-lg">
                                         {{ $t('words.pending-approval') }}
                                     </div>
+                                    <span v-if="course.is_approved" class="text-sm inline-block mt-2 p-1 px-2 bg-green-300 rounded-lg">
+                                        {{ $t('words.approved') }}
+                                    </span>
                                 </inertia-link>
                             </div>
                         </td>

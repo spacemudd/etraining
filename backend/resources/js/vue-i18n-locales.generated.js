@@ -359,7 +359,8 @@ export default {
             "to-register": "لإنشاء حساب جديد",
             "to-login": "تسجيل الدخول",
             "description": "الوصف",
-            "course-info": "وصف عن الدورة"
+            "course-info": "وصف عن الدورة",
+            "approve-course": "اعتمد الدورة"
         }
     },
     "en": {
@@ -690,7 +691,8 @@ export default {
             "to-register": "To register",
             "to-login": "To login",
             "description": "Description",
-            "course-info": "Description on course"
+            "course-info": "Description on course",
+            "approve-course": "Approve course"
         }
     }
 }

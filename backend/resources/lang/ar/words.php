@@ -202,4 +202,5 @@ return [
     'to-login' => 'تسجيل الدخول',
     'description' => 'الوصف',
     'course-info' => 'وصف عن الدورة',
+    'approve-course' => 'اعتمد الدورة',
 ];

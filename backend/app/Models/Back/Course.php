@@ -40,6 +40,7 @@ class Course extends Model implements HasMedia
     protected $appends = [
         'training_package_url',
         'is_pending_approval',
+        'is_approved',
     ];
 
     protected static function boot(): void
@@ -104,5 +105,10 @@ class Course extends Model implements HasMedia
     public function getIsPendingApprovalAttribute()
     {
         return (int) $this->status === self::STATUS_PENDING;
+    }
+
+    public function getIsApprovedAttribute()
+    {
+        return (int) $this->status === self::STATUS_APPROVED;
     }
 }

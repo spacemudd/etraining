@@ -201,4 +201,5 @@ return [
     'to-login' => 'To login',
     'description' => 'Description',
     'course-info' => 'Description on course',
+    'approve-course' => 'Approve course',
 ];
