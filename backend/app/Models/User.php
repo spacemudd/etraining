@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Back\Instructor;
+use App\Models\Back\Trainee;
 use App\Traits\HasUuid;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -115,6 +116,11 @@ class User extends Authenticatable
     public function instructor()
     {
         return $this->hasOne(Instructor::class);
+    }
+
+    public function trainee()
+    {
+        return $this->hasOne(Trainee::class);
     }
 
     public function routeNotificationForClickSend()

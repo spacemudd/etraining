@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Trainees;
 
 use App\Http\Controllers\Controller;
+use App\Models\Back\Course;
 use App\Models\Back\CourseBatchSession;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -11,7 +12,10 @@ class DashboardController extends Controller
 {
     public function dashboard()
     {
-        $sessions = CourseBatchSession::with(['course_batch' => function($q) {
+        $instructor = auth()->user()->trainee->instructor;
+        $coursesIds = Course::where('instructor_id', $instructor->id)->pluck('id');
+
+        $sessions = CourseBatchSession::whereIn('course_id', $coursesIds)->with(['course_batch' => function($q) {
             $q->with(['course' => function($q) {
                 $q->with('instructor');
             }]);

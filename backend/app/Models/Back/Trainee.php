@@ -84,6 +84,11 @@ class Trainee extends Model implements HasMedia
         return $this->belongsToMany(TraineeGroup::class, 'trainee_group_trainee');
     }
 
+    public function instructor()
+    {
+        return $this->belongsTo(Instructor::class, 'instructor_id', 'id');
+    }
+
     /**
      * Upload scan(s) of the documents.
      *

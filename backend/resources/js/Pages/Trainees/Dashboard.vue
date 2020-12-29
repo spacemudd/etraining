@@ -20,7 +20,8 @@
                     <div class="bg-white my-5 p-5 flex gap-6">
                         <div class="w-32">
                             <div class="w-full h-full bg-red rounded-lg">
-                                <img class="rounded-lg" src="https://source.unsplash.com/300x300/?training,classroom" alt="">
+                                <div class="bg-gray-200 rounded-lg" style="display: block;width:100px;height:100px;"></div>
+                                <!--<img class="rounded-lg" src="https://source.unsplash.com/300x300/?training,classroom" alt="">-->
                             </div>
                         </div>
 
