@@ -30,6 +30,11 @@
                             <jet-input id="name_en" type="text" class="mt-1 block w-full" v-model="form.name_en" autocomplete="off" />
                         </div>
 
+                        <div class="col-span-6 sm:col-span-4">
+                            <jet-label for="description" :value="$t('words.description')" />
+                            <jet-textarea id="description" class="mt-1 block w-full" v-model="form.description" autocomplete="off" />
+                        </div>
+
                         <div class="col-span-6 sm:col-span-2">
                             <jet-label for="course-approval-code" :value="$t('words.course-approval-code')" />
                             <jet-input id="course-approval-code" type="text" class="mt-1 block w-full" v-model="form.approval_code" autocomplete="off" />
@@ -85,6 +90,7 @@
     import JetButton from '@/Jetstream/Button';
     import JetFormSection from '@/Jetstream/FormSection';
     import JetLabel from '@/Jetstream/Label';
+    import JetTextarea from '@/Jetstream/Textarea';
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
     import VueDropzone from "vue2-dropzone";
     import 'vue2-dropzone/dist/vue2Dropzone.min.css'
@@ -102,6 +108,7 @@
             JetButton,
             JetFormSection,
             JetLabel,
+            JetTextarea,
             BreadcrumbContainer,
             VueDropzone
         },
@@ -121,6 +128,7 @@
                 form: this.$inertia.form({
                     name_ar: '',
                     name_en: '',
+                    description: '',
                     approval_code: '',
                     days_duration: '',
                     hours_duration: '',

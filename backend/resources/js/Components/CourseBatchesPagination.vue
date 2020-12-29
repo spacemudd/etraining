@@ -35,7 +35,8 @@
                     <div class="col-span-2">
                         <table class="table text-sm w-full">
                             <colgroup>
-                                <col class="w-1/2">
+                                <col style="width:50%;">
+                                <col style="width:50%;">
                             </colgroup>
                             <tbody>
                             <tr>
@@ -54,6 +55,7 @@
                         <div class="flex justify-start w-full">
                             <new-course-batch-session :course-batch="batch" @session:saved="getCourse()" />
                         </div>
+                        <p class="font-semibold mt-5">{{ $t('words.location') }}: {{ batch.location_at }}</p>
                         <course-batch-sessions-list class="mt-5"
                                                     @session:deleted="getCourse()"
                                                     :sessions="batch.course_batch_sessions">

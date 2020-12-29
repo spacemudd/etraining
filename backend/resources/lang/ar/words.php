@@ -200,4 +200,6 @@ return [
     'approved' => 'معتمد',
     'to-register' => 'لإنشاء حساب جديد',
     'to-login' => 'تسجيل الدخول',
+    'description' => 'الوصف',
+    'course-info' => 'وصف عن الدورة',
 ];

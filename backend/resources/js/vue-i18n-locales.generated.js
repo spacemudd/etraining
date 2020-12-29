@@ -349,7 +349,7 @@ export default {
             "url-problem": "إذا كانت تواجهك صعوبة في الضغط على \"{actionText}\", انسخ الرابط التالي \nفي صفحة المتصفح الخاص بك: ",
             "all-rights-reserved": "كل الحقوق محفوظة",
             "welcome-to-ptc": "اهلا بك في مركز احترافية التدريب",
-            "your-application-has-been-approved": "لقد تم قبول ملفك",
+            "your-application-has-been-approved": "لقد تم قبولك في منصة التدريب ويمكن الدخول عليها من: ",
             "incomplete-application": "ملف غير مكتمل",
             "pending-approval": "جاري الموافقة",
             "nominated-instructor": "مرشح",
@@ -357,7 +357,9 @@ export default {
             "approve-instructor": "اعتمد المدرب",
             "approved": "معتمد",
             "to-register": "لإنشاء حساب جديد",
-            "to-login": "تسجيل الدخول"
+            "to-login": "تسجيل الدخول",
+            "description": "الوصف",
+            "course-info": "وصف عن الدورة"
         }
     },
     "en": {
@@ -678,7 +680,7 @@ export default {
             "url-problem": "If you’re having trouble clicking the \"{actionText}\" button, copy and paste the URL below\ninto your web browser:",
             "all-rights-reserved": "All rights reserved",
             "welcome-to-ptc": "Welcome to PTC",
-            "your-application-has-been-approved": "Your application has been approved",
+            "your-application-has-been-approved": "Your application has been approved to PTC. You can access via: ",
             "incomplete-application": "Incomplete application",
             "pending-approval": "Pending approval",
             "nominated-instructor": "Pending approval",
@@ -686,7 +688,9 @@ export default {
             "approve-instructor": "Approve instructor",
             "approved": "Approved",
             "to-register": "To register",
-            "to-login": "To login"
+            "to-login": "To login",
+            "description": "Description",
+            "course-info": "Description on course"
         }
     }
 }

@@ -40,6 +40,11 @@
                     <jet-label for="hours_duration" :value="$t('words.course-duration-hours')" />
                     <jet-input id="hours_duration" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.hours_duration" autocomplete="off" disabled />
                 </div>
+
+                <div class="col-span-6 sm:col-span-2">
+                    <jet-label for="description" :value="$t('words.description')" />
+                    <jet-textarea id="description" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.description" autocomplete="off" disabled />
+                </div>
             </div>
 
 
@@ -108,6 +113,7 @@
     import JetButton from '@/Jetstream/Button';
     import JetFormSection from '@/Jetstream/FormSection';
     import JetLabel from '@/Jetstream/Label';
+    import JetTextarea from '@/Jetstream/Textarea';
     import CompanyContractsPagination from "@/Components/CompanyContractsPagination";
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
     import VueDropzone from 'vue2-dropzone'
@@ -128,6 +134,7 @@
             JetButton,
             JetFormSection,
             JetLabel,
+            JetTextarea,
             CompanyContractsPagination,
             BreadcrumbContainer,
             VueDropzone,

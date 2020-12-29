@@ -199,4 +199,6 @@ return [
     'approved' => 'Approved',
     'to-register' => 'To register',
     'to-login' => 'To login',
+    'description' => 'Description',
+    'course-info' => 'Description on course',
 ];
