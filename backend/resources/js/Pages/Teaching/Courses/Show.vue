@@ -45,6 +45,20 @@
                     <jet-label for="description" :value="$t('words.description')" />
                     <jet-textarea id="description" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.description" autocomplete="off" disabled />
                 </div>
+
+                <div class="col-span-6 sm:col-span-6">
+                    <jet-label for="name" :value="$t('words.status')" />
+                    <p>
+                        <span v-if="course.is_pending_approval" class="text-sm inline-block mt-2 p-1 px-2 bg-yellow-200 rounded-lg">
+                            {{ $t('words.pending-approval') }}
+                        </span>
+
+                        <span v-if="course.is_approved" class="text-sm inline-block mt-2 p-1 px-2 bg-green-300 rounded-lg">
+                            {{ $t('words.approved') }}
+                        </span>
+                    </p>
+                </div>
+
             </div>
 
             <jet-section-border></jet-section-border>

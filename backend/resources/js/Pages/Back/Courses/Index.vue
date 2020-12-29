@@ -33,9 +33,16 @@
                     </tr>
                     <tr v-for="course in courses.data" :key="course.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
                         <td class="border-t">
-                            <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('back.courses.show', course.id)">
-                                {{ course.name_ar }}
-                            </inertia-link>
+                            <div class="px-6 py-4 flex items-center focus:text-indigo-500">
+                                <inertia-link :href="route('back.courses.show', course.id)">
+                                    {{ course.name_ar }}
+                                    <br/>
+                                    <div v-if="course.is_pending_approval"
+                                         class="text-sm inline-block mt-2 p-1 px-2 bg-red-300 rounded-lg">
+                                        {{ $t('words.pending-approval') }}
+                                    </div>
+                                </inertia-link>
+                            </div>
                         </td>
                         <td class="border-t">
                             <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('back.courses.show', course.id)">

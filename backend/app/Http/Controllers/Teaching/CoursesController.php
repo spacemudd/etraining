@@ -26,7 +26,7 @@ class CoursesController extends Controller
     public function show($course_id)
     {
         return Inertia::render('Teaching/Courses/Show', [
-            'course' => Course::findOrFail($course_id),
+            'course' => Course::responsibleToTeach()->findOrFail($course_id),
         ]);
     }
 

@@ -39,6 +39,7 @@ class Course extends Model implements HasMedia
 
     protected $appends = [
         'training_package_url',
+        'is_pending_approval',
     ];
 
     protected static function boot(): void
@@ -98,5 +99,10 @@ class Course extends Model implements HasMedia
         if ($media_id) {
             return route('back.media.download', ['media_id' => $media_id]);
         }
+    }
+
+    public function getIsPendingApprovalAttribute()
+    {
+        return (int) $this->status === self::STATUS_PENDING;
     }
 }
