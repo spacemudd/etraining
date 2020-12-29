@@ -2,20 +2,17 @@
 
 namespace Tests\Feature;
 
+use App\Actions\Fortify\CreateNewUser;
+use App\Actions\Jetstream\AddTeamMember;
 use App\Actions\Jetstream\CreateTeam;
 use App\Mail\InstructorWelcomeEmail;
+use App\Models\Back\Course;
 use App\Models\Back\Instructor;
 use App\Models\City;
-use App\Models\EducationalLevel;
-use App\Models\MaritalStatus;
-use App\Models\Team;
 use App\Models\User;
 use App\Notifications\InstructorWelcomeNotification;
 use App\Services\RolesService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
@@ -207,5 +204,55 @@ class CreateInstructorsTest extends TestCase
             ->assertSessionHasNoErrors();
 
         Notification::assertSentTo($allan, InstructorWelcomeNotification::class);
+    }
+
+    public function test_instructor_can_submit_a_program_to_be_approved_by_the_administration()
+    {
+        $admin = (new CreateNewUser())->create([
+            'name' => 'Shafiq al-Shaar',
+            'email' => 'hello@getShafiq.com',
+            'password' => 'hello123123',
+            'password_confirmation' => 'hello123123',
+        ]);
+
+        $shafiqUser = User::factory()->create([
+            'email' => 'shafiqalshaar@gmail.com',
+        ]);
+
+        $team = $admin->currentTeam;
+        (new AddTeamMember())->add($shafiqUser, $team, $shafiqUser->email, 'instructor');
+
+        $shafiqUser->current_team_id = $team->id;
+        $shafiqUser->save();
+
+        $shafiqProfile = Instructor::factory()->create([
+            'user_id' => $shafiqUser->id,
+            'email' => $shafiqUser->email,
+            'status' => Instructor::STATUS_APPROVED,
+            'approved_at' => now(),
+            'approved_by_id' => $admin->id,
+        ]);
+
+        $awsCourse = Course::factory()->make([
+            'name_en' => 'AWS Course',
+            'name_ar' => 'AWS سيرفر',
+            'classroom_count' => 25,
+            'description' => 'AWS courses for servers',
+            'approval_code' => '10X',
+            'days_duration' => 5,
+            'hours_duration' => 30,
+        ]);
+
+        $this->actingAs($shafiqUser)
+            ->post(route('teaching.courses.store'), $awsCourse->toArray())
+            ->assertSessionHasNoErrors()
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('courses', [
+            'team_id' => $shafiqUser->current_team_id,
+            'instructor_id' => $shafiqProfile->id,
+            'name_en' => $awsCourse->name_en,
+            'status' => Course::STATUS_PENDING,
+        ]);
     }
 }

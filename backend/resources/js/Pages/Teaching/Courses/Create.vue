@@ -4,7 +4,7 @@
             <breadcrumb-container
                 :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
-                    {title: 'courses', link: route('back.courses.index')},
+                    {title: 'courses', link: route('teaching.courses.index')},
                     {title: 'new'},
                 ]"
             ></breadcrumb-container>
@@ -28,6 +28,11 @@
                         <div class="col-span-6 sm:col-span-2">
                             <jet-label for="name_en" :value="$t('words.course-name-en')" />
                             <jet-input id="name_en" type="text" class="mt-1 block w-full" v-model="form.name_en" autocomplete="off" />
+                        </div>
+
+                        <div class="col-span-6 sm:col-span-4">
+                            <jet-label for="description" :value="$t('words.description')" />
+                            <jet-textarea id="description" class="mt-1 block w-full" v-model="form.description" autocomplete="off" />
                         </div>
 
                         <div class="col-span-6 sm:col-span-2">
@@ -76,7 +81,7 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout'
+    import AppLayout from '@/Layouts/AppLayoutInstructor'
     import JetSectionBorder from '@/Jetstream/SectionBorder'
     import JetDialogModal from '@/Jetstream/DialogModal'
     import JetInput from '@/Jetstream/Input'
@@ -85,6 +90,7 @@
     import JetButton from '@/Jetstream/Button';
     import JetFormSection from '@/Jetstream/FormSection';
     import JetLabel from '@/Jetstream/Label';
+    import JetTextarea from '@/Jetstream/Textarea';
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
     import VueDropzone from "vue2-dropzone";
     import 'vue2-dropzone/dist/vue2Dropzone.min.css'
@@ -102,8 +108,9 @@
             JetButton,
             JetFormSection,
             JetLabel,
+            JetTextarea,
             BreadcrumbContainer,
-            VueDropzone
+            VueDropzone,
         },
         data() {
             return {
@@ -121,6 +128,7 @@
                 form: this.$inertia.form({
                     name_ar: '',
                     name_en: '',
+                    description: '',
                     approval_code: '',
                     days_duration: '',
                     hours_duration: '',
@@ -135,7 +143,7 @@
                 this.form.training_package = file;
             },
             createCourse() {
-                this.form.post('/back/courses', {
+                this.form.post('/teaching/courses', {
                     preserveScroll: true
                 });
             },

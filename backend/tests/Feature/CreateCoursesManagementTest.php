@@ -3,8 +3,6 @@
 namespace Tests\Feature;
 
 use App\Actions\Fortify\CreateNewUser;
-use App\Models\Back\Company;
-use App\Models\Back\CompanyContract;
 use App\Models\Back\Course;
 use App\Models\Back\CourseBatch;
 use App\Models\Back\CourseBatchSession;

@@ -18,6 +18,9 @@ class Course extends Model implements HasMedia
     use HasUuid;
     use InteractsWithMedia;
 
+    const STATUS_PENDING = 0;
+    const STATUS_APPROVED = 1;
+
     public $incrementing = false;
 
     protected $keyType = 'string';
@@ -58,6 +61,11 @@ class Course extends Model implements HasMedia
     public function batches()
     {
         return $this->hasMany(CourseBatch::class);
+    }
+
+    public function scopeResponsibleToTeach($q)
+    {
+        $q->where('instructor_id', auth()->user()->instructor->id);
     }
 
     /**

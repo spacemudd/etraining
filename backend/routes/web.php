@@ -55,6 +55,8 @@ Route::middleware(['auth:sanctum', 'verified', 'approved-instructor'])->get('/da
 })->name('dashboard');
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function() {
+
+    // FOr admins
     Route::prefix('back')->name('back.')->group(function() {
         Route::get('/settings', [\App\Http\Controllers\Back\SettingsController::class, 'index'])->name('settings');
 
@@ -118,6 +120,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::resource('courses', \App\Http\Controllers\Back\CoursesController::class);
     });
 
+    // For instructors
     Route::prefix('teaching')->name('teaching.')->group(function() {
         Route::get('/', [\App\Http\Controllers\Teaching\TeachingController::class, 'index'])->name('index');
         Route::resource('courses', \App\Http\Controllers\Teaching\CoursesController::class);

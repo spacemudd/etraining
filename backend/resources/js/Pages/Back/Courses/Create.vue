@@ -110,7 +110,7 @@
             JetLabel,
             JetTextarea,
             BreadcrumbContainer,
-            VueDropzone
+            VueDropzone,
         },
         data() {
             return {

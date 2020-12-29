@@ -12,11 +12,14 @@ class TeachingController extends Controller
 {
     public function dashboard()
     {
-        $sessions = CourseBatchSession::with(['course_batch' => function($q) {
+        $ownedCourses = Course::responsibleToTeach()->pluck('id');
+
+        $sessions = CourseBatchSession::whereIn('id', $ownedCourses)->with(['course_batch' => function($q) {
             $q->with(['course' => function($q) {
-                $q->with('instructor');
+                $q->responsibleToTeach()->with('instructor');
             }]);
-        }])->paginate(15);
+        }])->has('course_batch.course')
+            ->paginate(15);
 
         return Inertia::render('Teaching/Dashboard', [
             'user' => auth()->user(),

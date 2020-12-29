@@ -4,7 +4,7 @@
             <breadcrumb-container
                 :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
-                    {title: 'courses', link: route('back.courses.index')},
+                    {title: 'courses', link: route('teaching.courses.index')},
                 ]"
             ></breadcrumb-container>
             <div class="flex justify-between">
@@ -18,7 +18,7 @@
                     <!--        <option value="only">Only Trashed</option>-->
                     <!--    </select>-->
                     <!--</search-filter>-->
-                    <inertia-link class="btn-gray" :href="route('back.courses.create')">
+                    <inertia-link class="btn-gray" :href="route('teaching.courses.create')">
                         <span>{{ $t('words.new') }}</span>
                     </inertia-link>
                 </div>
@@ -28,34 +28,26 @@
                     <tr class="text-left font-bold">
                         <th class="px-6 pt-6 pb-4">{{ $t('words.name') }}</th>
                         <th class="px-6 pt-6 pb-4">{{ $t('words.course-approval-code') }}</th>
-                        <th class="px-6 pt-6 pb-4">{{ $t('words.instructor') }}</th>
                         <th class="px-6 pt-6 pb-4">{{ $t('words.recommended-trainees-count') }}</th>
                     </tr>
                     <tr v-for="course in courses.data" :key="course.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
                         <td class="border-t">
-                            <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('back.courses.show', course.id)">
+                            <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('teaching.courses.show', course.id)">
                                 {{ course.name_ar }}
                             </inertia-link>
                         </td>
                         <td class="border-t">
-                            <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('back.courses.show', course.id)">
+                            <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('teaching.courses.show', course.id)">
                                 {{ course.approval_code }}
                             </inertia-link>
                         </td>
                         <td class="border-t">
-                            <inertia-link class="px-6 py-4 flex items-center" :href="route('back.courses.show', course.id)" tabindex="-1">
-                                <div v-if="course.instructor">
-                                    {{ course.instructor.name }}
-                                </div>
-                            </inertia-link>
-                        </td>
-                        <td class="border-t">
-                            <inertia-link class="px-6 py-4 flex items-center" :href="route('back.courses.show', course.id)" tabindex="-1">
+                            <inertia-link class="px-6 py-4 flex items-center" :href="route('teaching.courses.show', course.id)" tabindex="-1">
                                 {{ course.classroom_count }}
                             </inertia-link>
                         </td>
                         <td class="border-t w-px">
-                            <inertia-link class="px-4 flex items-center" :href="route('back.courses.show', course.id)" tabindex="-1">
+                            <inertia-link class="px-4 flex items-center" :href="route('teaching.courses.show', course.id)" tabindex="-1">
                                 <ion-icon name="arrow-forward-outline" class="block w-6 h-6 fill-gray-400"></ion-icon>
                             </inertia-link>
                         </td>
@@ -64,7 +56,7 @@
                         <td class="border-t px-6 py-4" colspan="4">
                             <empty-slate>
                                 <template #actions>
-                                    <inertia-link class="btn-gray mt-2 block" :href="route('back.courses.create')">
+                                    <inertia-link class="btn-gray mt-2 block" :href="route('teaching.courses.create')">
                                         <span>{{ $t('words.new') }}</span>
                                     </inertia-link>
                                 </template>
@@ -86,7 +78,7 @@
     import pickBy from 'lodash/pickBy'
     // import SearchFilter from '@/Shared/SearchFilter'
     import throttle from 'lodash/throttle'
-    import AppLayout from '@/Layouts/AppLayout'
+    import AppLayout from '@/Layouts/AppLayoutInstructor'
     import IconNavigate from 'vue-ionicons/dist/ios-arrow-dropright'
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
     import EmptySlate from "@/Components/EmptySlate";
