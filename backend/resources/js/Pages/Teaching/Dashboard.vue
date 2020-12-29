@@ -20,7 +20,8 @@
                     <div class="bg-white my-5 p-5 flex gap-6">
                         <div class="w-32">
                             <div class="w-full h-full bg-red rounded-lg">
-                                <img class="rounded-lg" src="https://source.unsplash.com/300x300/?training,classroom" alt="">
+                                <div class="bg-gray-200 rounded-lg" style="display: block;width:100px;height:100px;"></div>
+                                <!--<img class="rounded-lg" src="https://source.unsplash.com/300x300/?training,classroom" alt="">-->
                             </div>
                         </div>
 
@@ -46,12 +47,19 @@
                             </p>
                             <div class="mt-5 flex gap-3 flex-col md:flex-row">
                                 <!-- Course options -->
+
+                                <!-- When the course is online -->
                                 <inertia-link
+                                    v-if="session.course_batch.location_at === 'online'"
                                     class="text-xs bg-yellow-200 py-3 px-6 rounded-lg font-bold hover:bg-yellow-300"
                                     :href="route('back.course-batch-sessions.show', {course_id: session.course_id, course_batch_id: session.course_batch_id, course_batch_session: session.id})"
                                     >
                                     {{ $t('words.join-the-online-course') }}
                                 </inertia-link>
+                                <a v-else target="_blank" :href="session.course_batch.location_at" class="text-xs bg-blue-300 py-3 px-6 rounded-lg font-bold hover:bg-blue-400">
+                                    {{ session.course_batch.location_at }}
+                                </a>
+
                                 <button class="btn-disabled" disabled>{{ $t('words.print-attendance') }}</button>
                                 <button class="btn-disabled" disabled>{{ $t('words.print-certificate') }}</button>
                             </div>
