@@ -110,7 +110,7 @@ class RegisterInstructorController extends Controller
     {
         $instructor = auth()->user()->instructor;
         return Inertia::render('Instructors/Application', [
-            'is_pending_approval_prop' => $instructor->isPendingApproval(),
+            'is_pending_approval_prop' => $instructor->is_pending_approval(),
             'instructor_id' => $instructor->id,
             'instructor_email' => $instructor->email,
         ]);

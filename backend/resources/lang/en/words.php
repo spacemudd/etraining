@@ -196,4 +196,6 @@ return [
     'approve-instructor-applicants' => 'Approve instructor applicants',
     'approve-instructor' => 'Approve instructor',
     'approved' => 'Approved',
+    'to-register' => 'To register',
+    'to-login' => 'To login',
 ];

@@ -197,4 +197,7 @@ return [
     'approve-instructor-applicants' => 'اعتماد المدربين المتقدمين',
     'approve-instructor' => 'اعتمد المدرب',
     'approved' => 'معتمد',
+    'to-register' => 'لإنشاء حساب جديد',
+    'to-login' => 'تسجيل الدخول',
+    //'to-login' => 'لتسجيل ',
 ];

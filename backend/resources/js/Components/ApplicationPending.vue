@@ -30,6 +30,9 @@
         <p class="text-center text-gray-500">{{ $t('words.you-can-check-our-social-media') }}</p>
 
         <div class="flex w-100 justify-center mb-5">
+            <a target="_blank" href="https://www.twitter.com/ptcksa" class="mx-3 mt-5 hover:text-red-500">
+                <twitter-icon w="46px" h="46px"/>
+            </a>
             <a target="_blank" href="https://www.instagram.com/ptcksa/" class="mx-3 mt-5 hover:text-red-500">
                 <instagram-icon w="46px" h="46px"/>
             </a>
@@ -44,12 +47,14 @@
 import LottieAnimation from 'lottie-vuejs/src/LottieAnimation.vue';
 import FacebookIcon from 'vue-ionicons/dist/logo-facebook';
 import InstagramIcon from 'vue-ionicons/dist/logo-instagram';
+import TwitterIcon from 'vue-ionicons/dist/logo-twitter';
 export default {
     name: "Applicationpending.vue",
     components: {
         LottieAnimation,
         FacebookIcon,
         InstagramIcon,
+        TwitterIcon,
     },
     props: ['instructor_email'],
     methods: {

@@ -17,7 +17,17 @@
 
             <div><h1 class="text-2xl text-center my-5 text-gray-500 font-bold">{{ __('words.welcome') }}!</h1></div>
 
-            <hr class="border-1 mb-5">
+            <div>
+                <a href="{{ route('login') }}"
+                   class="flex bg-gray-500 hover:bg-gray-600 text-white py-5 px-10 rounded-lg text-2xl justify-center">
+                    <img src="{{ asset('/img/login.svg') }}" class="w-8 ml-4" style="filter:invert(1)">
+                    {{ __('words.to-login') }}
+                </a>
+            </div>
+
+            <div class="headline-separator my-5 text-center">
+                {{ __('words.to-register') }}
+            </div>
 
             {{-- Trainee login --}}
             <div>
@@ -39,11 +49,6 @@
                     <img src="{{ asset('/img/teacher.svg') }}" class="w-8 ml-5" style="filter:invert(1)">
                     {{ __('words.im-an-instructor') }}
                 </a>
-            </div>
-
-
-            <div class="py-5 text-center">
-                <a href="{{ route('login') }}">{{ __('words.have-an-account-?') }} {{ __('words.click-here-to-login') }}</a>
             </div>
         </form>
 
