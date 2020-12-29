@@ -3,10 +3,12 @@
 namespace Tests\Feature;
 
 use App\Actions\Fortify\CreateNewUser;
+use App\Actions\Jetstream\AddTeamMember;
 use App\Models\Back\Course;
 use App\Models\Back\CourseBatch;
 use App\Models\Back\CourseBatchSession;
 use App\Models\Back\Instructor;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
@@ -287,5 +289,51 @@ class CreateCoursesManagementTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertSeeText($session->starts_at);
+    }
+
+    public function test_admin_approving_a_course_created_by_an_instructor()
+    {
+        $admin = $this->user;
+
+        $shafiqUser = User::factory()->create([
+            'email' => 'shafiqalshaar@gmail.com',
+        ]);
+
+        $team = $admin->currentTeam;
+        (new AddTeamMember())->add($shafiqUser, $team, $shafiqUser->email, 'instructor');
+
+        $shafiqUser->current_team_id = $team->id;
+        $shafiqUser->save();
+
+        $shafiqProfile = Instructor::factory()->create([
+            'user_id' => $shafiqUser->id,
+            'email' => $shafiqUser->email,
+            'status' => Instructor::STATUS_APPROVED,
+            'approved_at' => now(),
+            'approved_by_id' => $admin->id,
+        ]);
+
+        $awsCourse = Course::factory()->create([
+            'team_id' => $shafiqUser->current_team_id,
+            'instructor_id' => $shafiqProfile->id,
+            'status' => Course::STATUS_PENDING,
+            'name_en' => 'AWS Course',
+            'name_ar' => 'AWS سيرفر',
+            'classroom_count' => 25,
+            'description' => 'AWS courses for servers',
+            'approval_code' => '10X',
+            'days_duration' => 5,
+            'hours_duration' => 30,
+        ]);
+
+        $this->actingAs($admin)
+            ->post(route('back.courses.approve', $awsCourse->id));
+
+        $this->assertDatabaseHas('courses', [
+            'team_id' => $shafiqUser->current_team_id,
+            'instructor_id' => $shafiqProfile->id,
+            'name_en' => $awsCourse->name_en,
+            'status' => Course::STATUS_APPROVED,
+        ]);
     }
 }

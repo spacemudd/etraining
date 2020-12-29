@@ -139,4 +139,18 @@ class CoursesController extends Controller
         $course->getMedia('training-package')->each->forceDelete();
         return response()->redirectToRoute('back.courses.show', $course->id);
     }
+
+    /**
+     * Approve a course to be viewed by everyone.
+     *
+     * @param $course_id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function approve($course_id)
+    {
+        $course = Course::findOrFail($course_id);
+        $course->status = Course::STATUS_APPROVED;
+        $course->save();
+        return response()->redirectToRoute('back.courses.show', $course->id);
+    }
 }
