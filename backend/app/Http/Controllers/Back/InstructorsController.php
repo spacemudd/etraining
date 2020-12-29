@@ -6,8 +6,10 @@ use App\Actions\Fortify\CreateNewInstructorUser;
 use App\Http\Controllers\Controller;
 use App\Models\Back\Instructor;
 use App\Models\City;
+use App\Notifications\InstructorApplicationApprovedNotification;
 use App\Notifications\InstructorWelcomeNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Inertia\Inertia;
 
@@ -253,6 +255,10 @@ class InstructorsController extends Controller
         $instructor->approved_by_id = auth()->user()->id;
         $instructor->approved_at = now();
         $instructor->save();
+
+        Notification::send($instructor->user, new InstructorApplicationApprovedNotification());
+
+        Log::info('Instructor ID: '.$instructor->id.' has been approved by user: '.auth()->user()->email);
 
         return redirect()->route('back.instructors.show', $instructor->id);
     }

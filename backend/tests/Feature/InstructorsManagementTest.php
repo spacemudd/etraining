@@ -10,10 +10,12 @@ use App\Models\Back\CompanyContract;
 use App\Models\Back\Instructor;
 use App\Models\City;
 use App\Models\User;
+use App\Notifications\InstructorApplicationApprovedNotification;
 use App\Services\RolesService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Notification;
 use Storage;
 use Tests\TestCase;
 
@@ -288,5 +290,33 @@ class InstructorsManagementTest extends TestCase
         $this->assertDatabaseMissing('instructors', [
             'approved_at' => null,
         ]);
+    }
+
+    public function test_approving_an_instructor_sends_a_welcome_notifiction()
+    {
+        Notification::fake();
+
+        $admin = $this->user;
+
+        $shafiqUser = User::factory()->create([
+            'email' => 'shafiqalshaar@gmail.com',
+        ]);
+
+        $team = $this->user->currentTeam;
+        (new AddTeamMember())->add($shafiqUser, $team, $shafiqUser->email, 'instructor');
+
+        $shafiqUser->current_team_id = $team->id;
+        $shafiqUser->save();
+
+        $shafiqProfile = Instructor::factory()->create([
+            'user_id' => $shafiqUser->id,
+            'email' => $shafiqUser->email,
+            'status' => Instructor::STATUS_PENDING_APPROVAL,
+        ]);
+
+        $this->actingAs($admin)
+            ->post(route('back.instructors.approve-user', $shafiqProfile->id));
+
+        Notification::assertSentTo($shafiqProfile->user, InstructorApplicationApprovedNotification::class);
     }
 }
