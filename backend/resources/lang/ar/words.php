@@ -194,6 +194,7 @@ return [
     'your-application-has-been-approved' => 'لقد تم قبولك في منصة التدريب ويمكن الدخول عليها من: ',
     'incomplete-application' => 'ملف غير مكتمل',
     'pending-approval' => 'جاري الموافقة',
+    'nominated-instructor' => 'مرشح',
     'approve-instructor-applicants' => 'اعتماد المدربين المتقدمين',
     'approve-instructor' => 'اعتمد المدرب',
     'approved' => 'معتمد',

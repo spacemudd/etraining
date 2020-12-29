@@ -352,9 +352,12 @@ export default {
             "your-application-has-been-approved": "لقد تم قبولك في منصة التدريب ويمكن الدخول عليها من: ",
             "incomplete-application": "ملف غير مكتمل",
             "pending-approval": "جاري الموافقة",
+            "nominated-instructor": "مرشح",
             "approve-instructor-applicants": "اعتماد المدربين المتقدمين",
             "approve-instructor": "اعتمد المدرب",
-            "approved": "معتمد"
+            "approved": "معتمد",
+            "to-register": "لإنشاء حساب جديد",
+            "to-login": "تسجيل الدخول"
         }
     },
     "en": {
@@ -678,9 +681,12 @@ export default {
             "your-application-has-been-approved": "Your application has been approved to PTC. You can access via: ",
             "incomplete-application": "Incomplete application",
             "pending-approval": "Pending approval",
+            "nominated-instructor": "Pending approval",
             "approve-instructor-applicants": "Approve instructor applicants",
             "approve-instructor": "Approve instructor",
-            "approved": "Approved"
+            "approved": "Approved",
+            "to-register": "To register",
+            "to-login": "To login"
         }
     }
 }

@@ -64,7 +64,7 @@
                         </span>
 
                         <span v-if="instructor.is_pending_approval" class="text-sm inline-block mt-2 p-1 px-2 bg-yellow-200 rounded-lg">
-                            {{ $t('words.pending-approval') }}
+                            {{ $t('words.nominated-instructor') }}
                         </span>
 
                         <span v-if="instructor.is_approved" class="text-sm inline-block mt-2 p-1 px-2 bg-green-300 rounded-lg">

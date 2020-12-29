@@ -193,6 +193,7 @@ return [
     'your-application-has-been-approved' => 'Your application has been approved to PTC. You can access via: ',
     'incomplete-application' => 'Incomplete application',
     'pending-approval' => 'Pending approval',
+    'nominated-instructor' => 'Pending approval',
     'approve-instructor-applicants' => 'Approve instructor applicants',
     'approve-instructor' => 'Approve instructor',
     'approved' => 'Approved',
