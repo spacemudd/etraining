@@ -82,4 +82,13 @@ class CoursesController extends Controller
         return redirect()->route('teaching.courses.show', $course->id);
     }
 
+    /**
+     * Download the training package.
+     *
+     * @param $course_id
+     */
+    public function trainingPackage($course_id)
+    {
+
+    }
 }

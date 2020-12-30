@@ -2,6 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Actions\Fortify\CreateNewUser;
+use App\Actions\Jetstream\AddTeamMember;
+use App\Models\Back\Course;
+use App\Models\Back\Instructor;
+use App\Models\Back\Trainee;
 use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\MaritalStatus;
@@ -57,6 +62,36 @@ class CreateTraineesTest extends TestCase
         $this->assertDatabaseHas('trainees', [
             'email' => $trainee['email'],
         ]);
+    }
+
+    public function test_trainees_can_see_courses_index_page()
+    {
+        $admin = (new CreateNewUser())->create([
+            'name' => 'Shafiq al-Shaar',
+            'email' => 'hello@getShafiq.com',
+            'password' => 'hello123123',
+            'password_confirmation' => 'hello123123',
+        ]);
+
+        $majda = User::factory()->create([
+            'email' => 'shafiqalshaar@gmail.com',
+        ]);
+
+        $team = $admin->currentTeam;
+        (new AddTeamMember())->add($majda, $team, $majda->email, 'instructor');
+
+        $majda->current_team_id = $team->id;
+        $majda->save();
+
+        $majdaTraineeProfile = Trainee::factory()->create([
+            'team_id' => $majda->current_team_id,
+            'user_id' => $majda->id,
+            'email' => $majda->email,
+        ]);
+
+        $this->actingAs($majda)
+            ->get(route('trainees.courses.index'))
+            ->assertSuccessful();
     }
 
     // TODO.

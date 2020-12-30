@@ -47,6 +47,12 @@
                             </p>
                             <div class="mt-5 flex gap-3 flex-col md:flex-row">
                                 <!-- Course options -->
+                                <a target="_blank"
+                                   :href="session.course_batch.course.training_package_url"
+                                   class="text-xs bg-yellow-200 py-3 px-6 rounded-lg font-bold hover:bg-yellow-300">
+                                    {{ $t('words.training-package') }}
+                                </a>
+
                                 <inertia-link
                                     v-if="session.zoom_meeting_id"
                                     class="text-xs bg-yellow-200 py-3 px-6 rounded-lg font-bold hover:bg-yellow-300"
@@ -69,7 +75,7 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayoutInstructor'
+    import AppLayout from '@/Layouts/AppLayoutTrainee'
     import Welcome from '@/Jetstream/Welcome'
     import LanguageSelector from "@/Shared/LanguageSelector";
     import HeaderCard from "@/Components/HeaderCard";

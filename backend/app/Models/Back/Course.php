@@ -71,6 +71,18 @@ class Course extends Model implements HasMedia
     }
 
     /**
+     * Scope for limiting the trainees to viewing only
+     * the courses they're currently attending.
+     *
+     * @param $q
+     */
+    public function scopeAttending($q)
+    {
+        $instructor_id = optional(auth()->user()->trainee)->instructor_id;
+        $q->where('instructor_id', $instructor_id);
+    }
+
+    /**
      * Upload scan(s) of the documents.
      *
      * @param $file
