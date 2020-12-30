@@ -360,7 +360,10 @@ export default {
             "to-login": "تسجيل الدخول",
             "description": "الوصف",
             "course-info": "وصف عن الدورة",
-            "approve-course": "اعتمد الدورة"
+            "approve-course": "اعتمد الدورة",
+            "groups": "مجموعات",
+            "trainees-count": "عدد المتدربين",
+            "send-announcement": "ارسال إشعار"
         }
     },
     "en": {
@@ -692,7 +695,10 @@ export default {
             "to-login": "To login",
             "description": "Description",
             "course-info": "Description on course",
-            "approve-course": "Approve course"
+            "approve-course": "Approve course",
+            "groups": "Groups",
+            "trainees-count": "Trainees count",
+            "send-announcement": "Send announcement"
         }
     }
 }

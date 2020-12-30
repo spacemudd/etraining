@@ -203,4 +203,7 @@ return [
     'description' => 'الوصف',
     'course-info' => 'وصف عن الدورة',
     'approve-course' => 'اعتمد الدورة',
+    'groups' => 'مجموعات',
+    'trainees-count' => 'عدد المتدربين',
+    'send-announcement' => 'ارسال إشعار',
 ];

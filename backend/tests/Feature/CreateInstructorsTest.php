@@ -6,8 +6,11 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Jetstream\AddTeamMember;
 use App\Actions\Jetstream\CreateTeam;
 use App\Mail\InstructorWelcomeEmail;
+use App\Models\Back\Company;
 use App\Models\Back\Course;
 use App\Models\Back\Instructor;
+use App\Models\Back\Trainee;
+use App\Models\Back\TraineeGroup;
 use App\Models\City;
 use App\Models\User;
 use App\Notifications\InstructorWelcomeNotification;
@@ -254,5 +257,141 @@ class CreateInstructorsTest extends TestCase
             'name_en' => $awsCourse->name_en,
             'status' => Course::STATUS_PENDING,
         ]);
+    }
+
+    public function test_instructor_can_view_training_groups_assigned_to_them()
+    {
+        $admin = (new CreateNewUser())->create([
+            'name' => 'Shafiq al-Shaar',
+            'email' => 'hello@getShafiq.com',
+            'password' => 'hello123123',
+            'password_confirmation' => 'hello123123',
+        ]);
+
+        // Instructor.
+        $shafiqUser = User::factory()->create([
+            'email' => 'shafiqalshaar@gmail.com',
+        ]);
+        $team = $admin->currentTeam;
+        (new AddTeamMember())->add($shafiqUser, $team, $shafiqUser->email, 'instructor');
+        $shafiqUser->current_team_id = $team->id;
+        $shafiqUser->save();
+
+        $shafiqProfile = Instructor::factory()->create([
+            'user_id' => $shafiqUser->id,
+            'email' => $shafiqUser->email,
+            'status' => Instructor::STATUS_APPROVED,
+            'approved_at' => now(),
+            'approved_by_id' => $admin->id,
+        ]);
+
+        // Instructor (X).
+        $megamindUser = User::factory()->create([
+            'email' => 'megamind@gmail.com',
+        ]);
+        (new AddTeamMember())->add($megamindUser, $team, $megamindUser->email, 'instructor');
+        $megamindUser->current_team_id = $team->id;
+        $megamindUser->save();
+
+        $megamindUserProfile = Instructor::factory()->create([
+            'user_id' => $megamindUser->id,
+            'email' => $megamindUser->email,
+            'status' => Instructor::STATUS_APPROVED,
+            'approved_at' => now(),
+            'approved_by_id' => $admin->id,
+        ]);
+
+        // Trainee (1).
+        $majdaTrainee = User::factory()->create([
+            'email' => 'majda@gmail.com',
+        ]);
+        (new AddTeamMember())->add($majdaTrainee, $team, $majdaTrainee->email, 'trainee');
+        $majdaTrainee->current_team_id = $team->id;
+        $majdaTrainee->save();
+        $majdaTraineeProfile = Trainee::factory()->create([
+            'team_id' => $majdaTrainee->current_team_id,
+            'user_id' => $majdaTrainee->id,
+            'email' => $majdaTrainee->email,
+        ]);
+
+        // Trainee (2).
+        $mikeTrainee = User::factory()->create([
+            'email' => 'mike@gmail.com',
+        ]);
+        (new AddTeamMember())->add($mikeTrainee, $team, $mikeTrainee->email, 'trainee');
+        $mikeTrainee->current_team_id = $team->id;
+        $mikeTrainee->save();
+        $mikeTraineeProfile = Trainee::factory()->create([
+            'team_id' => $team->id,
+            'user_id' => $mikeTrainee->id,
+            'email' => $mikeTrainee->email,
+        ]);
+
+        // Trainee (3) / Not visible for the instructor.
+        $sarahTraineeUser = User::factory()->create([
+            'email' => 'sarah@gmail.com',
+        ]);
+        (new AddTeamMember())->add($sarahTraineeUser, $team, $sarahTraineeUser->email, 'trainee');
+        $sarahTraineeUser->current_team_id = $team->id;
+        $sarahTraineeUser->save();
+        $sarahTraineeUserProfile = Trainee::factory()->create([
+            'team_id' => $team->id,
+            'user_id' => $sarahTraineeUser->id,
+            'email' => $sarahTraineeUser->email,
+        ]);
+
+        // Course.
+        $awsCourse = Course::factory()->create([
+            'team_id' => $shafiqUser->current_team_id,
+            'instructor_id' => $shafiqProfile->id,
+            'name_en' => 'AWS Course',
+            'name_ar' => 'AWS سيرفر',
+            'classroom_count' => 25,
+            'description' => 'AWS courses for servers',
+            'approval_code' => '10X',
+            'days_duration' => 5,
+            'hours_duration' => 30,
+        ]);
+
+        // Assign trainees to a group.
+        $acmeCompany = Company::factory()->create(['team_id' => $team->id]);
+        $trainingGroup = TraineeGroup::factory()->create([
+            'team_id' => $team->id,
+            'company_id' => $acmeCompany->id,
+            'name' => 'Golden 1',
+        ]);
+        $trainingGroup->trainees()->attach([$majdaTraineeProfile->id]);
+        $trainingGroup_2 = TraineeGroup::factory()->create([
+            'team_id' => $team->id,
+            'company_id' => $acmeCompany->id,
+            'name' => 'Golden 2',
+        ]);
+        $trainingGroup_2->trainees()->attach([$mikeTraineeProfile->id]);
+
+        // A group that shouldn't be visible to the instructor
+        $trainingGroupNotVisible = TraineeGroup::factory()->create([
+            'team_id' => $team->id,
+            'company_id' => $acmeCompany->id,
+            'name' => 'Silver Not Visible',
+        ]);
+        $trainingGroupNotVisible->trainees()->attach([$sarahTraineeUserProfile->id]);
+
+        // Assign trainees to the instructor
+        $majdaTraineeProfile->instructor_id = $shafiqProfile->id;
+        $majdaTraineeProfile->save();
+        $mikeTraineeProfile->instructor_id = $shafiqProfile->id;
+        $mikeTraineeProfile->save();
+
+        $sarahTraineeUserProfile->instructor_id = $megamindUserProfile->id;
+        $sarahTraineeUserProfile->save();
+
+        $this->actingAs($shafiqUser)
+            ->get(route('teaching.trainee-groups.index'))
+            ->assertSuccessful()
+            ->assertPropValue('traineeGroups', function($traineeGroups) use ($trainingGroup, $trainingGroup_2, $trainingGroupNotVisible) {
+                $this->assertStringContainsString($trainingGroup->name, json_encode($traineeGroups));
+                $this->assertStringContainsString($trainingGroup_2->name, json_encode($traineeGroups));
+                $this->assertStringNotContainsString($trainingGroupNotVisible->name, json_encode($traineeGroups));
+            });
     }
 }

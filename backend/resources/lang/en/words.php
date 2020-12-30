@@ -202,4 +202,7 @@ return [
     'description' => 'Description',
     'course-info' => 'Description on course',
     'approve-course' => 'Approve course',
+    'groups' => 'Groups',
+    'trainees-count' => 'Trainees count',
+    'send-announcement' => 'Send announcement',
 ];

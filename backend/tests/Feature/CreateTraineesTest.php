@@ -74,11 +74,11 @@ class CreateTraineesTest extends TestCase
         ]);
 
         $majda = User::factory()->create([
-            'email' => 'shafiqalshaar@gmail.com',
+            'email' => 'majda@gmail.com',
         ]);
 
         $team = $admin->currentTeam;
-        (new AddTeamMember())->add($majda, $team, $majda->email, 'instructor');
+        (new AddTeamMember())->add($majda, $team, $majda->email, 'trainee');
 
         $majda->current_team_id = $team->id;
         $majda->save();

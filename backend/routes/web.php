@@ -125,6 +125,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::prefix('teaching')->name('teaching.')->group(function() {
         Route::get('/', [\App\Http\Controllers\Teaching\TeachingController::class, 'index'])->name('index');
         Route::resource('courses', \App\Http\Controllers\Teaching\CoursesController::class);
+
+        Route::get('/trainee-groups', [\App\Http\Controllers\Teaching\TraineeGroupsController::class, 'index'])->name('trainee-groups.index');
     });
 
     // For trainees

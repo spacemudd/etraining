@@ -89,6 +89,11 @@ class Trainee extends Model implements HasMedia
         return $this->belongsTo(Instructor::class, 'instructor_id', 'id');
     }
 
+    public function scopeResponsibleToTeach($q)
+    {
+        $q->where('instructor_id', auth()->user()->instructor->id);
+    }
+
     /**
      * Upload scan(s) of the documents.
      *
@@ -140,4 +145,5 @@ class Trainee extends Model implements HasMedia
     {
         return $this->name.' ('.$this->identity_number.')';
     }
+
 }
