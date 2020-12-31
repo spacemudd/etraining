@@ -205,4 +205,9 @@ return [
     'groups' => 'Groups',
     'trainees-count' => 'Trainees count',
     'send-announcement' => 'Send announcement',
+    'announcement-regarding-the-course' => 'Announcement regarding the course',
+    'new-announcement' => 'New announcement',
+    'send-announcement-to-all-trainees' => 'Send announcement to all trainees',
+    'message' => 'Message',
+    'you-can-only-send-a-message-per-day' => 'You can only send a message per day per course'
 ];

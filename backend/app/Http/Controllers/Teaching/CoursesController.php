@@ -18,6 +18,7 @@ class CoursesController extends Controller
     public function index()
     {
         return Inertia::render('Teaching/Courses/Index', [
+            'id' => auth()->user()->instructor->id,
             'courses' => Course::responsibleToTeach()->with('instructor')->latest()->paginate(10),
         ]);
     }

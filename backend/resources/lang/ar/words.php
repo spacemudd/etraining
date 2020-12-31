@@ -206,4 +206,9 @@ return [
     'groups' => 'مجموعات',
     'trainees-count' => 'عدد المتدربين',
     'send-announcement' => 'ارسال إشعار',
+    'announcement-regarding-the-course' => 'اشعار بشأن الدورة',
+    'new-announcement' => 'إشعار جديد',
+    'send-announcement-to-all-trainees' => 'إرسال اشعار الى كل المتدربين',
+    'message' => 'الرسالة',
+    'you-can-only-send-a-message-per-day' => 'يمكن لك الإرسال للمجموعة فقط مرة واحدة لكل برنامج'
 ];

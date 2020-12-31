@@ -25,11 +25,12 @@
                         <p class="text-center"><span class="rounded-xl bg-gray-200 p-2">{{ group.trainees.length }}</span></p>
                     </div>
 
-                    <!--<div class="my-7 text-center">-->
-                    <!--    <inertia-link class="bg-gray-800 font-semibold text-white hover:bg-gray-700 active:bg-gray-900 inline-flex items-center px-4 py-2 border border-transparent rounded-md text-xs focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150">-->
-                    <!--        {{ $t('words.send-announcement') }}-->
-                    <!--    </inertia-link>-->
-                    <!--</div>-->
+                    <!-- TODO: Create the button, the form, and submitting it -->
+                    <div class="my-7 text-center">
+                        <inertia-link :href="route('teaching.trainee-groups.announcements.create', group.id)" class="bg-gray-800 font-semibold text-white hover:bg-gray-700 active:bg-gray-900 inline-flex items-center px-4 py-2 border border-transparent rounded-md text-xs focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150">
+                            {{ $t('words.send-announcement') }}
+                        </inertia-link>
+                    </div>
 
                 </div>
                 </div>

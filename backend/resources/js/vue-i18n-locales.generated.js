@@ -363,7 +363,11 @@ export default {
             "approve-course": "اعتمد الدورة",
             "groups": "مجموعات",
             "trainees-count": "عدد المتدربين",
-            "send-announcement": "ارسال إشعار"
+            "send-announcement": "ارسال إشعار",
+            "announcement-regarding-the-course": "اشعار بشأن الدورة",
+            "new-announcement": "إشعار جديد",
+            "send-announcement-to-all-trainees": "إرسال اشعار الى كل المتدربين",
+            "message": "الرسالة"
         }
     },
     "en": {
@@ -698,7 +702,11 @@ export default {
             "approve-course": "Approve course",
             "groups": "Groups",
             "trainees-count": "Trainees count",
-            "send-announcement": "Send announcement"
+            "send-announcement": "Send announcement",
+            "announcement-regarding-the-course": "Announcement regarding the course",
+            "new-announcement": "New announcement",
+            "send-announcement-to-all-trainees": "Send announcement to all trainees",
+            "message": "Message"
         }
     }
 }
