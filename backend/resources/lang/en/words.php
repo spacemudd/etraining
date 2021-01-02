@@ -209,5 +209,11 @@ return [
     'new-announcement' => 'New announcement',
     'send-announcement-to-all-trainees' => 'Send announcement to all trainees',
     'message' => 'Message',
-    'you-can-only-send-a-message-per-day' => 'You can only send a message per day per course'
+    'you-can-only-send-a-message-per-day' => 'You can only send a message per day per course',
+    'messages' => 'Messages',
+    'from' => 'From',
+    'to' => 'To',
+    'view-trainees' => 'View trainees',
+    'send-private-message' => 'Send private message',
+    'send' => 'Send',
 ];

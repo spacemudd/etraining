@@ -367,7 +367,14 @@ export default {
             "announcement-regarding-the-course": "اشعار بشأن الدورة",
             "new-announcement": "إشعار جديد",
             "send-announcement-to-all-trainees": "إرسال اشعار الى كل المتدربين",
-            "message": "الرسالة"
+            "message": "الرسالة",
+            "you-can-only-send-a-message-per-day": "يمكن لك الإرسال للمجموعة فقط مرة واحدة لكل برنامج",
+            "messages": "رسائل",
+            "from": "من",
+            "to": "الى",
+            "view-trainees": "عرض المتدربين",
+            "send-private-message": "ارسال رسالة خاصة",
+            "send": "ارسال"
         }
     },
     "en": {
@@ -706,7 +713,14 @@ export default {
             "announcement-regarding-the-course": "Announcement regarding the course",
             "new-announcement": "New announcement",
             "send-announcement-to-all-trainees": "Send announcement to all trainees",
-            "message": "Message"
+            "message": "Message",
+            "you-can-only-send-a-message-per-day": "You can only send a message per day per course",
+            "messages": "Messages",
+            "from": "From",
+            "to": "To",
+            "view-trainees": "View trainees",
+            "send-private-message": "Send private message",
+            "send": "Send"
         }
     }
 }

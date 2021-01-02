@@ -68,6 +68,7 @@ class User extends Authenticatable
      */
     protected $appends = [
         'profile_photo_url',
+        'inbox_messages_count',
     ];
 
     /**
@@ -101,6 +102,16 @@ class User extends Authenticatable
     public function preferredLocale()
     {
         return $this->locale;
+    }
+
+    public function getInboxMessagesCountAttribute()
+    {
+        return $this->inbox_messages_for_me()->unread()->count();
+    }
+
+    public function inbox_messages_for_me()
+    {
+        return $this->hasMany(InboxMessage::class, 'to_id', 'id');
     }
 
     public function scopeFindByEmail($query, $email)

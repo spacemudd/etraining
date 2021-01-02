@@ -3,6 +3,7 @@
 namespace App\Models\Back;
 
 use App\Models\City;
+use App\Models\InboxMessage;
 use App\Models\Team;
 use App\Models\User;
 use App\Scope\TeamScope;
@@ -86,6 +87,16 @@ class Instructor extends Model implements HasMedia
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function inbox_message_from()
+    {
+        return $this->morphMany(InboxMessage::class, 'fromable');
+    }
+
+    public function inbox_message_to()
+    {
+        return $this->morphMany(InboxMessage::class, 'toable');
     }
 
     /**

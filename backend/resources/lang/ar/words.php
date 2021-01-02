@@ -210,5 +210,11 @@ return [
     'new-announcement' => 'إشعار جديد',
     'send-announcement-to-all-trainees' => 'إرسال اشعار الى كل المتدربين',
     'message' => 'الرسالة',
-    'you-can-only-send-a-message-per-day' => 'يمكن لك الإرسال للمجموعة فقط مرة واحدة لكل برنامج'
+    'you-can-only-send-a-message-per-day' => 'يمكن لك الإرسال للمجموعة فقط مرة واحدة لكل برنامج',
+    'messages' => 'رسائل',
+    'from' => 'من',
+    'to' => 'الى',
+    'view-trainees' => 'عرض المتدربين',
+    'send-private-message' => 'ارسال رسالة خاصة',
+    'send' => 'ارسال',
 ];

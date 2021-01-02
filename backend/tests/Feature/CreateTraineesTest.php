@@ -9,6 +9,7 @@ use App\Models\Back\Instructor;
 use App\Models\Back\Trainee;
 use App\Models\City;
 use App\Models\EducationalLevel;
+use App\Models\InboxMessage;
 use App\Models\MaritalStatus;
 use App\Models\Team;
 use App\Models\User;
@@ -126,4 +127,41 @@ class CreateTraineesTest extends TestCase
     //        ->get(route('dashboard'))
     //        ->assertRedirect(route('trainees.application'));
     //}
+
+    public function test_trainee_viewing_their_message()
+    {
+        $admin = (new CreateNewUser())->create([
+            'name' => 'Shafiq al-Shaar',
+            'email' => 'hello@getShafiq.com',
+            'password' => 'hello123123',
+            'password_confirmation' => 'hello123123',
+        ]);
+
+        $majda = User::factory()->create([
+            'email' => 'majda@gmail.com',
+        ]);
+
+        $team = $admin->currentTeam;
+        (new AddTeamMember())->add($majda, $team, $majda->email, 'trainee');
+        $majda->current_team_id = $team->id;
+        $majda->save();
+
+        $majdaTraineeProfile = Trainee::factory()->create([
+            'team_id' => $majda->current_team_id,
+            'user_id' => $majda->id,
+            'email' => $majda->email,
+        ]);
+
+        $message = InboxMessage::factory()->create([
+            'team_id' => $majda->current_team_id,
+            'to_id' => $majda->id,
+        ]);
+
+        $this->actingAs($majda)
+            ->get(route('inbox.index'))
+            ->assertSuccessful()
+            ->assertPropValue('messages', function($messages) use ($message) {
+                $this->assertEquals($message->body, $messages[0]['body']);
+            });
+    }
 }

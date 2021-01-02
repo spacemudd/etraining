@@ -67,7 +67,7 @@ class Course extends Model implements HasMedia
 
     public function scopeResponsibleToTeach($q)
     {
-        $q->where('instructor_id', auth()->user()->instructor->id);
+        return $q->where('instructor_id', auth()->user()->instructor->id);
     }
 
     /**
@@ -75,11 +75,12 @@ class Course extends Model implements HasMedia
      * the courses they're currently attending.
      *
      * @param $q
+     * @return mixed
      */
     public function scopeAttending($q)
     {
         $instructor_id = optional(auth()->user()->trainee)->instructor_id;
-        $q->where('instructor_id', $instructor_id);
+        return $q->where('instructor_id', $instructor_id);
     }
 
     /**

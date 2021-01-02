@@ -544,4 +544,76 @@ class CreateInstructorsTest extends TestCase
 
         Notification::assertSentTo($majdaTrainee, TraineeGroupAnnouncementNotification::class);
     }
+
+    public function test_instructors_listing_all_trainees()
+    {
+        $admin = (new CreateNewUser())->create([
+            'name' => 'Shafiq al-Shaar',
+            'email' => 'hello@getShafiq.com',
+            'password' => 'hello123123',
+            'password_confirmation' => 'hello123123',
+        ]);
+
+        // Instructor.
+        $shafiqUser = User::factory()->create([
+            'email' => 'shafiqalshaar@gmail.com',
+        ]);
+        $team = $admin->currentTeam;
+        (new AddTeamMember())->add($shafiqUser, $team, $shafiqUser->email, 'instructor');
+        $shafiqUser->current_team_id = $team->id;
+        $shafiqUser->save();
+
+        $shafiqProfile = Instructor::factory()->create([
+            'user_id' => $shafiqUser->id,
+            'email' => $shafiqUser->email,
+            'status' => Instructor::STATUS_APPROVED,
+            'approved_at' => now(),
+            'approved_by_id' => $admin->id,
+        ]);
+
+        // Trainee (1).
+        $majdaTrainee = User::factory()->create([
+            'email' => 'majda@gmail.com',
+        ]);
+        (new AddTeamMember())->add($majdaTrainee, $team, $majdaTrainee->email, 'trainee');
+        $majdaTrainee->current_team_id = $team->id;
+        $majdaTrainee->save();
+        $majdaTraineeProfile = Trainee::factory()->create([
+            'team_id' => $majdaTrainee->current_team_id,
+            'user_id' => $majdaTrainee->id,
+            'email' => $majdaTrainee->email,
+        ]);
+
+        // Course.
+        $awsCourse = Course::factory()->create([
+            'team_id' => $shafiqUser->current_team_id,
+            'instructor_id' => $shafiqProfile->id,
+            'name_en' => 'AWS Course',
+            'name_ar' => 'AWS سيرفر',
+            'classroom_count' => 25,
+            'description' => 'AWS courses for servers',
+            'approval_code' => '10X',
+            'days_duration' => 5,
+            'hours_duration' => 30,
+        ]);
+
+        // Assign trainees to a group.
+        $acmeCompany = Company::factory()->create(['team_id' => $team->id]);
+        $trainingGroup = TraineeGroup::factory()->create([
+            'team_id' => $team->id,
+            'company_id' => $acmeCompany->id,
+            'name' => 'Golden 1',
+        ]);
+        $trainingGroup->trainees()->attach([$majdaTraineeProfile->id]);
+
+        // Assign trainees to the instructor
+        $majdaTraineeProfile->instructor_id = $shafiqProfile->id;
+        $majdaTraineeProfile->save();
+
+        $this->actingAs($shafiqUser)
+            ->post(route('teaching.trainee-groups.trainees.index', ['trainee_group_id' => $trainingGroup->id]))
+            ->assertPropValue('trainees', function ($trainees) use ($majdaTraineeProfile) {
+               $this->assertEquals($trainees[0]['email'], $majdaTraineeProfile->email);
+            });
+    }
 }

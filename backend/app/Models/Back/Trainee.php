@@ -4,6 +4,7 @@ namespace App\Models\Back;
 
 use App\Models\City;
 use App\Models\EducationalLevel;
+use App\Models\InboxMessage;
 use App\Models\MaritalStatus;
 use App\Scope\TeamScope;
 use App\Traits\HasUuid;
@@ -91,7 +92,7 @@ class Trainee extends Model implements HasMedia
 
     public function scopeResponsibleToTeach($q)
     {
-        $q->where('instructor_id', auth()->user()->instructor->id);
+        return $q->where('instructor_id', auth()->user()->instructor->id);
     }
 
     /**
@@ -145,5 +146,4 @@ class Trainee extends Model implements HasMedia
     {
         return $this->name.' ('.$this->identity_number.')';
     }
-
 }

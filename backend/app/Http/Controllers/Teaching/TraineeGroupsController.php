@@ -22,6 +22,7 @@ class TraineeGroupsController extends Controller
         }])->whereHas('trainees', function($q) {
             $q->responsibleToTeach();
         })
+            ->withCount('trainees')
             ->get();
 
         return Inertia::render('Teaching/TraineeGroups/Index', [
