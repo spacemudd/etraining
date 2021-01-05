@@ -80,9 +80,34 @@ class CoursesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
+    public function edit($id, Request $request) {
+        $request->validate([
+            'name_en' => 'nullable|string|max:255',
+            'name_ar' => 'nullable|string|max:255',
+            'instructor_id' => 'nullable|exists:instructors,id',
+            'company_id' => 'nullable|exists:companies,id',
+            'description' => 'nullable|string|max:255',
+            'classroom_count' => 'nullable|numeric',
+            'approval_code' => 'nullable|string|max:255',
+            'days_duration' => 'nullable|numeric',
+            'hours_duration' => 'nullable|numeric',
+            'training_package' => 'nullable',
+        ]);
+
+        $course = Course::where('id', $id)->first();
+
+        return $course->update(
+            [
+                "name_en" => $request->course['name_en'],
+                "name_ar" => $request->course['name_ar'],
+                "approval_code" => $request->course['approval_code'],
+                "days_duration" => $request->course['days_duration'],
+                "hours_duration" => $request->course['hours_duration'],
+                "description" => $request->course['description']
+            ]
+        );
+
+
     }
 
     /**

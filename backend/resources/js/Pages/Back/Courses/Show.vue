@@ -11,9 +11,13 @@
 
             <div class="grid grid-cols-6 gap-6">
                 <div class="col-span-6 flex items-center justify-end bg-gray-50 text-right gap-6">
-                    <inertia-link :href="route('back.courses.edit', course.id)" class="flex items-center justify-start rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
-                        {{ $t('words.edit') }}
-                    </inertia-link>
+                    <button v-if="!editButton.editOption" @click="editCourse" class="flex items-center justify-start rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
+                        {{ editButton.text }}
+                    </button>
+
+                    <button v-else @click="editCourse" class="flex items-center justify-start rounded-md px-4 py-2 bg-green-300 hover:bg-green-400 text-right">
+                        {{ editButton.text }}
+                    </button>
 
                     <button v-if="course.is_pending_approval" @click="approveCourse" class="flex items-center justify-start rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
                         {{ $t('words.approve-course') }}
@@ -22,32 +26,32 @@
 
                 <div class="col-span-6 sm:col-span-2">
                     <jet-label for="name_ar" :value="$t('words.course-name-ar')" />
-                    <jet-input id="name_ar" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.name_ar" autocomplete="off" disabled />
+                    <jet-input id="name_ar" type="text" :class="editButton.inputClass" v-model="course.name_ar" autocomplete="off" :disabled="!editButton.editOption" />
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
                     <jet-label for="name_en" :value="$t('words.course-name-en')" />
-                    <jet-input id="name_en" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.name_en" autocomplete="off" disabled />
+                    <jet-input id="name_en" type="text" :class="editButton.inputClass" v-model="course.name_en" autocomplete="off" :disabled="!editButton.editOption" />
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
                     <jet-label for="course-approval-code" :value="$t('words.course-approval-code')" />
-                    <jet-input id="course-approval-code" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.approval_code" autocomplete="off" disabled />
+                    <jet-input id="course-approval-code" type="text" :class="editButton.inputClass" v-model="course.approval_code" autocomplete="off" :disabled="!editButton.editOption" />
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
                     <jet-label for="days_duration" :value="$t('words.course-duration-days')" />
-                    <jet-input id="days_duration" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.days_duration" autocomplete="off" disabled />
+                    <jet-input id="days_duration" type="text" :class="editButton.inputClass" v-model="course.days_duration" autocomplete="off" :disabled="!editButton.editOption" />
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
                     <jet-label for="hours_duration" :value="$t('words.course-duration-hours')" />
-                    <jet-input id="hours_duration" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.hours_duration" autocomplete="off" disabled />
+                    <jet-input id="hours_duration" type="text" :class="editButton.inputClass" v-model="course.hours_duration" autocomplete="off" :disabled="!editButton.editOption" />
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
                     <jet-label for="description" :value="$t('words.description')" />
-                    <jet-textarea id="description" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.description" autocomplete="off" disabled />
+                    <jet-textarea id="description" type="text" :class="editButton.inputClass" v-model="course.description" autocomplete="off" :disabled="!editButton.editOption" />
                 </div>
             </div>
 
@@ -102,6 +106,10 @@
                 </div>
             </div>
 
+            <jet-action-message class="mr-3" :show="true">
+                {{ $t('words.saved-successfully') }}
+            </jet-action-message>
+
         </div>
     </app-layout>
 </template>
@@ -146,6 +154,11 @@
         },
         data() {
             return {
+                editButton: {
+                    text: this.$t('words.edit'),
+                    editOption: false,
+                    inputClass: "mt-1 block w-full bg-gray-200",
+                },
                 dropzoneOptionsTrainingPackage: {
                     destroyDropzone: false,
                     url: route('back.courses.training-package', {course_id: this.course.id}),
@@ -159,6 +172,24 @@
             approveCourse() {
                 if (confirm(this.$t('words.are-you-sure'))) {
                     this.$inertia.post(route('back.courses.approve', {course_id: this.course.id}));
+                }
+            },
+            editCourse() {
+                if (!this.editButton.editOption) {
+                    this.editButton.editOption = true;
+                    this.editButton.inputClass = 'mt-1 block w-full bg-white';
+                    this.editButton.text = this.$t('words.save');
+                } else {
+
+                axios.post(route('back.courses.edit', this.course.id), {
+                            course: this.course,
+                    }).then(response => {
+                            this.editButton.editOption = false;
+                            this.editButton.inputClass = 'mt-1 block w-full bg-gray-200';
+                            this.editButton.text = this.$t('words.edit');
+                    }).catch(error => {
+                            throw error;
+                    })
                 }
             },
             sendingCsrf(file, xhr, formData) {
