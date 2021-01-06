@@ -6,6 +6,7 @@ use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\InboxMessage;
 use App\Models\MaritalStatus;
+use Laravel\Scout\Searchable;
 use App\Scope\TeamScope;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,6 +22,11 @@ class Trainee extends Model implements HasMedia
     use HasUuid;
     use SoftDeletes;
     use InteractsWithMedia;
+    use Searchable;
+
+
+    const SEARCHABLE_FIELDS = ['id', 'user_id', 'name', 'email'];
+
 
     public $incrementing = false;
 
@@ -145,5 +151,9 @@ class Trainee extends Model implements HasMedia
     public function getNameSelectableAttribute()
     {
         return $this->name.' ('.$this->identity_number.')';
+    }
+
+    public function toSearchableArray() {
+        return $this->only(self::SEARCHABLE_FIELDS);
     }
 }

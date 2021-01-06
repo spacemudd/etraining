@@ -117,8 +117,11 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
         Route::resource('courses/{course_id}/course-batches', \App\Http\Controllers\Back\CourseBatchesController::class);
 
+        // Search Back
+    Route::get('search/{search_string}', [\App\Http\Controllers\Back\SiteSearchController::class, 'search']);
+
         Route::post('courses/{course_id}/approve', [\App\Http\Controllers\Back\CoursesController::class, 'approve'])->name('courses.approve');
-        Route::post('courses/{course_id}/edit', [\App\Http\Controllers\Back\CoursesController::class, 'edit'])->name('courses.edit');
+        Route::post('courses/{course_id}/edit', [\App\Http\Controllers\Back\CoursesController::class, 'update'])->name('courses.edit');
         Route::post('courses/{course_id}/training-package', [\App\Http\Controllers\Back\CoursesController::class, 'storeTrainingPackage'])->name('courses.training-package');
         Route::delete('courses/{course_id}/training-package', [\App\Http\Controllers\Back\CoursesController::class, 'deleteTrainingPackage'])->name('courses.training-package.destroy');
         Route::resource('courses', \App\Http\Controllers\Back\CoursesController::class);

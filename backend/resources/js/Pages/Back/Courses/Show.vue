@@ -106,10 +106,6 @@
                 </div>
             </div>
 
-            <jet-action-message class="mr-3" :show="true">
-                {{ $t('words.saved-successfully') }}
-            </jet-action-message>
-
         </div>
     </app-layout>
 </template>
