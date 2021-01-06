@@ -14,11 +14,13 @@ class SiteSearchResource extends JsonResource
      */
     public function toArray($request)
     {
+
+
         return [
             'id' => $this->id,
-            'match' => $this->match,
+            'name' => $this->name,
+            'email' => $this->email,
             'model' => $this->model,
-            'view_link' => $this->view_link,
         ];
     }
 }
