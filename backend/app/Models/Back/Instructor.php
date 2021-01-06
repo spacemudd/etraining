@@ -24,7 +24,7 @@ class Instructor extends Model implements HasMedia
     use InteractsWithMedia;
     use Searchable;
 
-    const SEARCHABLE_FIELDS = ['id', 'user_id', 'name', 'email'];
+    const SEARCHABLE_FIELDS = ['id', 'identity_number', 'phone', 'phone_additional', 'name', 'email'];
 
     const STATUS_PENDING_UPLOADING_FILES = 0;
     const STATUS_PENDING_APPROVAL = 1;
@@ -51,6 +51,7 @@ class Instructor extends Model implements HasMedia
         'is_pending_uploading_files',
         'is_pending_approval',
         'is_approved',
+        'show_url',
     ];
 
     protected static function boot(): void
@@ -172,6 +173,15 @@ class Instructor extends Model implements HasMedia
     public function getIsApprovedAttribute()
     {
         return (int) $this->status === Instructor::STATUS_APPROVED;
+    }
+
+     /**
+     * Returns Route URL
+     *
+     * @return route
+     */
+    public function getShowUrlAttribute() {
+        return URL("/back/instructors/{$this->id}");
     }
 
     /**

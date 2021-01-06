@@ -41,7 +41,7 @@ return [
     |
     */
 
-    'queue' => env('SCOUT_QUEUE', true),
+    'queue' => env('SCOUT_QUEUE', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -67,6 +67,8 @@ return [
             'max_expansions' => 50,
             'distance' => 2
         ],
+        'stemmer'   => \TeamTNT\TNTSearch\Stemmer\PorterStemmer::class,
+        'setlanguage' => 'no',
         'asYouType' => true,
         'searchBoolean' => env('TNTSEARCH_BOOLEAN', false),
     ],

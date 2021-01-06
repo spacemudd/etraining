@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Laravel\Scout\Searchable;
 use Str;
 
 class Course extends Model implements HasMedia
@@ -16,12 +17,15 @@ class Course extends Model implements HasMedia
     use HasFactory;
     use SoftDeletes;
     use HasUuid;
+    use Searchable;
     use InteractsWithMedia;
 
     const STATUS_PENDING = 0;
     const STATUS_APPROVED = 1;
 
     public $incrementing = false;
+
+    const SEARCHABLE_FIELDS = ['id', 'description', 'name_ar', 'name_en'];
 
     protected $keyType = 'string';
 
@@ -40,6 +44,7 @@ class Course extends Model implements HasMedia
     protected $appends = [
         'training_package_url',
         'is_pending_approval',
+        'show_url',
         'is_approved',
     ];
 
@@ -101,6 +106,7 @@ class Course extends Model implements HasMedia
             ->toMediaCollection($folder);
     }
 
+
     public function getTrainingPackageUrlAttribute()
     {
         return $this->getCopyUrl('training-package');
@@ -124,4 +130,12 @@ class Course extends Model implements HasMedia
     {
         return (int) $this->status === self::STATUS_APPROVED;
     }
+    public function toSearchableArray() {
+        return $this->only(self::SEARCHABLE_FIELDS);
+    }
+
+    public function getShowUrlAttribute() {
+        return URL("/back/courses/{$this->id}");
+    }
 }
+

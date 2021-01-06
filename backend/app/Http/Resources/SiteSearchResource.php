@@ -1,6 +1,12 @@
 <?php
-
 namespace App\Http\Resources;
+
+
+/* This Resource IS NOT IN USE:
+
+I HAVE CREATED IT AS A BACKUP FOR US IF THE RESULTS WERE TOO COMPLICATED AND THAT WE COULDN"T HANDLE IT
+
+*/
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,13 +20,7 @@ class SiteSearchResource extends JsonResource
      */
     public function toArray($request)
     {
-
-
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'email' => $this->email,
-            'model' => $this->model,
-        ];
+       return $this->setEncodingOptions(JSON_UNESCAPED_SLASHES);;
     }
+
 }

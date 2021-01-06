@@ -25,7 +25,7 @@ class Trainee extends Model implements HasMedia
     use Searchable;
 
 
-    const SEARCHABLE_FIELDS = ['id', 'user_id', 'name', 'email'];
+    const SEARCHABLE_FIELDS = ['id', 'identity_number', 'phone', 'phone_additional', 'name', 'email'];
 
 
     public $incrementing = false;
@@ -52,6 +52,7 @@ class Trainee extends Model implements HasMedia
         'qualification_copy_url',
         'bank_account_copy_url',
         'name_selectable',
+        "show_url",
     ];
 
     protected static function boot(): void
@@ -146,6 +147,10 @@ class Trainee extends Model implements HasMedia
         if ($media_id) {
             return route('back.media.download', ['media_id' => $media_id]);
         }
+    }
+
+    public function getShowUrlAttribute() {
+        return URL("/back/trainees/{$this->id}");
     }
 
     public function getNameSelectableAttribute()

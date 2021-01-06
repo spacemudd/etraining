@@ -80,7 +80,7 @@ class SiteSearchController extends Controller
             // We dont want id in the match, so we filter it out.
 
             // NEEDS EDITING DEPENDS ON THE RESULTS
-            $fields = array_filter($model::SEARCHABLE_FIELDS);
+            $fields = array_filter($model::SEARCHABLE_FIELDS, fn($field) => $field !== 'id');
             return $model::search($search_string)->get()->map(function ($modelRecord) use ($model, $fields, $search_string, $classname){
 
                 // only extracting the relevant fields from our model
@@ -88,6 +88,32 @@ class SiteSearchController extends Controller
 
                 // setting the model name
                 $modelRecord->setAttribute('model', $classname);
+
+                if($classname == "Instructor") {
+                    $modelRecord->makeHidden([
+                        'reference_number', 'team_id', 'created_at', 'updated_at', 'twitter_link', 'city_id', 'deleted_at',
+                        'provided_courses', 'is_approved','approved_by', 'approved_at', 'is_pending_approval', 'approved_by_id', 'status',
+                        'cv_full_copy_url', 'cv_summary_copy_url', 'is_pending_uploading_files', 'id', 'user_id'
+                        ]);
+                } else if($classname == "Trainee") {
+                    $modelRecord->makeHidden([
+                        'reference_number', 'team_id', 'created_at', 'updated_at', 'name_selectable', 'city_id', 'deleted_at',
+                        'provided_courses', 'instructor_id', 'is_pending_approval', 'approved_by_id', 'identity_copy_url',
+                        'cv_full_copy_url', 'cv_summary_copy_url', 'is_pending_uploading_files', 'birthday', 'qualification_copy_url', 'id', 'user_id',
+                        'educational_level_id','qualification_copy_url', 'bank_account_copy_url', 'marital_status_id', 'children_count', 'company_id'
+                        ]);
+                } else if($classname == "Course") {
+                    $modelRecord->makeHidden([
+                        'id', 'instructor_id', 'team_id', 'approval_code', 'twitter_link', 'sharable', 'deleted_at', 'created_at', 'updated_at',
+                        'provided_courses', 'is_approved','approved_by', 'approved_at', 'is_pending_approval', 'approved_by_id', 'status', 'training_package_url',
+                        'cv_full_copy_url', 'cv_summary_copy_url', 'is_pending_uploading_files', 'classroom_count'
+                        ]);
+                } else {
+                    $modelRecord->makeHidden([
+                        'media','has_attachments',  'deleted_at', 'created_at', 'updated_at', 'id', 'team_id', 'company_id', 'created_by_id', 'trainee_salary', 'trainees_count'
+                    ]);
+                }
+
                 // setting the resource link
                 return $modelRecord;
 
@@ -95,7 +121,10 @@ class SiteSearchController extends Controller
         })->flatten(1);
 
         // using a standardised site search resource
-        return SiteSearchResource::collection($results);
+        return $results->toJSON(JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
+
+        // Use It IF YOU WANT TO USE COLLECTION
+        //return SiteSearchResource::collection($results);
 
     }
 

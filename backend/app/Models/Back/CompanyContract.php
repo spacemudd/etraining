@@ -44,6 +44,7 @@ class CompanyContract extends Model implements HasMedia
 
     protected $appends = [
         'has_attachments',
+        'show_url',
     ];
 
     protected static function boot(): void
@@ -107,5 +108,9 @@ class CompanyContract extends Model implements HasMedia
 
     public function toSearchableArray() {
         return $this->only(self::SEARCHABLE_FIELDS);
+    }
+
+    public function getShowUrlAttribute() {
+        return URL("/back/companies/{$this->company_id}");
     }
 }
