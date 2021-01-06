@@ -6,6 +6,7 @@ use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\InboxMessage;
 use App\Models\MaritalStatus;
+use App\Models\User;
 use App\Scope\TeamScope;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,6 +22,10 @@ class Trainee extends Model implements HasMedia
     use HasUuid;
     use SoftDeletes;
     use InteractsWithMedia;
+
+    const STATUS_PENDING_UPLOADING_FILES = 0;
+    const STATUS_PENDING_APPROVAL = 1;
+    const STATUS_APPROVED = 2;
 
     public $incrementing = false;
 
@@ -46,6 +51,9 @@ class Trainee extends Model implements HasMedia
         'qualification_copy_url',
         'bank_account_copy_url',
         'name_selectable',
+        'is_pending_uploading_files',
+        'is_pending_approval',
+        'is_approved',
     ];
 
     protected static function boot(): void
@@ -88,6 +96,11 @@ class Trainee extends Model implements HasMedia
     public function instructor()
     {
         return $this->belongsTo(Instructor::class, 'instructor_id', 'id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function scopeResponsibleToTeach($q)
@@ -145,5 +158,34 @@ class Trainee extends Model implements HasMedia
     public function getNameSelectableAttribute()
     {
         return $this->name.' ('.$this->identity_number.')';
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    public function isPendingApproval()
+    {
+        return (int) $this->status === Trainee::STATUS_PENDING_APPROVAL;
+    }
+
+    public function getIsPendingApprovalAttribute()
+    {
+        return $this->isPendingApproval();
+    }
+
+    /**
+     * The user didn't upload their CV or required files yet.
+     *
+     * @return bool
+     */
+    public function getIsPendingUploadingFilesAttribute()
+    {
+        return (int) $this->status === Instructor::STATUS_PENDING_UPLOADING_FILES;
+    }
+
+    public function getIsApprovedAttribute()
+    {
+        return (int) $this->status === Instructor::STATUS_APPROVED;
     }
 }

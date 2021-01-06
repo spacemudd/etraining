@@ -140,7 +140,6 @@
                 this.contractForm.files.push(file);
             },
             createContract() {
-                debugger;
                 this.contractForm.post('/back/companies/'+this.company.id+'/contracts', {
                     preserveScroll: true
                 }).catch(error => {

@@ -12,14 +12,19 @@ class DashboardController extends Controller
 {
     public function dashboard()
     {
-        $instructor = auth()->user()->trainee->instructor;
-        $coursesIds = Course::where('instructor_id', $instructor->id)->pluck('id');
+        $instructor = optional(auth()->user()->trainee)->instructor;
+        if ($instructor) {
+            $coursesIds = Course::where('instructor_id', $instructor->id)->pluck('id');
 
-        $sessions = CourseBatchSession::whereIn('course_id', $coursesIds)->with(['course_batch' => function($q) {
-            $q->with(['course' => function($q) {
-                $q->with('instructor');
-            }]);
-        }])->paginate(15);
+            $sessions = CourseBatchSession::whereIn('course_id', $coursesIds)->with(['course_batch' => function($q) {
+                $q->with(['course' => function($q) {
+                    $q->with('instructor');
+                }]);
+            }])->paginate(15);
+        } else {
+            $sessions = [];
+        }
+
 
         return Inertia::render('Trainees/Dashboard', [
             'user' => auth()->user(),

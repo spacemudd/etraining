@@ -18,7 +18,11 @@ class CourseBatchesController extends Controller
      */
     public function index($course_id)
     {
-        return CourseBatch::orderBy('starts_at', 'desc')->where('course_id', $course_id)->with(['course_batch_sessions' => function($q) {
+        return CourseBatch::orderBy('starts_at', 'desc')->where('course_id', $course_id)
+            ->with(['trainee_group' => function($q) {
+                $q->withCount('trainees');
+            }])
+            ->with(['course_batch_sessions' => function($q) {
             $q->orderBy('starts_at', 'desc');
         }])->get();
     }
@@ -42,6 +46,7 @@ class CourseBatchesController extends Controller
     public function store(Request $request, $course_id)
     {
         $request->validate([
+            'trainee_group_id' => 'required|exists:trainee_groups,id',
             'starts_at' => 'required|date',
             'ends_at' => 'required|date',
             'location_at' => 'required|string',
@@ -93,8 +98,11 @@ class CourseBatchesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($coursE_id, $id)
     {
-        //
+        CourseBatch::find($id)->delete();
+        return response()->json([
+            'success' => true,
+        ]);
     }
 }

@@ -22,6 +22,7 @@ class CourseBatchFactory extends Factory
     public function definition()
     {
         return [
+            'trainee_group_id' => null,
             'course_id' => null,
             'starts_at' => $this->faker->date(),
             'ends_at' => $this->faker->date(),

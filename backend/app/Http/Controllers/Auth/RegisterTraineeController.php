@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Actions\Fortify\CreateNewTraineeUser;
 use App\Actions\Fortify\PasswordValidationRules;
 use App\Http\Controllers\Controller;
-use App\Models\Back\Trainee;
 use App\Services\TraineesServices;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use Validator;
 
 class RegisterTraineeController extends Controller
@@ -29,6 +29,9 @@ class RegisterTraineeController extends Controller
     /**
      *
      * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Validation\ValidationException
+     * @throws \Throwable
      */
     public function store(Request $request)
     {
@@ -61,5 +64,20 @@ class RegisterTraineeController extends Controller
         auth()->loginUsingId($user->id);
 
         return redirect()->route('dashboard');
+    }
+
+    /**
+     * View the application of the logged in instructor.
+     *
+     * @return \Inertia\Response
+     */
+    public function application(): \Inertia\Response
+    {
+        $trainee = auth()->user()->trainee;
+        return Inertia::render('Trainees/Application', [
+            'is_pending_approval_prop' => $trainee->is_pending_approval,
+            'trainee_id' => $trainee->id,
+            'trainee_email' => $trainee->email,
+        ]);
     }
 }

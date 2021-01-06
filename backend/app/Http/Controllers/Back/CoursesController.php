@@ -70,7 +70,9 @@ class CoursesController extends Controller
     public function show($id)
     {
         return Inertia::render('Back/Courses/Show', [
-            'course' => Course::with('batches')->with('instructor')->findOrFail($id),
+            'course' => Course::with(['batches' => function($q) {
+                $q->with('trainee_group');
+            }])->with('instructor')->findOrFail($id),
         ]);
     }
 
