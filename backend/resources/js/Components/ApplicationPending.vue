@@ -22,7 +22,7 @@
                 :speed="1"/>
         </div>
 
-        <p class="text-center mt-5"><b>{{ instructor_email }}</b></p>
+        <p class="text-center mt-5"><b>{{ user_email }}</b></p>
         <p class="text-center mt-3"><b>{{ $t('words.we-will-inform-you-when-we-are-done-reviewing-your-application') }}</b></p>
 
         <hr class="my-10">
@@ -56,7 +56,7 @@ export default {
         InstagramIcon,
         TwitterIcon,
     },
-    props: ['instructor_email'],
+    props: ['user_email'],
     methods: {
         //
     },

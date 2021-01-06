@@ -22,6 +22,12 @@ class RedirectToApplication
             }
         }
 
+        if (auth()->user()->trainee) {
+            if (auth() && optional(auth()->user())->trainee && ! optional(auth()->user()->trainee)->is_pending_approval) {
+                return redirect()->route('register.trainees.application');
+            }
+        }
+
         return $next($request);
     }
 }

@@ -222,4 +222,5 @@ return [
     'absent' => 'غايب',
     'submit-attendance-sheet-information' => 'بعد رفع قائمة الحضور، لا يمكن التعديل على القائمة مرة أخرى',
     'submit-attendance-sheet' => 'اعتمد قائمة الحضور',
+    'approve-trainee' => 'اعتمد المتدرب',
 ];

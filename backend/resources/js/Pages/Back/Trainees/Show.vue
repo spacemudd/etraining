@@ -19,6 +19,10 @@
                             class="flex items-center justify-start rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
                         {{ $t('words.open-an-account') }}
                     </button>
+                    <button v-if="trainee.is_pending_approval" @click="approveTrainee"
+                            class="flex items-center justify-start rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
+                        {{ $t('words.approve-trainee') }}
+                    </button>
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
@@ -69,6 +73,23 @@
                 <div class="col-span-6 sm:col-span-1">
                     <jet-label for="children_count" :value="$t('words.children_count')" />
                     <jet-input id="children_count" type="text" class="mt-1 block w-full bg-gray-200" v-model="this.trainee.children_count" disabled />
+                </div>
+
+                <div class="col-span-6 sm:col-span-6">
+                    <jet-label for="name" :value="$t('words.status')" />
+                    <p>
+                        <span v-if="trainee.is_pending_uploading_files" class="text-sm inline-block mt-2 p-1 px-2 bg-red-300 rounded-lg">
+                            {{ $t('words.incomplete-application') }}
+                        </span>
+
+                        <span v-if="trainee.is_pending_approval" class="text-sm inline-block mt-2 p-1 px-2 bg-yellow-200 rounded-lg">
+                            {{ $t('words.nominated-instructor') }}
+                        </span>
+
+                        <span v-if="trainee.is_approved" class="text-sm inline-block mt-2 p-1 px-2 bg-green-300 rounded-lg">
+                            {{ $t('words.approved') }}
+                        </span>
+                    </p>
                 </div>
             </div>
 
@@ -194,6 +215,11 @@
             }
         },
         methods: {
+            approveTrainee() {
+                if (confirm(this.$t('words.are-you-sure'))) {
+                    this.$inertia.post(route('back.trainees.approve-user', {trainee_id: this.trainee.id}));
+                }
+            },
             sendingCsrf(file, xhr, formData) {
                 xhr.setRequestHeader('X-CSRF-TOKEN', window.token ? window.token.content : '');
             },

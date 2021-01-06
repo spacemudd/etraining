@@ -32,9 +32,23 @@
                     </tr>
                     <tr v-for="trainees in trainees.data" :key="trainees.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
                         <td class="border-t">
-                            <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('back.trainees.show', trainees.id)">
-                                {{ trainees.name }}<br/>
-                            </inertia-link>
+                            <div class="px-6 py-4 flex items-center focus:text-indigo-500">
+                                <inertia-link :href="route('back.trainees.show', trainees.id)">
+                                    {{ trainees.name }}
+                                    <br/>
+                                    <span v-if="trainees.is_pending_uploading_files" class="text-sm inline-block mt-2 p-1 px-2 bg-red-300 rounded-lg">
+                                            {{ $t('words.incomplete-application') }}
+                                        </span>
+
+                                    <span v-if="trainees.is_pending_approval" class="text-sm inline-block mt-2 p-1 px-2 bg-yellow-200 rounded-lg">
+                                            {{ $t('words.nominated-instructor') }}
+                                        </span>
+
+                                    <span v-if="trainees.is_approved" class="text-sm inline-block mt-2 p-1 px-2 bg-green-300 rounded-lg">
+                                            {{ $t('words.approved') }}
+                                        </span>
+                                </inertia-link>
+                            </div>
                         </td>
                         <td class="border-t">
                             <inertia-link class="px-6 py-4 flex items-center" :href="route('back.trainees.show', trainees.id)" tabindex="-1">

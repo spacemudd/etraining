@@ -30,13 +30,14 @@ Route::middleware(['guest'])->get('/', function () {
 
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('/register/instructors/application', [\App\Http\Controllers\Auth\RegisterInstructorController::class, 'application'])->name('register.instructors.application');
+    Route::get('/register/trainees/application', [\App\Http\Controllers\Auth\RegisterTraineeController::class, 'application'])->name('register.trainees.application');
 });
 
 Route::get('onboarding', [\App\Http\Controllers\OnboardingController::class, 'index']);
 
 Route::middleware(['auth:sanctum'])->get('/trainees/application', [\App\Http\Controllers\TraineesApplicationController::class, 'index']);
 
-Route::middleware(['auth:sanctum', 'verified', 'approved-instructor'])->get('/dashboard', function () {
+Route::middleware(['auth:sanctum', 'verified', 'approved-application'])->get('/dashboard', function () {
 
     if (\Illuminate\Support\Str::contains(auth()->user()->roles()->first()->name, 'instructors')) {
         return app()->make(\App\Http\Controllers\Teaching\TeachingController::class)->dashboard();
@@ -94,6 +95,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::put('monthly-subscription', [\App\Http\Controllers\Back\FinancialMonthlySubscriptionController::class, 'update'])->name('monthly-subscription.update');
         });
 
+        Route::post('trainees/{trainee_id}/approve-user', [\App\Http\Controllers\Back\TraineesController::class, 'approveUser'])->name('trainees.approve-user');
         Route::post('trainees/{trainee_id}/create-user', [\App\Http\Controllers\Back\TraineesController::class, 'createUser'])->name('trainees.create-user');
         Route::post('trainees/assign-instructor', [\App\Http\Controllers\Back\TraineesController::class, 'assignInstructor'])->name('trainees.assign-instructor');
         Route::post('trainees/{trainee_id}/attachments/identity', [\App\Http\Controllers\Back\TraineesController::class, 'storeIdentity'])->name('trainees.attachments.identity');
@@ -151,4 +153,5 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 Route::middleware(['auth:sanctum'])->group(function() {
     // Moved API call here because I don't have time to figure the token stuff out that work under /api/ url space.
     Route::post('/api/instructors/uploadcv', [\App\Http\Controllers\Back\InstructorsController::class, 'storeCvFromApplication'])->name('api.register.instructors.upload-cv');
+    Route::post('/api/trainees/uploadcv', [\App\Http\Controllers\Back\TraineesController::class, 'storeCvFromApplication'])->name('api.register.trainees.upload-cv');
 });

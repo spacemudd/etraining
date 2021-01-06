@@ -221,4 +221,5 @@ return [
     'absent' => 'Absent',
     'submit-attendance-sheet-information' => 'After submitting the attendance sheet, you will be unable to edit it in the future',
     'submit-attendance-sheet' => 'Submit attendance sheet',
+    'approve-trainee' => 'Approve trainee',
 ];

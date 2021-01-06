@@ -379,7 +379,8 @@ export default {
             "present": "موجود",
             "absent": "غايب",
             "submit-attendance-sheet-information": "بعد رفع قائمة الحضور، لا يمكن التعديل على القائمة مرة أخرى",
-            "submit-attendance-sheet": "اعتمد قائمة الحضور"
+            "submit-attendance-sheet": "اعتمد قائمة الحضور",
+            "approve-trainee": "اعتمد المتدرب"
         }
     },
     "en": {
@@ -725,12 +726,7 @@ export default {
             "to": "To",
             "view-trainees": "View trainees",
             "send-private-message": "Send private message",
-            "send": "Send",
-            "attendance": "Attendance",
-            "present": "Present",
-            "absent": "Absent",
-            "submit-attendance-sheet-information": "After submitting the attendance sheet, you will be unable to edit it in the future.",
-            "submit-attendance-sheet": "Submit attendance sheet"
+            "send": "Send"
         }
     }
 }

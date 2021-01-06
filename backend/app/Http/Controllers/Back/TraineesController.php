@@ -12,8 +12,15 @@ use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\MaritalStatus;
 use App\Models\Media;
+use App\Models\User;
+use App\Notifications\InstructorApplicationApprovedNotification;
+use App\Notifications\InstructorWelcomeNotification;
+use App\Notifications\TraineeWelcomeNotification;
+use App\Services\RolesService;
 use App\Services\TraineesServices;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -29,7 +36,7 @@ class TraineesController extends Controller
     public function index()
     {
         return Inertia::render('Back/Trainees/Index', [
-            'trainees' => Trainee::with('company')->paginate(20),
+            'trainees' => Trainee::with('company')->latest()->paginate(20),
         ]);
     }
 
@@ -88,12 +95,21 @@ class TraineesController extends Controller
     public function storeIdentity(Request $request, $trainee_id)
     {
         $request->validate([
-            'file' => 'required',
+            'identity_card_copy' => 'required_without:file',
+            'file' => 'required_without:identity_card_copy',
         ]);
 
         $trainee = Trainee::findOrFail($trainee_id);
-        $file = $request->file('file');
-        return $trainee->uploadToFolder($file, 'identity');
+        $file = $request->file('identity_card_copy') ?: $request->file('file');
+        $uploaded_file = $trainee->uploadToFolder($file, 'identity');
+
+        // When the other has been filled, mark the application as pending approval from the administration.
+        if ($trainee->identity_card_url) {
+            $trainee->status = Trainee::STATUS_PENDING_APPROVAL;
+            $trainee->save();
+        }
+
+        return $uploaded_file;
     }
 
     /**
@@ -106,6 +122,10 @@ class TraineesController extends Controller
     {
         $trainee = Trainee::findOrFail($trainee_id);
         $trainee->getMedia('identity')->each->forceDelete();
+
+        $trainee->status = Instructor::STATUS_PENDING_UPLOADING_FILES;
+        $trainee->save();
+
         return response()->redirectToRoute('back.trainees.show', $trainee->id);
     }
 
@@ -118,12 +138,21 @@ class TraineesController extends Controller
     public function storeQualification(Request $request, $trainee_id)
     {
         $request->validate([
-            'file' => 'required',
+            'qualification_copy' => 'required_without:file',
+            'file' => 'required_without:qualification_copy',
         ]);
 
         $trainee = Trainee::findOrFail($trainee_id);
-        $file = $request->file('file');
-        return $trainee->uploadToFolder($file, 'qualification');
+        $file = $request->file('qualification_copy') ?: $request->file('file');
+        $uploaded_file = $trainee->uploadToFolder($file, 'qualification');
+
+        // When the other has been filled, mark the application as pending approval from the administration.
+        if ($trainee->qualification_copy_url) {
+            $trainee->status = Trainee::STATUS_PENDING_APPROVAL;
+            $trainee->save();
+        }
+
+        return $uploaded_file;
     }
 
     /**
@@ -136,6 +165,10 @@ class TraineesController extends Controller
     {
         $trainee = Trainee::findOrFail($trainee_id);
         $trainee->getMedia('qualification')->each->forceDelete();
+
+        $trainee->status = Instructor::STATUS_PENDING_UPLOADING_FILES;
+        $trainee->save();
+
         return response()->redirectToRoute('back.trainees.show', $trainee->id);
     }
 
@@ -148,12 +181,21 @@ class TraineesController extends Controller
     public function storeBankAccount(Request $request, $trainee_id)
     {
         $request->validate([
-            'file' => 'required',
+            'bank_account_copy' => 'required_without:file',
+            'file' => 'required_without:bank_account_copy',
         ]);
 
         $trainee = Trainee::findOrFail($trainee_id);
-        $file = $request->file('file');
-        return $trainee->uploadToFolder($file, 'bank-account');
+        $file = $request->file('bank_account_copy') ?: $request->file('file');
+        $uploaded_file = $trainee->uploadToFolder($file, 'bank-account');
+
+        // When the other has been filled, mark the application as pending approval from the administration.
+        if ($trainee->bank_account_copy_url) {
+            $trainee->status = Trainee::STATUS_PENDING_APPROVAL;
+            $trainee->save();
+        }
+
+        return $uploaded_file;
     }
 
     /**
@@ -166,6 +208,10 @@ class TraineesController extends Controller
     {
         $trainee = Trainee::findOrFail($trainee_id);
         $trainee->getMedia('bank-account')->each->forceDelete();
+
+        $trainee->status = Instructor::STATUS_PENDING_UPLOADING_FILES;
+        $trainee->save();
+
         return response()->redirectToRoute('back.trainees.show', $trainee->id);
     }
 
@@ -241,6 +287,55 @@ class TraineesController extends Controller
             'password' => 'password',
             'password_confirmation' => 'password',
         ]);
+
+        return redirect()->route('back.trainees.show', $trainee->id);
+    }
+
+    /**
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return mixed
+     */
+    public function storeCvFromApplication(Request $request)
+    {
+        $request->validate([
+            'identity_card_copy' => 'required',
+            'qualification_copy' => 'required',
+            'bank_account_copy' => 'required',
+        ]);
+
+        $this->storeIdentity($request, auth()->user()->trainee->id);
+        $this->storeQualification($request, auth()->user()->trainee->id);
+        $this->storeBankAccount($request, auth()->user()->trainee->id);
+
+        $trainee = auth()->user()->trainee;
+        $trainee->status = Trainee::STATUS_PENDING_APPROVAL;
+        $trainee->save();
+
+        Notification::send(auth()->user(), new TraineeWelcomeNotification());
+
+        return $trainee->media;
+    }
+
+    /**
+     * Approving the instructor to use the platform and start broadcasting.
+     *
+     * @param $trainee_id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function approveUser($trainee_id)
+    {
+        //$this->authorize('approve-trainee-applicants');
+
+        $trainee = Trainee::findOrFail($trainee_id);
+        $trainee->status = Trainee::STATUS_APPROVED;
+        $trainee->approved_by_id = auth()->user()->id;
+        $trainee->approved_at = now();
+        $trainee->save();
+
+        Notification::send($trainee->user, new InstructorApplicationApprovedNotification());
+
+        Log::info('Trainee ID: '.$trainee->id.' has been approved by user: '.auth()->user()->email);
 
         return redirect()->route('back.trainees.show', $trainee->id);
     }

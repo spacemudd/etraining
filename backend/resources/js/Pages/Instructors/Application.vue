@@ -19,14 +19,14 @@
 
             <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
                 <div v-if="is_pending_approval_prop || is_pending_approval">
-                    <application-pending :instructor_email="instructor_email"/>
+                    <application-pending :user_email="instructor_email"/>
                 </div>
                 <form v-else
                       @submit.prevent="submitForm" enctype="multipart/form-data">
                     <div><h1 class="text-2xl text-center my-5 font-bold">{{ $t('words.hi-there') }}</h1></div>
 
                     <div class="flex py-5 px-10 rounded-lg text-2xl justify-center">
-                        <img src="http://etraining.test/img/teacher.svg" class="w-8 ml-5">
+                        <img src="/img/teacher.svg" class="w-8 ml-5">
                         قم بتعبئة ملفك
                     </div>
 

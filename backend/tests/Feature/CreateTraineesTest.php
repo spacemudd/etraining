@@ -4,22 +4,50 @@ namespace Tests\Feature;
 
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Jetstream\AddTeamMember;
-use App\Models\Back\Course;
+use App\Actions\Jetstream\CreateTeam;
 use App\Models\Back\Instructor;
 use App\Models\Back\Trainee;
 use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\InboxMessage;
 use App\Models\MaritalStatus;
-use App\Models\Team;
 use App\Models\User;
+use App\Notifications\InstructorWelcomeNotification;
+use App\Notifications\TraineeWelcomeNotification;
 use App\Services\RolesService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class CreateTraineesTest extends TestCase
 {
+    public function make_trainee()
+    {
+        // Make a new team.
+        $admin = User::factory()->create();
+        $team = $admin->ownedTeams()->create([
+            'name' => 'eTraining Shafiq',
+            'personal_team' => false,
+        ]);
+        app()->make(RolesService::class)->seedRolesToTeam($team);
+
+        return [
+            'name' => 'Davy Jones',
+            'email' => 'davy.jones@gmail.com',
+            'identity_number' => '2020202010',
+            'birthday' => '1994-12-10',
+            'phone' => '966565176235',
+            'phone_additional' => '966565176235',
+            'educational_level_id' => EducationalLevel::factory()->create()->id,
+            'city_id' => City::create(['name' => 'Riyadh'])->id,
+            'marital_status_id' => MaritalStatus::factory()->create()->id,
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'children_count' => 1,
+        ];
+    }
+
     public function test_trainee_can_see_signup_page()
     {
         $this->get(route('register.trainees'))
@@ -65,6 +93,92 @@ class CreateTraineesTest extends TestCase
         ]);
     }
 
+    public function test_trainee_redirected_to_completing_their_application()
+    {
+        $trainee_input = $this->make_trainee();
+
+        $this->post(route('register.trainees'), $trainee_input);
+
+        $trainee_profile = Trainee::whereEmail($trainee_input['email'])->first();
+        $trainee_user = $trainee_profile->user;
+        $this->actingAs($trainee_user)
+            ->get(route('register.trainees.application'))
+            ->assertSuccessful()
+            ->assertPropValue('trainee_id', function ($trainee_id) use ($trainee_profile) {
+                $this->assertEquals($trainee_id, $trainee_profile->id);
+            })->assertPropValue('trainee_email', function ($trainee_email) use ($trainee_profile) {
+                $this->assertEquals($trainee_email, $trainee_profile->email);
+            });
+    }
+
+    public function test_trainees_files_are_retrieved_when_returning_to_the_application_at_a_later_time()
+    {
+        Storage::fake('s3');
+
+        // Make a new team.
+        $admin = User::factory()->create();
+        $team = (new CreateTeam())->create($admin, [
+            'name' => 'eTraining Shafiq',
+        ]);
+        app()->make(RolesService::class)->seedRolesToTeam($team);
+
+        $trainee_input = $this->make_trainee();
+
+        $this->post(route('register.trainees'), $trainee_input);
+
+        $allan = User::whereEmail($trainee_input['email'])->first();
+
+        // Upload the CV.
+        $this->actingAs($allan)
+            ->post(route('api.register.trainees.upload-cv'), [
+                'identity_card_copy' => UploadedFile::fake()->create('identity-card-copy.jpg', 1024 * 24),
+                'qualification_copy' => UploadedFile::fake()->create('qualification-copy.jpg', 1024 * 24),
+                'bank_account_copy' => UploadedFile::fake()->create('bank-account-copy.jpg', 1024 * 24),
+            ])
+            ->assertSessionHasNoErrors();
+
+        $this->assertDatabaseHas('media', [
+            'model_id' => optional($allan->trainee)->id,
+            'file_name' => 'identity-card-copy.jpg',
+        ]);
+
+        $this->assertDatabaseHas('media', [
+            'model_id' => optional($allan->trainee)->id,
+            'file_name' => 'qualification-copy.jpg',
+        ]);
+
+        $this->assertDatabaseHas('media', [
+            'model_id' => optional($allan->trainee)->id,
+            'file_name' => 'bank-account-copy.jpg',
+        ]);
+
+        $this->assertDatabaseHas('trainees', [
+            'id' => $allan->trainee->id,
+            'status' => Trainee::STATUS_PENDING_APPROVAL,
+        ]);
+
+        // todo: api call to get the media files.
+    }
+
+    public function test_redirecting_trainee_to_application_page_if_they_are_not_approved_yet()
+    {
+        // Make a new team.
+        $admin = User::factory()->create();
+        $team = (new CreateTeam())->create($admin, [
+            'name' => 'eTraining Shafiq',
+        ]);
+        app()->make(RolesService::class)->seedRolesToTeam($team);
+
+        $trainee_input = $this->make_trainee();
+
+        $this->post(route('register.trainees'), $trainee_input);
+
+        $allan = User::whereEmail($trainee_input['email'])->first();
+
+        $this->actingAs($allan)->get('/dashboard')
+            ->assertRedirect(route('register.trainees.application'));
+    }
+
     public function test_trainees_can_see_courses_index_page()
     {
         $admin = (new CreateNewUser())->create([
@@ -93,6 +207,33 @@ class CreateTraineesTest extends TestCase
         $this->actingAs($majda)
             ->get(route('trainees.courses.index'))
             ->assertSuccessful();
+    }
+
+    public function test_sending_welcome_email_to_trainees()
+    {
+        Notification::fake();
+
+        // Make a new team.
+        $admin = User::factory()->create();
+        $team = (new CreateTeam())->create($admin, [
+            'name' => 'eTraining Shafiq',
+        ]);
+        app()->make(RolesService::class)->seedRolesToTeam($team);
+
+        $trainee_input = $this->make_trainee();
+
+        $this->post(route('register.trainees'), $trainee_input);
+        $allan = User::whereEmail($trainee_input['email'])->first();
+        // Upload the CV.
+        $this->actingAs($allan)
+            ->post(route('api.register.trainees.upload-cv'), [
+                'identity_card_copy' => UploadedFile::fake()->create('identity-card-copy.jpg', 1024 * 24),
+                'qualification_copy' => UploadedFile::fake()->create('qualification-copy.jpg', 1024 * 24),
+                'bank_account_copy' => UploadedFile::fake()->create('bank-account-copy.jpg', 1024 * 24),
+            ])
+            ->assertSessionHasNoErrors();
+
+        Notification::assertSentTo($allan, TraineeWelcomeNotification::class);
     }
 
     // TODO.

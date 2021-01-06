@@ -3,13 +3,21 @@
 namespace Tests\Feature;
 
 use App\Actions\Fortify\CreateNewUser;
+use App\Actions\Jetstream\AddTeamMember;
 use App\Models\Back\Company;
 use App\Models\Back\Instructor;
 use App\Models\Back\RequiredTraineesFiles;
 use App\Models\Back\Trainee;
 use App\Models\Back\TraineeGroup;
+use App\Models\City;
+use App\Models\EducationalLevel;
+use App\Models\MaritalStatus;
+use App\Models\User;
+use App\Notifications\InstructorApplicationApprovedNotification;
+use App\Services\RolesService;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Notification;
 use Storage;
 use Tests\TestCase;
 
@@ -27,6 +35,32 @@ class TraineesManagementTest extends TestCase
             'password' => 'hello123123',
             'password_confirmation' => 'hello123123',
         ]);
+    }
+
+    public function make_trainee()
+    {
+        // Make a new team.
+        $admin = User::factory()->create();
+        $team = $admin->ownedTeams()->create([
+            'name' => 'eTraining Shafiq',
+            'personal_team' => false,
+        ]);
+        app()->make(RolesService::class)->seedRolesToTeam($team);
+
+        return [
+            'name' => 'Davy Jones',
+            'email' => 'davy.jones@gmail.com',
+            'identity_number' => '2020202010',
+            'birthday' => '1994-12-10',
+            'phone' => '966565176235',
+            'phone_additional' => '966565176235',
+            'educational_level_id' => EducationalLevel::factory()->create()->id,
+            'city_id' => City::create(['name' => 'Riyadh'])->id,
+            'marital_status_id' => MaritalStatus::factory()->create()->id,
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'children_count' => 1,
+        ];
     }
 
     public function test_user_can_access_trainee_management_page()
@@ -326,5 +360,109 @@ class TraineesManagementTest extends TestCase
         $this->actingAs($nancy)
             ->get(route('back.settings.trainees-application.required-files'))
             ->assertDontSee($file->name_en);
+    }
+
+    public function test_trainee_is_shown_as_pending_completing_application()
+    {
+        $admin = $this->user;
+
+        $trainee_input = $this->make_trainee();
+
+        $this->post(route('register.trainees'), $trainee_input);
+        $trainee = Trainee::whereEmail($trainee_input['email'])->first();
+
+        $this->actingAs($admin)
+            ->get(route('back.trainees.index'))
+            ->assertSuccessful()
+            ->assertPropValue('trainees', function ($trainees) use ($trainee) {
+                $this->assertContains($trainee->email, $trainees['data'][0]);
+                $this->assertTrue($trainees['data'][0]['is_pending_uploading_files']);
+            });
+    }
+
+    public function test_trainee_marked_as_pending_approval_when_they_finish_uploading_their_cv()
+    {
+        $trainee_input = $this->make_trainee();
+
+        $this->post(route('register.trainees'), $trainee_input);
+        $trainee = Trainee::whereEmail($trainee_input['email'])->first();
+        $this->actingAs($trainee->user)
+            ->post(route('api.register.trainees.upload-cv'), [
+                'identity_card_copy' => UploadedFile::fake()->create('identity-card-copy.jpg', 1024 * 24),
+                'qualification_copy' => UploadedFile::fake()->create('qualification-copy.jpg', 1024 * 24),
+                'bank_account_copy' => UploadedFile::fake()->create('bank-account-copy.jpg', 1024 * 24),
+            ])->assertSuccessful();
+
+        $this->assertDatabaseHas('trainees', [
+            'id' => $trainee->id,
+            'status' => Trainee::STATUS_PENDING_APPROVAL,
+        ]);
+
+        $trainee->refresh();
+        $this->assertTrue($trainee->is_pending_approval);
+    }
+
+    public function test_approving_trainee_to_access_the_platform()
+    {
+        $admin = $this->user;
+
+        $shafiqUser = User::factory()->create([
+            'email' => 'shafiqalshaar@gmail.com',
+        ]);
+
+        $team = $this->user->currentTeam;
+        (new AddTeamMember())->add($shafiqUser, $team, $shafiqUser->email, 'instructor');
+
+        $shafiqUser->current_team_id = $team->id;
+        $shafiqUser->save();
+
+        $shafiqProfile = Trainee::factory()->create([
+            'team_id' => $shafiqUser->current_team_id,
+            'user_id' => $shafiqUser->id,
+            'email' => $shafiqUser->email,
+            'status' => Instructor::STATUS_PENDING_APPROVAL,
+        ]);
+
+        $this->actingAs($admin)
+            ->post(route('back.trainees.approve-user', $shafiqProfile->id))
+            ->assertRedirect(route('back.trainees.show', $shafiqProfile->id));
+
+        $this->assertDatabaseHas('trainees', [
+            'id' => $shafiqProfile->id,
+            'status' => Instructor::STATUS_APPROVED,
+            'approved_by_id' => $admin->id,
+        ]);
+
+        $this->assertDatabaseMissing('trainees', [
+            'approved_at' => null,
+        ]);
+    }
+
+    public function test_approving_an_instructor_sends_a_welcome_notifiction()
+    {
+        Notification::fake();
+
+        $admin = $this->user;
+
+        $shafiqUser = User::factory()->create([
+            'email' => 'shafiqalshaar@gmail.com',
+        ]);
+
+        $team = $this->user->currentTeam;
+        (new AddTeamMember())->add($shafiqUser, $team, $shafiqUser->email, 'instructor');
+
+        $shafiqUser->current_team_id = $team->id;
+        $shafiqUser->save();
+
+        $shafiqProfile = Instructor::factory()->create([
+            'user_id' => $shafiqUser->id,
+            'email' => $shafiqUser->email,
+            'status' => Instructor::STATUS_PENDING_APPROVAL,
+        ]);
+
+        $this->actingAs($admin)
+            ->post(route('back.instructors.approve-user', $shafiqProfile->id));
+
+        Notification::assertSentTo($shafiqProfile->user, InstructorApplicationApprovedNotification::class);
     }
 }

@@ -140,7 +140,7 @@ class InstructorsController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param $instructor_id
-     * @return
+     * @return mixed
      */
     public function storeCvFull(Request $request, $instructor_id)
     {
