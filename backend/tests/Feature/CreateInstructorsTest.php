@@ -611,9 +611,9 @@ class CreateInstructorsTest extends TestCase
         $majdaTraineeProfile->save();
 
         $this->actingAs($shafiqUser)
-            ->post(route('teaching.trainee-groups.trainees.index', ['trainee_group_id' => $trainingGroup->id]))
+            ->get(route('teaching.trainee-groups.trainees.index', ['trainee_group_id' => $trainingGroup->id]))
             ->assertPropValue('trainees', function ($trainees) use ($majdaTraineeProfile) {
-               $this->assertEquals($trainees[0]['email'], $majdaTraineeProfile->email);
+               $this->assertEquals($trainees['data'][0]['email'], $majdaTraineeProfile->email);
             });
     }
 }

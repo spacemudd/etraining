@@ -4,10 +4,12 @@ namespace Tests\Feature;
 
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Jetstream\AddTeamMember;
+use App\Models\Back\Company;
 use App\Models\Back\Course;
 use App\Models\Back\CourseBatch;
 use App\Models\Back\CourseBatchSession;
 use App\Models\Back\Instructor;
+use App\Models\Back\TraineeGroup;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -174,7 +176,13 @@ class CreateCoursesManagementTest extends TestCase
             'classroom_count' => 25,
         ]);
 
+        $traineeGroup = TraineeGroup::factory()->create([
+            'company_id' => Company::factory()->create(['team_id' => $this->user->personalTeam()->id]),
+            'team_id' => $this->user->personalTeam()->id,
+        ]);
+
         $batch = [
+            'trainee_group_id' => $traineeGroup->id,
             'course_id' => $pmpCourse->id,
             'starts_at' => now()->firstOfMonth(),
             'ends_at' => now()->endOfMonth(),

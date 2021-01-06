@@ -39,6 +39,14 @@
                                 <col style="width:50%;">
                             </colgroup>
                             <tbody>
+                            <tr v-if="batch.trainee_group">
+                                <td class="font-semibold">{{ $t('words.name') }}</td>
+                                <td class="text-gray-700">{{ batch.trainee_group.name }}</td>
+                            </tr>
+                            <tr v-if="batch.trainee_group">
+                                <td class="font-semibold">{{ $t('words.trainees') }}</td>
+                                <td class="text-gray-700">{{ batch.trainee_group.trainees_count }}</td>
+                            </tr>
                             <tr>
                                 <td class="font-semibold">{{ $t('words.start-date') }}</td>
                                 <td class="text-gray-700">{{ toDate(batch.starts_at) }}</td>
@@ -46,6 +54,12 @@
                             <tr>
                                 <td class="font-semibold">{{ $t('words.end-date') }}</td>
                                 <td class="text-gray-700">{{ toDate(batch.ends_at) }}</td>
+                            </tr>
+                            <tr>
+                                <td><span class="text-white">.</span></td>
+                            </tr>
+                            <tr>
+                                <td><button @click="deleteCourseBatch(batch)" class="hover:underline">{{ $t('words.delete') }}</button></td>
                             </tr>
                             </tbody>
                         </table>
@@ -70,6 +84,16 @@
                    classes="overflow-y-scroll">
                 <form class="bg-white block h-5 p-10" @submit.prevent="createNewCourseBatch">
                     <h1 class="text-lg font-bold">{{ $t('words.create-course-batch') }}</h1>
+
+                    <div class="mt-5">
+                        <jet-label for="training_group_id" :value="$t('words.group-name')" />
+                        <select-trainee-group class="mt-2"
+                                              @input="selectGroupName"
+                                              v-model="form.trainee_group_id"
+                                              :required="true"
+                        />
+                        <jet-input-error :message="form.error('training_group_id')" class="mt-2" />
+                    </div>
 
                     <div class="mt-5">
                         <jet-label for="starts_at" :value="$t('words.start-date')" />
@@ -118,6 +142,7 @@
     import JetInputError from '@/Jetstream/InputError';
     import CourseBatchSessionsList from "@/Components/CourseBatchSessionsList";
     import NewCourseBatchSession from "./NewCourseBatchSession";
+    import SelectTraineeGroup from '@/Components/SelectTraineeGroup';
 
     export default {
         components: {
@@ -131,12 +156,14 @@
             JetInputError,
             CourseBatchSessionsList,
             NewCourseBatchSession,
+            SelectTraineeGroup,
         },
         props: ['courseId'],
         name: "CourseBatchesPagination",
         data() {
             return {
                 form: this.$inertia.form({
+                   trainee_group_id: null,
                    starts_at: Date(),
                    ends_at: Date(),
                    location_at: 'online',
@@ -151,7 +178,16 @@
             this.$wait.start('GETTING_COURSE');
             this.getCourse();
         },
+        computed: {
+            rtl() {
+                let lang = document.documentElement.lang.substr(0, 2);
+                return lang === 'ar';
+            },
+        },
         methods: {
+            selectGroupName(input) {
+                this.form.trainee_group_id = input.id.split('-group')[0];
+            },
             getCourse() {
                 axios.get(route('back.course-batches.index', {id: this.courseId}))
                     .then(response => {
@@ -171,13 +207,21 @@
                 this.$modal.toggle('createCourseBatch');
             },
             createNewCourseBatch() {
-                debugger;
                 this.form.post(route('back.course-batches.store', {course_id: this.courseId}))
                     .then(response => {
                         this.openCreateNewCourseBatch();
                         this.getCourse();
                     });
             },
+            deleteCourseBatch(batch) {
+                axios.delete(route('back.course-batches.destroy', {
+                    course_id: batch.course_id,
+                    course_batch: batch.id,
+                }))
+                .then(response => {
+                    this.getCourse();
+                });
+            }
         }
     }
 </script>

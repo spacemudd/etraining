@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Str;
 
-class CourseBatch extends Model
+class CourseBatchSessionAttendance extends Model
 {
     use HasFactory;
     use HasUuid;
@@ -18,11 +18,16 @@ class CourseBatch extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'trainee_group_id',
+        'course_batch_session_id',
+        'course_batch_id',
         'course_id',
-        'starts_at',
-        'ends_at',
-        'location_at',
+        'trainee_id',
+        'trainee_user_id',
+        'trainee_user_id',
+        'session_starts_at',
+        'session_ends_at',
+        'attended_at',
+        'physical_attendance',
     ];
 
     protected static function boot(): void
@@ -32,23 +37,13 @@ class CourseBatch extends Model
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string) Str::uuid();
             if (auth()->user()) {
-                $model->team_id = $model->team_id = auth()->user()->currentTeam()->first()->id;
+                $model->team_id = $model->team_id = auth()->user()->current_team_id;
             }
         });
     }
 
-    public function course()
+    public function trainee()
     {
-        return $this->belongsTo(Course::class);
-    }
-
-    public function course_batch_sessions()
-    {
-        return $this->hasMany(CourseBatchSession::class);
-    }
-
-    public function trainee_group()
-    {
-        return $this->belongsTo(TraineeGroup::class);
+        return $this->belongsTo(Trainee::class);
     }
 }

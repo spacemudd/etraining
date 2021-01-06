@@ -27,8 +27,13 @@
                 {{ session.ends_at | timestampHours }}<br/>
                 <span class="text-xs">{{ session.ends_at | timestampDate }}</span>
             </td>
-            <td class="border-t py-3 text-left">
-                <button class="bg-red-600 py-1 px-2 rounded text-white text-sm hover:bg-red-800"
+            <td class="border-t py-3 text-left flex flex-col">
+                <inertia-link :href="route('teaching.course-batch-sessions.attendance.index', {course_batch_session_id: session.id})"
+                              class="bg-blue-600 py-1 px-2 rounded text-white text-sm hover:bg-blue-800 mt-5 w-full text-center">
+                    {{ $t('words.attendance') }}
+                </inertia-link>
+
+                <button class="bg-red-600 py-1 px-2 rounded text-white text-sm hover:bg-red-800 mt-5 w-full"
                         :id="session.id"
                         :disabled="$wait.is('DELETING_SESSION_'+session.id)"
                         @click.prevent="deleteSession(session)">

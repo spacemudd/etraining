@@ -17,6 +17,8 @@ class CreateCourseBatchesTable extends Migration
             $table->uuid('id')->primary();
             $table->uuid('team_id');
             $table->foreign('team_id')->references('id')->on('teams')->cascadeOnDelete();
+            $table->uuid('trainee_group_id')->nullable();
+            $table->foreign('trainee_group_id')->references('id')->on('trainee_groups')->nullOnDelete();
             $table->uuid('course_id')->nullable();
             $table->foreign('course_id')->references('id')->on('courses')->cascadeOnDelete();
             $table->timestamp('starts_at')->nullable();

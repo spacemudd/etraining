@@ -217,4 +217,9 @@ return [
     'view-trainees' => 'عرض المتدربين',
     'send-private-message' => 'ارسال رسالة خاصة',
     'send' => 'ارسال',
+    'attendance' => 'الحضور',
+    'present' => 'موجود',
+    'absent' => 'غايب',
+    'submit-attendance-sheet-information' => 'بعد رفع قائمة الحضور، لا يمكن التعديل على القائمة مرة أخرى',
+    'submit-attendance-sheet' => 'اعتمد قائمة الحضور',
 ];

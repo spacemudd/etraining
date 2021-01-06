@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\ZoomMeetingsController;
 use App\Models\Back\CourseBatch;
 use App\Models\Back\CourseBatchSession;
+use App\Models\Back\TraineeGroup;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Zoom;

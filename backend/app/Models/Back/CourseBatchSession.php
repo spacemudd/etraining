@@ -21,6 +21,7 @@ class CourseBatchSession extends Model
     protected $fillable = [
         'course_id',
         'course_batch_id',
+        'trainee_group_id',
         'starts_at',
         'ends_at',
     ];
@@ -45,6 +46,16 @@ class CourseBatchSession extends Model
     public function course_batch()
     {
         return $this->belongsTo(CourseBatch::class);
+    }
+
+    public function trainee_group()
+    {
+        return $this->belongsTo(TraineeGroup::class);
+    }
+
+    public function attendances()
+    {
+        return $this->hasMany(CourseBatchSessionAttendance::class);
     }
 
     public function setStartsAtAttribute($value)
