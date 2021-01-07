@@ -137,7 +137,7 @@
                         <div class="px-4 py-3"
                                         :class="{'border-t border-gray-200': i > 0}"
                                         @click="updateRoleForm.role = role.key"
-                                        v-for="(role, i) in availableRoles" 
+                                        v-for="(role, i) in availableRoles"
                                         :key="i"
                                         >
                             <div :class="{'opacity-50': updateRoleForm.role && updateRoleForm.role != role.key}">
@@ -313,7 +313,7 @@
             },
 
             leaveTeam() {
-                this.leaveTeamForm.delete('/teams/' + this.team.id + '/members/' + this.$page.user.id)
+                this.leaveTeamForm.delete('/teams/' + this.team.id + '/members/' + this.$page.props.user.id)
             },
 
             confirmTeamMemberRemoval(teamMember) {

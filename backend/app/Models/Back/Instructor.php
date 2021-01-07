@@ -6,6 +6,7 @@ use App\Models\City;
 use App\Models\InboxMessage;
 use App\Models\Team;
 use App\Models\User;
+use Laravel\Scout\Searchable;
 use App\Scope\TeamScope;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,6 +22,9 @@ class Instructor extends Model implements HasMedia
     use HasUuid;
     use SoftDeletes;
     use InteractsWithMedia;
+    use Searchable;
+
+    const SEARCHABLE_FIELDS = ['id', 'identity_number', 'phone', 'phone_additional', 'name', 'email'];
 
     const STATUS_PENDING_UPLOADING_FILES = 0;
     const STATUS_PENDING_APPROVAL = 1;
@@ -47,6 +51,7 @@ class Instructor extends Model implements HasMedia
         'is_pending_uploading_files',
         'is_pending_approval',
         'is_approved',
+        'show_url',
     ];
 
     protected static function boot(): void
@@ -168,5 +173,23 @@ class Instructor extends Model implements HasMedia
     public function getIsApprovedAttribute()
     {
         return (int) $this->status === Instructor::STATUS_APPROVED;
+    }
+
+     /**
+     * Returns Route URL
+     *
+     * @return route
+     */
+    public function getShowUrlAttribute() {
+        return URL("/back/instructors/{$this->id}");
+    }
+
+    /**
+     * Returns searchable fields to be used by Scout.
+     *
+     * @return array
+     */
+    public function toSearchableArray() {
+        return $this->only(self::SEARCHABLE_FIELDS);
     }
 }

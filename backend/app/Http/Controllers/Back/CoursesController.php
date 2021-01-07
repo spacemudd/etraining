@@ -76,13 +76,16 @@ class CoursesController extends Controller
         ]);
     }
 
+
     /**
-     * Show the form for editing the specified resource.
+     * Update the specified resource in storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id, Request $request) {
+    public function update(Request $request, $id)
+    {
         $request->validate([
             'name_en' => 'nullable|string|max:255',
             'name_ar' => 'nullable|string|max:255',
@@ -108,20 +111,6 @@ class CoursesController extends Controller
                 "description" => $request->course['description']
             ]
         );
-
-
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
     }
 
     /**

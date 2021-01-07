@@ -4,6 +4,7 @@ namespace App\Models\Back;
 
 use App\Scope\TeamScope;
 use Carbon\Carbon;
+use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
@@ -14,6 +15,9 @@ class CompanyContract extends Model implements HasMedia
 {
     use HasFactory;
     use InteractsWithMedia;
+    use Searchable;
+
+    const SEARCHABLE_FIELDS = ['id', 'reference_number'];
 
     public $incrementing = false;
 
@@ -40,6 +44,7 @@ class CompanyContract extends Model implements HasMedia
 
     protected $appends = [
         'has_attachments',
+        'show_url',
     ];
 
     protected static function boot(): void
@@ -99,5 +104,13 @@ class CompanyContract extends Model implements HasMedia
     public function getHasAttachmentsAttribute()
     {
         return $this->getMedia('contract_copy')->count();
+    }
+
+    public function toSearchableArray() {
+        return $this->only(self::SEARCHABLE_FIELDS);
+    }
+
+    public function getShowUrlAttribute() {
+        return URL("/back/companies/{$this->company_id}");
     }
 }

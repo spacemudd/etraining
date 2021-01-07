@@ -6,6 +6,7 @@ use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\InboxMessage;
 use App\Models\MaritalStatus;
+use Laravel\Scout\Searchable;
 use App\Models\User;
 use App\Scope\TeamScope;
 use App\Traits\HasUuid;
@@ -22,6 +23,11 @@ class Trainee extends Model implements HasMedia
     use HasUuid;
     use SoftDeletes;
     use InteractsWithMedia;
+    use Searchable;
+
+
+    const SEARCHABLE_FIELDS = ['id', 'identity_number', 'phone', 'phone_additional', 'name', 'email'];
+
 
     const STATUS_PENDING_UPLOADING_FILES = 0;
     const STATUS_PENDING_APPROVAL = 1;
@@ -51,6 +57,7 @@ class Trainee extends Model implements HasMedia
         'qualification_copy_url',
         'bank_account_copy_url',
         'name_selectable',
+        "show_url",
         'is_pending_uploading_files',
         'is_pending_approval',
         'is_approved',
@@ -155,9 +162,17 @@ class Trainee extends Model implements HasMedia
         }
     }
 
+    public function getShowUrlAttribute() {
+        return URL("/back/trainees/{$this->id}");
+    }
+
     public function getNameSelectableAttribute()
     {
         return $this->name.' ('.$this->identity_number.')';
+    }
+
+    public function toSearchableArray() {
+        return $this->only(self::SEARCHABLE_FIELDS);
     }
 
     /**

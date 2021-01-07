@@ -365,7 +365,7 @@
                                 aria-label="Account"
                                 aria-haspopup="true"
                             >
-                                <img class="object-cover w-8 h-8 rounded-full" :src="$page.user.profile_photo_url" :alt="$page.user.name" aria-hidden="true" />
+                                <img class="object-cover w-8 h-8 rounded-full" :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name" aria-hidden="true" />
                             </button>
                             <template v-if="isProfileMenuOpen">
                                 <ul
@@ -525,7 +525,7 @@
                 return window.location.pathname
             },
             selectable_locale() {
-                if(this.$page.locale == 'ar') {
+                if(this.$page.props.locale == 'ar') {
                     return 'en';
                 }
                 return 'ar'
