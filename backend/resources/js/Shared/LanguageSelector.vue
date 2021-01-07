@@ -16,7 +16,7 @@
 
         computed: {
             selectable_locale() {
-                if(this.$page.locale == 'ar') {
+                if(this.$page.props.locale == 'ar') {
                     return 'en';
                 }
                 return 'ar'

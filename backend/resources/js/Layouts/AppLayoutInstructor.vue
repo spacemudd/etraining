@@ -522,7 +522,7 @@
                 return window.location.pathname
             },
             selectable_locale() {
-                if(this.$page.locale == 'ar') {
+                if(this.$page.props.locale == 'ar') {
                     return 'en';
                 }
                 return 'ar'

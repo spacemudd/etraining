@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 8.20.1.
+ * Generated for Laravel 8.21.0.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -17195,6 +17195,35 @@
         public static function inertia()
         {
                         return \Illuminate\Http\Request::inertia();
+        }
+         
+    }
+            /**
+     * 
+     *
+     */ 
+        class RedirectResponse {
+                    /**
+         * 
+         *
+         * @see \Laravel\Jetstream\JetstreamServiceProvider::boot()
+         * @param mixed $message
+         * @static 
+         */ 
+        public static function banner($message)
+        {
+                        return \Illuminate\Http\RedirectResponse::banner($message);
+        }
+                    /**
+         * 
+         *
+         * @see \Laravel\Jetstream\JetstreamServiceProvider::boot()
+         * @param mixed $message
+         * @static 
+         */ 
+        public static function dangerBanner($message)
+        {
+                        return \Illuminate\Http\RedirectResponse::dangerBanner($message);
         }
          
     }
