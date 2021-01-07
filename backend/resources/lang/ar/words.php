@@ -224,4 +224,8 @@ return [
     'submit-attendance-sheet' => 'اعتمد قائمة الحضور',
     'approve-trainee' => 'اعتمد المتدرب',
     'results' => 'النتائج',
+    'trainee' => 'متدرب',
+    'instructor-singular' => 'مدرب',
+    'course' => 'دورة',
+    'no-records-have-been-found' => 'لا توجد نتائج بحث',
 ];

@@ -6,6 +6,7 @@ use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\InboxMessage;
 use App\Models\MaritalStatus;
+use App\Models\SearchableLabels;
 use Laravel\Scout\Searchable;
 use App\Models\User;
 use App\Scope\TeamScope;
@@ -17,7 +18,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Str;
 
-class Trainee extends Model implements HasMedia
+class Trainee extends Model implements HasMedia, SearchableLabels
 {
     use HasFactory;
     use HasUuid;
@@ -25,9 +26,7 @@ class Trainee extends Model implements HasMedia
     use InteractsWithMedia;
     use Searchable;
 
-
     const SEARCHABLE_FIELDS = ['id', 'identity_number', 'phone', 'phone_additional', 'name', 'email'];
-
 
     const STATUS_PENDING_UPLOADING_FILES = 0;
     const STATUS_PENDING_APPROVAL = 1;
@@ -61,6 +60,8 @@ class Trainee extends Model implements HasMedia
         'is_pending_uploading_files',
         'is_pending_approval',
         'is_approved',
+        'resource_label',
+        'resource_type',
     ];
 
     protected static function boot(): void
@@ -162,8 +163,9 @@ class Trainee extends Model implements HasMedia
         }
     }
 
-    public function getShowUrlAttribute() {
-        return URL("/back/trainees/{$this->id}");
+    public function getShowUrlAttribute()
+    {
+        return route('back.trainees.show', $this->id);
     }
 
     public function getNameSelectableAttribute()
@@ -171,7 +173,26 @@ class Trainee extends Model implements HasMedia
         return $this->name.' ('.$this->identity_number.')';
     }
 
-    public function toSearchableArray() {
+    /**
+     *
+     * @return string
+     */
+    public function getResourceLabelAttribute(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getResourceTypeAttribute(): string
+    {
+        return trans('words.trainee');
+    }
+
+    public function toSearchableArray()
+    {
         return $this->only(self::SEARCHABLE_FIELDS);
     }
 

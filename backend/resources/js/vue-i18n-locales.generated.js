@@ -381,7 +381,11 @@ export default {
             "submit-attendance-sheet-information": "بعد رفع قائمة الحضور، لا يمكن التعديل على القائمة مرة أخرى",
             "submit-attendance-sheet": "اعتمد قائمة الحضور",
             "approve-trainee": "اعتمد المتدرب",
-            "results": "النتائج"
+            "results": "النتائج",
+            "trainee": "متدرب",
+            "instructor-singular": "مدرب",
+            "course": "دورة",
+            "no-records-have-been-found": "لا توجد نتائج بحث"
         }
     },
     "en": {
@@ -734,7 +738,11 @@ export default {
             "submit-attendance-sheet-information": "After submitting the attendance sheet, you will be unable to edit it in the future",
             "submit-attendance-sheet": "Submit attendance sheet",
             "approve-trainee": "Approve trainee",
-            "results": "Results"
+            "results": "Results",
+            "trainee": "Trainee",
+            "instructor-singular": "Instructor",
+            "course": "Course",
+            "no-records-have-been-found": "No records have been found"
         }
     }
 }

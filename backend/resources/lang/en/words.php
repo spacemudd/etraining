@@ -223,4 +223,8 @@ return [
     'submit-attendance-sheet' => 'Submit attendance sheet',
     'approve-trainee' => 'Approve trainee',
     'results' => 'Results',
+    'trainee' => 'Trainee',
+    'instructor-singular' => 'Instructor',
+    'course' => 'Course',
+    'no-records-have-been-found' => 'No records have been found',
 ];

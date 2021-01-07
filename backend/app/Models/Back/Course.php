@@ -2,6 +2,7 @@
 
 namespace App\Models\Back;
 
+use App\Models\SearchableLabels;
 use App\Scope\TeamScope;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +13,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Laravel\Scout\Searchable;
 use Str;
 
-class Course extends Model implements HasMedia
+class Course extends Model implements HasMedia, SearchableLabels
 {
     use HasFactory;
     use SoftDeletes;
@@ -46,6 +47,8 @@ class Course extends Model implements HasMedia
         'is_pending_approval',
         'show_url',
         'is_approved',
+        'resource_label',
+        'resource_type',
     ];
 
     protected static function boot(): void
@@ -130,12 +133,34 @@ class Course extends Model implements HasMedia
     {
         return (int) $this->status === self::STATUS_APPROVED;
     }
-    public function toSearchableArray() {
+
+
+    public function toSearchableArray()
+    {
         return $this->only(self::SEARCHABLE_FIELDS);
     }
 
-    public function getShowUrlAttribute() {
-        return URL("/back/courses/{$this->id}");
+    public function getShowUrlAttribute()
+    {
+        return route('back.courses.show', $this->id);
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getResourceLabelAttribute(): string
+    {
+        return $this->name_ar.' ('.$this->name_en.')';
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getResourceTypeAttribute(): string
+    {
+        return trans('words.course');
     }
 }
 

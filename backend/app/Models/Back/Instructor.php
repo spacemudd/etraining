@@ -4,6 +4,7 @@ namespace App\Models\Back;
 
 use App\Models\City;
 use App\Models\InboxMessage;
+use App\Models\SearchableLabels;
 use App\Models\Team;
 use App\Models\User;
 use Laravel\Scout\Searchable;
@@ -16,7 +17,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Str;
 
-class Instructor extends Model implements HasMedia
+class Instructor extends Model implements HasMedia, SearchableLabels
 {
     use HasFactory;
     use HasUuid;
@@ -52,6 +53,8 @@ class Instructor extends Model implements HasMedia
         'is_pending_approval',
         'is_approved',
         'show_url',
+        'resource_label',
+        'resource_type',
     ];
 
     protected static function boot(): void
@@ -180,8 +183,27 @@ class Instructor extends Model implements HasMedia
      *
      * @return route
      */
-    public function getShowUrlAttribute() {
-        return URL("/back/instructors/{$this->id}");
+    public function getShowUrlAttribute()
+    {
+        return route('back.instructors.show', $this->id);
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getResourceLabelAttribute(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getResourceTypeAttribute(): string
+    {
+        return trans('words.instructor-singular');
     }
 
     /**
@@ -189,7 +211,8 @@ class Instructor extends Model implements HasMedia
      *
      * @return array
      */
-    public function toSearchableArray() {
+    public function toSearchableArray()
+    {
         return $this->only(self::SEARCHABLE_FIELDS);
     }
 }
