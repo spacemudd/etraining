@@ -24,49 +24,47 @@
         />
 
         <!-- View of results -->
-        <div class="search-results-box bg-white shadow-lg mt-1 p-3 overflow-x-scroll">
-            <p class="text-gray-500">{{ $t('words.results') }}</p>
-            <div class="search-results-container mt-2">
-                <div class="search-result-row hover:bg-gray-100 p-1 px-5 rounded-lg">
-                    <p class="text-black font-bold">شفيق الشعار</p>
-                    <p class="text-gray-500">متدرب</p>
-                </div>
-                <div class="search-result-row hover:bg-gray-100 p-1 px-5 rounded-lg">
-                    <p class="text-black font-bold">سارة الحمداني</p>
-                    <p class="text-gray-500">مدرب</p>
-                </div>
-                <div class="search-result-row hover:bg-gray-100 p-1 px-5 rounded-lg">
-                    <p class="text-black font-bold">التعليم الإحترافي</p>
-                    <p class="text-gray-500">دورة</p>
-                </div>
-                <div class="search-result-row hover:bg-gray-100 p-1 px-5 rounded-lg">
-                    <p class="text-black font-bold">مجدة الشنطة</p>
-                    <p class="text-gray-500">Record 2</p>
-                </div>
-                <div class="search-result-row hover:bg-gray-100 p-1 px-5 rounded-lg">
-                    <p class="text-black font-bold">Instructor</p>
-                    <p>Record 2</p>
-                </div>
-                <div class="search-result-row hover:bg-gray-100 p-1 px-5 rounded-lg">
-                    <p class="text-black font-bold">Instructor</p>
-                    <p>Record 2</p>
+        <transition
+            enter-active-class="animate__animated animate__fadeIn"
+            leave-active-class="animate__animated animate__fadeOut"
+        >
+            <div v-if="searchBoxVisible"
+             class="search-results-box bg-white shadow-lg mt-1 p-3 overflow-x-scroll">
+                <p class="text-gray-500">{{ $t('words.results') }}</p>
+                <div class="search-results-container mt-2">
+                    <div v-for="(record, index) in searchResults" :key="index" class="search-result-row hover:bg-gray-100 p-1 px-5 rounded-lg">
+                        <p class="text-black font-bold"><Skeleton>{{ record.label }}</Skeleton></p>
+                        <p class="text-gray-500"><Skeleton>{{ record.type }}</Skeleton></p>
+                    </div>
                 </div>
             </div>
-        </div>
+        </transition>
     </div>
 </template>
 
 <script>
+import { Skeleton } from 'vue-loading-skeleton';
 export default {
     name: "AdminSearchbar.vue",
+    components: {
+        Skeleton,
+    },
     data() {
         return {
             searchBoxVisible: false,
+            searchResults: 4,
         }
     },
     methods: {
         toggleSearchResultsBox() {
             this.searchBoxVisible = !this.searchBoxVisible;
+            this.searchResults = 4;
+            let vm = this;
+            setTimeout(() => {
+                vm.searchResults = [
+                    {label: 'شفيق الشعار', type: 'متدرب'},
+                ]
+            }, 5000)
         }
     },
 }
@@ -77,6 +75,7 @@ export default {
         width:150%;
         height:300px;
         position: absolute;
+        animation-duration: 0.3s;
     }
 
     .search-result-row {
