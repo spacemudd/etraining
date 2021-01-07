@@ -329,30 +329,7 @@
                     </button>
                     <!-- Search input -->
                     <div class="flex justify-center flex-1 ltr:lg:mr-32 rtl:lg:ml-32">
-                        <div
-                            class="relative w-full max-w-xl ltr:mr-6 rtl:ml-6 focus-within:text-red-500"
-                        >
-                            <div class="absolute inset-y-0 flex items-center ltr:pl-2 rtl:pr-2">
-                                <svg
-                                    class="w-4 h-4"
-                                    aria-hidden="true"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                >
-                                    <path
-                                        fill-rule="evenodd"
-                                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                        clip-rule="evenodd"
-                                    ></path>
-                                </svg>
-                            </div>
-                            <input
-                                class="w-full ltr:pl-8 ltr:pr-2 rtl:pr-8 rtl:pl-8 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:focus:placeholder-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:placeholder-gray-500 focus:bg-white focus:border-red-300 focus:outline-none focus:shadow-outline-red form-input"
-                                type="text"
-                                :placeholder="$t('words.search')"
-                                aria-label="Search"
-                            />
-                        </div>
+                        <admin-searchbar />
                     </div>
                     <language-selector></language-selector>
                     <ul class="flex items-center flex-shrink-0 space-x-6">
@@ -449,6 +426,7 @@
     import LanguageSelector from "../Shared/LanguageSelector";
     import SidebarLink from '../Components/SidebarLink';
     import SidebarContainer from "../Components/SidebarContainer";
+    import AdminSearchbar from '@/Components/AdminSearchbar';
 
     export default {
         components: {
@@ -461,6 +439,7 @@
             LanguageSelector,
             SidebarLink,
             SidebarContainer,
+            AdminSearchbar,
         },
 
         data() {
