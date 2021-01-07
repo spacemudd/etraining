@@ -3,22 +3,21 @@
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\SiteSearchResource;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Str;
+use ReflectionClass;
 use Symfony\Component\Finder\SplFileInfo;
 
 class SiteSearchController extends Controller
 {
-
+    /**
+     * 10 characters: to show 10 neighbouring characters around the searched word
+     * @var int
+     */
     const BUFFER = 10;
 
-    // 10 characters: to show 10 neighbouring characters around the searched word
-
-    /** A helper function to generate the model namespace
+    /**
+     * Helper function to generate the model namespace
      * @return string
      */
     private function modelNamespacePrefix()
@@ -26,16 +25,22 @@ class SiteSearchController extends Controller
         return app()->getNamespace() . 'Models\Back\\';
     }
 
+    /**
+     * Search the site globally.
+     *
+     * @param $search_string
+     * @return string
+     */
     public function search($search_string)
     {
+        $toExclude = [
+            // App\Models\Back\Company::class
+        ];
 
-        // If Later We Decided That We No Longer Need Any Model We Can Put It Here.
-        $toExclude = [];
-
-        // getting all the model files from the model folder
+        // Getting all the model files from the model folder
         $files = File::allFiles(app()->basePath() . '/app/Models/Back');
 
-        // to get all the model classes
+        // To get all the model classes
         $results = collect($files)->map(function (SplFileInfo $file){
             $filename = $file->getRelativePathname();
 
@@ -46,14 +51,15 @@ class SiteSearchController extends Controller
             }
             // removing .php
             return substr($filename, 0, -4);
+        });
 
-        })->filter(function (?string $classname) use($toExclude){
-            if($classname === null){
+        $results = $results->filter(function (?string $classname) use($toExclude) {
+            if($classname === null) {
                 return false;
             }
 
             // using reflection class to obtain class info dynamically
-            $reflection = new \ReflectionClass($this->modelNamespacePrefix() . $classname);
+            $reflection = new ReflectionClass($this->modelNamespacePrefix() . $classname);
 
             // making sure the class extended eloquent model
             $isModel = $reflection->isSubclassOf(Model::class);
@@ -63,8 +69,9 @@ class SiteSearchController extends Controller
 
             // filter model that has the searchable trait and not in exclude array
             return $isModel && $searchable && !in_array($reflection->getName(), $toExclude, true);
+        });
 
-        })->map(function ($classname) use ($search_string) {
+        $results = $results->map(function ($classname) use ($search_string) {
             // for each class, call the search function
             $model = app($this->modelNamespacePrefix() . $classname);
 
@@ -81,8 +88,7 @@ class SiteSearchController extends Controller
 
             // NEEDS EDITING DEPENDS ON THE RESULTS
             $fields = array_filter($model::SEARCHABLE_FIELDS, fn($field) => $field !== 'id');
-            return $model::search($search_string)->get()->map(function ($modelRecord) use ($model, $fields, $search_string, $classname){
-
+            return $model::search($search_string)->get()->map(function ($modelRecord) use ($model, $fields, $search_string, $classname) {
                 // only extracting the relevant fields from our model
                 $fieldsData = $modelRecord->only($fields);
 
@@ -116,16 +122,12 @@ class SiteSearchController extends Controller
 
                 // setting the resource link
                 return $modelRecord;
-
             });
         })->flatten(1);
 
         // using a standardised site search resource
         return $results->toJSON(JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
 
-        // Use It IF YOU WANT TO USE COLLECTION
-        //return SiteSearchResource::collection($results);
-
+        // return SiteSearchResource::collection($results);
     }
-
 }
