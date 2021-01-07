@@ -60,7 +60,7 @@ return [
     ],
 
     'tntsearch' => [
-        'storage'  => storage_path(),
+        'storage'  => storage_path('db_index'),
         'fuzziness' => true,
         'fuzzy' => [
             'prefix_length' => 1,
