@@ -19,6 +19,10 @@
                         {{ editButton.text }}
                     </button>
 
+                     <button v-if="editButton.editOption" @click="cancelEdit" class="flex items-center justify-start rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right">
+                        {{ cancelButton.text }}
+                    </button>
+
                     <button v-if="course.is_pending_approval" @click="approveCourse" class="flex items-center justify-start rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
                         {{ $t('words.approve-course') }}
                     </button>
@@ -150,6 +154,9 @@
         },
         data() {
             return {
+                cancelButton: {
+                    text: this.$t('words.cancel'),
+                },
                 editButton: {
                     text: this.$t('words.edit'),
                     editOption: false,
@@ -165,6 +172,13 @@
             }
         },
         methods: {
+            cancelEdit() {
+                            this.editButton.editOption = false;
+                            this.editButton.inputClass = 'mt-1 block w-full bg-gray-200';
+                            this.editButton.selectInputClass = 'mt-1 block w-full border border-gray-200 bg-gray-200 py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none';
+                            this.editButton.text = this.$t('words.edit');
+                            window.location.reload();
+            },
             approveCourse() {
                 if (confirm(this.$t('words.are-you-sure'))) {
                     this.$inertia.post(route('back.courses.approve', {course_id: this.course.id}));
