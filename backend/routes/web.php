@@ -112,6 +112,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::delete('instructors/{instructor_id}/attachments/cv-full', [\App\Http\Controllers\Back\InstructorsController::class, 'deleteCvFull'])->name('instructors.attachments.cv-full.destroy');
         Route::post('instructors/{instructor_id}/attachments/cv-summary', [\App\Http\Controllers\Back\InstructorsController::class, 'storeCvSummary'])->name('instructors.attachments.cv-summary');
         Route::delete('instructors/{instructor_id}/attachments/cv-summary', [\App\Http\Controllers\Back\InstructorsController::class, 'deleteCvSummary'])->name('instructors.attachments.cv-summary.destroy');
+        Route::post('instructors/{instructor_id}/edit', [\App\Http\Controllers\Back\InstructorsController::class, 'update'])->name('instructors.edit');
         Route::resource('instructors', \App\Http\Controllers\Back\InstructorsController::class);
 
 

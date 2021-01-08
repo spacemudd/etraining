@@ -70,31 +70,10 @@ class InstructorsController extends Controller
     {
         return Inertia::render('Back/Instructors/Show', [
             'instructor' => Instructor::with('city')->findOrFail($id),
+            'cities' => City::orderBy('name_ar')->get()
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -237,6 +216,40 @@ class InstructorsController extends Controller
             'password_confirmation' => 'password',
         ]);
         return redirect()->route('back.instructors.show', $instructor->id);
+    }
+
+    /** Update the specified model
+     * @param \Illuminate\Http\Request $request
+     * @param $instructor_id
+     * @return model
+    */
+
+    public function update(Request $request, $instructor_id)
+    {
+        $instructor = Instructor::findOrFail($instructor_id);
+        $request->validate([
+            'name' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:255',
+            'identity_number' => 'nullable|exists:instructors,id',
+            'email' => 'nullable|exists:companies,id',
+            'city_id' => 'nullable|string|max:255',
+            'twitter_link' => 'nullable|numeric',
+        ]);
+
+        echo $instructor['city'];
+
+         $instructor->update(
+            [
+                "name" => $request->instructor['name'],
+                "phone" => $request->instructor['phone'],
+                "identity_number" => $request->instructor['identity_number'],
+                "email" => $request->instructor['email'],
+                "city_id" => $request->instructor['city_id'],
+                "twitter_link" => $request->instructor['twitter_link']
+            ]
+        );
+
+        return redirect()->route('back.instructors.show', $instructor_id);
     }
 
     /**
