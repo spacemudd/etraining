@@ -1,7 +1,7 @@
 <?php
 
 return [
-
+    'language' => 'en',
     'email' => 'Email',
     'password' => 'Password',
     'dashboard' => 'Dashboard',

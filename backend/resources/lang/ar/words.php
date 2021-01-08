@@ -1,7 +1,7 @@
 <?php
 
 return [
-
+    'language' => 'ar',
     'email' => 'البريد الإكتروني',
     'password' => 'كلمة السر',
     'dashboard' => 'لوحة التحكم',

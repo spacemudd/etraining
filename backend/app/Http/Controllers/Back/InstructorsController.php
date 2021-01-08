@@ -230,13 +230,11 @@ class InstructorsController extends Controller
         $request->validate([
             'name' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:255',
-            'identity_number' => 'nullable|exists:instructors,id',
-            'email' => 'nullable|exists:companies,id',
+            'identity_number' => 'nullable|string|max:255',
+            'email' => 'nullable|string|max:255',
             'city_id' => 'nullable|string|max:255',
-            'twitter_link' => 'nullable|numeric',
+            'twitter_link' => 'nullable|string|max:255',
         ]);
-
-        echo $instructor['city'];
 
          $instructor->update(
             [

@@ -83,6 +83,10 @@ class TraineesController extends Controller
     {
         return Inertia::render('Back/Trainees/Show', [
             'trainee' => Trainee::with(['educational_level', 'city', 'marital_status'])->findOrFail($id),
+            'trainee_groups' => TraineeGroup::get(),
+            'cities' => City::orderBy('name_ar')->get(),
+            'marital_statuses' => MaritalStatus::orderBy('order')->get(),
+            'educational_levels' => EducationalLevel::orderBy('order')->get(),
         ]);
     }
 
@@ -339,4 +343,39 @@ class TraineesController extends Controller
 
         return redirect()->route('back.trainees.show', $trainee->id);
     }
+
+    public function update(Request $request, $trainee_id)
+    {
+        $trainee = Trainee::findOrFail($trainee_id);
+
+        $request->validate([
+            'trainee_group_name' => 'nullable|string|max:255',
+            'email' => 'nullable|string|max:255',
+            'name' => 'nullable|string|max:255',
+            'identity_number' => 'nullable|string|max:255',
+            'birthday' => 'nullable|date',
+            'educational_level_id' => 'nullable|exists:educational_levels,id',
+            'city_id' => 'nullable|exists:cities,id',
+            'marital_status_id' => 'nullable|exists:marital_statuses,id',
+        ]);
+
+         $trainee->update(
+            [
+                "name" => $request->trainee['name'],
+                "phone" => $request->trainee['phone'],
+                "phone_additional" => $request->trainee['phone_additional'],
+                "birthday" => $request->trainee['birthday'],
+                "educational_level_id" => $request->trainee['educational_level_id'],
+                "city_id" => $request->trainee['city_id'],
+                "marital_status_id" => $request->trainee['marital_status_id'],
+                "identity_number" => $request->trainee['identity_number'],
+                "email" => $request->trainee['email'],
+                "city_id" => $request->trainee['city_id'],
+                "children_count" => (int)$request->trainee['children_count'],
+            ]
+        );
+
+        return redirect()->route('back.trainees.show', $trainee_id);
+    }
+
 }

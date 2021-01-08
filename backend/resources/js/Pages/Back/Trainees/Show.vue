@@ -11,9 +11,15 @@
 
             <div class="grid grid-cols-6 gap-6">
                 <div class="col-span-6 flex items-center justify-end bg-gray-50 text-right gap-6">
-                    <inertia-link :href="route('back.trainees.edit', this.trainee.id)" class="flex items-center justify-start rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
-                        {{ $t('words.edit') }}
-                    </inertia-link>
+
+                   <button v-if="!editButton.editOption" @click="editTrainee" class="flex items-center justify-start rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
+                        {{ editButton.text }}
+                    </button>
+
+                    <button v-else @click="editTrainee" class="flex items-center justify-start rounded-md px-4 py-2 bg-green-300 hover:bg-green-400 text-right">
+                        {{ editButton.text }}
+                    </button>
+
                     <button v-if="!trainee.user_id"
                             @click="openTraineeAccount"
                             class="flex items-center justify-start rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
@@ -27,52 +33,96 @@
 
                 <div class="col-span-6 sm:col-span-2">
                     <jet-label for="name" :value="$t('words.name')" />
-                    <jet-input id="name" type="text" class="mt-1 block w-full bg-gray-200" v-model="this.trainee.name" autocomplete="off" disabled />
+                    <jet-input id="name" type="text" :class="editButton.inputClass" v-model="trainee.name" autocomplete="off" :disabled="!editButton.editOption" />
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
                     <jet-label for="identity_number" :value="$t('words.identity_number')" />
-                    <jet-input id="identity_number" type="text" class="mt-1 block w-full bg-gray-200" v-model="this.trainee.identity_number" disabled />
+                    <jet-input id="identity_number" type="text" :class="editButton.inputClass" v-model="trainee.identity_number" :disabled="!editButton.editOption" />
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
                     <jet-label for="birthday" :value="$t('words.birthday')" />
-                    <jet-input id="birthday" type="date" class="mt-1 block w-full bg-gray-200" v-model="this.trainee.birthday" disabled />
+                    <jet-input id="birthday" type="date" :class="editButton.inputClass" v-model="trainee.birthday" :disabled="!editButton.editOption" />
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
                     <jet-label for="phone" :value="$t('words.phone')" />
-                    <jet-input id="phone" type="text" class="mt-1 block w-full bg-gray-200" v-model="this.trainee.phone" placeholder="9665XXXXXXXX" disabled />
+                    <jet-input id="phone" type="text" :class="editButton.inputClass" v-model="trainee.phone" placeholder="9665XXXXXXXX" :disabled="!editButton.editOption" />
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
                     <jet-label for="phone_additional" :value="$t('words.phone_additional')" />
-                    <jet-input id="phone_additional" type="text" class="mt-1 block w-full bg-gray-200" v-model="this.trainee.phone_additional" disabled />
+                    <jet-input id="phone_additional" type="text" :class="editButton.inputClass" v-model="trainee.phone_additional" :disabled="!editButton.editOption" />
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
                     <jet-label for="email" :value="$t('words.email')" />
-                    <jet-input id="email" type="text" class="mt-1 block w-full bg-gray-200" :value="this.trainee.email" disabled />
+                    <jet-input id="email" type="text" :class="editButton.inputClass" v-model="trainee.email" :disabled="!editButton.editOption" />
                 </div>
 
-                <div class="col-span-6 sm:col-span-2">
+                <div class="col-span-6 sm:col-span-2" v-if="this.lang=='ar'">
                     <jet-label for="educational_level" :value="$t('words.educational_level')" />
-                    <jet-input id="educational_level" type="text" class="mt-1 block w-full bg-gray-200" :value="this.trainee.educational_level ? this.trainee.educational_level.name_ar : ''" disabled />
+
+                    <select :class="editButton.selectInputClass"
+                                        v-model="trainee.educational_level_id"
+                                        id="educational_level_id"  :disabled="!editButton.editOption" >
+                                    <option v-for="educational_level in educational_levels" :key="educational_level.id" :value="educational_level.id">{{ educational_level.name_ar }}</option>
+                    </select>
+
+                </div>
+
+                <div class="col-span-6 sm:col-span-2" v-else>
+                    <jet-label for="educational_level" :value="$t('words.educational_level')" />
+
+                    <select :class="editButton.selectInputClass"
+                                        v-model="trainee.educational_level_id"
+                                        id="educational_level_id"  :disabled="!editButton.editOption" >
+                                    <option v-for="educational_level in educational_levels" :key="educational_level.id" :value="educational_level.id">{{ educational_level.name_en }}</option>
+                    </select>
+
+
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
                     <jet-label for="city_id" :value="$t('words.city')" />
-                    <jet-input id="city" type="text" class="mt-1 block w-full bg-gray-200" :value="this.trainee.city ? this.trainee.city.name_ar : ''" disabled />
+
+                    <select :class="editButton.selectInputClass"
+                                        v-model="trainee.city_id"
+                                        id="city_id"  :disabled="!editButton.editOption" >
+                                    <option v-for="city in cities" :key="city.id" :value="city.id">{{ city.name_ar }}</option>
+                    </select>
+
+
                 </div>
 
-                <div class="col-span-6 sm:col-span-1">
+                <div class="col-span-6 sm:col-span-1" v-if="this.lang=='ar'">
                     <jet-label for="marital_status" :value="$t('words.marital_status')" />
-                    <jet-input id="marital_status" type="text" class="mt-1 block w-full bg-gray-200" :value="this.trainee.marital_status ? this.trainee.marital_status.name_ar : ''" disabled />
+
+                    <select :class="editButton.selectInputClass"
+                                        v-model="trainee.marital_status_id"
+                                        id="city_id"  :disabled="!editButton.editOption" >
+                                    <option  v-for="marital_status in marital_statuses" :key="marital_status.id" :value="marital_status.id">{{ marital_status.name_ar }}</option>
+                    </select>
+
+
+                </div>
+
+                <div class="col-span-6 sm:col-span-1" v-else>
+
+                    <jet-label for="marital_status" :value="$t('words.marital_status')" />
+
+                    <select :class="editButton.selectInputClass"
+                                        v-model="trainee.marital_status_id"
+                                        id="city_id"  :disabled="!editButton.editOption" >
+                                    <option  v-for="marital_status in marital_statuses" :key="marital_status.id" :value="marital_status.id">{{ marital_status.name_en }}</option>
+                    </select>
+
                 </div>
 
                 <div class="col-span-6 sm:col-span-1">
                     <jet-label for="children_count" :value="$t('words.children_count')" />
-                    <jet-input id="children_count" type="text" class="mt-1 block w-full bg-gray-200" v-model="this.trainee.children_count" disabled />
+                    <jet-input id="children_count" type="text" :class="editButton.inputClass" v-model="trainee.children_count" :disabled="!editButton.editOption" />
                 </div>
 
                 <div class="col-span-6 sm:col-span-6">
@@ -172,7 +222,7 @@
     import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
     export default {
-        props: ['sessions', 'trainee'],
+        props: ['sessions', 'trainee', 'cities', 'marital_statuses', 'educational_levels', 'trainee_groups'],
 
         components: {
             AppLayout,
@@ -191,6 +241,13 @@
         },
         data() {
             return {
+                lang: (this.$t('words.edit') == "Edit") ? 'en':'ar',
+                editButton: {
+                    text: this.$t('words.edit'),
+                    editOption: false,
+                    inputClass: "mt-1 block w-full bg-gray-200",
+                    selectInputClass: "mt-1 block w-full border border-gray-200 bg-gray-200 py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none"
+                },
                 dropzoneOptionsIdentity: {
                     destroyDropzone: false,
                     url: route('back.trainees.attachments.identity', {trainee_id: this.trainee.id}),
@@ -215,6 +272,25 @@
             }
         },
         methods: {
+            editTrainee() {
+                if (!this.editButton.editOption) {
+                    this.editButton.editOption = true;
+                    this.editButton.inputClass = 'mt-1 block w-full bg-white';
+                    this.editButton.selectInputClass = "mt-1 block w-full border border-gray-200 bg-white py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none"
+                    this.editButton.text = this.$t('words.save');
+                } else {
+                this.$inertia.post(route('back.trainees.edit', this.trainee.id), {
+                            trainee: this.trainee,
+                    }).then(response => {
+                            this.editButton.editOption = false;
+                            this.editButton.inputClass = 'mt-1 block w-full bg-gray-200';
+                            this.editButton.selectInputClass = 'mt-1 block w-full border border-gray-200 bg-gray-200 py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none';
+                            this.editButton.text = this.$t('words.edit');
+                    }).catch(error => {
+                            throw error;
+                    })
+                }
+            },
             approveTrainee() {
                 if (confirm(this.$t('words.are-you-sure'))) {
                     this.$inertia.post(route('back.trainees.approve-user', {trainee_id: this.trainee.id}));

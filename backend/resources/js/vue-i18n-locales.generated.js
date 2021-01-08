@@ -1,5 +1,6 @@
 export default {
     "ar": {
+        "language": "ar",
         "email": "الريد الإكتروني",
         "password": "كلمة السر",
         "auth": {
@@ -389,6 +390,7 @@ export default {
         }
     },
     "en": {
+        "language": "en",
         "email": "Email",
         "password": "Password",
         "auth": {
