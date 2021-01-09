@@ -8,6 +8,7 @@ use App\Models\InboxMessage;
 use App\Models\MaritalStatus;
 use App\Models\SearchableLabels;
 use Laravel\Scout\Searchable;
+use App\Models\Back\TraineeGroup;
 use App\Models\User;
 use App\Scope\TeamScope;
 use App\Traits\HasUuid;
@@ -53,6 +54,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels
     ];
 
     protected $appends = [
+        'trainee_group_object',
         'identity_copy_url',
         'qualification_copy_url',
         'bank_account_copy_url',
@@ -224,5 +226,11 @@ class Trainee extends Model implements HasMedia, SearchableLabels
     public function getIsApprovedAttribute()
     {
         return (int) $this->status === Instructor::STATUS_APPROVED;
+    }
+
+    public function getTraineeGroupObjectAttribute() {
+
+        return $this->trainee_group[0];
+
     }
 }

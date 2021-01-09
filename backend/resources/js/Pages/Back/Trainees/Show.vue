@@ -11,48 +11,52 @@
 
             <div class="grid grid-cols-6 gap-6">
 
-                <div class="col-span-6 flex items-center justify-end bg-gray-50 text-right gap-6">
+                <div class="col-span-6 items-center justify-end bg-gray-50 text-right gap-6">
 
-                    <button @click="blockTrainee" class="flex items-center justify-start text-left float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right">
+                    <button @click="blockTrainee" class=" items-center justify-start text-left float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right">
                         {{ $t('words.block-trainee') }}
                     </button>
 
-                   <button v-if="!editButton.editOption" @click="editTrainee" class="flex items-center justify-start rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
+                   <button v-if="!editButton.editOption" @click="editTrainee" class=" items-center justify-end rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
                         {{ editButton.text }}
                     </button>
 
-                    <button v-else @click="editTrainee" class="flex items-center justify-start rounded-md px-4 py-2 bg-green-300 hover:bg-green-400 text-right">
+                    <button v-else @click="editTrainee" class=" items-center justify-end rounded-md px-4 py-2 bg-green-300 hover:bg-green-400 text-right">
                         {{ editButton.text }}
                     </button>
 
-                    <button v-if="editButton.editOption" @click="cancelEdit" class="flex items-center justify-start rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right">
+                    <button v-if="editButton.editOption" @click="cancelEdit" class=" items-center justify-end rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right">
                         {{ cancelButton.text }}
                     </button>
 
 
                     <button v-if="!trainee.user_id"
                             @click="openTraineeAccount"
-                            class="flex items-center justify-start rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
+                            class=" items-center justify-end rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
                         {{ $t('words.open-an-account') }}
                     </button>
                     <button v-if="trainee.is_pending_approval" @click="approveTrainee"
-                            class="flex items-center justify-start rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
+                            class=" items-center justify-end rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
                         {{ $t('words.approve-trainee') }}
                     </button>
                 </div>
 
+                <div v-if="!editButton.editOption" class="col-span-6 sm:col-span-2">
 
-                <div class="col-span-6 sm:col-span-2">
+                    <jet-label for="trainee_group_name" :value="$t('words.group-name')" />
+                    <jet-input id="group-name" type="text" :class="editButton.inputClass" v-model="trainee.trainee_group_object.name" autocomplete="off" :disabled="!editButton.editOption" />
 
-                    <div class="col-span-4 sm:col-span-4">
+                </div>
+
+                <div v-else class="col-span-6 sm:col-span-2">
                             <jet-label for="trainee_group_name" :value="$t('words.group-name')" />
-                            <select-trainee-group class="mt-2"
+                            <select-trainee-group
+                                                class="mt-1.5"
+                                                  :selectedItem="trainee.trainee_group_object"
                                                   @input="selectGroupName"
-                                                  :v-model="trainee.trainee_group[0].name_selectable"
-                           :disabled="!editButton.editOption"/>
-                    </div>
-
-
+                                                  v-model="trainee.trainee_group_object_new"
+                                                  :disabled="!editButton.editOption"
+                            />
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
@@ -248,6 +252,7 @@
     import 'vue2-dropzone/dist/vue2Dropzone.min.css'
     import SelectTraineeGroup from "@/Components/SelectTraineeGroup";
 
+
     export default {
         props: ['sessions', 'trainee', 'cities', 'marital_statuses', 'educational_levels', 'trainee_groups', 'trainee_group_trainees'],
 
@@ -304,7 +309,9 @@
         },
         methods: {
             selectGroupName(input) {
+
                 this.trainee.trainee_group_name = input.name;
+
             },
             blockTrainee() {
                     this.$inertia.get(route('back.trainees.block', {trainee_id: this.trainee.id}));
@@ -317,7 +324,7 @@
                             window.location.reload();
             },
             editTrainee() {
-                console.log(this.trainee);
+                console.log(this.trainee.trainee_group_object);
                 if (!this.editButton.editOption) {
                     this.editButton.editOption = true;
                     this.editButton.inputClass = 'mt-1 block w-full bg-white';

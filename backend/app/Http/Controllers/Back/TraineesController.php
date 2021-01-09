@@ -375,6 +375,13 @@ class TraineesController extends Controller
             ]
         );
 
+        // if (isset($traineeRequest['trainee_group_name'])) {
+        //     $group = TraineeGroup::firstOrCreate([
+        //         'name' => $traineeRequest['trainee_group_name'],
+        //     ]);
+        //     $group->trainees()->attach([$trainee->id]);
+        // }
+
         return redirect()->route('back.trainees.show', $trainee_id);
     }
 

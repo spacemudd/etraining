@@ -78,7 +78,7 @@
                             if (i === undefined) continue;
 
                             let value = arr[i][this.settings.labelField];
-                            if (value === str) {
+                            if (value === str || str === this.selectedItem.name) {
                                 shouldHide = true;
                             }
                         }
