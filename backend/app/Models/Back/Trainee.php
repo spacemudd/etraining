@@ -49,6 +49,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels
         'phone',
         'phone_additional',
         'name_selectable',
+        'deleted_remark',
     ];
 
     protected $appends = [

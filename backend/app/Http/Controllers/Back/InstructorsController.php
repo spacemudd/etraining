@@ -273,4 +273,11 @@ class InstructorsController extends Controller
 
         return redirect()->route('back.instructors.show', $instructor->id);
     }
+
+    public function block(Request $request, $instructor_id)
+    {
+        $instructor = Instructor::findOrFail($instructor_id);
+        $instructor->delete();
+        return redirect()->route('back.instructors.index');
+    }
 }

@@ -1,6 +1,5 @@
 export default {
     "ar": {
-        "language": "ar",
         "email": "الريد الإكتروني",
         "password": "كلمة السر",
         "auth": {
@@ -162,6 +161,7 @@ export default {
             }
         },
         "words": {
+            "language": "ar",
             "email": "البريد الإكتروني",
             "password": "كلمة السر",
             "dashboard": "لوحة التحكم",
@@ -386,11 +386,13 @@ export default {
             "trainee": "متدرب",
             "instructor-singular": "مدرب",
             "course": "دورة",
-            "no-records-have-been-found": "لا توجد نتائج بحث"
+            "no-records-have-been-found": "لا توجد نتائج بحث",
+            "block-trainee": "إيقاف المتدرب",
+            "block-instructor": "إيقاف المدرب",
+            "delete-remark": "ملاحظة الإيقاف"
         }
     },
     "en": {
-        "language": "en",
         "email": "Email",
         "password": "Password",
         "auth": {
@@ -521,6 +523,7 @@ export default {
             "attributes": []
         },
         "words": {
+            "language": "en",
             "email": "Email",
             "password": "Password",
             "dashboard": "Dashboard",
@@ -744,7 +747,10 @@ export default {
             "trainee": "Trainee",
             "instructor-singular": "Instructor",
             "course": "Course",
-            "no-records-have-been-found": "No records have been found"
+            "no-records-have-been-found": "No records have been found",
+            "block-trainee": "Block Trainee",
+            "block-instructor": "Block Instructor",
+            "delete-remark": "Delete Remark"
         }
     }
 }

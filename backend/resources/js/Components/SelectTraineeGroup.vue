@@ -15,7 +15,7 @@
 </style>
 
 <template>
-    <selectize ref="groupName" id="group" v-model="selected" :settings="settings" :required="required"></selectize>
+    <selectize ref="groupName" id="group" v-model="selected" :settings="settings" :required="required" :disabled="disabled"></selectize>
 </template>
 
 <script>
@@ -30,6 +30,9 @@
                 type: Object,
                 required: false,
                 default: () => {},
+            },disabled : {
+                type: Boolean,
+                default: false,
             },
             required: {
                 type: Boolean,

@@ -82,7 +82,7 @@ class TraineesController extends Controller
     public function show($id)
     {
         return Inertia::render('Back/Trainees/Show', [
-            'trainee' => Trainee::with(['educational_level', 'city', 'marital_status'])->findOrFail($id),
+            'trainee' => Trainee::with(['educational_level', 'city', 'marital_status', 'trainee_group'])->findOrFail($id),
             'trainee_groups' => TraineeGroup::get(),
             'cities' => City::orderBy('name_ar')->get(),
             'marital_statuses' => MaritalStatus::orderBy('order')->get(),
@@ -376,6 +376,27 @@ class TraineesController extends Controller
         );
 
         return redirect()->route('back.trainees.show', $trainee_id);
+    }
+
+    public function blockView($trainee_id) {
+
+        $trainee = Trainee::findOrFail($trainee_id);
+        return Inertia::render('Back/Trainees/Block', [
+            'trainee' => $trainee,
+        ]);
+
+    }
+
+    public function block(Request $request, $trainee_id)
+    {
+
+        $trainee = Trainee::findOrFail($trainee_id);
+        $trainee->update(
+            [
+                "deleted_remark" => $request->deleted_remark,
+            ]);
+        $trainee->delete();
+        return redirect()->route('back.trainees.index');
     }
 
 }

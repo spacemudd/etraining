@@ -105,6 +105,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('trainees/{trainee_id}/attachments/bank-account', [\App\Http\Controllers\Back\TraineesController::class, 'storeBankAccount'])->name('trainees.attachments.bank-account');
         Route::post('trainees/{trainee_id}/edit', [\App\Http\Controllers\Back\TraineesController::class, 'update'])->name('trainees.edit');
         Route::delete('trainees/{trainee_id}/attachments/bank-account', [\App\Http\Controllers\Back\TraineesController::class, 'deleteBankAccount'])->name('trainees.attachments.bank-account.destroy');
+        Route::get('trainees/{trainee_id}/block', [\App\Http\Controllers\Back\TraineesController::class, 'blockView'])->name('trainees.block');
+        Route::post('trainees/{trainee_id}/block', [\App\Http\Controllers\Back\TraineesController::class, 'block'])->name('trainees.block');
         Route::resource('trainees', \App\Http\Controllers\Back\TraineesController::class);
 
         Route::post('instructors/{instructor_id}/approve-user', [\App\Http\Controllers\Back\InstructorsController::class, 'approveUser'])->name('instructors.approve-user');
@@ -114,6 +116,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('instructors/{instructor_id}/attachments/cv-summary', [\App\Http\Controllers\Back\InstructorsController::class, 'storeCvSummary'])->name('instructors.attachments.cv-summary');
         Route::delete('instructors/{instructor_id}/attachments/cv-summary', [\App\Http\Controllers\Back\InstructorsController::class, 'deleteCvSummary'])->name('instructors.attachments.cv-summary.destroy');
         Route::post('instructors/{instructor_id}/edit', [\App\Http\Controllers\Back\InstructorsController::class, 'update'])->name('instructors.edit');
+        Route::delete('instructors/{instructor_id}/block', [\App\Http\Controllers\Back\InstructorsController::class, 'block'])->name('instructors.block');
         Route::resource('instructors', \App\Http\Controllers\Back\InstructorsController::class);
 
 

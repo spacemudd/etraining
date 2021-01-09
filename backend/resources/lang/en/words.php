@@ -227,4 +227,7 @@ return [
     'instructor-singular' => 'Instructor',
     'course' => 'Course',
     'no-records-have-been-found' => 'No records have been found',
+    'block-trainee' => 'Block Trainee',
+    'block-instructor' => 'Block Instructor',
+    'delete-remark' => "Delete Remark",
 ];

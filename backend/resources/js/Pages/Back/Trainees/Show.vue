@@ -10,7 +10,12 @@
             ></breadcrumb-container>
 
             <div class="grid grid-cols-6 gap-6">
+
                 <div class="col-span-6 flex items-center justify-end bg-gray-50 text-right gap-6">
+
+                    <button @click="blockTrainee" class="flex items-center justify-start text-left float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right">
+                        {{ $t('words.block-trainee') }}
+                    </button>
 
                    <button v-if="!editButton.editOption" @click="editTrainee" class="flex items-center justify-start rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
                         {{ editButton.text }}
@@ -24,6 +29,7 @@
                         {{ cancelButton.text }}
                     </button>
 
+
                     <button v-if="!trainee.user_id"
                             @click="openTraineeAccount"
                             class="flex items-center justify-start rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
@@ -35,9 +41,25 @@
                     </button>
                 </div>
 
+
                 <div class="col-span-6 sm:col-span-2">
+
+                    <div class="col-span-4 sm:col-span-4">
+                            <jet-label for="trainee_group_name" :value="$t('words.group-name')" />
+                            <select-trainee-group class="mt-2"
+                                                  @input="selectGroupName"
+                                                  :v-model="trainee.trainee_group[0].name_selectable"
+                           :disabled="!editButton.editOption"/>
+                    </div>
+
+
+                </div>
+
+                <div class="col-span-6 sm:col-span-2">
+
                     <jet-label for="name" :value="$t('words.name')" />
                     <jet-input id="name" type="text" :class="editButton.inputClass" v-model="trainee.name" autocomplete="off" :disabled="!editButton.editOption" />
+
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
@@ -224,9 +246,10 @@
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
     import VueDropzone from 'vue2-dropzone'
     import 'vue2-dropzone/dist/vue2Dropzone.min.css'
+    import SelectTraineeGroup from "@/Components/SelectTraineeGroup";
 
     export default {
-        props: ['sessions', 'trainee', 'cities', 'marital_statuses', 'educational_levels', 'trainee_groups'],
+        props: ['sessions', 'trainee', 'cities', 'marital_statuses', 'educational_levels', 'trainee_groups', 'trainee_group_trainees'],
 
         components: {
             AppLayout,
@@ -242,6 +265,7 @@
             CompanyContractsPagination,
             BreadcrumbContainer,
             VueDropzone,
+            SelectTraineeGroup,
         },
         data() {
             return {
@@ -279,6 +303,12 @@
             }
         },
         methods: {
+            selectGroupName(input) {
+                this.trainee.trainee_group_name = input.name;
+            },
+            blockTrainee() {
+                    this.$inertia.get(route('back.trainees.block', {trainee_id: this.trainee.id}));
+            },
             cancelEdit() {
                             this.editButton.editOption = false;
                             this.editButton.inputClass = 'mt-1 block w-full bg-gray-200';
@@ -287,6 +317,7 @@
                             window.location.reload();
             },
             editTrainee() {
+                console.log(this.trainee);
                 if (!this.editButton.editOption) {
                     this.editButton.editOption = true;
                     this.editButton.inputClass = 'mt-1 block w-full bg-white';

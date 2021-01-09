@@ -12,6 +12,11 @@
             <div class="grid grid-cols-6 gap-6">
 
                 <div class="col-span-6 flex items-center justify-end bg-gray-50 text-right gap-6">
+
+                    <button @click="blockInstructor" class="flex items-center justify-start text-left float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right">
+                        {{ $t('words.block-instructor') }}
+                    </button>
+
                     <button v-if="!editButton.editOption" @click="editInstructor" class="flex items-center justify-start rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
                         {{ editButton.text }}
                     </button>
@@ -199,6 +204,11 @@
             }
         },
         methods: {
+            blockInstructor() {
+                if (confirm(this.$t('words.are-you-sure'))) {
+                    this.$inertia.delete(route('back.instructors.block', {instructor_id: this.instructor.id}));
+                }
+            },
             cancelEdit() {
                             this.editButton.editOption = false;
                             this.editButton.inputClass = 'mt-1 block w-full bg-gray-200';
