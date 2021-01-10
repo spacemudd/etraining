@@ -230,7 +230,9 @@ class Trainee extends Model implements HasMedia, SearchableLabels
 
     public function getTraineeGroupObjectAttribute() {
 
-        return $this->trainee_group[0];
+        if( isset($this->trainee_group[0])) {
+            return $this->trainee_group[0];
+        }
 
     }
 }

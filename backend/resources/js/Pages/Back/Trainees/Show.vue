@@ -54,7 +54,7 @@
                                                 class="mt-1.5"
                                                   :selectedItem="trainee.trainee_group_object"
                                                   @input="selectGroupName"
-                                                  v-model="trainee.trainee_group_object_new"
+                                                  v-model="trainee.trainee_group_object"
                                                   :disabled="!editButton.editOption"
                             />
                 </div>
@@ -274,6 +274,10 @@
         },
         data() {
             return {
+                new_trainee_group: {
+                    name: '',
+                    id: '',
+                },
                 cancelButton: {
                     text: this.$t('words.cancel'),
                 },
@@ -305,6 +309,11 @@
                     thumbnailWidth: 150,
                     maxFilesize: 20,
                 },
+            }
+        },
+        mounted() {
+            if(!this.trainee.trainee_group_object) {
+                this.trainee.trainee_group_object = this.new_trainee_group;
             }
         },
         methods: {

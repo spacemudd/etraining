@@ -375,12 +375,39 @@ class TraineesController extends Controller
             ]
         );
 
-        // if (isset($traineeRequest['trainee_group_name'])) {
-        //     $group = TraineeGroup::firstOrCreate([
-        //         'name' => $traineeRequest['trainee_group_name'],
-        //     ]);
-        //     $group->trainees()->attach([$trainee->id]);
-        // }
+
+        if(isset($request->trainee['trainee_group_object'])) {
+            if(isset($trainee->trainee_group_object)) {
+                if($trainee->trainee_group_object->name != $request->trainee['trainee_group_object']['name']) {
+
+                    $group = TraineeGroup::firstOrCreate([
+                        'name' => $trainee->trainee_group_object->name,
+                    ]);
+
+                    $group->trainees()->detach([$trainee_id]);
+
+                    $group = TraineeGroup::firstOrCreate([
+                        'name' => $request->trainee['trainee_group_object']['name'],
+                    ]);
+
+                    $group->trainees()->attach([$trainee_id]);
+                }
+            } else {
+                $group = TraineeGroup::firstOrCreate([
+                    'name' => $request->trainee['trainee_group_object']['name'],
+                ]);
+                $group->trainees()->attach([$trainee_id]);
+            }
+        } else {
+            return "Entered";
+            if(isset($trainee->trainee_group_object)) {
+                $group = TraineeGroup::firstOrCreate([
+                    'name' => $trainee->trainee_group_object->name,
+                ]);
+
+                $group->trainees()->detach([$trainee_id]);
+            }
+        }
 
         return redirect()->route('back.trainees.show', $trainee_id);
     }
