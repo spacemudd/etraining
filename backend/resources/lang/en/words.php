@@ -230,4 +230,11 @@ return [
     'block-trainee' => 'Block Trainee',
     'block-instructor' => 'Block Instructor',
     'delete-remark' => "Delete Remark",
+    'active' => 'Active',
+    'blocked-instructors' => 'Blocked Instructors',
+    'blocked-trainees' => 'Blocked Trainees',
+    'blocked' => 'Blocked',
+    'would-you-like-unblock-this-user' => "Would you like to unblock this user?",
+    'unblock' => "Unblock",
+    "no-file-available" => "No File Available",
 ];

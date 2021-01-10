@@ -21,7 +21,7 @@
                 <ion-icon name="mail-outline" class="w-5 h-5"></ion-icon>
             </template>
             <template #title>
-                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.messages') }} <span v-if="$page.user.inbox_messages_count" class="bg-red-500 rounded p-1 text-white">{{ $page.user.inbox_messages_count }}</span></span>
+                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.messages') }} <span v-if="$page.props.user.inbox_messages_count" class="bg-red-500 rounded p-1 text-white">{{ $page.props.user.inbox_messages_count }}</span></span>
             </template>
         </sidebar-link>
     </ul>

@@ -389,7 +389,14 @@ export default {
             "no-records-have-been-found": "لا توجد نتائج بحث",
             "block-trainee": "إيقاف المتدرب",
             "block-instructor": "إيقاف المدرب",
-            "delete-remark": "ملاحظة الإيقاف"
+            "delete-remark": "ملاحظة الإيقاف",
+            "active": "الحالي",
+            "blocked-instructors": "المدربين الموقوفين",
+            "blocked-trainees": "المتدربين الموقوفين",
+            "blocked": "موقوف",
+            "would-you-like-unblock-this-user": "هل ترغب في فك الحظر عن هذا المستخدم؟",
+            "unblock": "فك الحظر",
+            "no-file-available": "لا يوجد ملف متاح"
         }
     },
     "en": {
@@ -750,7 +757,14 @@ export default {
             "no-records-have-been-found": "No records have been found",
             "block-trainee": "Block Trainee",
             "block-instructor": "Block Instructor",
-            "delete-remark": "Delete Remark"
+            "delete-remark": "Delete Remark",
+            "active": "Active",
+            "blocked-instructors": "Blocked Instructors",
+            "blocked-trainees": "Blocked Trainees",
+            "blocked": "Blocked",
+            "would-you-like-unblock-this-user": "Would you like to unblock this user?",
+            "unblock": "Unblock",
+            "no-file-available": "No File Available"
         }
     }
 }

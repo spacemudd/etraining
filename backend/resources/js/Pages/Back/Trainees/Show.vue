@@ -158,7 +158,7 @@
                 <div class="col-span-6 sm:col-span-6">
                     <jet-label for="name" :value="$t('words.status')" />
                     <p>
-                        <span v-if="trainee.is_pending_uploading_files" class="text-sm inline-block mt-2 p-1 px-2 bg-red-300 rounded-lg">
+                        <span v-if="trainee.is_pending_uploading_files" class="text-sm inline-block mt-2 p-1 px-2 bg-blue-300 rounded-lg">
                             {{ $t('words.incomplete-application') }}
                         </span>
 

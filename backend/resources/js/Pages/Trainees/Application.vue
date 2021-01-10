@@ -167,6 +167,7 @@ export default {
             axios.post(route('api.register.trainees.upload-cv'), this.formData)
                 .then(response => {
                     this.is_pending_approval = true;
+                    window.location.reload();
                 });
 
         },

@@ -37,6 +37,7 @@ class TraineesController extends Controller
     {
         return Inertia::render('Back/Trainees/Index', [
             'trainees' => Trainee::with('company')->latest()->paginate(20),
+            'blocked_trainees' => Trainee::with('company')->onlyTrashed()->latest()->paginate(20),
         ]);
     }
 
@@ -419,6 +420,24 @@ class TraineesController extends Controller
             'trainee' => $trainee,
         ]);
 
+    }
+
+    public function showBlocked($id)
+    {
+        return Inertia::render('Back/Trainees/ShowBlocked', [
+            'trainee' => Trainee::with(['educational_level', 'city', 'marital_status', 'trainee_group'])->onlyTrashed()->findOrFail($id),
+            'trainee_groups' => TraineeGroup::get(),
+            'cities' => City::orderBy('name_ar')->get(),
+            'marital_statuses' => MaritalStatus::orderBy('order')->get(),
+            'educational_levels' => EducationalLevel::orderBy('order')->get(),
+        ]);
+    }
+
+
+    public function unblock(Request $request, $trainee_id)
+    {
+        $trainee = Trainee::onlyTrashed()->findOrFail($trainee_id)->restore();
+        return redirect()->route('back.trainees.show', $trainee_id);
     }
 
     public function block(Request $request, $trainee_id)

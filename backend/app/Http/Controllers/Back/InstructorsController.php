@@ -24,6 +24,7 @@ class InstructorsController extends Controller
     {
         return Inertia::render('Back/Instructors/Index', [
             'instructors' => Instructor::paginate(20),
+            'blocked_instructors' => Instructor::onlyTrashed()->paginate(20),
         ]);
     }
 
@@ -74,6 +75,13 @@ class InstructorsController extends Controller
         ]);
     }
 
+    public function showBlocked($id)
+    {
+        return Inertia::render('Back/Instructors/ShowBlocked', [
+            'instructor' => Instructor::onlyTrashed()->with('city')->findOrFail($id),
+            'cities' => City::orderBy('name_ar')->get()
+        ]);
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -279,5 +287,11 @@ class InstructorsController extends Controller
         $instructor = Instructor::findOrFail($instructor_id);
         $instructor->delete();
         return redirect()->route('back.instructors.index');
+    }
+
+    public function unblock(Request $request, $instructor_id)
+    {
+        $instructor = Instructor::onlyTrashed()->findOrFail($instructor_id)->restore();
+        return redirect()->route('back.instructors.show', $instructor_id);
     }
 }

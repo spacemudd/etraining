@@ -231,4 +231,11 @@ return [
     'block-trainee' => 'إيقاف المتدرب',
     'block-instructor' => 'إيقاف المدرب',
     'delete-remark' => "ملاحظة الإيقاف",
+    'active' => 'الحالي',
+    'blocked-instructors' => 'المدربين الموقوفين',
+    'blocked-trainees' => 'المتدربين الموقوفين',
+    'blocked' => 'موقوف',
+    'would-you-like-unblock-this-user' => "هل ترغب في فك الحظر عن هذا المستخدم؟",
+    'unblock' => "فك الحظر",
+    "no-file-available" => "لا يوجد ملف متاح",
 ];

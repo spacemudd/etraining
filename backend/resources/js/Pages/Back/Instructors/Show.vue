@@ -11,30 +11,30 @@
 
             <div class="grid grid-cols-6 gap-6">
 
-                <div class="col-span-6 flex items-center justify-end bg-gray-50 text-right gap-6">
+                <div class="col-span-6 items-center justify-end bg-gray-50 text-right gap-6">
 
-                    <button @click="blockInstructor" class="flex items-center justify-start text-left float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right">
+                    <button @click="blockInstructor" class=" items-center justify-start text-left float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right">
                         {{ $t('words.block-instructor') }}
                     </button>
 
-                    <button v-if="!editButton.editOption" @click="editInstructor" class="flex items-center justify-start rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
+                    <button v-if="!editButton.editOption" @click="editInstructor" class=" items-center justify-end rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
                         {{ editButton.text }}
                     </button>
 
-                    <button v-else @click="editInstructor" class="flex items-center justify-start rounded-md px-4 py-2 bg-green-300 hover:bg-green-400 text-right">
+                    <button v-else @click="editInstructor" class=" items-center justify-end rounded-md px-4 py-2 bg-green-300 hover:bg-green-400 text-right">
                         {{ editButton.text }}
                     </button>
 
-                    <button v-if="editButton.editOption" @click="cancelEdit" class="flex items-center justify-start rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right">
+                    <button v-if="editButton.editOption" @click="cancelEdit" class=" items-center justify-end rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right">
                         {{ cancelButton.text }}
                     </button>
 
 
-                    <button v-if="!instructor.user_id" @click="openInstructorAccount" class="flex items-center justify-start rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
+                    <button v-if="!instructor.user_id" @click="openInstructorAccount" class=" items-center justify-end rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
                         {{ $t('words.open-an-account') }}
                     </button>
 
-                    <button v-if="instructor.is_pending_approval" @click="approveInstructor" class="flex items-center justify-start rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
+                    <button v-if="instructor.is_pending_approval" @click="approveInstructor" class=" items-center justify-end rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
                         {{ $t('words.approve-instructor') }}
                     </button>
                 </div>
@@ -79,7 +79,7 @@
                 <div class="col-span-6 sm:col-span-6">
                     <jet-label for="name" :value="$t('words.status')" />
                     <p>
-                        <span v-if="instructor.is_pending_uploading_files" class="text-sm inline-block mt-2 p-1 px-2 bg-red-300 rounded-lg">
+                        <span v-if="instructor.is_pending_uploading_files" class="text-sm inline-block mt-2 p-1 px-2 bg-blue-300 rounded-lg">
                             {{ $t('words.incomplete-application') }}
                         </span>
 
