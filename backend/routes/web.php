@@ -157,8 +157,11 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
     // For trainees
     Route::prefix('trainees')->name('trainees.')->group(function() {
+
+        Route::get('/courses/{course_id}/certificate', [\App\Http\Controllers\Trainees\CoursesController::class, 'generateCertificate'])->name('courses.generate-certificate');
         Route::get('/courses/{course_id}/training-package', [\App\Http\Controllers\Teaching\CoursesController::class, 'trainingPackage'])->name('courses.training-package');
         Route::resource('courses', \App\Http\Controllers\Trainees\CoursesController::class);
+
     });
 });
 

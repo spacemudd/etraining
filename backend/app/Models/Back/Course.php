@@ -2,6 +2,7 @@
 
 namespace App\Models\Back;
 
+use App\Models\Back\CourseBatch;
 use App\Models\SearchableLabels;
 use App\Scope\TeamScope;
 use App\Traits\HasUuid;
@@ -49,6 +50,7 @@ class Course extends Model implements HasMedia, SearchableLabels
         'is_approved',
         'resource_label',
         'resource_type',
+        'can_show_certificate',
     ];
 
     protected static function boot(): void
@@ -161,6 +163,24 @@ class Course extends Model implements HasMedia, SearchableLabels
     public function getResourceTypeAttribute(): string
     {
         return trans('words.course');
+    }
+
+    public function getCanShowCertificateAttribute() {
+
+        $can_show_certificate = true;
+
+        $course_batches = CourseBatch::where('course_id', $this->id)->get()->toArray();
+
+        foreach ($course_batches as $course_batch) {
+            if(strtotime($course_batch['ends_at']) <= time()) {
+                continue;
+            } else {
+                $can_show_certificate = false;
+                break;
+            }
+        }
+
+        return $can_show_certificate;
     }
 }
 

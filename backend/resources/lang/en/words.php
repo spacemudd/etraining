@@ -237,4 +237,5 @@ return [
     'would-you-like-unblock-this-user' => "Would you like to unblock this user?",
     'unblock' => "Unblock",
     "no-file-available" => "No File Available",
+    'download-certificate' => "Download Certificate",
 ];

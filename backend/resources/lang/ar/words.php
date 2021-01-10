@@ -238,4 +238,5 @@ return [
     'would-you-like-unblock-this-user' => "هل ترغب في فك الحظر عن هذا المستخدم؟",
     'unblock' => "فك الحظر",
     "no-file-available" => "لا يوجد ملف متاح",
+    'download-certificate' => "تحميل الشهادة",
 ];

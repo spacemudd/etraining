@@ -42,6 +42,22 @@
                     <jet-label for="description" :value="$t('words.description')" />
                     <jet-textarea id="description" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.description" autocomplete="off" disabled />
                 </div>
+
+                <div v-if="!course.can_show_certificate" class="col-span-6 sm:col-span-2">
+
+                        <button @click="generateCertificate" class="flex items-center justify-start rounded-md px-4 py-2 bg-gray-300 text-right" :disabled="!course.can_show_certificate">
+                            {{ $t('words.download-certificate') }}
+                        </button>
+                </div>
+
+                <div v-else class="col-span-6 sm:col-span-2">
+
+                    <a :href="route('trainees.courses.generate-certificate',{course_id: course.id})">
+                        <button @click="generateCertificate" class="flex items-center justify-start rounded-md px-4 py-2 bg-green-200 hover:bg-green-300 text-right" >
+                            {{ $t('words.download-certificate') }}
+                        </button>
+                    </a>
+                </div>
             </div>
 
             <jet-section-border></jet-section-border>
@@ -66,6 +82,7 @@
                         <a class="bg-gray-700 text-white font-semibold p-2 text-center w-1/2 rounded my-1" target="_blank" :href="course.training_package_url">{{ $t('words.download') }}</a>
                     </div>
                 </div>
+
             </div>
         </div>
     </app-layout>

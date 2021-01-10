@@ -396,7 +396,8 @@ export default {
             "blocked": "موقوف",
             "would-you-like-unblock-this-user": "هل ترغب في فك الحظر عن هذا المستخدم؟",
             "unblock": "فك الحظر",
-            "no-file-available": "لا يوجد ملف متاح"
+            "no-file-available": "لا يوجد ملف متاح",
+            "download-certificate": "تحميل الشهادة"
         }
     },
     "en": {
@@ -764,7 +765,8 @@ export default {
             "blocked": "Blocked",
             "would-you-like-unblock-this-user": "Would you like to unblock this user?",
             "unblock": "Unblock",
-            "no-file-available": "No File Available"
+            "no-file-available": "No File Available",
+            "download-certificate": "Download Certificate"
         }
     }
 }
