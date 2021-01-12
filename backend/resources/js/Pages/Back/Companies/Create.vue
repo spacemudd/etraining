@@ -32,7 +32,7 @@
                             ]">
                             <div class="col-span-2 sm:col-span-2">
                                 <jet-label for="name" :value="$t('words.'+fieldName)" />
-                                <jet-input id="name" type="text" class="mt-1 block w-full" v-model="form[fieldName]" autocomplete="off" :autofocus="fieldName==='name_ar'" />
+                                <jet-input :id="fieldName" :name="fieldName" type="text" class="mt-1 block w-full" v-model="form[fieldName]" autocomplete="off" :autofocus="fieldName==='name_ar'" />
                                 <jet-input-error :message="form.error(fieldName)" class="mt-2" />
                             </div>
                         </template>
