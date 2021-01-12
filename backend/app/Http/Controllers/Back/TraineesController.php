@@ -19,6 +19,7 @@ use App\Notifications\TraineeWelcomeNotification;
 use App\Services\RolesService;
 use App\Services\TraineesServices;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
@@ -442,13 +443,16 @@ class TraineesController extends Controller
 
     public function block(Request $request, $trainee_id)
     {
-
+        DB::beginTransaction();
         $trainee = Trainee::findOrFail($trainee_id);
-        $trainee->update(
-            [
-                "deleted_remark" => $request->deleted_remark,
+        $trainee->update([
+            'deleted_remark' => $request->deleted_remark,
             ]);
         $trainee->delete();
+        if ($trainee->user) {
+            $trainee->user->delete();
+        }
+        DB::commit();
         return redirect()->route('back.trainees.index');
     }
 
