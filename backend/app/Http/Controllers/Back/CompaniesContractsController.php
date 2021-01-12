@@ -170,9 +170,13 @@ class CompaniesContractsController extends Controller
             return MediaStream::create(Str::slug($contract->reference_number.'-'.now()->format('d-m-Y').'-scans.zip'))->addMedia($files);
         }
 
-        return redirect()->to($files->first()->getTemporaryUrl(now()->addMinutes(5), '', [
-            'ResponseContentType' => 'application/octet-stream',
-        ]));
+        if ($files->first()->driver === 's3') {
+            return redirect()->to($files->first()->getTemporaryUrl(now()->addMinutes(5), '', [
+                //'ResponseContentType' => 'application/octet-stream',
+            ]));
+        } else {
+            return response()->file($files->first()->getPath());
+        }
     }
 
     /**
