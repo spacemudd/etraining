@@ -239,4 +239,5 @@ return [
     'unblock' => "فك الحظر",
     "no-file-available" => "لا يوجد ملف متاح",
     'download-certificate' => "تحميل الشهادة",
+    'you-are-approved' => 'لقد تم إعتمادك',
 ];

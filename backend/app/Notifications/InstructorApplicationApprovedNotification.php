@@ -52,7 +52,7 @@ class InstructorApplicationApprovedNotification extends Notification implements 
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject(trans('words.welcome-to-ptc'))
+            ->subject(trans('words.welcome-to-ptc').' - '.trans('words.you-are-approved'))
             ->line(trans('words.your-application-has-been-approved'))
             ->action(trans('words.access-the-platform'), url('/'))
             ->salutation(trans('words.with-regards'));

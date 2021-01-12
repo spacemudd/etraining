@@ -238,4 +238,5 @@ return [
     'unblock' => "Unblock",
     "no-file-available" => "No File Available",
     'download-certificate' => "Download Certificate",
+    'you-are-approved' => 'You are approved',
 ];
