@@ -23,7 +23,7 @@ class RedirectToApplication
         }
 
         if (auth()->user()->trainee) {
-            if (auth() && optional(auth()->user())->trainee && ! optional(auth()->user()->trainee)->is_pending_approval) {
+            if (auth() && optional(auth()->user())->trainee && ! optional(auth()->user()->trainee)->is_approved) {
                 return redirect()->route('register.trainees.application');
             }
         }
