@@ -9,6 +9,7 @@ use App\Models\City;
 use App\Notifications\InstructorApplicationApprovedNotification;
 use App\Notifications\InstructorWelcomeNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Inertia\Inertia;
@@ -284,8 +285,14 @@ class InstructorsController extends Controller
 
     public function block(Request $request, $instructor_id)
     {
+        DB::beginTransaction();
         $instructor = Instructor::findOrFail($instructor_id);
         $instructor->delete();
+        if($instructor->user) {
+            $instructor->user->delete();
+        }
+        DB::commit();
+
         return redirect()->route('back.instructors.index');
     }
 
