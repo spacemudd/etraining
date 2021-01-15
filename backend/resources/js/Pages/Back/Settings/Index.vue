@@ -19,6 +19,10 @@
             ></breadcrumb-container>
 
             <div class="grid md:grid-cols-4 grid-cols-1 gap-6">
+                <inertia-link :href="route('back.settings.roles.index')" class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
+                    {{ $t('words.roles-settings') }}
+                </inertia-link>
+
                 <inertia-link :href="route('back.settings.trainees-application')" class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
                     {{ $t('words.trainee-application-settings') }}
                 </inertia-link>

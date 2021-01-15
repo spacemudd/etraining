@@ -240,4 +240,5 @@ return [
     "no-file-available" => "لا يوجد ملف متاح",
     'download-certificate' => "تحميل الشهادة",
     'you-are-approved' => 'لقد تم إعتمادك',
+    'roles-settings' => 'الصلاحيات',
 ];
