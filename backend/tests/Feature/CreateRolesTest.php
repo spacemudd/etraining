@@ -54,4 +54,13 @@ class CreateRolesTest extends TestCase
             }
         });
     }
+
+    public function test_admin_can_view_role()
+    {
+        $adminRole = Role::whereName($this->admin->currentTeam->id.'_admins')->first();
+
+        $this->actingAs($this->admin)
+            ->get(route('back.settings.roles.show', $adminRole->id))
+            ->assertSuccessful();
+    }
 }

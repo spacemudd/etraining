@@ -17,6 +17,7 @@ class Role extends \Spatie\Permission\Models\Role
         'display_name',
         'order',
         'role_description',
+        'can_manage_users',
     ];
 
     public $incrementing = false;
@@ -48,6 +49,15 @@ class Role extends \Spatie\Permission\Models\Role
         if (Str::contains($this->name, 'finance')) return __('words.finance-role-info');
         if (Str::contains($this->name, 'instructors')) return __('words.instructors-role-info');
         if (Str::contains($this->name, 'trainees')) return __('words.trainees-role-info');
+    }
+
+    public function getCanManageUsersAttribute()
+    {
+        if (Str::contains($this->name, 'admins')) return true;
+        if (Str::contains($this->name, 'finance')) return true;
+
+        if (Str::contains($this->name, 'instructors')) return false;
+        if (Str::contains($this->name, 'trainees')) return false;
     }
 
     /**

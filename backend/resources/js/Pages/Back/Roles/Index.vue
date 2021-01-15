@@ -31,7 +31,10 @@
                             </p>
                         </div>
                         <div>
-                            <inertia-link class="bg-blue-600 py-1 px-2 rounded text-white text-sm hover:bg-blue-800 mt-5 w-full text-center">
+                            <inertia-link
+                                :href="route('back.settings.roles.show', {id: role.id})"
+                                v-if="role.can_manage_users"
+                                class="bg-blue-600 py-1 px-2 rounded text-white text-sm hover:bg-blue-800 mt-5 w-full text-center">
                                 {{ $t('words.manage') }}
                             </inertia-link>
                         </div>

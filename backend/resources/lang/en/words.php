@@ -247,4 +247,5 @@ return [
     'instructors-role-info' => 'Having just the permissions related to providing courses',
     'trainees-role-info' => 'Having just the permissions to view their course material',
     'manage' => 'Manage',
+    'invite' => 'Invite',
 ];
