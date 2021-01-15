@@ -241,4 +241,6 @@ return [
     'download-certificate' => "تحميل الشهادة",
     'you-are-approved' => 'لقد تم إعتمادك',
     'roles-settings' => 'الصلاحيات',
+    'admins' => 'مدراء المعهد',
+    'roles' => 'المناصب',
 ];

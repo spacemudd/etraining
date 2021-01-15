@@ -399,7 +399,9 @@ export default {
             "no-file-available": "لا يوجد ملف متاح",
             "download-certificate": "تحميل الشهادة",
             "you-are-approved": "لقد تم إعتمادك",
-            "roles-settings": "الصلاحيات"
+            "roles-settings": "الصلاحيات",
+            "admins": "مدراء المعهد",
+            "roles": "المناصب"
         }
     },
     "en": {
@@ -769,7 +771,10 @@ export default {
             "unblock": "Unblock",
             "no-file-available": "No File Available",
             "download-certificate": "Download Certificate",
-            "you-are-approved": "You are approved"
+            "you-are-approved": "You are approved",
+            "roles-settings": "Roles settings",
+            "admins": "Center Admins",
+            "roles": "Roles"
         }
     }
 }

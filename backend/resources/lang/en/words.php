@@ -240,4 +240,6 @@ return [
     'download-certificate' => "Download Certificate",
     'you-are-approved' => 'You are approved',
     'roles-settings' => 'Roles settings',
+    'admins' => 'Center Admins',
+    'roles' => 'Roles',
 ];

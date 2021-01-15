@@ -28,6 +28,6 @@ class Role extends \Spatie\Permission\Models\Role
 
     public function getDisplayNameAttribute()
     {
-        return __('words.'.$this->name);
+        return __('words.'.Str::after($this->name, '_'));
     }
 }
