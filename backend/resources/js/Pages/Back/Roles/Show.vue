@@ -46,6 +46,11 @@
                                 {{ user.email }}
                             </div>
                         </td>
+                        <td class="border-t">
+                            <button @click.prevent="deleteUserPerma(user.id)" class="bg-red-500 text-white font-semibold p-2 text-center rounded my-1">
+                                {{ $t('words.delete') }}
+                            </button>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -72,7 +77,9 @@
             }
         },
         methods: {
-            //
+            deleteUserPerma(userId) {
+                this.$inertia.delete(route('back.settings.roles.users.delete', {role_id: this.role.id, user_id: userId}));
+            },
         },
     }
 </script>

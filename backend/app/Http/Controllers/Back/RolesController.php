@@ -79,4 +79,16 @@ class RolesController extends Controller
 
         return redirect()->route('back.settings.roles.show', $role->id);
     }
+
+    /**
+     *
+     * @param $role_id
+     * @param $user_id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function deleteUser($role_id, $user_id)
+    {
+        User::findOrFail($user_id)->delete();
+        return redirect()->route('back.settings.roles.show', $role_id);
+    }
 }
