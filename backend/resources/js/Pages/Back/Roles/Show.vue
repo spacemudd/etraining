@@ -47,9 +47,14 @@
                             </div>
                         </td>
                         <td class="border-t">
-                            <button @click.prevent="deleteUserPerma(user.id)" class="bg-red-500 text-white font-semibold p-2 text-center rounded my-1">
-                                {{ $t('words.delete') }}
-                            </button>
+                            <div class="flex justify-end">
+                                <button
+                                    v-if="user.id != $page.props.user.id"
+                                    @click.prevent="deleteUserPerma(user.id)"
+                                    class="bg-red-500 text-white font-semibold p-2 text-center rounded my-1 mx-3">
+                                    {{ $t('words.delete') }}
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 </table>
