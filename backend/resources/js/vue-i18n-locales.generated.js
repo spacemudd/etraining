@@ -397,7 +397,17 @@ export default {
             "would-you-like-unblock-this-user": "هل ترغب في فك الحظر عن هذا المستخدم؟",
             "unblock": "فك الحظر",
             "no-file-available": "لا يوجد ملف متاح",
-            "download-certificate": "تحميل الشهادة"
+            "download-certificate": "تحميل الشهادة",
+            "you-are-approved": "لقد تم إعتمادك",
+            "roles-settings": "الصلاحيات",
+            "admins": "مدراء المعهد",
+            "roles": "المناصب",
+            "admins-role-info": "لديهم كافة الصلاحيات على النظام",
+            "finance-role-info": "لديهم صلاحيات فقط لإتمام مهام المالية",
+            "instructors-role-info": "لديهم صلاحيات فقط لإتمام مهام التدريب",
+            "trainees-role-info": "لديهم صلاحيات فقط للإستطلاع على الدورات",
+            "manage": "إدارة",
+            "invite": "ارسل دعوة"
         }
     },
     "en": {
@@ -766,7 +776,17 @@ export default {
             "would-you-like-unblock-this-user": "Would you like to unblock this user?",
             "unblock": "Unblock",
             "no-file-available": "No File Available",
-            "download-certificate": "Download Certificate"
+            "download-certificate": "Download Certificate",
+            "you-are-approved": "You are approved",
+            "roles-settings": "Roles settings",
+            "admins": "Center Admins",
+            "roles": "Roles",
+            "admins-role-info": "Having all permissions available in the system",
+            "finance-role-info": "Having just the permissions related to finance",
+            "instructors-role-info": "Having just the permissions related to providing courses",
+            "trainees-role-info": "Having just the permissions to view their course material",
+            "manage": "Manage",
+            "invite": "Invite"
         }
     }
 }

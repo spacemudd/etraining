@@ -239,4 +239,13 @@ return [
     "no-file-available" => "No File Available",
     'download-certificate' => "Download Certificate",
     'you-are-approved' => 'You are approved',
+    'roles-settings' => 'Roles settings',
+    'admins' => 'Center Admins',
+    'roles' => 'Roles',
+    'admins-role-info' => 'Having all permissions available in the system',
+    'finance-role-info' => 'Having just the permissions related to finance',
+    'instructors-role-info' => 'Having just the permissions related to providing courses',
+    'trainees-role-info' => 'Having just the permissions to view their course material',
+    'manage' => 'Manage',
+    'invite' => 'Invite',
 ];

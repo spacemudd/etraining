@@ -240,4 +240,13 @@ return [
     "no-file-available" => "لا يوجد ملف متاح",
     'download-certificate' => "تحميل الشهادة",
     'you-are-approved' => 'لقد تم إعتمادك',
+    'roles-settings' => 'الصلاحيات',
+    'admins' => 'مدراء المعهد',
+    'roles' => 'المناصب',
+    'admins-role-info' => 'لديهم كافة الصلاحيات على النظام',
+    'finance-role-info' => 'لديهم صلاحيات فقط لإتمام مهام المالية',
+    'instructors-role-info' => 'لديهم صلاحيات فقط لإتمام مهام التدريب',
+    'trainees-role-info' => 'لديهم صلاحيات فقط للإستطلاع على الدورات',
+    'manage' => 'إدارة',
+    'invite' => 'ارسل دعوة',
 ];
