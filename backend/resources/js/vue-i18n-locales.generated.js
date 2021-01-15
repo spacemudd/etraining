@@ -401,7 +401,12 @@ export default {
             "you-are-approved": "لقد تم إعتمادك",
             "roles-settings": "الصلاحيات",
             "admins": "مدراء المعهد",
-            "roles": "المناصب"
+            "roles": "المناصب",
+            "admins-role-info": "لديهم كافة الصلاحيات على النظام",
+            "finance-role-info": "لديهم صلاحيات فقط لإتمام مهام المالية",
+            "instructors-role-info": "لديهم صلاحيات فقط لإتمام مهام التدريب",
+            "trainees-role-info": "لديهم صلاحيات فقط للإستطلاع على الدورات",
+            "manage": "إدارة"
         }
     },
     "en": {
@@ -774,7 +779,12 @@ export default {
             "you-are-approved": "You are approved",
             "roles-settings": "Roles settings",
             "admins": "Center Admins",
-            "roles": "Roles"
+            "roles": "Roles",
+            "admins-role-info": "Having all permissions available in the system",
+            "finance-role-info": "Having just the permissions related to finance",
+            "instructors-role-info": "Having just the permissions related to providing courses",
+            "trainees-role-info": "Having just the permissions to view their course material",
+            "manage": "Manage"
         }
     }
 }

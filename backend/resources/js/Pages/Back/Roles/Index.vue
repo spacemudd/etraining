@@ -19,10 +19,22 @@
                 ]"
             ></breadcrumb-container>
 
-            <div class="grid md:grid-cols-4 grid-cols-1 gap-6">
+            <div class="overflow-x-auto">
                 <div>
-                    <div v-for="role in roles">
-                        {{ role.display_name }}
+                    <div v-for="role in rolesOrdered"
+                         class="bg-white rounded shadow overflow-x-auto my-5 p-4 flex justify-between">
+                        <div>
+                            <p class="font-bold">({{ role.users_count }}) {{ role.display_name }}</p>
+                            <p class="text-sm text-gray-400 mt-2">
+                                <ion-icon name="alert-circle-outline" class="inline-block align-middle"></ion-icon>
+                                <span>{{ role.role_description }}</span>
+                            </p>
+                        </div>
+                        <div>
+                            <inertia-link class="bg-blue-600 py-1 px-2 rounded text-white text-sm hover:bg-blue-800 mt-5 w-full text-center">
+                                {{ $t('words.manage') }}
+                            </inertia-link>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -43,6 +55,11 @@
             BreadcrumbContainer,
         },
         props: ['roles'],
+        computed: {
+            rolesOrdered() {
+                return _.sortBy(this.roles, 'order');
+            }
+        },
         data() {
             return {
                 //

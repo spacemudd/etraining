@@ -12,7 +12,7 @@ class RolesController extends Controller
     public function index()
     {
         return Inertia::render('Back/Roles/Index', [
-            'roles' => Role::with('permissions')->get(),
+            'roles' => Role::withCount('users')->with('permissions')->get()->toArray(),
         ]);
     }
 }

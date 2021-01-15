@@ -242,4 +242,9 @@ return [
     'roles-settings' => 'Roles settings',
     'admins' => 'Center Admins',
     'roles' => 'Roles',
+    'admins-role-info' => 'Having all permissions available in the system',
+    'finance-role-info' => 'Having just the permissions related to finance',
+    'instructors-role-info' => 'Having just the permissions related to providing courses',
+    'trainees-role-info' => 'Having just the permissions to view their course material',
+    'manage' => 'Manage',
 ];
