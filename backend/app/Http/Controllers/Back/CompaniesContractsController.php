@@ -19,9 +19,12 @@ class CompaniesContractsController extends Controller
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function index($company_id)
     {
+        $this->authorize('view-company-contracts');
+
         if (request()->wantsJson()) {
             return CompanyContract::where('company_id', $company_id)
                 ->with(['instructors' => function($q) {
@@ -39,9 +42,12 @@ class CompaniesContractsController extends Controller
      *
      * @param $company_id
      * @return \Inertia\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function create($company_id)
     {
+        $this->authorize('create-company-contracts');
+
         return Inertia::render('Back/CompaniesContracts/Create', [
             'company' => Company::findOrFail($company_id),
         ]);
@@ -56,6 +62,8 @@ class CompaniesContractsController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create-company-contracts');
+
         $request->validate([
             'reference_number' => 'nullable|string|max:255',
             'contract_starts_at' => 'required|date',
@@ -125,6 +133,8 @@ class CompaniesContractsController extends Controller
      */
     public function update(Request $request, $company_id, $contract_id)
     {
+        $this->authorize('create-company-contracts');
+        
         $request->validate([
             'instructor_id' => 'nullable|exists:instructors,id',
         ]);

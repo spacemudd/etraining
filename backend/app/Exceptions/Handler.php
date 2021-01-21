@@ -45,8 +45,12 @@ class Handler extends ExceptionHandler
     {
         if (app()->bound('sentry') && $this->shouldReport($exception)) {
             app('sentry')->withScope(function (\Sentry\State\Scope $scope) use ($exception): void {
-                $scope->setTag('user_id', auth()->user()->id);
-                $scope->setTag('user_email', auth()->user()->email);
+                if (auth()->user()) {
+                    $scope->setTag('user_id', auth()->user()->id);
+                    $scope->setTag('user_email', auth()->user()->email);
+                } else {
+                    $scope->setTag('visitor', true);
+                }
                 app('sentry')->captureException($exception);
             });
         }

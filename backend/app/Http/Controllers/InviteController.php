@@ -22,6 +22,7 @@ class InviteController extends Controller
     public function show($invite_id)
     {
         $invite = Invite::findOrFail($invite_id);
+
         return view('invite.show', compact('invite'));
     }
 
@@ -33,8 +34,8 @@ class InviteController extends Controller
 
         DB::beginTransaction();
         $invite = Invite::findOrFail($invite_id);
-        $role = Role::findOrFail($invite->role_id);
         $team = Team::findOrFail($invite->team_id);
+        $role = Role::findOrFail($invite->role_id);
         $user = User::create([
             'name' => $invite->name,
             'email' => $invite->email,
@@ -44,7 +45,9 @@ class InviteController extends Controller
         $user->assignRole($role);
         $user->current_team_id = $team->id;
         $user->save();
+
         (new AddTeamMember())->add($user, $team, $user->email, 'admin');
+
         DB::commit();
 
         Auth::login($user);

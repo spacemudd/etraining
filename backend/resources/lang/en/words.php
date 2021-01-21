@@ -263,4 +263,5 @@ return [
     'invitation-to-system' => 'Invitation to eTraining system',
     'regards' => 'Regards',
     'woops-an-error-occurred' => 'Woops, an error occurred.',
+    'edit-permissions' => 'Edit permissions',
 ];

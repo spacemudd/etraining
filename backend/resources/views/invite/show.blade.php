@@ -15,12 +15,12 @@
 
             <div class="mt-4">
                 <x-jet-label value="{{ __('words.name') }}" />
-                <x-jet-input class="block mt-1 w-full disabled:bg-grey-200" type="name" name="name" value="{{ auth()->user()->name }}" disabled required />
+                <x-jet-input class="block mt-1 w-full disabled:bg-grey-200" type="name" name="name" value="{{ $invite->name }}" disabled required />
             </div>
 
             <div class="mt-4">
                 <x-jet-label value="{{ __('words.email') }}" />
-                <x-jet-input class="block mt-1 w-full disabled:bg-grey-200" type="email" name="email" value="{{ auth()->user()->email }}" disabled required />
+                <x-jet-input class="block mt-1 w-full disabled:bg-grey-200" type="email" name="email" value="{{ $invite->email }}" disabled required />
             </div>
 
             <div class="mt-4">

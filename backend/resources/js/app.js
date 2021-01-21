@@ -64,15 +64,15 @@ Vue.directive('can', function (el, binding) {
     return false;
 })
 
-// Vue.directive('can', function (el, binding) {
-//     let permissions = document.head.querySelector('meta[name="user-permissions"]');
-//
-//     if(permissions.content.indexOf(binding.value) == -1){
-//         el.style.display = 'none';
-//     }
-//
-//     return permissions.content.indexOf(binding.value) !== -1;
-// });
+Vue.directive('can', function (el, binding) {
+    let permissions = document.head.querySelector('meta[name="user-permissions"]');
+
+    if(permissions.content.indexOf(binding.value) == -1){
+        el.style.display = 'none';
+    }
+
+    return permissions.content.indexOf(binding.value) !== -1;
+});
 
 const app = document.getElementById('app');
 

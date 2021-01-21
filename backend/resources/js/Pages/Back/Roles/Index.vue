@@ -32,6 +32,7 @@
                         </div>
                         <div class="flex flex-col" v-if="role.can_manage_users">
                             <inertia-link
+                                v-can="'edit-permissions'"
                                 :href="route('back.settings.roles.permissions.index', {id: role.id})"
                                 style="min-width:120px;"
                                 class="bg-gray-600 py-1 px-2 rounded text-white text-sm hover:bg-gray-800 mt-2 w-full text-center">

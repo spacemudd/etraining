@@ -41,7 +41,7 @@
 
             <jet-section-border></jet-section-border>
 
-            <div class="grid grid-cols-1 md:grid-cols-6 gap-6 mt-2">
+            <div v-can="'view-company-contracts'" class="grid grid-cols-1 md:grid-cols-6 gap-6 mt-2">
                 <div class="md:col-span-2 sm:col-span-3">
                     <div class="px-4 sm:px-0">
                         <h3 class="text-lg font-medium text-gray-900">

@@ -265,4 +265,5 @@ return [
     'we-would-like-to-inform-you-that-you-have-been-invited-to-create-an-account' => 'نود ان نعلمك انه تم دعوتك لإنشاء حساب على منصة التدريب عن بعد',
     'regards' => 'مع تحياتنا',
     'woops-an-error-occurred' => 'يوجد خطأ في البيانات',
+    'edit-permissions' => 'تعديل الصلاحيات',
 ];

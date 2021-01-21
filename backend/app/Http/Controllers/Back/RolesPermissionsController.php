@@ -30,6 +30,8 @@ class RolesPermissionsController extends Controller
 
     public function attachPermission(Request $request)
     {
+        $this->authorize('edit-permissions');
+
         $request->validate([
             'role_id' => 'required|exists:roles,id',
             'permission_name' => 'required|exists:permissions,name',
@@ -47,6 +49,8 @@ class RolesPermissionsController extends Controller
 
     public function detachPermission(Request $request)
     {
+        $this->authorize('edit-permissions');
+
         $request->validate([
             'role_id' => 'required|exists:roles,id',
             'permission_name' => 'required|exists:permissions,name',
