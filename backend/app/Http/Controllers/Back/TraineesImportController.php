@@ -25,7 +25,7 @@ class TraineesImportController extends Controller
             'excel_file' => 'required',
         ]);
 
-        $tmpfname = request()->file('excel_file')->getPathName();
+        $tmpfname = request()->file('excel_file')->getRealPath();
         rename($tmpfname, $tmpfname .= '.tmp');
 
         $rows = Excel::import(new TraineesCsvImport(), $tmpfname);
