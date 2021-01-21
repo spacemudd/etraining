@@ -19,7 +19,7 @@ class TraineesCsvImport implements ToCollection
     public function collection(Collection $rows)
     {
         \DB::beginTransaction();
-        $company_id = Company::where('name_en', 'PTC')->firstOrFail()->id;
+        $company_id = Company::where('name_en', 'PBC')->firstOrFail()->id;
 
         foreach ($rows as $row) {
             if ($row[0] === 'FullName') {
