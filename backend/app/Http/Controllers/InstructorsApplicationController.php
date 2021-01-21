@@ -6,13 +6,13 @@ use App\Models\Back\RequiredTraineesFiles;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class TraineesApplicationController extends Controller
+class InstructorsApplicationController extends Controller
 {
     public function index()
     {
         $required_files = RequiredTraineesFiles::get();
 
-        return Inertia::render('Trainees/Application', [
+        return Inertia::render('Instructor/Application', [
             'required_files' => $required_files,
         ]);
     }
