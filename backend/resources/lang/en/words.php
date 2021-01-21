@@ -248,4 +248,5 @@ return [
     'trainees-role-info' => 'Having just the permissions to view their course material',
     'manage' => 'Manage',
     'invite' => 'Invite',
+    'import' => 'Import',
 ];

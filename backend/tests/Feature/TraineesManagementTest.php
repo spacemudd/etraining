@@ -465,4 +465,12 @@ class TraineesManagementTest extends TestCase
 
         Notification::assertSentTo($shafiqProfile->user, InstructorApplicationApprovedNotification::class);
     }
+
+    public function test_admin_can_import_users()
+    {
+        $admin = $this->user;
+        $this->actingAs($admin)
+            ->get(route('back.trainees.import'))
+            ->assertSuccessful();
+    }
 }

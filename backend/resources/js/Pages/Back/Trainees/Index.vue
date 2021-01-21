@@ -26,6 +26,9 @@
                     <!--        <option value="only">Only Trashed</option>-->
                     <!--    </select>-->
                     <!--</search-filter>-->
+                    <inertia-link class="btn-gray mx-3" :href="route('back.trainees.import')">
+                        <span>{{ $t('words.import') }}</span>
+                    </inertia-link>
                     <inertia-link class="btn-gray" :href="route('back.trainees.create')">
                         <span>{{ $t('words.new') }}</span>
                     </inertia-link>
@@ -67,12 +70,7 @@
                         </td>
                         <td class="border-t">
                             <inertia-link class="px-6 py-4 flex items-center" :href="route('back.trainees.show', trainees.id)" tabindex="-1">
-                                {{ trainees.address }}
-                            </inertia-link>
-                        </td>
-                        <td class="border-t">
-                            <inertia-link class="px-6 py-4 flex items-center" :href="route('back.trainees.show', trainees.id)" tabindex="-1">
-                                <span v-if="trainees.company">{{ trainees.company.name }}</span>
+                                <span v-if="trainees.company">{{ trainees.company.name_ar }}</span>
                             </inertia-link>
                         </td>
                         <td class="border-t w-px">
