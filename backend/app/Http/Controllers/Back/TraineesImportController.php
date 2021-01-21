@@ -25,10 +25,10 @@ class TraineesImportController extends Controller
             'excel_file' => 'required',
         ]);
 
-        $tmpfname = request()->file('excel_file')->getRealPath();
-        rename($tmpfname, $tmpfname .= '.tmp');
+        $path = request()->file('excel_file')->store('tmp');
+        $filepath = storage_path('app').'/'.$path.'.tmp';
 
-        $rows = Excel::import(new TraineesCsvImport(), $tmpfname);
+        $rows = Excel::import(new TraineesCsvImport(), $filepath);
 
         return response()->json([
             'success' => true,
