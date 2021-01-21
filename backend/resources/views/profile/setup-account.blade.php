@@ -14,8 +14,13 @@
             <hr class="border-1 mb-5">
 
             <div class="mt-4">
+                <x-jet-label value="{{ __('words.email') }}" />
+                <x-jet-input class="block mt-1 w-full" type="email" name="email" value="{{ auth()->user()->email }}" disabled required />
+            </div>
+
+            <div class="mt-4">
                 <x-jet-label value="{{ __('words.password') }}" />
-                <x-jet-input class="block mt-1 w-full" type="password" name="password" :value="old('password')" required />
+                <x-jet-input class="block mt-1 w-full" type="password" name="password" :value="old('password')" required autofocus />
             </div>
 
             <div class="flex items-center mt-4">
