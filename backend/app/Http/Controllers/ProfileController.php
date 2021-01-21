@@ -11,7 +11,7 @@ use Auth;
 class ProfileController extends Controller
 {
     // TODO: Make test & refactor.
-    
+
     /**
      *
      * @param $user_id

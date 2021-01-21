@@ -16,6 +16,7 @@ use App\Models\User;
 use App\Notifications\InstructorApplicationApprovedNotification;
 use App\Notifications\InstructorWelcomeNotification;
 use App\Notifications\TraineeApplicationApprovedNotification;
+use App\Notifications\TraineeSetupAccountNotification;
 use App\Notifications\TraineeWelcomeNotification;
 use App\Services\RolesService;
 use App\Services\TraineesServices;
@@ -295,6 +296,8 @@ class TraineesController extends Controller
             'password' => 'password',
             'password_confirmation' => 'password',
         ]);
+
+        Notification::send($user, new TraineeSetupAccountNotification());
 
         return redirect()->route('back.trainees.show', $trainee->id);
     }
