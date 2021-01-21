@@ -2,7 +2,6 @@
 
 namespace App\Imports;
 
-use App\Models\Back\Company;
 use App\Models\Back\Trainee;
 use App\Models\City;
 use App\Models\EducationalLevel;
@@ -12,6 +11,13 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 
 class TraineesCsvImport implements ToCollection
 {
+    private $company_id;
+
+    public function __construct($company_id)
+    {
+        $this->company_id = $company_id;
+    }
+
     /**
      * @param \Illuminate\Support\Collection $rows
      * @return mixed
@@ -20,8 +26,6 @@ class TraineesCsvImport implements ToCollection
     public function collection(Collection $rows)
     {
         \DB::beginTransaction();
-        $company_id = Company::where('name_en', 'PBC')->firstOrFail()->id;
-
         foreach ($rows as $row) {
             if ($row[0] === 'FullName') {
                 continue;
@@ -45,7 +49,7 @@ class TraineesCsvImport implements ToCollection
             ]);
 
             $trainee->team_id = auth()->user()->current_team_id;
-            $trainee->company_id = $company_id;
+            $trainee->company_id = $this->company_id;
             $trainee->save();
         }
         \DB::commit();
