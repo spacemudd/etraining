@@ -23,6 +23,10 @@ class RedirectToApplication
         }
 
         if (auth()->user()->trainee) {
+            if (auth()->user()->trainee->skip_uploading_id) {
+                return $next($request);
+            }
+
             if (auth() && optional(auth()->user())->trainee && ! optional(auth()->user()->trainee)->is_approved) {
                 return redirect()->route('register.trainees.application');
             }

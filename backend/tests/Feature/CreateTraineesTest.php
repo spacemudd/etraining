@@ -5,14 +5,12 @@ namespace Tests\Feature;
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Jetstream\AddTeamMember;
 use App\Actions\Jetstream\CreateTeam;
-use App\Models\Back\Instructor;
 use App\Models\Back\Trainee;
 use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\InboxMessage;
 use App\Models\MaritalStatus;
 use App\Models\User;
-use App\Notifications\InstructorWelcomeNotification;
 use App\Notifications\TraineeWelcomeNotification;
 use App\Services\RolesService;
 use Illuminate\Http\UploadedFile;
@@ -304,5 +302,22 @@ class CreateTraineesTest extends TestCase
             ->assertPropValue('messages', function($messages) use ($message) {
                 $this->assertEquals($message->body, $messages[0]['body']);
             });
+    }
+
+    public function test_trainee_redirected_to_dashboard_if_marked_to_skip_application()
+    {
+        // todo.
+        $trainee_input = $this->make_trainee();
+
+        $this->post(route('register.trainees'), $trainee_input);
+
+        $trainee_profile = Trainee::whereEmail($trainee_input['email'])->first();
+        $trainee_profile->skip_uploading_id = true;
+        $trainee_profile->save();
+
+        $trainee_user = $trainee_profile->user;
+        $this->actingAs($trainee_user)
+            ->get(route('register.trainees.application'))
+            ->assertRedirect();
     }
 }

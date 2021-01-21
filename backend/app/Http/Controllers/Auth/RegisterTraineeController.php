@@ -23,6 +23,10 @@ class RegisterTraineeController extends Controller
 
     public function show()
     {
+        if (auth()->user()->trainee->skip_uploading_id) {
+            return redirect(route('dashboard'));
+        }
+
         return view('auth.register-trainees');
     }
 

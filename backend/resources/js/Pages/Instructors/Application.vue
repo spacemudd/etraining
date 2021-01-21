@@ -140,7 +140,6 @@
                     .then(response => {
                         this.is_pending_approval = true;
                     });
-
             },
         }
 

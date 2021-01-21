@@ -407,7 +407,8 @@ export default {
             "instructors-role-info": "لديهم صلاحيات فقط لإتمام مهام التدريب",
             "trainees-role-info": "لديهم صلاحيات فقط للإستطلاع على الدورات",
             "manage": "إدارة",
-            "invite": "ارسل دعوة"
+            "invite": "ارسل دعوة",
+            "import": "إدخال"
         }
     },
     "en": {
@@ -786,7 +787,8 @@ export default {
             "instructors-role-info": "Having just the permissions related to providing courses",
             "trainees-role-info": "Having just the permissions to view their course material",
             "manage": "Manage",
-            "invite": "Invite"
+            "invite": "Invite",
+            "import": "Import"
         }
     }
 }
