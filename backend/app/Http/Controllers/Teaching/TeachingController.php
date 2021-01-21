@@ -12,11 +12,20 @@ class TeachingController extends Controller
 {
     public function dashboard()
     {
-        $ownedCourses = Course::responsibleToTeach()->pluck('id');
+        //$ownedCourses = Course::responsibleToTeach()->pluck('id');
+        //
+        //$sessions = CourseBatchSession::whereIn('id', $ownedCourses)->with(['course_batch' => function($q) {
+        //    $q->with(['course' => function($q) {
+        //        $q->responsibleToTeach()->with('instructor');
+        //    }]);
+        //}])->has('course_batch.course')
+        //    ->paginate(15);
 
-        $sessions = CourseBatchSession::whereIn('id', $ownedCourses)->with(['course_batch' => function($q) {
+        $ownedCourses = Course::pluck('id');
+
+        $sessions = CourseBatchSession::whereIn('course_id', $ownedCourses)->with(['course_batch' => function($q) {
             $q->with(['course' => function($q) {
-                $q->responsibleToTeach()->with('instructor');
+                $q->with('instructor');
             }]);
         }])->has('course_batch.course')
             ->paginate(15);

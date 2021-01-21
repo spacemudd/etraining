@@ -19,7 +19,8 @@ class CoursesController extends Controller
     {
         return Inertia::render('Teaching/Courses/Index', [
             'id' => auth()->user()->instructor->id,
-            'courses' => Course::responsibleToTeach()->with('instructor')->latest()->paginate(10),
+            //'courses' => Course::responsibleToTeach()->with('instructor')->latest()->paginate(10),
+            'courses' => Course::with('instructor')->latest()->paginate(10),
         ]);
     }
 
@@ -27,7 +28,8 @@ class CoursesController extends Controller
     public function show($course_id)
     {
         return Inertia::render('Teaching/Courses/Show', [
-            'course' => Course::responsibleToTeach()->findOrFail($course_id),
+            //'course' => Course::responsibleToTeach()->findOrFail($course_id),
+            'course' => Course::findOrFail($course_id),
         ]);
     }
 
