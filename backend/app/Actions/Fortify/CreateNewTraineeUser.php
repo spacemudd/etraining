@@ -28,6 +28,7 @@ class CreateNewTraineeUser implements CreatesNewUsers
     {
         Validator::make($input, [
             'trainee_id' => ['required'],
+            'phone' => ['nullable', 'string'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => $this->passwordRules(),
@@ -41,6 +42,7 @@ class CreateNewTraineeUser implements CreatesNewUsers
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
+            'phone' => $input['phone'],
         ]);
 
         $user->assignRole($role);

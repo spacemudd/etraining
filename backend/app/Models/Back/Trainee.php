@@ -7,6 +7,7 @@ use App\Models\EducationalLevel;
 use App\Models\InboxMessage;
 use App\Models\MaritalStatus;
 use App\Models\SearchableLabels;
+use Illuminate\Notifications\Notifiable;
 use Laravel\Scout\Searchable;
 use App\Models\Back\TraineeGroup;
 use App\Models\User;
@@ -26,6 +27,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels
     use SoftDeletes;
     use InteractsWithMedia;
     use Searchable;
+    use Notifiable;
 
     const SEARCHABLE_FIELDS = ['id', 'identity_number', 'phone', 'phone_additional', 'name', 'email'];
 
@@ -77,6 +79,16 @@ class Trainee extends Model implements HasMedia, SearchableLabels
                 $model->team_id = $model->team_id = auth()->user()->currentTeam()->first()->id;
             }
         });
+    }
+
+    /**
+     * Get the user's preferred locale.
+     *
+     * @return string
+     */
+    public function preferredLocale()
+    {
+        return optional($this->user)->locale;
     }
 
     public function company()
@@ -228,11 +240,15 @@ class Trainee extends Model implements HasMedia, SearchableLabels
         return (int) $this->status === Instructor::STATUS_APPROVED;
     }
 
-    public function getTraineeGroupObjectAttribute() {
-
+    public function getTraineeGroupObjectAttribute()
+    {
         if( isset($this->trainee_group[0])) {
             return $this->trainee_group[0];
         }
+    }
 
+    public function routeNotificationForClickSend()
+    {
+        return $this->phone;
     }
 }

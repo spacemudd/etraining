@@ -276,7 +276,7 @@ class InstructorsController extends Controller
         $instructor->approved_at = now();
         $instructor->save();
 
-        Notification::send($instructor->user, new InstructorApplicationApprovedNotification());
+        Notification::send($instructor->user, new TraineesController());
 
         Log::info('Instructor ID: '.$instructor->id.' has been approved by user: '.auth()->user()->email);
 

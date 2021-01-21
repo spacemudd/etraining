@@ -6,6 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\URL;
 use NotificationChannels\ClickSend\ClickSendChannel;
 
 class TraineeApplicationApprovedNotification extends Notification implements ShouldQueue
@@ -54,7 +56,7 @@ class TraineeApplicationApprovedNotification extends Notification implements Sho
         return (new MailMessage)
             ->subject(trans('words.welcome-to-ptc'))
             ->line(trans('words.your-application-has-been-approved'))
-            ->action(trans('words.access-the-platform'), url('/'))
+            ->action(trans('words.access-the-platform'), URL::temporarySignedRoute('setup-account', now()->addHours(72), $notifiable->user_id ?: $notifiable->id)) // Can be the Trainee model or User model.
             ->salutation(trans('words.with-regards'));
     }
 

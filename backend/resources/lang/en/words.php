@@ -249,4 +249,5 @@ return [
     'manage' => 'Manage',
     'invite' => 'Invite',
     'import' => 'Import',
+    'welcome-please-specify-a-password' => 'Welcome, please specify a password for your account.',
 ];

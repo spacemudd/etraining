@@ -250,4 +250,5 @@ return [
     'manage' => 'إدارة',
     'invite' => 'ارسل دعوة',
     'import' => 'إدخال',
+    'welcome-please-specify-a-password' => 'اهلاً بك، يرجى تحديد كلمة سر لحسابك',
 ];

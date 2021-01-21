@@ -15,6 +15,7 @@ use App\Models\Media;
 use App\Models\User;
 use App\Notifications\InstructorApplicationApprovedNotification;
 use App\Notifications\InstructorWelcomeNotification;
+use App\Notifications\TraineeApplicationApprovedNotification;
 use App\Notifications\TraineeWelcomeNotification;
 use App\Services\RolesService;
 use App\Services\TraineesServices;
@@ -290,6 +291,7 @@ class TraineesController extends Controller
             'trainee_id' => $trainee->id,
             'name' => $trainee->name,
             'email' => $trainee->email,
+            'phone' => $trainee->phone,
             'password' => 'password',
             'password_confirmation' => 'password',
         ]);
@@ -339,7 +341,7 @@ class TraineesController extends Controller
         $trainee->approved_at = now();
         $trainee->save();
 
-        Notification::send($trainee->user, new InstructorApplicationApprovedNotification());
+        Notification::send($trainee->user ?: $trainee, new TraineeApplicationApprovedNotification());
 
         Log::info('Trainee ID: '.$trainee->id.' has been approved by user: '.auth()->user()->email);
 
