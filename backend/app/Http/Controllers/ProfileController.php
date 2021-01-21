@@ -26,8 +26,8 @@ class ProfileController extends Controller
         $trainee = Trainee::find($user_id);
         if ($trainee) {
             $user = User::find($trainee->user_id);
+            Auth::login($user);
         }
-        Auth::login($user);
         return view('profile.setup-account');
     }
 
