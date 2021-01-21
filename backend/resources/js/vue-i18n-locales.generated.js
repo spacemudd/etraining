@@ -408,7 +408,14 @@ export default {
             "trainees-role-info": "لديهم صلاحيات فقط للإستطلاع على الدورات",
             "manage": "إدارة",
             "invite": "ارسل دعوة",
-            "import": "إدخال"
+            "import": "إدخال",
+            "welcome-please-specify-a-password": "اهلاً بك، يرجى تحديد كلمة سر لحسابك",
+            "manage-users": "إدارة المستخدمين",
+            "manage-permissions": "إدارة الصلاحيات",
+            "edit-companies": "تعديل الشركات",
+            "view-companies": "عرض الشركات",
+            "create-companies": "إنشاء شركات",
+            "delete-companies": "حذف شركات"
         }
     },
     "en": {
@@ -788,7 +795,14 @@ export default {
             "trainees-role-info": "Having just the permissions to view their course material",
             "manage": "Manage",
             "invite": "Invite",
-            "import": "Import"
+            "import": "Import",
+            "welcome-please-specify-a-password": "Welcome, please specify a password for your account.",
+            "manage-users": "Manage users",
+            "manage-permissions": "Manage permissions",
+            "edit-companies": "Edit companies",
+            "view-companies": "View companies",
+            "create-companies": "Create companies",
+            "delete-companies": "Delete companies"
         }
     }
 }

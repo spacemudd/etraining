@@ -63,6 +63,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('/settings/roles/{id}', [\App\Http\Controllers\Back\RolesController::class, 'show'])->name('settings.roles.show');
         Route::get('/settings/roles', [\App\Http\Controllers\Back\RolesController::class, 'index'])->name('settings.roles.index');
 
+        Route::post('/settings/roles/attach-permission', [\App\Http\Controllers\Back\RolesPermissionsController::class, 'attachPermission'])->name('settings.roles.attach-permission');
+        Route::post('/settings/roles/detach-permission', [\App\Http\Controllers\Back\RolesPermissionsController::class, 'detachPermission'])->name('settings.roles.detach-permission');
+        Route::get('/settings/roles/{id}/permissions', [\App\Http\Controllers\Back\RolesPermissionsController::class, 'index'])->name('settings.roles.permissions.index');
+
         Route::get('/settings/trainees-applications', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'index'])->name('settings.trainees-application');
         Route::get('/settings/trainees-applications/required-files', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'requiredFiles'])->name('settings.trainees-application.required-files');
         Route::post('/settings/trainees-applications/required-files', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'store'])->name('settings.trainees-application.required-files');

@@ -82,6 +82,8 @@ const i18n = new VueInternationalization({
     messages: Locale
 });
 
+const appName = lang === 'ar' ? 'منصة التدريب' : 'eTraining';
+
 new Vue({
     i18n,
     Store,
@@ -91,7 +93,7 @@ new Vue({
         vuexModuleName: 'wait',      // Vuex module name
     }),
     metaInfo: {
-        titleTemplate: (title) => title ? `${title} - eTraining` : 'eTraining'
+        titleTemplate: (title) => title ? `${title} - ${appName}` : `${appName}`
     },
     render: (h) =>
         h(InertiaApp, {
