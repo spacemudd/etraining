@@ -68,7 +68,7 @@ class TraineeSetupAccountNotification extends Notification implements ShouldQueu
      */
     public function getMessage($notifiable)
     {
-        return trans('words.your-application-has-been-approved').' '.url('/');
+        return trans('words.your-application-has-been-approved').' '.URL::temporarySignedRoute('setup-account', now()->addHours(72), $notifiable->user_id ?: $notifiable->id);
     }
 
     /**
