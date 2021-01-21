@@ -61,14 +61,15 @@ class InvitePeopleCommand extends Command
                 ]);
             } catch (\Exception $e) {
                 Log::info('Failed validation for user: '.$trainee->email);
+                continue;
                 throw $e;
             }
-
 
             try {
                 Notification::send($user, new TraineeSetupAccountNotification());
             } catch (\Exception $e) {
                 Log::info('Failed for user: '.$trainee->email);
+                continue;
                 throw $e;
             }
 
