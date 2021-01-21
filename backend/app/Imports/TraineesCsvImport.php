@@ -15,6 +15,7 @@ class TraineesCsvImport implements ToCollection
     /**
      * @param \Illuminate\Support\Collection $rows
      * @return mixed
+     * @throws \Throwable
      */
     public function collection(Collection $rows)
     {
