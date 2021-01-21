@@ -102,7 +102,6 @@
                     <button v-if="!this.isArchive" @click="showBlocked" :class="archiveBtn.class">
                         {{ archiveBtn.text }}
                     </button>
-
                     <button v-else @click="hideBlocked" :class="archiveBtn.class">
                         {{ archiveBtn.text }}
                     </button>
@@ -212,7 +211,7 @@
             return {
                 archiveBtn: {
                     text: this.$t('words.archive'),
-                    class: "items-center justify-start mr-3 ml-3 float-left px-3 py-2.5 bg-yellow-200 hover:bg-yellow-300 text-left"
+                    class: "rounded items-center justify-start mr-3 ml-3 float-left px-3 py-2.5 bg-yellow-200 hover:bg-yellow-300 text-left"
                 },
                 isArchive: false,
                 form: {
@@ -233,17 +232,17 @@
         methods: {
             reset() {
                 this.form = mapValues(this.form, () => null)
-            },showBlocked() {
-                console.log(this.blocked_instructors)
+            },
+            showBlocked() {
                 this.isArchive = true;
                 this.archiveBtn.text =  this.$t('words.active');
-                this.archiveBtn.class = "items-center justify-start mr-3 ml-3 float-left px-3 py-2.5 bg-green-200 hover:bg-green-300 text-left";
+                this.archiveBtn.class = "rounded items-center justify-start mr-3 ml-3 float-left px-3 py-2.5 bg-green-200 hover:bg-green-300 text-left";
                 this.$forceUpdate();
             },
             hideBlocked() {
                 this.isArchive = false;
                 this.archiveBtn.text =  this.$t('words.archive');
-                this.archiveBtn.class = "items-center justify-start mr-3 ml-3 float-left px-3 py-2.5 bg-yellow-200 hover:bg-yellow-300 text-left";
+                this.archiveBtn.class = "rounded items-center justify-start mr-3 ml-3 float-left px-3 py-2.5 bg-yellow-200 hover:bg-yellow-300 text-left";
             },
         },
     }
