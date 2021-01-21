@@ -26,7 +26,7 @@ class TraineesImportController extends Controller
         ]);
 
         $path = request()->file('excel_file')->store('tmp');
-        $filepath = '/'.storage_path('app').'/'.$path.'.tmp';
+        $filepath = storage_path('app').'/'.$path;
 
         $rows = Excel::import(new TraineesCsvImport(), $filepath);
 
