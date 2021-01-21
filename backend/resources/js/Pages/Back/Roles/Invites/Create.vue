@@ -6,7 +6,7 @@
                     {title: 'dashboard', link: route('dashboard')},
                     {title: 'settings', link: route('back.settings')},
                     {title: 'roles', link: route('back.settings.roles.index')},
-                    {title_raw: role.display_name},
+                    {title_raw: role.display_name, link: route('back.settings.roles.show', role.id)},
                     {title_raw: $t('words.invite')},
                 ]"
             ></breadcrumb-container>
@@ -39,12 +39,6 @@
                             <jet-label for="email" :value="$t('words.email')" />
                             <jet-input id="email" type="email" class="mt-1 block w-full" v-model="form.email" autocomplete="off" />
                             <jet-input-error :message="form.error('email')" class="mt-2" />
-                        </div>
-
-                        <div class="col-span-2 sm:col-span-2">
-                            <jet-label for="password" :value="$t('password')" />
-                            <jet-input id="password" type="password" class="mt-1 block w-full" v-model="form.password" autocomplete="off" />
-                            <jet-input-error :message="form.error('password')" class="mt-2" />
                         </div>
                     </template>
 
@@ -100,7 +94,6 @@ export default {
                 name: '',
                 phone: '',
                 email: '',
-                password: '',
             }, {
                 bag: 'inviteUser',
             })
@@ -110,6 +103,8 @@ export default {
         inviteUser() {
             this.form.post(route('back.settings.roles.users.invite', this.role.id), {
                 preserveScroll: true
+            }).catch(error => {
+                this.form.processing = false;
             });
         },
     }

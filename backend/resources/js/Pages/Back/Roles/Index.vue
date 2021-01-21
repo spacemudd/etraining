@@ -30,12 +30,20 @@
                                 <span>{{ role.role_description }}</span>
                             </p>
                         </div>
-                        <div>
+                        <div class="flex flex-col" v-if="role.can_manage_users">
+                            <inertia-link
+                                v-can="'edit-permissions'"
+                                :href="route('back.settings.roles.permissions.index', {id: role.id})"
+                                style="min-width:120px;"
+                                class="bg-gray-600 py-1 px-2 rounded text-white text-sm hover:bg-gray-800 mt-2 w-full text-center">
+                                {{ $t('words.manage-permissions') }}
+                            </inertia-link>
+
                             <inertia-link
                                 :href="route('back.settings.roles.show', {id: role.id})"
-                                v-if="role.can_manage_users"
-                                class="bg-blue-600 py-1 px-2 rounded text-white text-sm hover:bg-blue-800 mt-5 w-full text-center">
-                                {{ $t('words.manage') }}
+                                style="min-width:120px;"
+                                class="bg-blue-600 py-1 px-2 rounded text-white text-sm hover:bg-blue-800 mt-2 w-full text-center">
+                                {{ $t('words.manage-users') }}
                             </inertia-link>
                         </div>
                     </div>
@@ -51,7 +59,11 @@
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
 
     export default {
-        metaInfo: { title: 'Settings' },
+        metaInfo() {
+            return {
+                title: this.$t('words.settings')
+            }
+        },
         components: {
             IconNavigate,
             AppLayout,

@@ -30,6 +30,7 @@ class RolesService
         'view-financial-department',
         'approve-invoices',
         'approve-instructor-applicants',
+        'edit-permissions',
         // add the same name of the role to translation files.
     ];
 

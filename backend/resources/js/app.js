@@ -64,15 +64,15 @@ Vue.directive('can', function (el, binding) {
     return false;
 })
 
-// Vue.directive('can', function (el, binding) {
-//     let permissions = document.head.querySelector('meta[name="user-permissions"]');
-//
-//     if(permissions.content.indexOf(binding.value) == -1){
-//         el.style.display = 'none';
-//     }
-//
-//     return permissions.content.indexOf(binding.value) !== -1;
-// });
+Vue.directive('can', function (el, binding) {
+    let permissions = document.head.querySelector('meta[name="user-permissions"]');
+
+    if(permissions.content.indexOf(binding.value) == -1){
+        el.style.display = 'none';
+    }
+
+    return permissions.content.indexOf(binding.value) !== -1;
+});
 
 const app = document.getElementById('app');
 
@@ -81,6 +81,8 @@ const i18n = new VueInternationalization({
     locale: lang,
     messages: Locale
 });
+
+const appName = lang === 'ar' ? 'منصة التدريب' : 'eTraining';
 
 new Vue({
     i18n,
@@ -91,7 +93,7 @@ new Vue({
         vuexModuleName: 'wait',      // Vuex module name
     }),
     metaInfo: {
-        titleTemplate: (title) => title ? `${title} - eTraining` : 'eTraining'
+        titleTemplate: (title) => title ? `${title} - ${appName}` : `${appName}`
     },
     render: (h) =>
         h(InertiaApp, {
