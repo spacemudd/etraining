@@ -260,4 +260,7 @@ return [
     'create-personal-courses' => 'Create personal courses',
     'view-personal-courses' => 'View personal courses',
     'archive-personal-courses' => 'Archive personal courses',
+    'invitation-to-system' => 'Invitation to eTraining system',
+    'regards' => 'Regards',
+    'woops-an-error-occurred' => 'Woops, an error occurred.',
 ];
