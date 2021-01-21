@@ -6,6 +6,7 @@ use App\Actions\Fortify\CreateNewTraineeUser;
 use App\Models\Back\Company;
 use App\Notifications\TraineeSetupAccountNotification;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
 class InvitePeopleCommand extends Command
@@ -44,6 +45,10 @@ class InvitePeopleCommand extends Command
         $company = Company::where('name_en', 'PBC')->firstOrFail();
 
         foreach ($company->trainees as $trainee) {
+            if ($trainee->user_id) {
+                continue;
+            }
+
             $this->info('Creating for user: '.$trainee->email);
             $user = (new CreateNewTraineeUser())->create([
                 'trainee_id' => $trainee->id,
@@ -54,7 +59,13 @@ class InvitePeopleCommand extends Command
                 'password_confirmation' => 'password',
             ]);
 
-            Notification::send($user, new TraineeSetupAccountNotification());
+            try {
+                Notification::send($user, new TraineeSetupAccountNotification());
+            } catch (\Exception $e) {
+                Log::info('Failed for user: '.$trainee->email);
+                throw $e;
+            }
+
             sleep(1);
         }
 
