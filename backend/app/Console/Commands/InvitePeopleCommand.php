@@ -50,14 +50,20 @@ class InvitePeopleCommand extends Command
             }
 
             $this->info('Creating for user: '.$trainee->email);
-            $user = (new CreateNewTraineeUser())->create([
-                'trainee_id' => $trainee->id,
-                'name' => $trainee->name,
-                'email' => $trainee->email,
-                'phone' => $trainee->phone,
-                'password' => 'password',
-                'password_confirmation' => 'password',
-            ]);
+            try {
+                $user = (new CreateNewTraineeUser())->create([
+                    'trainee_id' => $trainee->id,
+                    'name' => $trainee->name,
+                    'email' => $trainee->email,
+                    'phone' => $trainee->phone,
+                    'password' => 'password',
+                    'password_confirmation' => 'password',
+                ]);
+            } catch (\Exception $e) {
+                Log::info('Failed validation for user: '.$trainee->email);
+                throw $e;
+            }
+
 
             try {
                 Notification::send($user, new TraineeSetupAccountNotification());
