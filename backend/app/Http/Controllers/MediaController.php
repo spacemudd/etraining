@@ -15,7 +15,7 @@ class MediaController extends Controller
     {
         $media = Media::findOrFail($media_id);
 
-        if ($media->driver === 's3') {
+        if ($media->disk === 's3') {
             $file_url = $media->getTemporaryUrl(now()->addMinutes(5), '', [
                 //'ResponseContentType' => 'application/octet-stream', // this forces the item to be downloaded.
             ]);
