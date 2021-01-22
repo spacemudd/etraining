@@ -56,7 +56,7 @@
                                 <inertia-link
                                     v-if="session.zoom_meeting_id"
                                     class="text-xs bg-yellow-200 py-3 px-6 rounded-lg font-bold hover:bg-yellow-300"
-                                    :href="route('back.course-batch-sessions.show', {course_id: session.course_id, course_batch_id: session.course_batch_id, course_batch_session: session.id})"
+                                    :href="route('trainees.course-batch-session.show', {course_id: session.course_id, course_batch_id: session.course_batch_id, course_batch_session: session.id})"
                                     >
                                     {{ $t('words.join-the-online-course') }}
                                 </inertia-link>

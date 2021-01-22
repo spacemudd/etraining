@@ -27,6 +27,7 @@ class CourseBatchSessionAttendance extends Model
         'session_starts_at',
         'session_ends_at',
         'attended_at',
+        'attended',
         'physical_attendance',
     ];
 

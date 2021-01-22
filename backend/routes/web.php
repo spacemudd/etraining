@@ -139,8 +139,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
         Route::resource('courses/{course_id}/course-batches', \App\Http\Controllers\Back\CourseBatchesController::class);
 
-        // Search Back
-    Route::get('search/{search_string}', [\App\Http\Controllers\Back\SiteSearchController::class, 'search']);
+        Route::get('search/{search_string}', [\App\Http\Controllers\Back\SiteSearchController::class, 'search']);
 
         Route::post('courses/{course_id}/approve', [\App\Http\Controllers\Back\CoursesController::class, 'approve'])->name('courses.approve');
         Route::post('courses/{course_id}/edit', [\App\Http\Controllers\Back\CoursesController::class, 'update'])->name('courses.edit');
@@ -173,6 +172,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('/courses/{course_id}/training-package', [\App\Http\Controllers\Teaching\CoursesController::class, 'trainingPackage'])->name('courses.training-package');
         Route::resource('courses', \App\Http\Controllers\Trainees\CoursesController::class);
 
+        Route::get('/courses/{course_id}/course-batches/{course_batch_id}/course-batch-sessions/{course_batch_session}', [\App\Http\Controllers\Trainees\CourseBatchSessionsController::class, 'show'])->name('course-batch-session.show');
     });
 });
 
