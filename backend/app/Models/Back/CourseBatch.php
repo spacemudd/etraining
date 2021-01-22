@@ -65,21 +65,25 @@ class CourseBatch extends Model
 
     public function setStartsAtAttribute($value)
     {
-        $this->attributes['starts_at'] = Timezone::convertFromLocal($value);
+        $this->attributes['starts_at'] = $value ? Timezone::convertFromLocal($value) : null;
     }
 
     public function setEndsAtAttribute($value)
     {
-        $this->attributes['ends_at'] = Timezone::convertFromLocal($value);
+        $this->attributes['ends_at'] = $value ? Timezone::convertFromLocal($value) : null;
     }
 
     public function getStartsAtTimezoneAttribute()
     {
-        return Timezone::convertToLocal($this->starts_at);
+        if ($this->starts_at) {
+            return Timezone::convertToLocal($this->starts_at, 'Y-m-d\TH:i:s\Z');
+        }
     }
 
     public function getEndsAtTimezoneAttribute()
     {
-        return Timezone::convertToLocal($this->ends_at);
+        if ($this->ends_at) {
+            return Timezone::convertToLocal($this->ends_at, 'Y-m-d\TH:i:s\Z');
+        }
     }
 }

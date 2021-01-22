@@ -53,7 +53,7 @@
                             </tr>
                             <tr>
                                 <td class="font-semibold">{{ $t('words.end-date') }}</td>
-                                <td class="text-gray-700">{{ toDate(batch.ends_at.timezone) }}</td>
+                                <td class="text-gray-700">{{ toDate(batch.ends_at_timezone) }}</td>
                             </tr>
                             <tr>
                                 <td><span class="text-white">.</span></td>
