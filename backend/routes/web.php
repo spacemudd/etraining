@@ -48,6 +48,9 @@ Route::middleware(['auth:sanctum', 'verified', 'approved-application'])->get('/d
     return Inertia\Inertia::render('Dashboard', [
         'companies_count' => \App\Models\Back\Company::count(),
         'trainees_count' => \App\Models\Back\Trainee::count(),
+        'trainees_candidates_count' => \App\Models\Back\Trainee::candidates()->count(),
+        'trainees_approved_count' => \App\Models\Back\Trainee::approved()->count(),
+        'trainees_incomplete_count' => \App\Models\Back\Trainee::incomplete()->count(),
         'instructors_count' => \App\Models\Back\Instructor::count(),
         'courses_count' => \App\Models\Back\Course::count(),
     ]);

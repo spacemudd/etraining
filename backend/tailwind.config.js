@@ -19,7 +19,7 @@ module.exports = {
     variants: {
         opacity: ['responsive', 'hover', 'focus', 'disabled'],
         float: ['responsive', 'direction'],
-        margin: ['responsive', 'direction'],
+        margin: ['hover', 'responsive', 'direction'],
         padding: ['responsive', 'direction'],
         right: ['responsive', 'direction'],
         textAlign: ['responsive', 'direction'],

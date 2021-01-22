@@ -132,6 +132,40 @@ class Trainee extends Model implements HasMedia, SearchableLabels
     }
 
     /**
+     * Ones who have completed their application.
+     *
+     * @param $q
+     * @return mixed
+     */
+    public function scopeCandidates($q)
+    {
+        return $q->where('status', Trainee::STATUS_PENDING_APPROVAL);
+    }
+
+    /**
+     * Completed their application + approved by center.
+     *
+     * @param $q
+     * @return mixed
+     */
+    public function scopeApproved($q)
+    {
+        return $q->where('status', Trainee::STATUS_APPROVED);
+    }
+
+    /**
+     * Haven't completed their application.
+     *
+     * @param $q
+     * @return mixed
+     */
+    public function scopeIncomplete($q)
+    {
+        return $q->where('status', Trainee::STATUS_PENDING_UPLOADING_FILES)
+            ->orWhere('status', null);
+    }
+
+    /**
      * Upload scan(s) of the documents.
      *
      * @param $file

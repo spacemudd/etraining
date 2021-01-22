@@ -354,7 +354,9 @@
             },
             approveTrainee() {
                 if (confirm(this.$t('words.are-you-sure'))) {
-                    this.$inertia.post(route('back.trainees.approve-user', {trainee_id: this.trainee.id}));
+                    this.$inertia.post(route('back.trainees.approve-user', {trainee_id: this.trainee.id})).then(response => {
+                        this.$inertia.get(route('back.trainees.show', this.trainee.id))
+                    });
                 }
             },
             sendingCsrf(file, xhr, formData) {

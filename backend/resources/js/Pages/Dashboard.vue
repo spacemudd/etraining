@@ -9,7 +9,12 @@
                 <!-- Card -->
                 <header-card :href="route('back.companies.index')" :title-value="$t('words.companies')" :count-value="companies_count" icon-path="/img/building.svg"></header-card>
                 <header-card :href="route('back.instructors.index')" :title-value="$t('words.instructors')" :count-value="instructors_count" icon-path="/img/teacher.svg"></header-card>
-                <header-card :href="route('back.trainees.index')" :title-value="$t('words.trainees')" :count-value="trainees_count" icon-path="/img/student.svg"></header-card>
+                <header-card-trainees :href="route('back.trainees.index')" :title-value="$t('words.trainees')"
+                                      :count-value="trainees_count"
+                                      :candidates-count="trainees_candidates_count"
+                                      :approved-count="trainees_approved_count"
+                                      :incomplete-count="trainees_incomplete_count"
+                                      icon-path="/img/student.svg"></header-card-trainees>
                 <header-card :href="route('back.courses.index')" :title-value="$t('words.courses')" :count-value="courses_count" icon-path="/img/book.svg"></header-card>
             </div>
 
@@ -41,14 +46,24 @@
     import Welcome from './../Jetstream/Welcome'
     import LanguageSelector from "../Shared/LanguageSelector";
     import HeaderCard from "../Components/HeaderCard";
+    import HeaderCardTrainees from "../Components/HeaderCardTrainees";
 
     export default {
-        props: ['companies_count', 'instructors_count', 'trainees_count', 'courses_count'],
+        props: [
+            'companies_count',
+            'instructors_count',
+            'trainees_count',
+            'courses_count',
+            'trainees_candidates_count',
+            'trainees_approved_count',
+            'trainees_incomplete_count',
+        ],
         components: {
             AppLayout,
             Welcome,
             LanguageSelector,
-            HeaderCard
+            HeaderCard,
+            HeaderCardTrainees,
         },
     }
 </script>

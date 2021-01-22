@@ -134,7 +134,7 @@ class CompaniesContractsController extends Controller
     public function update(Request $request, $company_id, $contract_id)
     {
         $this->authorize('create-company-contracts');
-        
+
         $request->validate([
             'instructor_id' => 'nullable|exists:instructors,id',
         ]);
