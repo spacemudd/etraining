@@ -57,6 +57,12 @@
                             </tr>
                             </tbody>
                         </table>
+                        <!-- TODO: There is a problem with this button where the company also gets deleted? -->
+                        <!--<div v-can="'delete-company-contracts'"-->
+                        <!--        :id="`delete-contract-${contract.id}`"-->
+                        <!--        @click.prevent="deleteContract(contract.id)">-->
+                        <!--    <p>{{ $t('words.delete') }}</p>-->
+                        <!--</div>-->
                         <a v-if="contract.has_attachments" target="_blank" class="bg-gray-500 h-10 text-white text-sm rounded-sm mt-2 flex justify-center items-center" :href="route('back.companies.contracts.attachments', {company_id: contract.company_id, contract_id: contract.id})">
                             <span class="inline-block">
                                 {{ $t('words.download-scan') }}
@@ -303,6 +309,14 @@
                 }).finally(() => {
                 })
             },
+            deleteContract(contractId) {
+                if (confirm(this.$t('words.are-you-sure'))) {
+                    axios.delete(route('back.companies.contracts.destroy', {company_id: this.companyId, contract: contractId}))
+                        .then(response => {
+                            this.getContracts();
+                        })
+                }
+            }
         }
     }
 </script>

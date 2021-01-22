@@ -153,12 +153,16 @@ class CompaniesContractsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param $company_id
+     * @param $contract_id
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function destroy($id)
+    public function destroy($company_id, $contract_id)
     {
-        //
+        $this->authorize('delete-company-contracts');
+        CompanyContract::findOrFail($contract_id)->delete();
+        return redirect()->route('back.companies.show', $company_id);
     }
 
     /**

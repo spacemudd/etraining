@@ -17,22 +17,38 @@ class CoursesController extends Controller
      */
     public function index()
     {
+        // TODO: Refactor.
+        // The attending() problem is that when the user is not assigned to an instructor,
+        // they can view all courses that have instructor_id = null.
+        if (optional(auth()->user()->trainee)->instructor_id) {
+            $courses = Course::attending()->with('instructor')->latest()->paginate(10);
+        } else {
+            $courses = [];
+        }
+
         return Inertia::render('Trainees/Courses/Index', [
-            'courses' => Course::attending()->with('instructor')->latest()->paginate(10),
+            'courses' => $courses,
         ]);
     }
 
     public function show($course_id)
     {
-
+        // TODO: Refactor.
+        // The attending() problem is that when the user is not assigned to an instructor,
+        // they can view all courses that have instructor_id = null.
+        if (optional(auth()->user()->trainee)->instructor_id) {
+            $course = Course::attending()->with('instructor')->findOrFail($course_id);
+        } else {
+            $course = null;
+        }
 
         return Inertia::render('Trainees/Courses/Show', [
-            'course' => Course::attending()->findOrFail($course_id),
+            'course' => $course,
         ]);
-
     }
 
-    public function generateCertificate($course_id) {
+    public function generateCertificate($course_id)
+    {
        $course = Course::attending()->findOrFail($course_id);
 
        $trainee_name = auth()->user()->trainee->name;

@@ -46,8 +46,8 @@ class CompanyContract extends Model implements HasMedia
     protected $appends = [
         'has_attachments',
         'show_url',
-        'contract_starts_at',
-        'contract_ends_at',
+        'contract_starts_at_timezone',
+        'contract_ends_at_timezone',
     ];
 
     protected static function boot(): void
@@ -87,7 +87,7 @@ class CompanyContract extends Model implements HasMedia
         $this->attributes['contract_ends_at'] = $value ? Timezone::convertFromLocal($value) : null;
     }
 
-    public function getContractStartAtTimezoneAttribute()
+    public function getContractStartsAtTimezoneAttribute()
     {
         if ($this->contract_starts_at) {
             return Timezone::convertToLocal($this->contract_starts_at, 'Y-m-d');
