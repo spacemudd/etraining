@@ -53,10 +53,10 @@ return [
     'lookup' => [
         'server' => [
             //'REMOTE_ADDR',
-            'cf-connecting-ip',
+            //'cf-connecting-ip',
         ],
         'headers' => [
-            //'cf-connecting-ip',
+            'cf-connecting-ip',
         ],
     ],
 
