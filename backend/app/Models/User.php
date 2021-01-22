@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use JamesMills\LaravelTimezone\Facades\Timezone;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
@@ -59,6 +60,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'last_login_at' => 'datetime',
     ];
 
     /**
@@ -69,6 +71,7 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
         'inbox_messages_count',
+        'last_login_at_timezone',
     ];
 
     /**
@@ -92,6 +95,13 @@ class User extends Authenticatable
             'name' => $this->name,
             'email' => $this->email,
         ], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function getLastLoginAtTimezoneAttribute()
+    {
+        if ($this->last_login_at) {
+            return Timezone::convertToLocal($this->last_login_at, 'Y-m-d h:i A');
+        }
     }
 
     /**

@@ -20,12 +20,12 @@
         <tbody>
         <tr v-for="session in sessions" class="focus-within:bg-gray-100">
             <td class="border-t py-3 text-left" dir="ltr">
-                {{ session.starts_at | timestampHours }}<br/>
-                <span class="text-xs">{{ session.starts_at | timestampDate }}</span>
+                {{ session.starts_at_timezone | timestampHours }}<br/>
+                <span class="text-xs">{{ session.starts_at_timezone | timestampDate }}</span>
             </td>
             <td class="border-t py-3 text-left" dir="ltr">
-                {{ session.ends_at | timestampHours }}<br/>
-                <span class="text-xs">{{ session.ends_at | timestampDate }}</span>
+                {{ session.ends_at_timezone | timestampHours }}<br/>
+                <span class="text-xs">{{ session.ends_at_timezone | timestampDate }}</span>
             </td>
             <td class="border-t py-3 text-left flex flex-col">
                 <inertia-link :href="route('teaching.course-batch-sessions.attendance.index', {course_batch_session_id: session.id})"
@@ -52,11 +52,11 @@
         filters: {
             timestampDate(dateString) {
                 if (!dateString) return '';
-                return moment(dateString).local().format('YYYY-MM-DD');
+                return moment(dateString).format('YYYY-MM-DD');
             },
             timestampHours(dateString) {
                 if (!dateString) return '';
-                return moment(dateString).local().format('hh:mm A');
+                return moment(dateString).format('hh:mm A');
             },
         },
         methods: {

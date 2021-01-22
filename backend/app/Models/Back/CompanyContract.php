@@ -4,6 +4,7 @@ namespace App\Models\Back;
 
 use App\Scope\TeamScope;
 use Carbon\Carbon;
+use JamesMills\LaravelTimezone\Facades\Timezone;
 use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -45,6 +46,8 @@ class CompanyContract extends Model implements HasMedia
     protected $appends = [
         'has_attachments',
         'show_url',
+        'contract_starts_at',
+        'contract_ends_at',
     ];
 
     protected static function boot(): void
@@ -72,6 +75,30 @@ class CompanyContract extends Model implements HasMedia
                 $model->contract_ends_at = $end_date;
             }
         });
+    }
+
+    public function setContractStartsAtAttribute($value)
+    {
+        $this->attributes['contract_starts_at'] = $value ? Timezone::convertFromLocal($value) : null;
+    }
+
+    public function setContractEndsAtAttribute($value)
+    {
+        $this->attributes['contract_ends_at'] = $value ? Timezone::convertFromLocal($value) : null;
+    }
+
+    public function getContractStartAtTimezoneAttribute()
+    {
+        if ($this->contract_starts_at) {
+            return Timezone::convertToLocal($this->contract_starts_at, 'Y-m-d');
+        }
+    }
+
+    public function getContractEndsAtTimezoneAttribute()
+    {
+        if ($this->contract_ends_at) {
+            return Timezone::convertToLocal($this->contract_ends_at, 'Y-m-d');
+        }
     }
 
     public function attachments()
