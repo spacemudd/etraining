@@ -2,7 +2,6 @@
 
 use Illuminate\Notifications\Messages\MailMessage;
 
-https://etraining.test/invite/84cd2bb4-ea83-4959-93a4-6fca4975c743?expires=1611874959&signature=7458d99a23fba6d6e662a46dccf8fbafdbcbebd08f2b387cfc350008539a8800
 Route::get('invite/{invite_id}', [\App\Http\Controllers\InviteController::class, 'show'])->name('invite')->middleware('signed');
 Route::post('invite/{invite_id}/accept', [\App\Http\Controllers\InviteController::class, 'accept'])->name('invite.accept');
 
