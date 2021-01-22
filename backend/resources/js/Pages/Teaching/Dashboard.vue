@@ -49,13 +49,13 @@
                                 <!-- Course options -->
 
                                 <!-- When the course is online -->
-                                <inertia-link
+                                <a target="_blank"
                                     v-if="session.course_batch.location_at === 'online'"
                                     class="text-xs bg-yellow-200 py-3 px-6 rounded-lg font-bold hover:bg-yellow-300"
-                                    :href="route('back.course-batch-sessions.show', {course_id: session.course_id, course_batch_id: session.course_batch_id, course_batch_session: session.id})"
+                                    :href="route('back.course-batch-session.start', {course_id: session.course_id, course_batch_id: session.course_batch_id, course_batch_session: session.id})"
                                     >
                                     {{ $t('words.join-the-online-course') }}
-                                </inertia-link>
+                                </a>
                                 <a v-else target="_blank" :href="session.course_batch.location_at" class="text-xs bg-blue-300 py-3 px-6 rounded-lg font-bold hover:bg-blue-400">
                                     {{ session.course_batch.location_at }}
                                 </a>

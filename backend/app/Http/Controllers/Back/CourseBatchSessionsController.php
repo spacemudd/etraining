@@ -106,9 +106,8 @@ class CourseBatchSessionsController extends Controller
             $session->zoom_meeting_id = $meeting->id;
             $session->save();
         }
-
+        
         Inertia::setRootView('zoom');
-
         return Inertia::render('Teaching/CourseBatchSessions/Show', [
             'course_batch_session' => $session,
         ]);

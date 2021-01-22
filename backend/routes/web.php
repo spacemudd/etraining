@@ -135,6 +135,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::resource('instructors', \App\Http\Controllers\Back\InstructorsController::class);
 
 
+        Route::get('/courses/{course_id}/course-batches/{course_batch_id}/course-batch-sessions/{course_batch_session}/start', [\App\Http\Controllers\Back\CourseBatchSessionsController::class, 'show'])->name('course-batch-session.start');
         Route::resource('courses/{course_id}/course-batches/{course_batch_id}/course-batch-sessions', \App\Http\Controllers\Back\CourseBatchSessionsController::class);
 
         Route::resource('courses/{course_id}/course-batches', \App\Http\Controllers\Back\CourseBatchesController::class);

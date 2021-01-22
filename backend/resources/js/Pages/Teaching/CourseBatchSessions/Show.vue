@@ -1,13 +1,5 @@
 <template>
         <div class="container px-6 mx-auto grid pt-6">
-            <breadcrumb-container
-                :crumbs="[
-                    {title: 'dashboard', link: route('dashboard')},
-                    {title: 'courses', link: route('teaching.courses.index')},
-                    {title_raw: course_batch_session.course.name_ar},
-                ]"
-            ></breadcrumb-container>
-
             <div class="grid grid-cols-6 gap-6">
                 <div class="col-span-6 flex items-center justify-end text-right flex-col">
                     <button @click="joinMeeting"
@@ -49,22 +41,22 @@
             ZoomMtg.prepareJssdk()
 
             //Add your own custom language key
-            var langArray = ['en-US', 'ar-SA'];
+            //var langArray = ['en-US', 'ar-SA'];
 
             // set the userLangTemplate variable to a default language code
-            var userLangTemplate = $.i18n.getAll("en-US");
+            //var userLangTemplate = $.i18n.getAll("en-US");
 
             // Define the userLangDict variable
             // Use the language-key-value.json file to determine which keys to set the custom language
             // https://zoom.github.io/sample-app-web/languages/en-US.json
-            var userLangDict = Object.assign({}, userLangTemplate, ZoomArabic);
+            //var userLangDict = Object.assign({}, userLangTemplate, ZoomArabic);
             // Set the userLangDict and custom code language in the load method
-            $.i18n.load(userLangDict, "ar-SA");
+            //$.i18n.load(userLangDict, "ar-SA");
 
             //Add the language code to the internationalization.reload method.
-            $.i18n.reload("ar-SA");
+            //$.i18n.reload("ar-SA");
             //Add the language code to the ZoomMtg.reRender method.
-            ZoomMtg.reRender({lang: "ar-SA"});
+            //ZoomMtg.reRender({lang: "ar-SA"});
         },
         methods: {
             joinMeeting() {

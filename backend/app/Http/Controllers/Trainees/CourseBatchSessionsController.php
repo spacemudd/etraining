@@ -30,7 +30,6 @@ class CourseBatchSessionsController extends Controller
         $session = CourseBatchSession::with(['course', 'course_batch'])->findOrFail($course_batch_session_id);
 
         if (! $session->zoom_meeting_id) {
-            dd(1);
             abort(403);
         }
 
@@ -38,7 +37,7 @@ class CourseBatchSessionsController extends Controller
 
         Inertia::setRootView('zoom');
 
-        return Inertia::render('Trainees/CourseBatchSessions/Show', [
+        return Inertia::render('Teaching/CourseBatchSessions/Show', [
             'course_batch_session' => $session,
         ]);
     }
