@@ -8,7 +8,7 @@
                     <div>
                         <h1 class="text-2xl font-heavy">{{ $t('words.welcome') }}!</h1>
                         <p class="mt-2 text-gray-500">{{ user.email }}</p>
-                        <p dir="ltr" class="mt-2 text-xs text-gray-500 rtl:text-right">{{ $t('words.last-login-at') }}: {{ user.last_login_at_timezone }}</p>
+                        <p class="mt-2 text-xs text-gray-500">{{ $t('words.last-login-at') }}: <span dir="ltr">{{ user.last_login_at_timezone }}</span></p>
                     </div>
                 </div>
             </div>
@@ -90,10 +90,10 @@
         },
         filters: {
             toDate(timestamp) {
-                return moment(timestamp).local().format('DD-MM-YYYY');
+                return moment(timestamp).format('DD-MM-YYYY');
             },
             toHours(timestamp) {
-                return moment(timestamp).local().format('hh:mm A');
+                return moment(timestamp).format('hh:mm A');
             }
         }
     }
