@@ -49,11 +49,11 @@
                             </tr>
                             <tr>
                                 <td class="font-semibold">{{ $t('words.start-date') }}</td>
-                                <td class="text-gray-700">{{ toDate(batch.starts_at) }}</td>
+                                <td class="text-gray-700">{{ toDate(batch.starts_at_timezone) }}</td>
                             </tr>
                             <tr>
                                 <td class="font-semibold">{{ $t('words.end-date') }}</td>
-                                <td class="text-gray-700">{{ toDate(batch.ends_at) }}</td>
+                                <td class="text-gray-700">{{ toDate(batch.ends_at.timezone) }}</td>
                             </tr>
                             <tr>
                                 <td><span class="text-white">.</span></td>
