@@ -7,6 +7,7 @@ use App\Traits\HasUuid;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use JamesMills\LaravelTimezone\Facades\Timezone;
 use Str;
 
 class CourseBatchSession extends Model
@@ -24,6 +25,16 @@ class CourseBatchSession extends Model
         'trainee_group_id',
         'starts_at',
         'ends_at',
+    ];
+
+    protected $casts = [
+        'starts_at' => 'datetime',
+        'ends_at' => 'datetime',
+    ];
+
+    protected $appends = [
+        'starts_at_timezone',
+        'ends_at_timezone',
     ];
 
     protected static function boot(): void
@@ -60,11 +71,25 @@ class CourseBatchSession extends Model
 
     public function setStartsAtAttribute($value)
     {
-        $this->attributes['starts_at'] = $value ? Carbon::parse($value) : null;
+        $this->attributes['starts_at'] = Timezone::convertFromLocal($value);
     }
 
     public function setEndsAtAttribute($value)
     {
-        $this->attributes['ends_at'] = $value ? Carbon::parse($value) : null;
+        $this->attributes['ends_at'] = Timezone::convertFromLocal($value);
+    }
+
+    public function getStartsAtTimezoneAttribute()
+    {
+        if ($this->starts_at) {
+            return Timezone::convertToLocal($this->starts_at, 'Y-m-d H:i:s');
+        }
+    }
+
+    public function getEndsAtTimezoneAttribute()
+    {
+        if ($this->ends_at) {
+            return Timezone::convertToLocal($this->ends_at, 'Y-m-d H:i:s');
+        }
     }
 }

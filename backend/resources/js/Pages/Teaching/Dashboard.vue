@@ -8,7 +8,7 @@
                     <div>
                         <h1 class="text-2xl font-heavy">{{ $t('words.welcome') }}!</h1>
                         <p class="mt-2 text-gray-500">{{ user.email }}</p>
-                        <p dir="ltr" class="mt-2 text-xs text-gray-500">{{ $t('words.last-login-at') }}: {{ user.last_login_at }}</p>
+                        <p class="mt-2 text-xs text-gray-500">{{ $t('words.last-login-at') }}: <span dir="ltr">{{ user.last_login_at_timezone }}</span></p>
                     </div>
                 </div>
             </div>
@@ -29,17 +29,17 @@
                             <p class="font-bold text-lg py-2 text-center md:rtl:text-right md:ltr:text-left">{{ session.course_batch.course.name_ar }}</p>
                             <div class="my-3">
                                 <ion-icon name="calendar-outline" class="inline-block w-4 h-4 fill-gray-400"></ion-icon>
-                                {{ session.starts_at | toDate }}
+                                {{ session.starts_at_timezone | toDate }}
                                 -
                                 <ion-icon name="time-outline" class="inline-block w-4 h-4 fill-gray-500"></ion-icon>
-                                <span class="font-bold text-gray-500">{{ session.starts_at | toHours }}</span>
+                                <span class="font-bold text-gray-500" dir="ltr">{{ session.starts_at_timezone | toHours }}</span>
                             </div>
                             <div>
                                 <ion-icon name="calendar-outline" class="inline-block w-4 h-4 fill-gray-400"></ion-icon>
-                                {{ session.ends_at | toDate }}
+                                {{ session.ends_at_timezone | toDate }}
                                 -
                                 <ion-icon name="time-outline" class="inline-block w-4 h-4 fill-gray-500"></ion-icon>
-                                <span class="font-bold text-gray-500">{{ session.ends_at | toHours }}</span>
+                                <span class="font-bold text-gray-500" dir="ltr">{{ session.ends_at_timezone | toHours }}</span>
                             </div>
                             <p v-if="session.course_batch.course.instructor" class="text-sm">
                                 {{ $t('words.provided-by') }}:
@@ -89,10 +89,10 @@
         },
         filters: {
             toDate(timestamp) {
-                return moment(timestamp).local().format('DD-MM-YYYY');
+                return moment(timestamp).format('DD-MM-YYYY');
             },
             toHours(timestamp) {
-                return moment(timestamp).local().format('HH:mm');
+                return moment(timestamp).format('hh:mm A');
             }
         }
     }

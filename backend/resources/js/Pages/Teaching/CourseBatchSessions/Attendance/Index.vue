@@ -6,7 +6,7 @@
                     {title: 'dashboard', link: route('dashboard')},
                     {title: 'courses', link: route('teaching.courses.index')},
                     {title_raw: course_batch_session.course.name_ar},
-                    {title_raw: course_batch_session.starts_at},
+                    {title_raw: course_batch_session.starts_at_timezone},
                     {title_raw: $t('words.attendance')},
                 ]"
             ></breadcrumb-container>
