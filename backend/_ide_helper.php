@@ -17356,6 +17356,43 @@
      
 }
 
+    namespace JamesMills\LaravelTimezone\Facades { 
+            /**
+     * 
+     *
+     */ 
+        class Timezone {
+                    /**
+         * 
+         *
+         * @param \JamesMills\LaravelTimezone\Carbon|null $date
+         * @param null $format
+         * @param bool $format_timezone
+         * @return string 
+         * @static 
+         */ 
+        public static function convertToLocal($date, $format = null, $format_timezone = false)
+        {
+                        /** @var \JamesMills\LaravelTimezone\Timezone $instance */
+                        return $instance->convertToLocal($date, $format, $format_timezone);
+        }
+                    /**
+         * 
+         *
+         * @param $date
+         * @return \JamesMills\LaravelTimezone\Carbon 
+         * @static 
+         */ 
+        public static function convertFromLocal($date)
+        {
+                        /** @var \JamesMills\LaravelTimezone\Timezone $instance */
+                        return $instance->convertFromLocal($date);
+        }
+         
+    }
+     
+}
+
     namespace Illuminate\Http { 
             /**
      * 
@@ -20713,6 +20750,7 @@ namespace  {
             class Zoom extends \MacsiDigital\Zoom\Facades\Zoom {}
             class Sentry extends \Sentry\Laravel\Facade {}
             class GooglePlaces extends \SKAgarwal\GoogleApi\Facade {}
+            class Timezone extends \JamesMills\LaravelTimezone\Facades\Timezone {}
      
 }
 

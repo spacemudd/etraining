@@ -20,6 +20,7 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "h4cc/wkhtmltopdf-amd64": "^0.12.4",
         "inertiajs/inertia-laravel": "^0.2.15",
+        "jamesmills/laravel-timezone": "^1.9",
         "laravel/cashier-paddle": "^1.2",
         "laravel/framework": "^8.0",
         "laravel/helpers": "^1.3",
