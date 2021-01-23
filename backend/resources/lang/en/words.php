@@ -265,4 +265,7 @@ return [
     'woops-an-error-occurred' => 'Woops, an error occurred.',
     'edit-permissions' => 'Edit permissions',
     'activate-your-account' => 'Activate your account',
+    'forgot-password-title' => 'Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.',
+    'email-password-reset-link' => 'Email password reset link',
+    'reset-password' => 'Reset password',
 ];

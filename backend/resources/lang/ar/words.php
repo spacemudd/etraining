@@ -177,7 +177,7 @@ return [
     'submit' => 'ارسال',
     'select-file' => 'اختيار الملف',
     'provided_courses' => 'الدورات المقدمة',
-    'next' => 'النالي',
+    'next' => 'التالي',
     'file-selected' => 'تم اختيار ملف',
     'click-here-to-remove' => 'اضغط هنا للحذف',
     'pending-your-application-verification' => 'جاري مراجعة ملفك',
@@ -267,4 +267,7 @@ return [
     'woops-an-error-occurred' => 'يوجد خطأ في البيانات',
     'edit-permissions' => 'تعديل الصلاحيات',
     'activate-your-account' => 'فعل حسابك',
+    'forgot-password-title' => 'نسيت كلمة السر؟ لا مشكلة فقط أعلمنا عنوان بريدك الإلكتروني وسوف نرسل لك رابط إعادة كلمة السر التي ستسمح لك باختيار كلمة سر جديدة.',
+    'email-password-reset-link' => 'ارسل رابط إعادة كلمة السر',
+    'reset-password' => 'إعادة تعيين كلمة السر',
 ];

@@ -12,6 +12,7 @@ use Illuminate\Support\ServiceProvider;
 use Laravel\Jetstream\Jetstream;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Fortify;
+use Illuminate\Http\Request;
 
 class JetstreamServiceProvider extends ServiceProvider
 {
@@ -57,6 +58,7 @@ class JetstreamServiceProvider extends ServiceProvider
 
         Fortify::resetPasswordView(function (Request $request) {
             return view('auth/reset-password', [
+                'request' => $request,
                 'email' => $request->input('email'),
                 'token' => $request->route('token'),
             ]);

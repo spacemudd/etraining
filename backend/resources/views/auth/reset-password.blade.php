@@ -12,23 +12,23 @@
             <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
             <div class="block">
-                <x-jet-label value="{{ __('Email') }}" />
-                <x-jet-input class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus />
+                <x-jet-label value="{{ __('words.email') }}" />
+                <x-jet-input class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)"  autocomplete="off" required autofocus />
             </div>
 
             <div class="mt-4">
-                <x-jet-label value="{{ __('Password') }}" />
+                <x-jet-label value="{{ __('words.password') }}" />
                 <x-jet-input class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
             </div>
 
             <div class="mt-4">
-                <x-jet-label value="{{ __('Confirm Password') }}" />
+                <x-jet-label value="{{ __('words.password-confirm') }}" />
                 <x-jet-input class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
             </div>
 
             <div class="flex items-center justify-end mt-4">
                 <x-jet-button>
-                    {{ __('Reset Password') }}
+                    {{ __('words.reset-password') }}
                 </x-jet-button>
             </div>
         </form>
