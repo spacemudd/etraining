@@ -20,7 +20,10 @@
                     <div class="bg-white my-5 p-5 flex gap-6">
                         <div class="w-32">
                             <div class="w-full h-full bg-red rounded-lg">
-                                <div class="bg-gray-200 rounded-lg" style="display: block;width:100px;height:100px;"></div>
+                                <div class="bg-gray-200 rounded-lg flex items-center align-middle justify-center"
+                                     style="display: block;width:100px;height:100px;">
+                                    <!--<p class="align-middle">{{ $t('words.course') }}</p>-->
+                                </div>
                                 <!--<img class="rounded-lg" src="https://source.unsplash.com/300x300/?training,classroom" alt="">-->
                             </div>
                         </div>
@@ -53,15 +56,25 @@
                                     {{ $t('words.training-package') }}
                                 </a>
 
-                                <a
-                                    target="_blank"
-                                    v-if="session.zoom_meeting_id"
-                                    class="text-xs bg-yellow-200 py-3 px-6 rounded-lg font-bold hover:bg-yellow-300"
-                                    :href="route('trainees.course-batch-session.show', {course_id: session.course_id, course_batch_id: session.course_batch_id, course_batch_session: session.id})"
-                                    >
+                                <!-- When the course is online -->
+                                <button v-if="!session.can_join"
+                                        class="btn-disabled"
+                                        :disabled="!session.can_join">
+
                                     {{ $t('words.join-the-online-course') }}
-                                </a>
-                                <button v-else class="btn-disabled" disabled>{{ $t('words.join-the-online-course') }}</button>
+                                </button>
+                                <template v-else>
+                                    <a target="_blank"
+                                       v-if="session.course_batch.location_at === 'online'"
+                                       class="text-xs bg-yellow-200 py-3 px-6 rounded-lg font-bold hover:bg-yellow-300 disabled:bg-gray-500"
+                                       :href="route('trainees.course-batch-session.show', {course_id: session.course_id, course_batch_id: session.course_batch_id, course_batch_session: session.id})"
+                                    >
+                                        {{ $t('words.join-the-online-course') }}
+                                    </a>
+                                    <a v-else target="_blank" :href="session.course_batch.location_at" class="text-xs bg-blue-300 py-3 px-6 rounded-lg font-bold hover:bg-blue-400">
+                                        {{ session.course_batch.location_at }}
+                                    </a>
+                                </template>
 
                                 <button class="btn-disabled" disabled>{{ $t('words.print-attendance') }}</button>
                                 <button class="btn-disabled" disabled>{{ $t('words.print-certificate') }}</button>
@@ -89,6 +102,11 @@
             LanguageSelector,
             HeaderCard,
         },
+        data() {
+            return {
+                checkCoursesEnabledInterval: null,
+            }
+        },
         filters: {
             toDate(timestamp) {
                 return moment(timestamp).format('DD-MM-YYYY');
@@ -96,6 +114,33 @@
             toHours(timestamp) {
                 return moment(timestamp).format('hh:mm A');
             }
+        },
+        mounted() {
+            let vm = this;
+            this.checkCoursesEnabledInterval = setInterval(function() {
+                vm.updateCoursesEnabled();
+            }, 2000)
+        },
+        methods: {
+            updateCoursesEnabled() {
+                this.sessions.data.forEach((session, index) => {
+
+                    // TODO: Change the '5' minutes to be dynamic with backend settings.
+                    let accessibleAt = moment(session.starts_at).subtract('5', 'minutes');
+                    let disableAccess = moment(session.ends_at).subtract('5', 'minutes');
+
+                    let canTheUserJoin = moment().isBetween(accessibleAt, disableAccess);
+
+                    if (canTheUserJoin) {
+                        this.$set(this.sessions.data[index], 'can_join', true);
+                    } else {
+                        this.$set(this.sessions.data[index], 'can_join', false);
+                    }
+                })
+            },
+        },
+        beforeDestroy() {
+            clearInterval(this.checkCoursesEnabledInterval);
         }
     }
 </script>

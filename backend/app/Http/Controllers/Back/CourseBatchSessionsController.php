@@ -82,9 +82,9 @@ class CourseBatchSessionsController extends Controller
         if (! $session->zoom_meeting_id) {
 	    // https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingcreate
             $meeting = Zoom::user()->find('me')->meetings()->create([
-                'topic' => 'New Meeting',
-                'type' => ZoomMeetingsController::ZOOM_INSTANT_MEETING,
-                'start_time' => now()->toIso8601ZuluString(),
+                'topic' => $session->course->course_name,
+                'type' => ZoomMeetingsController::ZOOM_SCHEDULED_MEETING,
+                'start_time' => $session->starts_at->toIso8601ZuluString(),
                 'password' => '123123',
                 'timezone' => 'Asia/Riyadh',
                 'settings' => [
@@ -106,6 +106,8 @@ class CourseBatchSessionsController extends Controller
                 ],
             ]);
             $session->zoom_meeting_id = $meeting->id;
+            $session->start_url = $meeting->start_url;
+            $session->join_url = $meeting->join_url;
             $session->save();
         }
 

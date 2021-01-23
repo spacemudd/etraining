@@ -1,19 +1,22 @@
 <template>
     <div>
         <div class="container px-6 mx-auto grid pt-6">
-            <div class="grid grid-cols-6 gap-6">
-                <div class="col-span-6 flex items-center justify-end text-right flex-col">
+            <div class="text-center" style="margin-top: 2rem;">
+                <div class="text-center">
                     <button @click="joinMeeting"
                             :disabled="$wait.is('STARTING_INSTRUCTOR_SESSION')"
-                            class="flex items-center justify-start rounded-md px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 text-right">
+                            class="btn btn-primary">
                         {{ $t('words.join-meeting-via-browser') }}
                     </button>
 
-                    <button @click="joinMeeting"
-                            :disabled="$wait.is('STARTING_INSTRUCTOR_SESSION')"
-                            class="mt-5 rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
+                    <br/><br/>
+
+                    <a  :href="course_batch_session.start_url"
+                        :disabled="$wait.is('STARTING_INSTRUCTOR_SESSION')"
+                        dir="rtl"
+                        class="btn btn-primary">
                         {{ $t('words.join-meeting-via-client') }}
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>

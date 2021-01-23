@@ -35,6 +35,7 @@ class CourseBatchSession extends Model
     protected $appends = [
         'starts_at_timezone',
         'ends_at_timezone',
+        'can_join',
     ];
 
     protected static function boot(): void
@@ -90,6 +91,15 @@ class CourseBatchSession extends Model
     {
         if ($this->ends_at) {
             return Timezone::convertToLocal($this->ends_at, 'Y-m-d H:i:s');
+        }
+    }
+
+    public function getCanJoinAttribute()
+    {
+        if ($this->course_batch->location_at === 'online') {
+            return now()->isBetween($this->starts_at->subMinutes(5), $this->ends_at->subMinutes(5));
+        } else {
+            return true; // The location_at would be a Maps link.
         }
     }
 }

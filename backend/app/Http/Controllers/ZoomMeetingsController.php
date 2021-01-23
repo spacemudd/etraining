@@ -9,6 +9,7 @@ use Zoom;
 class ZoomMeetingsController extends Controller
 {
     const ZOOM_INSTANT_MEETING = 1;
+    const ZOOM_SCHEDULED_MEETING = 2;
 
     const ZOOM_HOST_ROLE = 1;
     const ZOOM_ATTENDEE_ROLE = 0;
@@ -53,7 +54,7 @@ class ZoomMeetingsController extends Controller
             'apiKey' => config('zoom.api_key'),
             'meetingNumber' => $meeting->id,
             'leaveUrl' => url('/dashboard'),
-            'userName' => auth()->user()->email,
+            'userName' => auth()->user()->name,
             'role' => auth()->user()->isTrainee() ? self::ZOOM_ATTENDEE_ROLE : self::ZOOM_HOST_ROLE,
             'password' => '123123',
         ]);
