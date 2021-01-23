@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Actions\Fortify\CreateNewTraineeUser;
 use App\Models\Back\Company;
+use App\Models\Back\Trainee;
 use App\Notifications\TraineeSetupAccountNotification;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -16,7 +17,7 @@ class InvitePeopleCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'etraining:invite';
+    protected $signature = 'etraining:invite {--trainee=}';
 
     /**
      * The console command description.
@@ -43,6 +44,32 @@ class InvitePeopleCommand extends Command
     public function handle()
     {
         $company = Company::where('name_en', 'PBC')->firstOrFail();
+
+        if ($trainee_id = $this->option('trainee')) {
+            $trainee = Trainee::findOrFail($trainee_id);
+            $this->info('Creating for user: '.$trainee->email);
+            try {
+                $user = (new CreateNewTraineeUser())->create([
+                    'trainee_id' => $trainee->id,
+                    'name' => $trainee->name,
+                    'email' => $trainee->email,
+                    'phone' => $trainee->phone,
+                    'password' => 'password',
+                    'password_confirmation' => 'password',
+                ]);
+            } catch (\Exception $e) {
+                Log::info('Failed validation for user: '.$trainee->email);
+                throw $e;
+            }
+
+            try {
+                Notification::send($user, new TraineeSetupAccountNotification());
+            } catch (\Exception $e) {
+                Log::info('Failed for user: '.$trainee->email);
+                throw $e;
+            }
+            return 1;
+        }
 
         foreach ($company->trainees as $trainee) {
             if ($trainee->user_id) {
