@@ -30,6 +30,9 @@ class ProfileController extends Controller
         if (!$trainee) {
             $user = User::find($user_id);
         }
+        if (!$user) {
+            abort(404); // The user/trainee has been deleted.
+        }
         Auth::login($user);
         return view('profile.setup-account');
     }
