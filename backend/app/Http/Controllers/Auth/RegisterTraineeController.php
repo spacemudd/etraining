@@ -61,6 +61,7 @@ class RegisterTraineeController extends Controller
             'trainee_id' => $trainee->id,
             'name' => $trainee->name,
             'email' => $trainee->email,
+            'phone' => $trainee->phone,
             'password' => 'password',
             'password_confirmation' => 'password',
         ]);
