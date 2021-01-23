@@ -37,6 +37,7 @@
         "sentry/sentry-laravel": "^2.3",
         "skagarwal/google-places-api": "^1.7",
         "spacemudd/laravel-tap-payments": "^2.0",
+        "spatie/laravel-backup": "^6.14",
         "spatie/laravel-medialibrary": "^8.9",
         "spatie/laravel-permission": "^3.17",
         "spatie/laravel-searchable": "^1.7",
