@@ -266,4 +266,5 @@ return [
     'regards' => 'مع تحياتنا',
     'woops-an-error-occurred' => 'يوجد خطأ في البيانات',
     'edit-permissions' => 'تعديل الصلاحيات',
+    'activate-your-account' => 'فعل حسابك',
 ];
