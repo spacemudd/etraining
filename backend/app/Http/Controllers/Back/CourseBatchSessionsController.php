@@ -80,6 +80,7 @@ class CourseBatchSessionsController extends Controller
         $session = CourseBatchSession::with(['course', 'course_batch'])->findOrFail($course_batch_session_id);
 
         if (! $session->zoom_meeting_id) {
+	    // https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingcreate
             $meeting = Zoom::user()->find('me')->meetings()->create([
                 'topic' => 'New Meeting',
                 'type' => ZoomMeetingsController::ZOOM_INSTANT_MEETING,
@@ -87,10 +88,11 @@ class CourseBatchSessionsController extends Controller
                 'password' => '123123',
                 'timezone' => 'Asia/Riyadh',
                 'settings' => [
-                    'show_share_button' => false,
-                    'host_video' => false,
                     'participant_video' => false,
                     'mute_upon_entry' => true,
+                    'host_video' => false,
+
+                    'show_share_button' => false,
                     'watermark' => false,
                     'use_pmi' => false,
                     'approval_type' => 2, // 0-automatic, 1-manually, 2-not required
@@ -106,7 +108,7 @@ class CourseBatchSessionsController extends Controller
             $session->zoom_meeting_id = $meeting->id;
             $session->save();
         }
-        
+
         Inertia::setRootView('zoom');
         return Inertia::render('Teaching/CourseBatchSessions/Show', [
             'course_batch_session' => $session,

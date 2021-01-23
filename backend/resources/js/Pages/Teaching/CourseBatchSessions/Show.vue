@@ -1,4 +1,5 @@
 <template>
+    <div>
         <div class="container px-6 mx-auto grid pt-6">
             <div class="grid grid-cols-6 gap-6">
                 <div class="col-span-6 flex items-center justify-end text-right flex-col">
@@ -16,6 +17,7 @@
                 </div>
             </div>
         </div>
+    </div>
 </template>
 
 <script>
@@ -60,6 +62,8 @@
         },
         methods: {
             joinMeeting() {
+
+
                 axios.post(route('back.zoom.meetings.configs'), {
                     course_batch_session_id: this.course_batch_session.id,
                 })

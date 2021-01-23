@@ -36,8 +36,7 @@ class CourseBatchSessionsController extends Controller
         $this->attendanceService->markAttendance($session, auth()->user()->trainee);
 
         Inertia::setRootView('zoom');
-
-        return Inertia::render('Teaching/CourseBatchSessions/Show', [
+        return Inertia::render('Trainees/CourseBatchSessions/Show', [
             'course_batch_session' => $session,
         ]);
     }

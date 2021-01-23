@@ -24,5 +24,30 @@
 </head>
 <body class="font-sans antialiased">
     @inertia
+    @if (auth()->user()->trainee)
+        <style type="text/css">
+            .send-video-container {
+                display: none;
+            }
+            .join-audio-container {
+                display: none;
+            }
+            .participants-section-container__participants-footer-bottom {
+                display: none;
+            }
+            [aria-label="Share Screen"] {
+                display: none;
+            }
+            [aria-label="open the chat pane"] {
+                display:none;
+            }
+            .join-dialog {
+                display: none;
+            }
+            .e2e-encryption-indicator__encrypt-indicator.e2e-encryption-indicator__encrypt-indicator--2 {
+                display: none;
+            }
+        </style>
+    @endif
 </body>
 </html>
