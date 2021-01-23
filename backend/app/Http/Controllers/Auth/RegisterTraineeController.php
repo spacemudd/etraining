@@ -23,7 +23,8 @@ class RegisterTraineeController extends Controller
 
     public function show()
     {
-        if (auth()->user()->trainee->skip_uploading_id) {
+        // TODO: Why is this here?
+        if (optional(optional(auth()->user())->trainee)->skip_uploading_id) {
             return redirect(route('dashboard'));
         }
 
