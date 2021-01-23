@@ -264,4 +264,5 @@ return [
     'regards' => 'Regards',
     'woops-an-error-occurred' => 'Woops, an error occurred.',
     'edit-permissions' => 'Edit permissions',
+    'activate-your-account' => 'Activate your account',
 ];
