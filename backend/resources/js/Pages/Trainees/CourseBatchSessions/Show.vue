@@ -14,6 +14,12 @@
                     <!--        class="mt-5 rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">-->
                     <!--    {{ $t('words.join-meeting-via-client') }}-->
                     <!--</button>-->
+                    <a  :href="course_batch_session.join_url"
+                        :disabled="$wait.is('STARTING_INSTRUCTOR_SESSION')"
+                        dir="rtl"
+                        class="btn btn-primary">
+                        {{ $t('words.join-meeting-via-client') }}
+                    </a>
                 </div>
             </div>
         </div>

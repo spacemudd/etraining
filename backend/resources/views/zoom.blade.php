@@ -46,9 +46,9 @@
             [aria-label="open the chat pane"] {
                 display:none;
             }
-            .join-dialog {
-                display: none;
-            }
+            /*.join-dialog {*/
+            /*    display: none;*/
+            /*}*/
             .e2e-encryption-indicator__encrypt-indicator.e2e-encryption-indicator__encrypt-indicator--2 {
                 display: none;
             }
