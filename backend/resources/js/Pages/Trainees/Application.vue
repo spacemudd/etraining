@@ -17,9 +17,18 @@
                 </a>
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+            <div v-if="$wait.is('UPLOADING_TRAINEE_FILES')">
+                <div style="margin: 50px auto auto;">
+                    <progress v-if="progressValue"
+                              class="progress is-info"
+                              :value="progressValue"
+                              max="100">{{ progressValue }}%</progress>
+                    <p class="text-center">{{ progressValue ? progressValue : 0 }}%</p>
+                </div>
+            </div>
+            <div v-else class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
                 <div v-if="is_pending_approval_prop || is_pending_approval">
-                    <application-pending :user_email="instructor_email"/>
+                    <application-pending :user_email="trainee_email"/>
                 </div>
                 <form v-else
                       @submit.prevent="submitForm" enctype="multipart/form-data">
@@ -138,6 +147,8 @@ export default {
             qualification_copy: null,
             bank_account_copy: null,
             formData: new FormData(),
+
+            progressValue: null,
         }
     },
     props: [
@@ -164,12 +175,32 @@ export default {
             }
         },
         submitForm() {
-            axios.post(route('api.register.trainees.upload-cv'), this.formData)
+            let vm = this;
+            var config = {
+                onUploadProgress: function(progressEvent) {
+                    var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+                    if(vm.onProgress) vm.onProgress(percentCompleted);
+                    return percentCompleted;
+                },
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                },
+            };
+
+            this.$wait.start('UPLOADING_TRAINEE_FILES');
+            axios.post(route('api.register.trainees.upload-cv'), this.formData, config)
                 .then(response => {
                     this.is_pending_approval = true;
-                    window.location.reload();
+                    //window.location.reload();
+                }).catch(error => {
+                    this.$wait.end('UPLOADING_TRAINEE_FILES');
+                }).finally(() => {
+                        this.$wait.end('UPLOADING_TRAINEE_FILES');
                 });
 
+        },
+        onProgress(percent) {
+            this.progressValue = percent;
         },
     }
 
