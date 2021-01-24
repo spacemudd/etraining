@@ -55,6 +55,8 @@ class CourseBatchSessionAttendance extends Model
 
     public function getAttendedAtTimezoneAttribute()
     {
-        return Timezone::convertToLocal($this->attended_at, 'Y-m-d H:i:s');
+        if ($this->attended_at) {
+            return Timezone::convertToLocal($this->attended_at, 'Y-m-d H:i:s');
+        }
     }
 }
