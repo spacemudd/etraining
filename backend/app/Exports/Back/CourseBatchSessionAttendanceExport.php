@@ -28,6 +28,6 @@ class CourseBatchSessionAttendanceExport implements FromCollection
     */
     public function collection()
     {
-        return $this->attendances()->get();
+        return $this->session->attendances()->get();
     }
 }
