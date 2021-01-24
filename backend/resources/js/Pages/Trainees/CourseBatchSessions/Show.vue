@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="container px-6 mx-auto grid pt-6">
+        <div class="container">
             <div class="text-center" style="margin-top: 2rem;">
                 <div class="text-center">
                     <button @click="joinMeeting"

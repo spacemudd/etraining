@@ -43,9 +43,9 @@
             [aria-label="Share Screen"] {
                 display: none;
             }
-            [aria-label="open the chat pane"] {
-                display:none;
-            }
+            /*[aria-label="open the chat pane"] {*/
+            /*    display:none;*/
+            /*}*/
             /*.join-dialog {*/
             /*    display: none;*/
             /*}*/
