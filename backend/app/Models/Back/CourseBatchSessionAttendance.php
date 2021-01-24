@@ -32,6 +32,10 @@ class CourseBatchSessionAttendance extends Model
         'physical_attendance',
     ];
 
+    protected $casts = [
+        'attended_at' => 'datetime',
+    ];
+
     protected $appends = [
         'attended_at_timezone',
     ];
