@@ -13,6 +13,7 @@
 
                 <div class="col-span-6 items-center justify-end bg-gray-50 text-right gap-6">
 
+
                     <button @click="blockTrainee" class=" items-center justify-start text-left float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right">
                         {{ $t('words.block-trainee') }}
                     </button>
