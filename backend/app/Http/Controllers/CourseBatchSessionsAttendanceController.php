@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Back\Exports\CourseBatchSessionAttendanceExport;
+use App\Exports\Back\CourseBatchSessionAttendanceExport;
 use App\Models\Back\CourseBatchSession;
 use App\Models\Back\CourseBatchSessionAttendance;
 use App\Models\Back\Trainee;

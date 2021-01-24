@@ -9,7 +9,7 @@
  * @author Shafiq al-Shaar <shafiqalshaar@gmail.com>
  */
 
-namespace App\Back\Exports;
+namespace App\Exports\Back;
 
 use App\Models\Back\CourseBatchSession;
 use Maatwebsite\Excel\Concerns\FromCollection;
