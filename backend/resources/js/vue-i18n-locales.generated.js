@@ -2,6 +2,11 @@ export default {
     "ar": {
         "email": "الريد الإكتروني",
         "password": "كلمة السر",
+        "Reset Password Notification": "إشعار إعادة كلمة السر",
+        "You are receiving this email because we received a password reset request for your account.": "أنت تتلقى هذا البريد الإلكتروني لأننا تلقينا طلب إعادة ضبط كلمة السر لحسابك.",
+        "Reset Password": "إعادة تعيين كلمة السر",
+        "This password reset link will expire in {count} minutes.": "رابط إعادة كلمة السر سوف ينتهيJetstreamServiceProvider صلاحيته خلال {count} دقائق.",
+        "If you did not request a password reset, no further action is required.": "إذا لم تطلب إعادة ضبط كلمة السر ، يرجى تجاهل هذا البريد.",
         "auth": {
             "failed": "بيانات الاعتماد هذه غير متطابقة مع البيانات المسجلة لدينا.",
             "throttle": "عدد كبير جدا من محاولات الدخول. يرجى المحاولة مرة أخرى بعد {seconds} ثانية."
@@ -337,7 +342,7 @@ export default {
             "submit": "ارسال",
             "select-file": "اختيار الملف",
             "provided_courses": "الدورات المقدمة",
-            "next": "النالي",
+            "next": "التالي",
             "file-selected": "تم اختيار ملف",
             "click-here-to-remove": "اضغط هنا للحذف",
             "pending-your-application-verification": "جاري مراجعة ملفك",
@@ -415,12 +420,31 @@ export default {
             "edit-companies": "تعديل الشركات",
             "view-companies": "عرض الشركات",
             "create-companies": "إنشاء شركات",
-            "delete-companies": "حذف شركات"
+            "delete-companies": "حذف شركات",
+            "broadcast-personal-courses": "بث الدورات الخاصة",
+            "create-personal-courses": "إنشاء دورات خاصة",
+            "view-personal-courses": "عرض دورات خاصة",
+            "archive-personal-courses": "ارشفة دورات خاصة",
+            "invitation-to-system": "دعوة لدخول منصة التدريب عن بعد",
+            "we-would-like-to-inform-you-that-you-have-been-invited-to-create-an-account": "نود ان نعلمك انه تم دعوتك لإنشاء حساب على منصة التدريب عن بعد",
+            "regards": "مع تحياتنا",
+            "woops-an-error-occurred": "يوجد خطأ في البيانات",
+            "edit-permissions": "تعديل الصلاحيات",
+            "activate-your-account": "فعل حسابك",
+            "forgot-password-title": "نسيت كلمة السر؟ لا مشكلة فقط أعلمنا عنوان بريدك الإلكتروني وسوف نرسل لك رابط إعادة كلمة السر التي ستسمح لك باختيار كلمة سر جديدة.",
+            "email-password-reset-link": "ارسل رابط إعادة كلمة السر",
+            "reset-password": "إعادة تعيين كلمة السر",
+            "excel": "إكسل"
         }
     },
     "en": {
         "email": "Email",
         "password": "Password",
+        "Reset Password Notification": "Reset Password Notification",
+        "You are receiving this email because we received a password reset request for your account.": "You are receiving this email because we received a password reset request for your account.",
+        "Reset Password": "Reset Password",
+        "This password reset link will expire in {count} minutes.": "This password reset link will expire in {count} minutes.",
+        "If you did not request a password reset, no further action is required.": "If you did not request a password reset, no further action is required.",
         "auth": {
             "failed": "These credentials do not match our records.",
             "throttle": "Too many login attempts. Please try again in {seconds} seconds."
@@ -802,7 +826,20 @@ export default {
             "edit-companies": "Edit companies",
             "view-companies": "View companies",
             "create-companies": "Create companies",
-            "delete-companies": "Delete companies"
+            "delete-companies": "Delete companies",
+            "broadcast-personal-courses": "Broadcast personal courses",
+            "create-personal-courses": "Create personal courses",
+            "view-personal-courses": "View personal courses",
+            "archive-personal-courses": "Archive personal courses",
+            "invitation-to-system": "Invitation to eTraining system",
+            "regards": "Regards",
+            "woops-an-error-occurred": "Woops, an error occurred.",
+            "edit-permissions": "Edit permissions",
+            "activate-your-account": "Activate your account",
+            "forgot-password-title": "Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.",
+            "email-password-reset-link": "Email password reset link",
+            "reset-password": "Reset password",
+            "excel": "Excel"
         }
     }
 }
