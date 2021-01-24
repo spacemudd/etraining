@@ -13,8 +13,10 @@ namespace App\Exports\Back;
 
 use App\Models\Back\CourseBatchSession;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
-class CourseBatchSessionAttendanceExport implements FromCollection
+class CourseBatchSessionAttendanceExport implements FromCollection, WithMapping, WithHeadings
 {
     public $session;
 
@@ -29,5 +31,23 @@ class CourseBatchSessionAttendanceExport implements FromCollection
     public function collection()
     {
         return $this->session->attendances()->get();
+    }
+
+    public function map($attendance): array
+    {
+        return [
+            'trainee' => $attendance->trainee->name,
+            'phone' => $attendance->trainee->phone,
+            'attended_at' => $attendance->attended_at,
+        ];
+    }
+
+    public function headings(): array
+    {
+        return [
+            'Trainee',
+            'Phone',
+            'Attended',
+        ];
     }
 }
