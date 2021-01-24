@@ -75,6 +75,8 @@
                         <td class="border-t">
                             <inertia-link class="px-6 py-4 flex items-center" :href="route('back.trainees.show', trainees.id)" tabindex="-1">
                                 <span v-if="trainees.company">{{ trainees.company.name_ar }}</span>
+                                <br/>
+                                <span v-if="trainees.trainee_group.length">{{ trainees.trainee_group[0].name }}</span>
                             </inertia-link>
                         </td>
                         <td class="border-t w-px">
