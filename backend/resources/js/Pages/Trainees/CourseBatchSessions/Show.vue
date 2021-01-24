@@ -9,6 +9,7 @@
                         {{ $t('words.join-meeting-via-browser') }}
                     </button>
 
+                    <br/>
                     <!--<button @click="joinMeeting"-->
                     <!--        :disabled="$wait.is('STARTING_TRAINEE_SESSION')"-->
                     <!--        class="mt-5 rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">-->
