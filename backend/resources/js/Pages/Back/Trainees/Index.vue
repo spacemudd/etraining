@@ -26,6 +26,10 @@
                     <!--        <option value="only">Only Trashed</option>-->
                     <!--    </select>-->
                     <!--</search-filter>-->
+                    <inertia-link class="btn-gray mx-3" :href="route('back.trainees.excel')">
+                        <span>{{ $t('words.excel') }}</span>
+                    </inertia-link>
+
                     <inertia-link class="btn-gray mx-3" :href="route('back.trainees.import')">
                         <span>{{ $t('words.import') }}</span>
                     </inertia-link>

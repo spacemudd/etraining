@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Back;
 
 use App\Actions\Fortify\CreateNewInstructorUser;
 use App\Actions\Fortify\CreateNewTraineeUser;
+use App\Exports\Back\TraineeExport;
 use App\Http\Controllers\Controller;
 use App\Models\Back\Instructor;
 use App\Models\Back\Trainee;
@@ -26,6 +27,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TraineesController extends Controller
 {
@@ -461,4 +463,8 @@ class TraineesController extends Controller
         return redirect()->route('back.trainees.index');
     }
 
+    public function excel()
+    {
+        return Excel::download(new TraineeExport(), 'trainees.xlsx');
+    }
 }
