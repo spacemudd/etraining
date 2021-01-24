@@ -38,7 +38,7 @@ class CourseBatchSessionAttendanceExport implements FromCollection, WithMapping,
         return [
             'trainee' => $attendance->trainee->name,
             'phone' => $attendance->trainee->phone,
-            'attended_at' => $attendance->attended_at,
+            'attended_at' => $attendance->attended_at_timezone,
         ];
     }
 

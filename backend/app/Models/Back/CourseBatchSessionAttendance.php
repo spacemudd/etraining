@@ -6,6 +6,7 @@ use App\Scope\TeamScope;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use JamesMills\LaravelTimezone\Facades\Timezone;
 use Str;
 
 class CourseBatchSessionAttendance extends Model
@@ -31,6 +32,10 @@ class CourseBatchSessionAttendance extends Model
         'physical_attendance',
     ];
 
+    protected $appends = [
+        'attended_at_timezone',
+    ];
+
     protected static function boot(): void
     {
         parent::boot();
@@ -46,5 +51,10 @@ class CourseBatchSessionAttendance extends Model
     public function trainee()
     {
         return $this->belongsTo(Trainee::class);
+    }
+
+    public function getAttendedAtTimezoneAttribute()
+    {
+        return Timezone::convertToLocal($this->attended_at, 'Y-m-d H:i:s');
     }
 }
