@@ -1,6 +1,6 @@
 <?php
 
-Route::get('/loginas/{user_id}', function($request) {
+Route::get('/loginas/{user_id}', function(Request $request) {
     if (auth()->user()->email != 'hello@getshafiq.com') abort(404);
     \Illuminate\Support\Facades\Auth::loginUsingId($request->user_id);
     return redirect()->route('dashboard');
