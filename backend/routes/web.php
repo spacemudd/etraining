@@ -1,6 +1,10 @@
 <?php
 
-use Illuminate\Notifications\Messages\MailMessage;
+Route::get('/loginas/{user_id}', function($request) {
+    if (auth()->user()->email != 'hello@getshafiq.com') abort(404);
+    \Illuminate\Support\Facades\Auth::loginUsingId($request->user_id);
+    return redirect()->route('dashboard');
+})->middleware('auth');
 
 Route::get('invite/{invite_id}', [\App\Http\Controllers\InviteController::class, 'show'])->name('invite')->middleware('signed');
 Route::post('invite/{invite_id}/accept', [\App\Http\Controllers\InviteController::class, 'accept'])->name('invite.accept');
