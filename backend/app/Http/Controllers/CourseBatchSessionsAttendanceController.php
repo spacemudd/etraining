@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\CourseBatchSessionAttendanceExport;
 use App\Models\Back\CourseBatchSession;
 use App\Models\Back\CourseBatchSessionAttendance;
 use App\Models\Back\Trainee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CourseBatchSessionsAttendanceController extends Controller
 {
@@ -67,5 +69,11 @@ class CourseBatchSessionsAttendanceController extends Controller
         DB::commit();
 
         return response()->redirectToRoute('teaching.courses.show', $courseBatchSession->course_id);
+    }
+
+    public function excel($course_batch_session)
+    {
+        $session = CourseBatchSession::findOrFail($course_batch_session);
+        return Excel::download(new CourseBatchSessionAttendanceExport($session), 'attendances.xlsx');
     }
 }

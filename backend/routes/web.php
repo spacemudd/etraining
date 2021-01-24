@@ -159,6 +159,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('/', [\App\Http\Controllers\Teaching\TeachingController::class, 'index'])->name('index');
         Route::resource('courses', \App\Http\Controllers\Teaching\CoursesController::class);
 
+        Route::get('/course-batch-sessions/{course_batch_session_id}/attendance/excel', [\App\Http\Controllers\CourseBatchSessionsAttendanceController::class, 'excel'])->name('course-batch-sessions.attendance.excel');
         Route::get('/course-batch-sessions/{course_batch_session_id}/attendance', [\App\Http\Controllers\CourseBatchSessionsAttendanceController::class, 'index'])->name('course-batch-sessions.attendance.index');
         Route::post('/course-batch-sessions/attendance', [\App\Http\Controllers\CourseBatchSessionsAttendanceController::class, 'store'])->name('course-batch-sessions.attendance.store');
 
