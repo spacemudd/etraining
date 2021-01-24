@@ -31,7 +31,7 @@
                                 <tr class="border-t" v-for="(trainee, key) in form.trainees">
                                     <td class="px-6 py-4">{{ trainee.name }}</td>
                                     <td class="px-6 py-4">
-                                        <button style="width:100px;height:40px;" v-if="trainee.physical_attendance" class="bg-blue-600 p-2 rounded-lg text-white inline-block" @click.prevent="setTraineeAbsent(trainee, key)">{{ $t('words.present') }}</button>
+                                        <button style="width:100px;height:40px;" v-if="trainee.attended" class="bg-blue-600 p-2 rounded-lg text-white inline-block" @click.prevent="setTraineeAbsent(trainee, key)">{{ $t('words.present') }}</button>
                                         <button style="width:100px;height:40px;" v-else class="border-2 inline-block border-red-500 p-2 rounded-lg" @click.prevent="setTraineePresent(trainee, key)">{{ $t('words.absent') }}</button>
                                     </td>
                                 </tr>
