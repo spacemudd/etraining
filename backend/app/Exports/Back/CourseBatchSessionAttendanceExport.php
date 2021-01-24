@@ -12,7 +12,6 @@
 namespace App\Exports;
 
 use App\Models\Back\CourseBatchSession;
-use App\Models\Back\CourseBatchSessionAttendance;
 use Maatwebsite\Excel\Concerns\FromCollection;
 
 class CourseBatchSessionAttendanceExport implements FromCollection
