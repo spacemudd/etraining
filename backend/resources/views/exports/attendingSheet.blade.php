@@ -45,6 +45,10 @@
             </tr>
         @endforeach
 
+        <tr>
+            <td>------</td>
+        </tr>
+
         @foreach ($attendances as $attendance)
             <tr>
                 <td style="width:50px; text-align:center; ">
@@ -69,10 +73,6 @@
                 </td>
             </tr>
         @endforeach
-
-        <tr>
-            <td>------</td>
-        </tr>
 
 
 
