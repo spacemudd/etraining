@@ -38,7 +38,7 @@
                         {{__('words.absent')}}
                     </td>
                     <td>
-                        {{ $trainee->attended_at }}
+                        {{ $user->attended_at_timezone }}
                     </td>
                 @endif
             </tr>
