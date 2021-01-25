@@ -15,6 +15,7 @@
             <th></th>
             <th></th>
             <th style="width:50px; text-align:center">  <strong> {{ __('words.attendance') }} </strong></th>
+            <th style="width:50px; text-align:center">  <strong> {{ __('words.time') }} </strong></th>
         </tr>
 
     </thead>
@@ -36,6 +37,9 @@
                     <td style="width:50px; text-align:center; color:red; background-color:darkgrey">
                         {{__('words.absent')}}
                     </td>
+                    <td>
+                        {{ $trainee->attended_at }}
+                    </td>
                 @endif
             </tr>
         @endforeach
@@ -56,6 +60,9 @@
                         {{__('words.absent')}}
                     </td>
                 @endif
+                <td>
+                    {{ $trainee->attended_at }}
+                </td>
             </tr>
         @endforeach
 

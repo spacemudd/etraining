@@ -271,4 +271,5 @@ return [
     'email-password-reset-link' => 'ارسل رابط إعادة كلمة السر',
     'reset-password' => 'إعادة تعيين كلمة السر',
     'excel' => 'إكسل',
+    'time' => 'الوقت',
 ];

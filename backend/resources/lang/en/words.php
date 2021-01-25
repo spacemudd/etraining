@@ -269,4 +269,5 @@ return [
     'email-password-reset-link' => 'Email password reset link',
     'reset-password' => 'Reset password',
     'excel' => 'Excel',
+    'time' => 'Time',
 ];
