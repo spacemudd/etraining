@@ -35,7 +35,13 @@
                     {{__('words.absent')}}
                 </td>
                 <td></td>
-                <td>{{ $trainee_profile->user->last_login_at }}</td>
+                <td>
+                    @if ($trainee_profile->user)
+                        {{ $trainee_profile->user->last_login_at ?: 'لم يدخل إطلاقاً الى المنصة'}}
+                    @else
+                        No user
+                    @endif
+                </td>
             </tr>
         @endforeach
 
