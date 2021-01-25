@@ -60,7 +60,7 @@ class AttendanceSheetExport implements FromView, WithEvents
         foreach ($users->course_batch->trainee_group->trainees as $trainee) {
             if (!CourseBatchSessionAttendance::where('id', $this->course_batch_session_id)
                 ->where('trainee_id', $trainee->id)->exists()) {
-                $usersWhoDidntAttended = $trainee;
+                $usersWhoDidntAttended[] = $trainee;
             }
         }
 
