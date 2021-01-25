@@ -15,6 +15,12 @@
             <template v-if="course_batch_session.attendances.length === 0">
                 <div class="bg-white rounded shadow overflow-x-auto">
 
+                    <a :href="route('teaching.course-batch-sessions.attendance.export', {course_batch_session_id: course_batch_session.id})">
+                    <button class="  mt-5 ml-5 mr-5 rounded-md px-4 py-2 bg-green-300 hover:bg-green-400 ">
+                        <img src="/img/excel.svg" class="float"> {{ $t('words.excel') }}
+                    </button>
+                    </a>
+
                     <div class="p-5">
                         <table class="w-full whitespace-no-wrap">
                             <colgroup>
@@ -56,8 +62,18 @@
                 </div>
             </div>
             </template>
+
             <template v-else>
                 <div class="bg-white rounded shadow overflow-x-auto">
+
+
+
+                    <a :href="route('teaching.course-batch-sessions.attendance.export', {course_batch_session_id: course_batch_session.id})">
+                    <button class="  mt-5 ml-5 mr-5 rounded-md px-4 py-2 bg-green-300 hover:bg-green-400 ">
+                        <img style="display:block" src="/img/excel.svg" class="float-left"/> <div class="float-right">{{ $t('words.excel') }} </div>
+                    </button>
+                    </a>
+
                     <div class="p-5">
                         <table class="w-full whitespace-no-wrap">
                             <colgroup>

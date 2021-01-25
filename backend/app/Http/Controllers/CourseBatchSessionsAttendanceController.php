@@ -6,10 +6,11 @@ use App\Exports\Back\CourseBatchSessionAttendanceExport;
 use App\Models\Back\CourseBatchSession;
 use App\Models\Back\CourseBatchSessionAttendance;
 use App\Models\Back\Trainee;
+use App\Exports\AttendanceSheetExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
-use Maatwebsite\Excel\Facades\Excel;
+use Excel;
 
 class CourseBatchSessionsAttendanceController extends Controller
 {
@@ -30,6 +31,7 @@ class CourseBatchSessionsAttendanceController extends Controller
                     $q->with('trainees');
                 }]);
             }])->findOrFail($course_batch_session_id);
+
 
         return Inertia::render('Teaching/CourseBatchSessions/Attendance/Index', [
             'course_batch_session' => $courseBatchSession,
@@ -71,9 +73,9 @@ class CourseBatchSessionsAttendanceController extends Controller
         return response()->redirectToRoute('teaching.courses.show', $courseBatchSession->course_id);
     }
 
-    public function excel($course_batch_session)
-    {
-        $session = CourseBatchSession::findOrFail($course_batch_session);
-        return Excel::download(new CourseBatchSessionAttendanceExport($session), 'attendances.xlsx');
+    public function attendingExcel($course_batch_session_id) {
+
+        return Excel::download(new AttendanceSheetExport($course_batch_session_id),'Attendance Sheet.xlsx');
+
     }
 }
