@@ -32,6 +32,10 @@ class InviteController extends Controller
             'password' => 'required|min:8',
         ]);
 
+        if (User::whereEmail($request->email)->exists()) {
+            return redirect()->route('dashboard');
+        }
+
         DB::beginTransaction();
         $invite = Invite::findOrFail($invite_id);
         $team = Team::findOrFail($invite->team_id);
