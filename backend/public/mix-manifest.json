@@ -1,31 +1,4 @@
 {
-<<<<<<< HEAD
-    "/js/app.js": "/js/app.js?id=05def147494026b0d806",
-    "/css/app.css": "/css/app.css?id=e2d65367f9221dfe7928"
-=======
     "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css",
-    "/js/app.2683c013cd72a5195320.hot-update.js": "/js/app.2683c013cd72a5195320.hot-update.js",
-    "/js/app.b59e3322da546de3cc96.hot-update.js": "/js/app.b59e3322da546de3cc96.hot-update.js",
-    "/js/app.b28bdb25423391d7b7ba.hot-update.js": "/js/app.b28bdb25423391d7b7ba.hot-update.js",
-    "/js/app.71a24c95ad0bf080c715.hot-update.js": "/js/app.71a24c95ad0bf080c715.hot-update.js",
-    "/js/app.b059fb6b51cfd40f013f.hot-update.js": "/js/app.b059fb6b51cfd40f013f.hot-update.js",
-    "/js/app.5aa674860f346f3b2239.hot-update.js": "/js/app.5aa674860f346f3b2239.hot-update.js",
-    "/js/app.46cc54a7cc34bfd141f9.hot-update.js": "/js/app.46cc54a7cc34bfd141f9.hot-update.js",
-    "/js/app.0b8bf53b98cbd5890af7.hot-update.js": "/js/app.0b8bf53b98cbd5890af7.hot-update.js",
-    "/js/app.36043451a8c6434f1f2d.hot-update.js": "/js/app.36043451a8c6434f1f2d.hot-update.js",
-    "/js/app.94dc02422e9f7928c77a.hot-update.js": "/js/app.94dc02422e9f7928c77a.hot-update.js",
-    "/js/app.ceaf10cc5a0bf67d41a9.hot-update.js": "/js/app.ceaf10cc5a0bf67d41a9.hot-update.js",
-    "/js/app.01c2e8a24628fc03728e.hot-update.js": "/js/app.01c2e8a24628fc03728e.hot-update.js",
-    "/js/app.110208d1273f26244d3e.hot-update.js": "/js/app.110208d1273f26244d3e.hot-update.js",
-    "/js/app.a1008e864513ae778e3c.hot-update.js": "/js/app.a1008e864513ae778e3c.hot-update.js",
-    "/js/app.ea09c6a33f9cdbd4653c.hot-update.js": "/js/app.ea09c6a33f9cdbd4653c.hot-update.js",
-    "/js/app.15107e1d4b1a4ce19428.hot-update.js": "/js/app.15107e1d4b1a4ce19428.hot-update.js",
-    "/js/app.76e99790c982374ee7e5.hot-update.js": "/js/app.76e99790c982374ee7e5.hot-update.js",
-    "/js/app.7f9999e9322839017ea1.hot-update.js": "/js/app.7f9999e9322839017ea1.hot-update.js",
-    "/js/app.169f26e33d89fc8655d7.hot-update.js": "/js/app.169f26e33d89fc8655d7.hot-update.js",
-    "/js/app.7c1d6bd5ede5086da060.hot-update.js": "/js/app.7c1d6bd5ede5086da060.hot-update.js",
-    "/js/app.b96f7b6bb5cb76396c6e.hot-update.js": "/js/app.b96f7b6bb5cb76396c6e.hot-update.js",
-    "/js/app.e79f1c646d13bd2c36ba.hot-update.js": "/js/app.e79f1c646d13bd2c36ba.hot-update.js"
->>>>>>> ExportAttending
+    "/css/app.css": "/css/app.css"
 }
