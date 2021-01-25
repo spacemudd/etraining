@@ -40,14 +40,14 @@
             </tr>
         @endforeach
 
-        @foreach ($users_who_didnt_attend as $user)
+        @foreach ($users_who_didnt_attend as $trainee)
             <tr>
                 <td style="width:50px; text-align:center; ">
-                    {{ $user->trainee->name }}
+                    {{ $trainee->name }}
                 </td>
                 <td></td>
                 <td></td>
-                @if ($user->attended)
+                @if ($trainee->attended)
                     <td style="width:50px; text-align:center; color:blue; background-color:darkgrey">
                         {{__('words.present')}}----
                     </td>
