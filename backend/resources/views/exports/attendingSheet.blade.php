@@ -44,6 +44,10 @@
             </tr>
         @endforeach
 
+        <tr>
+            <td>------</td>
+        </tr>
+
         @foreach ($users_who_didnt_attend as $trainee)
             <tr>
                 <td style="width:50px; text-align:center; ">
@@ -60,9 +64,9 @@
                         {{__('words.absent')}}
                     </td>
                 @endif
-                <td>
-                    {{ $trainee->attended_at }}
-                </td>
+{{--                <td>--}}
+{{--                    {{ $trainee->attended_at }}--}}
+{{--                </td>--}}
             </tr>
         @endforeach
 
