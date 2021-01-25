@@ -39,21 +39,30 @@ class AttendanceSheetExport implements FromView, WithEvents
     }
 
     /**
-    * @return \Illuminate\Support\View
-    */
+     * @return \Illuminate\Support\View
+     */
     public function view(): View
     {
         $users = CourseBatchSession::with('course')
-        ->with(['attendances' => function($q) {
-            $q->with('trainee');
-        }])
-        ->with(['course_batch' => function($q) {
-            $q->with(['trainee_group' => function($q) {
-                $q->with('trainees');
-            }]);
-        }])->findOrFail($this->course_batch_session_id);
+            ->with(['attendances' => function($q) {
+                $q->with('trainee');
+            }])
+            ->with(['course_batch' => function($q) {
+                $q->with(['trainee_group' => function($q) {
+                    $q->with('trainees');
+                }]);
+            }])->findOrFail($this->course_batch_session_id);
 
         $users_attending = $users->attendances;
+
+        $usersWhoDidntAttended = [];
+
+        foreach ($users->course_batch->trainee_group->trainees as $trainee) {
+            if (!CourseBatchSessionAttendance::where('id', $this->course_batch_session_id)
+                ->where('trainee_id', $trainee->id)->exists()) {
+                $usersWhoDidntAttended = $trainee;
+            }
+        }
 
         if (app()->getLocale() === 'ar') {
             $course_name = $users->course->name_ar;
@@ -63,6 +72,7 @@ class AttendanceSheetExport implements FromView, WithEvents
 
         return view('exports.attendingSheet', [
             'users' => $users_attending,
+            'users_who_didnt_attend' => $usersWhoDidntAttended,
             'course_name' => $course_name,
         ]);
 
