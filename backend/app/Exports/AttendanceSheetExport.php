@@ -53,7 +53,7 @@ class AttendanceSheetExport implements FromView, WithEvents
                 }]);
             }])->findOrFail($this->course_batch_session_id);
 
-        $users_attending = $users->attendances;
+        $attendances = $users->attendances;
 
         $usersWhoDidntAttended = [];
 
@@ -71,7 +71,7 @@ class AttendanceSheetExport implements FromView, WithEvents
         }
 
         return view('exports.attendingSheet', [
-            'users' => $users_attending,
+            'attendances' => $attendances,
             'users_who_didnt_attend' => $usersWhoDidntAttended,
             'course_name' => $course_name,
         ]);
