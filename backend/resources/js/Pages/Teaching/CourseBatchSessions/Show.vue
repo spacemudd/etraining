@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div class="container px-6 mx-auto grid pt-6">
-            <div class="text-center" style="margin-top: 2rem;">
-                <div class="text-center">
+        <div>
+            <div style="margin-top: 2rem; margin-left: 40px;">
+                <div>
                     <button @click="joinMeeting"
                             :disabled="$wait.is('STARTING_INSTRUCTOR_SESSION')"
                             class="btn btn-primary">
@@ -14,6 +14,7 @@
                     <a  :href="course_batch_session.start_url"
                         :disabled="$wait.is('STARTING_INSTRUCTOR_SESSION')"
                         dir="rtl"
+                        style="margin-top:3rem;"
                         class="btn btn-primary">
                         {{ $t('words.join-meeting-via-client') }}
                     </a>

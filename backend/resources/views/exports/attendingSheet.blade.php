@@ -12,9 +12,8 @@
 
         <tr>
             <th style="width:50px; text-align:center"> <strong>  {{ __('words.name') }} </strong> </th>
-            <th></th>
-            <th></th>
             <th style="width:50px; text-align:center">  <strong> {{ __('words.email') }} </strong></th>
+            <th style="width:50px; text-align:center">  <strong> {{ __('words.phone') }} </strong></th>
             <th style="width:50px; text-align:center">  <strong> {{ __('words.attendance') }} </strong></th>
             <th style="width:50px; text-align:center">  <strong> {{ __('words.time') }} </strong></th>
             <th style="width:50px; text-align:center">  <strong> {{ __('words.last-login-at') }} </strong></th>
