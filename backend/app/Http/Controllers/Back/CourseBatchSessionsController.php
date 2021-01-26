@@ -79,39 +79,38 @@ class CourseBatchSessionsController extends Controller
     {
         $session = CourseBatchSession::with(['course', 'course_batch'])->findOrFail($course_batch_session_id);
 
-        //if (! $session->zoom_meeting_id) {
-	    //// https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingcreate
-        //    $meeting = Zoom::user()->find('me')->meetings()->create([
-        //        'topic' => $session->course->course_name,
-        //        'type' => ZoomMeetingsController::ZOOM_SCHEDULED_MEETING,
-        //        'start_time' => $session->starts_at->toIso8601ZuluString(),
-        //        'password' => '123123',
-        //        'timezone' => 'Asia/Riyadh',
-        //        'settings' => [
-        //            'participant_video' => false,
-        //            'mute_upon_entry' => true,
-        //            'host_video' => false,
-        //
-        //            'show_share_button' => false,
-        //            'watermark' => false,
-        //            'use_pmi' => false,
-        //            'approval_type' => 2, // 0-automatic, 1-manually, 2-not required
-        //            'registration_type' => 2, // 1-Attendees register once and can attend any of the occurrences., 2-Attendees need to register for each occurrence to attend., 3-Attendees register once and can choose one or more occurrences to attend.
-        //            'audio' => 'voip', // voip, telephony, both
-        //            'auto_recording' => 'none', // none, local, cloud
-        //            'waiting_room' => false,
-        //            'global_dial_in_countries' => [],
-        //            'contact_name' => null,
-        //            'contact_email' => null
-        //        ],
-        //    ]);
-        //    $session->zoom_meeting_id = $meeting->id;
-        //    $session->start_url = $meeting->start_url;
-        //    $session->join_url = $meeting->join_url;
-        //    $session->save();
-        //}
+        if (! $session->zoom_meeting_id) {
+	        // https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingcreate
+            $meeting = Zoom::user()->find('me')->meetings()->create([
+                'topic' => $session->course->course_name,
+                'type' => ZoomMeetingsController::ZOOM_SCHEDULED_MEETING,
+                'start_time' => $session->starts_at->toIso8601ZuluString(),
+                'password' => '123123',
+                'timezone' => 'Asia/Riyadh',
+                'settings' => [
+                    'participant_video' => false,
+                    'mute_upon_entry' => true,
+                    'host_video' => false,
+                    'show_share_button' => false,
+                    'watermark' => false,
+                    'use_pmi' => false,
+                    'approval_type' => 2, // 0-automatic, 1-manually, 2-not required
+                    'registration_type' => 2, // 1-Attendees register once and can attend any of the occurrences., 2-Attendees need to register for each occurrence to attend., 3-Attendees register once and can choose one or more occurrences to attend.
+                    'audio' => 'voip', // voip, telephony, both
+                    'auto_recording' => 'none', // none, local, cloud
+                    'waiting_room' => false,
+                    'global_dial_in_countries' => [],
+                    'contact_name' => null,
+                    'contact_email' => null
+                ],
+            ]);
+            $session->zoom_meeting_id = $meeting->id;
+            $session->start_url = $meeting->start_url;
+            $session->join_url = $meeting->join_url;
+            $session->save();
+        }
 
-        Inertia::setRootView('zoom');
+       Inertia::setRootView('zoom');
         return Inertia::render('Teaching/CourseBatchSessions/Show', [
             'course_batch_session' => $session,
         ]);
