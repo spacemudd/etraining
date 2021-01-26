@@ -81,12 +81,9 @@
 </template>
 
 <script>
-    // import Icon from '@/Shared/Icon'
-    // import Layout from '@/Shared/Layout'
     import mapValues from 'lodash/mapValues'
     import Pagination from '@/Shared/Pagination'
     import pickBy from 'lodash/pickBy'
-    // import SearchFilter from '@/Shared/SearchFilter'
     import throttle from 'lodash/throttle'
     import AppLayout from '@/Layouts/AppLayoutInstructor'
     import IconNavigate from 'vue-ionicons/dist/ios-arrow-dropright'
@@ -101,9 +98,7 @@
             BreadcrumbContainer,
             IconNavigate,
             AppLayout,
-            // Icon,
             Pagination,
-            // SearchFilter,
         },
         props: {
             courses: Object,
