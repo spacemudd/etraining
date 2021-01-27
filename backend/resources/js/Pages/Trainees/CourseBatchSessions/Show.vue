@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="">
-            <div class="" style="margin-top: 2rem;">
+            <div class="" style="margin-top: 2rem;width:200px;">
                 <div class="">
                     <button @click="joinMeeting"
                             :disabled="$wait.is('STARTING_TRAINEE_SESSION')"
