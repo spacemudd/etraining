@@ -20,7 +20,8 @@ class DashboardController extends Controller
                 $q->with(['course' => function($q) {
                     $q->with('instructor');
                 }]);
-            }])->paginate(15);
+            }])->latest()
+                ->paginate(15);
         } else {
             $sessions = [];
         }

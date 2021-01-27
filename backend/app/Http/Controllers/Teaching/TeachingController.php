@@ -19,7 +19,7 @@ class TeachingController extends Controller
                 $q->responsibleToTeach()->with('instructor');
             }]);
         }])->has('course_batch.course')
-            ->oldest()
+            ->latest()
             ->paginate(15);
 
         return Inertia::render('Teaching/Dashboard', [
