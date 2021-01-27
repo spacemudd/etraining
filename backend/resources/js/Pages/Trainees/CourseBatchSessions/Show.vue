@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="">
-            <div class="" style="margin-top: 2rem;width:200px;">
+            <div class="" style="margin-top: 2rem;width:200px;margin-left:5rem;">
                 <div class="">
                     <button @click="joinMeeting"
                             :disabled="$wait.is('STARTING_TRAINEE_SESSION')"
@@ -18,6 +18,7 @@
                     <a  :href="course_batch_session.join_url"
                         :disabled="$wait.is('STARTING_INSTRUCTOR_SESSION')"
                         dir="rtl"
+                        style="margin-top:5rem;"
                         class="btn btn-primary">
                         {{ $t('words.join-meeting-via-client') }}
                     </a>
