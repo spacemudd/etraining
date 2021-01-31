@@ -82,7 +82,7 @@
 
         <portal to="app-modal-container">
             <modal name="createCourseBatch"
-                   classes="overflow-y-scroll">
+                   classes="force-overflow-auto">
                 <form class="bg-white block h-5 p-10" @submit.prevent="createNewCourseBatch">
                     <h1 class="text-lg font-bold">{{ $t('words.create-course-batch') }}</h1>
 

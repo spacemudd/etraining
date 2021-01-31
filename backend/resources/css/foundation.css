@@ -39,12 +39,19 @@
 /**
  * To show the modals (from v-modal).
  */
+.vm--modal {
+    overflow: unset;
+}
 .vm--container {
     width: unset;
 }
 [dir=rtl] .vm--modal {
     left: unset !important;
     margin: 0 auto;
+}
+
+.force-overflow-auto {
+    overflow: auto !important;
 }
 
 .btn-gray {
