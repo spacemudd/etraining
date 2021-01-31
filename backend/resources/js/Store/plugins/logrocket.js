@@ -11,9 +11,7 @@
 import LogRocket from 'logrocket';
 import createPlugin from 'logrocket-vuex';
 
-const debug = process.env.NODE_ENV !== 'production'
-
-if (!debug && process.env.MIX_LOGROCKET_KEY) {
+if (window.location.hostname.includes('.com')) {
     LogRocket.init(process.env.MIX_LOGROCKET_KEY);
     let logRocketId = document.head.querySelector('meta[name="logrocket-id"]');
     let logRocketIdExtra = document.head.querySelector('meta[name="logrocket-id-extra"]');

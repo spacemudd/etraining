@@ -53,14 +53,6 @@
 </template>
 
 <script>
-    import '@syncfusion/ej2-base/styles/material.css';
-    import '@syncfusion/ej2-buttons/styles/material.css';
-    import '@syncfusion/ej2-inputs/styles/material.css';
-    import '@syncfusion/ej2-popups/styles/material.css';
-    import '@syncfusion/ej2-lists/styles/material.css';
-    import '@syncfusion/ej2-vue-calendars/styles/material.css';
-    import 'vue-js-modal/dist/styles.css';
-
     import JetLabel from '@/Jetstream/Label';
     import JetSecondaryButton from '@/Jetstream/SecondaryButton';
     import JetInputError from '@/Jetstream/InputError';
