@@ -19,13 +19,14 @@ mix.options({
 
 mix.copy('node_modules/@zoomus/websdk/dist', 'public/node_modules/@zoomus/websdk/dist')
 
+
 mix.js('resources/js/app.js', 'public/js')
     .postCss('resources/css/app.css', 'public/css', [
         require('postcss-import'),
         require('tailwindcss'),
     ])
     .webpackConfig({
-        output: { chunkFilename: 'js/[name].js?id=[chunkhash]' },
+        // output: { chunkFilename: 'js/[name].js?id=[chunkhash]' },
         resolve: {
             alias: {
                 vue$: 'vue/dist/vue.runtime.esm.js',
@@ -34,6 +35,9 @@ mix.js('resources/js/app.js', 'public/js')
         },
     });
 
+mix.extract()
+
 if (mix.inProduction()) {
     mix.version();
 }
+
