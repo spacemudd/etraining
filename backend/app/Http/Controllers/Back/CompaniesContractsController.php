@@ -26,6 +26,17 @@ class CompaniesContractsController extends Controller
         $this->authorize('view-company-contracts');
 
         if (request()->wantsJson()) {
+            CompanyContract::where('company_id', $company_id)
+                ->with(['instructors' => function($q) {
+                    $q->with('trainees')
+                        ->withCount('trainees');
+                }])
+                ->withCount('attachments')
+                ->latest()
+                ->get();
+        }
+
+        if (request()->wantsJson()) {
             return CompanyContract::where('company_id', $company_id)
                 ->with(['instructors' => function($q) {
                     $q->with('trainees')

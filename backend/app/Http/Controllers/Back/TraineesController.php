@@ -236,6 +236,16 @@ class TraineesController extends Controller
             ->get()
             ->toArray();
 
+        //foreach ($groups as &$group) {
+        //    $groupModel = TraineeGroup::find($group['id']);
+        //    if ($groupModel->trainees->count() === count($group['trainees'])) {
+        //        $group['trainees'][] = [
+        //            'id' => $group['id'],
+        //            'name' => $group['name'],
+        //        ];
+        //    }
+        //}
+
         foreach ($groups as &$group)  {
             $group['id'] .= '-group';
         }

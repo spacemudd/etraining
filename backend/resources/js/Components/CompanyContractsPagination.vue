@@ -108,16 +108,16 @@
         </template>
 
         <portal to="app-modal-container">
-            <modal name="selectingTraineesModal" classes="overflow-visible">
+            <modal name="selectingTraineesModal" classes="force-overflow-auto">
                 <div class="bg-white block h-5 p-10">
                     <h1 class="text-lg font-bold">{{ $t('words.attach-trainees') }}</h1>
                     <div>
                         <div class="mt-5" v-if="treeSelectOptions.length">
                             <treeselect v-model="selectingTraineesForm.trainees"
+                                        value-consists-of="BRANCH_PRIORITY"
                                         name="instructors"
                                         :multiple="true"
                                         :show-count="true"
-                                        :default-expand-level="1"
                                         :options="treeSelectOptions"
                                         :normalizer="normalizer"
                                         :placeholder="$t('words.please-select')"
@@ -233,6 +233,9 @@
             this.getInstructorGroups();
         },
         methods: {
+            // This actually load the instructors and their trainees.
+            // We need that when we call 'openChoosingTrainees', the function makes sure
+            // that if all the trainees under a group is selected, then add the group ID to the selection too.
             getContracts() {
                 this.$wait.start('GETTING_CONTRACTS');
                 axios.get('/back/companies/'+this.companyId+'/contracts')
