@@ -34,6 +34,7 @@ class CourseBatch extends Model
     protected $appends = [
         'starts_at_timezone',
         'ends_at_timezone',
+        'location_at_display',
     ];
 
     protected static function boot(): void
@@ -85,5 +86,14 @@ class CourseBatch extends Model
         if ($this->ends_at) {
             return Timezone::convertToLocal($this->ends_at, 'Y-m-d\TH:i:s\Z');
         }
+    }
+
+    public function getLocationAtDisplayAttribute()
+    {
+        if ($this->location_at === 'online') {
+            return __('words.online');
+        }
+
+        return $this->location_at;
     }
 }

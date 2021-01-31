@@ -269,5 +269,7 @@ return [
     'email-password-reset-link' => 'Email password reset link',
     'reset-password' => 'Reset password',
     'excel' => 'Excel',
-    'time' => 'Time',
+    'error-occurred' => 'Error occurred',
+    'you-must-delete-the-course-batches-first' => 'You must delete the course batches first',
+    'online' => 'Online',
 ];

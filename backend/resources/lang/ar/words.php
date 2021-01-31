@@ -271,5 +271,7 @@ return [
     'email-password-reset-link' => 'ارسل رابط إعادة كلمة السر',
     'reset-password' => 'إعادة تعيين كلمة السر',
     'excel' => 'إكسل',
-    'time' => 'الوقت',
+    'error-occurred' => 'حصل خطأ',
+    'you-must-delete-the-course-batches-first' => 'يجب عليك حذف كل اوقات الدورات لكي تحذف الدفعة',
+    'online' => 'اونلاين',
 ];

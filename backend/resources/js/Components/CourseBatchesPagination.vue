@@ -31,7 +31,7 @@
                 </empty-slate>
             </div>
             <div class="bg-white rounded-lg my-5 p-5 shadow" v-for="batch in course_batches" :key="batch.id">
-                <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-6 gap-12">
+                <div class="grid grid-cols-2 sm:grid-cols-1 md:grid-cols-6 gap-12">
                     <div class="col-span-2">
                         <table class="table text-sm w-full">
                             <colgroup>
@@ -64,12 +64,13 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="col-span-4 border-2 p-2">
+                    <div class="col-span-1"></div>
+                    <div class="col-span-3 border-2 p-2">
                         <!-- View sessions  -->
                         <div class="flex justify-start w-full">
                             <new-course-batch-session :course-batch="batch" @session:saved="getCourse()" />
                         </div>
-                        <p class="font-semibold mt-5">{{ $t('words.location') }}: {{ batch.location_at }}</p>
+                        <p class="mt-5 bg-blue-100 p-2 rounded-lg"><span class="font-semibold">{{ $t('words.location') }}</span>: {{ batch.location_at_display }}</p>
                         <course-batch-sessions-list class="mt-5"
                                                     @session:deleted="getCourse()"
                                                     :sessions="batch.course_batch_sessions">
@@ -214,13 +215,25 @@
                     });
             },
             deleteCourseBatch(batch) {
-                axios.delete(route('back.course-batches.destroy', {
-                    course_id: batch.course_id,
-                    course_batch: batch.id,
-                }))
-                .then(response => {
-                    this.getCourse();
-                });
+
+                if (batch.course_batch_sessions.length) {
+                    alert(this.$t('words.you-must-delete-the-course-batches-first'));
+                    return false;
+                }
+
+                if (confirm(this.$t('words.are-you-sure'))) {
+                    axios.delete(route('back.course-batches.destroy', {
+                        course_id: batch.course_id,
+                        course_batch: batch.id,
+                    }))
+                    .then(response => {
+                        this.getCourse();
+                    }).catch(error => {
+                        Logrocket.captureException(error);
+                        alert(this.$t('words.error-occurred'));
+                        throw error;
+                    });
+                }
             }
         }
     }

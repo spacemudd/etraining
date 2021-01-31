@@ -4,7 +4,6 @@ namespace App\Models\Back;
 
 use App\Scope\TeamScope;
 use App\Traits\HasUuid;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use JamesMills\LaravelTimezone\Facades\Timezone;

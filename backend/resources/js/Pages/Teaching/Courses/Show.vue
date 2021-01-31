@@ -94,7 +94,7 @@
             <jet-section-border></jet-section-border>
 
             <div class="grid grid-cols-1 md:grid-cols-6 gap-6 my-2">
-                <div class="md:col-span-4 lg:col-span-3 sm:col-span-3">
+                <div class="md:col-span-6 lg:col-span-6 sm:col-span-6">
                     <div class="px-4 sm:px-0">
                         <h3 class="text-lg font-medium text-gray-900">
                             {{ $t('words.course-schedule') }}
@@ -106,7 +106,7 @@
                     </div>
                 </div>
 
-                <div class="md:col-span-3 sm:col-span-1">
+                <div class="md:col-span-6 sm:col-span-1">
                     <course-batches-pagination :course-id="course.id" />
                 </div>
             </div>

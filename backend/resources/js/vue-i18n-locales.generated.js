@@ -434,7 +434,9 @@ export default {
             "forgot-password-title": "نسيت كلمة السر؟ لا مشكلة فقط أعلمنا عنوان بريدك الإلكتروني وسوف نرسل لك رابط إعادة كلمة السر التي ستسمح لك باختيار كلمة سر جديدة.",
             "email-password-reset-link": "ارسل رابط إعادة كلمة السر",
             "reset-password": "إعادة تعيين كلمة السر",
-            "excel": "إكسل"
+            "excel": "إكسل",
+            "error-occurred": "حصل خطأ",
+            "you-must-delete-the-course-batches-first": "يجب عليك حذف كل اوقات الدورات لكي تحذف الدفعة"
         }
     },
     "en": {
@@ -839,7 +841,9 @@ export default {
             "forgot-password-title": "Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.",
             "email-password-reset-link": "Email password reset link",
             "reset-password": "Reset password",
-            "excel": "Excel"
+            "excel": "Excel",
+            "error-occurred": "Error occurred",
+            "you-must-delete-the-course-batches-first": "You must delete the course batches first"
         }
     }
 }
