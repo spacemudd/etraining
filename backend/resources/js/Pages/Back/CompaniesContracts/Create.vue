@@ -47,7 +47,7 @@
                         <div class="col-span-4 sm:col-span-4">
                             <vue-dropzone ref="dropZoneContainer"
                                           id="dropzone"
-                                          @vdropzone-file-added.prevent="fileAdded"
+                                          @vdropzone-file-added="fileAdded"
                                           :options="dropzoneOptions"
                             ></vue-dropzone>
                         </div>
@@ -117,6 +117,9 @@
                     dictRemoveFile: this.$t('words.delete'),
                     thumbnailWidth: 150,
                     maxFilesize: 20,
+                    accept: function(file, done) {
+                        done();
+                    },
                 },
                 contractForm: this.$inertia.form({
                     reference_number: '',
