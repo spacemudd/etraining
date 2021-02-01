@@ -272,4 +272,5 @@ return [
     'error-occurred' => 'Error occurred',
     'you-must-delete-the-course-batches-first' => 'You must delete the course batches first',
     'online' => 'Online',
+    'contract' => 'Contract',
 ];

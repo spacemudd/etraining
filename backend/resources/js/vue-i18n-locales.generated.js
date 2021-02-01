@@ -437,7 +437,8 @@ export default {
             "excel": "إكسل",
             "error-occurred": "حصل خطأ",
             "you-must-delete-the-course-batches-first": "يجب عليك حذف كل اوقات الدورات لكي تحذف الدفعة",
-            "online": "اونلاين"
+            "online": "اونلاين",
+            "contract": "العقد"
         }
     },
     "en": {
@@ -845,7 +846,8 @@ export default {
             "excel": "Excel",
             "error-occurred": "Error occurred",
             "you-must-delete-the-course-batches-first": "You must delete the course batches first",
-            "online": "Online"
+            "online": "Online",
+            "contract": "Contract"
         }
     }
 }
