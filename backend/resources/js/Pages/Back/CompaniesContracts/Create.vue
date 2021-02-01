@@ -4,7 +4,7 @@
             <!--<breadcrumb/>-->
 
             <div class="mt-20" v-if="company">
-                <jet-form-section @submitted="createContract">
+                <jet-form-section @submitted.prevent="createContract">
                     <template #title>
                         {{ company.name_ar }}<br/>
                         {{ company.name_en }}
