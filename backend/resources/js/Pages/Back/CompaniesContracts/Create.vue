@@ -47,7 +47,7 @@
                         <div class="col-span-4 sm:col-span-4">
                             <vue-dropzone ref="dropZoneContainer"
                                           id="dropzone"
-                                          @vdropzone-file-added="fileAdded"
+                                          @vdropzone-file-added.prevent="fileAdded"
                                           :options="dropzoneOptions"
                             ></vue-dropzone>
                         </div>
