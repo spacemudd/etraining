@@ -5,7 +5,7 @@ export default {
         "Reset Password Notification": "إشعار إعادة كلمة السر",
         "You are receiving this email because we received a password reset request for your account.": "أنت تتلقى هذا البريد الإلكتروني لأننا تلقينا طلب إعادة ضبط كلمة السر لحسابك.",
         "Reset Password": "إعادة تعيين كلمة السر",
-        "This password reset link will expire in {count} minutes.": "رابط إعادة كلمة السر سوف ينتهيJetstreamServiceProvider صلاحيته خلال {count} دقائق.",
+        "This password reset link will expire in {count} minutes.": "رابط إعادة كلمة السر سوف ينتهي صلاحيته خلال {count} دقائق.",
         "If you did not request a password reset, no further action is required.": "إذا لم تطلب إعادة ضبط كلمة السر ، يرجى تجاهل هذا البريد.",
         "auth": {
             "failed": "بيانات الاعتماد هذه غير متطابقة مع البيانات المسجلة لدينا.",
@@ -436,7 +436,8 @@ export default {
             "reset-password": "إعادة تعيين كلمة السر",
             "excel": "إكسل",
             "error-occurred": "حصل خطأ",
-            "you-must-delete-the-course-batches-first": "يجب عليك حذف كل اوقات الدورات لكي تحذف الدفعة"
+            "you-must-delete-the-course-batches-first": "يجب عليك حذف كل اوقات الدورات لكي تحذف الدفعة",
+            "online": "اونلاين"
         }
     },
     "en": {
@@ -843,7 +844,8 @@ export default {
             "reset-password": "Reset password",
             "excel": "Excel",
             "error-occurred": "Error occurred",
-            "you-must-delete-the-course-batches-first": "You must delete the course batches first"
+            "you-must-delete-the-course-batches-first": "You must delete the course batches first",
+            "online": "Online"
         }
     }
 }

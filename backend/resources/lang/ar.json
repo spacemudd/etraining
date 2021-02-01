@@ -4,6 +4,6 @@
     "Reset Password Notification": "إشعار إعادة كلمة السر",
     "You are receiving this email because we received a password reset request for your account.": "أنت تتلقى هذا البريد الإلكتروني لأننا تلقينا طلب إعادة ضبط كلمة السر لحسابك.",
     "Reset Password": "إعادة تعيين كلمة السر",
-    "This password reset link will expire in :count minutes.": "رابط إعادة كلمة السر سوف ينتهيJetstreamServiceProvider صلاحيته خلال :count دقائق.",
+    "This password reset link will expire in :count minutes.": "رابط إعادة كلمة السر سوف ينتهي صلاحيته خلال :count دقائق.",
     "If you did not request a password reset, no further action is required.": "إذا لم تطلب إعادة ضبط كلمة السر ، يرجى تجاهل هذا البريد."
 }
