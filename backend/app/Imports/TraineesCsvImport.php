@@ -54,6 +54,10 @@ class TraineesCsvImport implements ToCollection
                 continue;
             }
 
+            if (! filter_var($row[3], FILTER_VALIDATE_EMAIL)) {
+                continue;
+            }
+
             $trainee = Trainee::make([
                 'team_id' => auth()->user()->current_team_id,
                 'name' => $row[0],
