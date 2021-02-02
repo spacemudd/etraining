@@ -438,7 +438,8 @@ export default {
             "error-occurred": "حصل خطأ",
             "you-must-delete-the-course-batches-first": "يجب عليك حذف كل اوقات الدورات لكي تحذف الدفعة",
             "online": "اونلاين",
-            "contract": "العقد"
+            "contract": "العقد",
+            "not-assigned-to-a-company": "غير مربوط مع شركة"
         }
     },
     "en": {
@@ -847,7 +848,8 @@ export default {
             "error-occurred": "Error occurred",
             "you-must-delete-the-course-batches-first": "You must delete the course batches first",
             "online": "Online",
-            "contract": "Contract"
+            "contract": "Contract",
+            "not-assigned-a-company": "Not assigned to a company"
         }
     }
 }

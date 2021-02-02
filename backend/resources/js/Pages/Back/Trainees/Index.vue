@@ -75,9 +75,13 @@
                         <td class="border-t">
                             <inertia-link class="px-6 py-4 flex items-center" :href="route('back.trainees.show', trainees.id)" tabindex="-1">
                                 <span v-if="trainees.company">{{ trainees.company.name_ar }}</span>
-                                <br/>
-                                <span v-if="trainees.trainee_group.length">{{ trainees.trainee_group[0].name }}</span>
+                                <span v-else class="italic text-gray-500 text-xs">{{ $t('words.not-assigned-to-a-company') }}</span>
                             </inertia-link>
+                            <p class="px-6 flex items-center text-xs text-gray-500"
+                               style=""
+                               v-if="trainees.trainee_group.length">
+                                {{ trainees.trainee_group[0].name }}
+                            </p>
                         </td>
                         <td class="border-t w-px">
                             <inertia-link class="px-4 flex items-center" :href="route('back.trainees.show', trainees.id)" tabindex="-1">

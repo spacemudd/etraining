@@ -275,4 +275,5 @@ return [
     'you-must-delete-the-course-batches-first' => 'يجب عليك حذف كل اوقات الدورات لكي تحذف الدفعة',
     'online' => 'اونلاين',
     'contract' => 'العقد',
+    'not-assigned-to-a-company' => 'غير مربوط مع شركة',
 ];

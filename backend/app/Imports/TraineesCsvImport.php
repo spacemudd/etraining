@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\Back\Trainee;
+use App\Models\Back\TraineeGroup;
 use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\MaritalStatus;
@@ -12,10 +13,21 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 class TraineesCsvImport implements ToCollection
 {
     private $company_id;
+    private $trainee_group_id;
+    private $trainee_group_name;
 
-    public function __construct($company_id)
+    /**
+     * TraineesCsvImport constructor.
+     *
+     * @param $company_id
+     * @param $trainee_group_name
+     * @param $trainee_group_id string UUID of group. If not provided, the group name will be used to create a new one.
+     */
+    public function __construct($company_id, $trainee_group_name, $trainee_group_id=null)
     {
         $this->company_id = $company_id;
+        $this->trainee_group_name = $trainee_group_name;
+        $this->trainee_group_id = $trainee_group_id;
     }
 
     /**
@@ -26,6 +38,13 @@ class TraineesCsvImport implements ToCollection
     public function collection(Collection $rows)
     {
         \DB::beginTransaction();
+
+        if ($this->trainee_group_id) {
+            $group = TraineeGroup::findOrFail($this->trainee_group_id);
+        } else {
+            $group = TraineeGroup::firstOrCreate(['name' => $this->trainee_group_name]);
+        }
+
         foreach ($rows as $row) {
             if ($row[0] === 'FullName') {
                 continue;
@@ -51,6 +70,8 @@ class TraineesCsvImport implements ToCollection
             $trainee->team_id = auth()->user()->current_team_id;
             $trainee->company_id = $this->company_id;
             $trainee->save();
+
+            $group->trainees()->attach([$trainee->id]);
         }
         \DB::commit();
 

@@ -273,4 +273,5 @@ return [
     'you-must-delete-the-course-batches-first' => 'You must delete the course batches first',
     'online' => 'Online',
     'contract' => 'Contract',
+    'not-assigned-a-company' => 'Not assigned to a company',
 ];
