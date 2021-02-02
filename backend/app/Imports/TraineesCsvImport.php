@@ -8,6 +8,7 @@ use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\MaritalStatus;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
 class TraineesCsvImport implements ToCollection
@@ -51,10 +52,12 @@ class TraineesCsvImport implements ToCollection
             }
 
             if (!isset($row[3])) { // The email.
+                Log::error('Failed validating for this user: '.$row[0].' --- '.$row[3].' --- '.$row[4]);
                 continue;
             }
 
             if (! filter_var($row[3], FILTER_VALIDATE_EMAIL)) {
+                Log::error('Failed validating for this user: '.$row[0].' --- '.$row[3].' --- '.$row[4]);
                 continue;
             }
 
