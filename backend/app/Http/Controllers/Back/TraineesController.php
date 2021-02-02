@@ -65,7 +65,7 @@ class TraineesController extends Controller
     {
         $request->validate([
             'trainee_group_name' => 'nullable|string|max:255',
-            'email' => 'string|max:255',
+            'email' => 'string|max:255|unique:trainees,email',
             'name' => 'required|string|max:255',
             'identity_number' => 'required|string|max:255',
             'birthday' => 'required|date',
