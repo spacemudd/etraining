@@ -73,6 +73,7 @@ class CreateCoursesManagementTest extends TestCase
 
         $this->assertDatabaseHas('courses', [
             'name_ar' => $pmpCourse['name_ar'],
+            'instructor_Id' => $instructor->id,
         ]);
     }
 

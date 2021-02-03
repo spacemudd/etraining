@@ -28,6 +28,9 @@ class AddStartUrlForZoom extends Migration
     {
         Schema::table('course_batch_sessions', function (Blueprint $table) {
             $table->dropColumn(['start_url']);
+        });
+
+        Schema::table('course_batch_sessions', function (Blueprint $table) {
             $table->dropColumn(['join_url']);
         });
     }

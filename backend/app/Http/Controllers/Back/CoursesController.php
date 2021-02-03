@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
 use App\Models\Back\Course;
+use App\Models\Back\Instructor;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -28,7 +29,9 @@ class CoursesController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Back/Courses/Create');
+        return Inertia::render('Back/Courses/Create', [
+            'instructors' => Instructor::get(),
+        ]);
     }
 
     /**
@@ -70,6 +73,7 @@ class CoursesController extends Controller
     public function show($id)
     {
         return Inertia::render('Back/Courses/Show', [
+            'instructors' => Instructor::get(),
             'course' => Course::with(['batches' => function($q) {
                 $q->with('trainee_group');
             }])->with('instructor')->findOrFail($id),
@@ -108,7 +112,8 @@ class CoursesController extends Controller
                 "approval_code" => $request->course['approval_code'],
                 "days_duration" => $request->course['days_duration'],
                 "hours_duration" => $request->course['hours_duration'],
-                "description" => $request->course['description']
+                "description" => $request->course['description'],
+                "instructor_id" => $request->course['instructor_id'],
             ]
         );
     }

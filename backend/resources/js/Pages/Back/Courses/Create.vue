@@ -31,6 +31,27 @@
                         </div>
 
                         <div class="col-span-6 sm:col-span-4">
+                            <jet-label for="instructor_id" :value="$t('words.instructor')" />
+
+                            <div class="relative">
+                                <select class="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                        v-model="form.instructor_id"
+                                        id="instructor_id">
+                                    <option v-for="instructor in instructors"
+                                            :key="instructor.id"
+                                            :value="instructor.id">
+                                        {{ instructor.name }}
+                                    </option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                                </div>
+                            </div>
+
+                            <jet-input-error :message="form.error('instructor_id')" class="mt-2" />
+                        </div>
+
+                        <div class="col-span-6 sm:col-span-4">
                             <jet-label for="description" :value="$t('words.description')" />
                             <jet-textarea id="description" class="mt-1 block w-full" v-model="form.description" autocomplete="off" />
                         </div>
@@ -96,7 +117,7 @@
     import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
     export default {
-        props: ['sessions'],
+        props: ['sessions', 'instructors'],
 
         components: {
             AppLayout,
@@ -128,6 +149,7 @@
                 form: this.$inertia.form({
                     name_ar: '',
                     name_en: '',
+                    instructor_id: '',
                     description: '',
                     approval_code: '',
                     days_duration: '',

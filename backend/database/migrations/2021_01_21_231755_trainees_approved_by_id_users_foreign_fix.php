@@ -14,7 +14,9 @@ class TraineesApprovedByIdUsersForeignFix extends Migration
     public function up()
     {
         Schema::table('trainees', function (Blueprint $table) {
-            $table->dropForeign(['approved_by_id']);
+            if (env('DB_CONNECTION') != 'sqlite') {
+                $table->dropForeign(['approved_by_id']);
+            }
             $table->foreign('approved_by_id')->references('id')->on('users')->nullOnDelete();
         });
     }

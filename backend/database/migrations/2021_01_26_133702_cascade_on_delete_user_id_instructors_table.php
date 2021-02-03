@@ -14,7 +14,9 @@ class CascadeOnDeleteUserIdInstructorsTable extends Migration
     public function up()
     {
         Schema::table('instructors', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
+            if (env('DB_CONNECTION') != 'sqlite') {
+                $table->dropForeign(['user_id']);
+            }
             $table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
         });
     }

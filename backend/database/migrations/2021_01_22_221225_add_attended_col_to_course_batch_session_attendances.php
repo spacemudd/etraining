@@ -14,7 +14,7 @@ class AddAttendedColToCourseBatchSessionAttendances extends Migration
     public function up()
     {
         Schema::table('course_batch_session_attendances', function (Blueprint $table) {
-            $table->boolean('attended')->after('attended_at');
+            $table->boolean('attended')->nullable()->after('attended_at');
         });
     }
 
