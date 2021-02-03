@@ -28,17 +28,27 @@
                 <span class="text-xs">{{ session.ends_at_timezone | timestampDate }}</span>
             </td>
             <td class="border-t py-3 text-left flex flex-col">
-                <inertia-link :href="route('teaching.course-batch-sessions.attendance.index', {course_batch_session_id: session.id})"
+                <a v-if="can('download-attendance-sheet-for-course-batch')"
+                              :href="route('teaching.course-batch-sessions.attendance.export', {course_batch_session_id: session.id})"
+                              class="bg-gray-200 py-1 px-2 rounded text-black text-sm hover:bg-gray-300 mt-5 w-full text-center">
+                    <img src="/img/excel.svg" class="float inline-block ml-2" style="max-width:16px;">
+                    {{ $t('words.download-attendance') }}
+                </a>
+                <inertia-link v-else
+                              :href="route('teaching.course-batch-sessions.attendance.index', {course_batch_session_id: session.id})"
                               class="bg-blue-600 py-1 px-2 rounded text-white text-sm hover:bg-blue-800 mt-5 w-full text-center">
                     {{ $t('words.attendance') }}
                 </inertia-link>
 
-                <button class="bg-red-600 py-1 px-2 rounded text-white text-sm hover:bg-red-800 mt-5 w-full"
+                <button class="bg-red-600 py-1 px-2 rounded text-white text-sm hover:bg-red-800 mt-5 w-full disabled:bg-gray-500"
+                        v-if="session.can_be_deleted"
+                        :class="{'btn-disabled': $wait.is('DELETING_SESSION_'+session.id)}"
                         :id="session.id"
                         :disabled="$wait.is('DELETING_SESSION_'+session.id)"
                         @click.prevent="deleteSession(session)">
                     {{ $t('words.cancel') }}
                 </button>
+
             </td>
         </tr>
         </tbody>
@@ -60,16 +70,26 @@
             },
         },
         methods: {
+            can(permName) {
+                let permissions = document.head.querySelector('meta[name="user-permissions"]');
+
+                if (permissions) {
+                    return permissions.content.indexOf(permName) !== -1;
+                }
+
+                return false;
+            },
             deleteSession(session) {
                 this.$wait.start('DELETING_SESSION_'+session.id);
                 axios.delete(route('back.course-batch-sessions.destroy', {
                     course_id: session.course_id,
                     course_batch_id: session.course_batch_id,
                     course_batch_session: session.id
-                }))
-                    .then(response => {
-                        this.$emit('session:deleted');
-                    }).finally(() => {
+                })).catch(error => {
+                    alert(error.response.data.message);
+                }).then(response => {
+                    this.$emit('session:deleted');
+                }).finally(() => {
                     this.$wait.end('DELETING_SESSION_'+session.id);
                 })
             },

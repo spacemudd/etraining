@@ -35,6 +35,7 @@ class CourseBatchSession extends Model
         'starts_at_timezone',
         'ends_at_timezone',
         'can_join',
+        'can_be_deleted',
     ];
 
     protected static function boot(): void
@@ -100,5 +101,10 @@ class CourseBatchSession extends Model
         } else {
             return true; // The location_at would be a Maps link.
         }
+    }
+
+    public function getCanBeDeletedAttribute()
+    {
+        return now()->isBefore($this->starts_at);
     }
 }

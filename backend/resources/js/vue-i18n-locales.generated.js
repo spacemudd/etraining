@@ -439,7 +439,9 @@ export default {
             "you-must-delete-the-course-batches-first": "يجب عليك حذف كل اوقات الدورات لكي تحذف الدفعة",
             "online": "اونلاين",
             "contract": "العقد",
-            "not-assigned-to-a-company": "غير مربوط مع شركة"
+            "not-assigned-to-a-company": "غير مربوط مع شركة",
+            "download-attendance-sheet-for-course-batch": "عرض ملف حضور الدورات (للإدارة)",
+            "download-attendance": "تنزيل الحضور"
         }
     },
     "en": {
@@ -849,7 +851,9 @@ export default {
             "you-must-delete-the-course-batches-first": "You must delete the course batches first",
             "online": "Online",
             "contract": "Contract",
-            "not-assigned-a-company": "Not assigned to a company"
+            "not-assigned-a-company": "Not assigned to a company",
+            "download-attendance-sheet-for-course-batch": "Download attendance sheet (for management)",
+            "download-attendance": "Download attendance"
         }
     }
 }
