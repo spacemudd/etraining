@@ -43,7 +43,8 @@ class InvitePeopleCommand extends Command
      */
     public function handle()
     {
-        //$company = Company::where('name_en', 'PBC')->firstOrFail();
+        // TODO: Check for emails starting with 'mailto:' and remove that string.
+        // Add trim too.
 
         if ($trainee_id = $this->option('trainee')) {
             $trainee = Trainee::findOrFail($trainee_id);
@@ -114,7 +115,7 @@ class InvitePeopleCommand extends Command
                 $bar->advance();
             }
         }
-        
+
         $bar->finish();
         return 1;
     }
