@@ -393,7 +393,6 @@ class TraineesController extends Controller
             ]
         );
 
-
         if(isset($request->trainee['trainee_group_object'])) {
             if(isset($trainee->trainee_group_object)) {
                 if($trainee->trainee_group_object->name != $request->trainee['trainee_group_object']['name']) {

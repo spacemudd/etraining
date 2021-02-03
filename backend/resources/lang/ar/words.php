@@ -276,4 +276,5 @@ return [
     'online' => 'اونلاين',
     'contract' => 'العقد',
     'not-assigned-to-a-company' => 'غير مربوط مع شركة',
+    'download-attendance-sheet-for-course-batch' => 'عرض ملف حضور الدورات (للإدارة)',
 ];

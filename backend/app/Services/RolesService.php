@@ -31,6 +31,7 @@ class RolesService
         'approve-invoices',
         'approve-instructor-applicants',
         'edit-permissions',
+        'download-attendance-sheet-for-course-batch',
         // add the same name of the role to translation files.
     ];
 

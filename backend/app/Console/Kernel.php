@@ -3,6 +3,9 @@
 namespace App\Console;
 
 use App\Console\Commands\DatabaseIndexTextCommand;
+use App\Console\Commands\InvitePeopleCommand;
+use App\Console\Commands\SeedPermissionsCommand;
+use App\Console\Commands\SetupDevCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -15,6 +18,9 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         DatabaseIndexTextCommand::class,
+        InvitePeopleCommand::class,
+        SetupDevCommand::class,
+        SeedPermissionsCommand::class,
     ];
 
     /**
