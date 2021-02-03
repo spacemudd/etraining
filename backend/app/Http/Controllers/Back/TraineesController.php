@@ -389,7 +389,6 @@ class TraineesController extends Controller
                 "marital_status_id" => $request->trainee['marital_status_id'],
                 "identity_number" => $request->trainee['identity_number'],
                 "email" => $request->trainee['email'],
-                "city_id" => $request->trainee['city_id'],
                 "children_count" => (int)$request->trainee['children_count'],
             ]
         );
@@ -412,10 +411,12 @@ class TraineesController extends Controller
                     $group->trainees()->attach([$trainee_id]);
                 }
             } else {
-                $group = TraineeGroup::firstOrCreate([
-                    'name' => $request->trainee['trainee_group_object']['name'],
-                ]);
-                $group->trainees()->attach([$trainee_id]);
+                if ($request->trainee['trainee_group_object']['name']) {
+                    $group = TraineeGroup::firstOrCreate([
+                        'name' => $request->trainee['trainee_group_object']['name'],
+                    ]);
+                    $group->trainees()->attach([$trainee_id]);
+                }
             }
         } else {
             return "Entered";
