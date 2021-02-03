@@ -88,7 +88,7 @@ class SiteSearchController extends Controller
 
             // NEEDS EDITING DEPENDS ON THE RESULTS
             $fields = array_filter($model::SEARCHABLE_FIELDS, fn($field) => $field !== 'id');
-            return $model::search($search_string)->get()->map(function ($modelRecord) use ($model, $fields, $search_string, $classname) {
+            return $model::search($search_string)->withTrashed()->get()->map(function ($modelRecord) use ($model, $fields, $search_string, $classname) {
                 // only extracting the relevant fields from our model
                 $fieldsData = $modelRecord->only($fields);
 
