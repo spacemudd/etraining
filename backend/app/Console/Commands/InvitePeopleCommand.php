@@ -43,7 +43,7 @@ class InvitePeopleCommand extends Command
      */
     public function handle()
     {
-        $company = Company::where('name_en', 'PBC')->firstOrFail();
+        //$company = Company::where('name_en', 'PBC')->firstOrFail();
 
         if ($trainee_id = $this->option('trainee')) {
             $trainee = Trainee::findOrFail($trainee_id);
@@ -71,38 +71,51 @@ class InvitePeopleCommand extends Command
             return 1;
         }
 
-        foreach ($company->trainees as $trainee) {
-            if ($trainee->user_id) {
-                continue;
-            }
+        $companies = Company::whereNotIn('id',
+            ['a0bc0fcb-20e3-45a3-a057-be5d47d26d19', '6d0a6fc0-4b5e-491d-97cc-b70b1f72774f']
+        )->get();
 
-            $this->info('Creating for user: '.$trainee->email);
-            try {
-                $user = (new CreateNewTraineeUser())->create([
-                    'trainee_id' => $trainee->id,
-                    'name' => $trainee->name,
-                    'email' => $trainee->email,
-                    'phone' => $trainee->phone,
-                    'password' => 'password',
-                    'password_confirmation' => 'password',
-                ]);
-            } catch (\Exception $e) {
-                Log::info('Failed validation for user: '.$trainee->email);
-                continue;
-                throw $e;
-            }
 
-            try {
-                Notification::send($user, new TraineeSetupAccountNotification());
-            } catch (\Exception $e) {
-                Log::info('Failed for user: '.$trainee->email);
-                continue;
-                throw $e;
-            }
+        $traineesCount = Trainee::whereIn('company_id', $companies->pluck('id'))->count();
+        $bar = $this->output->createProgressBar($traineesCount);
+        $bar->start();
 
-            sleep(1);
+        foreach ($companies as $company) {
+            foreach ($company->trainees as $trainee) {
+                if ($trainee->user_id) {
+                    continue;
+                }
+
+                $this->info('Creating for user: '.$trainee->email);
+                try {
+                    $user = (new CreateNewTraineeUser())->create([
+                        'trainee_id' => $trainee->id,
+                        'name' => $trainee->name,
+                        'email' => $trainee->email,
+                        'phone' => $trainee->phone,
+                        'password' => 'password',
+                        'password_confirmation' => 'password',
+                    ]);
+                } catch (\Exception $e) {
+                    Log::info('Failed validation for user: '.$trainee->email);
+                    continue;
+                    throw $e;
+                }
+
+                try {
+                    Notification::send($user, new TraineeSetupAccountNotification());
+                } catch (\Exception $e) {
+                    Log::info('Failed for user: '.$trainee->email);
+                    continue;
+                    throw $e;
+                }
+
+                sleep(1);
+                $bar->advance();
+            }
         }
-
+        
+        $bar->finish();
         return 1;
     }
 }
