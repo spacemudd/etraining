@@ -52,12 +52,12 @@ class TraineesCsvImport implements ToCollection
             }
 
             if (!isset($row[3])) { // The email.
-                Log::error('Failed validating for this user: '.$row[0].' --- '.$row[3].' --- '.$row[4]);
+                Log::error('Failed validating for this user: '.$row[0]);
                 continue;
             }
 
             if (! filter_var($row[3], FILTER_VALIDATE_EMAIL)) {
-                Log::error('Failed validating for this user: '.$row[0].' --- '.$row[3].' --- '.$row[4]);
+                Log::error('Failed validating for this user: '.$row[0]);
                 continue;
             }
 
