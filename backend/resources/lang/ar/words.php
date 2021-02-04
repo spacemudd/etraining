@@ -278,4 +278,5 @@ return [
     'not-assigned-to-a-company' => 'غير مربوط مع شركة',
     'download-attendance-sheet-for-course-batch' => 'عرض ملف حضور الدورات (للإدارة)',
     'download-attendance' => 'تنزيل الحضور',
+    'view-company-trainees' => 'عرض متدربين الشركة',
 ];

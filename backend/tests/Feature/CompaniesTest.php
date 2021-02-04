@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Actions\Fortify\CreateNewUser;
 use App\Models\Back\Company;
+use App\Models\Back\Trainee;
 use App\Models\Role;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -78,5 +79,20 @@ class CompaniesTest extends TestCase
         $this->actingAs($this->user)
             ->get('/back/companies/create')
             ->assertSuccessful();
+    }
+
+    public function test_admin_can_see_trainees_under_company()
+    {
+        $acmeCompany = Company::factory()->create(['team_id' => $this->user->personalTeam()->id]);
+        $trainee = Trainee::factory()->create([
+            'team_id' => $this->user->personalTeam()->id,
+            'company_id' => $acmeCompany->id,
+        ]);
+        $this->actingAs($this->user)
+            ->get('/back/companies/'.$acmeCompany->id)
+            ->assertSuccessful()
+            ->assertPropValue('company', function($company) use ($acmeCompany) {
+                $this->assertCount(1, $company['trainees']);
+            });
     }
 }

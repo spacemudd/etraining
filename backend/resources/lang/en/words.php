@@ -276,4 +276,5 @@ return [
     'not-assigned-a-company' => 'Not assigned to a company',
     'download-attendance-sheet-for-course-batch' => 'Download attendance sheet (for management)',
     'download-attendance' => 'Download attendance',
+    'view-company-trainees' => 'View company trainees',
 ];

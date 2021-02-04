@@ -32,6 +32,7 @@ class RolesService
         'approve-instructor-applicants',
         'edit-permissions',
         'download-attendance-sheet-for-course-batch',
+        'view-company-trainees',
         // add the same name of the role to translation files.
     ];
 

@@ -58,6 +58,27 @@
                     <company-contracts-pagination :company-id="company.id" :instructors="instructors" />
                 </div>
             </div>
+
+            <jet-section-border></jet-section-border>
+
+            <div v-can="'view-company-trainees'" class="grid grid-cols-1 md:grid-cols-6 gap-6 mt-2">
+                <div class="md:col-span-2 sm:col-span-3">
+                    <div class="px-4 sm:px-0">
+                        <h3 class="text-lg font-medium text-gray-900">
+                            {{ $t('words.trainees') }} <span v-if="company.trainees_count">({{ company.trainees_count }})</span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="md:col-span-4 sm:col-span-1">
+                    <ul>
+                        <li v-for="trainee in company.trainees">
+                            <inertia-link :href="route('back.trainees.show', {id: trainee.id})">
+                                {{ trainee.name }}
+                            </inertia-link>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </app-layout>
 </template>
