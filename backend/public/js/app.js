@@ -878,51 +878,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -998,17 +953,12 @@ __webpack_require__.r(__webpack_exports__);
     toDate: function toDate(timestamp) {
       return moment(timestamp).local().format('YYYY-MM-DD');
     },
-    openCreateNewCourseBatch: function openCreateNewCourseBatch() {
-      this.$modal.toggle('createCourseBatch');
-    },
     createNewCourseBatch: function createNewCourseBatch() {
       var _this2 = this;
 
       this.form.post(route('back.course-batches.store', {
         course_id: this.courseId
       })).then(function (response) {
-        _this2.openCreateNewCourseBatch();
-
         _this2.getCourse();
       });
     },
@@ -16868,35 +16818,44 @@ var render = function() {
     ? _c(
         "div",
         [
-          _c("div", { staticClass: "flex justify-between items-center" }, [
-            _c(
-              "p",
-              { staticClass: "text-gray-500 text-sm font-semibold" },
-              [
-                _vm._v(_vm._s(_vm.$t("words.view-all")) + " "),
-                _vm.course_batches && _vm.course_batches.length
-                  ? [_vm._v("(" + _vm._s(_vm.course_batches.length) + ")")]
-                  : _vm._e()
-              ],
-              2
-            ),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass:
-                  "inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150",
-                on: { click: _vm.openCreateNewCourseBatch }
-              },
-              [
-                _vm._v(
-                  "\n            " +
-                    _vm._s(_vm.$t("words.add-new-batch")) +
-                    "\n        "
-                )
-              ]
-            )
-          ]),
+          _c(
+            "div",
+            { staticClass: "flex justify-between items-center" },
+            [
+              _c(
+                "p",
+                { staticClass: "text-gray-500 text-sm font-semibold" },
+                [
+                  _vm._v(_vm._s(_vm.$t("words.view-all")) + " "),
+                  _vm.course_batches && _vm.course_batches.length
+                    ? [_vm._v("(" + _vm._s(_vm.course_batches.length) + ")")]
+                    : _vm._e()
+                ],
+                2
+              ),
+              _vm._v(" "),
+              _c(
+                "inertia-link",
+                {
+                  staticClass:
+                    "inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150",
+                  attrs: {
+                    href: _vm.route("back.course-batches.create", {
+                      course_id: _vm.courseId
+                    })
+                  }
+                },
+                [
+                  _vm._v(
+                    "\n            " +
+                      _vm._s(_vm.$t("words.add-new-batch")) +
+                      "\n        "
+                  )
+                ]
+              )
+            ],
+            1
+          ),
           _vm._v(" "),
           _vm.$wait.is("GETTING_COURSE")
             ? _c("Skeleton", {
@@ -16917,12 +16876,15 @@ var render = function() {
                                 fn: function() {
                                   return [
                                     _c(
-                                      "button",
+                                      "inertia-link",
                                       {
                                         staticClass:
                                           "inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150",
-                                        on: {
-                                          click: _vm.openCreateNewCourseBatch
+                                        attrs: {
+                                          href: _vm.route(
+                                            "back.course-batches.create",
+                                            { course_id: _vm.courseId }
+                                          )
                                         }
                                       },
                                       [
@@ -16942,7 +16904,7 @@ var render = function() {
                             ],
                             null,
                             false,
-                            2066750197
+                            3178457691
                           )
                         })
                       ],
@@ -17141,223 +17103,7 @@ var render = function() {
                     ]
                   )
                 })
-              ],
-          _vm._v(" "),
-          _c(
-            "portal",
-            { attrs: { to: "app-modal-container" } },
-            [
-              _c(
-                "modal",
-                {
-                  attrs: {
-                    name: "createCourseBatch",
-                    classes: "force-overflow-auto"
-                  }
-                },
-                [
-                  _c(
-                    "form",
-                    {
-                      staticClass: "bg-white block h-5 p-10",
-                      on: {
-                        submit: function($event) {
-                          $event.preventDefault()
-                          return _vm.createNewCourseBatch($event)
-                        }
-                      }
-                    },
-                    [
-                      _c("h1", { staticClass: "text-lg font-bold" }, [
-                        _vm._v(_vm._s(_vm.$t("words.create-course-batch")))
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "mt-5" },
-                        [
-                          _c("jet-label", {
-                            attrs: {
-                              for: "training_group_id",
-                              value: _vm.$t("words.group-name")
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("select-trainee-group", {
-                            staticClass: "mt-2",
-                            attrs: { required: true },
-                            on: { input: _vm.selectGroupName },
-                            model: {
-                              value: _vm.form.trainee_group_id,
-                              callback: function($$v) {
-                                _vm.$set(_vm.form, "trainee_group_id", $$v)
-                              },
-                              expression: "form.trainee_group_id"
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("jet-input-error", {
-                            staticClass: "mt-2",
-                            attrs: {
-                              message: _vm.form.error("training_group_id")
-                            }
-                          })
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "mt-5" },
-                        [
-                          _c("jet-label", {
-                            attrs: {
-                              for: "starts_at",
-                              value: _vm.$t("words.start-date")
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("jet-input", {
-                            staticClass: "mt-1 block w-full",
-                            attrs: {
-                              id: "starts_at",
-                              type: "date",
-                              required: ""
-                            },
-                            model: {
-                              value: _vm.form.starts_at,
-                              callback: function($$v) {
-                                _vm.$set(_vm.form, "starts_at", $$v)
-                              },
-                              expression: "form.starts_at"
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("jet-input-error", {
-                            staticClass: "mt-2",
-                            attrs: { message: _vm.form.error("starts_at") }
-                          })
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "mt-5" },
-                        [
-                          _c("jet-label", {
-                            attrs: {
-                              for: "ends_at",
-                              value: _vm.$t("words.end-date")
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("jet-input", {
-                            staticClass: "mt-1 block w-full",
-                            attrs: {
-                              id: "ends_at",
-                              type: "date",
-                              required: ""
-                            },
-                            model: {
-                              value: _vm.form.ends_at,
-                              callback: function($$v) {
-                                _vm.$set(_vm.form, "ends_at", $$v)
-                              },
-                              expression: "form.ends_at"
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("jet-input-error", {
-                            staticClass: "mt-2",
-                            attrs: { message: _vm.form.error("ends_at") }
-                          })
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "mt-5" },
-                        [
-                          _c("jet-label", {
-                            attrs: {
-                              for: "location_at",
-                              value: _vm.$t("words.location")
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("jet-input", {
-                            staticClass: "mt-1 block w-full",
-                            attrs: {
-                              id: "location_at",
-                              type: "text",
-                              required: ""
-                            },
-                            model: {
-                              value: _vm.form.location_at,
-                              callback: function($$v) {
-                                _vm.$set(_vm.form, "location_at", $$v)
-                              },
-                              expression: "form.location_at"
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("jet-input-error", {
-                            staticClass: "mt-2",
-                            attrs: { message: _vm.form.error("location_at") }
-                          })
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "mt-5 mb-5" },
-                        [
-                          _c(
-                            "jet-secondary-button",
-                            {
-                              nativeOn: {
-                                click: function($event) {
-                                  return _vm.openCreateNewCourseBatch($event)
-                                }
-                              }
-                            },
-                            [
-                              _vm._v(
-                                "\n                        " +
-                                  _vm._s(_vm.$t("words.cancel")) +
-                                  "\n                    "
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "jet-button",
-                            {
-                              staticClass: "rtl:mr-5 ltr:ml-5",
-                              class: { "opacity-25": _vm.form.processing },
-                              attrs: { disabled: _vm.form.processing }
-                            },
-                            [
-                              _vm._v(
-                                "\n                        " +
-                                  _vm._s(_vm.$t("words.save")) +
-                                  "\n                    "
-                              )
-                            ]
-                          )
-                        ],
-                        1
-                      )
-                    ]
-                  )
-                ]
-              )
-            ],
-            1
-          )
+              ]
         ],
         2
       )

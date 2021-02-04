@@ -7,6 +7,7 @@ use App\Models\Back\Course;
 use App\Models\Back\CourseBatch;
 use App\Models\Back\CourseBatchSession;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class CourseBatchesController extends Controller
 {
@@ -32,9 +33,11 @@ class CourseBatchesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($course_id)
     {
-        //
+        return Inertia::render('Back/Courses/CourseBatches/Create', [
+            'course' => Course::findOrFail($course_id),
+        ]);
     }
 
     /**
