@@ -363,35 +363,40 @@ class TraineesController extends Controller
         return redirect()->route('back.trainees.show', $trainee->id);
     }
 
+    /**
+     * Update trainee data.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param $trainee_id
+     * @return \Illuminate\Http\RedirectResponse|string
+     */
     public function update(Request $request, $trainee_id)
     {
         $trainee = Trainee::findOrFail($trainee_id);
 
         $request->validate([
             'trainee_group_name' => 'nullable|string|max:255',
-            'email' => 'nullable|string|max:255',
-            'name' => 'nullable|string|max:255',
-            'identity_number' => 'nullable|string|max:255',
+            'email' => 'required|string|max:255|unique:trainees,email,'.$trainee->id,
+            'name' => 'required|string|max:255',
+            'identity_number' => 'required|string|max:255',
             'birthday' => 'nullable|date',
             'educational_level_id' => 'nullable|exists:educational_levels,id',
             'city_id' => 'nullable|exists:cities,id',
             'marital_status_id' => 'nullable|exists:marital_statuses,id',
         ]);
 
-         $trainee->update(
-            [
-                "name" => $request->trainee['name'],
-                "phone" => $request->trainee['phone'],
-                "phone_additional" => $request->trainee['phone_additional'],
-                "birthday" => $request->trainee['birthday'],
-                "educational_level_id" => $request->trainee['educational_level_id'],
-                "city_id" => $request->trainee['city_id'],
-                "marital_status_id" => $request->trainee['marital_status_id'],
-                "identity_number" => $request->trainee['identity_number'],
-                "email" => $request->trainee['email'],
-                "children_count" => (int)$request->trainee['children_count'],
-            ]
-        );
+        if ($trainee->user) {
+            $request->validate([
+                'email' => 'required|string|max:255|unique:users,email,'.$trainee->user->id,
+            ]);
+        }
+
+        DB::beginTransaction();
+        $trainee->update($request->except('_token'));
+
+        $user = $trainee->user;
+        $user->email = $trainee->refresh()->email;
+        $user->save();
 
         if(isset($request->trainee['trainee_group_object'])) {
             if(isset($trainee->trainee_group_object)) {
@@ -427,6 +432,7 @@ class TraineesController extends Controller
                 $group->trainees()->detach([$trainee_id]);
             }
         }
+        DB::commit();
 
         return redirect()->route('back.trainees.show', $trainee_id);
     }

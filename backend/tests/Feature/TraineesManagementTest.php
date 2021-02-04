@@ -438,39 +438,61 @@ class TraineesManagementTest extends TestCase
         ]);
     }
 
-    public function test_approving_an_instructor_sends_a_welcome_notifiction()
-    {
-        Notification::fake();
-
-        $admin = $this->user;
-
-        $shafiqUser = User::factory()->create([
-            'email' => 'shafiqalshaar@gmail.com',
-        ]);
-
-        $team = $this->user->currentTeam;
-        (new AddTeamMember())->add($shafiqUser, $team, $shafiqUser->email, 'instructor');
-
-        $shafiqUser->current_team_id = $team->id;
-        $shafiqUser->save();
-
-        $shafiqProfile = Instructor::factory()->create([
-            'user_id' => $shafiqUser->id,
-            'email' => $shafiqUser->email,
-            'status' => Instructor::STATUS_PENDING_APPROVAL,
-        ]);
-
-        $this->actingAs($admin)
-            ->post(route('back.instructors.approve-user', $shafiqProfile->id));
-
-        Notification::assertSentTo($shafiqProfile->user, InstructorApplicationApprovedNotification::class);
-    }
-
     public function test_admin_can_import_users()
     {
         $admin = $this->user;
         $this->actingAs($admin)
             ->get(route('back.trainees.import'))
             ->assertSuccessful();
+    }
+
+    public function test_updating_trainee_email_changes_the_user_email_too()
+    {
+        $admin = $this->user;
+
+        $trainee_input = $this->make_trainee();
+
+        $this->post(route('register.trainees'), $trainee_input);
+        $trainee = Trainee::whereEmail($trainee_input['email'])->first();
+
+        $this->actingAs($admin)
+            ->get(route('back.trainees.index'))
+            ->assertSee($trainee_input['email']);
+
+        $newEmail = $this->faker()->email;
+
+        $this->actingAs($admin)
+            ->put(route('back.trainees.update', $trainee->id), [
+                'name' => $this->faker->name,
+                'identity_number' => '123',
+                'email' => $newEmail
+            ])
+            ->assertSessionDoesntHaveErrors();
+
+        $this->assertDatabaseHas('trainees', [
+            'email' => $newEmail,
+        ]);
+
+        $this->assertDatabaseHas('users', [
+            'email' => $newEmail,
+        ]);
+    }
+
+    public function test_updating_trainee_email_with_an_existing_user_email_fails()
+    {
+        $existingUser = User::factory()->create();
+
+        $admin = $this->user;
+        $trainee_input = $this->make_trainee();
+        $this->post(route('register.trainees'), $trainee_input);
+        $trainee = Trainee::whereEmail($trainee_input['email'])->first();
+
+        $this->actingAs($admin)
+            ->put(route('back.trainees.update', $trainee->id), [
+                'name' => $this->faker->name,
+                'identity_number' => '123',
+                'email' => $existingUser->email,
+            ])
+            ->assertSessionHasErrorsIn('email');
     }
 }
