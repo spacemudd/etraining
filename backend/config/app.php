@@ -180,6 +180,7 @@ return [
         App\Providers\JetstreamServiceProvider::class,
         Laravel\Scout\ScoutServiceProvider::class,
         TeamTNT\Scout\TNTSearchScoutServiceProvider::class,
+        \App\Providers\HorizonServiceProvider::class,
 
     ],
 
