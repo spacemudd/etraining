@@ -13,11 +13,9 @@
         <!-- Header -->
         <div class="flex justify-between items-center">
             <p class="text-gray-500 text-sm font-semibold">{{ $t('words.view-all') }} <template v-if="course_batches && course_batches.length">({{ course_batches.length }})</template></p>
-            <inertia-link
-                :href="route('back.course-batches.create', {'course_id': courseId})"
-                class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150">
+            <button @click="openCreateNewCourseBatch" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150">
                 {{ $t('words.add-new-batch') }}
-            </inertia-link>
+            </button>
         </div>
 
         <!-- All contracts -->
@@ -26,11 +24,9 @@
             <div v-if="course_batches.length===0">
                 <empty-slate class="border-2 rounded-lg mt-3">
                     <template #actions>
-                        <inertia-link
-                            :href="route('back.course-batches.create', {'course_id': courseId})"
-                            class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150">
+                        <button @click="openCreateNewCourseBatch" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150">
                             {{ $t('words.add-new-batch') }}
-                        </inertia-link>
+                        </button>
                     </template>
                 </empty-slate>
             </div>
@@ -83,6 +79,55 @@
                 </div>
             </div>
         </template>
+
+        <portal to="app-modal-container">
+            <modal name="createCourseBatch"
+                   classes="force-overflow-auto">
+                <form class="bg-white block h-5 p-10" @submit.prevent="createNewCourseBatch">
+                    <h1 class="text-lg font-bold">{{ $t('words.create-course-batch') }}</h1>
+
+                    <div class="mt-5">
+                        <jet-label for="training_group_id" :value="$t('words.group-name')" />
+                        <select-trainee-group class="mt-2"
+                                              @input="selectGroupName"
+                                              v-model="form.trainee_group_id"
+                                              :required="true"
+                        />
+                        <jet-input-error :message="form.error('training_group_id')" class="mt-2" />
+                    </div>
+
+                    <div class="mt-5">
+                        <jet-label for="starts_at" :value="$t('words.start-date')" />
+                        <jet-input id="starts_at" type="date" class="mt-1 block w-full" v-model="form.starts_at" required />
+                        <jet-input-error :message="form.error('starts_at')" class="mt-2" />
+                    </div>
+
+                    <div class="mt-5">
+                        <jet-label for="ends_at" :value="$t('words.end-date')" />
+                        <jet-input id="ends_at" type="date" class="mt-1 block w-full" v-model="form.ends_at" required />
+                        <jet-input-error :message="form.error('ends_at')" class="mt-2" />
+                    </div>
+
+                    <div class="mt-5">
+                        <jet-label for="location_at" :value="$t('words.location')" />
+                        <jet-input id="location_at" type="text" class="mt-1 block w-full" v-model="form.location_at" required />
+                        <jet-input-error :message="form.error('location_at')" class="mt-2" />
+                    </div>
+
+                    <div class="mt-5 mb-5">
+                        <jet-secondary-button @click.native="openCreateNewCourseBatch">
+                            {{ $t('words.cancel') }}
+                        </jet-secondary-button>
+
+                        <jet-button class="rtl:mr-5 ltr:ml-5"
+                                    :class="{ 'opacity-25': form.processing }"
+                                    :disabled="form.processing">
+                            {{ $t('words.save') }}
+                        </jet-button>
+                    </div>
+                </form>
+            </modal>
+        </portal>
     </div>
 </template>
 
@@ -159,9 +204,13 @@
             toDate(timestamp) {
                 return moment(timestamp).local().format('YYYY-MM-DD');
             },
+            openCreateNewCourseBatch() {
+                this.$modal.toggle('createCourseBatch');
+            },
             createNewCourseBatch() {
                 this.form.post(route('back.course-batches.store', {course_id: this.courseId}))
                     .then(response => {
+                        this.openCreateNewCourseBatch();
                         this.getCourse();
                     });
             },
