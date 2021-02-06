@@ -172,8 +172,12 @@
                 </div>
 
                 <div class="col-span-6 sm:col-span-1">
-                    <jet-label for="last_login_at" :value="$t('words.last_login_at')" />
-                    <jet-input id="last_login_at" type="text" :value="trainee.user ? trainee.user.last_login_at_timezone : ''" disabled />
+                    <jet-label for="last_login_at" :value="$t('words.last-login-at')" />
+                    <jet-input id="last_login_at"
+                               type="text"
+                               class="form-input rounded-md shadow-sm mt-1 block w-full bg-gray-200"
+                               :value="trainee.user ? trainee.user.last_login_at_timezone : ''"
+                               disabled />
                 </div>
 
                 <div class="col-span-6 sm:col-span-6">
