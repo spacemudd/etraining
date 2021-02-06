@@ -51,7 +51,6 @@ class Trainee extends Model implements HasMedia, SearchableLabels
         'children_count',
         'phone',
         'phone_additional',
-        'name_selectable',
         'deleted_remark',
         'trainee_group_id',
     ];

@@ -369,14 +369,13 @@ class TraineesController extends Controller
      * @param \Illuminate\Http\Request $request
      * @param $trainee_id
      * @return \Illuminate\Http\RedirectResponse|string
+     * @throws \Throwable
      */
     public function update(Request $request, $trainee_id)
     {
-        $trainee = Trainee::findOrFail($trainee_id);
-
         $request->validate([
             'trainee_group_name' => 'nullable|string|max:255',
-            'email' => 'required|string|max:255|unique:trainees,email,'.$trainee->id,
+            'email' => 'required|string|max:255|unique:trainees,email,'.$trainee_id,
             'name' => 'required|string|max:255',
             'identity_number' => 'required|string|max:255',
             'birthday' => 'nullable|date',
@@ -384,6 +383,8 @@ class TraineesController extends Controller
             'city_id' => 'nullable|exists:cities,id',
             'marital_status_id' => 'nullable|exists:marital_statuses,id',
         ]);
+
+        $trainee = Trainee::findOrFail($trainee_id);
 
         if ($trainee->user) {
             $request->validate([
@@ -394,14 +395,15 @@ class TraineesController extends Controller
         DB::beginTransaction();
         $trainee->update($request->except('_token'));
 
-        $user = $trainee->user;
-        $user->email = $trainee->refresh()->email;
-        $user->save();
 
-        if(isset($request->trainee['trainee_group_object'])) {
+        if ($user = $trainee->user) {
+            $user->email = $trainee->refresh()->email;
+            $user->save();
+        }
+    
+        if(isset($request['trainee_group_object'])) {
             if(isset($trainee->trainee_group_object)) {
-                if($trainee->trainee_group_object->name != $request->trainee['trainee_group_object']['name']) {
-
+                if($trainee->trainee_group_object->name !== $request['trainee_group_object']['name']) {
                     $group = TraineeGroup::firstOrCreate([
                         'name' => $trainee->trainee_group_object->name,
                     ]);
@@ -409,15 +411,15 @@ class TraineesController extends Controller
                     $group->trainees()->detach([$trainee_id]);
 
                     $group = TraineeGroup::firstOrCreate([
-                        'name' => $request->trainee['trainee_group_object']['name'],
+                        'name' => $request['trainee_group_object']['name'],
                     ]);
 
                     $group->trainees()->attach([$trainee_id]);
                 }
             } else {
-                if ($request->trainee['trainee_group_object']['name']) {
+                if ($request['trainee_group_object']['name']) {
                     $group = TraineeGroup::firstOrCreate([
-                        'name' => $request->trainee['trainee_group_object']['name'],
+                        'name' => $request['trainee_group_object']['name'],
                     ]);
                     $group->trainees()->attach([$trainee_id]);
                 }
