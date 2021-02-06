@@ -14,6 +14,7 @@ use App\Models\EducationalLevel;
 use App\Models\MaritalStatus;
 use App\Models\User;
 use App\Notifications\InstructorApplicationApprovedNotification;
+use App\Notifications\TraineeSetupAccountNotification;
 use App\Services\RolesService;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
@@ -494,5 +495,22 @@ class TraineesManagementTest extends TestCase
                 'email' => $existingUser->email,
             ])
             ->assertSessionHasErrorsIn('email');
+    }
+
+    public function test_admin_re_sending_invitation_notification_to_trainee()
+    {
+        Notification::fake();
+
+        $admin = $this->user;
+        $trainee_input = $this->make_trainee();
+        $this->post(route('register.trainees'), $trainee_input);
+        $trainee = Trainee::whereEmail($trainee_input['email'])->first();
+        $this->actingAs($admin)->post(route('back.trainees.approve-user', $trainee->id));
+
+        $this->actingAs($admin)
+            ->post(route('back.trainees.re-send-invitation', $trainee->id))
+            ->assertRedirect();
+
+        Notification::assertSentTo($trainee->user, TraineeSetupAccountNotification::class);
     }
 }

@@ -279,4 +279,6 @@ return [
     'download-attendance-sheet-for-course-batch' => 'عرض ملف حضور الدورات (للإدارة)',
     'download-attendance' => 'تنزيل الحضور',
     'view-company-trainees' => 'عرض متدربين الشركة',
+    'resend-invitation' => 'إرسل رسالة دعوة',
+    'done-successfully' => 'تم بنجاح',
 ];

@@ -277,4 +277,6 @@ return [
     'download-attendance-sheet-for-course-batch' => 'Download attendance sheet (for management)',
     'download-attendance' => 'Download attendance',
     'view-company-trainees' => 'View company trainees',
+    'resend-invitation' => 'Resend Invitation',
+    'done-successfully' => 'Done successfully',
 ];

@@ -21,7 +21,6 @@
                    <button v-if="!editButton.editOption" @click="editTrainee" class=" items-center justify-end rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
                         {{ editButton.text }}
                     </button>
-
                     <button v-else @click="editTrainee" class=" items-center justify-end rounded-md px-4 py-2 bg-green-300 hover:bg-green-400 text-right">
                         {{ editButton.text }}
                     </button>
@@ -30,12 +29,28 @@
                         {{ cancelButton.text }}
                     </button>
 
+                    <template v-if="trainee.user">
+                        <button v-if="!trainee.user.last_login_at"
+                                @click="resendInvitation"
+                                :class="{'btn-disabled': this.$wait.is('SENDING_INVITATION')}"
+                                :disabled="this.$wait.is('SENDING_INVITATION')"
+                                class="inline-flex items-center rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
+
+                            <svg v-if="this.$wait.is('SENDING_INVITATION')" class="animate-spin ml-1 ml-3 h-3 w-3 text-dark" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+
+                            {{ $t('words.resend-invitation') }}
+                        </button>
+                    </template>
 
                     <button v-if="!trainee.user_id"
                             @click="openTraineeAccount"
                             class=" items-center justify-end rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
                         {{ $t('words.open-an-account') }}
                     </button>
+
                     <button v-if="trainee.is_pending_approval" @click="approveTrainee"
                             class=" items-center justify-end rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
                         {{ $t('words.approve-trainee') }}
@@ -324,17 +339,16 @@
 
             },
             blockTrainee() {
-                    this.$inertia.get(route('back.trainees.block', {trainee_id: this.trainee.id}));
+                this.$inertia.get(route('back.trainees.block', {trainee_id: this.trainee.id}));
             },
             cancelEdit() {
-                            this.editButton.editOption = false;
-                            this.editButton.inputClass = 'mt-1 block w-full bg-gray-200';
-                            this.editButton.selectInputClass = 'mt-1 block w-full border border-gray-200 bg-gray-200 py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none';
-                            this.editButton.text = this.$t('words.edit');
-                            window.location.reload();
+                this.editButton.editOption = false;
+                this.editButton.inputClass = 'mt-1 block w-full bg-gray-200';
+                this.editButton.selectInputClass = 'mt-1 block w-full border border-gray-200 bg-gray-200 py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none';
+                this.editButton.text = this.$t('words.edit');
+                window.location.reload();
             },
             editTrainee() {
-                console.log(this.trainee.trainee_group_object);
                 if (!this.editButton.editOption) {
                     this.editButton.editOption = true;
                     this.editButton.inputClass = 'mt-1 block w-full bg-white';
@@ -381,6 +395,14 @@
                     this.$inertia.post(route('back.trainees.create-user', {trainee_id: this.trainee.id}));
                 }
             },
+            resendInvitation() {
+                this.$wait.start('SENDING_INVITATION');
+                this.$inertia.post(route('back.trainees.re-send-invitation', {trainee_id: this.trainee.id})).then(response => {
+                    alert(this.$t('words.done-successfully'));
+                }).finally(error => {
+                    this.$wait.end('SENDING_INVITATION');
+                });
+            }
         }
     }
 </script>

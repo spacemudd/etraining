@@ -88,7 +88,7 @@ class TraineesController extends Controller
     public function show($id)
     {
         return Inertia::render('Back/Trainees/Show', [
-            'trainee' => Trainee::with(['educational_level', 'city', 'marital_status', 'trainee_group'])->findOrFail($id),
+            'trainee' => Trainee::with(['educational_level', 'city', 'marital_status', 'trainee_group', 'user'])->findOrFail($id),
             'trainee_groups' => TraineeGroup::get(),
             'cities' => City::orderBy('name_ar')->get(),
             'marital_statuses' => MaritalStatus::orderBy('order')->get(),
@@ -400,7 +400,7 @@ class TraineesController extends Controller
             $user->email = $trainee->refresh()->email;
             $user->save();
         }
-    
+
         if(isset($request['trainee_group_object'])) {
             if(isset($trainee->trainee_group_object)) {
                 if($trainee->trainee_group_object->name !== $request['trainee_group_object']['name']) {
@@ -484,5 +484,18 @@ class TraineesController extends Controller
     public function excel()
     {
         return Excel::download(new TraineeExport(), 'trainees.xlsx');
+    }
+
+    public function resendInvitation($trainee_id)
+    {
+        $trainee = Trainee::findOrFail($trainee_id);
+
+        if (!$trainee->user) {
+            throw new \RuntimeException('There is no user created for this trainee to send an invite to.');
+        }
+
+        Notification::send($trainee->user, new TraineeSetupAccountNotification());
+
+        return redirect()->route('back.trainees.show', $trainee_id);
     }
 }

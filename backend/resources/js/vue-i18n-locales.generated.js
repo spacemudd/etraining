@@ -441,7 +441,10 @@ export default {
             "contract": "العقد",
             "not-assigned-to-a-company": "غير مربوط مع شركة",
             "download-attendance-sheet-for-course-batch": "عرض ملف حضور الدورات (للإدارة)",
-            "download-attendance": "تنزيل الحضور"
+            "download-attendance": "تنزيل الحضور",
+            "view-company-trainees": "عرض متدربين الشركة",
+            "resend-invitation": "إرسل رسالة دعوة",
+            "done-successfully": "تم بنجاح"
         }
     },
     "en": {
@@ -853,7 +856,10 @@ export default {
             "contract": "Contract",
             "not-assigned-a-company": "Not assigned to a company",
             "download-attendance-sheet-for-course-batch": "Download attendance sheet (for management)",
-            "download-attendance": "Download attendance"
+            "download-attendance": "Download attendance",
+            "view-company-trainees": "View company trainees",
+            "resend-invitation": "Resend Invitation",
+            "done-successfully": "Done successfully"
         }
     }
 }
