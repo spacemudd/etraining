@@ -6,6 +6,7 @@ use App\Console\Commands\DatabaseIndexTextCommand;
 use App\Console\Commands\InvitePeopleCommand;
 use App\Console\Commands\SeedPermissionsCommand;
 use App\Console\Commands\SetupDevCommand;
+use App\Console\Commands\FixTraineeGroupsCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -21,6 +22,7 @@ class Kernel extends ConsoleKernel
         InvitePeopleCommand::class,
         SetupDevCommand::class,
         SeedPermissionsCommand::class,
+        FixTraineeGroupsCommand::class,
     ];
 
     /**
