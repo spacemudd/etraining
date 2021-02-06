@@ -171,6 +171,11 @@
                     <jet-input id="children_count" type="text" :class="editButton.inputClass" v-model="trainee.children_count" :disabled="!editButton.editOption" />
                 </div>
 
+                <div class="col-span-6 sm:col-span-1">
+                    <jet-label for="last_login_at" :value="$t('words.last_login_at')" />
+                    <jet-input id="last_login_at" type="text" :value="trainee.user ? trainee.user.last_login_at_timezone : ''" disabled />
+                </div>
+
                 <div class="col-span-6 sm:col-span-6">
                     <jet-label for="name" :value="$t('words.status')" />
                     <p>
