@@ -51,7 +51,9 @@ class AttendanceSheetExport implements FromView, WithEvents
             }])
             ->with(['course_batch' => function($q) {
                 $q->with(['trainee_group' => function($q) {
-                    $q->with('trainees');
+                    $q->with(['trainees' => function($q) {
+                        $q->with('company');
+                    }]);
                 }]);
             }])->findOrFail($this->course_batch_session_id);
 

@@ -14,6 +14,7 @@
             <th style="width:50px; text-align:center"> <strong>  {{ __('words.name') }} </strong> </th>
             <th style="width:50px; text-align:center">  <strong> {{ __('words.email') }} </strong></th>
             <th style="width:50px; text-align:center">  <strong> {{ __('words.phone') }} </strong></th>
+            <th style="width:50px; text-align:center">  <strong> {{ __('words.company') }} </strong></th>
             <th style="width:50px; text-align:center">  <strong> {{ __('words.attendance') }} </strong></th>
             <th style="width:50px; text-align:center">  <strong> {{ __('words.time') }} </strong></th>
             <th style="width:50px; text-align:center">  <strong> {{ __('words.last-login-at') }} </strong></th>
@@ -30,6 +31,7 @@
                 </td>
                 <td>{{ $trainee_profile->email }}</td>
                 <td>{{ $trainee_profile->phone }}</td>
+                <td>{{ optional($trainee_profile->company)->name_ar }}</td>
                 <td style="width:50px; text-align:center; color:red; background-color:darkgrey">
                     {{__('words.absent')}}
                 </td>
@@ -55,6 +57,7 @@
                 </td>
                 <td>{{ $attendance->trainee->email }}</td>
                 <td>{{ $attendance->trainee->phone }}</td>
+                <td>{{ optional($attendance->trainee->company)->name_ar }}</td>
                 @if ($attendance->attended)
                     <td style="width:50px; text-align:center; color:blue; background-color:darkgrey">
                         {{__('words.present')}}
