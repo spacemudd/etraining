@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Jobs\LoginTimestampJob;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
@@ -25,8 +26,8 @@ class RecordLastLoginTimestamp
      */
     public function handle($event)
     {
-        if (auth()->user()) {
-            auth()->user()->update(['last_login_at' => now()]);
+        if ($user = auth()->user()) {
+            LoginTimestampJob::dispatch($user->id, now());
         }
     }
 }
