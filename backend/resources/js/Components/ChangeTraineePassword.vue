@@ -16,10 +16,10 @@
         </button>
 
         <sweet-modal ref="changePasswordForTraineeModal">
-            <form ref="changeTraineePasswordForm">
+            <form ref="changeTraineePasswordForm" @submit.prevent="changePasswordRequest">
                 <div class="col-span-2 sm:col-span-2">
                     <jet-label for="new_trainee_password" :value="$t('words.change-password')" />
-                    <jet-input id="new_trainee_password" type="password" class="mt-1 block w-full" v-model="form.name" autocomplete="off" />
+                    <jet-input @keydown.enter.prevent="changePasswordRequest" id="new_trainee_password" type="password" class="mt-1 block w-full" v-model="form.new_trainee_password" autocomplete="off" />
                     <jet-input-error :message="form.error('new_trainee_password')" class="mt-2" />
                 </div>
             </form>
@@ -60,6 +60,7 @@
                 form: this.$inertia.form({
                     new_trainee_password: null,
                 }, {
+                    resetOnSuccess: true,
                     bag: 'changingTraineePassword',
                 }),
             }

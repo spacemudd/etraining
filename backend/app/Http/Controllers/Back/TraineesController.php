@@ -510,13 +510,13 @@ class TraineesController extends Controller
     public function setPassword($trainee_id, Request $request)
     {
         $request->validate([
-            'password' => 'required|string|max:56',
+            'new_trainee_password' => 'required|string|max:56',
         ]);
 
         $user = Trainee::findOrFail($trainee_id)->user;
-        $user->password = Hash::make($request->password);
+        $user->password = bcrypt($request->new_trainee_password);
         $user->save();
 
-        return response()->route('back.trainees.show', $trainee_id);
+        return redirect()->route('back.trainees.show', $trainee_id);
     }
 }
