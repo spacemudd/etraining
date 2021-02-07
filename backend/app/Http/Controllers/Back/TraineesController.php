@@ -2,24 +2,19 @@
 
 namespace App\Http\Controllers\Back;
 
-use App\Actions\Fortify\CreateNewInstructorUser;
 use App\Actions\Fortify\CreateNewTraineeUser;
 use App\Exports\Back\TraineeExport;
 use App\Http\Controllers\Controller;
+use App\Models\Back\Company;
 use App\Models\Back\Instructor;
 use App\Models\Back\Trainee;
 use App\Models\Back\TraineeGroup;
 use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\MaritalStatus;
-use App\Models\Media;
-use App\Models\User;
-use App\Notifications\InstructorApplicationApprovedNotification;
-use App\Notifications\InstructorWelcomeNotification;
 use App\Notifications\TraineeApplicationApprovedNotification;
 use App\Notifications\TraineeSetupAccountNotification;
 use App\Notifications\TraineeWelcomeNotification;
-use App\Services\RolesService;
 use App\Services\TraineesServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -49,6 +44,7 @@ class TraineesController extends Controller
     public function create()
     {
         return Inertia::render('Back/Trainees/Create', [
+            'companies' => Company::get(),
             'trainee_groups' => TraineeGroup::get(),
             'cities' => City::orderBy('name_ar')->get(),
             'marital_statuses' => MaritalStatus::orderBy('order')->get(),
@@ -64,10 +60,13 @@ class TraineesController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'company_id' => 'nullable|exists:companies,id',
             'trainee_group_name' => 'nullable|string|max:255',
             'email' => 'string|max:255|unique:trainees,email',
             'name' => 'required|string|max:255',
-            'identity_number' => 'required|string|max:255',
+            'phone' => 'required|string|max:255|unique:trainees,phone',
+            'phone_additional' => 'nullable|string|max:255|unique:trainees,phone_additional',
+            'identity_number' => 'required|string|max:255|unique:trainees,identity_number',
             'birthday' => 'required|date',
             'educational_level_id' => 'nullable|exists:educational_levels,id',
             'city_id' => 'nullable|exists:cities,id',
@@ -88,6 +87,7 @@ class TraineesController extends Controller
     public function show($id)
     {
         return Inertia::render('Back/Trainees/Show', [
+            'companies' => Company::get(),
             'trainee' => Trainee::with(['educational_level', 'city', 'marital_status', 'trainee_group', 'user'])->findOrFail($id),
             'trainee_groups' => TraineeGroup::get(),
             'cities' => City::orderBy('name_ar')->get(),

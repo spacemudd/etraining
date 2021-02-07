@@ -22,6 +22,25 @@
                     <template #form>
 
                         <div class="col-span-4 sm:col-span-4">
+                            <jet-label for="company" :value="$t('words.company')" />
+                            <div class="relative mt-2">
+                                <select class="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                        v-model="form.company_id"
+                                        id="company_id">
+                                    <option v-for="company in companies"
+                                            :key="company.id"
+                                            :value="company.id">
+                                        {{ company.name_ar ? company.name_ar : company.name_en }}
+                                    </option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                                </div>
+                            </div>
+                            <jet-input-error :message="form.error('company_id')" class="mt-2" />
+                        </div>
+
+                        <div class="col-span-4 sm:col-span-4">
                             <jet-label for="trainee_group_name" :value="$t('words.group-name')" />
                             <select-trainee-group class="mt-2"
                                                   @input="selectGroupName"
@@ -157,7 +176,14 @@
     import SelectTraineeGroup from "@/Components/SelectTraineeGroup";
 
     export default {
-        props: ['sessions', 'cities', 'marital_statuses', 'educational_levels', 'trainee_groups'],
+        props: [
+            'sessions',
+            'companies',
+            'cities',
+            'marital_statuses',
+            'educational_levels',
+            'trainee_groups',
+        ],
 
         components: {
             AppLayout,
@@ -176,6 +202,7 @@
             return {
                 addressSearch: '',
                 form: this.$inertia.form({
+                    company_id: '',
                     trainee_group_name: '',
                     email: '',
                     name: '',
@@ -208,6 +235,10 @@
             createTrainee() {
                 this.form.post('/back/trainees', {
                     preserveScroll: true
+                }).catch(error => {
+                    this.form.processing = false;
+                }).finally(() => {
+                    this.form.processing = false;
                 });
             },
             findAddress: debounce(function () {
