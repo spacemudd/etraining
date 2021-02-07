@@ -45,7 +45,7 @@ class AttendanceSheetExport implements FromView, WithEvents
     {
         $users = CourseBatchSession::with('course')
             ->with(['attendances' => function($q) {
-                $q->with('trainee');
+                $q->with('trainee')->with('company');
             }])
             ->with(['course_batch' => function($q) {
                 $q->with(['trainee_group' => function($q) {
