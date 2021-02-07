@@ -281,4 +281,6 @@ return [
     'view-company-trainees' => 'عرض متدربين الشركة',
     'resend-invitation' => 'إرسل رسالة دعوة',
     'done-successfully' => 'تم بنجاح',
+    'reset-trainees-account-password' => 'إتعديل كلمة سر المتدربات',
+    'change-password' => 'تغير كلمة السر',
 ];

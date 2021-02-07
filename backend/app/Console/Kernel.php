@@ -7,6 +7,7 @@ use App\Console\Commands\InvitePeopleCommand;
 use App\Console\Commands\SeedPermissionsCommand;
 use App\Console\Commands\SetupDevCommand;
 use App\Console\Commands\FixTraineeGroupsCommand;
+use App\Console\Commands\ZoomCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -23,6 +24,7 @@ class Kernel extends ConsoleKernel
         SetupDevCommand::class,
         SeedPermissionsCommand::class,
         FixTraineeGroupsCommand::class,
+        ZoomCommand::class,
     ];
 
     /**

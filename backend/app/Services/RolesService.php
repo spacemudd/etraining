@@ -33,6 +33,7 @@ class RolesService
         'edit-permissions',
         'download-attendance-sheet-for-course-batch',
         'view-company-trainees',
+        'reset-trainees-account-password',
         // add the same name of the role to translation files.
     ];
 

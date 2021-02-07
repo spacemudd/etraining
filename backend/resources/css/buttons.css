@@ -1,0 +1,25 @@
+/*
+ * Copyright (c) 2020 - Clarastars, LLC  - All Rights Reserved.
+ *
+ * Unauthorized copying of this file via any medium is strictly prohibited.
+ * This file is a proprietary of Clarastars LLC and is confidential / educational purpose only.
+ *
+ * https://clarastars.com - info@clarastars.com
+ * @author Shafiq al-Shaar <shafiqalshaar@gmail.com>
+ */
+
+.btn-primary {
+    @apply inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-normal transition ease-in-out duration-150
+}
+
+.btn-primary:hover {
+    @apply bg-gray-700
+}
+
+.btn-primary:focus {
+    @apply outline-none border-gray-900 shadow-outline-gray
+}
+
+.btn-primary:active {
+    @apply bg-gray-900
+}

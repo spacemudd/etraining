@@ -13,7 +13,6 @@ use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\MaritalStatus;
 use App\Models\User;
-use App\Notifications\InstructorApplicationApprovedNotification;
 use App\Notifications\TraineeSetupAccountNotification;
 use App\Services\RolesService;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -512,5 +511,24 @@ class TraineesManagementTest extends TestCase
             ->assertRedirect();
 
         Notification::assertSentTo($trainee->user, TraineeSetupAccountNotification::class);
+    }
+
+    public function test_admin_setting_trainee_password()
+    {
+        $admin = $this->user;
+
+        $trainee_input = $this->make_trainee();
+        $this->post(route('register.trainees'), $trainee_input);
+        $trainee = Trainee::whereEmail($trainee_input['email'])->first();
+        $this->actingAs($admin)->post(route('back.trainees.approve-user', $trainee->id));
+
+        $oldHash = $trainee->refresh()->user;
+
+        $this->actingAs($admin)
+            ->post(route('back.trainees.set-password', $trainee->id), [
+                'password' => 'hi_there_mate',
+            ]);
+
+        $this->assertNotEquals($oldHash, $trainee->user->refresh()->password);
     }
 }

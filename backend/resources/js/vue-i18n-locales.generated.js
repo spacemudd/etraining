@@ -444,7 +444,9 @@ export default {
             "download-attendance": "تنزيل الحضور",
             "view-company-trainees": "عرض متدربين الشركة",
             "resend-invitation": "إرسل رسالة دعوة",
-            "done-successfully": "تم بنجاح"
+            "done-successfully": "تم بنجاح",
+            "reset-trainees-account-password": "إتعديل كلمة سر المتدربات",
+            "change-password": "تغير كلمة السر"
         }
     },
     "en": {
@@ -859,7 +861,9 @@ export default {
             "download-attendance": "Download attendance",
             "view-company-trainees": "View company trainees",
             "resend-invitation": "Resend Invitation",
-            "done-successfully": "Done successfully"
+            "done-successfully": "Done successfully",
+            "reset-trainees-account-password": "Reset trainees accounts password",
+            "change-password": "Change password"
         }
     }
 }

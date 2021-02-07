@@ -279,4 +279,6 @@ return [
     'view-company-trainees' => 'View company trainees',
     'resend-invitation' => 'Resend Invitation',
     'done-successfully' => 'Done successfully',
+    'reset-trainees-account-password' => 'Reset trainees accounts password',
+    'change-password' => 'Change password',
 ];

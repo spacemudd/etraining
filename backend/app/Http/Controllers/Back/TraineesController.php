@@ -18,6 +18,7 @@ use App\Notifications\TraineeWelcomeNotification;
 use App\Services\TraineesServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
@@ -497,5 +498,25 @@ class TraineesController extends Controller
         Notification::send($trainee->user, new TraineeSetupAccountNotification());
 
         return redirect()->route('back.trainees.show', $trainee_id);
+    }
+
+    /**
+     * Assign a password for the trainee's account.
+     *
+     * @param $trainee_id
+     * @param \Illuminate\Http\Request $request
+     * @return mixed
+     */
+    public function setPassword($trainee_id, Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string|max:56',
+        ]);
+
+        $user = Trainee::findOrFail($trainee_id)->user;
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return response()->route('back.trainees.show', $trainee_id);
     }
 }

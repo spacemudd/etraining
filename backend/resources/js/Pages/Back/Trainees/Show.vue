@@ -30,6 +30,8 @@
                     </button>
 
                     <template v-if="trainee.user">
+                        <change-trainee-password :trainee="trainee" />
+
                         <button v-if="!trainee.user.last_login_at"
                                 @click="resendInvitation"
                                 :class="{'btn-disabled': this.$wait.is('SENDING_INVITATION')}"
@@ -276,12 +278,14 @@
     import VueDropzone from 'vue2-dropzone'
     import 'vue2-dropzone/dist/vue2Dropzone.min.css'
     import SelectTraineeGroup from "@/Components/SelectTraineeGroup";
+    import ChangeTraineePassword from '@/Components/ChangeTraineePassword';
 
 
     export default {
         props: ['sessions', 'trainee', 'cities', 'marital_statuses', 'educational_levels', 'trainee_groups', 'trainee_group_trainees'],
 
         components: {
+            ChangeTraineePassword,
             AppLayout,
             JetSectionBorder,
             Breadcrumb,
