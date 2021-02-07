@@ -118,9 +118,8 @@
             updateCoursesEnabled() {
                 this.sessions.data.forEach((session, index) => {
 
-                    // TODO: Change the '5' minutes to be dynamic with backend settings.
-                    let accessibleAt = moment(session.starts_at).subtract('10', 'minutes');
-                    let disableAccess = moment(session.ends_at).subtract('10', 'minutes');
+                    let accessibleAt = moment(session.starts_at).subtract('15', 'minutes');
+                    let disableAccess = moment(session.ends_at);
 
                     let canTheUserJoin = moment().isBetween(accessibleAt, disableAccess);
 

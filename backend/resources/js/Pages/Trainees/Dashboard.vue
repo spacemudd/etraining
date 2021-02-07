@@ -125,9 +125,8 @@
             updateCoursesEnabled() {
                 this.sessions.data.forEach((session, index) => {
 
-                    // TODO: Change the '5' minutes to be dynamic with backend settings.
-                    let accessibleAt = moment(session.starts_at).subtract('10', 'minutes'); // Add 5+ minutes to the instructors so the Zoom room is ready.
-                    let disableAccess = moment(session.ends_at).subtract('5', 'minutes');
+                    let accessibleAt = moment(session.starts_at);
+                    let disableAccess = moment(session.ends_at);
 
                     let canTheUserJoin = moment().isBetween(accessibleAt, disableAccess);
 
