@@ -55,6 +55,20 @@ services:
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
 
+  backend-two:
+    build: ./../backend
+    working_dir: /usr/src/app
+    volumes:
+      - ./../backend:/usr/src/app
+    environment:
+      - REDIS_HOST=redis-service
+      - QUEUE_CONNECTION=redis
+      - DB_PORT=3306
+      - DB_HOST=${DB_HOST}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+
   backend-worker:
     build: ./../backend-worker
     working_dir: /usr/src/app
