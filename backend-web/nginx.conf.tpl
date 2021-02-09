@@ -16,6 +16,7 @@ server {
    index  index.php index.html;
 
    client_max_body_size 50M;
+   client_body_timeout  3m;
 
    # Compression
    # Enable Gzip compressed.
