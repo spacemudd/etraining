@@ -15,7 +15,7 @@ server {
   add_header X-Content-Type-Options nosniff;
   add_header X-XSS-Protection "1; mode=block";
 
-  client_max_body_size 30M;
+  client_max_body_size 50M;
   ssl_certificate /etc/letsencrypt/cert.crt;
   ssl_certificate_key /etc/letsencrypt/cert.key;
 
