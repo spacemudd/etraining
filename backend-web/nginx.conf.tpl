@@ -15,8 +15,12 @@ server {
    root   /usr/src/app/public;
    index  index.php index.html;
 
-   client_max_body_size 50M;
-   client_body_timeout  3m;
+   client_max_body_size  50M;
+   client_header_timeout 900s;
+   client_body_timeout   900s;
+   send_timeout          900s;
+   proxy_connect_timeout 900s;
+   proxy_read_timeout    900s;
 
    # Compression
    # Enable Gzip compressed.
