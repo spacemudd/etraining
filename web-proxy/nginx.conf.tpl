@@ -9,6 +9,10 @@ server {
   proxy_http_version 1.1;
   fastcgi_hide_header X-Powered-By;
   proxy_hide_header X-Powered-By;
+  proxy_connect_timeout       600;
+  proxy_send_timeout          600;
+  proxy_read_timeout          600;
+  send_timeout                600;
   fastcgi_param HTTP_PROXY "";
   autoindex off;
   add_header Strict-Transport-Security "max-age=31536000";
