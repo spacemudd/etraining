@@ -4,22 +4,22 @@ namespace App\Exports;
 
 use App\Models\Back\CourseBatchSession;
 use App\Models\Back\CourseBatchSessionAttendance;
-use App\Models\Back\Trainee;
 use Illuminate\Contracts\View\View;
-
 use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Events\BeforeExport;
 use Maatwebsite\Excel\Events\AfterSheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class AttendanceSheetExport implements FromView, WithEvents
+class AttendanceSheetExport implements FromView, WithEvents, WithStyles, WithColumnWidths
 {
 
     public function __construct($course_batch_session_id)
     {
         $this->course_batch_session_id = $course_batch_session_id;
     }
-
 
     public function registerEvents(): array
     {
@@ -36,6 +36,32 @@ class AttendanceSheetExport implements FromView, WithEvents
                 },
             ];
         }
+    }
+
+    public function styles(Worksheet $sheet)
+    {
+        return [
+            'A:Z' => [
+                'font' => [
+                    'name' => 'Arial',
+                    'size' => 12,
+                ]
+            ],
+        ];
+    }
+
+    public function columnWidths(): array
+    {
+        return [
+            'A' => 25,
+            'B' => 25,
+            'C' => 20,
+            'D' => 20,
+            'E' => 15,
+            'F' => 22,
+            'G' => 22,
+
+        ];
     }
 
     /**
@@ -77,6 +103,7 @@ class AttendanceSheetExport implements FromView, WithEvents
         }
 
         return view('exports.attendingSheet', [
+            'course_batch' => $users,
             'attendances' => $attendances,
             'users_who_didnt_attend' => $usersWhoDidntAttended,
             'course_name' => $course_name,

@@ -281,4 +281,7 @@ return [
     'done-successfully' => 'Done successfully',
     'reset-trainees-account-password' => 'Reset trainees accounts password',
     'change-password' => 'Change password',
+    'didnt-attend-at-all' => 'Didnt attend at all',
+    'attendees-plus-late-attendees' => 'Attendees + Late',
+    'last-login-to-platform' => 'Last login to platform',
 ];

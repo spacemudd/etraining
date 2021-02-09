@@ -283,4 +283,7 @@ return [
     'done-successfully' => 'تم بنجاح',
     'reset-trainees-account-password' => 'إتعديل كلمة سر المتدربات',
     'change-password' => 'تغير كلمة السر',
+    'didnt-attend-at-all' => 'لم يحضرو إطلاقاً',
+    'attendees-plus-late-attendees' => 'الحضور + المتأخرين',
+    'last-login-to-platform' => 'آخر دخول للمنصة',
 ];

@@ -4,12 +4,10 @@ namespace App\Models\Back;
 
 use App\Models\City;
 use App\Models\EducationalLevel;
-use App\Models\InboxMessage;
 use App\Models\MaritalStatus;
 use App\Models\SearchableLabels;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Scout\Searchable;
-use App\Models\Back\TraineeGroup;
 use App\Models\User;
 use App\Scope\TeamScope;
 use App\Traits\HasUuid;
@@ -61,7 +59,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels
         'qualification_copy_url',
         'bank_account_copy_url',
         'name_selectable',
-        "show_url",
+        'show_url',
         'is_pending_uploading_files',
         'is_pending_approval',
         'is_approved',
