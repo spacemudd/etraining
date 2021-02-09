@@ -15,7 +15,7 @@ server {
    root   /usr/src/app/public;
    index  index.php index.html;
 
-   client_max_body_size 30M;
+   client_max_body_size 50M;
 
    # Compression
    # Enable Gzip compressed.
