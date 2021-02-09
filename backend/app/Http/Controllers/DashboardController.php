@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Teaching\TeachingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -11,11 +12,11 @@ class DashboardController extends Controller
     public function index()
     {
         if (Str::contains(auth()->user()->roles()->first()->name, 'instructors')) {
-            return app()->make(\App\Http\Controllers\Teaching\TeachingController::class)->dashboard();
+            return app()->make(TeachingController::class)->dashboard();
         }
 
         if (Str::contains(auth()->user()->roles()->first()->name, 'trainees')) {
-            return app()->make(\App\Http\Controllers\Trainees\DashboardController::class)->dashboard();
+            return app()->make(Trainees\DashboardController::class)->dashboard();
         }
 
         return Inertia::render('Dashboard', [

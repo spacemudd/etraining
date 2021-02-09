@@ -23,8 +23,20 @@ services:
       - ./../backend-web/cert.crt:/etc/letsencrypt/cert.crt
       - ./../backend-web/cert.key:/etc/letsencrypt/cert.key
     ports:
-      - 8085:443
-      - 8086:80
+      - 8085
+    restart: always
+    depends_on:
+      - backend
+
+  backend-web-two:
+    build: ./../backend-web
+    working_dir: /usr/src/app
+    volumes:
+      - ./../backend:/usr/src/app
+      - ./../backend-web/cert.crt:/etc/letsencrypt/cert.crt
+      - ./../backend-web/cert.key:/etc/letsencrypt/cert.key
+    ports:
+      - 8086
     restart: always
     depends_on:
       - backend
