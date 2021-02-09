@@ -64,7 +64,7 @@
         methods: {
             blockTrainee() {
                 if (confirm(this.$t('words.are-you-sure'))) {
-                    this.$inertia.post(route('back.trainees.block', {trainee_id: this.trainee.id}), {
+                    this.$inertia.post(route('back.trainees.block.store', {trainee_id: this.trainee.id}), {
                         deleted_remark: this.deleted_remark,
                     });
                 }

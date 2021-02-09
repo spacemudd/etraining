@@ -99,7 +99,7 @@
         },
         methods: {
             storeNewFileRequest() {
-                this.createRequirementForm.post(route('back.settings.trainees-application.required-files'), {
+                this.createRequirementForm.post(route('back.settings.trainees-application.required-files.store'), {
                     preserveScroll: true
                 }).then(response => {
                     this.getRequiredFiles();

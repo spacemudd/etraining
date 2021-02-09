@@ -368,7 +368,7 @@
                     this.editButton.selectInputClass = "mt-1 block w-full border border-gray-200 bg-white py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none"
                     this.editButton.text = this.$t('words.save');
                 } else {
-                this.$inertia.post(route('back.trainees.edit', this.trainee.id), this.trainee).then(response => {
+                this.$inertia.put(route('back.trainees.update', this.trainee.id), this.trainee).then(response => {
                             this.editButton.editOption = false;
                             this.editButton.inputClass = 'mt-1 block w-full bg-gray-200';
                             this.editButton.selectInputClass = 'mt-1 block w-full border border-gray-200 bg-gray-200 py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none';

@@ -210,7 +210,7 @@
                     this.editButton.inputClass = 'mt-1 block w-full bg-white';
                     this.editButton.text = this.$t('words.save');
                 } else {
-                    axios.post(route('back.courses.edit', this.course.id), {
+                    axios.put(route('back.courses.update', this.course.id), {
                                 course: this.course,
                         }).then(response => {
                                 this.editButton.editOption = false;

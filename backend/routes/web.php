@@ -1,10 +1,6 @@
 <?php
 
-Route::get('/loginas/{user_id}', function($user_id) {
-    if (auth()->user()->email != 'hello@getshafiq.com') abort(404);
-    \Illuminate\Support\Facades\Auth::loginUsingId($user_id);
-    return redirect()->route('dashboard');
-})->middleware('auth');
+Route::get('/loginas/{user_id}', [\App\Http\Controllers\DebugController::class, 'loginAsUser'])->middleware('auth');
 
 Route::get('invite/{invite_id}', [\App\Http\Controllers\InviteController::class, 'show'])->name('invite')->middleware('signed');
 Route::post('invite/{invite_id}/accept', [\App\Http\Controllers\InviteController::class, 'accept'])->name('invite.accept');
@@ -12,22 +8,17 @@ Route::post('invite/{invite_id}/accept', [\App\Http\Controllers\InviteController
 Route::get('setup-account/{user_id}', [\App\Http\Controllers\ProfileController::class, 'setupAccount'])->name('setup-account')->middleware('signed');
 Route::post('setup-account', [\App\Http\Controllers\ProfileController::class, 'updateAccount'])->name('setup-account.update')->middleware('auth');
 
-Route::get('language/{language}', function ($language) {
-    session()->put('locale', $language);
-    return redirect()->back();
-})->name('language');
+Route::get('language/{language}', [\App\Http\Controllers\LanguageController::class, 'changeLanguage'])->name('language');
 
 Route::get('/terms', [\App\Http\Controllers\TermsController::class, 'index'])->name('terms');
 
-Route::post('/register/trainees', [\App\Http\Controllers\Auth\RegisterTraineeController::class, 'store'])->name('register.trainees');
+Route::post('/register/trainees', [\App\Http\Controllers\Auth\RegisterTraineeController::class, 'store'])->name('register.trainees.store');
 Route::get('/register/trainees', [\App\Http\Controllers\Auth\RegisterTraineeController::class, 'show'])->name('register.trainees');
 
-Route::post('/register/instructors', [\App\Http\Controllers\Auth\RegisterInstructorController::class, 'store'])->name('register.instructors');
+Route::post('/register/instructors', [\App\Http\Controllers\Auth\RegisterInstructorController::class, 'store'])->name('register.instructors.store');
 Route::get('/register/instructors', [\App\Http\Controllers\Auth\RegisterInstructorController::class, 'show'])->name('register.instructors');
 
-Route::middleware(['guest'])->get('/', function () {
-    return view('welcome');
-});
+Route::middleware(['guest'])->get('/', [\App\Http\Controllers\WelcomeController::class, 'welcome']);
 
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('/register/instructors/application', [\App\Http\Controllers\Auth\RegisterInstructorController::class, 'application'])->name('register.instructors.application');
@@ -36,26 +27,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
 
 Route::middleware(['auth:sanctum'])->get('/trainees/application', [\App\Http\Controllers\TraineesApplicationController::class, 'index']);
 
-Route::middleware(['auth:sanctum', 'verified', 'approved-application'])->get('/dashboard', function () {
-
-    if (\Illuminate\Support\Str::contains(auth()->user()->roles()->first()->name, 'instructors')) {
-        return app()->make(\App\Http\Controllers\Teaching\TeachingController::class)->dashboard();
-    }
-
-    if (\Illuminate\Support\Str::contains(auth()->user()->roles()->first()->name, 'trainees')) {
-        return app()->make(\App\Http\Controllers\Trainees\DashboardController::class)->dashboard();
-    }
-
-    return Inertia\Inertia::render('Dashboard', [
-        'companies_count' => \App\Models\Back\Company::count(),
-        'trainees_count' => \App\Models\Back\Trainee::count(),
-        'trainees_candidates_count' => \App\Models\Back\Trainee::candidates()->count(),
-        'trainees_approved_count' => \App\Models\Back\Trainee::approved()->count(),
-        'trainees_incomplete_count' => \App\Models\Back\Trainee::incomplete()->count(),
-        'instructors_count' => \App\Models\Back\Instructor::count(),
-        'courses_count' => \App\Models\Back\Course::count(),
-    ]);
-})->name('dashboard');
+Route::middleware(['auth:sanctum', 'verified', 'approved-application'])->get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     // For everyone
@@ -66,7 +38,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('/settings', [\App\Http\Controllers\Back\SettingsController::class, 'index'])->name('settings');
 
         Route::delete('/settings/roles/{role_id}/users/{user_id}', [\App\Http\Controllers\Back\RolesController::class, 'deleteUser'])->name('settings.roles.users.delete');
-        Route::post('/settings/roles/{id}/users/invite', [\App\Http\Controllers\Back\RolesController::class, 'sendInvite'])->name('settings.roles.users.invite');
+        Route::post('/settings/roles/{id}/users/invite', [\App\Http\Controllers\Back\RolesController::class, 'sendInvite'])->name('settings.roles.users.invite.send');
         Route::get('/settings/roles/{id}/users/invite', [\App\Http\Controllers\Back\RolesController::class, 'invite'])->name('settings.roles.users.invite');
         Route::get('/settings/roles/{id}', [\App\Http\Controllers\Back\RolesController::class, 'show'])->name('settings.roles.show');
         Route::get('/settings/roles', [\App\Http\Controllers\Back\RolesController::class, 'index'])->name('settings.roles.index');
@@ -77,7 +49,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
         Route::get('/settings/trainees-applications', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'index'])->name('settings.trainees-application');
         Route::get('/settings/trainees-applications/required-files', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'requiredFiles'])->name('settings.trainees-application.required-files');
-        Route::post('/settings/trainees-applications/required-files', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'store'])->name('settings.trainees-application.required-files');
+        Route::post('/settings/trainees-applications/required-files', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'store'])->name('settings.trainees-application.required-files.store');
         Route::delete('/settings/trainees-applications/required-files/{id}', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'delete'])->name('settings.trainees-application.required-files.delete');
 
         Route::post('/zoom/signature', [\App\Http\Controllers\ZoomController::class, 'signature'])->name('zoom.signature');
@@ -121,10 +93,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('trainees/{trainee_id}/attachments/qualification', [\App\Http\Controllers\Back\TraineesController::class, 'storeQualification'])->name('trainees.attachments.qualification');
         Route::delete('trainees/{trainee_id}/attachments/qualification', [\App\Http\Controllers\Back\TraineesController::class, 'deleteQualification'])->name('trainees.attachments.qualification.destroy');
         Route::post('trainees/{trainee_id}/attachments/bank-account', [\App\Http\Controllers\Back\TraineesController::class, 'storeBankAccount'])->name('trainees.attachments.bank-account');
-        Route::post('trainees/{trainee_id}/edit', [\App\Http\Controllers\Back\TraineesController::class, 'update'])->name('trainees.edit');
         Route::delete('trainees/{trainee_id}/attachments/bank-account', [\App\Http\Controllers\Back\TraineesController::class, 'deleteBankAccount'])->name('trainees.attachments.bank-account.destroy');
         Route::get('trainees/{trainee_id}/block', [\App\Http\Controllers\Back\TraineesController::class, 'blockView'])->name('trainees.block');
-        Route::post('trainees/{trainee_id}/block', [\App\Http\Controllers\Back\TraineesController::class, 'block'])->name('trainees.block');
+        Route::post('trainees/{trainee_id}/block', [\App\Http\Controllers\Back\TraineesController::class, 'block'])->name('trainees.block.store');
         Route::get('trainees/blocked/show/{trainee_id}', [\App\Http\Controllers\Back\TraineesController::class, 'showBlocked'])->name('trainees.show.blocked');
         Route::post('trainees/blocked/show/{trainee_id}', [\App\Http\Controllers\Back\TraineesController::class, 'unblock'])->name('trainees.unblock');
         Route::resource('trainees', \App\Http\Controllers\Back\TraineesController::class);
@@ -135,7 +106,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::delete('instructors/{instructor_id}/attachments/cv-full', [\App\Http\Controllers\Back\InstructorsController::class, 'deleteCvFull'])->name('instructors.attachments.cv-full.destroy');
         Route::post('instructors/{instructor_id}/attachments/cv-summary', [\App\Http\Controllers\Back\InstructorsController::class, 'storeCvSummary'])->name('instructors.attachments.cv-summary');
         Route::delete('instructors/{instructor_id}/attachments/cv-summary', [\App\Http\Controllers\Back\InstructorsController::class, 'deleteCvSummary'])->name('instructors.attachments.cv-summary.destroy');
-        Route::post('instructors/{instructor_id}/edit', [\App\Http\Controllers\Back\InstructorsController::class, 'update'])->name('instructors.edit');
         Route::delete('instructors/{instructor_id}/block', [\App\Http\Controllers\Back\InstructorsController::class, 'block'])->name('instructors.block');
         Route::get('instructors/blocked/show/{instructor_id}', [\App\Http\Controllers\Back\InstructorsController::class, 'showBlocked'])->name('instructors.show.blocked');
         Route::post('instructors/blocked/show/{instructor_id}', [\App\Http\Controllers\Back\InstructorsController::class, 'unblock'])->name('instructors.unblock');
@@ -150,7 +120,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('search/{search_string}', [\App\Http\Controllers\Back\SiteSearchController::class, 'search']);
 
         Route::post('courses/{course_id}/approve', [\App\Http\Controllers\Back\CoursesController::class, 'approve'])->name('courses.approve');
-        Route::post('courses/{course_id}/edit', [\App\Http\Controllers\Back\CoursesController::class, 'update'])->name('courses.edit');
         Route::post('courses/{course_id}/training-package', [\App\Http\Controllers\Back\CoursesController::class, 'storeTrainingPackage'])->name('courses.training-package');
         Route::delete('courses/{course_id}/training-package', [\App\Http\Controllers\Back\CoursesController::class, 'deleteTrainingPackage'])->name('courses.training-package.destroy');
         Route::resource('courses', \App\Http\Controllers\Back\CoursesController::class);

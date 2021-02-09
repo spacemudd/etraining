@@ -223,7 +223,7 @@
                     this.editButton.selectInputClass = "mt-1 block w-full border border-gray-200 bg-white py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none"
                     this.editButton.text = this.$t('words.save');
                 } else {
-                this.$inertia.post(route('back.instructors.edit', this.instructor.id), {
+                this.$inertia.put(route('back.instructors.update', this.instructor.id), {
                             instructor: this.instructor,
                     }).then(response => {
                             this.editButton.editOption = false;

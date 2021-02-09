@@ -101,7 +101,7 @@ export default {
     },
     methods: {
         inviteUser() {
-            this.form.post(route('back.settings.roles.users.invite', this.role.id), {
+            this.form.post(route('back.settings.roles.users.invite.send', this.role.id), {
                 preserveScroll: true
             }).catch(error => {
                 this.form.processing = false;

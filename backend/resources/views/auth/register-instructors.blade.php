@@ -6,7 +6,7 @@
 
         <x-jet-validation-errors class="mb-4" />
 
-        <form method="POST" action="{{ route('register.instructors') }}">
+        <form method="POST" action="{{ route('register.instructors.store') }}">
             @csrf
 
             <div><h1 class="text-2xl text-center my-5 font-bold">{{ __('words.welcome') }}!</h1></div>
