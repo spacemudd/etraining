@@ -73,10 +73,10 @@ class Company extends Model implements SearchableLabels
     public function getResourceLabelAttribute(): string
     {
         if (app()->getLocale() === 'ar') {
-            return $this->name_en;
+            return $this->name_ar;
         }
 
-        return $this->name_en;
+        return $this->name_en ?: $this->name_ar;
     }
 
     /**
