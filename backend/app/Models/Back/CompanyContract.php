@@ -27,6 +27,7 @@ class CompanyContract extends Model implements HasMedia
     protected $casts = [
         'contract_starts_at' => 'date:Y-m-d',
         'contract_ends_at' => 'date:Y-m-d',
+        'auto_renewal' => 'boolean',
     ];
 
     protected $fillable = [
@@ -79,12 +80,12 @@ class CompanyContract extends Model implements HasMedia
 
     public function setContractStartsAtAttribute($value)
     {
-        $this->attributes['contract_starts_at'] = $value ? Timezone::convertFromLocal($value) : null;
+        $this->attributes['contract_starts_at'] = $value ? Carbon::parse($value, optional(auth()->user())->timezone ?: config('app.timezone'))->setTimezone('UTC') : null;
     }
 
     public function setContractEndsAtAttribute($value)
     {
-        $this->attributes['contract_ends_at'] = $value ? Timezone::convertFromLocal($value) : null;
+        $this->attributes['contract_ends_at'] = $value ? Carbon::parse($value, optional(auth()->user())->timezone ?: config('app.timezone'))->setTimezone('UTC') : null;
     }
 
     public function getContractStartsAtTimezoneAttribute()

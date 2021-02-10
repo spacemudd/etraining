@@ -304,9 +304,8 @@ class CreateTraineesTest extends TestCase
             });
     }
 
-    public function test_trainee_redirected_to_dashboard_if_marked_to_skip_application()
+    public function test_unapproved_trainee_can_see_dashboard_if_skip_flag_is_enabled_for_them()
     {
-        // todo.
         $trainee_input = $this->make_trainee();
 
         $this->post(route('register.trainees'), $trainee_input);
@@ -317,7 +316,7 @@ class CreateTraineesTest extends TestCase
 
         $trainee_user = $trainee_profile->user;
         $this->actingAs($trainee_user)
-            ->get(route('register.trainees.application'))
-            ->assertRedirect();
+            ->get(route('dashboard'))
+            ->assertSuccessful();
     }
 }

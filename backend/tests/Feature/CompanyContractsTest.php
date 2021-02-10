@@ -36,8 +36,8 @@ class CompanyContractsTest extends TestCase
         $contract = [
             'company_id' => $this->company->id,
             'reference_number' => (string) rand(),
-            'contract_starts_at' => now()->toDateString(),
-            'contract_ends_at' => now()->addMonth()->toDateString(),
+            'contract_starts_at' => now()->startOfDay()->toDateTimeString(),
+            'contract_ends_at' => now()->addMonth()->startOfDay()->toDateTimeString(),
             'contract_period_in_months' => 1,
             'auto_renewal' => true,
             'trainees_count' => rand(),

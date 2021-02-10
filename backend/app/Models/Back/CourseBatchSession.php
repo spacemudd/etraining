@@ -4,6 +4,7 @@ namespace App\Models\Back;
 
 use App\Scope\TeamScope;
 use App\Traits\HasUuid;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use JamesMills\LaravelTimezone\Facades\Timezone;
@@ -72,12 +73,12 @@ class CourseBatchSession extends Model
 
     public function setStartsAtAttribute($value)
     {
-        $this->attributes['starts_at'] = Timezone::convertFromLocal($value);
+        $this->attributes['starts_at'] = Carbon::parse($value, optional(auth()->user())->timezone ?: config('app.timezone'))->setTimezone('UTC');
     }
 
     public function setEndsAtAttribute($value)
     {
-        $this->attributes['ends_at'] = Timezone::convertFromLocal($value);
+        $this->attributes['ends_at'] = Carbon::parse($value, optional(auth()->user())->timezone ?: config('app.timezone'))->setTimezone('UTC');
     }
 
     public function getStartsAtTimezoneAttribute()

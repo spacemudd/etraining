@@ -118,7 +118,7 @@
             updateCoursesEnabled() {
                 this.sessions.data.forEach((session, index) => {
 
-                    let accessibleAt = moment(session.starts_at).subtract('15', 'minutes');
+                    let accessibleAt = moment(session.starts_at).subtract('30', 'minutes');
                     let disableAccess = moment(session.ends_at);
 
                     let canTheUserJoin = moment().isBetween(accessibleAt, disableAccess);

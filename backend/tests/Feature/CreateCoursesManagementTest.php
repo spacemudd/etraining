@@ -224,9 +224,9 @@ class CreateCoursesManagementTest extends TestCase
         $this->actingAs($this->user)
             ->get(route('back.course-batches.index', ['course_id' => $pmpCourse->id]))
             ->assertSeeText($batch->course_id)
-            ->assertSeeText($batch->starts_at)
+            ->assertSeeText($batch->starts_at_timezone)
             ->assertSeeText($batch_2->course_id)
-            ->assertSeeText($batch_2->starts_at);
+            ->assertSeeText($batch_2->ends_at_timezone);
     }
 
     public function test_admin_can_create_course_sessions()
