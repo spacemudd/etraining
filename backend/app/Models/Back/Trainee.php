@@ -27,7 +27,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels
     use Searchable;
     use Notifiable;
 
-    const SEARCHABLE_FIELDS = ['id', 'identity_number', 'phone', 'phone_additional', 'name', 'email'];
+    const SEARCHABLE_FIELDS = ['id', 'identity_number', 'phone', 'name', 'email'];
 
     const STATUS_PENDING_UPLOADING_FILES = 0;
     const STATUS_PENDING_APPROVAL = 1;
@@ -210,7 +210,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels
         }
     }
 
-    public function getShowUrlAttribute()
+    public function getShowUrlAttribute(): string
     {
         return route('back.trainees.show', $this->id);
     }

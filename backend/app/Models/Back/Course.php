@@ -142,7 +142,7 @@ class Course extends Model implements HasMedia, SearchableLabels
         return $this->only(self::SEARCHABLE_FIELDS);
     }
 
-    public function getShowUrlAttribute()
+    public function getShowUrlAttribute(): string
     {
         if ($this->id) {
             return route('back.courses.show', ['course' => $this->id]);

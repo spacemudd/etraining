@@ -183,7 +183,7 @@ class Instructor extends Model implements HasMedia, SearchableLabels
      *
      * @return route
      */
-    public function getShowUrlAttribute()
+    public function getShowUrlAttribute(): string
     {
         return route('back.instructors.show', $this->id);
     }

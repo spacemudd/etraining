@@ -13,6 +13,7 @@ namespace App\Models;
 
 interface SearchableLabels
 {
+    public function getShowUrlAttribute(): string;
     public function getResourceLabelAttribute(): string;
     public function getResourceTypeAttribute(): string;
 }

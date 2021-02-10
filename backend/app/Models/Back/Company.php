@@ -2,20 +2,25 @@
 
 namespace App\Models\Back;
 
+use App\Models\SearchableLabels;
 use App\Scope\TeamScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Scout\Searchable;
 use Str;
 
-class Company extends Model
+class Company extends Model implements SearchableLabels
 {
     use HasFactory;
     use SoftDeletes;
+    use Searchable;
 
     public $incrementing = false;
 
     protected $keyType = 'string';
+
+    const SEARCHABLE_FIELDS = ['id', 'name_ar', 'name_en', 'email'];
 
     protected $fillable = [
         'name_ar',
@@ -26,6 +31,12 @@ class Company extends Model
         'company_rep_mobile',
         'email',
         'address',
+    ];
+
+    protected $appends = [
+        'show_url',
+        'resource_label',
+        'resource_type',
     ];
 
     protected static function boot(): void
@@ -53,5 +64,47 @@ class Company extends Model
     public function trainees()
     {
         return $this->hasMany(Trainee::class);
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getResourceLabelAttribute(): string
+    {
+        if (app()->getLocale() === 'ar') {
+            return $this->name_en;
+        }
+
+        return $this->name;
+    }
+
+    /**
+     * Returns Route URL
+     *
+     * @return route
+     */
+    public function getShowUrlAttribute(): string
+    {
+        return route('back.companies.show', $this->id);
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getResourceTypeAttribute(): string
+    {
+        return trans('words.company');
+    }
+
+    /**
+     * Returns searchable fields to be used by Scout.
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        return $this->only(self::SEARCHABLE_FIELDS);
     }
 }

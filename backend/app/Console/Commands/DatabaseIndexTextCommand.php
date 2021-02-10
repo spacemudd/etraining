@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Back\Company;
 use App\Models\Back\Course;
 use App\Models\Back\Instructor;
 use App\Models\Back\Trainee;
@@ -41,10 +42,18 @@ class DatabaseIndexTextCommand extends Command
      */
     public function handle()
     {
+        $models = [
+            Company::class,
+            Instructor::class,
+            Trainee::class,
+            Course::class,
+        ];
+
         $this->info('Starting importing of all models');
-        Artisan::call('scout:import', ['model' => Instructor::class]);
-        Artisan::call('scout:import', ['model' => Trainee::class]);
-        Artisan::call('scout:import', ['model' => Course::class]);
+        foreach ($models as $model) {
+            $this->info('Seeding model: '.$model);
+            Artisan::call('scout:import', ['model' => $model]);
+        }
         $this->info('Completed importing of all models');
         return 1;
     }
