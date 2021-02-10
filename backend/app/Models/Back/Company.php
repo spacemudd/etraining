@@ -76,7 +76,7 @@ class Company extends Model implements SearchableLabels
             return $this->name_en;
         }
 
-        return $this->name;
+        return $this->name_en;
     }
 
     /**
