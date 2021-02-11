@@ -57,7 +57,7 @@
                             </tr>
                             </tbody>
                         </table>
-                        <inertia-link class="bg-gray-500 h-10 text-white text-sm rounded-sm mt-2 flex justify-center items-center"
+                        <inertia-link v-f="contract" class="bg-gray-500 h-10 text-white text-sm rounded-sm mt-2 flex justify-center items-center"
                            :href="route('back.companies.contracts.show', {company_id: contract.company_id, contract: contract.id})">
                             <span class="inline-block">
                                 {{ $t('words.view') }}
