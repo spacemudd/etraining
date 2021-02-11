@@ -197,7 +197,6 @@ export default {
                 }).finally(() => {
                         this.$wait.end('UPLOADING_TRAINEE_FILES');
                 });
-
         },
         onProgress(percent) {
             this.progressValue = percent;

@@ -286,4 +286,5 @@ return [
     'didnt-attend-at-all' => 'لم يحضرو إطلاقاً',
     'attendees-plus-late-attendees' => 'الحضور + المتأخرين',
     'last-login-to-platform' => 'آخر دخول للمنصة',
+    'copy' => 'نسخة',
 ];

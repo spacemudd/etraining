@@ -193,4 +193,30 @@ class CompanyContractsTest extends TestCase
             ]);
         }
     }
+
+    public function test_viewing_a_contract()
+    {
+        $contract = [
+            'company_id' => $this->company->id,
+            'reference_number' => (string) rand(),
+            'contract_starts_at' => now()->startOfDay()->toDateTimeString(),
+            'contract_ends_at' => now()->addMonth()->startOfDay()->toDateTimeString(),
+            'contract_period_in_months' => 1,
+            'auto_renewal' => true,
+            'trainees_count' => rand(),
+            'trainee_salary' => rand(),
+            'instructor_cost' => rand(),
+            'company_reimbursement' => rand(),
+            'notes' => $this->faker->text,
+        ];
+
+        $this->actingAs($this->user)
+            ->post(route('back.companies.contracts.store', ['company_id' => Company::find($contract['company_id'])]), $contract);
+
+        $contract = CompanyContract::whereReferenceNumber($contract['reference_number'])->first();
+
+        $this->actingAs($this->user)
+            ->get(route('back.companies.contracts.show', ['company_id' => $contract->company_id, 'contract' => $contract->id]))
+            ->assertSeeText($contract->reference_number);
+    }
 }

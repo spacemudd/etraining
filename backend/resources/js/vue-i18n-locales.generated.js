@@ -446,7 +446,11 @@ export default {
             "resend-invitation": "إرسل رسالة دعوة",
             "done-successfully": "تم بنجاح",
             "reset-trainees-account-password": "إتعديل كلمة سر المتدربات",
-            "change-password": "تغير كلمة السر"
+            "change-password": "تغير كلمة السر",
+            "didnt-attend-at-all": "لم يحضرو إطلاقاً",
+            "attendees-plus-late-attendees": "الحضور + المتأخرين",
+            "last-login-to-platform": "آخر دخول للمنصة",
+            "copy": "نسخة"
         }
     },
     "en": {
@@ -863,7 +867,11 @@ export default {
             "resend-invitation": "Resend Invitation",
             "done-successfully": "Done successfully",
             "reset-trainees-account-password": "Reset trainees accounts password",
-            "change-password": "Change password"
+            "change-password": "Change password",
+            "didnt-attend-at-all": "Didnt attend at all",
+            "attendees-plus-late-attendees": "Attendees + Late",
+            "last-login-to-platform": "Last login to platform",
+            "copy": "Copy"
         }
     }
 }

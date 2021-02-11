@@ -112,6 +112,11 @@ class CompanyContract extends Model implements HasMedia
         return $this->belongsToMany(Instructor::class, 'company_contract_instructor');
     }
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
     /**
      * Upload scan(s) of the contract.
      *
@@ -134,11 +139,16 @@ class CompanyContract extends Model implements HasMedia
         return $this->getMedia('contract_copy')->count();
     }
 
-    public function toSearchableArray() {
+    public function toSearchableArray()
+    {
         return $this->only(self::SEARCHABLE_FIELDS);
     }
 
-    public function getShowUrlAttribute() {
-        return URL("/back/companies/{$this->company_id}");
+    public function getShowUrlAttribute()
+    {
+        return route('back.companies.contracts.show', [
+            'company_id' => $this->company_id,
+            'contract' => $this->id,
+        ]);
     }
 }

@@ -284,4 +284,5 @@ return [
     'didnt-attend-at-all' => 'Didnt attend at all',
     'attendees-plus-late-attendees' => 'Attendees + Late',
     'last-login-to-platform' => 'Last login to platform',
+    'copy' => 'Copy',
 ];

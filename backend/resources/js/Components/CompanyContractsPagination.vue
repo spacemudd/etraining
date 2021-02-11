@@ -34,7 +34,7 @@
             </div>
             <div class="bg-white rounded-lg my-5 p-5 shadow" v-for="contract in contracts" :key="contract.id">
                 <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-6 gap-12">
-                    <div class="col-span-2">
+                    <div class="col-span-6 md:col-span-3">
                         <table class="table text-sm w-full">
                             <colgroup>
                                 <col class="w-1/2">
@@ -57,29 +57,14 @@
                             </tr>
                             </tbody>
                         </table>
-                        <!-- TODO: There is a problem with this button where the company also gets deleted? -->
-                        <!--<div v-can="'delete-company-contracts'"-->
-                        <!--        :id="`delete-contract-${contract.id}`"-->
-                        <!--        @click.prevent="deleteContract(contract.id)">-->
-                        <!--    <p>{{ $t('words.delete') }}</p>-->
-                        <!--</div>-->
-                        <a v-if="contract.has_attachments" target="_blank" class="bg-gray-500 h-10 text-white text-sm rounded-sm mt-2 flex justify-center items-center" :href="route('back.companies.contracts.attachments', {company_id: contract.company_id, contract_id: contract.id})">
+                        <inertia-link class="bg-gray-500 h-10 text-white text-sm rounded-sm mt-2 flex justify-center items-center"
+                           :href="route('back.companies.contracts.show', {company_id: contract.company_id, contract: contract.id})">
                             <span class="inline-block">
-                                {{ $t('words.download-scan') }}
+                                {{ $t('words.view') }}
                             </span>
-                        </a>
+                        </inertia-link>
                     </div>
-                    <!--<div class="col-span-2">-->
-                    <!--    &lt;!&ndash; Attaching trainees &ndash;&gt;-->
-                    <!--    <div class="w-full h-full border-2 border-gray-100 rounded p-2 flex justify-center items-center">-->
-                    <!--        <button class="text-sm bg-green-600 text-white px-3 py-1 rounded mx-auto block"-->
-                    <!--                @click="toggleChoosingTrainees"-->
-                    <!--                :title="$t('words.attach-trainees-help')">-->
-                    <!--            {{ $t('words.attach-trainees') }}-->
-                    <!--        </button>-->
-                    <!--    </div>-->
-                    <!--</div>-->
-                    <div class="col-span-4">
+                    <div class="col-span-6 md:col-span-3">
                         <!-- Attaching instructors -->
                         <div class="w-full h-full border-2 border-gray-100 rounded p-2 items-center flex-col">
                             <div v-if="contract.instructors.length">

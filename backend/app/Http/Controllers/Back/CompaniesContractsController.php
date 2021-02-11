@@ -76,7 +76,7 @@ class CompaniesContractsController extends Controller
         $this->authorize('create-company-contracts');
 
         $request->validate([
-            'reference_number' => 'nullable|string|max:255',
+            'reference_number' => 'nullable|string|max:255|unique:company_contracts,reference_number',
             'contract_starts_at' => 'required|date',
             'contract_ends_at' => 'nullable|date',
             'contract_period_in_months' => 'nullable',
@@ -115,23 +115,33 @@ class CompaniesContractsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function show($id)
+    public function show($company_id, $id)
     {
-        //
+        $this->authorize('view-company-contracts');
+        return Inertia::render('Back/CompaniesContracts/Show', [
+            'contract' => CompanyContract::with('company')->findOrFail($id)
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param $company_id
+     * @param $contract_id
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function edit($id)
+    public function edit($company_id, $contract_id)
     {
-        //
+        $this->authorize('create-company-contracts');
+
+        return Inertia::render('Back/CompaniesContracts/Edit', [
+            'contract' => CompanyContract::with('company')->findOrFail($contract_id),
+        ]);
     }
 
     /**
@@ -141,24 +151,42 @@ class CompaniesContractsController extends Controller
      * @param $company_id
      * @param $contract_id
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws \Throwable
      */
     public function update(Request $request, $company_id, $contract_id)
     {
         $this->authorize('create-company-contracts');
 
         $request->validate([
-            'instructor_id' => 'nullable|exists:instructors,id',
+            'reference_number' => 'nullable|string|max:255|unique:company_contracts,reference_number,'.$contract_id,
+            'contract_starts_at' => 'required|date',
+            'contract_ends_at' => 'nullable|date',
+            'contract_period_in_months' => 'nullable',
+            'auto_renewal' => 'nullable|boolean',
+            'trainees_count' => 'nullable',
+            'trainee_salary' => 'nullable',
+            'instructor_cost' => 'nullable',
+            'company_reimbursement' => 'nullable',
+            'notes' => 'nullable',
         ]);
 
         \DB::beginTransaction();
-
         $contract = CompanyContract::findOrFail($contract_id);
-        $contract->instructor_id = Instructor::findOrFail($request->instructor_id)->id;
-        $contract->save();
 
+        if (!$request->reference_number || $request->reference_number==='') {
+            $contract->reference_number = Numbering::getNewNumber(now()->format('dmY').'-');
+            $contract->save();
+        }
+
+        $contract->update($request->except('_token'));
         \DB::commit();
 
-        return redirect()->route('back.companies.show', $contract->company_id);
+        return $contract;
+        //return redirect()->route('back.companies.contracts.show', [
+        //    'company_id' => $company_id,
+        //    'contract' => $contract_id,
+        //]);
     }
 
     /**
@@ -244,5 +272,38 @@ class CompaniesContractsController extends Controller
         $contract->load('instructors');
 
         return $contract;
+    }
+
+    public function storeAttachments($company_id, $contract_id, Request $request)
+    {
+        $contract = CompanyContract::where('id', $contract_id)
+            ->where('company_id', $company_id)
+            ->firstOrFail();
+
+        // Check and save the files.
+        $files = $request->file('files');
+        if ($files) {
+            foreach($files as $file) {
+                $contract->addContractCopyAttachment($file);
+            }
+        }
+        return redirect()->route('back.companies.contracts.show', [
+            'company_id' => $company_id,
+            'contract' => $contract_id,
+        ]);
+    }
+
+    public function deleteAttachments($company_id, $contract_id)
+    {
+        $contract = CompanyContract::where('id', $contract_id)
+            ->where('company_id', $company_id)
+            ->firstOrFail();
+
+        $files = $contract->clearMediaCollection('contract_copy');
+
+        return redirect()->route('back.companies.contracts.show', [
+            'company_id' => $contract->company_id,
+            'contract' => $contract->id,
+        ]);
     }
 }
