@@ -43,10 +43,22 @@ class RegisterInstructorController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],
             'identity_number' => ['required'],
-            'phone' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'max:255', 'unique:users'],
             'provided_courses' => ['required', 'string', 'max:255'],
             'twitter_link' => 'nullable|url|unique:instructors',
             'city_id' => 'required|exists:cities,id',
+        ]);
+
+        $request->validate([
+            'identity_number' => ['required', 'unique:instructors'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:instructors'],
+            'phone' => ['required', 'string', 'max:255', 'unique:instructors'],
+        ]);
+
+        $request->validate([
+            'identity_number' => ['required', 'unique:trainees'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:trainees'],
+            'phone' => ['required', 'string', 'max:255', 'unique:trainees'],
         ]);
 
         \DB::beginTransaction();

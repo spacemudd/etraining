@@ -217,6 +217,6 @@ class CompanyContractsTest extends TestCase
 
         $this->actingAs($this->user)
             ->get(route('back.companies.contracts.show', ['company_id' => $contract->company_id, 'contract' => $contract->id]))
-            ->assertSeeText($contract->reference_number);
+            ->assertSuccessful();
     }
 }

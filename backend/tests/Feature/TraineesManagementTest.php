@@ -465,7 +465,8 @@ class TraineesManagementTest extends TestCase
             ->put(route('back.trainees.update', $trainee->id), [
                 'name' => $this->faker->name,
                 'identity_number' => '123',
-                'email' => $newEmail
+                'email' => $newEmail,
+                'phone' => '+966565176235',
             ])
             ->assertSessionDoesntHaveErrors();
 

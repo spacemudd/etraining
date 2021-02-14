@@ -147,6 +147,8 @@ class Course extends Model implements HasMedia, SearchableLabels
         if ($this->id) {
             return route('back.courses.show', ['course' => $this->id]);
         }
+
+        return '';
     }
 
     /**

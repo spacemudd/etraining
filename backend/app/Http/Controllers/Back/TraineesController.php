@@ -385,6 +385,12 @@ class TraineesController extends Controller
             'marital_status_id' => 'nullable|exists:marital_statuses,id',
         ]);
 
+        $request->validate([
+            'identity_number' => ['required', 'unique:instructors'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:instructors'],
+            'phone' => ['required', 'string', 'max:255', 'unique:instructors'],
+        ]);
+
         $trainee = Trainee::findOrFail($trainee_id);
 
         if ($trainee->user) {
