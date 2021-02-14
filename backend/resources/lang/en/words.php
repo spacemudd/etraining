@@ -285,4 +285,5 @@ return [
     'attendees-plus-late-attendees' => 'Attendees + Late',
     'last-login-to-platform' => 'Last login to platform',
     'copy' => 'Copy',
+    'singular-contract' => 'Contract',
 ];

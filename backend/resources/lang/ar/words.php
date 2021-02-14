@@ -287,4 +287,5 @@ return [
     'attendees-plus-late-attendees' => 'الحضور + المتأخرين',
     'last-login-to-platform' => 'آخر دخول للمنصة',
     'copy' => 'نسخة',
+    'singular-contract' => 'عقد',
 ];

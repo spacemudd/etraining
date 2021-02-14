@@ -2,6 +2,7 @@
 
 namespace App\Models\Back;
 
+use App\Models\SearchableLabels;
 use App\Scope\TeamScope;
 use Carbon\Carbon;
 use JamesMills\LaravelTimezone\Facades\Timezone;
@@ -12,7 +13,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Str;
 
-class CompanyContract extends Model implements HasMedia
+class CompanyContract extends Model implements HasMedia, SearchableLabels
 {
     use HasFactory;
     use InteractsWithMedia;
@@ -49,6 +50,8 @@ class CompanyContract extends Model implements HasMedia
         'show_url',
         'contract_starts_at_timezone',
         'contract_ends_at_timezone',
+        'resource_label',
+        'resource_type',
     ];
 
     protected static function boot(): void
@@ -144,11 +147,21 @@ class CompanyContract extends Model implements HasMedia
         return $this->only(self::SEARCHABLE_FIELDS);
     }
 
-    public function getShowUrlAttribute()
+    public function getShowUrlAttribute(): string
     {
         return route('back.companies.contracts.show', [
             'company_id' => $this->company_id,
             'contract' => $this->id,
         ]);
+    }
+
+    public function getResourceLabelAttribute(): string
+    {
+        return $this->reference_number ?: '';
+    }
+
+    public function getResourceTypeAttribute(): string
+    {
+        return __('words.singular-contract');
     }
 }

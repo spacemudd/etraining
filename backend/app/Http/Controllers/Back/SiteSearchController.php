@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use ReflectionClass;
 use Symfony\Component\Finder\SplFileInfo;
@@ -31,8 +32,14 @@ class SiteSearchController extends Controller
      * @param $search_string
      * @return string
      */
-    public function search($search_string)
+    public function search(Request $request)
     {
+        $request->validate([
+            'search' => 'required|max:200',
+        ]);
+
+        $search_string = $request->search;
+
         $toExclude = [
             // App\Models\Back\Company::class
         ];

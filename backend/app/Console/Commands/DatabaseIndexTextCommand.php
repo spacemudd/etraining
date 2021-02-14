@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Back\Company;
+use App\Models\Back\CompanyContract;
 use App\Models\Back\Course;
 use App\Models\Back\Instructor;
 use App\Models\Back\Trainee;
@@ -44,6 +45,7 @@ class DatabaseIndexTextCommand extends Command
     {
         $models = [
             Company::class,
+            CompanyContract::class,
             Instructor::class,
             Trainee::class,
             Course::class,

@@ -92,7 +92,11 @@
             loadSearchResultsBox: _.debounce(function() {
                 if (this.searchString) {
                     this.searchResults = 3;
-                    axios.get(`/back/search/${this.searchString}`)
+                    axios.get('/back/search', {
+                        params: {
+                            search: this.searchString,
+                        }
+                    })
                         .then(response => {
                             this.searchResults = response.data;
                         })
