@@ -110,7 +110,7 @@ class TraineesCsvImport implements ToCollection
 
     public function getCity($string)
     {
-        return City::where('name_ar', $string)->first()->id;
+        return optional(City::where('name_ar', $string)->first())->id;
     }
 
     public function getMaritalStatus($string)
