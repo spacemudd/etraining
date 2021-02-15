@@ -51,6 +51,30 @@ class CreateInvoicingTest extends TestCase
             ->assertSuccessful();
     }
 
+    public function test_storing_a_monthly_invoicing_batch()
+    {
+        $company = Company::factory()->create(['team_id' => $this->admin->current_team_id]);
+        $contract = CompanyContract::factory()->create(['team_id' => $this->admin->current_team_id, 'company_id' => $company->id]);
+        $trainee = Trainee::factory()->create([
+            'team_id' => $this->admin->current_team_id,
+            'company_contract_id' => $contract->id,
+        ]);
+
+        $this->actingAs($this->admin)
+            ->post(route('back.finance.invoicing.store'))
+            ->assertSuccessful();
+
+        $this->assertDatabaseHas('monthly_invoicing_batches', [
+            'team_id' => $this->admin->current_team_id,
+            'invoices_date' => now()->startOfMonth(),
+            'period_from' => now()->subMonth()->startOfMonth(),
+            'period_to' => now()->subMonth()->endOfMonth(),
+            'status' => 'draft',
+            'progress' => 0,
+            'total'=> 1,
+        ]);
+    }
+
     public function test_monthly_training_fees_are_invoiced_to_trainees()
     {
         // Make one company to hold the contract.

@@ -29,9 +29,7 @@ class InvoicingController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'invoices_dates',
-        ]);
+
 
         dd(1);
     }
