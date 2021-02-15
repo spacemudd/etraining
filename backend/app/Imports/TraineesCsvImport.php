@@ -43,7 +43,7 @@ class TraineesCsvImport implements ToCollection
         if ($this->trainee_group_id) {
             $group = TraineeGroup::findOrFail($this->trainee_group_id);
         } else {
-            $group = TraineeGroup::firstOrCreate(['name' => $this->trainee_group_name]);
+            $group = TraineeGroup::firstOrCreate(['name' => trim($this->trainee_group_name)]);
         }
 
         foreach ($rows as $row) {
@@ -56,22 +56,22 @@ class TraineesCsvImport implements ToCollection
                 continue;
             }
 
-            if (! filter_var($row[3], FILTER_VALIDATE_EMAIL)) {
+            if (! filter_var(($row[3]), FILTER_VALIDATE_EMAIL)) {
                 Log::error('Failed validating for this user: '.$row[0]);
                 continue;
             }
 
             $trainee = Trainee::make([
                 'team_id' => auth()->user()->current_team_id,
-                'name' => $row[0],
-                'email' => $row[3],
-                'identity_number' => $row[1],
-                'phone' => '966'.$row[4],
-                'phone_additional' => $row[5],
+                'name' => trim($row[0]),
+                'email' => trim($row[3]),
+                'identity_number' => trim($row[1]),
+                'phone' => '966'.trim($row[4]),
+                'phone_additional' => trim($row[5]),
                 'educational_level_id' => $this->getEducationalLevel($row[6]),
                 'city_id' => $this->getCity($row[7]),
                 'marital_status_id' => $this->getMaritalStatus($row[8]),
-                'children_count' => $row[9],
+                'children_count' => trim($row[9]),
             ]);
 
             $trainee->team_id = auth()->user()->current_team_id;
