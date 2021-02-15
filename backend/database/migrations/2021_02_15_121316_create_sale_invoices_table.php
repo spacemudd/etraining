@@ -23,9 +23,9 @@ class CreateSaleInvoicesTable extends Migration
             $table->nullableMorphs('billable');
             $table->tinyInteger('status');
             $table->timestamp('issued_at');
-            $table->bigInteger('sub_total');
-            $table->bigInteger('tax_total');
-            $table->bigInteger('grand_total');
+            $table->bigInteger('sub_total')->default(0);
+            $table->bigInteger('tax_total')->default(0);
+            $table->bigInteger('grand_total')->default(0);
             $table->timestamps();
 
             $table->unique(['team_id', 'number']);

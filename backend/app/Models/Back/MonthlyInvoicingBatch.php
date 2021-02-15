@@ -82,4 +82,9 @@ class MonthlyInvoicingBatch extends Model implements Auditable
 
         return '';
     }
+
+    public function sale_invoices()
+    {
+        return $this->hasMany(SaleInvoice::class);
+    }
 }

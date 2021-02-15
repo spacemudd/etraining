@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\MakeTraineesDraftInvoicesJob;
+use App\Models\Back\FinancialSetting;
 use App\Models\Back\MonthlyInvoicingBatch;
 use App\Models\Back\Trainee;
 use App\Services\MonthlyInvoicingService;
@@ -44,7 +45,7 @@ class InvoicingController extends Controller
             'total' => Trainee::readyForBilling()->count(),
         ]);
 
-        dispatch(new MakeTraineesDraftInvoicesJob($batch));
+        dispatch(new MakeTraineesDraftInvoicesJob($batch, FinancialSetting::first()->trainee_monthly_subscription));
 
         return redirect()->route('back.finance.invoicing.show', [
             'batch' => $batch->id,
@@ -59,7 +60,9 @@ class InvoicingController extends Controller
     public function show($batch)
     {
         return Inertia::render('Back/Finance/Invoicing/Show', [
-            'batch' => MonthlyInvoicingBatch::with('created_by')->findOrFail($batch),
+            'batch' => MonthlyInvoicingBatch::with('created_by')
+                ->withSum('sale_invoices', 'grand_total')
+                ->findOrFail($batch),
         ]);
     }
 

@@ -47,6 +47,10 @@
                                     <td>{{ batch.total }}</td>
                                 </tr>
                                 <tr>
+                                    <td>{{ $t('words.total-value') }}</td>
+                                    <td>{{ Number(batch.sale_invoices_sum_grand_total)/100 }}</td>
+                                </tr>
+                                <tr>
                                     <td>{{ $t('words.status') }}</td>
                                     <td>{{ batch.status_display }}</td>
                                 </tr>

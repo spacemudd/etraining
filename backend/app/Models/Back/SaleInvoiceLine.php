@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Auditable;
 use Str;
 
-class SaleInvoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
+class SaleInvoiceLine extends Model implements \OwenIt\Auditing\Contracts\Auditable
 {
     use HasFactory;
     use HasUuid;
@@ -19,14 +19,6 @@ class SaleInvoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
 
     protected $keyType = 'string';
 
-    const STATUS_DRAFT = 0;
-    const STATUS_ISSUED = 1;
-    const STATUS_VOID = 2;
-
-    protected $fillable = [
-        'issued_at',
-    ];
-
     protected static function boot(): void
     {
         parent::boot();
@@ -34,7 +26,7 @@ class SaleInvoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string) Str::uuid();
             if (auth()->user()) {
-                $model->team_id = $model->team_id = auth()->user()->currentTeam()->first()->id;
+                $model->team_id = $model->team_id = auth()->user()->current_team_id;
             }
         });
     }

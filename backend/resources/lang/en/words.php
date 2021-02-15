@@ -368,4 +368,5 @@ return [
     'period-to' => 'Period to',
     'draft' => 'Draft',
     'created-by' => 'Created by',
+    'total-value' => 'Total value',
 ];

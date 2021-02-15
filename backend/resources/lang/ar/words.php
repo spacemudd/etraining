@@ -373,4 +373,5 @@ return [
     'period-to' => 'المدة الى',
     'draft' => 'مسودة',
     'created-by' => 'من قبل',
+    'total-value' => 'الإجمالي',
 ];
