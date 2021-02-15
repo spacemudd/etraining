@@ -494,6 +494,7 @@ export default {
             "all": "الكل",
             "report-work-on-progress": "جاري العمل على التقرير",
             "please-dont-close-the-window": "الرجاء عدم إغلاق الصفحة",
+<<<<<<< main
             "download-file": "تحميل الملف",
             "disable-website": "إقفال الموقع",
             "here-you-can-disable-the-website-and-specify-a-message": "هنا يمكن لك إقاف الموقع و تحديد الرسالة الرئيسية",
@@ -529,6 +530,10 @@ export default {
             "blocked-at": "تاريخ الحظر",
             "please-enter-valid-phone-number": "الرجاء استخدام رقم جوال لتوثيق الحساب",
             "warnings-sheet": "تاريخ الإنذارات"
+=======
+            "download-file": "تحميل الملف"
+            "monthly-invoicing": "الفوترة الشهرية"
+>>>>>>> Show monthly invoicing page
         }
     },
     "en": {

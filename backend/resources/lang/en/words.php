@@ -359,4 +359,6 @@ return [
     'blocked-at' => 'Block date',
     'please-enter-valid-phone-number' => 'Please enter a valid phone number for verification purposes',
     'warnings-sheet' => 'Warnings sheet',
+    'error-occurred' => 'Error occurred',
+    'invoicing' => 'Monthly invoicing',
 ];

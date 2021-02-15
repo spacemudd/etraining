@@ -15,22 +15,12 @@
                 :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
                     {title: 'finance', link: route('back.finance')},
+                    {title: 'monthly-invoicing', link: route('back.finance.invoicing.index')},
                 ]"
             ></breadcrumb-container>
 
             <div class="grid md:grid-cols-4 grid-cols-1 gap-6">
-                <inertia-link :href="route('back.finance.invoicing.index')" class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
-                    {{ $t('words.monthly-invoicing') }}
-                </inertia-link>
-                <inertia-link :href="route('back.finance.accounts.index')" class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
-                   {{ $t('words.view-client-accounts') }}
-                </inertia-link>
-                <inertia-link :href="route('back.finance.invoices.index')" class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
-                    {{ $t('words.view-invoices') }}
-                </inertia-link>
-                <inertia-link v-can="'view-financial-department'" :href="route('back.finance.monthly-subscription.edit')" class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
-                    {{ $t('words.view-monthly-subscription-settings') }}
-                </inertia-link>
+                Invoicing
             </div>
         </div>
     </app-layout>
@@ -49,7 +39,7 @@
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
 
     export default {
-        metaInfo: { title: 'Finance' },
+        metaInfo: { title: 'Invoicing' },
         // layout: Layout,
         components: {
             IconNavigate,

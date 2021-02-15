@@ -84,6 +84,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('finance', [\App\Http\Controllers\Back\FinanceController::class, 'index'])->name('finance');
 
         Route::prefix('finance')->name('finance.')->group(function() {
+            Route::get('invoicing', [\App\Http\Controllers\Back\InvoicingController::class, 'index'])->name('invoicing.index');
             Route::resource('accounts', \App\Http\Controllers\Back\FinancialAccountsController::class);
             Route::resource('invoices', \App\Http\Controllers\Back\FinancialInvoicesController::class);
             Route::get('monthly-subscription/edit', [\App\Http\Controllers\Back\FinancialMonthlySubscriptionController::class, 'edit'])->name('monthly-subscription.edit');

@@ -37,6 +37,13 @@ class CreateInvoicingTest extends TestCase
         $this->admin->save();
     }
 
+    public function test_monthly_invoicing_page_is_accessible()
+    {
+        $this->actingAs($this->admin)
+            ->get(route('back.finance.invoicing.index'))
+            ->assertSuccessful();
+    }
+
     public function test_monthly_training_fees_are_invoiced_to_trainees()
     {
         // Make one company to hold the contract.
@@ -61,7 +68,7 @@ class CreateInvoicingTest extends TestCase
         // Question: What is the period of the invoice? It is for the past period.
         // E.g. If a student joins in the middle of the month, then at the end of the month
         // They're charged alongside the other people in the contract.
-        
+
         app()->make(MonthlyInvoicingService::class)
             ->generateTraineesMonthlyInvoices();
     }

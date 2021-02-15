@@ -1,6 +1,26 @@
 {
+<<<<<<< main
     "/js/app.js": "/js/app.js?id=9311841e3f1f964a94dd",
     "/css/app.css": "/css/app.css?id=25c6e2e973732bce9057",
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
     "/js/vendor.js": "/js/vendor.js?id=b6c6f73b723edf9d5ebf"
+=======
+<<<<<<< main
+    "/js/app.js": "/js/app.js?id=8ef0c0b6639154823d92",
+    "/css/app.css": "/css/app.css?id=25c6e2e973732bce9057",
+    "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
+    "/js/vendor.js": "/js/vendor.js?id=19440898fbb98607d999"
+=======
+    "/js/app.js": "/js/app.js",
+    "/css/app.css": "/css/app.css",
+    "/js/manifest.js": "/js/manifest.js",
+    "/js/vendor.js": "/js/vendor.js",
+    "/js/app.89ef79c02c5c987222f2.hot-update.js": "/js/app.89ef79c02c5c987222f2.hot-update.js",
+    "/js/app.0f7215e25f6ef362021d.hot-update.js": "/js/app.0f7215e25f6ef362021d.hot-update.js",
+    "/js/app.a51d0da2d78ed056e806.hot-update.js": "/js/app.a51d0da2d78ed056e806.hot-update.js",
+    "/js/app.e38d5b2db7778462ce04.hot-update.js": "/js/app.e38d5b2db7778462ce04.hot-update.js",
+    "/js/app.8dd20ed7c44e6f6c49d8.hot-update.js": "/js/app.8dd20ed7c44e6f6c49d8.hot-update.js",
+    "/js/app.eee45fa6b6b66e20d50e.hot-update.js": "/js/app.eee45fa6b6b66e20d50e.hot-update.js"
+>>>>>>> Show monthly invoicing page
+>>>>>>> Show monthly invoicing page
 }
