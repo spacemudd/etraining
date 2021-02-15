@@ -287,6 +287,7 @@ return [
     'last-login-to-platform' => 'Last login to platform',
     'copy' => 'Copy',
     'singular-contract' => 'Contract',
+    'monthly-invoicing' => 'Monthly invoicing',
     'can-impersonate' => 'Login as other user',
     'login-as-user' => 'Login as user',
     'view-payments' => 'View payments',
@@ -363,4 +364,8 @@ return [
     'invoicing' => 'Monthly invoicing',
     'invoice-current-students-for-the-month' => 'Invoice current students for the month',
     'invoices-date' => 'Invoices date',
+    'period-from' => 'Period from',
+    'period-to' => 'Period to',
+    'draft' => 'Draft',
+    'created-by' => 'Created by',
 ];

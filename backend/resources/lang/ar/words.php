@@ -369,4 +369,8 @@ return [
     'monthly-invoicing' => 'الفوترة الشهرية',
     'invoice-current-students-for-the-month' => 'فوترة المتدربين لهذا الشهر',
     'invoices-date' => 'تاريخ الفواتير',
+    'period-from' => 'المدة من',
+    'period-to' => 'المدة الى',
+    'draft' => 'مسودة',
+    'created-by' => 'من قبل',
 ];

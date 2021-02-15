@@ -457,6 +457,11 @@ export default {
 =======
             "monthly-invoicing": "الفوترة الشهرية",
             "invoice-current-students-for-the-month": "فوترة المتدربين لهذا الشهر",
+            "invoices-date": "تاريخ الفواتير",
+            "period-from": "المدة من",
+            "period-to": "المدة الى",
+            "draft": "مسودة",
+            "created-by": "من قبل"
             "invoices-date": "تاريخ الفواتير"
 >>>>>>> Add 'create' page for monthly invoicing
             "can-impersonate": "دخول عبر حساب آخر (متدرب \\ مدرب)",
@@ -963,8 +968,13 @@ export default {
             "last-login-to-platform": "Last login to platform",
             "copy": "Copy",
             "singular-contract": "Contract",
-            "invoicing": "Monthly invoicing",
+            "monthly-invoicing": "Monthly invoicing",
             "invoice-current-students-for-the-month": "Invoice current students for the month",
+            "invoices-date": "Invoices date",
+            "period-from": "Period from",
+            "period-to": "Period to",
+            "draft": "Draft",
+            "created-by": "Created by"
             "invoices-date": "Invoices date"
             "can-impersonate": "Login as other user",
             "login-as-user": "Login as user",

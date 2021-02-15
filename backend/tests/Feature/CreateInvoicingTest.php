@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Actions\Fortify\CreateNewUser;
 use App\Models\Back\Company;
 use App\Models\Back\CompanyContract;
+use App\Models\Back\MonthlyInvoicingBatch;
 use App\Models\Back\Trainee;
 use App\Services\MonthlyInvoicingService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -55,24 +56,45 @@ class CreateInvoicingTest extends TestCase
     {
         $company = Company::factory()->create(['team_id' => $this->admin->current_team_id]);
         $contract = CompanyContract::factory()->create(['team_id' => $this->admin->current_team_id, 'company_id' => $company->id]);
-        $trainee = Trainee::factory()->create([
+        Trainee::factory()->create([
             'team_id' => $this->admin->current_team_id,
             'company_contract_id' => $contract->id,
         ]);
 
         $this->actingAs($this->admin)
             ->post(route('back.finance.invoicing.store'))
-            ->assertSuccessful();
+            ->assertSessionDoesntHaveErrors();
 
         $this->assertDatabaseHas('monthly_invoicing_batches', [
             'team_id' => $this->admin->current_team_id,
             'invoices_date' => now()->startOfMonth(),
             'period_from' => now()->subMonth()->startOfMonth(),
             'period_to' => now()->subMonth()->endOfMonth(),
-            'status' => 'draft',
+            'job_status' => MonthlyInvoicingBatch::JOB_STATUS_QUEUED,
+            'status' => MonthlyInvoicingBatch::STATUS_DRAFT,
             'progress' => 0,
             'total'=> 1,
         ]);
+    }
+
+    public function test_viewing_monthly_invoicing_batch()
+    {
+        $savedBatch = MonthlyInvoicingBatch::factory([
+            'team_id' => $this->admin->current_team_id,
+            'invoices_date' => now()->startOfMonth(),
+            'period_from' => now()->subMonth()->startOfMonth(),
+            'period_to' => now()->subMonth()->endOfMonth(),
+            'job_status' => MonthlyInvoicingBatch::JOB_STATUS_QUEUED,
+            'status' => MonthlyInvoicingBatch::STATUS_DRAFT,
+            'progress' => 0,
+            'total'=> 1,
+        ])->create();
+
+        $this->actingAs($this->admin)
+            ->get(route('back.finance.invoicing.show', $savedBatch->id))
+            ->assertPropValue('batch', function($batch) use ($savedBatch) {
+                $this->assertEquals($batch['id'], $savedBatch->id);
+            });
     }
 
     public function test_monthly_training_fees_are_invoiced_to_trainees()

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
+use App\Models\Back\MonthlyInvoicingBatch;
+use App\Models\Back\Trainee;
+use App\Services\MonthlyInvoicingService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -26,11 +29,42 @@ class InvoicingController extends Controller
      * This is a collection of invoices for the current month.
      *
      * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
+        $trainees = Trainee::where('company_contract_id', '!=', null)->count();
 
+        $batch = MonthlyInvoicingBatch::create([
+            'invoices_date' => now()->startOfMonth(),
+            'period_from' => now()->subMonth()->startOfMonth(),
+            'period_to' => now()->subMonth()->endOfMonth(),
+            'job_status' => MonthlyInvoicingBatch::JOB_STATUS_QUEUED,
+            'status' => MonthlyInvoicingBatch::STATUS_DRAFT,
+            'progress' => 0,
+            'total' => $trainees,
+        ]);
 
-        dd(1);
+        return redirect()->route('back.finance.invoicing.show', [
+            'batch' => $batch->id,
+        ]);
+    }
+
+    /**
+     *
+     * @param $batch MonthlyInvoicingBatch
+     * @return \Inertia\Response
+     */
+    public function show($batch)
+    {
+        return Inertia::render('Back/Finance/Invoicing/Show', [
+            'batch' => MonthlyInvoicingBatch::with('created_by')->findOrFail($batch),
+        ]);
+    }
+
+    public function delete($batch)
+    {
+        MonthlyInvoicingBatch::findOrFail($batch)->delete();
+        return redirect()->route('back.finance.invoicing.index');
     }
 }

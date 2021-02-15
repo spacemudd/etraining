@@ -16,6 +16,7 @@
     "/js/manifest.js": "/js/manifest.js",
     "/js/vendor.js": "/js/vendor.js",
 <<<<<<< main
+<<<<<<< main
     "/js/app.89ef79c02c5c987222f2.hot-update.js": "/js/app.89ef79c02c5c987222f2.hot-update.js",
     "/js/app.0f7215e25f6ef362021d.hot-update.js": "/js/app.0f7215e25f6ef362021d.hot-update.js",
     "/js/app.a51d0da2d78ed056e806.hot-update.js": "/js/app.a51d0da2d78ed056e806.hot-update.js",
@@ -57,5 +58,65 @@
     "/js/app.487949c85c07258632fd.hot-update.js": "/js/app.487949c85c07258632fd.hot-update.js",
     "/js/app.75a1cffeffaa485a6ce2.hot-update.js": "/js/app.75a1cffeffaa485a6ce2.hot-update.js"
 >>>>>>> Test pass and make post request
+<<<<<<< main
 >>>>>>> Test pass and make post request
+=======
+=======
+    "/js/app.2bda933f6983302cacda.hot-update.js": "/js/app.2bda933f6983302cacda.hot-update.js",
+    "/js/app.2922cd21bb9d3502b369.hot-update.js": "/js/app.2922cd21bb9d3502b369.hot-update.js",
+    "/js/app.2d0fb1616c1626838d7f.hot-update.js": "/js/app.2d0fb1616c1626838d7f.hot-update.js",
+    "/js/app.3fe3e0b1fe2ae883987f.hot-update.js": "/js/app.3fe3e0b1fe2ae883987f.hot-update.js",
+    "/js/app.60376187be0dd00d9e16.hot-update.js": "/js/app.60376187be0dd00d9e16.hot-update.js",
+    "/js/app.86bfbc6a47bad00a56a4.hot-update.js": "/js/app.86bfbc6a47bad00a56a4.hot-update.js",
+    "/js/app.5c3049ca5bf5784e110c.hot-update.js": "/js/app.5c3049ca5bf5784e110c.hot-update.js",
+    "/js/app.5193eded93b06f4926fb.hot-update.js": "/js/app.5193eded93b06f4926fb.hot-update.js",
+    "/js/app.94dcc2eadab08265da72.hot-update.js": "/js/app.94dcc2eadab08265da72.hot-update.js",
+    "/js/app.1b13bc83ce9165e1002a.hot-update.js": "/js/app.1b13bc83ce9165e1002a.hot-update.js",
+    "/js/app.a1e7a8a55e717df0c6aa.hot-update.js": "/js/app.a1e7a8a55e717df0c6aa.hot-update.js",
+    "/js/app.8332f0c66e70647bfde4.hot-update.js": "/js/app.8332f0c66e70647bfde4.hot-update.js",
+    "/js/app.dfde36b5917bbb950d08.hot-update.js": "/js/app.dfde36b5917bbb950d08.hot-update.js",
+    "/js/app.9e34521fc84749f2f6d2.hot-update.js": "/js/app.9e34521fc84749f2f6d2.hot-update.js",
+    "/js/app.419341c332ea16fd1b1d.hot-update.js": "/js/app.419341c332ea16fd1b1d.hot-update.js",
+    "/js/app.a8dd7fe191d4c25bc81e.hot-update.js": "/js/app.a8dd7fe191d4c25bc81e.hot-update.js",
+    "/js/app.c4d9802163f5010ee42a.hot-update.js": "/js/app.c4d9802163f5010ee42a.hot-update.js",
+    "/js/app.a91da928db6ff55733d3.hot-update.js": "/js/app.a91da928db6ff55733d3.hot-update.js",
+    "/js/app.8aadf6fe72a4da7fac78.hot-update.js": "/js/app.8aadf6fe72a4da7fac78.hot-update.js",
+    "/js/app.f71bf337aad375623ea8.hot-update.js": "/js/app.f71bf337aad375623ea8.hot-update.js",
+    "/js/app.7aafcc49023af285133e.hot-update.js": "/js/app.7aafcc49023af285133e.hot-update.js",
+    "/js/app.b3ad0e349a0d92959aaf.hot-update.js": "/js/app.b3ad0e349a0d92959aaf.hot-update.js",
+    "/js/app.d518eca20839c5a94974.hot-update.js": "/js/app.d518eca20839c5a94974.hot-update.js",
+    "/js/app.38a48bc3ed415ca0a7ab.hot-update.js": "/js/app.38a48bc3ed415ca0a7ab.hot-update.js",
+    "/js/app.e309fe0b6db850a11d31.hot-update.js": "/js/app.e309fe0b6db850a11d31.hot-update.js",
+    "/js/app.3398e79c8928209ae273.hot-update.js": "/js/app.3398e79c8928209ae273.hot-update.js",
+    "/js/app.0cf566ec3c7653c785ed.hot-update.js": "/js/app.0cf566ec3c7653c785ed.hot-update.js",
+    "/js/app.09ec055d0e507731abbf.hot-update.js": "/js/app.09ec055d0e507731abbf.hot-update.js",
+    "/js/app.ccfe0f7fb1a9d96bdc24.hot-update.js": "/js/app.ccfe0f7fb1a9d96bdc24.hot-update.js",
+    "/js/app.c4e7feafbc19ba5f1006.hot-update.js": "/js/app.c4e7feafbc19ba5f1006.hot-update.js",
+    "/js/app.26f494e80b7dad2ccf26.hot-update.js": "/js/app.26f494e80b7dad2ccf26.hot-update.js",
+    "/js/app.6af5fd82c36c2278f967.hot-update.js": "/js/app.6af5fd82c36c2278f967.hot-update.js",
+    "/js/app.5c6622840a642efe1d6c.hot-update.js": "/js/app.5c6622840a642efe1d6c.hot-update.js",
+    "/js/app.5e09322059f0f39b3a1e.hot-update.js": "/js/app.5e09322059f0f39b3a1e.hot-update.js",
+    "/js/app.0203bf0596baea2db3ad.hot-update.js": "/js/app.0203bf0596baea2db3ad.hot-update.js",
+    "/js/app.a0d2fb97410335e3f395.hot-update.js": "/js/app.a0d2fb97410335e3f395.hot-update.js",
+    "/js/app.6774f1709f61ad8ce2c1.hot-update.js": "/js/app.6774f1709f61ad8ce2c1.hot-update.js",
+    "/js/app.4e3e6eb2e3380256f14d.hot-update.js": "/js/app.4e3e6eb2e3380256f14d.hot-update.js",
+    "/js/app.ce8b04e0688ba1e1bf77.hot-update.js": "/js/app.ce8b04e0688ba1e1bf77.hot-update.js",
+    "/js/app.f8870a9e5cd6e0aae3ef.hot-update.js": "/js/app.f8870a9e5cd6e0aae3ef.hot-update.js",
+    "/js/app.50166ada9be0601847ca.hot-update.js": "/js/app.50166ada9be0601847ca.hot-update.js",
+    "/js/app.1fdd1f20ba9cf3036df0.hot-update.js": "/js/app.1fdd1f20ba9cf3036df0.hot-update.js",
+    "/js/app.f8e9546a0f9a7df5e86d.hot-update.js": "/js/app.f8e9546a0f9a7df5e86d.hot-update.js",
+    "/js/app.ebb907cb08a8a608e418.hot-update.js": "/js/app.ebb907cb08a8a608e418.hot-update.js",
+    "/js/app.4d426f3746dbf0ac33bf.hot-update.js": "/js/app.4d426f3746dbf0ac33bf.hot-update.js",
+    "/js/app.5631256922b93528eafb.hot-update.js": "/js/app.5631256922b93528eafb.hot-update.js",
+    "/js/app.ca94ff48ef4c24952f9b.hot-update.js": "/js/app.ca94ff48ef4c24952f9b.hot-update.js",
+    "/js/app.2ce1f37a6065dfa10bbd.hot-update.js": "/js/app.2ce1f37a6065dfa10bbd.hot-update.js",
+    "/js/app.f3ae169e858c9b5dc148.hot-update.js": "/js/app.f3ae169e858c9b5dc148.hot-update.js",
+    "/js/app.56e715e8e8aa386f1038.hot-update.js": "/js/app.56e715e8e8aa386f1038.hot-update.js",
+    "/js/app.91d9524809e7535cb76d.hot-update.js": "/js/app.91d9524809e7535cb76d.hot-update.js",
+    "/js/app.4a0844c6e642a5aaaef4.hot-update.js": "/js/app.4a0844c6e642a5aaaef4.hot-update.js",
+    "/js/app.cfd806d10f1c53987c8c.hot-update.js": "/js/app.cfd806d10f1c53987c8c.hot-update.js",
+    "/js/app.2beb05e93f1bae5d93a1.hot-update.js": "/js/app.2beb05e93f1bae5d93a1.hot-update.js",
+    "/js/app.5c6fd30881a0858ed25e.hot-update.js": "/js/app.5c6fd30881a0858ed25e.hot-update.js"
+>>>>>>> Delete invoicing batch
+>>>>>>> Delete invoicing batch
 }
