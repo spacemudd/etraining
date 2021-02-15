@@ -25,6 +25,13 @@
                             </colgroup>
                         	<tbody>
                                 <tr>
+                                    <td>{{ $t('words.date') }}</td>
+                                    <td class="justify-content-end">{{ batch.invoices_date }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><hr></td>
+                                </tr>
+                                <tr>
                                     <td>{{ $t('words.period-from') }}</td>
                                     <td class="justify-content-end">{{ batch.period_from }}</td>
                                 </tr>
@@ -34,10 +41,6 @@
                                 </tr>
                                 <tr>
                                     <td colspan="2"><hr></td>
-                                </tr>
-                                <tr>
-                                    <td>{{ $t('words.date') }}</td>
-                                    <td class="justify-content-end">{{ batch.invoices_date }}</td>
                                 </tr>
                                 <tr>
                                     <td>{{ $t('words.trainees') }}</td>
