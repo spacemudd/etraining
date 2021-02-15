@@ -367,4 +367,6 @@ return [
     'please-enter-valid-phone-number' => 'الرجاء استخدام رقم جوال لتوثيق الحساب',
     'warnings-sheet' => 'تاريخ الإنذارات',
     'monthly-invoicing' => 'الفوترة الشهرية',
+    'invoice-current-students-for-the-month' => 'فوترة المتدربين لهذا الشهر',
+    'invoices-date' => 'تاريخ الفواتير',
 ];

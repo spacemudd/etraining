@@ -42,12 +42,14 @@ Vue.mixin({ methods: { route: window.route } });
 
 // import { loadCldr, L10n } from '@syncfusion/ej2-base';
 import { DateTimePickerPlugin } from '@syncfusion/ej2-vue-calendars';
+import { DatePickerPlugin } from '@syncfusion/ej2-vue-calendars';
 // import * as numberingSystems from 'cldr-data/supplemental/numberingSystems.json';
 // import * as gregorian from 'cldr-data/main/ar/ca-gregorian.json';
 // import * as numbers from 'cldr-data/main/ar/numbers.json';
 // import * as timeZoneNames from 'cldr-data/main/ar/timeZoneNames.json';
 // import * as weekData from 'cldr-data/supplemental/weekdata.json'; // To load the culture based first day of week
 Vue.use(DateTimePickerPlugin);
+Vue.use(DatePickerPlugin);
 // loadCldr(numberingSystems, gregorian, numbers, timeZoneNames, weekData);
 // L10n.load({
 //     'ar': {

@@ -44,6 +44,13 @@ class CreateInvoicingTest extends TestCase
             ->assertSuccessful();
     }
 
+    public function test_creating_a_monthly_invoicing_batch()
+    {
+        $this->acting($this->admin)
+            ->post(route('back.finance.invoicing.create'))
+            ->assertSuccessful();
+    }
+
     public function test_monthly_training_fees_are_invoiced_to_trainees()
     {
         // Make one company to hold the contract.

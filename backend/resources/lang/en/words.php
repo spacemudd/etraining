@@ -361,4 +361,6 @@ return [
     'warnings-sheet' => 'Warnings sheet',
     'error-occurred' => 'Error occurred',
     'invoicing' => 'Monthly invoicing',
+    'invoice-current-students-for-the-month' => 'Invoice current students for the month',
+    'invoices-date' => 'Invoices date',
 ];

@@ -452,7 +452,13 @@ export default {
             "last-login-to-platform": "آخر دخول للمنصة",
             "copy": "نسخة",
             "singular-contract": "عقد",
+<<<<<<< main
             "without-contract": "من دون عقد",
+=======
+            "monthly-invoicing": "الفوترة الشهرية",
+            "invoice-current-students-for-the-month": "فوترة المتدربين لهذا الشهر",
+            "invoices-date": "تاريخ الفواتير"
+>>>>>>> Add 'create' page for monthly invoicing
             "can-impersonate": "دخول عبر حساب آخر (متدرب \\ مدرب)",
             "login-as-user": "الدخول من عبر الحساب",
             "view-payments": "عرض المدفوعات",
@@ -957,6 +963,9 @@ export default {
             "last-login-to-platform": "Last login to platform",
             "copy": "Copy",
             "singular-contract": "Contract",
+            "invoicing": "Monthly invoicing",
+            "invoice-current-students-for-the-month": "Invoice current students for the month",
+            "invoices-date": "Invoices date"
             "can-impersonate": "Login as other user",
             "login-as-user": "Login as user",
             "view-payments": "View payments",

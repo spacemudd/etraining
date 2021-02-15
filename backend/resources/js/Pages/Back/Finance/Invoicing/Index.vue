@@ -18,6 +18,13 @@
                     {title: 'monthly-invoicing', link: route('back.finance.invoicing.index')},
                 ]"
             ></breadcrumb-container>
+            <div class="flex justify-end">
+                <div class="mb-6 flex justify-between items-center">
+                    <inertia-link class="btn-gray" :href="route('back.finance.invoicing.create')">
+                        <span>{{ $t('words.new') }}</span>
+                    </inertia-link>
+                </div>
+            </div>
 
             <div class="grid md:grid-cols-4 grid-cols-1 gap-6">
                 Invoicing
