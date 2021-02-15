@@ -21,9 +21,8 @@
 
                     <template #form>
                         <div class="col-span-6 sm:col-span-2">
-                            <jet-label for="name_ar" :value="$t('words.invoices-date')" />
-                            <ejs-datepicker class="mt-1 block w-full" v-model="form.starts_at" :placeholder="$t('words.select-date')" :enableRtl="rtl" required></ejs-datepicker>
-                            <jet-input-error :message="form.error('starts_at')" class="mt-2" />
+                            <jet-label for="invoice_date" :value="$t('words.invoices-date')" />
+                            <jet-input id="invoice_date" type="text" class="mt-1 block w-full" v-model="invoiceDate" disabled />
                         </div>
                     </template>
 
@@ -32,7 +31,7 @@
                             {{ $t('words.saved-successfully') }}
                         </jet-action-message>
 
-                        <inertia-link href="/back/companies" class="flex items-center justify-start rtl:ml-4 ltr:mr-4 rounded-md px-4 py-2 bg-white hover:bg-gray-300 text-right">
+                        <inertia-link :href="route('back.finance.invoicing.index')" class="flex items-center justify-start rtl:ml-4 ltr:mr-4 rounded-md px-4 py-2 bg-white hover:bg-gray-300 text-right">
                             {{ $t('words.cancel') }}
                         </inertia-link>
 
@@ -58,11 +57,9 @@
     import JetLabel from '@/Jetstream/Label';
     import JetTextarea from '@/Jetstream/Textarea';
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
-    import VueDropzone from "vue2-dropzone";
-    import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
     export default {
-        props: ['sessions', 'instructors'],
+        props: [],
 
         components: {
             AppLayout,
@@ -76,38 +73,22 @@
             JetLabel,
             JetTextarea,
             BreadcrumbContainer,
-            VueDropzone,
         },
         computed: {
             rtl() {
                 let lang = document.documentElement.lang.substr(0, 2);
                 return lang === 'ar';
             },
+            invoiceDate() {
+                return moment().startOf('month').format('YYYY-MM-DD');
+            },
         },
         data() {
             return {
-                dropzoneOptions: {
-                    addRemoveLinks: true,
-                    destroyDropzone: false,
-                    autoProcessQueue: false,
-                    manuallyAddFile: true,
-                    url: 'https://getShafiq.com', // Just required to initiate DropZone.
-                    dictDefaultMessage: "<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> "+this.$t('words.upload-files-here'),
-                    dictRemoveFile: this.$t('words.delete'),
-                    thumbnailWidth: 150,
-                    maxFilesize: 20,
-                },
                 form: this.$inertia.form({
-                    name_ar: '',
-                    name_en: '',
-                    instructor_id: '',
-                    description: '',
-                    approval_code: '',
-                    days_duration: '',
-                    hours_duration: '',
-                    training_package: '',
+
                 }, {
-                    bag: 'createCourse',
+                    bag: 'createInvoicingBatch',
                 })
             }
         },
@@ -116,28 +97,10 @@
                 this.form.training_package = file;
             },
             createCourse() {
-                this.form.post('/back/courses', {
+                this.form.post(route('back.finance.invoicing.store'), {
                     preserveScroll: true
                 });
             },
         }
     }
 </script>
-
-<style>
-    .dropzone .dz-preview .dz-progress {
-        display: none;
-    }
-    .vue-dropzone > .dz-preview .dz-remove {
-        margin: 0 10px;
-    }
-
-    .vue-dropzone > .dz-preview .dz-details {
-        background-color: rgb(37, 47, 63);
-    }
-
-    .dropzone.dz-clickable .dz-message, .dropzone.dz-clickable .dz-message * {
-        font-family: Nunito, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-        line-height: 1.5;
-    }
-</style>

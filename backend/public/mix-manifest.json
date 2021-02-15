@@ -15,6 +15,7 @@
     "/css/app.css": "/css/app.css",
     "/js/manifest.js": "/js/manifest.js",
     "/js/vendor.js": "/js/vendor.js",
+<<<<<<< main
     "/js/app.89ef79c02c5c987222f2.hot-update.js": "/js/app.89ef79c02c5c987222f2.hot-update.js",
     "/js/app.0f7215e25f6ef362021d.hot-update.js": "/js/app.0f7215e25f6ef362021d.hot-update.js",
     "/js/app.a51d0da2d78ed056e806.hot-update.js": "/js/app.a51d0da2d78ed056e806.hot-update.js",
@@ -44,5 +45,17 @@
     "/js/app.63a83d3bb2a1f80d1da7.hot-update.js": "/js/app.63a83d3bb2a1f80d1da7.hot-update.js",
     "/js/app.c85b27f431aed14f42c1.hot-update.js": "/js/app.c85b27f431aed14f42c1.hot-update.js"
 >>>>>>> Add 'create' page for monthly invoicing
+<<<<<<< main
 >>>>>>> Add 'create' page for monthly invoicing
+=======
+=======
+    "/js/app.e36e9357eedf03db89c7.hot-update.js": "/js/app.e36e9357eedf03db89c7.hot-update.js",
+    "/js/app.24c82d36dda41c1b1930.hot-update.js": "/js/app.24c82d36dda41c1b1930.hot-update.js",
+    "/js/app.ea9db758678aeb244aa7.hot-update.js": "/js/app.ea9db758678aeb244aa7.hot-update.js",
+    "/js/app.180b9dcae4ba49148e83.hot-update.js": "/js/app.180b9dcae4ba49148e83.hot-update.js",
+    "/js/app.650c0148bc29e90b5395.hot-update.js": "/js/app.650c0148bc29e90b5395.hot-update.js",
+    "/js/app.487949c85c07258632fd.hot-update.js": "/js/app.487949c85c07258632fd.hot-update.js",
+    "/js/app.75a1cffeffaa485a6ce2.hot-update.js": "/js/app.75a1cffeffaa485a6ce2.hot-update.js"
+>>>>>>> Test pass and make post request
+>>>>>>> Test pass and make post request
 }

@@ -33,6 +33,6 @@ class InvoicingController extends Controller
             'invoices_dates',
         ]);
 
-
+        dd(1);
     }
 }
