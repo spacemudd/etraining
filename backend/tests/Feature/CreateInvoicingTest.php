@@ -6,8 +6,11 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Jobs\MakeTraineesDraftInvoicesJob;
 use App\Models\Back\Company;
 use App\Models\Back\CompanyContract;
+use App\Models\Back\FinancialSetting;
 use App\Models\Back\MonthlyInvoicingBatch;
 use App\Models\Back\Trainee;
+use Brick\Math\RoundingMode;
+use Brick\Money\Money;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
@@ -58,7 +61,7 @@ class CreateInvoicingTest extends TestCase
         $contract = CompanyContract::factory()->create(['team_id' => $this->admin->current_team_id, 'company_id' => $company->id]);
         Trainee::factory()->create([
             'team_id' => $this->admin->current_team_id,
-            'company_contract_id' => $contract->id,
+            'company_id' => $company->id,
         ]);
 
         $this->actingAs($this->admin)
@@ -105,7 +108,8 @@ class CreateInvoicingTest extends TestCase
         $contract = CompanyContract::factory()->create(['team_id' => $this->admin->current_team_id, 'company_id' => $company->id]);
         Trainee::factory()->create([
             'team_id' => $this->admin->current_team_id,
-            'company_contract_id' => $contract->id,
+            'company_id' => $company->id,
+            'status' => Trainee::STATUS_APPROVED,
         ]);
 
         $this->actingAs($this->admin)
@@ -117,6 +121,39 @@ class CreateInvoicingTest extends TestCase
         Queue::assertPushed(function(MakeTraineesDraftInvoicesJob $job) use ($batch) {
             return $job->batch->id === $batch->id;
         });
+    }
+
+    public function test_backend_job_is_creating_draft_invoices_for_all_trainees()
+    {
+        $company = Company::factory()->create(['team_id' => $this->admin->current_team_id]);
+        $contract = CompanyContract::factory()->create([
+            'team_id' => $this->admin->current_team_id,
+            'company_id' => $company->id,
+        ]);
+        $trainee = Trainee::factory()->create([
+            'team_id' => $this->admin->current_team_id,
+            'company_id' => $company->id,
+            'status' => Trainee::STATUS_APPROVED,
+        ]);
+
+        $this->actingAs($this->admin)
+            ->post(route('back.finance.invoicing.store'))
+            ->assertSessionDoesntHaveErrors();
+
+        $cost_per_month = FinancialSetting::where('team_id', $this->admin->current_team_id)->firstOrFail()
+            ->trainee_monthly_subscription;
+
+        $this->assertDatabaseHas('sale_invoices', [
+            'team_id' => $this->admin->current_team_id,
+            'issued_at' => now()->startOfMonth()->startOfDay(),
+            'billable_id' => $trainee->id,
+            'billable_type' => Trainee::class,
+            'sub_total' => $cost_per_month,
+            'tax_total' => Money::ofMinor($cost_per_month, 'SAR')
+                ->multipliedBy(0.15, RoundingMode::HALF_UP)->getMinorAmount()->toInt(),
+            'grand_total' => Money::ofMinor($cost_per_month, 'SAR')
+                ->multipliedBy(1.15, RoundingMode::HALF_UP)->getMinorAmount()->toInt(),
+        ]);
     }
 
     //public function test_approving_an_invoicing_batch()
@@ -158,7 +195,6 @@ class CreateInvoicingTest extends TestCase
     //    $trainee = Trainee::factory()->create([
     //        'team_id' => $this->admin->current_team_id,
     //        'company_id' => $company->id,
-    //        'company_contract_id' => $contract->id,
     //    ]);
     //
     //    // We're gonna get all the trainees under the contract and do this month's billing.

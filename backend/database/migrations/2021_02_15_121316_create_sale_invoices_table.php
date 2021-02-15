@@ -1,0 +1,44 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateSaleInvoicesTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('sale_invoices', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->uuid('team_id');
+            $table->foreign('team_id')->references('id')->on('teams')->cascadeOnDelete();
+            $table->uuid('monthly_invoicing_batch_id')->nullable();
+            $table->foreign('monthly_invoicing_batch_id')->references('id')->on('monthly_invoicing_batches')->nullOnDelete();
+            $table->string('number')->nullable();
+            $table->nullableMorphs('billable');
+            $table->tinyInteger('status');
+            $table->timestamp('issued_at');
+            $table->bigInteger('sub_total');
+            $table->bigInteger('tax_total');
+            $table->bigInteger('grand_total');
+            $table->timestamps();
+
+            $table->unique(['team_id', 'number']);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('sale_invoices');
+    }
+}

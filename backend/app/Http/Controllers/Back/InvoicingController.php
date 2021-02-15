@@ -34,8 +34,6 @@ class InvoicingController extends Controller
      */
     public function store(Request $request)
     {
-        $trainees = Trainee::where('company_contract_id', '!=', null)->count();
-
         $batch = MonthlyInvoicingBatch::create([
             'invoices_date' => now()->startOfMonth(),
             'period_from' => now()->subMonth()->startOfMonth(),
@@ -43,7 +41,7 @@ class InvoicingController extends Controller
             'job_status' => MonthlyInvoicingBatch::JOB_STATUS_QUEUED,
             'status' => MonthlyInvoicingBatch::STATUS_DRAFT,
             'progress' => 0,
-            'total' => $trainees,
+            'total' => Trainee::readyForBilling()->count(),
         ]);
 
         dispatch(new MakeTraineesDraftInvoicesJob($batch));

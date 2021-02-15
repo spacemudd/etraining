@@ -181,6 +181,12 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
             ->orWhere('status', null);
     }
 
+    public function scopeReadyForBilling($q)
+    {
+        return $q->where('status', self::STATUS_APPROVED)
+            ->where('company_id', '!=', null);
+    }
+
     /**
      * Upload scan(s) of the documents.
      *
