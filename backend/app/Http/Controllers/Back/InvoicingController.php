@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\MakeTraineesDraftInvoicesJob;
 use App\Models\Back\MonthlyInvoicingBatch;
 use App\Models\Back\Trainee;
 use App\Services\MonthlyInvoicingService;
@@ -45,6 +46,8 @@ class InvoicingController extends Controller
             'total' => $trainees,
         ]);
 
+        dispatch(new MakeTraineesDraftInvoicesJob($batch));
+
         return redirect()->route('back.finance.invoicing.show', [
             'batch' => $batch->id,
         ]);
@@ -66,5 +69,20 @@ class InvoicingController extends Controller
     {
         MonthlyInvoicingBatch::findOrFail($batch)->delete();
         return redirect()->route('back.finance.invoicing.index');
+    }
+
+    /**
+     *
+     * @param $batch
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function approve($batch)
+    {
+        $monthlyBatch = MonthlyInvoicingBatch::findOrFail($batch);
+
+        $monthlyBatch->status = MonthlyInvoicingBatch::STATUS_APPROVED;
+        $monthlyBatch->save();
+
+        return redirect()->route('back.finance.invoicing.show', $monthlyBatch->id);
     }
 }

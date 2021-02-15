@@ -3,13 +3,13 @@
 namespace Tests\Feature;
 
 use App\Actions\Fortify\CreateNewUser;
+use App\Jobs\MakeTraineesDraftInvoicesJob;
 use App\Models\Back\Company;
 use App\Models\Back\CompanyContract;
 use App\Models\Back\MonthlyInvoicingBatch;
 use App\Models\Back\Trainee;
-use App\Services\MonthlyInvoicingService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
 class CreateInvoicingTest extends TestCase
@@ -97,32 +97,77 @@ class CreateInvoicingTest extends TestCase
             });
     }
 
-    public function test_monthly_training_fees_are_invoiced_to_trainees()
+    public function test_storing_draft_batch_triggers_backend_job_to_make_trainee_invoices()
     {
-        // Make one company to hold the contract.
-        $company = Company::factory()->create([
-            'team_id' => $this->admin->current_team_id,
-        ]);
+        Queue::fake();
 
-        // The contract to be assigned for the trainees.
-        $contract = $company->contracts()->save(
-            CompanyContract::factory()->make(['team_id' => $company->team_id])
-        );
-
-        // Make a trainee.
-        $trainee = Trainee::factory()->create([
+        $company = Company::factory()->create(['team_id' => $this->admin->current_team_id]);
+        $contract = CompanyContract::factory()->create(['team_id' => $this->admin->current_team_id, 'company_id' => $company->id]);
+        Trainee::factory()->create([
             'team_id' => $this->admin->current_team_id,
-            'company_id' => $company->id,
             'company_contract_id' => $contract->id,
         ]);
 
-        // We're gonna get all the trainees under the contract and do this month's billing.
-        // Now, we're going to set the monthly invoicing period
-        // Question: What is the period of the invoice? It is for the past period.
-        // E.g. If a student joins in the middle of the month, then at the end of the month
-        // They're charged alongside the other people in the contract.
+        $this->actingAs($this->admin)
+            ->post(route('back.finance.invoicing.store'))
+            ->assertSessionDoesntHaveErrors();
 
-        app()->make(MonthlyInvoicingService::class)
-            ->generateTraineesMonthlyInvoices();
+        $batch = MonthlyInvoicingBatch::first();
+
+        Queue::assertPushed(function(MakeTraineesDraftInvoicesJob $job) use ($batch) {
+            return $job->batch->id === $batch->id;
+        });
     }
+
+    //public function test_approving_an_invoicing_batch()
+    //{
+    //    $savedBatch = MonthlyInvoicingBatch::factory([
+    //        'team_id' => $this->admin->current_team_id,
+    //        'invoices_date' => now()->startOfMonth(),
+    //        'period_from' => now()->subMonth()->startOfMonth(),
+    //        'period_to' => now()->subMonth()->endOfMonth(),
+    //        'job_status' => MonthlyInvoicingBatch::JOB_STATUS_QUEUED,
+    //        'status' => MonthlyInvoicingBatch::STATUS_DRAFT,
+    //        'progress' => 0,
+    //        'total'=> 1,
+    //    ])->create();
+    //
+    //    $this->actingAs($this->admin)
+    //        ->post(route('back.finance.invoicing.approve', $savedBatch->id))
+    //        ->assertSessionDoesntHaveErrors();
+    //
+    //    $this->assertDatabaseHas('monthly_invoicing_batches', [
+    //        'id' => $savedBatch->id,
+    //        'status' => MonthlyInvoicingBatch::STATUS_APPROVED,
+    //    ]);
+    //}
+
+    //public function test_monthly_training_fees_are_invoiced_to_trainees()
+    //{
+    //    // Make one company to hold the contract.
+    //    $company = Company::factory()->create([
+    //        'team_id' => $this->admin->current_team_id,
+    //    ]);
+    //
+    //    // The contract to be assigned for the trainees.
+    //    $contract = $company->contracts()->save(
+    //        CompanyContract::factory()->make(['team_id' => $company->team_id])
+    //    );
+    //
+    //    // Make a trainee.
+    //    $trainee = Trainee::factory()->create([
+    //        'team_id' => $this->admin->current_team_id,
+    //        'company_id' => $company->id,
+    //        'company_contract_id' => $contract->id,
+    //    ]);
+    //
+    //    // We're gonna get all the trainees under the contract and do this month's billing.
+    //    // Now, we're going to set the monthly invoicing period
+    //    // Question: What is the period of the invoice? It is for the past period.
+    //    // E.g. If a student joins in the middle of the month, then at the end of the month
+    //    // They're charged alongside the other people in the contract.
+    //
+    //    app()->make(MonthlyInvoicingService::class)
+    //        ->generateTraineesMonthlyInvoices();
+    //}
 }

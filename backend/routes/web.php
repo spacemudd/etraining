@@ -85,6 +85,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
         Route::prefix('finance')->name('finance.')->group(function() {
             Route::get('invoicing', [\App\Http\Controllers\Back\InvoicingController::class, 'index'])->name('invoicing.index');
+            Route::post('invoicing/{batch}/approve', [\App\Http\Controllers\Back\InvoicingController::class, 'approve'])->name('invoicing.approve');
             Route::get('invoicing/create', [\App\Http\Controllers\Back\InvoicingController::class, 'create'])->name('invoicing.create');
             Route::post('invoicing/store', [\App\Http\Controllers\Back\InvoicingController::class, 'store'])->name('invoicing.store');
             Route::get('invoicing/{batch}', [\App\Http\Controllers\Back\InvoicingController::class, 'show'])->name('invoicing.show');
