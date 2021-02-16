@@ -62,7 +62,17 @@
                         </table>
                     </div>
                 </div>
-                <div class="bg-red-500 col-span-8">2</div>
+                <div class="col-span-8">
+                    <div class="bg-gray-100 shadow-lg border rounded-lg p-5">
+                        <h4>{{ $t('words.invoices') }} ({{ batch.sales_invoices_count }})</h4>
+                        <hr class="my-5">
+                        <div class="bg-gray-200">
+                            <div v-for="sale_invoice in batch.sale_invoices">
+                                {{ sale_invoice.id }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </app-layout>

@@ -62,6 +62,7 @@ class CreateInvoicingTest extends TestCase
         Trainee::factory()->create([
             'team_id' => $this->admin->current_team_id,
             'company_id' => $company->id,
+            'status' => Trainee::STATUS_APPROVED,
         ]);
 
         $this->actingAs($this->admin)
@@ -75,7 +76,7 @@ class CreateInvoicingTest extends TestCase
             'period_to' => now()->subMonth()->endOfMonth(),
             'job_status' => MonthlyInvoicingBatch::JOB_STATUS_QUEUED,
             'status' => MonthlyInvoicingBatch::STATUS_DRAFT,
-            'progress' => 0,
+            'progress' => 1,
             'total'=> 1,
         ]);
     }
@@ -90,7 +91,7 @@ class CreateInvoicingTest extends TestCase
             'job_status' => MonthlyInvoicingBatch::JOB_STATUS_QUEUED,
             'status' => MonthlyInvoicingBatch::STATUS_DRAFT,
             'progress' => 0,
-            'total'=> 1,
+            'total'=> 0,
         ])->create();
 
         $this->actingAs($this->admin)
@@ -141,7 +142,7 @@ class CreateInvoicingTest extends TestCase
             ->assertSessionDoesntHaveErrors();
 
         $cost_per_month = FinancialSetting::where('team_id', $this->admin->current_team_id)->firstOrFail()
-            ->trainee_monthly_subscription;
+            ->getRawOriginal('trainee_monthly_subscription');
 
         $this->assertDatabaseHas('sale_invoices', [
             'team_id' => $this->admin->current_team_id,
@@ -154,6 +155,28 @@ class CreateInvoicingTest extends TestCase
             'grand_total' => Money::ofMinor($cost_per_month, 'SAR')
                 ->multipliedBy(1.15, RoundingMode::HALF_UP)->getMinorAmount()->toInt(),
         ]);
+    }
+
+    public function test_invoices_are_shown_for_the_batch()
+    {
+        $company = Company::factory()->create(['team_id' => $this->admin->current_team_id]);
+        $trainee = Trainee::factory()->create([
+            'team_id' => $this->admin->current_team_id,
+            'company_id' => $company->id,
+            'status' => Trainee::STATUS_APPROVED,
+        ]);
+
+        $this->actingAs($this->admin)
+            ->post(route('back.finance.invoicing.store'))
+            ->assertSessionDoesntHaveErrors();
+
+        $savedBatch = MonthlyInvoicingBatch::withCount('sale_invoices')->first();
+
+        $this->actingAs($this->admin)
+            ->get(route('back.finance.invoicing.show', $savedBatch->id))
+            ->assertPropValue('batch', function($batch) use ($savedBatch) {
+                $this->assertCount($savedBatch->sale_invoices->count(), $batch['sale_invoices']);
+            });
     }
 
     //public function test_approving_an_invoicing_batch()
