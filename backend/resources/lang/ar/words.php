@@ -381,5 +381,6 @@ return [
     'completed-issuing-invoices' => 'إصدار الفواتير',
     'completed-sending-invoices' => 'ارسال الفواتير',
     'training-fees-is-issued' => 'تم إصدار رسوم التدريب',
-    'please-transfer-the-amount' => 'نرجو منكم تسديد المبلغ'
+    'please-transfer-the-amount' => 'نرجو منكم تسديد المبلغ',
+    'please-wait' => 'يرجى الإنتظار',
 ];

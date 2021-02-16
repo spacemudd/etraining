@@ -566,9 +566,19 @@ export default {
 =======
             "generated-draft-invoices": "إنشاء الفواتير (مسودة)",
             "completed-issuing-invoices": "إصدار الفواتير",
+<<<<<<< main
             "completed-sending-invoices": "ارسال الفواتير"
 >>>>>>> Fix positioning
+<<<<<<< main
 >>>>>>> Fix positioning
+=======
+=======
+            "completed-sending-invoices": "ارسال الفواتير",
+            "training-fees-is-issued": "تم إصدار رسوم التدريب",
+            "please-transfer-the-amount": "نرجو منكم تسديد المبلغ",
+            "please-wait": "يرجى الإنتظار"
+>>>>>>> WIP: Improve UX after approving monthly invoicing batches
+>>>>>>> WIP: Improve UX after approving monthly invoicing batches
         }
     },
     "en": {
@@ -1086,9 +1096,19 @@ export default {
             "stages": "Stages",
             "generated-draft-invoices": "Generated draft invoices",
             "completed-issuing-invoices": "Completed issuing invoices",
+<<<<<<< main
             "completed-sending-invoices": "Completed sending invoices"
 >>>>>>> Display job status for issuing invoices
+<<<<<<< main
 >>>>>>> Display job status for issuing invoices
+=======
+=======
+            "completed-sending-invoices": "Completed sending invoices",
+            "training-fees-is-issued": "Training fees is issued",
+            "please-transfer-the-amount": "Please transfer the amount",
+            "please-wait": "Please wait"
+>>>>>>> WIP: Improve UX after approving monthly invoicing batches
+>>>>>>> WIP: Improve UX after approving monthly invoicing batches
         }
     }
 }

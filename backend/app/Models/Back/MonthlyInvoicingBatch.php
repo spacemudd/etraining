@@ -24,6 +24,8 @@ class MonthlyInvoicingBatch extends Model implements Auditable
     const JOB_STATUS_PROCESSING = 1;
     const JOB_STATUS_FAILED = 3;
     const JOB_STATUS_COMPLETED = 4;
+    const JOB_STATUS_SENDING_EMAILS = 5;
+    const JOB_STATUS_COMPLETING_SENDING_EMAILS = 6;
 
     const STATUS_DRAFT = 0;
     const STATUS_APPROVED = 1;
@@ -65,6 +67,27 @@ class MonthlyInvoicingBatch extends Model implements Auditable
     public function created_by()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getJobStatusDisplayAttribute()
+    {
+        if ($this->job_status === self::JOB_STATUS_QUEUED) {
+            return 'queued';
+        }
+
+        if ($this->job_status === self::JOB_STATUS_PROCESSING) {
+            return 'processing';
+        }
+
+        if ($this->job_status === self::JOB_STATUS_SENDING_EMAILS) {
+            return 'sending_emails';
+        }
+
+        if ($this->job_status === self::JOB_STATUS_COMPLETING_SENDING_EMAILS) {
+            return 'completed_sending_emails';
+        }
+
+        return '';
     }
 
     /**

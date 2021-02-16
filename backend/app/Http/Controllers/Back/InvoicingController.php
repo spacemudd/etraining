@@ -37,6 +37,7 @@ class InvoicingController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Brick\Money\Exception\UnknownCurrencyException
      */
     public function store(Request $request)
     {
@@ -75,6 +76,10 @@ class InvoicingController extends Controller
                 }]);
             }])
             ->findOrFail($batch);
+
+        if (request()->wantsJson()) {
+            return new MonthlyInvoicingBatchResource($invoicesBatch);
+        }
 
         return Inertia::render('Back/Finance/Invoicing/Show', [
             'batch' => new MonthlyInvoicingBatchResource($invoicesBatch),

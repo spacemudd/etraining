@@ -26,6 +26,7 @@ class MonthlyInvoicingBatchResource extends JsonResource
             'sale_invoices_count' => $this->sale_invoices_count,
             'sale_invoices_sum_grand_total' => $this->sale_invoices_sum_grand_total ? str_replace('SAR', '', Money::ofMinor($this->sale_invoices_sum_grand_total, 'SAR')->formatTo('en_SA')) : 0,
             'job_status' => $this->job_status,
+            'job_status_display' => $this->job_status_display,
             'status' => $this->status,
             'is_draft' => $this->is_draft,
             'is_approved' => $this->is_approved,

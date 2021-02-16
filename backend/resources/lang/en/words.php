@@ -377,4 +377,5 @@ return [
     'completed-sending-invoices' => 'Completed sending invoices',
     'training-fees-is-issued' => 'Training fees is issued',
     'please-transfer-the-amount' => 'Please transfer the amount',
+    'please-wait' => 'Please wait',
 ];

@@ -1,24 +1,27 @@
 <template>
     <app-layout>
-        <div class="container px-6 mx-auto grid pt-6">
+        <div class="container px-6 mx-auto grid pt-6" v-if="invoicingBatch">
             <breadcrumb-container
                 :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
                     {title: 'finance', link: route('back.finance')},
                     {title: 'monthly-invoicing', link: route('back.finance.invoicing.index')},
-                    {title_raw: batch.invoices_date},
+                    {title_raw: invoicingBatch.invoices_date},
                 ]"
             ></breadcrumb-container>
 
-            <div class="flex justify-end mb-10 gap-4" v-if="batch.is_draft">
-                <approve-invoices-batch :batch="batch"></approve-invoices-batch>
+            <div class="flex justify-end mb-10 gap-4" v-if="invoicingBatch.is_draft">
+                <approve-invoices-batch :batch="invoicingBatch"></approve-invoices-batch>
 
                 <jet-danger-button @click.native="deleteMonthlyInvoicingBatch()">
                     {{ $t('words.delete') }}
                 </jet-danger-button>
             </div>
 
-            <div class="grid grid-cols-1 gap-2 lg:grid-cols-12 md:gap-4">
+            <div class="bg-yellow-200 p-5" v-if="invoicingBatch.job_status_display === 'queued'">
+                <btn-loading-indicator class="inline-block"/> {{ $t('words.please-wait') }}
+            </div>
+            <div class="grid grid-cols-1 gap-2 lg:grid-cols-12 md:gap-4" :class="{'opacity-50': invoicingBatch.job_status_display === 'queued'}">
                 <div class="col-span-4">
                     <div class="bg-gray-100 shadow-lg border rounded-lg p-5">
                         <table class="table w-full">
@@ -28,47 +31,47 @@
                         	<tbody>
                             <tr>
                                 <td>{{ $t('words.date') }}</td>
-                                <td class="justify-content-end">{{ batch.invoices_date }}</td>
+                                <td class="justify-content-end">{{ invoicingBatch.invoices_date }}</td>
                             </tr>
                                 <tr>
                                     <td>{{ $t('words.trainees') }}</td>
-                                    <td>{{ batch.total }}</td>
+                                    <td>{{ invoicingBatch.total }}</td>
                                 </tr>
                                 <tr>
                                     <td>{{ $t('words.total-value') }}</td>
-                                    <td>{{ batch.sale_invoices_sum_grand_total }}</td>
+                                    <td>{{ invoicingBatch.sale_invoices_sum_grand_total }}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="2" class="py-4"><hr></td>
                                 </tr>
                                 <tr>
                                     <td>{{ $t('words.period-from') }}</td>
-                                    <td class="justify-content-end">{{ batch.period_from }}</td>
+                                    <td class="justify-content-end">{{ invoicingBatch.period_from }}</td>
                                 </tr>
                                 <tr>
                                     <td>{{ $t('words.period-to') }}</td>
-                                    <td class="justify-content-end">{{ batch.period_to }}</td>
+                                    <td class="justify-content-end">{{ invoicingBatch.period_to }}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="2" class="py-4"><hr></td>
                                 </tr>
                                 <tr>
                                     <td class="text-gray-500">{{ $t('words.status') }}</td>
-                                    <td class="text-gray-500">{{ batch.status_display }}</td>
+                                    <td class="text-gray-500">{{ invoicingBatch.status_display }}</td>
                                 </tr>
                                 <tr>
                                     <td class="text-gray-500">{{ $t('words.created-by') }}</td>
-                                    <td class="text-gray-500" v-if="batch.created_by">{{ batch.created_by.name }}</td>
+                                    <td class="text-gray-500" v-if="invoicingBatch.created_by">{{ invoicingBatch.created_by.name }}</td>
                                 </tr>
                         	</tbody>
                         </table>
 
-                        <monthly-invoicing-job-status :batch="batch"></monthly-invoicing-job-status>
+                        <monthly-invoicing-job-status :batch="invoicingBatch"></monthly-invoicing-job-status>
                     </div>
                 </div>
                 <div class="col-span-8">
                     <div class="bg-gray-100 shadow-lg border rounded-lg p-5">
-                        <h4>{{ $t('words.invoices') }} ({{ batch.sale_invoices_count }})</h4>
+                        <h4>{{ $t('words.invoices') }} ({{ invoicingBatch.sale_invoices_count }})</h4>
                         <hr class="my-5">
 
                         <table class="w-full whitespace-no-wrap text-sm">
@@ -84,7 +87,7 @@
                                 <th class="pt-6 pb-4">{{ $t('words.date') }}</th>
                                 <th class="pt-6 pb-4 rtl:text-left text-right">{{ $t('words.total-value') }}</th>
                             </tr>
-                            <tr v-for="sale_invoice in batch.sale_invoices" :key="sale_invoice.id"
+                            <tr v-for="sale_invoice in invoicingBatch.sale_invoices" :key="sale_invoice.id"
                                 class="hover:bg-gray-100 focus-within:bg-gray-100">
                                 <td class="border-t py-5">
                                     {{ sale_invoice.billable.name }}
@@ -137,11 +140,13 @@
     import { SweetModal, SweetModalTab } from 'sweet-modal-vue';
     import ApproveInvoicesBatch from '@/Components/ApproveInvoicesBatch';
     import MonthlyInvoicingJobStatus from '@/Components/MonthlyInvoicingJobStatus';
+    import BtnLoadingIndicator from "@/Components/BtnLoadingIndicator";
 
     export default {
         props: ['batch'],
 
         components: {
+            BtnLoadingIndicator,
             MonthlyInvoicingJobStatus,
             ApproveInvoicesBatch,
             SweetModal,
@@ -162,19 +167,24 @@
         },
         data() {
             return {
-                form: this.$inertia.form({
-                    name_ar: '',
-                    name_en: '',
-                    cr_number: '',
-                    contact_number: '',
-                    company_rep: '',
-                    company_rep_mobile: '',
-                    address: '',
-                    email: '',
-                }, {
-                    bag: 'createCompany',
-                })
+                refreshInvoiceInterval: null,
+
+                invoicingBatch: null,
             }
+        },
+        mounted() {
+            this.invoicingBatch = this.batch;
+
+            let vm = this;
+            this.refreshInvoiceInterval = setInterval(function() {
+                axios.get(route('back.finance.invoicing.show', vm.batch.id), {headers: {'Accept': 'text/json'}})
+                .then(response => {
+                    vm.invoicingBatch = response.data;
+                    if (vm.invoicingBatch.job_status_display != 'queued') {
+                        clearInterval(vm.refreshInvoiceInterval);
+                    }
+                })
+            }, 2000);
         },
         methods: {
             deleteMonthlyInvoicingBatch() {
@@ -182,16 +192,9 @@
                     this.$inertia.delete(route('back.finance.invoicing.delete', this.batch.id));
                 }
             },
-            createCompany() {
-                this.form.post('/back/companies', {
-                    preserveScroll: true
-                });
-            },
-            deleteCompany() {
-                if (confirm(this.$t('words.are-you-sure'))) {
-                    this.$inertia.delete('/back/companies/'+this.company.id);
-                }
-            }
+        },
+        beforeDestroy() {
+            clearInterval(this.refreshInvoiceInterval);
         }
     }
 </script>

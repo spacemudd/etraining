@@ -51,6 +51,9 @@ class MakeTraineesDraftInvoicesJob implements ShouldQueue
 
         \DB::beginTransaction();
 
+        $this->batch->job_status = MonthlyInvoicingBatch::JOB_STATUS_PROCESSING;
+        $this->batch->save();
+
         Trainee::readyForBilling()->chunk(100, function ($trainees) {
             $trainees->each(function ($trainee) {
                 $this->issue_draft_invoice_for_trainee($trainee);
@@ -58,6 +61,9 @@ class MakeTraineesDraftInvoicesJob implements ShouldQueue
             $this->batch->refresh()->progress += $trainees->count();
             $this->batch->save();
         });
+
+        $this->batch->job_status = MonthlyInvoicingBatch::JOB_STATUS_COMPLETED;
+        $this->batch->save();
 
         \DB::commit();
     }
