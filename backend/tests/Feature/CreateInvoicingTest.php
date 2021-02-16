@@ -205,6 +205,36 @@ class CreateInvoicingTest extends TestCase
         ]);
     }
 
+    public function test_approving_an_invoice_batch_creates_invoice_numbers()
+    {
+        $company = Company::factory()->create(['team_id' => $this->admin->current_team_id]);
+        $trainee = Trainee::factory()->create([
+            'team_id' => $this->admin->current_team_id,
+            'company_id' => $company->id,
+            'status' => Trainee::STATUS_APPROVED,
+        ]);
+
+        $this->actingAs($this->admin)
+            ->post(route('back.finance.invoicing.store'))
+            ->assertSessionDoesntHaveErrors();
+
+        $savedBatch = MonthlyInvoicingBatch::withCount('sale_invoices')->first();
+
+        $this->actingAs($this->admin)
+            ->post(route('back.finance.invoicing.approve', $savedBatch->id), ['approved' => true])
+            ->assertSessionDoesntHaveErrors()
+            ->assertRedirect(route('back.finance.invoicing.show', $savedBatch->id));
+
+        $this->assertDatabaseHas('monthly_invoicing_batches', [
+            'id' => $savedBatch->id,
+            'status' => MonthlyInvoicingBatch::STATUS_APPROVED,
+        ]);
+
+        $this->assertDatabaseHas('sale_invoices', [
+            'number' => 'TI-021001',
+        ]);
+    }
+
     //public function test_approving_an_invoicing_batch()
     //{
     //    $savedBatch = MonthlyInvoicingBatch::factory([

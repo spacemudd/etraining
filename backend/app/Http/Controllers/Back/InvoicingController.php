@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MonthlyInvoicingBatchResource;
+use App\Jobs\IssueMonthlyInvoicingBatchInvoicesJob;
 use App\Jobs\MakeTraineesDraftInvoicesJob;
 use App\Models\Back\FinancialSetting;
 use App\Models\Back\MonthlyInvoicingBatch;
@@ -102,9 +103,10 @@ class InvoicingController extends Controller
         }
 
         $monthlyBatch = MonthlyInvoicingBatch::findOrFail($batch);
-
         $monthlyBatch->status = MonthlyInvoicingBatch::STATUS_APPROVED;
         $monthlyBatch->save();
+
+        dispatch(new IssueMonthlyInvoicingBatchInvoicesJob($monthlyBatch));
 
         return redirect()->route('back.finance.invoicing.show', $monthlyBatch->id);
     }
