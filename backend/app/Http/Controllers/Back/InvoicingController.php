@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\MonthlyInvoicingBatchResource;
 use App\Jobs\MakeTraineesDraftInvoicesJob;
 use App\Models\Back\FinancialSetting;
 use App\Models\Back\MonthlyInvoicingBatch;
 use App\Models\Back\Trainee;
 use App\Services\MonthlyInvoicingService;
+use Brick\Money\Money;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -59,10 +61,14 @@ class InvoicingController extends Controller
      */
     public function show($batch)
     {
+        MonthlyInvoicingBatchResource::withoutWrapping();
+
+        $invoicesBatch = MonthlyInvoicingBatch::with('created_by')
+            ->withSum('sale_invoices', 'grand_total')
+            ->findOrFail($batch);
+
         return Inertia::render('Back/Finance/Invoicing/Show', [
-            'batch' => MonthlyInvoicingBatch::with('created_by')
-                ->withSum('sale_invoices', 'grand_total')
-                ->findOrFail($batch),
+            'batch' => new MonthlyInvoicingBatchResource($invoicesBatch),
         ]);
     }
 

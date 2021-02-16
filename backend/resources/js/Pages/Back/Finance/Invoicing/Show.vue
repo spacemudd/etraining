@@ -16,20 +16,28 @@
                 </jet-danger-button>
             </div>
 
-            <div class="grid grid-cols-1 gap-2 md:grid-cols-4 md:gap-4">
-                <div class="col-span-1">
+            <div class="grid grid-cols-1 gap-2 lg:grid-cols-12 md:gap-4">
+                <div class="col-span-4">
                     <div class="bg-gray-100 shadow-lg border rounded-lg p-5">
                         <table class="table w-full">
                             <colgroup>
                                 <col style="width:50%;">
                             </colgroup>
                         	<tbody>
+                            <tr>
+                                <td>{{ $t('words.date') }}</td>
+                                <td class="justify-content-end">{{ batch.invoices_date }}</td>
+                            </tr>
                                 <tr>
-                                    <td>{{ $t('words.date') }}</td>
-                                    <td class="justify-content-end">{{ batch.invoices_date }}</td>
+                                    <td>{{ $t('words.trainees') }}</td>
+                                    <td>{{ batch.total }}</td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2"><hr></td>
+                                    <td>{{ $t('words.total-value') }}</td>
+                                    <td>{{ batch.sale_invoices_sum_grand_total }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" class="py-2"><hr></td>
                                 </tr>
                                 <tr>
                                     <td>{{ $t('words.period-from') }}</td>
@@ -40,29 +48,21 @@
                                     <td class="justify-content-end">{{ batch.period_to }}</td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2"><hr></td>
+                                    <td class="pt-5"></td>
                                 </tr>
                                 <tr>
-                                    <td>{{ $t('words.trainees') }}</td>
-                                    <td>{{ batch.total }}</td>
+                                    <td class="text-gray-500">{{ $t('words.status') }}</td>
+                                    <td class="text-gray-500">{{ batch.status_display }}</td>
                                 </tr>
                                 <tr>
-                                    <td>{{ $t('words.total-value') }}</td>
-                                    <td>{{ Number(batch.sale_invoices_sum_grand_total)/100 }}</td>
-                                </tr>
-                                <tr>
-                                    <td>{{ $t('words.status') }}</td>
-                                    <td>{{ batch.status_display }}</td>
-                                </tr>
-                                <tr>
-                                    <td>{{ $t('words.created-by') }}</td>
-                                    <td v-if="batch.created_by">{{ batch.created_by.name }}</td>
+                                    <td class="text-gray-500">{{ $t('words.created-by') }}</td>
+                                    <td class="text-gray-500" v-if="batch.created_by">{{ batch.created_by.name }}</td>
                                 </tr>
                         	</tbody>
                         </table>
                     </div>
                 </div>
-                <div class="bg-red-500 col-span-3">2</div>
+                <div class="bg-red-500 col-span-8">2</div>
             </div>
         </div>
     </app-layout>
