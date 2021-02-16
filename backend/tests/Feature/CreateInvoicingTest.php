@@ -195,7 +195,7 @@ class CreateInvoicingTest extends TestCase
         $savedBatch = MonthlyInvoicingBatch::withCount('sale_invoices')->first();
 
         $this->actingAs($this->admin)
-            ->post(route('back.finance.invoicing.approve', $savedBatch->id))
+            ->post(route('back.finance.invoicing.approve', $savedBatch->id), ['approved' => true])
             ->assertSessionDoesntHaveErrors()
             ->assertRedirect(route('back.finance.invoicing.show', $savedBatch->id));
 

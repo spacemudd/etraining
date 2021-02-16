@@ -12,6 +12,7 @@ use App\Models\Back\Trainee;
 use App\Services\MonthlyInvoicingService;
 use Brick\Money\Money;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Bus;
 use Inertia\Inertia;
 
 class InvoicingController extends Controller
@@ -88,7 +89,9 @@ class InvoicingController extends Controller
     /**
      *
      * @param $batch
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Throwable
      */
     public function approve($batch, Request $request)
     {
@@ -103,10 +106,15 @@ class InvoicingController extends Controller
         }
 
         $monthlyBatch = MonthlyInvoicingBatch::findOrFail($batch);
+
+        throw_if($monthlyBatch->status !== MonthlyInvoicingBatch::STATUS_DRAFT, 'The batch must be in draft mode');
+
         $monthlyBatch->status = MonthlyInvoicingBatch::STATUS_APPROVED;
         $monthlyBatch->save();
 
-        dispatch(new IssueMonthlyInvoicingBatchInvoicesJob($monthlyBatch));
+        Bus::chain([
+            new IssueMonthlyInvoicingBatchInvoicesJob($monthlyBatch),
+        ])->dispatch();
 
         return redirect()->route('back.finance.invoicing.show', $monthlyBatch->id);
     }

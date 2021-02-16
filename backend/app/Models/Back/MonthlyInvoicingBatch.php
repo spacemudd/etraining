@@ -42,6 +42,7 @@ class MonthlyInvoicingBatch extends Model implements Auditable
         'invoices_date' => 'date:Y-m-d',
         'period_from' => 'date:Y-m-d',
         'period_to' => 'date:Y-m-d',
+        'status' => 'int',
     ];
 
     protected $appends = [
