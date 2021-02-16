@@ -375,4 +375,6 @@ return [
     'generated-draft-invoices' => 'Generated draft invoices',
     'completed-issuing-invoices' => 'Completed issuing invoices',
     'completed-sending-invoices' => 'Completed sending invoices',
+    'training-fees-is-issued' => 'Training fees is issued',
+    'please-transfer-the-amount' => 'Please transfer the amount',
 ];

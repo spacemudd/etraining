@@ -9,9 +9,11 @@ use App\Models\Back\CompanyContract;
 use App\Models\Back\FinancialSetting;
 use App\Models\Back\MonthlyInvoicingBatch;
 use App\Models\Back\Trainee;
+use App\Notifications\TraineeTrainingFeesNotification;
 use Brick\Math\RoundingMode;
 use Brick\Money\Money;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
@@ -233,6 +235,31 @@ class CreateInvoicingTest extends TestCase
         $this->assertDatabaseHas('sale_invoices', [
             'number' => 'TI-021001',
         ]);
+    }
+
+    public function test_notification_is_sent_to_trainee_about_training_fees()
+    {
+        Notification::fake();
+
+        $company = Company::factory()->create(['team_id' => $this->admin->current_team_id]);
+        $trainee = Trainee::factory()->create([
+            'team_id' => $this->admin->current_team_id,
+            'company_id' => $company->id,
+            'status' => Trainee::STATUS_APPROVED,
+        ]);
+
+        $this->actingAs($this->admin)
+            ->post(route('back.finance.invoicing.store'))
+            ->assertSessionDoesntHaveErrors();
+
+        $savedBatch = MonthlyInvoicingBatch::withCount('sale_invoices')->first();
+
+        $this->actingAs($this->admin)
+            ->post(route('back.finance.invoicing.approve', $savedBatch->id), ['approved' => true])
+            ->assertSessionDoesntHaveErrors()
+            ->assertRedirect(route('back.finance.invoicing.show', $savedBatch->id));
+
+        Notification::assertSentTo($trainee, TraineeTrainingFeesNotification::class);
     }
 
     //public function test_approving_an_invoicing_batch()

@@ -104,7 +104,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
      */
     public function preferredLocale()
     {
-        return optional($this->user)->locale;
+        return optional($this->user)->locale ?: 'ar';
     }
 
     public function company()

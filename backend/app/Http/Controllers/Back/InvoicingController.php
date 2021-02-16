@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\MonthlyInvoicingBatchResource;
 use App\Jobs\IssueMonthlyInvoicingBatchInvoicesJob;
 use App\Jobs\MakeTraineesDraftInvoicesJob;
+use App\Jobs\SendMonthlyInvoicingBatchNotificationsJob;
 use App\Models\Back\FinancialSetting;
 use App\Models\Back\MonthlyInvoicingBatch;
 use App\Models\Back\Trainee;
@@ -114,6 +115,7 @@ class InvoicingController extends Controller
 
         Bus::chain([
             new IssueMonthlyInvoicingBatchInvoicesJob($monthlyBatch),
+            new SendMonthlyInvoicingBatchNotificationsJob($monthlyBatch),
         ])->dispatch();
 
         return redirect()->route('back.finance.invoicing.show', $monthlyBatch->id);
