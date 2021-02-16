@@ -89,8 +89,18 @@ class InvoicingController extends Controller
      * @param $batch
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function approve($batch)
+    public function approve($batch, Request $request)
     {
+        $request->validate([
+            'approved' => 'required|boolean',
+        ]);
+
+        if (!$request->approved) {
+            return response()->json([
+                'msg' => 'Please approve',
+            ], 402);
+        }
+
         $monthlyBatch = MonthlyInvoicingBatch::findOrFail($batch);
 
         $monthlyBatch->status = MonthlyInvoicingBatch::STATUS_APPROVED;

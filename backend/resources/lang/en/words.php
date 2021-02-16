@@ -370,4 +370,9 @@ return [
     'created-by' => 'Created by',
     'total-value' => 'Total value',
     'customer-name' => 'Customer name',
+    'start-sending-invoices' => 'Start sending invoices',
+    'stages' => 'Stages',
+    'generated-draft-invoices' => 'Generated draft invoices',
+    'completed-issuing-invoices' => 'Completed issuing invoices',
+    'completed-sending-invoices' => 'Completed sending invoices',
 ];

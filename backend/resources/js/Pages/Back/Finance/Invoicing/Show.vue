@@ -10,7 +10,9 @@
                 ]"
             ></breadcrumb-container>
 
-            <div class="flex justify-end mb-10">
+            <div class="flex justify-end mb-10 gap-4" v-if="batch.is_draft">
+                <approve-invoices-batch :batch="batch"></approve-invoices-batch>
+
                 <jet-danger-button @click.native="deleteMonthlyInvoicingBatch()">
                     {{ $t('words.delete') }}
                 </jet-danger-button>
@@ -60,6 +62,8 @@
                                 </tr>
                         	</tbody>
                         </table>
+
+                        <monthly-invoicing-job-status :batch="batch"></monthly-invoicing-job-status>
                     </div>
                 </div>
                 <div class="col-span-8">
@@ -130,11 +134,18 @@
     import JetLabel from '@/Jetstream/Label';
     import CompanyContractsPagination from "@/Components/CompanyContractsPagination";
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
+    import { SweetModal, SweetModalTab } from 'sweet-modal-vue';
+    import ApproveInvoicesBatch from '@/Components/ApproveInvoicesBatch';
+    import MonthlyInvoicingJobStatus from '@/Components/MonthlyInvoicingJobStatus';
 
     export default {
         props: ['batch'],
 
         components: {
+            MonthlyInvoicingJobStatus,
+            ApproveInvoicesBatch,
+            SweetModal,
+            SweetModalTab,
             AppLayout,
             JetSectionBorder,
             Breadcrumb,
@@ -147,7 +158,7 @@
             JetLabel,
             CompanyContractsPagination,
             BreadcrumbContainer,
-            JetDangerButton
+            JetDangerButton,
         },
         data() {
             return {

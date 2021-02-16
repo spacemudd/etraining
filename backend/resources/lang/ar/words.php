@@ -375,4 +375,9 @@ return [
     'created-by' => 'من قبل',
     'total-value' => 'الإجمالي',
     'customer-name' => 'اسم العميل',
+    'start-sending-invoices' => 'البدء بإرسال الفواتير',
+    'stages' => 'المراحل',
+    'generated-draft-invoices' => 'تم إنشاء الفواتير (مسودة)',
+    'completed-issuing-invoices' => 'تم إصدار الفواتير',
+    'completed-sending-invoices' => 'تم ارسال الفواتير',
 ];

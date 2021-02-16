@@ -175,9 +175,34 @@ class CreateInvoicingTest extends TestCase
         $this->actingAs($this->admin)
             ->get(route('back.finance.invoicing.show', $savedBatch->id))
             ->assertPropValue('batch', function($batch) use ($savedBatch) {
-                dd($batch);
                 $this->assertCount($savedBatch->sale_invoices->count(), $batch['sale_invoices']);
             });
+    }
+
+    public function test_approving_an_invoice_batch()
+    {
+        $company = Company::factory()->create(['team_id' => $this->admin->current_team_id]);
+        $trainee = Trainee::factory()->create([
+            'team_id' => $this->admin->current_team_id,
+            'company_id' => $company->id,
+            'status' => Trainee::STATUS_APPROVED,
+        ]);
+
+        $this->actingAs($this->admin)
+            ->post(route('back.finance.invoicing.store'))
+            ->assertSessionDoesntHaveErrors();
+
+        $savedBatch = MonthlyInvoicingBatch::withCount('sale_invoices')->first();
+
+        $this->actingAs($this->admin)
+            ->post(route('back.finance.invoicing.approve', $savedBatch->id))
+            ->assertSessionDoesntHaveErrors()
+            ->assertRedirect(route('back.finance.invoicing.show', $savedBatch->id));
+
+        $this->assertDatabaseHas('monthly_invoicing_batches', [
+            'id' => $savedBatch->id,
+            'status' => MonthlyInvoicingBatch::STATUS_APPROVED,
+        ]);
     }
 
     //public function test_approving_an_invoicing_batch()

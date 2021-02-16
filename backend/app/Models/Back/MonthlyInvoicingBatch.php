@@ -83,6 +83,21 @@ class MonthlyInvoicingBatch extends Model implements Auditable
         return '';
     }
 
+    public function getIsDraftAttribute()
+    {
+        return $this->status === self::STATUS_DRAFT;
+    }
+
+    public function getIsApprovedAttribute()
+    {
+        return $this->status === self::STATUS_APPROVED;
+    }
+
+    public function getFinishedGeneratingDraftInvoicesAttribute()
+    {
+        return $this->progress === $this->total;
+    }
+
     public function sale_invoices()
     {
         return $this->hasMany(SaleInvoice::class);

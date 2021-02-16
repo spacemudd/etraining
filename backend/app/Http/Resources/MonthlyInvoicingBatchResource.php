@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Back\MonthlyInvoicingBatch;
 use Brick\Money\Money;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -26,6 +27,9 @@ class MonthlyInvoicingBatchResource extends JsonResource
             'sale_invoices_sum_grand_total' => $this->sale_invoices_sum_grand_total ? str_replace('SAR', '', Money::ofMinor($this->sale_invoices_sum_grand_total, 'SAR')->formatTo('en_SA')) : 0,
             'job_status' => $this->job_status,
             'status' => $this->status,
+            'is_draft' => $this->is_draft,
+            'is_approved' => $this->is_approved,
+            'finished_generating_draft_invoices' => $this->finished_generating_draft_invoices,
             'status_display' => $this->status_display,
             'progress' => $this->progress,
             'total' => $this->total,

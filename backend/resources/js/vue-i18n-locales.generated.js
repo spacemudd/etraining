@@ -463,6 +463,7 @@ export default {
             "draft": "مسودة",
             "created-by": "من قبل",
             "total-value": "الإجمالي",
+<<<<<<< main
             "customer-name": "اسم العميل"
             "created-by": "من قبل"
             "invoices-date": "تاريخ الفواتير"
@@ -547,7 +548,18 @@ export default {
 =======
             "download-file": "تحميل الملف"
             "monthly-invoicing": "الفوترة الشهرية"
+<<<<<<< main
 >>>>>>> Show monthly invoicing page
+=======
+=======
+            "customer-name": "اسم العميل",
+            "start-sending-invoices": "البدء بإرسال الفواتير",
+            "stages": "المراحل",
+            "generated-draft-invoices": "تم إنشاء الفواتير (مسودة)",
+            "completed-issuing-invoices": "تم إصدار الفواتير",
+            "completed-sending-invoices": "تم ارسال الفواتير"
+>>>>>>> Display job status for issuing invoices
+>>>>>>> Display job status for issuing invoices
         }
     },
     "en": {
@@ -979,6 +991,7 @@ export default {
             "draft": "Draft",
             "created-by": "Created by",
             "total-value": "Total value",
+<<<<<<< main
             "customer-name": "Customer name"
             "created-by": "Created by"
             "invoices-date": "Invoices date"
@@ -1023,6 +1036,7 @@ export default {
             "all": "All",
             "report-work-on-progress": "Generating your report",
             "please-dont-close-the-window": "Please dont close the window",
+<<<<<<< main
             "download-file": "Download file",
             "disable-website": "Disable website",
             "here-you-can-disable-the-website-and-specify-a-message": "Here you can disable the website and specify the message",
@@ -1055,6 +1069,17 @@ export default {
             "blocked-at": "Block date",
             "please-enter-valid-phone-number": "Please enter a valid phone number for verification purposes",
             "warnings-sheet": "Warnings sheet"
+=======
+            "download-file": "Download file"
+=======
+            "customer-name": "Customer name",
+            "start-sending-invoices": "Start sending invoices",
+            "stages": "Stages",
+            "generated-draft-invoices": "Generated draft invoices",
+            "completed-issuing-invoices": "Completed issuing invoices",
+            "completed-sending-invoices": "Completed sending invoices"
+>>>>>>> Display job status for issuing invoices
+>>>>>>> Display job status for issuing invoices
         }
     }
 }
