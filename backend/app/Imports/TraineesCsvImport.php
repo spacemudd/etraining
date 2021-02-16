@@ -78,6 +78,9 @@ class TraineesCsvImport implements ToCollection
                     'marital_status_id' => $this->getMaritalStatus($row[8]),
                     'children_count' => trim($row[9]),
                 ]);
+                $trainee->team_id = auth()->user()->current_team_id;
+                $trainee->company_id = $this->company_id;
+                $trainee->save();
             }
 
             $group->trainees()->attach([$trainee->id]);
