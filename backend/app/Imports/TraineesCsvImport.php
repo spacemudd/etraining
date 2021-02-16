@@ -61,22 +61,24 @@ class TraineesCsvImport implements ToCollection
                 continue;
             }
 
-            $trainee = Trainee::make([
-                'team_id' => auth()->user()->current_team_id,
-                'name' => trim($row[0]),
-                'email' => trim($row[3]),
-                'identity_number' => trim($row[1]),
-                'phone' => '966'.trim($row[4]),
-                'phone_additional' => trim($row[5]),
-                'educational_level_id' => $this->getEducationalLevel($row[6]),
-                'city_id' => $this->getCity($row[7]),
-                'marital_status_id' => $this->getMaritalStatus($row[8]),
-                'children_count' => trim($row[9]),
-            ]);
-
-            $trainee->team_id = auth()->user()->current_team_id;
-            $trainee->company_id = $this->company_id;
-            $trainee->save();
+            if ($trainee = Trainee::where('email', $row[3])->first()) {
+                $trainee->team_id = auth()->user()->current_team_id;
+                $trainee->company_id = $this->company_id;
+                $trainee->save();
+            } else {
+                $trainee = Trainee::make([
+                    'team_id' => auth()->user()->current_team_id,
+                    'name' => trim($row[0]),
+                    'email' => trim($row[3]),
+                    'identity_number' => trim($row[1]),
+                    'phone' => '966'.trim($row[4]),
+                    'phone_additional' => trim($row[5]),
+                    'educational_level_id' => $this->getEducationalLevel($row[6]),
+                    'city_id' => $this->getCity($row[7]),
+                    'marital_status_id' => $this->getMaritalStatus($row[8]),
+                    'children_count' => trim($row[9]),
+                ]);
+            }
 
             $group->trainees()->attach([$trainee->id]);
         }
