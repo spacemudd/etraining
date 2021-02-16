@@ -461,6 +461,9 @@ export default {
             "period-from": "المدة من",
             "period-to": "المدة الى",
             "draft": "مسودة",
+            "created-by": "من قبل",
+            "total-value": "الإجمالي",
+            "customer-name": "اسم العميل"
             "created-by": "من قبل"
             "invoices-date": "تاريخ الفواتير"
 >>>>>>> Add 'create' page for monthly invoicing
@@ -974,6 +977,9 @@ export default {
             "period-from": "Period from",
             "period-to": "Period to",
             "draft": "Draft",
+            "created-by": "Created by",
+            "total-value": "Total value",
+            "customer-name": "Customer name"
             "created-by": "Created by"
             "invoices-date": "Invoices date"
             "can-impersonate": "Login as other user",

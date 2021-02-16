@@ -369,4 +369,5 @@ return [
     'draft' => 'Draft',
     'created-by' => 'Created by',
     'total-value' => 'Total value',
+    'customer-name' => 'Customer name',
 ];

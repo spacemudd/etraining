@@ -64,13 +64,51 @@
                 </div>
                 <div class="col-span-8">
                     <div class="bg-gray-100 shadow-lg border rounded-lg p-5">
-                        <h4>{{ $t('words.invoices') }} ({{ batch.sales_invoices_count }})</h4>
+                        <h4>{{ $t('words.invoices') }} ({{ batch.sale_invoices_count }})</h4>
                         <hr class="my-5">
-                        <div class="bg-gray-200">
-                            <div v-for="sale_invoice in batch.sale_invoices">
-                                {{ sale_invoice.id }}
-                            </div>
-                        </div>
+
+                        <table class="w-full whitespace-no-wrap text-sm">
+                            <colgroup>
+                                <col>
+                                <col style="width:150px;">
+                                <col style="width:100px;">
+                                <col style="width:100px;">
+                            </colgroup>
+                            <tr class="text-left font-bold">
+                                <th class="pt-6 pb-4">{{ $t('words.customer-name') }}</th>
+                                <th class="pt-6 pb-4">{{ $t('words.invoice') }}</th>
+                                <th class="pt-6 pb-4">{{ $t('words.date') }}</th>
+                                <th class="pt-6 pb-4 rtl:text-left text-right">{{ $t('words.total-value') }}</th>
+                            </tr>
+                            <tr v-for="sale_invoice in batch.sale_invoices" :key="sale_invoice.id"
+                                class="hover:bg-gray-100 focus-within:bg-gray-100">
+                                <td class="border-t py-5">
+                                    {{ sale_invoice.billable.name }}
+                                    <br/>
+                                    {{ sale_invoice.billable.email }}
+                                    <br/>
+                                    {{ sale_invoice.billable.phone }}
+                                    <br/>
+                                    <span class="text-gray-500">{{ sale_invoice.billable.company.name_ar }}</span>
+                                </td>
+                                <td class="border-t py-5">
+                                    <span :class="{'text-gray-400': !sale_invoice.number}">
+                                        {{ sale_invoice.number ? sale_invoice.number : '#'+$t('words.draft') }}
+                                    </span>
+                                </td>
+                                <td class="border-t py-5">
+                                    {{ sale_invoice.issued_at }}
+                                </td>
+                                <td class="border-t rtl:text-left text-right">
+                                    {{ sale_invoice.grand_total_display }}
+                                </td>
+                                <!--<td class="border-t w-px">-->
+                                <!--    <inertia-link class="px-4 flex items-center" :href="'#'">-->
+                                <!--        <ion-icon name="arrow-forward-outline" class="block w-6 h-6 fill-gray-400"></ion-icon>-->
+                                <!--    </inertia-link>-->
+                                <!--</td>-->
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>

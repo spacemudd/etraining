@@ -6,6 +6,7 @@ use App\Models\Back\MonthlyInvoicingBatch;
 use App\Models\Back\SaleInvoice;
 use App\Models\Back\SaleInvoiceLine;
 use App\Models\Back\Trainee;
+use Brick\Math\RoundingMode;
 use Brick\Money\Money;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -79,7 +80,7 @@ class MakeTraineesDraftInvoicesJob implements ShouldQueue
         $invoice->save();
 
         // Calculate cost.
-        $taxTotal = $this->costPerMonth->multipliedBy(0.15);
+        $taxTotal = $this->costPerMonth->multipliedBy(0.15, RoundingMode::HALF_UP);
         $grandTotal = $this->costPerMonth->plus($taxTotal);
 
         $invoiceLine = new SaleInvoiceLine();

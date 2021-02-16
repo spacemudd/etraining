@@ -142,6 +142,11 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         return $this->belongsTo(User::class);
     }
 
+    public function sale_invoices()
+    {
+        return $this->morphMany(SaleInvoice::class, 'billabe');
+    }
+
     public function scopeResponsibleToTeach($q)
     {
         return $q->where('instructor_id', auth()->user()->instructor->id);

@@ -374,4 +374,5 @@ return [
     'draft' => 'مسودة',
     'created-by' => 'من قبل',
     'total-value' => 'الإجمالي',
+    'customer-name' => 'اسم العميل',
 ];

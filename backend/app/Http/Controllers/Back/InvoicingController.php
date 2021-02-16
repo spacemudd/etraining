@@ -66,7 +66,11 @@ class InvoicingController extends Controller
         $invoicesBatch = MonthlyInvoicingBatch::with('created_by')
             ->withSum('sale_invoices', 'grand_total')
             ->withCount('sale_invoices')
-            ->with('sale_invoices')
+            ->with(['sale_invoices' => function($q) {
+                $q->with(['billable' => function($q) {
+                    $q->with('company');
+                }]);
+            }])
             ->findOrFail($batch);
 
         return Inertia::render('Back/Finance/Invoicing/Show', [

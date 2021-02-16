@@ -20,7 +20,7 @@ class CreateSaleInvoicesTable extends Migration
             $table->uuid('monthly_invoicing_batch_id')->nullable();
             $table->foreign('monthly_invoicing_batch_id')->references('id')->on('monthly_invoicing_batches')->nullOnDelete();
             $table->string('number')->nullable();
-            $table->nullableMorphs('billable');
+            $table->nullableUuidMorphs('billable');
             $table->tinyInteger('status');
             $table->timestamp('issued_at');
             $table->bigInteger('sub_total')->default(0);

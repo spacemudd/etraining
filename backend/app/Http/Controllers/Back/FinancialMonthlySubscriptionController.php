@@ -34,7 +34,7 @@ class FinancialMonthlySubscriptionController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'trainee_monthly_subscription' => 'required|integer|min:0',
+            'trainee_monthly_subscription' => 'required|numeric|min:0',
         ]);
 
         $setting = FinancialSetting::firstOrFail();

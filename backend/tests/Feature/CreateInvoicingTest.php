@@ -154,7 +154,7 @@ class CreateInvoicingTest extends TestCase
                 ->multipliedBy(0.15, RoundingMode::HALF_UP)->getMinorAmount()->toInt(),
             'grand_total' => Money::ofMinor($cost_per_month, 'SAR')
                 ->multipliedBy(1.15, RoundingMode::HALF_UP)->getMinorAmount()->toInt(),
-        ]);
+    ]);
     }
 
     public function test_invoices_are_shown_for_the_batch()
@@ -175,6 +175,7 @@ class CreateInvoicingTest extends TestCase
         $this->actingAs($this->admin)
             ->get(route('back.finance.invoicing.show', $savedBatch->id))
             ->assertPropValue('batch', function($batch) use ($savedBatch) {
+                dd($batch);
                 $this->assertCount($savedBatch->sale_invoices->count(), $batch['sale_invoices']);
             });
     }
