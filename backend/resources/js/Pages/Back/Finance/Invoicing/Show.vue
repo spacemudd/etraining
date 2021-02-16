@@ -39,7 +39,7 @@
                                     <td>{{ batch.sale_invoices_sum_grand_total }}</td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2" class="py-2"><hr></td>
+                                    <td colspan="2" class="py-4"><hr></td>
                                 </tr>
                                 <tr>
                                     <td>{{ $t('words.period-from') }}</td>
@@ -50,7 +50,7 @@
                                     <td class="justify-content-end">{{ batch.period_to }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="pt-5"></td>
+                                    <td colspan="2" class="py-4"><hr></td>
                                 </tr>
                                 <tr>
                                     <td class="text-gray-500">{{ $t('words.status') }}</td>

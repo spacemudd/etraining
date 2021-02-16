@@ -10,7 +10,7 @@
 
 <template>
     <div>
-        <hr class="my-5">
+        <hr class="my-4">
         <p class="font-bold">{{ $t('words.stages') }}</p>
         <p class="my-2 text-center bg-blue-700 text-white"
            :class="{'opacity-100': batch.finished_generating_draft_invoices, 'opacity-50': !batch.finished_generating_draft_invoices}">

@@ -555,11 +555,20 @@ export default {
             "customer-name": "اسم العميل",
             "start-sending-invoices": "البدء بإرسال الفواتير",
             "stages": "المراحل",
+<<<<<<< main
             "generated-draft-invoices": "تم إنشاء الفواتير (مسودة)",
             "completed-issuing-invoices": "تم إصدار الفواتير",
             "completed-sending-invoices": "تم ارسال الفواتير"
 >>>>>>> Display job status for issuing invoices
+<<<<<<< main
 >>>>>>> Display job status for issuing invoices
+=======
+=======
+            "generated-draft-invoices": "إنشاء الفواتير (مسودة)",
+            "completed-issuing-invoices": "إصدار الفواتير",
+            "completed-sending-invoices": "ارسال الفواتير"
+>>>>>>> Fix positioning
+>>>>>>> Fix positioning
         }
     },
     "en": {
