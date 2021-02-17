@@ -17,11 +17,12 @@
             {{ $t('words.generated-draft-invoices') }}
         </p>
         <p class="my-2 text-center bg-blue-700 text-white"
-           :class="{'opacity-100': batch.finishing_issuing_invoices, 'opacity-50': !batch.finishing_issuing_invoices}">
+           :class="{'opacity-100': batch.finished_issuing_invoices, 'opacity-50': !batch.finished_issuing_invoices}">
+            <btn-loading-indicator class="inline-block" v-if="batch.job_status_display === 'committing_processing'" />
             {{ $t('words.completed-issuing-invoices') }}
         </p>
         <p class="my-2 text-center bg-blue-700 text-white"
-           :class="{'opacity-100': batch.finishing_sending_invoices, 'opacity-50': !batch.finishing_sending_invoices}">
+           :class="{'opacity-100': batch.finished_sending_invoices, 'opacity-50': !batch.finished_sending_invoices}">
             {{ $t('words.completed-sending-invoices') }}
         </p>
     </div>
@@ -47,18 +48,7 @@ export default {
         }
     },
     methods: {
-        approveInvoicesBatchRequest() {
-            this.form.post(route('back.finance.invoicing.approve', {batch: this.batch.id}))
-                .then(() => {
-                    this.$refs.approveInvoicesBatch.close();
-                }).catch(error => {
-                LogRocket.captureException(error);
-                alert(error.response.data.message);
-                throw error;
-            }).finally(() => {
-                this.form.processing = false;
-            });
-        }
+
     }
 }
 </script>

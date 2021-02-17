@@ -39,6 +39,9 @@ class SendMonthlyInvoicingBatchNotificationsJob implements ShouldQueue
     public function handle()
     {
         $just_one = 0;
+        $this->batch->job_status = MonthlyInvoicingBatch::JOB_STATUS_SENDING_EMAILS;
+        $this->batch->save();
+
         $this->batch->sale_invoices()->chunk(300, function($invoices) use (&$just_one) {
             $invoices->each(function($invoice) use (&$just_one) {
                 if ($just_one === 2) {
@@ -48,5 +51,8 @@ class SendMonthlyInvoicingBatchNotificationsJob implements ShouldQueue
                 $just_one++;
             });
         });
+
+        $this->batch->job_status = MonthlyInvoicingBatch::JOB_STATUS_COMPLETED_SENDING_EMAILS;
+        $this->batch->save();
     }
 }

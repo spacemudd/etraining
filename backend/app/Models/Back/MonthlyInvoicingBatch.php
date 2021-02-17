@@ -25,7 +25,9 @@ class MonthlyInvoicingBatch extends Model implements Auditable
     const JOB_STATUS_FAILED = 3;
     const JOB_STATUS_COMPLETED = 4;
     const JOB_STATUS_SENDING_EMAILS = 5;
-    const JOB_STATUS_COMPLETING_SENDING_EMAILS = 6;
+    const JOB_STATUS_COMPLETED_SENDING_EMAILS = 6;
+    const JOB_STATUS_COMMITTING_PROCESSING = 7;
+    const JOB_STATUS_COMMITTING_COMPLETED = 8;
 
     const STATUS_DRAFT = 0;
     const STATUS_APPROVED = 1;
@@ -49,6 +51,7 @@ class MonthlyInvoicingBatch extends Model implements Auditable
 
     protected $appends = [
         'status_display',
+        'job_status_display',
     ];
 
     protected static function boot(): void
@@ -79,12 +82,24 @@ class MonthlyInvoicingBatch extends Model implements Auditable
             return 'processing';
         }
 
+        if ($this->job_status === self::JOB_STATUS_COMPLETED) {
+            return 'completed_draft_invoices';
+        }
+
         if ($this->job_status === self::JOB_STATUS_SENDING_EMAILS) {
             return 'sending_emails';
         }
 
-        if ($this->job_status === self::JOB_STATUS_COMPLETING_SENDING_EMAILS) {
+        if ($this->job_status === self::JOB_STATUS_COMPLETED_SENDING_EMAILS) {
             return 'completed_sending_emails';
+        }
+
+        if ($this->job_status === self::JOB_STATUS_COMMITTING_PROCESSING) {
+            return 'committing_processing';
+        }
+
+        if ($this->job_status === self::JOB_STATUS_COMMITTING_COMPLETED) {
+            return 'committing_completed';
         }
 
         return '';
@@ -120,6 +135,30 @@ class MonthlyInvoicingBatch extends Model implements Auditable
     public function getFinishedGeneratingDraftInvoicesAttribute()
     {
         return $this->progress === $this->total;
+    }
+
+    public function getFinishedIssuingInvoicesAttribute()
+    {
+        return (
+            $this->job_status === self::JOB_STATUS_COMMITTING_COMPLETED ||
+            $this->job_status === self::JOB_STATUS_SENDING_EMAILS ||
+            $this->job_status === self::JOB_STATUS_COMPLETED_SENDING_EMAILS
+        );
+    }
+
+    public function getFinishedSendingInvoicesAttribute()
+    {
+        return (
+            $this->job_status === self::JOB_STATUS_SENDING_EMAILS ||
+            $this->job_status === self::JOB_STATUS_COMPLETED_SENDING_EMAILS
+        );
+    }
+
+    public function getIsProcessingAttribute()
+    {
+        return ($this->job_status === self::JOB_STATUS_QUEUED ||
+            $this->job_status === self::JOB_STATUS_COMMITTING_PROCESSING ||
+            $this->job_status === self::JOB_STATUS_SENDING_EMAILS);
     }
 
     public function sale_invoices()

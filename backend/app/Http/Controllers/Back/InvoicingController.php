@@ -73,7 +73,7 @@ class InvoicingController extends Controller
             ->with(['sale_invoices' => function($q) {
                 $q->with(['billable' => function($q) {
                     $q->with('company');
-                }]);
+                }])->paginate(5);
             }])
             ->findOrFail($batch);
 
@@ -116,6 +116,7 @@ class InvoicingController extends Controller
         throw_if($monthlyBatch->status !== MonthlyInvoicingBatch::STATUS_DRAFT, 'The batch must be in draft mode');
 
         $monthlyBatch->status = MonthlyInvoicingBatch::STATUS_APPROVED;
+        $monthlyBatch->job_status = MonthlyInvoicingBatch::JOB_STATUS_COMMITTING_PROCESSING;
         $monthlyBatch->save();
 
         Bus::chain([

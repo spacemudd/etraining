@@ -11,15 +11,15 @@
             ></breadcrumb-container>
 
             <div class="flex justify-end mb-10 gap-4" v-if="invoicingBatch.is_draft">
-                <approve-invoices-batch :batch="invoicingBatch"></approve-invoices-batch>
+                <approve-invoices-batch @refreshBatch="updateInvoiceBatch" :batch="invoicingBatch"></approve-invoices-batch>
 
                 <jet-danger-button @click.native="deleteMonthlyInvoicingBatch()">
                     {{ $t('words.delete') }}
                 </jet-danger-button>
             </div>
 
-            <div class="bg-yellow-200 p-5" v-if="invoicingBatch.job_status_display === 'queued'">
-                <btn-loading-indicator class="inline-block"/> {{ $t('words.please-wait') }}
+            <div class="bg-yellow-200 p-5" v-if="invoicingBatch.is_processing">
+                <btn-loading-indicator class="inline-block"/> {{ $t('words.please-wait') }} - {{ invoicingBatch.job_status_display }}
             </div>
             <div class="grid grid-cols-1 gap-2 lg:grid-cols-12 md:gap-4" :class="{'opacity-50': invoicingBatch.job_status_display === 'queued'}">
                 <div class="col-span-4">
@@ -87,7 +87,7 @@
                                 <th class="pt-6 pb-4">{{ $t('words.date') }}</th>
                                 <th class="pt-6 pb-4 rtl:text-left text-right">{{ $t('words.total-value') }}</th>
                             </tr>
-                            <tr v-for="sale_invoice in invoicingBatch.sale_invoices" :key="sale_invoice.id"
+                            <tr v-for="sale_invoice in invoicingBatch.sale_invoices.data.slice(0, 5)" :key="sale_invoice.id"
                                 class="hover:bg-gray-100 focus-within:bg-gray-100">
                                 <td class="border-t py-5">
                                     {{ sale_invoice.billable.name }}
@@ -116,6 +116,8 @@
                                 <!--</td>-->
                             </tr>
                         </table>
+
+                        <pagination :links="invoicingBatch.sale_invoices.links" />
                     </div>
                 </div>
             </div>
@@ -141,11 +143,13 @@
     import ApproveInvoicesBatch from '@/Components/ApproveInvoicesBatch';
     import MonthlyInvoicingJobStatus from '@/Components/MonthlyInvoicingJobStatus';
     import BtnLoadingIndicator from "@/Components/BtnLoadingIndicator";
+    import Pagination from '@/Shared/Pagination';
 
     export default {
         props: ['batch'],
 
         components: {
+            Pagination,
             BtnLoadingIndicator,
             MonthlyInvoicingJobStatus,
             ApproveInvoicesBatch,
@@ -174,27 +178,32 @@
         },
         mounted() {
             this.invoicingBatch = this.batch;
-
-            let vm = this;
-            this.refreshInvoiceInterval = setInterval(function() {
-                axios.get(route('back.finance.invoicing.show', vm.batch.id), {headers: {'Accept': 'text/json'}})
-                .then(response => {
-                    vm.invoicingBatch = response.data;
-                    if (vm.invoicingBatch.job_status_display != 'queued') {
-                        clearInterval(vm.refreshInvoiceInterval);
-                    }
-                })
-            }, 2000);
+            this.setupRefreshInterval();
         },
         methods: {
+            setupRefreshInterval() {
+                if (this.batch.is_processing) {
+                    this.refreshInvoiceInterval = setTimeout(this.updateInvoiceBatch(), 1000);
+                }
+            },
             deleteMonthlyInvoicingBatch() {
                 if (confirm(this.$t('words.are-you-sure'))) {
                     this.$inertia.delete(route('back.finance.invoicing.delete', this.batch.id));
                 }
             },
+            updateInvoiceBatch() {
+                let vm = this;
+                setTimeout(function() {
+                    axios.get(route('back.finance.invoicing.show', vm.batch.id), {headers: {'Accept': 'text/json'}})
+                        .then(response => {
+                            vm.invoicingBatch = response.data;
+                            if (response.data.is_processing) {
+                                vm.updateInvoiceBatch();
+                            }
+                        })
+                }, 1000);
+
+            },
         },
-        beforeDestroy() {
-            clearInterval(this.refreshInvoiceInterval);
-        }
     }
 </script>

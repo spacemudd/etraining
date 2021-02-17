@@ -32,20 +32,22 @@ class IssueMonthlyInvoicingBatchInvoicesJob implements ShouldQueue
      * Execute the job.
      *
      * @return void
+     * @throws \Throwable
      */
     public function handle()
     {
         \DB::beginTransaction();
-        $this->batch->job_status = MonthlyInvoicingBatch::JOB_STATUS_PROCESSING;
+        $this->batch->job_status = MonthlyInvoicingBatch::JOB_STATUS_COMMITTING_PROCESSING;
         $this->batch->save();
 
         $this->batch->sale_invoices()->chunk(100, function($invoices) {
+            sleep(2);
             $invoices->each(function($invoice) {
                 $this->issue_invoice($invoice);
             });
         });
 
-        $this->batch->job_status = MonthlyInvoicingBatch::JOB_STATUS_COMPLETED;
+        $this->batch->job_status = MonthlyInvoicingBatch::JOB_STATUS_COMMITTING_COMPLETED;
         $this->batch->save();
         \DB::commit();
     }

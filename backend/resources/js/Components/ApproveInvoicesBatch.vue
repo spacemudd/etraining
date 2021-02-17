@@ -79,8 +79,11 @@ export default {
     },
     methods: {
         approveInvoicesBatchRequest() {
-            this.form.post(route('back.finance.invoicing.approve', {batch: this.batch.id}))
+            axios.post(route('back.finance.invoicing.approve', {batch: this.batch.id}), {
+                approved: this.form.approved,
+            })
                 .then(() => {
+                    this.$emit('refreshBatch');
                     this.$refs.approveInvoicesBatch.close();
                 }).catch(error => {
                 LogRocket.captureException(error);
