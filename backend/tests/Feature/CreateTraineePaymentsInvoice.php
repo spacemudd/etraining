@@ -54,4 +54,30 @@ class CreateTraineePaymentsInvoice extends TestCase
         $this->get(route('sale-invoices.pay.bank-transfer', $invoice->id))
             ->assertSuccessful();
     }
+
+    // WIP.
+    //public function test_trainee_recording_a_payment_via_bank_transfer()
+    //{
+    //    $company = Company::factory()->create(['team_id' => $this->admin->current_team_id]);
+    //    $trainee = Trainee::factory()->create([
+    //        'team_id' => $this->admin->current_team_id,
+    //        'company_id' => $company->id,
+    //        'status' => Trainee::STATUS_APPROVED,
+    //    ]);
+    //
+    //    $invoice = SaleInvoice::factory([
+    //        'team_id' => $this->admin->current_team_id,
+    //        'billable_id' => $trainee->id,
+    //        'billable_type' => Trainee::class,
+    //        'number' => 'TI-2000',
+    //        'status' => SaleInvoice::STATUS_ISSUED,
+    //    ])->create();
+    //
+    //    $this->post(route('sale-invoices.pay.bank-transfer.store', $invoice->id), [
+    //        'transfee_name' => 'Shafiq',
+    //        'amount_transferred' => 0,
+    //    ])
+    //        ->assertSuccessful();
+    //
+    //}
 }

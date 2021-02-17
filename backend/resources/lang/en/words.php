@@ -380,6 +380,6 @@ return [
     'please-wait' => 'Please wait',
     'generating-draft-invoices' => 'Generating draft invoices',
     'generating-invoices' => 'Generating invoices',
-    'ending-invoices-via-email' => 'Sending invoices via email',
+    'sending-invoices-via-email' => 'Sending invoices via email',
     'pay-link' => 'Pay link',
 ];

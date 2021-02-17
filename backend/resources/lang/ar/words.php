@@ -385,6 +385,6 @@ return [
     'please-wait' => 'يرجى الإنتظار',
     'generating-draft-invoices' => 'جاري محاسبة الفواتير',
     'generating-invoices' => 'جاري ترحيل الفواتير',
-    'ending-invoices-via-email' => 'جاري ارسال الفواتير من خلال البريد الإكتروني',
+    'sending-invoices-via-email' => 'جاري ارسال الفواتير من خلال البريد الإكتروني',
     'pay-link' => 'رابط الدفع',
 ];
