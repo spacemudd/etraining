@@ -378,4 +378,7 @@ return [
     'training-fees-is-issued' => 'Training fees is issued',
     'please-transfer-the-amount' => 'Please transfer the amount',
     'please-wait' => 'Please wait',
+    'generating-draft-invoices' => 'Generating draft invoices',
+    'generating-invoices' => 'Generating invoices',
+    'ending-invoices-via-email' => 'Sending invoices via email',
 ];

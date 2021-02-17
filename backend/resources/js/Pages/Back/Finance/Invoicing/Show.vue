@@ -18,8 +18,8 @@
                 </jet-danger-button>
             </div>
 
-            <div class="bg-yellow-200 p-5" v-if="invoicingBatch.is_processing">
-                <btn-loading-indicator class="inline-block"/> {{ $t('words.please-wait') }} - {{ invoicingBatch.job_status_display }}
+            <div class="bg-yellow-200 p-5 mb-6 rounded shadow-lg" v-if="invoicingBatch.is_processing">
+                <btn-loading-indicator class="inline-block"/> {{ $t('words.please-wait') }} - {{ invoicingBatch.is_processing_reason }}
             </div>
             <div class="grid grid-cols-1 gap-2 lg:grid-cols-12 md:gap-4" :class="{'opacity-50': invoicingBatch.job_status_display === 'queued'}">
                 <div class="col-span-4">

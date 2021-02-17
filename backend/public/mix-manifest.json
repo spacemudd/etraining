@@ -488,7 +488,24 @@
     "/js/app.2288c1f39d6de3aeeaf7.hot-update.js": "/js/app.2288c1f39d6de3aeeaf7.hot-update.js",
     "/js/app.4ec61c78613435647a4b.hot-update.js": "/js/app.4ec61c78613435647a4b.hot-update.js",
     "/js/app.a84441972d5dcf023a50.hot-update.js": "/js/app.a84441972d5dcf023a50.hot-update.js",
+<<<<<<< main
     "/js/app.dad495fd311e942e8095.hot-update.js": "/js/app.dad495fd311e942e8095.hot-update.js"
 >>>>>>> Keep refreshing the invoice if its in processing state
+<<<<<<< main
 >>>>>>> Keep refreshing the invoice if its in processing state
+=======
+=======
+    "/js/app.dad495fd311e942e8095.hot-update.js": "/js/app.dad495fd311e942e8095.hot-update.js",
+    "/js/app.57b3e957b05ccb9d9804.hot-update.js": "/js/app.57b3e957b05ccb9d9804.hot-update.js",
+    "/js/app.944d360595d5fda52895.hot-update.js": "/js/app.944d360595d5fda52895.hot-update.js",
+    "/js/app.0315ff519d9a1dfbf77c.hot-update.js": "/js/app.0315ff519d9a1dfbf77c.hot-update.js",
+    "/js/app.46db9e18dc9fd4a311c4.hot-update.js": "/js/app.46db9e18dc9fd4a311c4.hot-update.js",
+    "/js/app.ecce52cf33e4e2bf081b.hot-update.js": "/js/app.ecce52cf33e4e2bf081b.hot-update.js",
+    "/js/app.cf5808cacfa0aed8c060.hot-update.js": "/js/app.cf5808cacfa0aed8c060.hot-update.js",
+    "/js/app.166381c47a29f6173b3c.hot-update.js": "/js/app.166381c47a29f6173b3c.hot-update.js",
+    "/js/app.5a467f6b4b555f5175b5.hot-update.js": "/js/app.5a467f6b4b555f5175b5.hot-update.js",
+    "/js/app.e12b0079442c327ddb89.hot-update.js": "/js/app.e12b0079442c327ddb89.hot-update.js",
+    "/js/app.4b0ca4dc57fbfbe1780b.hot-update.js": "/js/app.4b0ca4dc57fbfbe1780b.hot-update.js"
+>>>>>>> Add reason of processing
+>>>>>>> Add reason of processing
 }

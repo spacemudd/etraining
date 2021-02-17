@@ -34,6 +34,7 @@ class MonthlyInvoicingBatchResource extends JsonResource
             'is_draft' => $this->is_draft,
             'is_approved' => $this->is_approved,
             'is_processing' => $this->is_processing,
+            'is_processing_reason' => $this->is_processing_reason,
             'finished_sending_invoices' => $this->finished_sending_invoices,
             'finished_issuing_invoices' => $this->finished_issuing_invoices,
             'finished_generating_draft_invoices' => $this->finished_generating_draft_invoices,

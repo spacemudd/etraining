@@ -576,9 +576,19 @@ export default {
             "completed-sending-invoices": "ارسال الفواتير",
             "training-fees-is-issued": "تم إصدار رسوم التدريب",
             "please-transfer-the-amount": "نرجو منكم تسديد المبلغ",
+<<<<<<< main
             "please-wait": "يرجى الإنتظار"
 >>>>>>> WIP: Improve UX after approving monthly invoicing batches
+<<<<<<< main
 >>>>>>> WIP: Improve UX after approving monthly invoicing batches
+=======
+=======
+            "please-wait": "يرجى الإنتظار",
+            "generating-draft-invoices": "جاري محاسبة الفواتير",
+            "generating-invoices": "جاري ترحيل الفواتير",
+            "ending-invoices-via-email": "جاري ارسال الفواتير من خلال البريد الإكتروني"
+>>>>>>> Add reason of processing
+>>>>>>> Add reason of processing
         }
     },
     "en": {
@@ -1106,9 +1116,19 @@ export default {
             "completed-sending-invoices": "Completed sending invoices",
             "training-fees-is-issued": "Training fees is issued",
             "please-transfer-the-amount": "Please transfer the amount",
+<<<<<<< main
             "please-wait": "Please wait"
 >>>>>>> WIP: Improve UX after approving monthly invoicing batches
+<<<<<<< main
 >>>>>>> WIP: Improve UX after approving monthly invoicing batches
+=======
+=======
+            "please-wait": "Please wait",
+            "generating-draft-invoices": "Generating draft invoices",
+            "generating-invoices": "Generating invoices",
+            "ending-invoices-via-email": "Sending invoices via email"
+>>>>>>> Add reason of processing
+>>>>>>> Add reason of processing
         }
     }
 }

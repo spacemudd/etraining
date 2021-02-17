@@ -1,5 +1,8 @@
 <?php
 
+// Payment links.
+Route::get('sale-invoices/{sale_invoice}', [\App\Http\Controllers\SaleInvoicesController::class, 'show']);
+
 Route::impersonate();
 
 Route::get('/disabled', [\App\Http\Controllers\Back\DisableWebsiteController::class, 'showDisabledPage'])->name('disabled');

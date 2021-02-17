@@ -149,7 +149,6 @@ class MonthlyInvoicingBatch extends Model implements Auditable
     public function getFinishedSendingInvoicesAttribute()
     {
         return (
-            $this->job_status === self::JOB_STATUS_SENDING_EMAILS ||
             $this->job_status === self::JOB_STATUS_COMPLETED_SENDING_EMAILS
         );
     }
@@ -159,6 +158,23 @@ class MonthlyInvoicingBatch extends Model implements Auditable
         return ($this->job_status === self::JOB_STATUS_QUEUED ||
             $this->job_status === self::JOB_STATUS_COMMITTING_PROCESSING ||
             $this->job_status === self::JOB_STATUS_SENDING_EMAILS);
+    }
+
+    public function getIsProcessingReasonAttribute()
+    {
+        if ($this->job_status === self::JOB_STATUS_QUEUED) {
+            return __('words.generating-draft-invoices');
+        }
+
+        if ($this->job_status === self::JOB_STATUS_COMMITTING_PROCESSING) {
+            return __('words.generating-invoices');
+        }
+
+        if ($this->job_status === self::JOB_STATUS_SENDING_EMAILS) {
+            return __('words.sending-invoices-via-email');
+        }
+
+        return '';
     }
 
     public function sale_invoices()
