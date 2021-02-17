@@ -11,8 +11,20 @@ class SaleInvoicesController extends Controller
 {
     public function show($sale_invoice)
     {
+        Inertia::setRootView('payment-layout');
         return Inertia::render('Back/SaleInvoices/Show', [
             'saleInvoice' => SaleInvoice::withoutGlobalScope(TeamScope::class)
+                ->with('billable')
+                ->findOrFail($sale_invoice),
+        ]);
+    }
+
+    function payViaBankTransfer($sale_invoice)
+    {
+        Inertia::setRootView('payment-layout');
+        return Inertia::render('Back/SaleInvoices/PayViaBankTransfer', [
+            'saleInvoice' => SaleInvoice::withoutGlobalScope(TeamScope::class)
+                ->with('billable')
                 ->findOrFail($sale_invoice),
         ]);
     }

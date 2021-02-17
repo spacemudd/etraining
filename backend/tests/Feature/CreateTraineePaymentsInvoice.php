@@ -49,9 +49,9 @@ class CreateTraineePaymentsInvoice extends TestCase
             'billable_type' => Trainee::class,
             'number' => 'TI-2000',
             'status' => SaleInvoice::STATUS_ISSUED,
-        ]);
+        ])->create();
 
-        $this->get(route('invoices.pay', $invoice->id))
+        $this->get(route('sale-invoices.pay.bank-transfer', $invoice->id))
             ->assertSuccessful();
     }
 }

@@ -34,6 +34,7 @@ class SaleInvoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
 
     protected $appends = [
         'grand_total_display',
+        'pay_link',
     ];
 
     protected static function boot(): void
@@ -56,5 +57,12 @@ class SaleInvoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
     public function getGrandTotalDisplayAttribute()
     {
         return str_replace('SAR', '', Money::ofMinor($this->grand_total ?: 0, 'SAR')->formatTo('en_SA'));
+    }
+
+    public function getPayLinkAttribute()
+    {
+        if ($this->id) {
+            return route('sale-invoices.show', $this->id);
+        }
     }
 }

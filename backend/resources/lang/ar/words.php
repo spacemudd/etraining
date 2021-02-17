@@ -386,4 +386,5 @@ return [
     'generating-draft-invoices' => 'جاري محاسبة الفواتير',
     'generating-invoices' => 'جاري ترحيل الفواتير',
     'ending-invoices-via-email' => 'جاري ارسال الفواتير من خلال البريد الإكتروني',
+    'pay-link' => 'رابط الدفع',
 ];

@@ -41,6 +41,7 @@ class MonthlyInvoicingBatchResource extends JsonResource
             'status_display' => $this->status_display,
             'progress' => $this->progress,
             'total' => $this->total,
+            'pay_link' => $this->pay_link,
             'created_by_id' => $this->created_by_id,
             'created_by' => $this->created_by,
         ];

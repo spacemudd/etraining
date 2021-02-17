@@ -109,6 +109,14 @@
                                 <td class="border-t rtl:text-left text-right">
                                     {{ sale_invoice.grand_total_display }}
                                 </td>
+                                <td class="border-t rtl:text-left text-right">
+                                    <a :href="sale_invoice.pay_link"
+                                       rel="noreferrer"
+                                       target="_blank"
+                                       class="text-sm inline-flex items-center rounded-md px-4 py-2 bg-blue-600 hover:bg-blue-800 text-white text-right">
+                                        {{ $t('words.pay-link') }}
+                                    </a>
+                                </td>
                                 <!--<td class="border-t w-px">-->
                                 <!--    <inertia-link class="px-4 flex items-center" :href="'#'">-->
                                 <!--        <ion-icon name="arrow-forward-outline" class="block w-6 h-6 fill-gray-400"></ion-icon>-->
