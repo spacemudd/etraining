@@ -76,7 +76,7 @@ class CreateInvoicingTest extends TestCase
             'invoices_date' => now()->startOfMonth(),
             'period_from' => now()->subMonth()->startOfMonth(),
             'period_to' => now()->subMonth()->endOfMonth(),
-            'job_status' => MonthlyInvoicingBatch::JOB_STATUS_QUEUED,
+            'job_status' => MonthlyInvoicingBatch::JOB_STATUS_COMPLETED,
             'status' => MonthlyInvoicingBatch::STATUS_DRAFT,
             'progress' => 1,
             'total'=> 1,
@@ -177,7 +177,7 @@ class CreateInvoicingTest extends TestCase
         $this->actingAs($this->admin)
             ->get(route('back.finance.invoicing.show', $savedBatch->id))
             ->assertPropValue('batch', function($batch) use ($savedBatch) {
-                $this->assertCount($savedBatch->sale_invoices->count(), $batch['sale_invoices']);
+                $this->assertEquals($savedBatch->sale_invoices->count(), $batch['sale_invoices_count']);
             });
     }
 
