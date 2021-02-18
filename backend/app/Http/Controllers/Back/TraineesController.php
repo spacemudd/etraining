@@ -89,7 +89,7 @@ class TraineesController extends Controller
     {
         return Inertia::render('Back/Trainees/Show', [
             'companies' => Company::get(),
-            'trainee' => Trainee::with(['educational_level', 'city', 'marital_status', 'trainee_group', 'user'])->findOrFail($id),
+            'trainee' => Trainee::with(['company', 'educational_level', 'city', 'marital_status', 'trainee_group', 'user'])->findOrFail($id),
             'trainee_groups' => TraineeGroup::get(),
             'cities' => City::orderBy('name_ar')->get(),
             'marital_statuses' => MaritalStatus::orderBy('order')->get(),
@@ -375,6 +375,7 @@ class TraineesController extends Controller
     public function update(Request $request, $trainee_id)
     {
         $request->validate([
+            'company_id' => 'nullable|exists:companies,id',
             'trainee_group_name' => 'nullable|string|max:255',
             'email' => 'required|string|max:255|unique:trainees,email,'.$trainee_id,
             'name' => 'required|string|max:255',

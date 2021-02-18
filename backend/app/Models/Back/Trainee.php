@@ -39,6 +39,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels
 
     protected $fillable = [
         'instructor_id',
+        'company_id',
         'email',
         'name',
         'identity_number',
