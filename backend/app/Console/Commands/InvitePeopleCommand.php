@@ -90,9 +90,9 @@ class InvitePeopleCommand extends Command
                     throw $e;
                 }
 
-                sleep(61);
             }
-
+            
+            sleep(61);
             $bar->advance(count($traineesCollection));
         });
 
