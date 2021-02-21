@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\AdhocCommand;
 use App\Console\Commands\DatabaseIndexTextCommand;
 use App\Console\Commands\InvitePeopleCommand;
 use App\Console\Commands\SeedPermissionsCommand;
@@ -25,6 +26,7 @@ class Kernel extends ConsoleKernel
         SeedPermissionsCommand::class,
         FixTraineeGroupsCommand::class,
         ZoomCommand::class,
+        AdhocCommand::class,
     ];
 
     /**

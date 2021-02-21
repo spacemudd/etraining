@@ -91,7 +91,7 @@ class InvitePeopleCommand extends Command
                 }
 
             }
-            
+
             sleep(61);
             $bar->advance(count($traineesCollection));
         });
