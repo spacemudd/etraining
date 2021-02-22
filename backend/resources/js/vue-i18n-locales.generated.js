@@ -587,6 +587,7 @@ export default {
             "generating-draft-invoices": "جاري محاسبة الفواتير",
             "generating-invoices": "جاري ترحيل الفواتير",
 <<<<<<< main
+<<<<<<< main
             "ending-invoices-via-email": "جاري ارسال الفواتير من خلال البريد الإكتروني"
 >>>>>>> Add reason of processing
 <<<<<<< main
@@ -596,7 +597,15 @@ export default {
             "ending-invoices-via-email": "جاري ارسال الفواتير من خلال البريد الإكتروني",
             "pay-link": "رابط الدفع"
 >>>>>>> Add bank transfer page
+<<<<<<< main
 >>>>>>> Add bank transfer page
+=======
+=======
+            "sending-invoices-via-email": "جاري ارسال الفواتير من خلال البريد الإكتروني",
+            "pay-link": "رابط الدفع",
+            "payments": "المدفوعات"
+>>>>>>> WIP: Adding payments index page
+>>>>>>> WIP: Adding payments index page
         }
     },
     "en": {
@@ -1135,6 +1144,7 @@ export default {
             "generating-draft-invoices": "Generating draft invoices",
             "generating-invoices": "Generating invoices",
 <<<<<<< main
+<<<<<<< main
             "ending-invoices-via-email": "Sending invoices via email"
 >>>>>>> Add reason of processing
 <<<<<<< main
@@ -1144,7 +1154,15 @@ export default {
             "ending-invoices-via-email": "Sending invoices via email",
             "pay-link": "Pay link"
 >>>>>>> Add bank transfer page
+<<<<<<< main
 >>>>>>> Add bank transfer page
+=======
+=======
+            "sending-invoices-via-email": "Sending invoices via email",
+            "pay-link": "Pay link",
+            "payments": "Payments"
+>>>>>>> WIP: Adding payments index page
+>>>>>>> WIP: Adding payments index page
         }
     }
 }

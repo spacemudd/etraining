@@ -382,4 +382,5 @@ return [
     'generating-invoices' => 'Generating invoices',
     'sending-invoices-via-email' => 'Sending invoices via email',
     'pay-link' => 'Pay link',
+    'payments' => 'Payments',
 ];

@@ -96,6 +96,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('invoicing/{batch}', [\App\Http\Controllers\Back\InvoicingController::class, 'show'])->name('invoicing.show');
             Route::delete('invoicing/{batch}/delete', [\App\Http\Controllers\Back\InvoicingController::class, 'delete'])->name('invoicing.delete');
 
+            Route::resource('payments', \App\Http\Controllers\Back\PaymentsController::class)->only(['index', 'show']);
+
             Route::resource('accounts', \App\Http\Controllers\Back\FinancialAccountsController::class);
             Route::resource('invoices', \App\Http\Controllers\Back\FinancialInvoicesController::class);
             Route::get('monthly-subscription/edit', [\App\Http\Controllers\Back\FinancialMonthlySubscriptionController::class, 'edit'])->name('monthly-subscription.edit');

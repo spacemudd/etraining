@@ -22,6 +22,9 @@
                 <inertia-link :href="route('back.finance.invoicing.index')" class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
                     {{ $t('words.monthly-invoicing') }}
                 </inertia-link>
+                <inertia-link :href="route('back.finance.payments.index')" class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
+                    {{ $t('words.payments') }}
+                </inertia-link>
                 <inertia-link :href="route('back.finance.accounts.index')" class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
                    {{ $t('words.view-client-accounts') }}
                 </inertia-link>
