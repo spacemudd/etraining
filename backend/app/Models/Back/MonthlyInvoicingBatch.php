@@ -52,6 +52,8 @@ class MonthlyInvoicingBatch extends Model implements Auditable
     protected $appends = [
         'status_display',
         'job_status_display',
+        'is_processing',
+        'is_processing_reason',
     ];
 
     protected static function boot(): void
@@ -70,6 +72,11 @@ class MonthlyInvoicingBatch extends Model implements Auditable
     public function created_by()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function sale_invoices()
+    {
+        return $this->hasMany(SaleInvoice::class);
     }
 
     public function getJobStatusDisplayAttribute()
@@ -175,10 +182,5 @@ class MonthlyInvoicingBatch extends Model implements Auditable
         }
 
         return '';
-    }
-
-    public function sale_invoices()
-    {
-        return $this->hasMany(SaleInvoice::class);
     }
 }

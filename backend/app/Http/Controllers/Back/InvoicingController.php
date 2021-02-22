@@ -20,7 +20,10 @@ class InvoicingController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Back/Finance/Invoicing/Index');
+        $monthlyInvoicingBatches = MonthlyInvoicingBatch::withCount('sale_invoices')->paginate(12);
+        return Inertia::render('Back/Finance/Invoicing/Index', [
+            'monthlyInvoicingBatches' => $monthlyInvoicingBatches,
+        ]);
     }
 
     /**
