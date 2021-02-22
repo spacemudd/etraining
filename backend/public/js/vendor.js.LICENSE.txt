@@ -39,6 +39,12 @@ object-assign
  */
 
 /*!
+ * pulltorefreshjs v0.1.21
+ * (c) Rafael Soto
+ * Released under the MIT License.
+ */
+
+/*!
  * vue-i18n v8.22.2 
  * (c) 2020 kazuya kawaguchi
  * Released under the MIT License.

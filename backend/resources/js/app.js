@@ -84,6 +84,16 @@ const i18n = new VueInternationalization({
 
 const appName = lang === 'ar' ? 'منصة التدريب' : 'eTraining';
 
+PullToRefresh.init({
+    mainElement: 'body',
+    instructionsPullToRefresh: lang === 'ar' ? 'قم بالسحب لتحديث الصفحة' : 'Pull to refresh',
+    instructionsReleaseToRefresh: lang === 'ar' ? 'حرر للتحديث' : 'Release to refresh',
+    instructionsRefreshing: lang === 'ar' ? 'جاري التحديث...' : 'Refresh...',
+    onRefresh() {
+        window.location.reload();
+    }
+});
+
 new Vue({
     i18n,
     Store,
