@@ -11,8 +11,8 @@ class PaymentsController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Back/Payments/Index', [
-            'payments' => Payment::paginate(10),
+        return Inertia::render('Back/Finance/Payments/Index', [
+            'payments' => Payment::with('sale_invoice')->paginate(10),
         ]);
     }
 }

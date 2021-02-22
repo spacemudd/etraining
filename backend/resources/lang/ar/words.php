@@ -388,4 +388,5 @@ return [
     'sending-invoices-via-email' => 'جاري ارسال الفواتير من خلال البريد الإكتروني',
     'pay-link' => 'رابط الدفع',
     'payments' => 'المدفوعات',
+    'under-manual-review' => 'قيد المراجعة اليدوية',
 ];

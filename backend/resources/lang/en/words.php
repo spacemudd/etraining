@@ -383,4 +383,5 @@ return [
     'sending-invoices-via-email' => 'Sending invoices via email',
     'pay-link' => 'Pay link',
     'payments' => 'Payments',
+    'under-manual-review' => 'Under manual review',
 ];

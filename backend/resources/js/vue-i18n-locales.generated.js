@@ -603,9 +603,17 @@ export default {
 =======
             "sending-invoices-via-email": "جاري ارسال الفواتير من خلال البريد الإكتروني",
             "pay-link": "رابط الدفع",
+<<<<<<< main
             "payments": "المدفوعات"
 >>>>>>> WIP: Adding payments index page
+<<<<<<< main
 >>>>>>> WIP: Adding payments index page
+=======
+=======
+            "payments": "المدفوعات",
+            "under-manual-review": "قيد المراجعة اليدوية"
+>>>>>>> Display payments
+>>>>>>> Display payments
         }
     },
     "en": {
@@ -1160,9 +1168,17 @@ export default {
 =======
             "sending-invoices-via-email": "Sending invoices via email",
             "pay-link": "Pay link",
+<<<<<<< main
             "payments": "Payments"
 >>>>>>> WIP: Adding payments index page
+<<<<<<< main
 >>>>>>> WIP: Adding payments index page
+=======
+=======
+            "payments": "Payments",
+            "under-manual-review": "Under manual review"
+>>>>>>> Display payments
+>>>>>>> Display payments
         }
     }
 }

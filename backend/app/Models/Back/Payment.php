@@ -24,6 +24,16 @@ class Payment extends Model implements HasMedia, Auditable
 
     protected $keyType = 'string';
 
+    protected $appends = [
+        'created_at_display',
+        'status_css',
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
     protected static function boot(): void
     {
         parent::boot();
@@ -57,5 +67,17 @@ class Payment extends Model implements HasMedia, Auditable
                 'team_id' => $this->team_id,
             ])
             ->toMediaCollection($folder);
+    }
+
+    public function getCreatedAtDisplayAttribute()
+    {
+        return $this->created_at->toDateTimeString();
+    }
+
+    public function getStatusCssAttribute()
+    {
+        if ($this->status === self::STATUS_UNDER_REVIEW) {
+            return '<span class="bg-yellow-200 text-black p-2 rounded">'.__('words.under-manual-review').'</span>';
+        }
     }
 }
