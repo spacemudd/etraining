@@ -114,7 +114,6 @@ class Course extends Model implements HasMedia, SearchableLabels, Auditable
             ->toMediaCollection($folder);
     }
 
-
     public function getTrainingPackageUrlAttribute()
     {
         return $this->getCopyUrl('training-package');

@@ -64,21 +64,25 @@
 
                 <hr class="my-5">
 
-                <p class="text-right px-5">طريقة الدفع</p>
+                <p class="text-center mt-20 text-2xl font-bold" v-if="saleInvoice.is_under_review">
+                    تم الدفع - جاري المراجعة والتحقق
+                </p>
+                <template v-else>
+                    <p class="text-right px-5">طريقة الدفع</p>
 
-                <!-- Uploading bank receipt -->
-                <div class="mt-5 text-center">
-                    <inertia-link :href="route('sale-invoices.pay.bank-transfer', {sale_invoice: saleInvoice.id})"
-                                  class="text-sm inline-flex items-center rounded-md px-4 py-2 bg-blue-600 hover:bg-blue-800 text-white">
-                        تحويل بنكي
-                    </inertia-link>
-                </div>
-
-                <div class="mt-5 text-center">
-                    <div class="text-sm inline-flex items-center rounded-md px-4 py-2 bg-blue-600 hover:bg-blue-800 text-white">
-                        الدفع اونلاين
+                    <!-- Uploading bank receipt -->
+                    <div class="mt-5 text-center">
+                        <inertia-link :href="route('sale-invoices.pay.bank-transfer', {sale_invoice: saleInvoice.id})"
+                                      class="text-sm inline-flex items-center rounded-md px-4 py-2 bg-blue-600 hover:bg-blue-800 text-white">
+                            تحويل بنكي
+                        </inertia-link>
                     </div>
-                </div>
+                    <div class="mt-5 text-center">
+                        <div class="text-sm inline-flex items-center rounded-md px-4 py-2 bg-blue-600 hover:bg-blue-800 text-white">
+                            الدفع اونلاين
+                        </div>
+                    </div>
+                </template>
             </div>
         </main>
     </div>

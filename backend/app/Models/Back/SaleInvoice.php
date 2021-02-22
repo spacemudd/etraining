@@ -33,6 +33,7 @@ class SaleInvoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
     ];
 
     protected $appends = [
+        'is_under_review',
         'grand_total_display',
         'pay_link',
     ];
@@ -52,6 +53,16 @@ class SaleInvoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
     public function billable()
     {
         return $this->morphTo();
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function getIsUnderReviewAttribute()
+    {
+        return Payment::STATUS_UNDER_REVIEW === optional($this->payments()->first())->status;
     }
 
     public function getGrandTotalDisplayAttribute()

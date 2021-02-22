@@ -8,11 +8,14 @@ use App\Models\Back\Company;
 use App\Models\Back\CompanyContract;
 use App\Models\Back\FinancialSetting;
 use App\Models\Back\MonthlyInvoicingBatch;
+use App\Models\Back\Payment;
+use App\Models\Back\SaleInvoice;
 use App\Models\Back\Trainee;
 use App\Notifications\TraineeTrainingFeesNotification;
 use Brick\Math\RoundingMode;
 use Brick\Money\Money;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
@@ -260,6 +263,44 @@ class CreateInvoicingTest extends TestCase
             ->assertRedirect(route('back.finance.invoicing.show', $savedBatch->id));
 
         Notification::assertSentTo($trainee, TraineeTrainingFeesNotification::class);
+    }
+
+    public function test_trainee_uploading_their_proof_of_payment_as_bank_transfer()
+    {
+        $company = Company::factory()->create(['team_id' => $this->admin->current_team_id]);
+        $trainee = Trainee::factory()->create([
+            'team_id' => $this->admin->current_team_id,
+            'company_id' => $company->id,
+            'status' => Trainee::STATUS_APPROVED,
+        ]);
+        $sale_invoice = SaleInvoice::factory([
+            'team_id' => $this->admin->current_team_id,
+            'billable_id' => $trainee->id,
+            'billable_type' => Trainee::class,
+            'number' => rand(),
+            'status' => SaleInvoice::STATUS_ISSUED,
+            'sub_total' => 100,
+            'tax_total' => 15,
+            'grand_total' => 115,
+        ])->create();
+
+        $this->post(route('sale-invoices.pay.bank-transfer.transfer-receipt', $sale_invoice->id), [
+            'bank_receipt' => $file = UploadedFile::fake()->create('receipt.png', 1024 * 24),
+            'amount_transferred' => 115,
+            'sender_name' => 'Shafiq',
+            'sender_bank' => 'Palestine Bank',
+        ]);
+
+        $this->assertDatabaseHas('payments', [
+            'team_id' => $this->admin->current_team_id,
+            'sale_invoice_id' => $sale_invoice->id,
+            'amount' => 115 * 100,
+            'status' => Payment::STATUS_UNDER_REVIEW,
+            'confirmed_at' => null,
+            'confirmed_by' => null,
+        ]);
+
+        $this->assertEquals(1, $sale_invoice->payments()->count());
     }
 
     //public function test_approving_an_invoicing_batch()

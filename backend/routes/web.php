@@ -3,6 +3,7 @@
 // Payment links.
 Route::get('sale-invoices/{sale_invoice}', [\App\Http\Controllers\SaleInvoicesController::class, 'show'])->name('sale-invoices.show');
 Route::get('sale-invoices/{sale_invoice}/pay/bank-transfer', [\App\Http\Controllers\SaleInvoicesController::class, 'payViaBankTransfer'])->name('sale-invoices.pay.bank-transfer');
+Route::post('sale-invoices/{sale_invoice}/pay/bank-transfer/transfer-receipt', [\App\Http\Controllers\SaleInvoicesController::class, 'uploadBankTransferReceipt'])->name('sale-invoices.pay.bank-transfer.transfer-receipt');
 
 Route::impersonate();
 

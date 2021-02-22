@@ -76,20 +76,20 @@
                 <form class="mt-5 text-center px-5 pb-20" @submit.prevent="submitForm" enctype="multipart/form-data">
                     <div class="text-right mt-5">
                             <jet-label class="font-bold" for="amount_transferred" value="المبلغ المحول" />
-                            <jet-input id="name" type="number" class="mt-1 block w-full" autocomplete="off" required />
+                            <jet-input v-model="form.amount_transferred" id="name" type="number" class="mt-1 block w-full" autocomplete="off" required />
                             <jet-input-error :message="form.error('amount_transferred')" class="mt-2" />
                     </div>
 
                     <div class="text-right mt-5">
                         <jet-label class="font-bold" for="amount_transferred" value="أسم المحول" />
-                        <jet-input id="transfee_name" type="text" class="mt-1 block w-full" autocomplete="off" required />
-                        <jet-input-error :message="form.error('amount_transferred')" class="mt-2" />
+                        <jet-input v-model="form.sender_name" id="sender_name" type="text" class="mt-1 block w-full" autocomplete="off" required />
+                        <jet-input-error :message="form.error('sender_name')" class="mt-2" />
                     </div>
 
                     <div class="text-right mt-5">
                         <jet-label class="font-bold" for="amount_transferred" value="البنك المحول منه" />
-                        <jet-input id="bank_name" type="text" class="mt-1 block w-full" autocomplete="off" required />
-                        <jet-input-error :message="form.error('amount_transferred')" class="mt-2" />
+                        <jet-input v-model="form.sender_bank" id="sender_bank" type="text" class="mt-1 block w-full" autocomplete="off" required />
+                        <jet-input-error :message="form.error('sender_bank')" class="mt-2" />
                     </div>
 
                     <label class="mt-5 mx-auto w-64 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg border border-blue cursor-pointer">
@@ -115,7 +115,7 @@
 
                     <button class="mt-5 text-sm inline-flex items-center rounded-md px-4 py-2 bg-blue-600 hover:bg-blue-800 text-white">
                             ارسال
-                        </button>
+                    </button>
                 </form>
             </div>
         </main>
@@ -142,26 +142,28 @@ export default {
             formData: new FormData(),
             form: this.$inertia.form({
                 amount_transferred: '',
+                sender_name: '',
+                sender_bank: '',
             }, {
-                bag: 'updateAmounts',
+                bag: 'bankTransfer',
             })
         }
     },
     methods: {
         uploadFile(e) {
             this.bank_receipt = e.target.files[0];
-            this.formData.append('bank_receipt', this.bank_receipt);
         },
         submitForm() {
-            axios.post(route('api.register.instructors.upload-cv'), this.formData)
+            this.formData = new FormData();
+            this.formData.append('bank_receipt', this.bank_receipt);
+            this.formData.append('amount_transferred', this.form.amount_transferred);
+            this.formData.append('sender_name', this.form.sender_name);
+            this.formData.append('sender_bank', this.form.sender_bank);
+            axios.post(route('sale-invoices.pay.bank-transfer.transfer-receipt', this.saleInvoice.id), this.formData)
                 .then(response => {
-                    this.is_pending_approval = true;
+                    window.location = route('sale-invoices.show', this.saleInvoice.id);
                 });
         },
     }
 }
 </script>
-
-<style scoped>
-
-</style>
