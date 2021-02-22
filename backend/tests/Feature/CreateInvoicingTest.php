@@ -303,7 +303,7 @@ class CreateInvoicingTest extends TestCase
         $this->assertEquals(1, $sale_invoice->payments()->count());
     }
 
-    public function test_viewing_payments_that_require_manual_verification()
+    public function test_listing_payments_that_require_manual_verification()
     {
         $company = Company::factory()->create(['team_id' => $this->admin->current_team_id]);
         $trainee = Trainee::factory()->create([
@@ -335,6 +335,38 @@ class CreateInvoicingTest extends TestCase
             ->get(route('back.finance.payments.index'))
             ->assertPropValue('payments', function($payments) use ($payment) {
                 $this->assertEquals($payment->id, $payments['data'][0]['id']);
+            });
+    }
+
+    public function test_viewing_payment_that_require_manual_verification()
+    {
+        $company = Company::factory()->create(['team_id' => $this->admin->current_team_id]);
+        $trainee = Trainee::factory()->create([
+            'team_id' => $this->admin->current_team_id,
+            'company_id' => $company->id,
+            'status' => Trainee::STATUS_APPROVED,
+        ]);
+        $sale_invoice = SaleInvoice::factory([
+            'team_id' => $this->admin->current_team_id,
+            'billable_id' => $trainee->id,
+            'billable_type' => Trainee::class,
+            'number' => rand(),
+            'status' => SaleInvoice::STATUS_ISSUED,
+            'sub_total' => 100,
+            'tax_total' => 15,
+            'grand_total' => 115,
+        ])->create();
+
+        $db_payment = Payment::factory([
+            'team_id' => $this->admin->current_team_id,
+            'sale_invoice_id' => $sale_invoice->id,
+            'amount' => 115 * 100,
+        ])->create();
+
+        $this->actingAs($this->admin)
+            ->get(route('back.finance.payments.show', $db_payment->id))
+            ->assertPropValue('payment', function($payment) use ($db_payment) {
+                $this->assertEquals($payment['id'], $db_payment->id);
             });
     }
 

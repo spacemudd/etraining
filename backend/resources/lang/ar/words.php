@@ -389,4 +389,5 @@ return [
     'pay-link' => 'رابط الدفع',
     'payments' => 'المدفوعات',
     'under-manual-review' => 'قيد المراجعة اليدوية',
+    'view-payments' => 'عرض المدفوعات',
 ];

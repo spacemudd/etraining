@@ -384,4 +384,5 @@ return [
     'pay-link' => 'Pay link',
     'payments' => 'Payments',
     'under-manual-review' => 'Under manual review',
+    'view-payments' => 'View payments',
 ];

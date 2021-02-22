@@ -34,6 +34,7 @@ class RolesService
         'download-attendance-sheet-for-course-batch',
         'view-company-trainees',
         'reset-trainees-account-password',
+        'view-payments',
         'can-impersonate',
         'send-messages-to-groups-of-trainees',
         'view-backoffice-reports',

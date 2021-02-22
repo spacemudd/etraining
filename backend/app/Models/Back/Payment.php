@@ -27,6 +27,7 @@ class Payment extends Model implements HasMedia, Auditable
     protected $appends = [
         'created_at_display',
         'status_css',
+        'short_code',
     ];
 
     protected $casts = [
@@ -79,5 +80,10 @@ class Payment extends Model implements HasMedia, Auditable
         if ($this->status === self::STATUS_UNDER_REVIEW) {
             return '<span class="bg-yellow-200 text-black p-2 rounded">'.__('words.under-manual-review').'</span>';
         }
+    }
+
+    public function getShortCodeAttribute()
+    {
+        return substr($this->id, 0, 6);
     }
 }

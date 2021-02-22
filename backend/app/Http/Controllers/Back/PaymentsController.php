@@ -15,4 +15,13 @@ class PaymentsController extends Controller
             'payments' => Payment::with('sale_invoice')->paginate(10),
         ]);
     }
+
+    public function show($payment_id)
+    {
+        $this->authorize('view-payments');
+        $payment = Payment::findOrFail($payment_id);
+        return Inertia::render('Back/Finance/Payments/Show', [
+            'payment' => $payment,
+        ]);
+    }
 }
