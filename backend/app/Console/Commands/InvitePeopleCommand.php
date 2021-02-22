@@ -45,8 +45,31 @@ class InvitePeopleCommand extends Command
      */
     public function handle()
     {
-        // TODO: Check for emails starting with 'mailto:' and remove that string.
-        // Add trim too.
+        if ($trainee_id = $this->option('trainee')) {
+            $trainee = Trainee::findOrFail($trainee_id);
+            $this->info('Creating for user: '.$trainee->email);
+            try {
+                $user = (new CreateNewTraineeUser())->create([
+                    'trainee_id' => $trainee->id,
+                    'name' => $trainee->name,
+                    'email' => $trainee->email,
+                    'phone' => $trainee->phone,
+                    'password' => 'password',
+                    'password_confirmation' => 'password',
+                ]);
+            } catch (\Exception $e) {
+                Log::info('Failed validation for user: '.$trainee->email);
+                throw $e;
+            }
+
+            try {
+                Notification::send($user, new TraineeSetupAccountNotification());
+            } catch (\Exception $e) {
+                Log::info('Failed for user: '.$trainee->email);
+                throw $e;
+            }
+            return 1;
+        }
 
         // Samar group.
         $traineeGroup = TraineeGroup::where('id', 'dc856095-4a0d-471d-9a9f-c8c4ca430e91')->with('trainees')->first();
