@@ -61,16 +61,32 @@
 
                 <div v-if="!editButton.editOption" class="col-span-6 sm:col-span-2">
                     <jet-label for="trainee_group_name" :value="$t('words.group-name')" />
-                    <jet-input id="group-name" type="text" :class="editButton.inputClass" v-model="trainee.trainee_group_object.name" autocomplete="off" :disabled="!editButton.editOption" />
+                    <template v-if="trainee.trainee_group_object">
+                        <jet-input id="group-name"
+                                   type="text"
+                                   :class="editButton.inputClass"
+                                   v-model="trainee.trainee_group_object.name"
+                                   autocomplete="off"
+                                   :disabled="!editButton.editOption" />
+                    </template>
+                    <template v-else>
+                        <jet-input id="group-name"
+                                   type="text"
+                                   :class="editButton.inputClass"
+                                   v-model="trainee.trainee_group_object"
+                                   autocomplete="off"
+                                   :disabled="!editButton.editOption" />
+                    </template>
                 </div>
                 <div v-else class="col-span-6 sm:col-span-2">
                     <jet-label for="trainee_group_name" :value="$t('words.group-name')" />
                     <select-trainee-group
-                                        class="mt-1.5"
-                                          :selectedItem="trainee.trainee_group_object"
-                                          @input="selectGroupName"
-                                          v-model="trainee.trainee_group_object"
-                                          :disabled="!editButton.editOption"
+                        :loadTrainees="false"
+                        class="mt-1.5"
+                        :selectedItem="trainee.trainee_group_object"
+                        @input="selectGroupName"
+                        v-model="trainee.trainee_group_name"
+                        :disabled="!editButton.editOption"
                     />
                 </div>
 
@@ -368,7 +384,7 @@
             }
         },
         mounted() {
-            if(!this.trainee.trainee_group_object) {
+            if(this.trainee.trainee_group_object) {
                 this.trainee.trainee_group_object = this.new_trainee_group;
             }
         },
@@ -395,7 +411,24 @@
                     this.editButton.selectInputClass = "mt-1 block w-full border border-gray-200 bg-white py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none"
                     this.editButton.text = this.$t('words.save');
                 } else {
-                this.$inertia.put(route('back.trainees.update', this.trainee.id), this.trainee).then(response => {
+                    let newForm = {
+                        trainee_group_name: this.trainee.trainee_group_name,
+                        trainee_group_object: {
+                            name: this.trainee.trainee_group_name,
+                        },
+                        company_id: this.trainee.company_id,
+                        name: this.trainee.name,
+                        email: this.trainee.email,
+                        identity_number: this.trainee.identity_number,
+                        birthday: this.trainee.birthday,
+                        phone: this.trainee.phone,
+                        phone_additional: this.trainee.phone_additional,
+                        educational_level: this.trainee.educational_level_id,
+                        city_id: this.trainee.city_id,
+                        marital_status_id: this.trainee.marital_status_id,
+                        children_count: this.trainee.children_count,
+                    };
+                    this.$inertia.put(route('back.trainees.update', this.trainee.id), newForm).then(response => {
                             this.editButton.editOption = false;
                             this.editButton.inputClass = 'mt-1 block w-full bg-gray-200';
                             this.editButton.selectInputClass = 'mt-1 block w-full border border-gray-200 bg-gray-200 py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none';

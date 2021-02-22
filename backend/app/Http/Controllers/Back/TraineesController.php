@@ -233,19 +233,14 @@ class TraineesController extends Controller
      */
     public function withGroups(): array
     {
-        $groups = TraineeGroup::with('trainees')
-            ->get()
-            ->toArray();
-
-        //foreach ($groups as &$group) {
-        //    $groupModel = TraineeGroup::find($group['id']);
-        //    if ($groupModel->trainees->count() === count($group['trainees'])) {
-        //        $group['trainees'][] = [
-        //            'id' => $group['id'],
-        //            'name' => $group['name'],
-        //        ];
-        //    }
-        //}
+        if (filter_var(request()->load_trainees, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
+            $groups = TraineeGroup::with('trainees')
+                ->get()
+                ->toArray();
+        } else {
+            $groups = TraineeGroup::get()
+                ->toArray();
+        }
 
         foreach ($groups as &$group)  {
             $group['id'] .= '-group';

@@ -235,7 +235,11 @@
                 })
             },
             getInstructorGroups() {
-                axios.get(route('back.trainee-groups.index'))
+                axios.get(route('back.trainee-groups.index'), {
+                        params: {
+                            load_trainees: true,
+                        }
+                    })
                     .then(response => {
                         let vm = this;
                         _.forEach(response.data, function(group) {

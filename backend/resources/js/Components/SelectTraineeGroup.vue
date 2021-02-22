@@ -37,6 +37,10 @@
             required: {
                 type: Boolean,
                 default: false,
+            },
+            loadTrainees: {
+                type: Boolean,
+                default: true,
             }
         },
         data() {
@@ -100,10 +104,14 @@
         },
         methods: {
             getItems(query, callback) {
-                axios.get(route('back.trainee-groups.index'))
-                    .then(response => {
-                        callback(response.data);
-                    })
+                axios.get(route('back.trainee-groups.index'), {
+                    params: {
+                        load_trainees: this.loadTrainees,
+                    }
+                })
+                .then(response => {
+                    callback(response.data);
+                })
             },
             /**
              * Defines the structure of a new items
