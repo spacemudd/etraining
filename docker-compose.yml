@@ -3,12 +3,12 @@ version: '3'
 services:
 
   backend-web:
-    build: ./../backend-web
+    build: ./backend-web
     working_dir: /usr/src/app
     volumes:
-      - ./../backend:/usr/src/app
-      - ./../backend-web/cert.crt:/etc/letsencrypt/cert.crt
-      - ./../backend-web/cert.key:/etc/letsencrypt/cert.key
+      - ./backend:/usr/src/app
+      - ./backend-web/cert.crt:/etc/letsencrypt/cert.crt
+      - ./backend-web/cert.key:/etc/letsencrypt/cert.key
     ports:
       - 80:8085
     restart: always
@@ -16,7 +16,7 @@ services:
       - backend
 
   backend:
-    build: ./../backend
+    build: ./backend
     working_dir: /var/www
     environment:
       - REDIS_HOST=redis-service
@@ -28,7 +28,7 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
 
   backend-worker:
-    build: ./../backend-worker
+    build: ./backend-worker
     working_dir: /var/www
     environment:
       - REDIS_HOST=redis-service
@@ -42,7 +42,7 @@ services:
       - backend
 
   backend-schedule:
-    build: ./../backend-schedule
+    build: ./backend-schedule
     working_dir: /var/www
     environment:
       - REDIS_HOST=redis-service
@@ -58,7 +58,7 @@ services:
     image: mariadb:10.2
     command: '--innodb-flush-method=fsync'
     volumes:
-      - ./../etraining-db:/var/lib/mysql
+      - ./etraining-db:/var/lib/mysql
     ports:
       - 33066:3306
     environment:
