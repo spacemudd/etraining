@@ -63,7 +63,19 @@ RUN echo "cgi.fix_pathinfo=0" > $PHP_INI_DIR/conf.d/path-info.ini
 RUN echo "expose_php=0" >> $PHP_INI_DIR/conf.d/path-info.ini
 
 # Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+COPY . /var/www
+
+# Create system user to run Composer and Artisan Commands
+RUN useradd -G www-data,root -u 1000 -d /home/www www
+RUN mkdir -p /home/www/.composer && \
+    chown -R www:www /home/www
+
+# Set working directory
+WORKDIR /var/www
+
+USER $user
 
 EXPOSE 9000
 

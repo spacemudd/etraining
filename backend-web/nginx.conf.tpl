@@ -12,7 +12,7 @@ server {
    ssl_certificate /etc/letsencrypt/cert.crt;
    ssl_certificate_key /etc/letsencrypt/cert.key;
 
-   root   /usr/src/app/public;
+   root   /var/www/public;
    index  index.php index.html;
 
    client_max_body_size  50M;
