@@ -1,6 +1,5 @@
 upstream app {
-    server backend-web:8085;
-    server backend-web-two:8086;
+    server internal-prod-alb-internal-596022634.eu-central-1.elb.amazonaws.com;
 }
 
 server {
