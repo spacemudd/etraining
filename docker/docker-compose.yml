@@ -2,19 +2,6 @@ version: '3'
 
 services:
 
-  web-proxy:
-    build: ./../web-proxy
-    working_dir: /usr/src/app
-    volumes:
-      - ./../backend-web/cert.crt:/etc/letsencrypt/cert.crt
-      - ./../backend-web/cert.key:/etc/letsencrypt/cert.key
-    ports:
-      - ${HTTPS_PORT}:443
-      - ${HTTP_PORT}:80
-    restart: always
-    depends_on:
-      - backend
-
   backend-web:
     build: ./../backend-web
     working_dir: /usr/src/app
@@ -23,39 +10,12 @@ services:
       - ./../backend-web/cert.crt:/etc/letsencrypt/cert.crt
       - ./../backend-web/cert.key:/etc/letsencrypt/cert.key
     ports:
-      - 8085
-    restart: always
-    depends_on:
-      - backend
-
-  backend-web-two:
-    build: ./../backend-web
-    working_dir: /usr/src/app
-    volumes:
-      - ./../backend:/usr/src/app
-      - ./../backend-web/cert.crt:/etc/letsencrypt/cert.crt
-      - ./../backend-web/cert.key:/etc/letsencrypt/cert.key
-    ports:
-      - 8086
+      - 443:8085
     restart: always
     depends_on:
       - backend
 
   backend:
-    build: ./../backend
-    working_dir: /usr/src/app
-    volumes:
-      - ./../backend:/usr/src/app
-    environment:
-      - REDIS_HOST=redis-service
-      - QUEUE_CONNECTION=redis
-      - DB_PORT=3306
-      - DB_HOST=${DB_HOST}
-      - DB_DATABASE=${DB_DATABASE}
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_PASSWORD=${DB_PASSWORD}
-
-  backend-two:
     build: ./../backend
     working_dir: /usr/src/app
     volumes:
