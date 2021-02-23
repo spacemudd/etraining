@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Back\CourseBatchSession;
 use Illuminate\Http\Request;
+use MacsiDigital\Zoom\Support\Entry;
+use MacsiDigital\Zoom\User;
 use Zoom;
 
 class ZoomMeetingsController extends Controller
@@ -20,14 +22,19 @@ class ZoomMeetingsController extends Controller
             'course_batch_session_id' => 'required',
         ]);
 
-        $meeting = Zoom::user()->find('me')->meetings()->create([
-            'topic' => 'New Meeting',
+        $session = CourseBatchSession::find($request->course_batch_session_id);
+
+        $zoomSettings = $session->course->instructor->zoom_account;
+        $zoom = new Entry($zoomSettings->ZOOM_CLIENT_KEY, $zoomSettings->ZOOM_CLIENT_SECRET);
+        $user = new User($zoom);
+
+        $meeting = $user->find('me')->meetings()->create([
+            'topic' => 'New Meeting - eTraining',
             'type' => self::ZOOM_INSTANT_MEETING,
             'start_time' => now()->toIso8601ZuluString(),
             'password' => '123123',
         ]);
 
-        $session = CourseBatchSession::find($request->course_batch_session_id);
         $session->zoom_meeting_id = $meeting->id;
         $session->save();
 
@@ -41,7 +48,12 @@ class ZoomMeetingsController extends Controller
         ]);
 
         $session = CourseBatchSession::find($request->course_batch_session_id);
-        $meeting = Zoom::meeting()->find($session->zoom_meeting_id);
+
+        $zoomSettings = $session->course->instructor->zoom_account;
+        $zoom = new Entry($zoomSettings->ZOOM_CLIENT_KEY, $zoomSettings->ZOOM_CLIENT_SECRET);
+        $user = new User($zoom);
+
+        $meeting = $zoom->meeting()->find($session->zoom_meeting_id);
 
         \Log::info([
             'zoom' => json_encode((array) $meeting),
@@ -51,7 +63,7 @@ class ZoomMeetingsController extends Controller
         ]);
 
         return response()->json([
-            'apiKey' => config('zoom.api_key'),
+            'apiKey' => $zoomSettings->ZOOM_CLIENT_KEY,
             'meetingNumber' => $meeting->id,
             'leaveUrl' => url('/dashboard'),
             'userName' => auth()->user()->name,

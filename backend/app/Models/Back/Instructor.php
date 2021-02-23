@@ -107,6 +107,11 @@ class Instructor extends Model implements HasMedia, SearchableLabels
         return $this->morphMany(InboxMessage::class, 'toable');
     }
 
+    public function zoom_account()
+    {
+        return $this->hasOne(ZoomAccount::class);
+    }
+
     /**
      * Upload scan(s) of the documents.
      *

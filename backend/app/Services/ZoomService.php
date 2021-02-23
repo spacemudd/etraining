@@ -11,6 +11,10 @@
 
 namespace App\Services;
 
+use App\Models\Back\CourseBatchSession;
+use MacsiDigital\Zoom\Support\Entry;
+use MacsiDigital\Zoom\User;
+
 class ZoomService
 {
     private $api_key;
@@ -32,6 +36,14 @@ class ZoomService
      */
     function generateSignature($meeting_number, $role)
     {
+        $session = CourseBatchSession::where('zoom_meeting_id', $meeting_number)->first();
+
+        $zoomSettings = $session->course->instructor->zoom_account;
+        $zoom = new Entry($zoomSettings->ZOOM_CLIENT_KEY, $zoomSettings->ZOOM_CLIENT_SECRET);
+        $user = new User($zoom);
+        $this->api_key = $zoomSettings->ZOOM_CLIENT_KEY;
+        $this->api_secret = $zoomSettings->ZOOM_CLIENT_SECRET;
+
         $time = time() * 1000 - 30000; // time in milliseconds (or close enough)
 
         $data = base64_encode($this->api_key . $meeting_number . $time . $role);

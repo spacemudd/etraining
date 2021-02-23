@@ -9,6 +9,8 @@ use App\Models\Back\CourseBatchSession;
 use App\Models\Back\TraineeGroup;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use MacsiDigital\Zoom\Support\Entry;
+use MacsiDigital\Zoom\User;
 use Zoom;
 
 class CourseBatchSessionsController extends Controller
@@ -79,9 +81,13 @@ class CourseBatchSessionsController extends Controller
     {
         $session = CourseBatchSession::with(['course', 'course_batch'])->findOrFail($course_batch_session_id);
 
+        $zoomSettings = $session->course->instructor->zoom_account;
+        $zoom = new Entry($zoomSettings->ZOOM_CLIENT_KEY, $zoomSettings->ZOOM_CLIENT_SECRET);
+        $user = new User($zoom);
+
         if (! $session->zoom_meeting_id) {
 	        // https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingcreate
-            $meeting = Zoom::user()->find('me')->meetings()->create([
+            $meeting = $user->find('me')->meetings()->create([
                 'topic' => $session->course->course_name,
                 'type' => ZoomMeetingsController::ZOOM_SCHEDULED_MEETING,
                 'start_time' => $session->starts_at->toIso8601ZuluString(),
