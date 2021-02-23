@@ -65,4 +65,4 @@ RUN echo "expose_php=0" >> $PHP_INI_DIR/conf.d/path-info.ini
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-CMD ["/bin/sh", "-c", "composer install --no-dev && php artisan key:generate && chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstrap/cache php-fpm"]
+CMD ["/bin/sh", "-c", "composer install --no-dev && php artisan key:generate && chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstrap/cache && php-fpm"]
