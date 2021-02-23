@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\RedirectToApplication;
+use App\Http\Middleware\RedirectTraineesToDashboard;
 use App\Http\Middleware\RoleNavigator;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
@@ -74,5 +75,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'role.navigator' => RoleNavigator::class,
         'approved-application' => RedirectToApplication::class,
+        'redirect-trainees-to-dashboard' => RedirectTraineesToDashboard::class,
     ];
 }

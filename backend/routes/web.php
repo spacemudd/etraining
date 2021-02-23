@@ -32,9 +32,12 @@ Route::middleware(['auth:sanctum', 'verified', 'approved-application'])->get('/d
 Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     // For everyone
     Route::get('inbox', [\App\Http\Controllers\InboxController::class, 'index'])->name('inbox.index');
+    Route::post('back/zoom/signature', [\App\Http\Controllers\ZoomController::class, 'signature'])->name('zoom.signature');
+    Route::post('back/zoom/meetings', [\App\Http\Controllers\ZoomMeetingsController::class, 'store'])->name('zoom.meetings.store');
+    Route::post('back/zoom/meetings/configs', [\App\Http\Controllers\ZoomMeetingsController::class, 'configs'])->name('zoom.meetings.configs');
 
     // For admins
-    Route::prefix('back')->name('back.')->group(function() {
+    Route::prefix('back')->middleware('redirect-trainees-to-dashboard')->name('back.')->group(function() {
         Route::get('/settings', [\App\Http\Controllers\Back\SettingsController::class, 'index'])->name('settings');
 
         Route::delete('/settings/roles/{role_id}/users/{user_id}', [\App\Http\Controllers\Back\RolesController::class, 'deleteUser'])->name('settings.roles.users.delete');
@@ -51,10 +54,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('/settings/trainees-applications/required-files', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'requiredFiles'])->name('settings.trainees-application.required-files');
         Route::post('/settings/trainees-applications/required-files', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'store'])->name('settings.trainees-application.required-files.store');
         Route::delete('/settings/trainees-applications/required-files/{id}', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'delete'])->name('settings.trainees-application.required-files.delete');
-
-        Route::post('/zoom/signature', [\App\Http\Controllers\ZoomController::class, 'signature'])->name('zoom.signature');
-        Route::post('/zoom/meetings', [\App\Http\Controllers\ZoomMeetingsController::class, 'store'])->name('zoom.meetings.store');
-        Route::post('/zoom/meetings/configs', [\App\Http\Controllers\ZoomMeetingsController::class, 'configs'])->name('zoom.meetings.configs');
 
         Route::get('media/{media_id}', [\App\Http\Controllers\MediaController::class, 'download'])->name('media.download');
         Route::delete('media/{media_id}', [\App\Http\Controllers\MediaController::class, 'delete'])->name('media.delete');
@@ -128,7 +127,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     });
 
     // For instructors
-    Route::prefix('teaching')->name('teaching.')->group(function() {
+    Route::prefix('teaching')->middleware('redirect-trainees-to-dashboard')->name('teaching.')->group(function() {
         Route::get('/', [\App\Http\Controllers\Teaching\TeachingController::class, 'index'])->name('index');
         Route::resource('courses', \App\Http\Controllers\Teaching\CoursesController::class);
 
