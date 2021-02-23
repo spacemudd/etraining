@@ -28,7 +28,9 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
 
   backend-worker:
-    build: ./backend-worker.dockerfile
+    build:
+      context: .
+      dockerfile: ./backend-worker.dockerfile
     working_dir: /var/www
     environment:
       - REDIS_HOST=redis-service
@@ -42,7 +44,9 @@ services:
       - backend
 
   backend-schedule:
-    build: ./backend-schedule.dockerfile
+    build:
+      context: .
+      dockerfile: ./backend-schedule.dockerfile
     working_dir: /var/www
     environment:
       - REDIS_HOST=redis-service
