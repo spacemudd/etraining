@@ -405,7 +405,7 @@ class TraineesController extends Controller
         }
 
         if (empty($request['trainee_group_object']['name'])) {
-            $trainee->trainee_groups()->sync([]);
+            $trainee->trainee_group()->sync([]);
         } else {
             if(isset($request['trainee_group_object'])) {
                 if(isset($trainee->trainee_group_object)) {
