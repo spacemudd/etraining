@@ -38,6 +38,7 @@ class ZoomCommand extends Command
      */
     public function handle()
     {
+        dd(Zoom::user()->find('7Ud78mp_TkW-gyg5v66xoQ')->meetings()->all()->toArray());
         //$d = Zoom::user()->all()->toArray();
         //$d = Zoom::user()->create([
         //    'action' => 'create',

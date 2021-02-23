@@ -412,9 +412,9 @@
                     this.editButton.text = this.$t('words.save');
                 } else {
                     let newForm = {
-                        trainee_group_name: this.trainee.trainee_group_name,
+                        trainee_group_name: this.trainee.trainee_group_name ? this.trainee.trainee_group_name : '',
                         trainee_group_object: {
-                            name: this.trainee.trainee_group_name,
+                            name: this.trainee.trainee_group_name ? this.trainee.trainee_group_name : '',
                         },
                         company_id: this.trainee.company_id,
                         name: this.trainee.name,
