@@ -10,7 +10,7 @@ services:
       - ./../backend-web/cert.crt:/etc/letsencrypt/cert.crt
       - ./../backend-web/cert.key:/etc/letsencrypt/cert.key
     ports:
-      - 443:8085
+      - 80:8085
     restart: always
     depends_on:
       - backend
@@ -29,9 +29,7 @@ services:
 
   backend-worker:
     build: ./../backend-worker
-    working_dir: /usr/src/app
-    volumes:
-      - ./../backend:/usr/src/app
+    working_dir: /var/www
     environment:
       - REDIS_HOST=redis-service
       - QUEUE_CONNECTION=redis
@@ -45,9 +43,7 @@ services:
 
   backend-schedule:
     build: ./../backend-schedule
-    working_dir: /usr/src/app
-    volumes:
-      - ./../backend:/usr/src/app
+    working_dir: /var/www
     environment:
       - REDIS_HOST=redis-service
       - QUEUE_CONNECTION=redis

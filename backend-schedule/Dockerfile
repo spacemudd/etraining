@@ -41,6 +41,27 @@ RUN echo "date.timezone=${PHP_TIMEZONE:-UTC}" > $PHP_INI_DIR/conf.d/date_timezon
 RUN echo "cgi.fix_pathinfo=0" > $PHP_INI_DIR/conf.d/path-info.ini
 RUN echo "expose_php=0" > $PHP_INI_DIR/conf.d/path-info.ini
 
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+COPY . /var/www
+
+# Create system user to run Composer and Artisan Commands
+RUN useradd -G www-data,root -u 1000 -d /home/www www
+RUN mkdir -p /home/www/.composer && \
+    chown -R www:www /home/www
+
+# Set working directory
+WORKDIR /var/www
+
+USER $user
+
+RUN cp .env.example .env && \
+    composer install --no-dev && \
+    php artisan key:generate && \
+    chgrp -R www-data storage bootstrap/cache && \
+    chmod -R ug+rwx storage bootstrap/cache
+
 RUN apt update
 RUN apt-get install -y -u python-pip
 RUN pip install supervisor
