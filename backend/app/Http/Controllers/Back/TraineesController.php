@@ -404,39 +404,44 @@ class TraineesController extends Controller
             $user->save();
         }
 
-        if(isset($request['trainee_group_object'])) {
-            if(isset($trainee->trainee_group_object)) {
-                if($trainee->trainee_group_object->name !== $request['trainee_group_object']['name']) {
+        if (empty($request['trainee_group_object']['name'])) {
+            $trainee->trainee_groups()->sync([]);
+        } else {
+            if(isset($request['trainee_group_object'])) {
+                if(isset($trainee->trainee_group_object)) {
+                    if($trainee->trainee_group_object->name !== $request['trainee_group_object']['name']) {
+                        $group = TraineeGroup::firstOrCreate([
+                            'name' => $trainee->trainee_group_object->name,
+                        ]);
+
+                        $group->trainees()->detach([$trainee_id]);
+
+                        $group = TraineeGroup::firstOrCreate([
+                            'name' => $request['trainee_group_object']['name'],
+                        ]);
+
+                        $group->trainees()->attach([$trainee_id]);
+                    }
+                } else {
+                    if ($request['trainee_group_object']['name']) {
+                        $group = TraineeGroup::firstOrCreate([
+                            'name' => $request['trainee_group_object']['name'],
+                        ]);
+                        $group->trainees()->attach([$trainee_id]);
+                    }
+                }
+            } else {
+                return "Entered";
+                if(isset($trainee->trainee_group_object)) {
                     $group = TraineeGroup::firstOrCreate([
                         'name' => $trainee->trainee_group_object->name,
                     ]);
 
                     $group->trainees()->detach([$trainee_id]);
-
-                    $group = TraineeGroup::firstOrCreate([
-                        'name' => $request['trainee_group_object']['name'],
-                    ]);
-
-                    $group->trainees()->attach([$trainee_id]);
                 }
-            } else {
-                if ($request['trainee_group_object']['name']) {
-                    $group = TraineeGroup::firstOrCreate([
-                        'name' => $request['trainee_group_object']['name'],
-                    ]);
-                    $group->trainees()->attach([$trainee_id]);
-                }
-            }
-        } else {
-            return "Entered";
-            if(isset($trainee->trainee_group_object)) {
-                $group = TraineeGroup::firstOrCreate([
-                    'name' => $trainee->trainee_group_object->name,
-                ]);
-
-                $group->trainees()->detach([$trainee_id]);
             }
         }
+
         DB::commit();
 
         return redirect()->route('back.trainees.show', $trainee_id);
