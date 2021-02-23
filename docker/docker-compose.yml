@@ -17,9 +17,7 @@ services:
 
   backend:
     build: ./../backend
-    working_dir: /usr/src/app
-    volumes:
-      - ./../backend:/usr/src/app
+    working_dir: /var/www
     environment:
       - REDIS_HOST=redis-service
       - QUEUE_CONNECTION=redis
