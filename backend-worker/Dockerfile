@@ -52,7 +52,7 @@ RUN echo "expose_php=0" > $PHP_INI_DIR/conf.d/path-info.ini
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-COPY . /var/www
+COPY ../backend /var/www
 
 # Create system user to run Composer and Artisan Commands
 RUN useradd -G www-data,root -u 1000 -d /home/www www
