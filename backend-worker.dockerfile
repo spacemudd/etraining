@@ -9,6 +9,7 @@ RUN apt-get install -y \
     libpq-dev \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
+    libbz2-dev \
     libzip-dev \
     zip \
     libbz2-dev
@@ -25,9 +26,16 @@ RUN docker-php-ext-install zip bz2 pcntl \
     exif \
     && docker-php-ext-enable redis
 
+# Imagick
+RUN apt-get update && apt-get install -y libmagickwand-dev --no-install-recommends && rm -rf /var/lib/apt/lists/*
+RUN printf "\n" | pecl install imagick
+RUN docker-php-ext-enable imagick
+
 # For wkhtmltopdf
+RUN apt-get update
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get install -yq build-essential xorg libssl-dev libxrender-dev wget gdebi
+RUN apt-get install -yq build-essential
+RUN apt-get install -yq xorg libssl-dev libxrender-dev wget gdebi
 
 # Install Windows fonts.
 RUN wget http://ftp.br.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.6_all.deb
@@ -44,7 +52,7 @@ RUN echo "expose_php=0" > $PHP_INI_DIR/conf.d/path-info.ini
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-COPY ../backend /var/www
+COPY backend/ /var/www
 
 # Create system user to run Composer and Artisan Commands
 RUN useradd -G www-data,root -u 1000 -d /home/www www
@@ -68,8 +76,8 @@ RUN pip install supervisor
 
 WORKDIR /etc/supervisor/conf.d
 
-COPY scheduler.conf /etc/supervisor/conf.d/supervisord.conf
+COPY backend-worker/horizon.conf.tpl /etc/supervisor/conf.d/horizon.conf.tpl
 
-COPY init.sh /usr/local/bin/init.sh
+COPY backend-worker/init.sh /usr/local/bin/init.sh
 
 ENTRYPOINT ["/bin/sh", "/usr/local/bin/init.sh"]
