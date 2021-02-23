@@ -65,4 +65,6 @@ RUN echo "expose_php=0" >> $PHP_INI_DIR/conf.d/path-info.ini
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-CMD ["/bin/sh", "-c", "cp .env.example .env && composer install --no-dev && php artisan key:generate && chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstrap/cache && php-fpm"]
+EXPOSE 9000
+
+CMD ["/bin/bash", "-c", "cp .env.example .env && composer install --no-dev && php artisan key:generate && chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstrap/cache && php-fpm"]
