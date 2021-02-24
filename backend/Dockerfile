@@ -82,6 +82,6 @@ RUN cp .env.example .env && \
 RUN chgrp -R www-data storage bootstrap/cache && \
     chmod -R ug+rwx storage bootstrap/cache
 
-USER nobody
+# USER nobody
 #    chgrp -R www-data storage bootstrap/cache && \
 #    chmod -R ug+rwx storage bootstrap/cache
