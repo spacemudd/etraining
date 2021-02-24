@@ -64,6 +64,7 @@ RUN echo "expose_php=0" >> $PHP_INI_DIR/conf.d/path-info.ini
 
 # Enable port
 COPY www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY www.conf.default /usr/local/etc/php-fpm.d/www.conf.default
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
