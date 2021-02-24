@@ -23,7 +23,8 @@ RUN apk update
 RUN apk add \
     mariadb-client \
     zip \
-    php7-simplexml
+    php7-simplexml \
+    iconv 
 
 RUN composer install --optimize-autoloader --no-interaction --no-progress
 
