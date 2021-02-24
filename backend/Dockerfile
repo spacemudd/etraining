@@ -72,18 +72,22 @@ RUN apt-get remove -qq -y php7.4-dev pkg-config libmagickwand-dev build-essentia
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-COPY . /var/www
+COPY . /app
+WORKDIR /app
+USER $user
 
 # Create system user to run Composer and Artisan Commands
-RUN useradd -G www-data,root -u 1000 -d /home/www www
-RUN mkdir -p /home/www/.composer && \
-    chown -R www:www /home/www
-
-# Set working directory
-WORKDIR /var/www
-
-USER $user
+RUN useradd -G www-data,root -u 1000 -d /app www
+RUN mkdir -p /app/.composer && \
+    chown -R www:www /app
 
 EXPOSE 80
 
-CMD ["/bin/bash", "-c", "cp .env.example .env && composer install --no-dev && php artisan key:generate && chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstrap/cache"]
+# CMD ["/bin/bash", "-c", "cp .env.example .env && composer install --no-dev && php artisan key:generate && chgrp -R www-data storage bootstrap/cache && "]
+RUN cp .env.example .env && \
+    composer install --no-dev && \
+    php artisan key:generate && \
+    chgrp -R www-data storage bootstrap/cache && \
+    chmod -R ug+rwx storage bootstrap/cache
+
+RUN container build
