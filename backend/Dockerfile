@@ -16,9 +16,9 @@ COPY nginx.conf /etc/nginx/conf.d/server.conf
 COPY . /var/www/html
 # Install composer from the official image
 COPY --from=composer /usr/bin/composer /usr/bin/composer
-RUN apt-get update
+RUN apk update
 
-RUN apt-get install -y \
+RUN apk add -y \
     mariadb-client \
     libpq-dev \
     libfreetype6-dev \
