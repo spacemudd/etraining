@@ -23,8 +23,30 @@ RUN apk update
 RUN apk add \
     mariadb-client \
     zip \
+    coreutils \
+    php7-ctype \
+    php7-curl \
+    php7-dom \
+    php7-gd \
+    php7-iconv \
+    php7-imagick \
+    php7-json \
+    php7-intl \
+    php7-mcrypt \
+    php7-fileinfo\
+    php7-mbstring \
+    php7-opcache \
+    php7-openssl \
+    php7-pdo \
+    php7-pdo_mysql \
+    php7-mysqli \
+    php7-xml \
+    php7-zlib \
+    php7-phar \
+    php7-tokenizer \
+    php7-session \
     php7-simplexml \
-    iconv 
+    php7-xmlwriter
 
 RUN composer install --optimize-autoloader --no-interaction --no-progress
 
