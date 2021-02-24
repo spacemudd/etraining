@@ -46,10 +46,10 @@ RUN apt-get remove -qq -y php7.4-dev pkg-config libmagickwand-dev build-essentia
      && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # APCU
-RUN pecl install apcu && docker-php-ext-enable apcu
-RUN echo "extension=apcu.so" > $PHP_INI_DIR/conf.d/apcu.ini
-RUN echo "apc.enable_cli=1" > $PHP_INI_DIR/conf.d/apcu.ini
-RUN echo "apc.enable=1" > $PHP_INI_DIR/conf.d/apcu.ini
+#RUN pecl install apcu && docker-php-ext-enable apcu
+#RUN echo "extension=apcu.so" > $PHP_INI_DIR/conf.d/apcu.ini
+#RUN echo "apc.enable_cli=1" > $PHP_INI_DIR/conf.d/apcu.ini
+#RUN echo "apc.enable=1" > $PHP_INI_DIR/conf.d/apcu.ini
 
 # Memory Limit
 RUN echo "memory_limit=2048M" > $PHP_INI_DIR/conf.d/memory-limit.ini
