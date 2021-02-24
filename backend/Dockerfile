@@ -46,7 +46,8 @@ RUN apk add \
     php7-tokenizer \
     php7-session \
     php7-simplexml \
-    php7-xmlwriter
+    php7-xmlwriter \
+    php7-zip
 
 RUN composer install --optimize-autoloader --no-interaction --no-progress
 
