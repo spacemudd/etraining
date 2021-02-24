@@ -14,7 +14,6 @@ server {
   server_tokens off;
   fastcgi_hide_header X-Powered-By;
   proxy_hide_header X-Powered-By;
-  server_tokens off;
   fastcgi_hide_header X-Powered-By;
   proxy_hide_header X-Powered-By;
 
