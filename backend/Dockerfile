@@ -53,7 +53,7 @@ RUN apk add \
     php7-zip \
     php7-exif
 
-RUN composer install --optimize-autoloader --no-interaction --no-progress
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
 #RUN apt-get install -y php7.4-dev
 #
@@ -78,6 +78,9 @@ EXPOSE 8080
 RUN cp .env.example .env && \
     composer install --no-dev && \
     php artisan key:generate
+
+RUN chgrp -R www-data storage bootstrap/cache && \
+    chmod -R ug+rwx storage bootstrap/cache
 
 USER nobody
 #    chgrp -R www-data storage bootstrap/cache && \
