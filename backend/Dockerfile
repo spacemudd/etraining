@@ -79,6 +79,6 @@ RUN cp .env.example .env && \
 #RUN chgrp -R www-data storage bootstrap/cache && \
 #    chmod -R ug+rwx storage bootstrap/cache
 
-EXPOSE 9000
+EXPOSE 8900
 
 USER nobody
