@@ -52,22 +52,22 @@ RUN apt-get remove -qq -y php7.4-dev pkg-config libmagickwand-dev build-essentia
 #RUN echo "apc.enable=1" > $PHP_INI_DIR/conf.d/apcu.ini
 
 # Memory Limit
-RUN echo "memory_limit=2048M" > $PHP_INI_DIR/conf.d/memory-limit.ini
-RUN echo "max_execution_time=900" >> $PHP_INI_DIR/conf.d/memory-limit.ini
-RUN echo "post_max_size=50M" >> $PHP_INI_DIR/conf.d/memory-limit.ini
-RUN echo "upload_max_filesize=50M" >> $PHP_INI_DIR/conf.d/memory-limit.ini
-
-# Time Zone
-RUN echo "date.timezone=${PHP_TIMEZONE:-UTC}" > $PHP_INI_DIR/conf.d/date_timezone.ini
-
-# Display errors in stderr
-RUN echo "display_errors=stderr" > $PHP_INI_DIR/conf.d/display-errors.ini
-
-# Disable PathInfo
-RUN echo "cgi.fix_pathinfo=0" > $PHP_INI_DIR/conf.d/path-info.ini
-
-# Disable expose PHP
-RUN echo "expose_php=0" >> $PHP_INI_DIR/conf.d/path-info.ini
+#RUN echo "memory_limit=2048M" > $PHP_INI_DIR/conf.d/memory-limit.ini
+#RUN echo "max_execution_time=900" >> $PHP_INI_DIR/conf.d/memory-limit.ini
+#RUN echo "post_max_size=50M" >> $PHP_INI_DIR/conf.d/memory-limit.ini
+#RUN echo "upload_max_filesize=50M" >> $PHP_INI_DIR/conf.d/memory-limit.ini
+#
+## Time Zone
+#RUN echo "date.timezone=${PHP_TIMEZONE:-UTC}" > $PHP_INI_DIR/conf.d/date_timezone.ini
+#
+## Display errors in stderr
+#RUN echo "display_errors=stderr" > $PHP_INI_DIR/conf.d/display-errors.ini
+#
+## Disable PathInfo
+#RUN echo "cgi.fix_pathinfo=0" > $PHP_INI_DIR/conf.d/path-info.ini
+#
+## Disable expose PHP
+#RUN echo "expose_php=0" >> $PHP_INI_DIR/conf.d/path-info.ini
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
