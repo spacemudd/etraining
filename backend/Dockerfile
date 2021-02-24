@@ -68,7 +68,7 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progre
 
 # Install Composer
 # Create system user to run Composer and Artisan Commands
-RUN adduser -G www-data,root -u 1000 -d /var/www/html www
+RUN adduser -G www-data,root -u 1000 -h /var/www/html www
 RUN mkdir -p /var/www/html/.composer && \
     chown -R www:www /var/www/html
 
