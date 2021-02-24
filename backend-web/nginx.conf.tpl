@@ -11,13 +11,27 @@ server {
   listen [::]:8085;
   server_name _;
 
-  location / {
-    proxy_pass http://app;
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
-  }
+   location / {
+       fastcgi_cache laravel;
+       fastcgi_ignore_headers Cache-Control;
+       fastcgi_no_cache $http_authorization $cookie_laravel_session;
+       fastcgi_cache_lock on;
+       fastcgi_cache_lock_timeout 10s;
+       add_header X-Proxy-Cache $upstream_cache_status;
+       fastcgi_pass   backend;
+       fastcgi_index  index.php;
+       fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+       fastcgi_read_timeout 900s;
+       include        fastcgi_params;
+   }
+
+#  location / {
+#    proxy_pass http://app;
+#    proxy_set_header Host $host;
+#    proxy_set_header X-Real-IP $remote_addr;
+#    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#    proxy_set_header X-Forwarded-Proto $scheme;
+#  }
 
   location ~ /\. {
     deny  all;
