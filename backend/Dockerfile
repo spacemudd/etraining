@@ -20,7 +20,7 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 USER root
 RUN apk update
 
-RUN apk add -y \
+RUN apk add \
     mariadb-client \
     libpq-dev \
     libfreetype6-dev \
