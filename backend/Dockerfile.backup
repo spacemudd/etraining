@@ -1,4 +1,4 @@
-FROM digitonic1/php7.4-nginx:latest
+FROM php:7.4-fpm
 
 RUN apt-get update
 
@@ -38,12 +38,6 @@ RUN wget http://ftp.br.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscore
 RUN apt-get -y install cabextract
 RUN dpkg -i ttf-mscorefonts-installer_3.6_all.deb
 
- # Clean the image \
-RUN apt-get remove -qq -y php7.4-dev pkg-config libmagickwand-dev build-essential \
-     && apt-get auto-remove -qq -y \
-     && apt-get clean \
-     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
 # APCU
 RUN pecl install apcu && docker-php-ext-enable apcu
 RUN echo "extension=apcu.so" > $PHP_INI_DIR/conf.d/apcu.ini
@@ -68,6 +62,10 @@ RUN echo "cgi.fix_pathinfo=0" > $PHP_INI_DIR/conf.d/path-info.ini
 # Disable expose PHP
 RUN echo "expose_php=0" >> $PHP_INI_DIR/conf.d/path-info.ini
 
+# Enable port
+COPY www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY www.conf.default /usr/local/etc/php-fpm.d/www.conf.default
+
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -83,6 +81,6 @@ WORKDIR /var/www
 
 USER $user
 
-EXPOSE 80
+EXPOSE 9000
 
-CMD ["/bin/bash", "-c", "cp .env.example .env && composer install --no-dev && php artisan key:generate && chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstrap/cache"]
+CMD ["/bin/bash", "-c", "cp .env.example .env && composer install --no-dev && php artisan key:generate && chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstrap/cache && php-fpm"]
