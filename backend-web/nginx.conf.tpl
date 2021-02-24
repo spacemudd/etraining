@@ -63,6 +63,10 @@ server {
     try_files $uri $uri/ /index.php?$query_string;
   }
 
+  location /healthcheck {
+    return 200;
+  }
+
   location / {
     proxy_pass http://app;
     proxy_set_header Host $host;
