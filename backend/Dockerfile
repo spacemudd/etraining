@@ -14,11 +14,11 @@ FROM trafex/alpine-nginx-php7:latest
 COPY nginx.default.conf /etc/nginx/nginx.conf
 COPY nginx.server.conf /etc/nginx/conf.d/server.conf
 
-COPY . /var/www/html
+COPY --chown=nginx . /var/www/html
 # Install composer from the official image
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
-#USER root
+USER root
 RUN apk update
 
 RUN apk add \
