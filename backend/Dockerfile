@@ -12,7 +12,7 @@ RUN apt-get install -y \
     libbz2-dev \
     git
 
-RUN apt-get install php7.4-dev
+RUN apt-get install -y php7.4-dev
 
 RUN pecl channel-update pecl.php.net \
     && pecl install redis
