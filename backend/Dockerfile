@@ -1,17 +1,22 @@
-FROM composer AS composer
-
-# copying the source directory and install the dependencies with composer
-COPY . /app
-
-# run composer install to install the dependencies
-RUN composer install \
-  --optimize-autoloader \
-  --no-interaction \
-  --no-progress
+#FROM composer AS composer
+#
+## copying the source directory and install the dependencies with composer
+#COPY . /app
+#
+## run composer install to install the dependencies
+#RUN composer install \
+#  --optimize-autoloader \
+#  --no-interaction \
+#  --no-progress
 
 FROM trafex/alpine-nginx-php7:latest
-COPY --chown=nginx --from=composer /app /var/www/html
+#COPY --chown=nginx --from=composer /app /var/www/html
 COPY nginx.conf /etc/nginx/conf.d/server.conf
+
+COPY . /var/www/html
+# Install composer from the official image
+COPY --from=composer /usr/bin/composer /usr/bin/composer
+RUN composer install --optimize-autoloader --no-interaction --no-progress
 
 RUN apt-get update
 
