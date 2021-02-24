@@ -17,21 +17,25 @@ server {
   fastcgi_hide_header X-Powered-By;
   proxy_hide_header X-Powered-By;
 
-   location / {
-       root   /var/www/public;
-       index  index.php index.html;
-       fastcgi_cache laravel;
-       fastcgi_ignore_headers Cache-Control;
-       fastcgi_no_cache $http_authorization $cookie_laravel_session;
-       fastcgi_cache_lock on;
-       fastcgi_cache_lock_timeout 10s;
-       add_header X-Proxy-Cache $upstream_cache_status;
-       fastcgi_pass   app;
-       fastcgi_index  index.php;
-       fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
-       fastcgi_read_timeout 900s;
-       include        fastcgi_params;
-   }
+  location /healthcheck {
+    return 200;
+  }
+
+  location / {
+     root   /var/www/public;
+     index  index.php index.html;
+     fastcgi_cache laravel;
+     fastcgi_ignore_headers Cache-Control;
+     fastcgi_no_cache $http_authorization $cookie_laravel_session;
+     fastcgi_cache_lock on;
+     fastcgi_cache_lock_timeout 10s;
+     add_header X-Proxy-Cache $upstream_cache_status;
+     fastcgi_pass   app;
+     fastcgi_index  index.php;
+     fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+     fastcgi_read_timeout 900s;
+     include        fastcgi_params;
+  }
 
 #  location / {
 #    proxy_pass http://app;
