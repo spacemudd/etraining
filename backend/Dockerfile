@@ -17,27 +17,27 @@ RUN apt-get install -y php7.4-dev
 RUN pecl channel-update pecl.php.net \
     && pecl install redis
 
-RUN docker-php-ext-install zip bz2 pcntl \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo_mysql exif \
-    && docker-php-ext-configure intl \
-    && docker-php-ext-install intl
+#RUN docker-php-ext-install zip bz2 pcntl \
+#    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+#    && docker-php-ext-install gd pdo_mysql exif \
+#    && docker-php-ext-configure intl \
+#    && docker-php-ext-install intl
 
 # Imagick
-RUN apt-get update && apt-get install -y libmagickwand-dev --no-install-recommends && rm -rf /var/lib/apt/lists/*
-RUN printf "\n" | pecl install imagick
-RUN docker-php-ext-enable imagick
+#RUN apt-get update && apt-get install -y libmagickwand-dev --no-install-recommends && rm -rf /var/lib/apt/lists/*
+#RUN printf "\n" | pecl install imagick
+#RUN docker-php-ext-enable imagick
 
 # For wkhtmltopdf
-RUN apt update
-RUN apt install -y software-properties-common ca-certificates wget curl ssh
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get install -yq xorg libssl-dev libxrender-dev wget gdebi
+#RUN apt update
+#RUN apt install -y software-properties-common ca-certificates wget curl ssh
+#ENV DEBIAN_FRONTEND=noninteractive
+#RUN apt-get install -yq xorg libssl-dev libxrender-dev wget gdebi
 
 # Install Windows fonts.
-RUN wget http://ftp.br.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.6_all.deb
-RUN apt-get -y install cabextract
-RUN dpkg -i ttf-mscorefonts-installer_3.6_all.deb
+#RUN wget http://ftp.br.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.6_all.deb
+#RUN apt-get -y install cabextract
+#RUN dpkg -i ttf-mscorefonts-installer_3.6_all.deb
 
  # Clean the image \
 RUN apt-get remove -qq -y php7.4-dev pkg-config libmagickwand-dev build-essential \
