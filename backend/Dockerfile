@@ -16,6 +16,8 @@ COPY nginx.conf /etc/nginx/conf.d/server.conf
 COPY . /var/www/html
 # Install composer from the official image
 COPY --from=composer /usr/bin/composer /usr/bin/composer
+
+USER root
 RUN apk update
 
 RUN apk add -y \
@@ -54,5 +56,7 @@ EXPOSE 8080
 RUN cp .env.example .env && \
     composer install --no-dev && \
     php artisan key:generate
+
+USER nobody
 #    chgrp -R www-data storage bootstrap/cache && \
 #    chmod -R ug+rwx storage bootstrap/cache
