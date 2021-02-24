@@ -40,6 +40,7 @@ RUN apk add \
     php7-pdo \
     php7-pdo_mysql \
     php7-mysqli \
+    php7-sqlite3 \
     php7-xml \
     php7-zlib \
     php7-phar \
@@ -47,7 +48,8 @@ RUN apk add \
     php7-session \
     php7-simplexml \
     php7-xmlwriter \
-    php7-zip
+    php7-zip \
+    php7-exif
 
 RUN composer install --optimize-autoloader --no-interaction --no-progress
 
