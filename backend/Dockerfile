@@ -17,7 +17,7 @@ COPY nginx.default.conf /etc/nginx/nginx.conf
 COPY nginx.server.conf /etc/nginx/conf.d/server.conf
 
 # PHP-FPM settings
-COPY php-fpm-settings.conf /etc/php7/php-fpm.d/wwww.conf
+COPY php-fpm-settings.conf /etc/php7/php-fpm.d/www.conf
 
 COPY --chown=nobody . /var/www/html
 # Install composer from the official image
