@@ -11,8 +11,13 @@
 
 FROM trafex/alpine-nginx-php7:latest
 #COPY --chown=nginx --from=composer /app /var/www/html
+
+# NGINX settings
 COPY nginx.default.conf /etc/nginx/nginx.conf
 COPY nginx.server.conf /etc/nginx/conf.d/server.conf
+
+# PHP-FPM settings
+COPY php-fpm-settings.conf /etc/php7/php-fpm.d/server.conf
 
 COPY --chown=nobody . /var/www/html
 # Install composer from the official image
