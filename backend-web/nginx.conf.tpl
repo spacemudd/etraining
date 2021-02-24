@@ -18,7 +18,7 @@ server {
        fastcgi_cache_lock on;
        fastcgi_cache_lock_timeout 10s;
        add_header X-Proxy-Cache $upstream_cache_status;
-       fastcgi_pass   backend;
+       fastcgi_pass   app;
        fastcgi_index  index.php;
        fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
        fastcgi_read_timeout 900s;
