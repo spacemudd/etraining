@@ -3,7 +3,7 @@ fastcgi_cache_key "$scheme$request_method$host$request_uri$query_string";
 
 upstream app {
     #server internal-prod-alb-internal-596022634.eu-central-1.elb.amazonaws.com;
-    server backend:9000;
+    server backend;
 }
 
 server {
