@@ -1,6 +1,6 @@
 upstream app {
-    #server internal-prod-alb-internal-596022634.eu-central-1.elb.amazonaws.com;
-    server backend:8900;
+    server internal-prod-alb-internal-596022634.eu-central-1.elb.amazonaws.com;
+    #server backend:8900;
 }
 
 server {
