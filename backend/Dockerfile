@@ -18,7 +18,7 @@ COPY . /var/www/html
 # Install composer from the official image
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
-USER root
+#USER root
 RUN apk update
 
 RUN apk add \
@@ -68,16 +68,16 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progre
 
 # Install Composer
 # Create system user to run Composer and Artisan Commands
-RUN adduser -G www-data,root -u 1000 -h /var/www/html www
-RUN mkdir -p /var/www/html/.composer && \
-    chown -R www:www /var/www/html
+#RUN adduser -G www-data,root -u 1000 -h /var/www/html www
+#RUN mkdir -p /var/www/html/.composer && \
+#    chown -R www:www /var/www/html
 
 RUN cp .env.example .env && \
     composer install --no-dev && \
     php artisan key:generate
 
-RUN chgrp -R www-data storage bootstrap/cache && \
-    chmod -R ug+rwx storage bootstrap/cache
+#RUN chgrp -R www-data storage bootstrap/cache && \
+#    chmod -R ug+rwx storage bootstrap/cache
 
 EXPOSE 8080
 
