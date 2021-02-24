@@ -68,13 +68,10 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progre
 
 # Install Composer
 # Create system user to run Composer and Artisan Commands
-#RUN useradd -G www-data,root -u 1000 -d /app www
-#RUN mkdir -p /app/.composer && \
-#    chown -R www:www /app
+RUN useradd -G www-data,root -u 1000 -d /var/www/html www
+RUN mkdir -p /var/www/html/.composer && \
+    chown -R www:www /var/www/html
 
-EXPOSE 8080
-
-# CMD ["/bin/bash", "-c", "cp .env.example .env && composer install --no-dev && php artisan key:generate && chgrp -R www-data storage bootstrap/cache && "]
 RUN cp .env.example .env && \
     composer install --no-dev && \
     php artisan key:generate
@@ -82,6 +79,6 @@ RUN cp .env.example .env && \
 RUN chgrp -R www-data storage bootstrap/cache && \
     chmod -R ug+rwx storage bootstrap/cache
 
-# USER nobody
-#    chgrp -R www-data storage bootstrap/cache && \
-#    chmod -R ug+rwx storage bootstrap/cache
+EXPOSE 8080
+
+USER nobody
