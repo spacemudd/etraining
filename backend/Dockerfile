@@ -22,14 +22,7 @@ RUN apk update
 
 RUN apk add \
     mariadb-client \
-    libpq-dev \
-    libfreetype6-dev \
-    libzip-dev \
-    zip \
-    libicu-dev \
-    libbz2-dev \
-    simplexml \
-    git
+    zip
 
 RUN composer install --optimize-autoloader --no-interaction --no-progress
 
