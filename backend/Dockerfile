@@ -16,8 +16,6 @@ COPY nginx.conf /etc/nginx/conf.d/server.conf
 COPY . /var/www/html
 # Install composer from the official image
 COPY --from=composer /usr/bin/composer /usr/bin/composer
-RUN composer install --optimize-autoloader --no-interaction --no-progress
-
 RUN apt-get update
 
 RUN apt-get install -y \
@@ -28,7 +26,10 @@ RUN apt-get install -y \
     zip \
     libicu-dev \
     libbz2-dev \
+    simplexml \
     git
+
+RUN composer install --optimize-autoloader --no-interaction --no-progress
 
 #RUN apt-get install -y php7.4-dev
 #
