@@ -63,7 +63,7 @@ RUN echo "cgi.fix_pathinfo=0" > $PHP_INI_DIR/conf.d/path-info.ini
 RUN echo "expose_php=0" >> $PHP_INI_DIR/conf.d/path-info.ini
 
 # Enable port
-RUN echo "listen=0.0.0.0:9000" >>  $PHP_INI_DIR/conf.d/listen.ini
+COPY www.conf /usr/local/etc/php-fpm.d/www.conf
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
