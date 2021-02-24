@@ -11,7 +11,16 @@ server {
   listen [::]:8085;
   server_name _;
 
+  server_tokens off;
+  fastcgi_hide_header X-Powered-By;
+  proxy_hide_header X-Powered-By;
+  server_tokens off;
+  fastcgi_hide_header X-Powered-By;
+  proxy_hide_header X-Powered-By;
+
    location / {
+       root   /var/www/public;
+       index  index.php index.html;
        fastcgi_cache laravel;
        fastcgi_ignore_headers Cache-Control;
        fastcgi_no_cache $http_authorization $cookie_laravel_session;
