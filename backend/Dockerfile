@@ -6,7 +6,6 @@ RUN apt-get install -y \
     mariadb-client \
     libpq-dev \
     libfreetype6-dev \
-    libjpeg62-turbo-dev \
     libzip-dev \
     zip \
     libicu-dev \
