@@ -12,6 +12,9 @@
 FROM trafex/alpine-nginx-php7:latest
 #COPY --chown=nginx --from=composer /app /var/www/html
 
+# Supervisord settings
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
 # NGINX settings
 COPY nginx.default.conf /etc/nginx/nginx.conf
 COPY nginx.server.conf /etc/nginx/conf.d/server.conf
@@ -87,3 +90,9 @@ RUN cp .env.example .env && \
 EXPOSE 8900
 
 USER nobody
+
+# Let supervisord start nginx & php-fpm
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+
+# Configure a healthcheck to validate that everything is up&running
+HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1:8080/fpm-ping
