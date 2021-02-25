@@ -11,6 +11,8 @@ COPY nginx.server.conf /etc/nginx/conf.d/server.conf
 COPY php-fpm-settings.conf /etc/php7/php-fpm.d/www.conf
 
 COPY --chown=nobody . /var/www/html
+RUN mkdir -p /var/run/php && \
+    chown -R nobody.nobody /var/run/php
 
 # Install composer from the official image
 COPY --from=composer /usr/bin/composer /usr/bin/composer
