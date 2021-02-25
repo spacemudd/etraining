@@ -80,4 +80,3 @@ EXPOSE 8900
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
 HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1:9000/fpm-ping
-curl -http://127.0.0.1:9000/fpm-ping
