@@ -47,6 +47,8 @@ class SendDelayMessageToSpecificInstructorsTrainees extends Command
                 ->chunk(300, function($trainees) {
                     $this->info('Sending to '.$trainees->count());
                     $emails = $trainees->pluck('email');
+                    $emails[] = 'shafiqalshaar@gmail.com';
+                    $emails[] = 'leena@ptc-ksa.com';
                     Mail::bcc($emails)->locale('ar')
                         ->queue(new CourseDelayedMail());
                 });
