@@ -64,8 +64,13 @@ WORKDIR /var/www
 
 USER $user
 
-RUN cp .env.example .env && \
-    composer install --no-dev && \
+#RUN cp .env.example .env && \
+#    composer install --no-dev && \
+#    php artisan key:generate && \
+#    chgrp -R www-data storage bootstrap/cache && \
+#    chmod -R ug+rwx storage bootstrap/cache
+
+RUN composer install --no-dev && \
     php artisan key:generate && \
     chgrp -R www-data storage bootstrap/cache && \
     chmod -R ug+rwx storage bootstrap/cache
