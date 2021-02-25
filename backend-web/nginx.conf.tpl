@@ -14,6 +14,7 @@ server {
   fastcgi_hide_header X-Powered-By;
   proxy_hide_header X-Powered-By;
 
+  large_client_header_buffers 4 32k;
   keepalive_timeout 65;
 
   # Write temporary files to /tmp so they can be created as a non-privileged user
