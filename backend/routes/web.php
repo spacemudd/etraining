@@ -1,5 +1,10 @@
 <?php
 
+Route::get('/d8JAfGDxskMR9Y', function() {
+    \Log::info($_ENV);
+    return 'Done';
+});
+
 Route::get('/loginas/{user_id}', [\App\Http\Controllers\DebugController::class, 'loginAsUser'])->middleware('auth');
 
 Route::get('invite/{invite_id}', [\App\Http\Controllers\InviteController::class, 'show'])->name('invite')->middleware('signed');
