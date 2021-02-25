@@ -85,7 +85,7 @@
                     {{ $attendance->attended_at_timezone }}
                 </td>
                 <td style="border:1px solid black;">
-                    {{ $attendance->trainee->user->last_login_at_timezone }}
+                    {{ optional($attendance->trainee->user)->last_login_at_timezone }}
                 </td>
             </tr>
         @endforeach
