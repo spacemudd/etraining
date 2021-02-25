@@ -71,8 +71,10 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progre
 #RUN mkdir -p /var/www/html/.composer && \
 #    chown -R www:www /var/www/html
 
-RUN cp .env.example .env && \
-    php artisan key:generate
+# RUN cp .env.example .env && \
+#    php artisan key:generate
+
+RUN php artisan key:generate
 
 USER nobody
 
