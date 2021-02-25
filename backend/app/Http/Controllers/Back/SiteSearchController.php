@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
+use App\Models\Back\Trainee;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -39,6 +40,11 @@ class SiteSearchController extends Controller
         ]);
 
         $search_string = $request->search;
+
+        return Trainee::where('name', 'LIKE', '%'.$request->search.'%')
+            ->orWhere('email', 'LIKE', '%'.$request->search.'%')
+            ->take(30)
+            ->get();
 
         $toExclude = [
             // App\Models\Back\Company::class
