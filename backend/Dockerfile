@@ -1,16 +1,4 @@
-#FROM composer AS composer
-#
-## copying the source directory and install the dependencies with composer
-#COPY . /app
-#
-## run composer install to install the dependencies
-#RUN composer install \
-#  --optimize-autoloader \
-#  --no-interaction \
-#  --no-progress
-
 FROM trafex/alpine-nginx-php7:latest
-#COPY --chown=nginx --from=composer /app /var/www/html
 
 # Supervisord settings
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -23,6 +11,7 @@ COPY nginx.server.conf /etc/nginx/conf.d/server.conf
 COPY php-fpm-settings.conf /etc/php7/php-fpm.d/www.conf
 
 COPY --chown=nobody . /var/www/html
+
 # Install composer from the official image
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
@@ -81,18 +70,14 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progre
 #    chown -R www:www /var/www/html
 
 RUN cp .env.example .env && \
-    composer install --no-dev && \
     php artisan key:generate
 
-#RUN chgrp -R www-data storage bootstrap/cache && \
-#    chmod -R ug+rwx storage bootstrap/cache
+USER nobody
 
 EXPOSE 8900
-
-USER nobody
 
 # Let supervisord start nginx & php-fpm
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
-# Configure a healthcheck to validate that everything is up&running
-HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1:8080/fpm-ping
+HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1:9000/fpm-ping
+curl -http://127.0.0.1:9000/fpm-ping
