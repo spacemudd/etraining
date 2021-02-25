@@ -29,7 +29,7 @@ class CourseDelayedMail extends Mailable
     public function build()
     {
         return $this
-            ->subject('تم تأجيل الدورة')
+            ->subject('بث تجريبي اليوم من الساعة 1')
             ->markdown('emails.courses.delayed');
     }
 }
