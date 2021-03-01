@@ -10,6 +10,9 @@ COPY nginx.server.conf /etc/nginx/conf.d/server.conf
 # PHP-FPM settings
 COPY php-fpm-settings.conf /etc/php7/php-fpm.d/www.conf
 
+# PHP settings
+COPY php-settings.ini /etc/php7/conf.d/settings.ini
+
 COPY --chown=nobody . /var/www/html
 RUN mkdir -p /var/run/php && \
     chown -R nobody.nobody /var/run/php
