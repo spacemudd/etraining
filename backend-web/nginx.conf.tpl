@@ -14,6 +14,7 @@ server {
   fastcgi_hide_header X-Powered-By;
   proxy_hide_header X-Powered-By;
 
+  client_max_body_size 500M;
   large_client_header_buffers 4 32k;
   keepalive_timeout 65;
 
