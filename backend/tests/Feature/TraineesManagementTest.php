@@ -259,7 +259,7 @@ class TraineesManagementTest extends TestCase
         ]);
     }
 
-    public function test_getting_trainees_with_groups()
+    public function test_getting_groups_names()
     {
         $nancy = $this->user;
 
@@ -280,17 +280,17 @@ class TraineesManagementTest extends TestCase
             ->assertJson([
                 [
                     'name' => $teamX->name,
-                    'trainees' => [
-                        ['id' => $alex->id],
-                        ['id' => $mike->id],
-                    ]
+                    //'trainees' => [
+                    //    ['id' => $alex->id],
+                    //    ['id' => $mike->id],
+                    //]
                 ],
                 [
                     'name' => $teamB->name,
-                    'trainees' => [
-                        ['id' => $jonas->id],
-                        ['id' => $steve->id],
-                    ]
+                    //'trainees' => [
+                    //    ['id' => $jonas->id],
+                    //    ['id' => $steve->id],
+                    //]
                 ],
             ]);
     }
