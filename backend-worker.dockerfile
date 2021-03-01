@@ -71,7 +71,7 @@ USER $user
 #    chmod -R ug+rwx storage bootstrap/cache
 
 RUN composer install --no-dev && \
-    php artisan key:generate && \
+    php artisan key:generate --force && \
     chgrp -R www-data storage bootstrap/cache && \
     chmod -R ug+rwx storage bootstrap/cache
 
