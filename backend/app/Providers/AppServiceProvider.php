@@ -35,6 +35,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         if (env('APP_USE_HTTPS')) {
+            \Illuminate\Pagination\AbstractPaginator::currentPathResolver(function () {
+                /** @var \Illuminate\Routing\UrlGenerator $url */
+                $url = app('url');
+                return $url->current();
+            });
             URL::forceScheme('https');
         }
     }
