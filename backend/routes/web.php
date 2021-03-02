@@ -32,9 +32,9 @@ Route::middleware(['auth:sanctum', 'verified', 'approved-application'])->get('/d
 Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     // For everyone
     Route::get('inbox', [\App\Http\Controllers\InboxController::class, 'index'])->name('inbox.index');
-    Route::post('back/zoom/signature', [\App\Http\Controllers\ZoomController::class, 'signature'])->name('zoom.signature');
-    Route::post('back/zoom/meetings', [\App\Http\Controllers\ZoomMeetingsController::class, 'store'])->name('zoom.meetings.store');
-    Route::post('back/zoom/meetings/configs', [\App\Http\Controllers\ZoomMeetingsController::class, 'configs'])->name('zoom.meetings.configs');
+    Route::post('back/zoom/signature', [\App\Http\Controllers\ZoomController::class, 'signature'])->name('back.zoom.signature');
+    Route::post('back/zoom/meetings', [\App\Http\Controllers\ZoomMeetingsController::class, 'store'])->name('back.zoom.meetings.store');
+    Route::post('back/zoom/meetings/configs', [\App\Http\Controllers\ZoomMeetingsController::class, 'configs'])->name('back.zoom.meetings.configs');
 
     // For admins
     Route::prefix('back')->middleware('redirect-trainees-to-dashboard')->name('back.')->group(function() {
