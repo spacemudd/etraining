@@ -77,7 +77,7 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progre
 # RUN cp .env.example .env && \
 #    php artisan key:generate
 
-RUN php artisan key:generate --force
+# RUN php artisan key:generate --force
 
 USER nobody
 
