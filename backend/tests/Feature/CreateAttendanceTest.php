@@ -76,7 +76,7 @@ class CreateAttendanceTest extends TestCase
             'company_id' => $acmeCompany->id,
             'name' => 'Golden 1',
         ]);
-        $trainingGroup->trainees()->attach([$majdaTraineeProfile->id]);
+        $majdaTraineeProfile->trainee_group_id = $trainingGroup->id;
         // Assign trainees to the instructor
         $majdaTraineeProfile->instructor_id = $shafiqProfile->id;
         $majdaTraineeProfile->save();
@@ -181,7 +181,7 @@ class CreateAttendanceTest extends TestCase
             'company_id' => $acmeCompany->id,
             'name' => 'Golden 1',
         ]);
-        $trainingGroup->trainees()->attach([$majdaTraineeProfile->id]);
+        $majdaTraineeProfile->trainee_group_id = $trainingGroup->id;
         // Assign trainees to the instructor
         $majdaTraineeProfile->instructor_id = $shafiqProfile->id;
         $majdaTraineeProfile->save();

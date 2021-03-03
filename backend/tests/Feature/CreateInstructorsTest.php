@@ -361,13 +361,14 @@ class CreateInstructorsTest extends TestCase
             'company_id' => $acmeCompany->id,
             'name' => 'Golden 1',
         ]);
-        $trainingGroup->trainees()->attach([$majdaTraineeProfile->id]);
+        $majdaTraineeProfile->trainee_group_id = $trainingGroup->id;
+        $majdaTraineeProfile->save();
         $trainingGroup_2 = TraineeGroup::factory()->create([
             'team_id' => $team->id,
             'company_id' => $acmeCompany->id,
             'name' => 'Golden 2',
         ]);
-        $trainingGroup_2->trainees()->attach([$mikeTraineeProfile->id]);
+        $mikeTraineeProfile->trainee_group_id = $trainingGroup_2->id;
 
         // A group that shouldn't be visible to the instructor
         $trainingGroupNotVisible = TraineeGroup::factory()->create([
@@ -375,7 +376,8 @@ class CreateInstructorsTest extends TestCase
             'company_id' => $acmeCompany->id,
             'name' => 'Silver Not Visible',
         ]);
-        $trainingGroupNotVisible->trainees()->attach([$sarahTraineeUserProfile->id]);
+        $sarahTraineeUserProfile->trainee_group_id = $trainingGroupNotVisible;
+        $sarahTraineeUserProfile->save();
 
         // Assign trainees to the instructor
         $majdaTraineeProfile->instructor_id = $shafiqProfile->id;
@@ -455,7 +457,8 @@ class CreateInstructorsTest extends TestCase
             'company_id' => $acmeCompany->id,
             'name' => 'Golden 1',
         ]);
-        $trainingGroup->trainees()->attach([$majdaTraineeProfile->id]);
+        $majdaTraineeProfile->trainee_group_id = $trainingGroup->id;
+        $majdaTraineeProfile->save();
 
         // Assign trainees to the instructor
         $majdaTraineeProfile->instructor_id = $shafiqProfile->id;
@@ -527,7 +530,8 @@ class CreateInstructorsTest extends TestCase
             'company_id' => $acmeCompany->id,
             'name' => 'Golden 1',
         ]);
-        $trainingGroup->trainees()->attach([$majdaTraineeProfile->id]);
+        $majdaTraineeProfile->trainee_group_id = $trainingGroup->id;
+        $majdaTraineeProfile->save();
 
         // Assign trainees to the instructor
         $majdaTraineeProfile->instructor_id = $shafiqProfile->id;
@@ -604,7 +608,7 @@ class CreateInstructorsTest extends TestCase
             'company_id' => $acmeCompany->id,
             'name' => 'Golden 1',
         ]);
-        $trainingGroup->trainees()->attach([$majdaTraineeProfile->id]);
+        $majdaTraineeProfile->trainee_group_id = $trainingGroup->id;
 
         // Assign trainees to the instructor
         $majdaTraineeProfile->instructor_id = $shafiqProfile->id;

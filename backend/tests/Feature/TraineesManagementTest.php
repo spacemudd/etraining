@@ -266,14 +266,12 @@ class TraineesManagementTest extends TestCase
         $company = Company::factory()->create(['team_id' => $nancy->personalTeam()->id]);
 
         $teamX = TraineeGroup::factory()->create(['company_id' => $company->id, 'team_id' => $company->team_id]);
-        $alex = Trainee::factory()->create(['company_id' => $company->id, 'team_id' => $company->team_id]);
-        $mike = Trainee::factory()->create(['company_id' => $company->id, 'team_id' => $company->team_id]);
-        $teamX->trainees()->attach([$alex->id, $mike->id]);
+        $alex = Trainee::factory()->create(['company_id' => $company->id, 'team_id' => $company->team_id, 'trainee_group_id' => $teamX]);
+        $mike = Trainee::factory()->create(['company_id' => $company->id, 'team_id' => $company->team_id, 'trainee_group_id' => $teamX]);
 
         $teamB = TraineeGroup::factory()->create(['company_id' => $company->id, 'team_id' => $company->team_id]);
-        $jonas = Trainee::factory()->create(['company_id' => $company->id, 'team_id' => $company->team_id]);
-        $steve = Trainee::factory()->create(['company_id' => $company->id, 'team_id' => $company->team_id]);
-        $teamB->trainees()->attach([$jonas->id, $steve->id]);
+        $jonas = Trainee::factory()->create(['company_id' => $company->id, 'team_id' => $company->team_id, 'trainee_group_id' => $teamB]);
+        $steve = Trainee::factory()->create(['company_id' => $company->id, 'team_id' => $company->team_id, 'trainee_group_id' => $teamB]);
 
         $this->actingAs($nancy)
             ->get('/api/back/trainee-groups')
