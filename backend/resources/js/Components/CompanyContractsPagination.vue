@@ -238,6 +238,7 @@
                 axios.get(route('back.trainee-groups.index'), {
                         params: {
                             load_trainees: true,
+                            company_id: this.companyId,
                         }
                     })
                     .then(response => {
