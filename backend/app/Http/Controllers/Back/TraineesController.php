@@ -401,51 +401,10 @@ class TraineesController extends Controller
 
         DB::beginTransaction();
         $trainee->update($request->except('_token'));
-
-
         if ($user = $trainee->user) {
             $user->email = $trainee->refresh()->email;
             $user->save();
         }
-
-        if (empty($request['trainee_group_object']['name'])) {
-            $trainee->trainee_group()->sync([]);
-        } else {
-            if(isset($request['trainee_group_object'])) {
-                if(isset($trainee->trainee_group_object)) {
-                    if($trainee->trainee_group_object->name !== $request['trainee_group_object']['name']) {
-                        $group = TraineeGroup::firstOrCreate([
-                            'name' => $trainee->trainee_group_object->name,
-                        ]);
-
-                        $group->trainees()->detach([$trainee_id]);
-
-                        $group = TraineeGroup::firstOrCreate([
-                            'name' => $request['trainee_group_object']['name'],
-                        ]);
-
-                        $group->trainees()->attach([$trainee_id]);
-                    }
-                } else {
-                    if ($request['trainee_group_object']['name']) {
-                        $group = TraineeGroup::firstOrCreate([
-                            'name' => $request['trainee_group_object']['name'],
-                        ]);
-                        $group->trainees()->attach([$trainee_id]);
-                    }
-                }
-            } else {
-                return "Entered";
-                if(isset($trainee->trainee_group_object)) {
-                    $group = TraineeGroup::firstOrCreate([
-                        'name' => $trainee->trainee_group_object->name,
-                    ]);
-
-                    $group->trainees()->detach([$trainee_id]);
-                }
-            }
-        }
-
         DB::commit();
 
         return redirect()->route('back.trainees.show', $trainee_id);

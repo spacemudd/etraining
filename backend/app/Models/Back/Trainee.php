@@ -112,7 +112,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels
 
     public function trainee_group()
     {
-        return $this->belongsToMany(TraineeGroup::class, 'trainee_group_trainee');
+        return $this->belongsTo(TraineeGroup::class);
     }
 
     public function instructor()

@@ -55,7 +55,7 @@ class TraineeGroup extends Model
 
     public function trainees()
     {
-        return $this->belongsToMany(Trainee::class, 'trainee_group_trainee');
+        return $this->hasMany(Trainee::class);
     }
 
     public function getNameSelectableAttribute()

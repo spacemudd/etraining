@@ -18,7 +18,7 @@ use Tests\TestCase;
 class TraineesGroupManagementTest extends TestCase
 {
     use WithFaker;
-    
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -66,7 +66,7 @@ class TraineesGroupManagementTest extends TestCase
         $teamX = TraineeGroup::factory()->create(['company_id' => $company->id, 'team_id' => $company->team_id]);
 
         $trainee = [
-            'trainee_group_name' => $teamX->name,
+            'trainee_group_id' => $teamX->id,
             'name' => 'Shafiq al-Shaar',
             'email' => 'hello@getshafiq',
             'identity_number' => '10000',
@@ -84,6 +84,10 @@ class TraineesGroupManagementTest extends TestCase
 
         $this->assertEquals(1, $teamX->trainees()->count());
         $this->assertEquals(1, Trainee::whereEmail($trainee['email'])->first()->trainee_group()->count());
+        $this->assertDatabaseHas('trainees', [
+            'email' => $trainee['email'],
+            'trainee_group_id' => $teamX->id,
+        ]);
     }
 
     public function test_trainee_cant_have_multiple_trainee_groups()
@@ -99,7 +103,7 @@ class TraineesGroupManagementTest extends TestCase
         ]);
 
         $trainee = [
-            'trainee_group_name' => $teamX->name,
+            'trainee_group_id' => $teamX->id,
             'name' => 'Shafiq al-Shaar',
             'email' => 'hello@getshafiq',
             'identity_number' => '10000',
@@ -121,7 +125,7 @@ class TraineesGroupManagementTest extends TestCase
             'name' => 'Team Y',
         ]);
         $traineeDb = Trainee::whereEmail($trainee['email'])->first();
-        $trainee['trainee_group_name'] = $differentTeam->name;
+        $trainee['trainee_group_id'] = $differentTeam->id;
         $this->actingAs($this->user)
             ->put(route('back.trainees.update', $traineeDb->id), $trainee)
             ->assertSessionDoesntHaveErrors();
