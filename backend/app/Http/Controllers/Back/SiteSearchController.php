@@ -47,7 +47,7 @@ class SiteSearchController extends Controller
             ->take(30)
             ->get();
 
-        $companies = Company::where('name', 'LIKE', '%'.$request->search.'%')->take(30)->get();
+        $companies = Company::where('name_ar', 'LIKE', '%'.$request->search.'%')->take(30)->get();
 
         $related = $trainees->merge($companies);
         return $related;
