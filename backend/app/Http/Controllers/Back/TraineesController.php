@@ -234,7 +234,11 @@ class TraineesController extends Controller
     public function withGroups(): array
     {
         if (filter_var(request()->load_trainees, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
-            $groups = TraineeGroup::with('trainees')
+            $groups = TraineeGroup::with(['trainees' => function($q) {
+                if (request()->company_id) {
+                    return $q->where('company_id', request()->company_id);
+                }
+            }])
                 ->get()
                 ->toArray();
         } else {
