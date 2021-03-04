@@ -83,6 +83,7 @@ class SendLateClassNotificationsJob implements ShouldQueue
                 $punchIn->notify(new TraineeLateToClassNotification($this->courseBatchSession));
             } catch (\Exception $er) {
                 Log::error('Couldnt send to: '.$punchIn->email);
+                app('sentry')->captureException($er);
             }
         }
         Log::debug('Finished sending late notifications to trainees');
