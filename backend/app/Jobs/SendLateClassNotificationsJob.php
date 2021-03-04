@@ -13,6 +13,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Str;
 
 class SendLateClassNotificationsJob implements ShouldQueue
 {
@@ -66,6 +67,18 @@ class SendLateClassNotificationsJob implements ShouldQueue
         Log::debug('Beginning to send late notifications to trainees ('.count($usersWhoDidntAttended).')');
         foreach ($usersWhoDidntAttended as $punchIn) {
             Log::debug('Sending warning to user: '.$punchIn->email);
+
+            if (Str::startsWith($punchIn->phone, '05')) {
+                $punchIn->phone = Str::replaceFirst('05', '9665', $punchIn->phone);
+                $punchIn->save();
+
+                if ($punchIn->user) {
+                    $user = $punchIn->user;
+                    $user->phone = $punchIn->phone;
+                    $user->save();
+                }
+            }
+
             try {
                 $punchIn->notify(new TraineeLateToClassNotification($this->courseBatchSession));
             } catch (\Exception $er) {
