@@ -66,7 +66,11 @@ class SendLateClassNotificationsJob implements ShouldQueue
         Log::debug('Beginning to send late notifications to trainees ('.count($usersWhoDidntAttended).')');
         foreach ($usersWhoDidntAttended as $punchIn) {
             Log::debug('Sending warning to user: '.$punchIn->email);
-            $punchIn->notify(new TraineeLateToClassNotification($this->courseBatchSession));
+            try {
+                $punchIn->notify(new TraineeLateToClassNotification($this->courseBatchSession));
+            } catch (\Exception $er) {
+                Log::error('Couldnt send to: '.$punchIn->email);
+            }
         }
         Log::debug('Finished sending late notifications to trainees');
     }
