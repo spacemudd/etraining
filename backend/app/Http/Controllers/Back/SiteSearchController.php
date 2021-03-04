@@ -44,6 +44,8 @@ class SiteSearchController extends Controller
 
         $trainees = Trainee::where('name', 'LIKE', '%'.$request->search.'%')
             ->orWhere('email', 'LIKE', '%'.$request->search.'%')
+            ->orWhere('phone', 'LIKE', '%'.$request->search.'%')
+            ->orWhere('identity_number', 'LIKE', '%'.$request->search.'%')
             ->take(30)
             ->get();
 
