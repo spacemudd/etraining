@@ -68,9 +68,6 @@ class SendLateClassNotificationsJob implements ShouldQueue
             ->where('attended', false)
             ->get();
 
-        Log::debug('Beginning to send late notifications to trainees ('.count($usersWhoDidntAttended).')');
-        Log::debug('Beginning to send late notifications to trainees ('.$usersWhoWhereLate->count().')---');
-        dd(count($usersWhoDidntAttended));
         foreach ($usersWhoDidntAttended as $punchIn) {
             Log::debug('Sending warning to user: '.$punchIn->email);
 
@@ -92,6 +89,29 @@ class SendLateClassNotificationsJob implements ShouldQueue
                 app('sentry')->captureException($er);
             }
         }
+
+        foreach ($usersWhoWhereLate as $punchIn) {
+            Log::debug('Sending warning to user: '.$punchIn->email);
+
+            if (Str::startsWith($punchIn->phone, '05')) {
+                $punchIn->phone = Str::replaceFirst('05', '9665', $punchIn->phone);
+                $punchIn->save();
+
+                if ($punchIn->user) {
+                    $user = $punchIn->user;
+                    $user->phone = $punchIn->phone;
+                    $user->save();
+                }
+            }
+
+            try {
+                $punchIn->notify(new TraineeLateToClassNotification($this->courseBatchSession));
+            } catch (\Exception $er) {
+                Log::error("Couldn't send to: ".$punchIn->email);
+                app('sentry')->captureException($er);
+            }
+        }
+
         Log::debug('Finished sending late notifications to trainees');
     }
 }
