@@ -290,4 +290,8 @@ return [
     'login-as-user' => 'Login as user',
     'view-payments' => 'View payments',
     'you-are-currently-logged-in-as' => 'You are currently logged in as',
+    'late-to-class-warning' => 'Late to course warning',
+    'late-to-class-zero-part' => "Hello, we'd like to warn you about your lateness to the course",
+    'late-to-class-first-part' => "the day of",
+    'late-to-class-second-part' => 'We hope you abide by the course timings',
 ];

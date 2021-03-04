@@ -293,4 +293,8 @@ return [
     'view-payments' => 'عرض المدفوعات',
     'you-are-currently-logged-in-as' => 'انت حاليا تستخدم حساب',
     'to-go-back-to-your-account-click-here' => 'للعودة لحسابك، يرجى الضغط هنا',
+    'late-to-class-warning' => 'انذار لعدم حضور البرنامج التدريبي',
+    'late-to-class-zero-part' => 'تم انذاركم لعدم دخولكم البرنامج التدريبي',
+    'late-to-class-first-part' => 'اليوم الموافق',
+    'late-to-class-second-part' => 'نأمل الالتزام بمواعيد الدورات التدريبية',
 ];

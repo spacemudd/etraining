@@ -71,6 +71,11 @@ class CourseBatchSession extends Model
         return $this->hasMany(CourseBatchSessionAttendance::class);
     }
 
+    public function absentees()
+    {
+        return $this->attendances()->where('attended', false);
+    }
+
     public function setStartsAtAttribute($value)
     {
         $this->attributes['starts_at'] = Carbon::parse($value, optional(auth()->user())->timezone ?: config('app.timezone'))->setTimezone('UTC');
