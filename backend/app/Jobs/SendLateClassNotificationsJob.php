@@ -69,12 +69,12 @@ class SendLateClassNotificationsJob implements ShouldQueue
             ->get();
 
         Log::info(collect($usersWhoDidntAttended)->pluck('email'));
-        Log::info(collect($usersWhoWhereLate)->pluck('email'));
+        Log::info(collect($usersWhoWhereLate)->pluck('trainee.email'));
 
         Log::debug('Beginning to send late notifications to trainees ('.count($usersWhoDidntAttended).')');
         Log::debug('Beginning to send late notifications to trainees ('.$usersWhoWhereLate->count().')');
 
-        return 1;
+        //return 1;
 
         foreach ($usersWhoDidntAttended as $punchIn) {
             Log::debug('Sending warning to user: '.$punchIn->email);
@@ -98,7 +98,8 @@ class SendLateClassNotificationsJob implements ShouldQueue
             }
         }
 
-        foreach ($usersWhoWhereLate as $punchIn) {
+        foreach ($usersWhoWhereLateAttendance as $punchInAttendance) {
+            $punchIn = $punchInAttendance->trainee;
             Log::debug('Sending warning to user: '.$punchIn->email);
 
             if (Str::startsWith($punchIn->phone, '05')) {
