@@ -21,7 +21,7 @@
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
         <link rel="manifest" href="/site.webmanifest">
-        
+
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
         @routes
@@ -34,6 +34,13 @@
         <script src="{{ mix('js/app.js') }}" defer></script>
     </head>
     <body class="font-sans antialiased">
+        @if (app('impersonate')->isImpersonating())
+            <div class="w-full bg-blue-600 text-center p-5 text-white">
+                {{ __('words.you-are-currently-logged-in-as') }}: {{ \App\Models\User::find(app('impersonate')->getImpersonatorId())->name }}
+                <br/>
+                <a class="mt-5 block underline" href="{{ route('impersonate.leave') }}">{{ __('words.to-go-back-to-your-account-click-here') }}</a>
+            </div>
+        @endif
         @inertia
     </body>
 </html>

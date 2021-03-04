@@ -450,7 +450,11 @@ export default {
             "didnt-attend-at-all": "لم يحضرو إطلاقاً",
             "attendees-plus-late-attendees": "الحضور + المتأخرين",
             "last-login-to-platform": "آخر دخول للمنصة",
-            "copy": "نسخة"
+            "copy": "نسخة",
+            "singular-contract": "عقد",
+            "can-impersonate": "دخول عبر حساب آخر (متدرب \\ مدرب)",
+            "login-as-user": "الدخول من عبر الحساب",
+            "view-payments": "عرض المدفوعات"
         }
     },
     "en": {
@@ -871,7 +875,11 @@ export default {
             "didnt-attend-at-all": "Didnt attend at all",
             "attendees-plus-late-attendees": "Attendees + Late",
             "last-login-to-platform": "Last login to platform",
-            "copy": "Copy"
+            "copy": "Copy",
+            "singular-contract": "Contract",
+            "can-impersonate": "Login as other user",
+            "login-as-user": "Login as user",
+            "view-payments": "View payments"
         }
     }
 }

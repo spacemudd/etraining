@@ -288,4 +288,9 @@ return [
     'last-login-to-platform' => 'آخر دخول للمنصة',
     'copy' => 'نسخة',
     'singular-contract' => 'عقد',
+    'can-impersonate' => 'دخول عبر حساب آخر (متدرب \ مدرب)',
+    'login-as-user' => 'الدخول من عبر الحساب',
+    'view-payments' => 'عرض المدفوعات',
+    'you-are-currently-logged-in-as' => 'انت حاليا تستخدم حساب',
+    'to-go-back-to-your-account-click-here' => 'للعودة لحسابك، يرجى الضغط هنا',
 ];

@@ -11,12 +11,15 @@
 
             <div class="grid grid-cols-6 gap-6">
 
-                <div class="col-span-6 items-center justify-end bg-gray-50 text-right gap-6">
+                <div class="col-span-6 items-center justify-end bg-gray-50 text-right flex gap-6">
 
-
-                    <button @click="blockTrainee" class=" items-center justify-start text-left float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right">
-                        {{ $t('words.block-trainee') }}
-                    </button>
+                    <a @click="blockTrainee"
+                       v-if="trainee.user_id"
+                       v-can="'can-impersonate'"
+                       :href="route('impersonate', trainee.user_id)"
+                       class="items-center justify-start text-left float-left rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
+                        {{ $t('words.login-as-user') }}
+                    </a>
 
                    <button v-if="!editButton.editOption" @click="editTrainee" class=" items-center justify-end rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
                         {{ editButton.text }}
@@ -56,6 +59,10 @@
                     <button v-if="trainee.is_pending_approval" @click="approveTrainee"
                             class=" items-center justify-end rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
                         {{ $t('words.approve-trainee') }}
+                    </button>
+
+                    <button @click="blockTrainee" class=" items-center justify-start text-left float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right">
+                        {{ $t('words.block-trainee') }}
                     </button>
                 </div>
 

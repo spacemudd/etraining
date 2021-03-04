@@ -286,4 +286,8 @@ return [
     'last-login-to-platform' => 'Last login to platform',
     'copy' => 'Copy',
     'singular-contract' => 'Contract',
+    'can-impersonate' => 'Login as other user',
+    'login-as-user' => 'Login as user',
+    'view-payments' => 'View payments',
+    'you-are-currently-logged-in-as' => 'You are currently logged in as',
 ];

@@ -34,6 +34,7 @@ class RolesService
         'download-attendance-sheet-for-course-batch',
         'view-company-trainees',
         'reset-trainees-account-password',
+        'can-impersonate',
         // add the same name of the role to translation files.
     ];
 

@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use JamesMills\LaravelTimezone\Facades\Timezone;
+use Lab404\Impersonate\Models\Impersonate;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
@@ -27,6 +28,7 @@ class User extends Authenticatable
     use TwoFactorAuthenticatable;
     use HasUuid;
     use HasRoles;
+    use Impersonate;
 
     public $incrementing = false;
 
@@ -147,5 +149,10 @@ class User extends Authenticatable
     public function routeNotificationForClickSend()
     {
         return $this->phone;
+    }
+
+    public function canImpersonate()
+    {
+        return $this->hasPermissionTo('can-impersonate');
     }
 }
