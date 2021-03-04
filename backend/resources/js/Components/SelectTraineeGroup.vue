@@ -30,7 +30,8 @@
                 type: Object,
                 required: false,
                 default: () => {},
-            },disabled : {
+            },
+            disabled : {
                 type: Boolean,
                 default: false,
             },

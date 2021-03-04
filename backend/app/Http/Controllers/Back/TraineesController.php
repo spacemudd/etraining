@@ -405,6 +405,11 @@ class TraineesController extends Controller
             $user->email = $trainee->refresh()->email;
             $user->save();
         }
+
+        $group = TraineeGroup::firstOrCreate(['name' => $request->trainee_group_name]);
+        $trainee->trainee_group_id = $group->id;
+        $trainee->save();
+
         DB::commit();
 
         return redirect()->route('back.trainees.show', $trainee_id);

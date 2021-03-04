@@ -79,8 +79,8 @@
                             </inertia-link>
                             <p class="px-6 flex items-center text-xs text-gray-500"
                                style=""
-                               v-if="trainees.trainee_group.length">
-                                {{ trainees.trainee_group[0].name }}
+                               v-if="trainees.trainee_group">
+                                {{ trainees.trainee_group.name }}
                             </p>
                         </td>
                         <td class="border-t w-px">

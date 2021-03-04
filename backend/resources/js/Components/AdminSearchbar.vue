@@ -48,7 +48,7 @@
                 </div>
                 <div v-else class="search-results-container mt-5">
                     <inertia-link v-for="(record, index) in searchResults"
-                                  :href="record.show_url"
+                                  :href="record.show_url ? record.show_url : '/'"
                                   :key="index"
                                   tabindex="-1"
                                   class="search-result-row p-1 px-5 rounded-lg block"

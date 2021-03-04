@@ -61,11 +61,11 @@
 
                 <div v-if="!editButton.editOption" class="col-span-6 sm:col-span-2">
                     <jet-label for="trainee_group_name" :value="$t('words.group-name')" />
-                    <template v-if="trainee.trainee_group_object">
+                    <template v-if="trainee.trainee_group_id">
                         <jet-input id="group-name"
                                    type="text"
                                    :class="editButton.inputClass"
-                                   v-model="trainee.trainee_group_object.name"
+                                   v-model="trainee.trainee_group.name"
                                    autocomplete="off"
                                    :disabled="!editButton.editOption" />
                     </template>
@@ -83,9 +83,9 @@
                     <select-trainee-group
                         :loadTrainees="false"
                         class="mt-1.5"
-                        :selectedItem="trainee.trainee_group_object"
+                        :selectedItem="trainee.trainee_group"
                         @input="selectGroupName"
-                        v-model="trainee.trainee_group_name"
+                        v-model="trainee.trainee_group.name"
                         :disabled="!editButton.editOption"
                     />
                 </div>
@@ -384,15 +384,15 @@
             }
         },
         mounted() {
-            if(this.trainee.trainee_group_object) {
+            if(this.trainee.trainee_group) {
+                this.trainee.trainee_group_object = this.trainee_group;
+            } else {
                 this.trainee.trainee_group_object = this.new_trainee_group;
             }
         },
         methods: {
             selectGroupName(input) {
-
-                this.trainee.trainee_group_name = input.name;
-
+                this.trainee.trainee_group = input;
             },
             blockTrainee() {
                 this.$inertia.get(route('back.trainees.block', {trainee_id: this.trainee.id}));
@@ -412,10 +412,7 @@
                     this.editButton.text = this.$t('words.save');
                 } else {
                     let newForm = {
-                        trainee_group_name: this.trainee.trainee_group_name ? this.trainee.trainee_group_name : '',
-                        trainee_group_object: {
-                            name: this.trainee.trainee_group_name ? this.trainee.trainee_group_name : '',
-                        },
+                        trainee_group_name: this.trainee.trainee_group ? this.trainee.trainee_group.name : '',
                         company_id: this.trainee.company_id,
                         name: this.trainee.name,
                         email: this.trainee.email,

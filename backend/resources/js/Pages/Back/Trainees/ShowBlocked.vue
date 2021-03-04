@@ -20,21 +20,18 @@
                 </div>
 
                 <div v-if="!editButton.editOption" class="col-span-6 sm:col-span-2">
-
                     <jet-label for="trainee_group_name" :value="$t('words.group-name')" />
                     <jet-input id="group-name" type="text" :class="editButton.inputClass" v-model="trainee.trainee_group_object.name" autocomplete="off" :disabled="!editButton.editOption" />
-
                 </div>
-
                 <div v-else class="col-span-6 sm:col-span-2">
-                            <jet-label for="trainee_group_name" :value="$t('words.group-name')" />
-                            <select-trainee-group
-                                                class="mt-1.5"
-                                                  :selectedItem="trainee.trainee_group_object"
-                                                  @input="selectGroupName"
-                                                  v-model="trainee.trainee_group_object"
-                                                  :disabled="!editButton.editOption"
-                            />
+                    <jet-label for="trainee_group_name" :value="$t('words.group-name')" />
+                    <select-trainee-group
+                                        class="mt-1.5"
+                                          :selectedItem="trainee.trainee_group_object"
+                                          @input="selectGroupName"
+                                          v-model="trainee.trainee_group_object"
+                                          :disabled="!editButton.editOption"
+                    />
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">

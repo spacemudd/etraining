@@ -65,7 +65,7 @@ class AttendanceSheetExport implements FromView, WithEvents, WithStyles, WithCol
     }
 
     /**
-     * @return \Illuminate\Support\View
+     * @return \Illuminate\Contracts\View\View
      */
     public function view(): View
     {
