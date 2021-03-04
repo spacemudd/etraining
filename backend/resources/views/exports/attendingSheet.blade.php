@@ -6,7 +6,7 @@
         </tr>
         <tr>
             <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong>{{ __('words.instructor') }}:</strong></th>
-            <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong>{{ $course_batch->course->instructor->name }}</strong></th>
+            <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong>{{ optional($course_batch->course->instructor)->name }}</strong></th>
         </tr>
         <tr>
             <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong>{{ __('words.start-date') }}:</strong></th>

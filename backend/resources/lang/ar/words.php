@@ -281,7 +281,7 @@ return [
     'view-company-trainees' => 'عرض متدربين الشركة',
     'resend-invitation' => 'إرسل رسالة دعوة',
     'done-successfully' => 'تم بنجاح',
-    'reset-trainees-account-password' => 'إتعديل كلمة سر المتدربات',
+    'reset-trainees-account-password' => 'تعديل كلمة سر المتدربات',
     'change-password' => 'تغير كلمة السر',
     'didnt-attend-at-all' => 'لم يحضرو إطلاقاً',
     'attendees-plus-late-attendees' => 'الحضور + المتأخرين',
