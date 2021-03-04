@@ -68,6 +68,9 @@ class SendLateClassNotificationsJob implements ShouldQueue
             ->where('attended', false)
             ->get();
 
+        Log::info(collect($usersWhoDidntAttended)->pluck('email'));
+        Log::info(collect($usersWhoWhereLate)->pluck('email'));
+
         Log::debug('Beginning to send late notifications to trainees ('.count($usersWhoDidntAttended).')');
         Log::debug('Beginning to send late notifications to trainees ('.$usersWhoWhereLate->count().')');
 
