@@ -32,6 +32,7 @@
                         <div class="relative mt-2">
                             <select-trainee-group class="mt-2"
                                                   @input="selectGroupName"
+                                                  :loadTrainees="false"
                                                   v-model="trainee_group_name"
                                                   :required="true"
                             />

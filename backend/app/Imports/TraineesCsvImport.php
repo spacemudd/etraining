@@ -64,6 +64,7 @@ class TraineesCsvImport implements ToCollection
             if ($trainee = Trainee::where('email', $row[3])->first()) {
                 $trainee->team_id = auth()->user()->current_team_id;
                 $trainee->company_id = $this->company_id;
+                $trainee->trainee_group_id = $group->id;
                 $trainee->save();
             } else {
                 $trainee = Trainee::make([
@@ -80,10 +81,9 @@ class TraineesCsvImport implements ToCollection
                 ]);
                 $trainee->team_id = auth()->user()->current_team_id;
                 $trainee->company_id = $this->company_id;
+                $trainee->trainee_group_id = $group->id;
                 $trainee->save();
             }
-
-            $group->trainees()->attach([$trainee->id]);
         }
         \DB::commit();
 

@@ -73,21 +73,22 @@
                         <jet-input id="group-name"
                                    type="text"
                                    :class="editButton.inputClass"
-                                   v-model="trainee.trainee_group_object"
+                                   v-model="trainee.trainee_group"
                                    autocomplete="off"
                                    :disabled="!editButton.editOption" />
                     </template>
                 </div>
                 <div v-else class="col-span-6 sm:col-span-2">
                     <jet-label for="trainee_group_name" :value="$t('words.group-name')" />
-                    <select-trainee-group
-                        :loadTrainees="false"
-                        class="mt-1.5"
-                        :selectedItem="trainee.trainee_group"
-                        @input="selectGroupName"
-                        v-model="trainee.trainee_group.name"
-                        :disabled="!editButton.editOption"
-                    />
+                    <select :class="editButton.selectInputClass"
+                            v-model="trainee.trainee_group"
+                            id="trainee_group_id"
+                            :disabled="!editButton.editOption" >
+                        <option value=""></option>
+                        <option v-for="group in trainee_groups" :key="group.id" :value="group">
+                            {{ group.name }}
+                        </option>
+                    </select>
                 </div>
 
 

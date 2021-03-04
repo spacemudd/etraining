@@ -406,9 +406,14 @@ class TraineesController extends Controller
             $user->save();
         }
 
-        $group = TraineeGroup::firstOrCreate(['name' => $request->trainee_group_name]);
-        $trainee->trainee_group_id = $group->id;
-        $trainee->save();
+        if ($request->trainee_group_name) {
+            $group = TraineeGroup::firstOrCreate(['name' => $request->trainee_group_name]);
+            $trainee->trainee_group_id = $group->id;
+            $trainee->save();
+        } else {
+            $trainee->trainee_group_id = null;
+            $trainee->save();
+        }
 
         DB::commit();
 

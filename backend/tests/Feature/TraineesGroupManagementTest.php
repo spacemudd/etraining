@@ -67,6 +67,7 @@ class TraineesGroupManagementTest extends TestCase
 
         $trainee = [
             'trainee_group_id' => $teamX->id,
+            // 'trainee_group_name' => $teamX->name, Should work also.
             'name' => 'Shafiq al-Shaar',
             'email' => 'hello@getshafiq',
             'identity_number' => '10000',
