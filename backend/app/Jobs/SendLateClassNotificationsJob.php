@@ -76,55 +76,26 @@ class SendLateClassNotificationsJob implements ShouldQueue
         Log::debug('Beginning to send late notifications to trainees ('.count($usersWhoDidntAttended).')');
         Log::debug('Beginning to send late notifications to trainees ('.$usersWhoWhereLate->count().')');
 
-        //return 1;
-
-        $alreadySent = [
-            "noony7771@gmail.com",
-            "Jojo.f505@hotmail.com",
-            "mnala8706@gmail.com",
-            "Abonassertk@gmail.com",
-            "Lauly11@hotmail.com",
-            "Abeerth73@gmail.com",
-            "n.7oppy@gmail.com",
-            "n.7oppy@gmail.com",
-            "wadad857@gmail.com",
-            "sara9alenezi@gmail.com",
-            "hand1100@icloud.com",
-            "Realmu99@gmail.com",
-            "Mm-_-94@hotmail.com",
-            "ats1403h@gmail.com",
-            "meesh22880@gmail.com",
-            "Njoola14161234@gmail.com",
-            "mashaeil1678@gmail.com",
-            "abeeralaenazi@gmail.com",
-            "F20036@icloud.com",
-            "agla.glaa@windowslive.com",
-            "ziadanzi2002@gmail.com",
-            "muntt1985@gmail.com",
-            "Fatimah77_@hotmail.com",
-            "Fatima.Mohammad.sh@hotmail.com",
-            "hajrfran@gmail.com",
-            "najdn331@gmail.com",
-            "Norah1418nnaa@gmail.com",
-            "memebaqir1418@icloud.com",
-            "adlal8311@gmail.com",
-            "raghadmq15@gmail.com",
-            "hya.supie2030@gmail.com",
-            "ashwwag.n@gmail.com",
-            "alanazisha21@gmail.com",
-            "eill35az@gmail.com",
-        ];
-
         foreach ($usersWhoDidntAttended as $punchIn) {
-            if (in_array($punchIn->email, $alreadySent)) {
-                continue;
-            }
-
+            //if (in_array($punchIn->email, $alreadySent)) {
+            //    continue;
+            //}
 
             Log::debug('Sending warning to user: '.$punchIn->email);
 
             if (Str::startsWith($punchIn->phone, '05')) {
                 $punchIn->phone = Str::replaceFirst('05', '9665', $punchIn->phone);
+                $punchIn->save();
+
+                if ($punchIn->user) {
+                    $user = $punchIn->user;
+                    $user->phone = $punchIn->phone;
+                    $user->save();
+                }
+            }
+
+            if (Str::startsWith($punchIn->phone, '5')) {
+                $punchIn->phone = Str::replaceFirst('5', '9665', $punchIn->phone);
                 $punchIn->save();
 
                 if ($punchIn->user) {

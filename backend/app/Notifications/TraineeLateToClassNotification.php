@@ -56,10 +56,10 @@ class TraineeLateToClassNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject(__('words.late-to-class-warning'))
+            ->subject('انذار تأخر البرنامج التدريبي')
             ->line('عزيزتي المتدربة \ '.$notifiable->name)
             ->line(
-                'نظرا لتغيبكم اليوم الأربعاء الموافق لـ 3/3/2021 وعدم حضوركم البرنامج التدريبي وبناء عليه تم انذاركم.',
+                'نظرا لتأخركم اليوم الأثنين الموافق لـ 9/3/2021 للبرنامج التدريبي وبناء عليه تم انذاركم.',
             )
             ->line('نأمل منكم الالتزام بحضور البرنامج التدريبي والالتزام بالاوقات المحددة.')
             ->salutation('⠀')
