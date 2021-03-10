@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Jetstream\AddTeamMember;
-use App\Jobs\SendLateClassNotificationsJob;
+use App\Jobs\SendEmailsToLateAndMissedTraineesJob;
 use App\Models\Back\Company;
 use App\Models\Back\Course;
 use App\Models\Back\CourseBatch;
@@ -121,7 +121,7 @@ class SendingTraineesClassLateNotifications extends TestCase
         $attendance->team_id = $team->id;
         $attendance->save();
 
-        SendLateClassNotificationsJob::dispatch($session);
+        SendEmailsToLateAndMissedTraineesJob::dispatch($session);
 
         Notification::assertSentTo($majdaTraineeProfile, TraineeLateToClassNotification::class);
     }

@@ -7,11 +7,10 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use NotificationChannels\ClickSend\ClickSendChannel;
 
-class TraineeLateToClassNotification extends Notification
+class TraineeMissedClassNotification extends Notification
 {
     use Queueable;
 
@@ -59,10 +58,10 @@ class TraineeLateToClassNotification extends Notification
         $dayName = $this->session->starts_at->locale('ar')->getTranslatedDayName();
         $dayDate = $this->session->starts_at->now()->toDateString();
         return (new MailMessage)
-            ->subject('انذار تأخر البرنامج التدريبي')
+            ->subject('انذار لعدم حضور البرنامج التدريبي')
             ->line('عزيزتي المتدربة \ '.$notifiable->name)
             ->line(
-                'نظرا لتأخركم اليوم '.$dayName.' الموافق لـ '.$dayDate.' للبرنامج التدريبي وبناء عليه تم انذاركم.',
+                'نظرا لتغيبكم اليوم '.$dayName.' الموافق لـ '.$dayDate.'وعدم حضوركم للبرنامج التدريبي وبناء عليه تم انذاركم.',
             )
             ->line('نأمل منكم الالتزام بحضور البرنامج التدريبي والالتزام بالاوقات المحددة.')
             ->salutation('⠀')
@@ -77,7 +76,7 @@ class TraineeLateToClassNotification extends Notification
      */
     public function getMessage($notifiable)
     {
-        return 'تم انذاركم لتأخركم عن البرنامج التدريبي،
+        return 'تم انذاركم لعدم دخولكم البرنامج التدريبي،
         نأمل الالتزام بمواعيد الدورات التدريبية وشكراً';
     }
 

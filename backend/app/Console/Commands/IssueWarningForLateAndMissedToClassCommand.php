@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\SendLateClassNotificationsJob;
+use App\Jobs\SendEmailsToLateAndMissedTraineesJob;
 use App\Models\Back\CourseBatchSession;
 use Illuminate\Console\Command;
 
-class IssueWarningForLateToClassCommand extends Command
+class IssueWarningForLateAndMissedToClassCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -41,7 +41,7 @@ class IssueWarningForLateToClassCommand extends Command
     {
         if ($session_id = $this->option('session')) {
             $session = CourseBatchSession::findOrFail($session_id);
-            SendLateClassNotificationsJob::dispatch($session);
+            SendEmailsToLateAndMissedTraineesJob::dispatch($session);
         }
         return 1;
     }
