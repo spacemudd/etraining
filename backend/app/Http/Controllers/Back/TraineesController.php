@@ -12,6 +12,7 @@ use App\Models\Back\TraineeGroup;
 use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\MaritalStatus;
+use App\Notifications\CustomTraineeNotification;
 use App\Notifications\TraineeApplicationApprovedNotification;
 use App\Notifications\TraineeSetupAccountNotification;
 use App\Notifications\TraineeWelcomeNotification;
@@ -498,5 +499,32 @@ class TraineesController extends Controller
         $user->save();
 
         return redirect()->route('back.trainees.show', $trainee_id);
+    }
+
+    public function sendNotificationForm()
+    {
+        $this->authorize('send-messages-to-groups-of-trainees');
+        return Inertia::render('Back/Trainees/SendNotificationForm');
+    }
+
+    public function sendNotification(Request $request)
+    {
+        $this->authorize('send-messages-to-groups-of-trainees');
+
+        $request->validate([
+            'to_trainees_status' => 'required|numeric',
+            'email_title' => 'nullable|string|max:255',
+            'email_body' => 'nullable|string|max:255',
+            'sms_body' => 'nullable|string|max:255',
+        ]);
+
+        $trainees = Trainee::where('status', $request->to_trainees_status)
+            ->get();
+
+        Notification::send($trainees,
+            new CustomTraineeNotification($request->email_title, $request->email_body, $request->sms_body)
+        );
+
+        return redirect()->route('back.trainees.index');
     }
 }

@@ -85,6 +85,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('trainees/import', [\App\Http\Controllers\Back\TraineesImportController::class, 'index'])->name('trainees.import');
         Route::post('trainees/import', [\App\Http\Controllers\Back\TraineesImportController::class, 'store'])->name('trainees.import.store');
 
+        Route::get('trainees/send-notification', [\App\Http\Controllers\Back\TraineesController::class, 'sendNotificationForm'])->name('trainees.send-notification');
+        Route::post('trainees/send-notification/send', [\App\Http\Controllers\Back\TraineesController::class, 'sendNotification'])->name('trainees.send-notification.send');
         Route::post('trainees/{trainee_id}/set-password', [\App\Http\Controllers\Back\TraineesController::class, 'setPassword'])->name('trainees.set-password');
         Route::post('trainees/{trainee_id}/re-send-invitation', [\App\Http\Controllers\Back\TraineesController::class, 'resendInvitation'])->name('trainees.re-send-invitation');
         Route::get('trainees/excel', [\App\Http\Controllers\Back\TraineesController::class, 'excel'])->name('trainees.excel');

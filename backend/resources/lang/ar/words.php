@@ -297,4 +297,9 @@ return [
     'late-to-class-zero-part' => 'تم انذاركم لعدم دخولكم البرنامج التدريبي',
     'late-to-class-first-part' => 'اليوم الموافق',
     'late-to-class-second-part' => 'نأمل الالتزام بمواعيد الدورات التدريبية',
+    'send-messages-to-groups-of-trainees' => 'ارسال رسائل الى مجموعات من المتدربين',
+    'email-title' => 'عنوان البريد',
+    'email-body' => 'محتوى البريد',
+    'sms-body' => 'محتوى الرسالة النصية',
+    'group' => 'المجموعة',
 ];

@@ -11,6 +11,12 @@
             <div class="flex justify-between">
                 <h1 class="mb-8 font-bold text-3xl">{{ $t('words.trainees') }}</h1>
                 <div class="mb-6 flex justify-between items-center">
+
+                    <inertia-link :href="route('back.trainees.send-notification')"
+                                  class="rounded items-center justify-start mr-3 ml-3 float-left px-3 py-2.5 bg-yellow-200 hover:bg-yellow-300 text-left">
+                        {{ $t('words.send-messages-to-groups-of-trainees') }}
+                    </inertia-link>
+
                     <button v-if="!this.isArchive" @click="showBlocked" :class="archiveBtn.class">
                         {{ archiveBtn.text }}
                     </button>

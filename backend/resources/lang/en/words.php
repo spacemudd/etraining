@@ -294,4 +294,9 @@ return [
     'late-to-class-zero-part' => "Hello, we'd like to warn you about your lateness to the course",
     'late-to-class-first-part' => "the day of",
     'late-to-class-second-part' => 'We hope you abide by the course timings',
+    'send-messages-to-groups-of-trainees' => 'Send messages to groups of trainees',
+    'email-title' => 'Email title',
+    'email-body' => 'Email body',
+    'sms-body' => 'SMS body',
+    'group' => 'Group',
 ];

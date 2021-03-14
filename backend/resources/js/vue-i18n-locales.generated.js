@@ -445,7 +445,7 @@ export default {
             "view-company-trainees": "عرض متدربين الشركة",
             "resend-invitation": "إرسل رسالة دعوة",
             "done-successfully": "تم بنجاح",
-            "reset-trainees-account-password": "إتعديل كلمة سر المتدربات",
+            "reset-trainees-account-password": "تعديل كلمة سر المتدربات",
             "change-password": "تغير كلمة السر",
             "didnt-attend-at-all": "لم يحضرو إطلاقاً",
             "attendees-plus-late-attendees": "الحضور + المتأخرين",
@@ -454,7 +454,18 @@ export default {
             "singular-contract": "عقد",
             "can-impersonate": "دخول عبر حساب آخر (متدرب \\ مدرب)",
             "login-as-user": "الدخول من عبر الحساب",
-            "view-payments": "عرض المدفوعات"
+            "view-payments": "عرض المدفوعات",
+            "you-are-currently-logged-in-as": "انت حاليا تستخدم حساب",
+            "to-go-back-to-your-account-click-here": "للعودة لحسابك، يرجى الضغط هنا",
+            "late-to-class-warning": "انذار لعدم حضور البرنامج التدريبي",
+            "late-to-class-zero-part": "تم انذاركم لعدم دخولكم البرنامج التدريبي",
+            "late-to-class-first-part": "اليوم الموافق",
+            "late-to-class-second-part": "نأمل الالتزام بمواعيد الدورات التدريبية",
+            "send-messages-to-groups-of-trainees": "ارسال رسائل الى مجموعات من المتدربين",
+            "email-title": "عنوان البريد",
+            "email-body": "محتوى البريد",
+            "sms-body": "محتوى الرسالة النصية",
+            "group": "المجموعة"
         }
     },
     "en": {
@@ -879,7 +890,17 @@ export default {
             "singular-contract": "Contract",
             "can-impersonate": "Login as other user",
             "login-as-user": "Login as user",
-            "view-payments": "View payments"
+            "view-payments": "View payments",
+            "you-are-currently-logged-in-as": "You are currently logged in as",
+            "late-to-class-warning": "Late to course warning",
+            "late-to-class-zero-part": "Hello, we'd like to warn you about your lateness to the course",
+            "late-to-class-first-part": "the day of",
+            "late-to-class-second-part": "We hope you abide by the course timings",
+            "send-messages-to-groups-of-trainees": "Send messages to groups of trainees",
+            "email-title": "Email title",
+            "email-body": "Email body",
+            "sms-body": "SMS body",
+            "group": "Group"
         }
     }
 }
