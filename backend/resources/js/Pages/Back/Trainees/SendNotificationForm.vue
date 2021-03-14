@@ -104,6 +104,7 @@
                     email_title: '',
                     email_body: '',
                     email_message: '',
+                    sms_body: '',
                 }, {
                     bag: 'sendNotification',
                 })

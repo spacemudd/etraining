@@ -514,7 +514,7 @@ class TraineesController extends Controller
         $request->validate([
             'to_trainees_status' => 'required|numeric',
             'email_title' => 'nullable|string|max:255',
-            'email_body' => 'nullable|string|max:255',
+            'email_body' => 'nullable|string|max:500',
             'sms_body' => 'nullable|string|max:255',
         ]);
 
