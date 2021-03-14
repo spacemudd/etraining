@@ -23,7 +23,7 @@
 
                         <div class="col-span-4 sm:col-span-4">
                             <jet-label for="group" :value="$t('words.group')" />
-                            <jet-input id="to_trainee_status" type="text" class="mt-1 block w-full" value="المشرحين" disabled />
+                            <jet-input id="to_trainee_status" type="text" class="mt-1 block w-full" value="المرشحين" disabled />
                             <jet-input-error :message="form.error('to_trainee_status')" class="mt-2" />
                         </div>
 
