@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Console\Commands\AdhocCommand;
 use App\Console\Commands\DatabaseIndexTextCommand;
 use App\Console\Commands\InvitePeopleCommand;
+use App\Console\Commands\ProcessCourseAbsentWarningsCommand;
 use App\Console\Commands\SeedPermissionsCommand;
 use App\Console\Commands\SetupDevCommand;
 use App\Console\Commands\FixTraineeGroupsCommand;
@@ -27,6 +28,7 @@ class Kernel extends ConsoleKernel
         FixTraineeGroupsCommand::class,
         ZoomCommand::class,
         AdhocCommand::class,
+        ProcessCourseAbsentWarningsCommand::class,
     ];
 
     /**
@@ -40,6 +42,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->command('backup:clean')->daily()->at('01:00')->onOneServer();
         $schedule->command('backup:run')->daily()->at('01:30')->onOneServer();
+        $schedule->command('etraining:course-absent-warnings')->everyMinute();
     }
 
     /**
