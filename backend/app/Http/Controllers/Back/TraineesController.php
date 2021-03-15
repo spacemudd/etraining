@@ -512,14 +512,20 @@ class TraineesController extends Controller
         $this->authorize('send-messages-to-groups-of-trainees');
 
         $request->validate([
+            'registered_today_only' => 'nullable|boolean',
             'to_trainees_status' => 'required|numeric',
             'email_title' => 'nullable|string|max:255',
             'email_body' => 'nullable|string|max:500',
             'sms_body' => 'nullable|string|max:500',
         ]);
 
-        $trainees = Trainee::where('status', $request->to_trainees_status)
-            ->get();
+        $trainees = Trainee::where('status', $request->to_trainees_status);
+
+        if ($request->registered_today_only) {
+            $trainees->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()]);
+        }
+
+        $trainees = $trainees->get();
 
         Notification::send($trainees,
             new CustomTraineeNotification($request->email_title, $request->email_body, $request->sms_body)

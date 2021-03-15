@@ -465,7 +465,10 @@ export default {
             "email-title": "عنوان البريد",
             "email-body": "محتوى البريد",
             "sms-body": "محتوى الرسالة النصية",
-            "group": "المجموعة"
+            "group": "المجموعة",
+            "congratulations-you-were-assigned-to-a-company": "مبروك! تم ربط ملفك مع شركة",
+            "this-is-to-inform-you-that-your-file-was-assigned-to-a-company": "هذه إشعار انه تم ربط ملفك على شركة",
+            "registered-today-online": "تسجيلات اليوم فقط"
         }
     },
     "en": {
@@ -900,7 +903,10 @@ export default {
             "email-title": "Email title",
             "email-body": "Email body",
             "sms-body": "SMS body",
-            "group": "Group"
+            "group": "Group",
+            "congratulations-you-were-assigned-to-a-company": "Congratulations! You were assigned to a company",
+            "this-is-to-inform-you-that-your-file-was-assigned-to-a-company": "This is a notification that you were assigned to a company",
+            "registered-today-online": "Registered today only"
         }
     }
 }

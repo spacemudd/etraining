@@ -302,4 +302,7 @@ return [
     'email-body' => 'محتوى البريد',
     'sms-body' => 'محتوى الرسالة النصية',
     'group' => 'المجموعة',
+    'congratulations-you-were-assigned-to-a-company' => 'مبروك! تم ربط ملفك مع شركة',
+    'this-is-to-inform-you-that-your-file-was-assigned-to-a-company' => 'هذه إشعار انه تم ربط ملفك على شركة',
+    'registered-today-online' => 'تسجيلات اليوم فقط'
 ];
