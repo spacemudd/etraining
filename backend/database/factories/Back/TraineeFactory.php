@@ -49,6 +49,7 @@ class TraineeFactory extends Factory
             'marital_status_id' => null,
             'children_count' => $this->faker->randomDigit,
             'company_id' => null,
+            'email' => $this->faker->email,
         ];
     }
 }

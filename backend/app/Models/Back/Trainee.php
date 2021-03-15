@@ -6,6 +6,7 @@ use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\MaritalStatus;
 use App\Models\SearchableLabels;
+use App\Notifications\AssignedToCompanyTraineeNotification;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Scout\Searchable;
 use App\Models\User;
@@ -76,6 +77,13 @@ class Trainee extends Model implements HasMedia, SearchableLabels
             $model->{$model->getKeyName()} = (string) Str::uuid();
             if (auth()->user()) {
                 $model->team_id = $model->team_id = auth()->user()->currentTeam()->first()->id;
+            }
+        });
+
+        static::updating(function ($model) {
+            $companyChanged = $model->company_id != $model->getOriginal('company_id');
+            if ($companyChanged && $model->company_id) {
+                $model->notify(new AssignedToCompanyTraineeNotification());
             }
         });
     }

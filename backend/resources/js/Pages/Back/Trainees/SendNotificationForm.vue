@@ -28,6 +28,12 @@
                         </div>
 
                         <div class="col-span-4 sm:col-span-4">
+                            <jet-label for="registered_today_online" :value="$t('words.registered-today-online')" />
+                            <input type="checkbox" v-model="form.registered_today_online">
+                            <jet-input-error :message="form.error('registered_today_online')" class="mt-2" />
+                        </div>
+
+                        <div class="col-span-4 sm:col-span-4">
                             <jet-label for="email_title" :value="$t('words.email-title')" />
                             <jet-input id="email_title" type="text" class="mt-1 block w-full" v-model="form.email_title" autocomplete="off" autofocus />
                             <jet-input-error :message="form.error('email_title')" class="mt-2" />
@@ -101,6 +107,7 @@
                 addressSearch: '',
                 form: this.$inertia.form({
                     to_trainees_status: 1,
+                    registered_today_online: false,
                     email_title: '',
                     email_body: '',
                     email_message: '',

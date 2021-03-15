@@ -20,7 +20,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Notification;
 use Tests\TestCase;
 
-class SendingTraineesClassLateNotifications extends TestCase
+class SendingTraineesClassLateNotificationsTest extends TestCase
 {
     use WithFaker;
 

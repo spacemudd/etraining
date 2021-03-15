@@ -5,12 +5,14 @@ namespace Tests\Feature;
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Jetstream\AddTeamMember;
 use App\Actions\Jetstream\CreateTeam;
+use App\Models\Back\Company;
 use App\Models\Back\Trainee;
 use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\InboxMessage;
 use App\Models\MaritalStatus;
 use App\Models\User;
+use App\Notifications\AssignedToCompanyTraineeNotification;
 use App\Notifications\TraineeWelcomeNotification;
 use App\Services\RolesService;
 use Illuminate\Http\UploadedFile;
@@ -318,5 +320,34 @@ class CreateTraineesTest extends TestCase
         $this->actingAs($trainee_user)
             ->get(route('dashboard'))
             ->assertSuccessful();
+    }
+
+    public function test_trainee_receives_an_email_when_they_are_assigned_a_company()
+    {
+        Notification::fake();
+
+        $admin = (new CreateNewUser())->create([
+            'name' => 'Shafiq al-Shaar',
+            'email' => 'admin@getShafiq.com',
+            'password' => 'hello123123',
+            'password_confirmation' => 'hello123123',
+        ]);
+
+        $acmeCompany = Company::factory()->create(['team_id' => $admin->personalTeam()->id]);
+        $johnCompany = Company::factory()->create(['team_id' => $admin->personalTeam()->id]);
+        $trainee = Trainee::factory()->create([
+            'team_id' => $admin->personalTeam()->id,
+            'company_id' => $acmeCompany->id,
+        ]);
+
+        $this->actingAs($admin)->put(route('back.trainees.update', $trainee->id), [
+            'company_id' => $johnCompany->id,
+            'email' => $trainee->email,
+            'name' => $trainee->name,
+            'identity_number' => $trainee->identity_number,
+            'phone' => $trainee->phone,
+        ])->assertSessionDoesntHaveErrors();
+
+        Notification::assertSentTo($trainee, AssignedToCompanyTraineeNotification::class);
     }
 }
