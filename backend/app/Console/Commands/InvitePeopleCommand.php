@@ -71,8 +71,8 @@ class InvitePeopleCommand extends Command
             return 1;
         }
 
-        // Samar group.
-        $traineeGroup = TraineeGroup::where('id', 'dc856095-4a0d-471d-9a9f-c8c4ca430e91')->with('trainees')->first();
+        // Moodi group.
+        $traineeGroup = TraineeGroup::where('id', '47396796-9ee4-41d0-a069-179ea1b83a56')->with('trainees')->first();
         $trainees = $traineeGroup->trainees;
 
         $traineesCount = $trainees->count();
