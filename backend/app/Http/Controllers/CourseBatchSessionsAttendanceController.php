@@ -24,9 +24,9 @@ class CourseBatchSessionsAttendanceController extends Controller
     public function index($course_batch_session_id): \Inertia\Response
     {
         $courseBatchSession = CourseBatchSession::with('course')
-            ->with(['attendances' => function($q) {
-                $q->with('trainee');
-            }])
+            //->with(['attendances' => function($q) {
+            //    $q->with('trainee');
+            //}])
             ->with(['course_batch' => function($q) {
                 $q->with(['trainee_group' => function($q) {
                     $q->with(['trainees' => function($q) {
