@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddProcessedAbsenteesToCourseBatchSessions extends Migration
+class AddAbsenceReasonToAttendanceTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class AddProcessedAbsenteesToCourseBatchSessions extends Migration
      */
     public function up()
     {
-        Schema::table('course_batch_sessions', function (Blueprint $table) {
-            $table->boolean('processed_absentees')->default(false);
+        Schema::table('course_batch_session_attendances', function (Blueprint $table) {
+            $table->string('absence_reason')->nullable();
+            $table->tinyInteger('status')->nullable()->index();
         });
     }
 
@@ -25,7 +26,7 @@ class AddProcessedAbsenteesToCourseBatchSessions extends Migration
      */
     public function down()
     {
-        Schema::table('processed_absentees', function (Blueprint $table) {
+        Schema::table('course_batch_session_attendances', function (Blueprint $table) {
             //
         });
     }

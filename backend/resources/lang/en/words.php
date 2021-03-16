@@ -301,5 +301,7 @@ return [
     'group' => 'Group',
     'congratulations-you-were-assigned-to-a-company' => 'Congratulations! You were assigned to a company',
     'this-is-to-inform-you-that-your-file-was-assigned-to-a-company' => 'This is a notification that you were assigned to a company',
-    'registered-today-online' => 'Registered today only'
+    'registered-today-online' => 'Registered today only',
+    'absence-reason' => 'Absence reason',
+    'absent-with-excuse' => 'Absent with excuse',
 ];

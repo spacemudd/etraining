@@ -383,8 +383,8 @@ export default {
             "send": "ارسال",
             "attendance": "الحضور",
             "present": "موجود",
-            "absent": "غايب",
-            "submit-attendance-sheet-information": "بعد رفع قائمة الحضور، لا يمكن التعديل على القائمة مرة أخرى",
+            "absent": "غياب",
+            "submit-attendance-sheet-information": "بعد رفع قائمة الحضور، لا يمكن التعديل على القائمة مرة أخرى. النظام تلقائيا يرسل إنذارات بعد الإعتماد",
             "submit-attendance-sheet": "اعتمد قائمة الحضور",
             "approve-trainee": "اعتمد المتدرب",
             "results": "النتائج",
@@ -468,7 +468,9 @@ export default {
             "group": "المجموعة",
             "congratulations-you-were-assigned-to-a-company": "مبروك! تم ربط ملفك مع شركة",
             "this-is-to-inform-you-that-your-file-was-assigned-to-a-company": "هذه إشعار انه تم ربط ملفك على شركة",
-            "registered-today-online": "تسجيلات اليوم فقط"
+            "registered-today-online": "تسجيلات اليوم فقط",
+            "absence-reason": "سبب الغياب",
+            "absent-with-excuse": "غياب بعذر"
         }
     },
     "en": {
@@ -906,7 +908,9 @@ export default {
             "group": "Group",
             "congratulations-you-were-assigned-to-a-company": "Congratulations! You were assigned to a company",
             "this-is-to-inform-you-that-your-file-was-assigned-to-a-company": "This is a notification that you were assigned to a company",
-            "registered-today-online": "Registered today only"
+            "registered-today-online": "Registered today only",
+            "absence-reason": "Absence reason",
+            "absent-with-excuse": "Absent with excuse"
         }
     }
 }

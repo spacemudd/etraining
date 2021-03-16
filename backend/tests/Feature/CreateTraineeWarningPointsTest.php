@@ -7,6 +7,7 @@ use App\Models\Back\Company;
 use App\Models\Back\Course;
 use App\Models\Back\CourseBatch;
 use App\Models\Back\CourseBatchSession;
+use App\Models\Back\CourseBatchSessionAttendance;
 use App\Models\Back\Instructor;
 use App\Models\Back\Trainee;
 use App\Models\Back\TraineeGroup;
@@ -74,25 +75,40 @@ class CreateTraineeWarningPointsTest extends TestCase
             'ends_at' => now()->subMinute(10)
         ])->create();
 
+        $joeDoe = Trainee::factory()->create(
+            [
+                'team_id' => $company->team_id,
+                'trainee_group_id' => $traineeGroup->id,
+                'instructor_id' => $instructor->id,
+                'skip_uploading_id' => true,
+            ]
+        );
 
-        $joeDoe = Trainee::factory()->create([
-            'team_id' => $company->team_id,
-            'trainee_group_id' => $traineeGroup->id,
-            'instructor_id' => $instructor->id,
-        ]);
 
-        // Instructor to submit attendance sheet
 
-        $this->assertDatabaseHas('trainee_absents', [
+        //$joeDoe->status = 'absent_forgiven';
+        //$joeDoe->absence_reason = 'Sick';
+
+        // Instructor/Admin to submit attendance sheet
+        $this->actingAs($this->admin)
+            ->post(route('teaching.course-batch-sessions.attendance.store'), [
+               'course_batch_session_id' => $courseBatchSession->id,
+               'trainees' => [
+                   $joeDoe,
+               ],
+            ])->assertSessionDoesntHaveErrors();
+
+        dd($joeDoe->id);
+
+        $this->assertDatabaseHas('course_batch_session_attendances', [
             'trainee_id' => $joeDoe->id,
-            'course_id' => $course->id,
-            'course_batch_id' => $courseBatch->id,
-            'course_batch_session_id' => $courseBatchSession->id,
+            'status' => CourseBatchSessionAttendance::STATUS_ABSENT_FORGIVEN,
+            'absent_reason' => 'Sick',
         ]);
-
-        $this->assertDatabaseHas('course_batch_sessions', [
-            'id' => $courseBatchSession->id,
-            'processed_absentees' => true,
-        ]);
+        //
+        //$this->assertDatabaseHas('course_batch_sessions', [
+        //    'id' => $courseBatchSession->id,
+        //    'processed_absentees' => true,
+        //]);
     }
 }

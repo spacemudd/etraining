@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\Back\CourseBatchSessionAttendanceExport;
+use App\Jobs\CourseBatchSessionWarningsJob;
 use App\Models\Back\CourseBatchSession;
 use App\Models\Back\CourseBatchSessionAttendance;
 use App\Models\Back\Trainee;
@@ -28,10 +29,14 @@ class CourseBatchSessionsAttendanceController extends Controller
             }])
             ->with(['course_batch' => function($q) {
                 $q->with(['trainee_group' => function($q) {
-                    $q->with('trainees');
+                    $q->with(['trainees' => function($q) {
+                        $q->addSelect(['has_attended' => CourseBatchSessionAttendance::select('attended')
+                            ->whereColumn('trainee_id', 'trainees.id')
+                            ->take(1)
+                        ]);
+                    }]);
                 }]);
             }])->findOrFail($course_batch_session_id);
-
 
         return Inertia::render('Teaching/CourseBatchSessions/Attendance/Index', [
             'course_batch_session' => $courseBatchSession,
@@ -49,33 +54,60 @@ class CourseBatchSessionsAttendanceController extends Controller
     {
         $request->validate([
             'course_batch_session_id' => 'required|exists:course_batch_sessions,id',
-            'trainees.*.id' => 'required|exists:trainees,id',
-            'trainees.*.physical_attendance' => 'required|boolean',
         ]);
 
         $courseBatchSession = CourseBatchSession::with(['course', 'course_batch'])->findOrFail($request->course_batch_session_id);
 
         DB::beginTransaction();
         foreach ($request->trainees as $trainee) {
-            CourseBatchSessionAttendance::create([
-                'course_batch_session_id' => $courseBatchSession->id,
-                'course_batch_id' => $courseBatchSession->course_batch->id,
-                'course_id' => $courseBatchSession->course->id,
-                'trainee_id' => $trainee['id'],
-                'trainee_user_id' => Trainee::findOrFail($trainee['id'])->user_id,
-                'session_starts_at' => $courseBatchSession->starts_at,
-                'session_ends_at' => $courseBatchSession->ends_at,
-                'physical_attendance' => $trainee['physical_attendance'],
-            ]);
+            $status = CourseBatchSessionAttendance::STATUS_PRESENT;
+            if ($trainee['status'] === 'present') {
+                $status = CourseBatchSessionAttendance::STATUS_PRESENT;
+            }
+
+            if ($trainee['status'] === 'absent') {
+                $status = CourseBatchSessionAttendance::STATUS_ABSENT;
+            }
+
+            if ($trainee['status'] === 'absent_forgiven') {
+                $status = CourseBatchSessionAttendance::STATUS_ABSENT_FORGIVEN;
+            }
+
+            $attendance = CourseBatchSessionAttendance::where('trainee_id', $trainee['id'])
+                ->where('course_batch_session_id', $courseBatchSession->id)
+                ->first();
+
+            if ($attendance) {
+                $attendance->attended = $attendance->attended;
+                $attendance->absence_reason = $trainee['absence_reason'];
+                $attendance->status = $status;
+                $attendance->save();
+            } else {
+                $att = CourseBatchSessionAttendance::make([
+                    'team_id' => $courseBatchSession->team_id,
+                    'course_batch_session_id' => $courseBatchSession->id,
+                    'course_batch_id' => $courseBatchSession->course_batch->id,
+                    'course_id' => $courseBatchSession->course->id,
+                    'trainee_id' => $trainee['id'],
+                    'trainee_user_id' => Trainee::findOrFail($trainee['id'])->user_id,
+                    'session_starts_at' => $courseBatchSession->starts_at,
+                    'session_ends_at' => $courseBatchSession->ends_at,
+                    'attended' => false,
+                    'absence_reason' => $trainee['absence_reason'],
+                    'status' => $status,
+                ]);
+                $att->save();
+            }
         }
         DB::commit();
+
+        CourseBatchSessionWarningsJob::dispatch($courseBatchSession);
 
         return response()->redirectToRoute('teaching.courses.show', $courseBatchSession->course_id);
     }
 
-    public function attendingExcel($course_batch_session_id) {
-
+    public function attendingExcel($course_batch_session_id)
+    {
         return Excel::download(new AttendanceSheetExport($course_batch_session_id),'Attendance Sheet.xlsx');
-
     }
 }
