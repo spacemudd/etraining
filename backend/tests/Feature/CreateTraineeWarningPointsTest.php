@@ -81,7 +81,7 @@ class CreateTraineeWarningPointsTest extends TestCase
             'instructor_id' => $instructor->id,
         ]);
 
-        Artisan::call('etraining:course-absent-warnings');
+        // Instructor to submit attendance sheet
 
         $this->assertDatabaseHas('trainee_absents', [
             'trainee_id' => $joeDoe->id,
