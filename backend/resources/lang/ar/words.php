@@ -219,8 +219,8 @@ return [
     'send' => 'ارسال',
     'attendance' => 'الحضور',
     'present' => 'موجود',
-    'absent' => 'غايب',
-    'submit-attendance-sheet-information' => 'بعد رفع قائمة الحضور، لا يمكن التعديل على القائمة مرة أخرى',
+    'absent' => 'غياب',
+    'submit-attendance-sheet-information' => 'بعد رفع قائمة الحضور، لا يمكن التعديل على القائمة مرة أخرى. النظام تلقائيا يرسل إنذارات بعد الإعتماد',
     'submit-attendance-sheet' => 'اعتمد قائمة الحضور',
     'approve-trainee' => 'اعتمد المتدرب',
     'results' => 'النتائج',
@@ -304,5 +304,7 @@ return [
     'group' => 'المجموعة',
     'congratulations-you-were-assigned-to-a-company' => 'مبروك! تم ربط ملفك مع شركة',
     'this-is-to-inform-you-that-your-file-was-assigned-to-a-company' => 'هذه إشعار انه تم ربط ملفك على شركة',
-    'registered-today-online' => 'تسجيلات اليوم فقط'
+    'registered-today-online' => 'تسجيلات اليوم فقط',
+    'absence-reason' => 'سبب الغياب',
+    'absent-with-excuse' => 'غياب بعذر',
 ];

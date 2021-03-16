@@ -41,7 +41,6 @@ class SendEmailsToLateAndMissedTraineesJob implements ShouldQueue
      */
     public function handle()
     {
-
         $users = CourseBatchSession::with('course')
             ->with(['attendances' => function($q) {
                 $q->with(['trainee' => function($q) {
@@ -78,10 +77,6 @@ class SendEmailsToLateAndMissedTraineesJob implements ShouldQueue
         Log::debug('Beginning to send late notifications to trainees ('.$usersWhoWhereLate->count().')');
 
         foreach ($usersWhoDidntAttended as $punchIn) {
-            //if (in_array($punchIn->email, $alreadySent)) {
-            //    continue;
-            //}
-
             Log::debug('Sending warning to user: '.$punchIn->email);
 
             if (Str::startsWith($punchIn->phone, '05')) {
@@ -116,9 +111,6 @@ class SendEmailsToLateAndMissedTraineesJob implements ShouldQueue
 
         foreach ($usersWhoWhereLate as $punchInAttendance) {
             $punchIn = $punchInAttendance->trainee;
-            //if (in_array($punchIn->email, $alreadySent)) {
-            //    continue;
-            //}
             Log::debug('Sending warning to user: '.$punchIn->email);
 
             if (Str::startsWith($punchIn->phone, '05')) {

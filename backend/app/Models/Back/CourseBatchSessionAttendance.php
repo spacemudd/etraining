@@ -14,11 +14,16 @@ class CourseBatchSessionAttendance extends Model
     use HasFactory;
     use HasUuid;
 
+    const STATUS_ABSENT = 1;
+    const STATUS_ABSENT_FORGIVEN = 2;
+    const STATUS_PRESENT = 3;
+
     public $incrementing = false;
 
     protected $keyType = 'string';
 
     protected $fillable = [
+        'team_id',
         'course_batch_session_id',
         'course_batch_id',
         'course_id',
