@@ -75,14 +75,10 @@ class CustomCommand extends Command
             966550328208,
         ];
 
-        $numbers = [
-            '966565176235',
-        ];
-
         foreach ($numbers as $number) {
             $trainee = Trainee::where('phone', $number)->first();
             if (!$trainee) {
-                $this->info('Trainee not found: '.$trainee->phone);
+                $this->info('Trainee not found: '.$number);
             } else {
                 $this->info('Sent: '.$trainee->phone);
                 $trainee->notify(new TraineePrivateMessage(
