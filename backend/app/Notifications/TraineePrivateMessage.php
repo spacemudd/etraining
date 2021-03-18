@@ -62,7 +62,7 @@ class TraineePrivateMessage extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
+        return (new MailMessageMultiline())
             ->subject($this->email_title)
             ->line($this->email_body)
             ->salutation('⠀')
