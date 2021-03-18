@@ -307,4 +307,6 @@ return [
     'registered-today-online' => 'تسجيلات اليوم فقط',
     'absence-reason' => 'سبب الغياب',
     'absent-with-excuse' => 'غياب بعذر',
+    'send-message' => 'ارسال رسالة',
+    'private-message' => 'رسالة خاصة',
 ];

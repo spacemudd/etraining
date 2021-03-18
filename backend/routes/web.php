@@ -85,6 +85,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('trainees/import', [\App\Http\Controllers\Back\TraineesImportController::class, 'index'])->name('trainees.import');
         Route::post('trainees/import', [\App\Http\Controllers\Back\TraineesImportController::class, 'store'])->name('trainees.import.store');
 
+        Route::get('/trainees/{id}/send-private-notification', [\App\Http\Controllers\Back\TraineesController::class, 'sendPrivateNotificationForm'])->name('trainees.private-notifications.create');
+        Route::post('/trainees/{id}/send-private-notification/send', [\App\Http\Controllers\Back\TraineesController::class, 'sendPrivateNotification'])->name('trainees.private-notifications.send');
         Route::get('trainees/send-notification', [\App\Http\Controllers\Back\TraineesController::class, 'sendNotificationForm'])->name('trainees.send-notification');
         Route::post('trainees/send-notification/send', [\App\Http\Controllers\Back\TraineesController::class, 'sendNotification'])->name('trainees.send-notification.send');
         Route::post('trainees/{trainee_id}/set-password', [\App\Http\Controllers\Back\TraineesController::class, 'setPassword'])->name('trainees.set-password');

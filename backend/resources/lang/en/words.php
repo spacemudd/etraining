@@ -304,4 +304,6 @@ return [
     'registered-today-online' => 'Registered today only',
     'absence-reason' => 'Absence reason',
     'absent-with-excuse' => 'Absent with excuse',
+    'send-message' => 'Send message',
+    'private-message' => 'Private message',
 ];

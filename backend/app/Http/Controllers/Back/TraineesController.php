@@ -14,6 +14,7 @@ use App\Models\EducationalLevel;
 use App\Models\MaritalStatus;
 use App\Notifications\CustomTraineeNotification;
 use App\Notifications\TraineeApplicationApprovedNotification;
+use App\Notifications\TraineePrivateMessage;
 use App\Notifications\TraineeSetupAccountNotification;
 use App\Notifications\TraineeWelcomeNotification;
 use App\Services\TraineesServices;
@@ -532,5 +533,34 @@ class TraineesController extends Controller
         );
 
         return redirect()->route('back.trainees.index');
+    }
+
+    public function sendPrivateNotificationForm($id)
+    {
+        return Inertia::render('Back/Trainees/PrivateNotifications/Create', [
+            'trainee' => Trainee::findOrFail($id),
+        ]);
+    }
+
+    /**
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function sendPrivateNotification(Request $request, $id)
+    {
+        $request->validate([
+            'email_title' => 'required|string|max:500',
+            'email_body' => 'required|string|max:500',
+            'sms_body' => 'nullable|string|max:500',
+        ]);
+        $trainee = Trainee::findOrFail($id);
+        $trainee->notify(new TraineePrivateMessage($request->email_title, $request->email_body, $request->sms_body));
+        Log::info([
+            'Sending message to: '.$trainee->email,
+            'Body: '.$request->email_body,
+        ]);
+        return redirect()->route('back.trainees.show', $trainee->id);
     }
 }

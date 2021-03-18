@@ -13,6 +13,7 @@ use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\MaritalStatus;
 use App\Models\User;
+use App\Notifications\TraineePrivateMessage;
 use App\Notifications\TraineeSetupAccountNotification;
 use App\Services\RolesService;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -529,5 +530,40 @@ class TraineesManagementTest extends TestCase
             ]);
 
         $this->assertNotEquals($oldHash, $trainee->user->refresh()->password);
+    }
+
+    public function test_sending_private_message_to_trainee()
+    {
+        Notification::fake();
+
+        $mike = Trainee::factory()->create([
+            'team_id' => $this->user->personalTeam()->id,
+        ]);
+
+        $message = [
+            'email_title' => 'Hello1',
+            'email_body' => 'Hello2',
+            'sms_body' => 'Hello3',
+        ];
+
+        $this->actingAs($this->user)
+            ->post(route('back.trainees.private-notifications.send', $mike->id), $message)
+            ->assertRedirect(route('back.trainees.show', $mike->id))
+            ->assertSessionDoesntHaveErrors();
+
+        Notification::assertSentTo($mike, function(TraineePrivateMessage $notification) use ($message) {
+            return $notification->body === $message['body'];
+        });
+    }
+
+    public function test_sending_private_notification_form()
+    {
+        $sarah = Trainee::factory()->create([
+            'team_id' => $this->user->personalTeam()->id,
+        ]);
+
+        $this->actingAs($this->user)
+            ->get(route('back.trainees.private-notifications.create', $sarah->id))
+            ->assertSuccessful();
     }
 }

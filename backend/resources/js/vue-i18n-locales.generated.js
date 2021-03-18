@@ -470,7 +470,9 @@ export default {
             "this-is-to-inform-you-that-your-file-was-assigned-to-a-company": "هذه إشعار انه تم ربط ملفك على شركة",
             "registered-today-online": "تسجيلات اليوم فقط",
             "absence-reason": "سبب الغياب",
-            "absent-with-excuse": "غياب بعذر"
+            "absent-with-excuse": "غياب بعذر",
+            "send-message": "ارسال رسالة",
+            "private-message": "رسالة خاصة"
         }
     },
     "en": {
@@ -910,7 +912,9 @@ export default {
             "this-is-to-inform-you-that-your-file-was-assigned-to-a-company": "This is a notification that you were assigned to a company",
             "registered-today-online": "Registered today only",
             "absence-reason": "Absence reason",
-            "absent-with-excuse": "Absent with excuse"
+            "absent-with-excuse": "Absent with excuse",
+            "send-message": "Send message",
+            "private-message": "Private message"
         }
     }
 }
