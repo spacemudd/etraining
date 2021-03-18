@@ -13,8 +13,7 @@
 
                 <div class="col-span-6 items-center justify-end bg-gray-50 text-right flex gap-6">
 
-                    <inertia-link v-if="trainee.user_id"
-                               :href="route('back.trainees.private-notifications.create', trainee.id)"
+                    <inertia-link :href="route('back.trainees.private-notifications.create', trainee.id)"
                                class="items-center justify-start text-left float-left rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
                                 {{ $t('words.private-message') }}
                     </inertia-link>
