@@ -552,7 +552,7 @@ class TraineesManagementTest extends TestCase
             ->assertSessionDoesntHaveErrors();
 
         Notification::assertSentTo($mike, function(TraineePrivateMessage $notification) use ($message) {
-            return $notification->body === $message['body'];
+            return $notification->email_body === $message['email_body'];
         });
     }
 

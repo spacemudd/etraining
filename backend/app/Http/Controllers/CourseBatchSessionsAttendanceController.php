@@ -24,9 +24,6 @@ class CourseBatchSessionsAttendanceController extends Controller
     public function index($course_batch_session_id): \Inertia\Response
     {
         $courseBatchSession = CourseBatchSession::with('course')
-            //->with(['attendances' => function($q) {
-            //    $q->with('trainee');
-            //}])
             ->with(['course_batch' => function($q) {
                 $q->with(['trainee_group' => function($q) {
                     $q->with(['trainees' => function($q) {
@@ -58,6 +55,8 @@ class CourseBatchSessionsAttendanceController extends Controller
 
         $courseBatchSession = CourseBatchSession::with(['course', 'course_batch'])->findOrFail($request->course_batch_session_id);
 
+        throw_if($courseBatchSession->committed_attendances_at, 'Attendances were already committed');
+
         DB::beginTransaction();
         foreach ($request->trainees as $trainee) {
             $status = CourseBatchSessionAttendance::STATUS_PRESENT;
@@ -84,7 +83,6 @@ class CourseBatchSessionsAttendanceController extends Controller
                 $attendance->save();
             } else {
                 $att = CourseBatchSessionAttendance::make([
-                    'team_id' => $courseBatchSession->team_id,
                     'course_batch_session_id' => $courseBatchSession->id,
                     'course_batch_id' => $courseBatchSession->course_batch->id,
                     'course_id' => $courseBatchSession->course->id,
@@ -96,9 +94,13 @@ class CourseBatchSessionsAttendanceController extends Controller
                     'absence_reason' => $trainee['absence_reason'],
                     'status' => $status,
                 ]);
+                $att->team_id = $courseBatchSession->team_id;
                 $att->save();
             }
         }
+
+        $courseBatchSession->committed_attendances_at = now();
+        $courseBatchSession->save();
         DB::commit();
 
         CourseBatchSessionWarningsJob::dispatch($courseBatchSession);
@@ -109,5 +111,30 @@ class CourseBatchSessionsAttendanceController extends Controller
     public function attendingExcel($course_batch_session_id)
     {
         return Excel::download(new AttendanceSheetExport($course_batch_session_id),'Attendance Sheet.xlsx');
+    }
+
+    public function updateTraineeAttendance(Request $request, $session_id)
+    {
+        $request->validate([
+            'trainee_id' => 'required',
+            'status' => 'required|string',
+        ]);
+
+        $trainee = Trainee::findOrFail($request->trainee_id);
+        $attendance = CourseBatchSessionAttendance::where('course_batch_session_id', $session_id)
+            ->where('trainee_id', $trainee->id)
+            ->first();
+
+        if ($request->status === 'present') {
+            $attendance->status = CourseBatchSessionAttendance::STATUS_PRESENT;
+        } elseif ($request->status === 'absent') {
+            $attendance->status = CourseBatchSessionAttendance::STATUS_ABSENT;
+        } elseif ($request->status === 'absent_forgiven') {
+            $attendance->status = CourseBatchSessionAttendance::STATUS_ABSENT_FORGIVEN;
+        }
+
+        $attendance->save();
+
+        return $attendance;
     }
 }

@@ -127,11 +127,13 @@ class TraineesGroupManagementTest extends TestCase
         ]);
         $traineeDb = Trainee::whereEmail($trainee['email'])->first();
         $trainee['trainee_group_id'] = $differentTeam->id;
+        $trainee['trainee_group_name'] = $differentTeam->name;
         $this->actingAs($this->user)
             ->put(route('back.trainees.update', $traineeDb->id), $trainee)
-            ->assertSessionDoesntHaveErrors();
+            ->assertSessionDoesntHaveErrors()
+            ->assertRedirect(route('back.trainees.show', $traineeDb->id));
 
-        $this->assertEquals(0, $teamX->trainees()->count());
-        $this->assertEquals(1, $differentTeam->trainees()->count());
+        $this->assertEquals(0, $teamX->refresh()->trainees()->count());
+        $this->assertEquals(1, $differentTeam->refresh()->trainees()->count());
     }
 }

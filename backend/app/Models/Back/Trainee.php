@@ -98,11 +98,6 @@ class Trainee extends Model implements HasMedia, SearchableLabels
         return optional($this->user)->locale;
     }
 
-    public function absentes()
-    {
-        return $this->hasMany(TraineeAbsent::class);
-    }
-
     public function company()
     {
         return $this->belongsTo(Company::class);

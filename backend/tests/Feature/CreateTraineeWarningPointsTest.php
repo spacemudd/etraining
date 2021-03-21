@@ -34,46 +34,38 @@ class CreateTraineeWarningPointsTest extends TestCase
         ]);
     }
 
-    public function test_trainee_has_absent_points()
+    public function test_trainee_gets_an_absent_record_when_missing_a_course()
     {
-        $joeDoe = Trainee::factory()->create([
+        $team_id = $this->admin->personalTeam()->id;
+        $instructor = Instructor::factory()->create([
             'team_id' => $this->admin->personalTeam()->id,
         ]);
 
-        $this->assertEmpty($joeDoe->absents()->get());
-    }
-
-    public function test_trainee_gets_an_absent_record_when_missing_a_course()
-    {
-        $instructor = Instructor::factory([
+        $company = Company::factory()->create([
             'team_id' => $this->admin->personalTeam()->id,
-        ])->create();
+        ]);
 
-        $company = Company::factory([
-            'team_id' => $this->admin->personalTeam()->id,
-        ])->create();
-
-        $traineeGroup = TraineeGroup::factory([
+        $traineeGroup = TraineeGroup::factory()->create([
             'team_id' => $company->team_id,
             'company_id' => $company->id,
-        ])->create();
+        ]);
 
-        $course = Course::factory([
+        $course = Course::factory()->create([
             'team_id' => $company->team_id,
             'instructor_id' => $instructor->id,
-        ])->create();
-        $courseBatch = CourseBatch::factory([
+        ]);
+        $courseBatch = CourseBatch::factory()->create([
             'team_id' => $company->team_id,
             'course_id' => $course->id,
             'trainee_group_id' => $traineeGroup->id,
-        ])->create();
-        $courseBatchSession = CourseBatchSession::factory([
+        ]);
+        $courseBatchSession = CourseBatchSession::factory()->create([
             'team_id' => $company->team_id,
             'course_id' => $course->id,
             'course_batch_id' => $courseBatch->id,
             'starts_at' => now()->subHour(3),
             'ends_at' => now()->subMinute(10)
-        ])->create();
+        ]);
 
         $joeDoe = Trainee::factory()->create(
             [

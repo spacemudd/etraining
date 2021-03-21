@@ -39,6 +39,7 @@ class CourseBatchSessionAttendance extends Model
 
     protected $casts = [
         'attended_at' => 'datetime',
+        'committed_attendances_at' => 'datetime',
     ];
 
     protected $appends = [

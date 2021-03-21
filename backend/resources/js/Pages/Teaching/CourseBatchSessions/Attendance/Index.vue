@@ -24,7 +24,8 @@
                     <div class="p-5">
                         <table class="w-full whitespace-no-wrap">
                             <colgroup>
-                                <col style="width:50%;">
+                                <col style="width:400px;">
+                                <col style="width:400px;">
                                 <col>
                             </colgroup>
                             <thead>
@@ -53,7 +54,7 @@
                                     </td>
                                     <td class="px-6 py-4">
                                         <input class="input"
-                                               v-if="!trainee.has_attended"
+                                               v-if="trainee.status==='absent_forgiven'"
                                                v-model="trainee.absence_reason"
                                                type="text"
                                                name="fileRequestTitleAr"
@@ -76,7 +77,10 @@
                     <inertia-link :href="route('teaching.courses.show', course_batch_session.course_id)" class="flex items-center justify-start rounded-md px-4 py-2 hover:bg-gray-300 text-right">
                         {{ $t('words.cancel') }}
                     </inertia-link>
-                    <button @click.prevent="submitAttendanceSheet" class="flex items-center justify-start rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right mx-5">
+                    <button @click.prevent="submitAttendanceSheet"
+                            :class="{'opacity-50': $wait.is('SUBMITTING_ATTENDANCE')}"
+                            class="flex items-center justify-start rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right mx-5">
+                        <btn-loading-indicator v-if="$wait.is('SUBMITTING_ATTENDANCE')" />
                         {{ $t('words.submit-attendance-sheet') }}
                     </button>
                 </div>
@@ -100,6 +104,7 @@
         },
         props: ['course_batch_session'],
         mounted() {
+            this.$wait.end('SUBMITTING_ATTENDANCE');
             this.course_batch_session.course_batch.trainee_group.trainees.forEach((trainee) => {
                 if (trainee.has_attended) {
                     trainee.status = 'present';
@@ -133,8 +138,10 @@
                 trainee.status = 'absent_forgiven';
             },
             submitAttendanceSheet() {
+                this.$wait.start('SUBMITTING_ATTENDANCE');
                 this.form.post(
-                    route('teaching.course-batch-sessions.attendance.store', {course_batch_session_id: this.course_batch_session_id}));
+                    route('teaching.course-batch-sessions.attendance.store', {course_batch_session_id: this.course_batch_session_id})
+                );
             },
         },
     }
