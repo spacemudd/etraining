@@ -39,11 +39,11 @@ class FixTraineeesPhone extends Command
      */
     public function handle()
     {
-        $traineesCount = Trainee::candidates()->count();
+        $traineesCount = Trainee::count();
         $bar = $this->output->createProgressBar($traineesCount);
         $bar->start();
 
-        Trainee::candidates()->chunk(100, function($trainees) use ($bar) {
+        Trainee::chunk(100, function($trainees) use ($bar) {
             foreach ($trainees as $trainee) {
                 if (Str::startsWith('966', $trainee->phone)) {
                     continue;
