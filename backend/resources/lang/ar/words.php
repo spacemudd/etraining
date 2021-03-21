@@ -99,7 +99,7 @@ return [
     'educational_level' => 'مؤهل التعليمي',
     'city' => 'المدينة',
     'district' => 'الحي',
-    'marital_status' => 'الحالة الزوجية',
+    'marital_status' => 'الحالة الإجتماعية',
     'children_count' => 'عدد الأطفال',
     'documents' => 'ملفات',
     'documents-help' => 'هنا يمكنك عرض كل الملفات المطلوبة',
