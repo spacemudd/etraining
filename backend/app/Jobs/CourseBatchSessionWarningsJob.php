@@ -43,7 +43,7 @@ class CourseBatchSessionWarningsJob implements ShouldQueue
     {
         $attendances = $this->courseBatchSession->attendances;
         foreach ($attendances as $attendance) {
-            if ($attendance->status === CourseBatchSessionAttendance::STATUS_ABSENT) {
+            if ($attendance->status === CourseBatchSessionAttendance::STATUS_ABSENT && !$attendance->attended) {
                 Log::info('Sending to: '.$attendance->trainee->id);
                 $attendance->trainee->notify(new TraineeMissedClassNotification($this->courseBatchSession));
             }
