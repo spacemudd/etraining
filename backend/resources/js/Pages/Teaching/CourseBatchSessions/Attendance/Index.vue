@@ -25,8 +25,8 @@
                         <table class="w-full whitespace-no-wrap">
                             <colgroup>
                                 <col style="width:400px;">
-                                <col style="width:400px;">
                                 <col>
+                                <col style="width:300px;">
                             </colgroup>
                             <thead>
                                 <tr class="text-left font-bold">
@@ -39,15 +39,19 @@
                                 <tr class="border-t" v-for="(trainee, key) in form.trainees">
                                     <td class="px-6 py-4">{{ trainee.name }}</td>
                                     <td class="px-6 py-4">
-                                        <button style="width:100px;height:40px;"
+                                        <button style="width:130px;height:40px;"
                                                 :class="{'bg-blue-600 border-blue-600 text-white': trainee.status === 'absent'}"
                                                 class="border-2 inline-block border-red-500 p-2 rounded-lg"
                                                 @click.prevent="setTraineeAbsent(trainee, key)">{{ $t('words.absent') }}</button>
-                                        <button style="width:100px;height:40px;"
+                                        <button style="width:130px;height:40px;"
                                                 :class="{'bg-blue-600 border-blue-600 text-white': trainee.status === 'absent_forgiven'}"
                                                 class="border-2 inline-block border-red-500 p-2 rounded-lg"
                                                 @click.prevent="setTraineeAbsentWihExcuse(trainee, key)">{{ $t('words.absent-with-excuse') }}</button>
-                                        <button style="width:100px;height:40px;"
+                                        <button style="width:130px;height:40px;"
+                                                :class="{'bg-blue-600 border-blue-600 text-white': trainee.status === 'present_late'}"
+                                                class="border-2 inline-block border-red-500 p-2 rounded-lg"
+                                                @click.prevent="setTraineePresentLate(trainee, key)">{{ $t('words.present-but-late') }}</button>
+                                        <button style="width:130px;height:40px;"
                                                 :class="{'bg-blue-600 border-blue-600 text-white': trainee.status === 'present'}"
                                                 class="border-2 inline-block border-red-500 p-2 rounded-lg"
                                                 @click.prevent="setTraineePresent(trainee, key)">{{ $t('words.present') }}</button>
@@ -68,11 +72,6 @@
                 </div>
 
                 <div class="bg-white rounded shadow overflow-x-auto mt-5 p-5">
-                <div class="flex">
-                    <ion-icon name="alert-circle-outline" class="w-5 h-5" style="margin-top:3px;"></ion-icon>
-                    <p class="mx-2">{{ $t('words.submit-attendance-sheet-information') }}.</p>
-                </div>
-
                 <div class="flex mt-5">
                     <inertia-link :href="route('teaching.courses.show', course_batch_session.course_id)" class="flex items-center justify-start rounded-md px-4 py-2 hover:bg-gray-300 text-right">
                         {{ $t('words.cancel') }}
@@ -81,7 +80,7 @@
                             :class="{'opacity-50': $wait.is('SUBMITTING_ATTENDANCE')}"
                             class="flex items-center justify-start rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right mx-5">
                         <btn-loading-indicator v-if="$wait.is('SUBMITTING_ATTENDANCE')" />
-                        {{ $t('words.submit-attendance-sheet') }}
+                        {{ $t('words.submit') }}
                     </button>
                 </div>
             </div>
@@ -94,6 +93,7 @@
     import AppLayout from '@/Layouts/AppLayoutInstructor'
     import IconNavigate from 'vue-ionicons/dist/ios-arrow-dropright'
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
+    import BtnLoadingIndicator from "@/Components/BtnLoadingIndicator";
 
     export default {
         metaInfo: { title: 'Attendance' },
@@ -101,6 +101,7 @@
             BreadcrumbContainer,
             IconNavigate,
             AppLayout,
+            BtnLoadingIndicator,
         },
         props: ['course_batch_session'],
         mounted() {
@@ -128,6 +129,10 @@
         methods: {
             setTraineePresent(trainee, key) {
                 trainee.status = 'present';
+                this.$set(this.form.trainees, key, trainee);
+            },
+            setTraineePresentLate(trainee, key) {
+                trainee.status = 'present_late';
                 this.$set(this.form.trainees, key, trainee);
             },
             setTraineeAbsent(trainee, key) {

@@ -17,6 +17,7 @@ class CourseBatchSessionAttendance extends Model
     const STATUS_ABSENT = 1;
     const STATUS_ABSENT_FORGIVEN = 2;
     const STATUS_PRESENT = 3;
+    const STATUS_PRESENT_LATE_TO_COURSE = 4;
 
     public $incrementing = false;
 

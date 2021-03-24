@@ -195,6 +195,11 @@ class Trainee extends Model implements HasMedia, SearchableLabels
         return $this->media()->where('collection_name', $folder);
     }
 
+    public function attendances()
+    {
+        return $this->hasMany(CourseBatchSessionAttendance::class);
+    }
+
     public function getIdentityCopyUrlAttribute()
     {
         return $this->getCopyUrl('identity');

@@ -472,7 +472,12 @@ export default {
             "absence-reason": "سبب الغياب",
             "absent-with-excuse": "غياب بعذر",
             "send-message": "ارسال رسالة",
-            "private-message": "رسالة خاصة"
+            "private-message": "رسالة خاصة",
+            "confirm": "اعتماد",
+            "confirm-attendance-sheet": "إعتمد الحضور",
+            "sending-absent-warnings-to-users": "إنذارات عدم الحضور",
+            "sending-late-warnings-to-users": "إنذارات تأخر الحضور",
+            "present-but-late": "موجود (متأخر)"
         }
     },
     "en": {
@@ -914,7 +919,12 @@ export default {
             "absence-reason": "Absence reason",
             "absent-with-excuse": "Absent with excuse",
             "send-message": "Send message",
-            "private-message": "Private message"
+            "private-message": "Private message",
+            "confirm": "Confirm",
+            "confirm-attendance-sheet": "Confirm attendance sheet",
+            "sending-absent-warnings-to-users": "ًAbsent warnings",
+            "sending-late-warnings-to-users": "Late warnings",
+            "present-but-late": "Present (late)"
         }
     }
 }

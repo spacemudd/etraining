@@ -42,6 +42,7 @@ class AttendanceService
                 'session_ends_at' => $course_batch_session->ends_at,
                 'attended_at' => now(),
                 'attended' => $attendance,
+                'status' => $attendance ? CourseBatchSessionAttendance::STATUS_PRESENT : CourseBatchSessionAttendance::STATUS_PRESENT_LATE_TO_COURSE,
             ]));
         }
 

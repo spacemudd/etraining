@@ -24,13 +24,12 @@ class CourseBatchSessionsAttendanceController extends Controller
     public function index($course_batch_session_id): \Inertia\Response
     {
         $courseBatchSession = CourseBatchSession::with('course')
-            ->with(['course_batch' => function($q) {
-                $q->with(['trainee_group' => function($q) {
-                    $q->with(['trainees' => function($q) {
-                        $q->addSelect(['has_attended' => CourseBatchSessionAttendance::select('attended')
-                            ->whereColumn('trainee_id', 'trainees.id')
-                            ->take(1)
-                        ]);
+            ->with(['course_batch' => function($q) use ($course_batch_session_id) {
+                $q->with(['trainee_group' => function($q) use ($course_batch_session_id) {
+                    $q->with(['trainees' => function($q) use ($course_batch_session_id) {
+                        $q->with(['attendances' => function($q) use ($course_batch_session_id) {
+                            $q->where('course_batch_session_id', $course_batch_session_id);
+                        }]);
                     }]);
                 }]);
             }])->findOrFail($course_batch_session_id);
@@ -55,13 +54,17 @@ class CourseBatchSessionsAttendanceController extends Controller
 
         $courseBatchSession = CourseBatchSession::with(['course', 'course_batch'])->findOrFail($request->course_batch_session_id);
 
-        throw_if($courseBatchSession->committed_attendances_at, 'Attendances were already committed');
+        // throw_if($courseBatchSession->committed_attendances_at, 'Attendances were already committed');
 
         DB::beginTransaction();
         foreach ($request->trainees as $trainee) {
             $status = CourseBatchSessionAttendance::STATUS_PRESENT;
             if ($trainee['status'] === 'present') {
                 $status = CourseBatchSessionAttendance::STATUS_PRESENT;
+            }
+
+            if ($trainee['status'] === 'present_late') {
+                $status = CourseBatchSessionAttendance::STATUS_PRESENT_LATE_TO_COURSE;
             }
 
             if ($trainee['status'] === 'absent') {
@@ -103,9 +106,7 @@ class CourseBatchSessionsAttendanceController extends Controller
         $courseBatchSession->save();
         DB::commit();
 
-        CourseBatchSessionWarningsJob::dispatch($courseBatchSession);
-
-        return response()->redirectToRoute('teaching.courses.show', $courseBatchSession->course_id);
+        return response()->redirectToRoute('teaching.course-batch-sessions.attendance.confirm', $courseBatchSession->id);
     }
 
     public function attendingExcel($course_batch_session_id)
@@ -136,5 +137,43 @@ class CourseBatchSessionsAttendanceController extends Controller
         $attendance->save();
 
         return $attendance;
+    }
+
+    /**
+     * Confirm sending our warnings.
+     *
+     * @param $course_batch_session_id
+     * @return \Inertia\Response
+     */
+    public function confirm($course_batch_session_id)
+    {
+        $session = CourseBatchSession::with('course')->findOrFail($course_batch_session_id);
+        $sendingWarningsToQuery = $session->attendances()
+            ->with('trainee')
+            ->where('status', CourseBatchSessionAttendance::STATUS_ABSENT);
+            //->where('attended', false);
+
+        $sendingLateWarningsQuery = $session->attendances()
+            ->with('trainee')
+            ->where('status', CourseBatchSessionAttendance::STATUS_PRESENT_LATE_TO_COURSE);
+
+        return Inertia::render('Teaching/CourseBatchSessions/Attendance/Confirm', [
+            'course_batch_session' => $session,
+            'sending_absent_warnings_to_count' => $sendingWarningsToQuery->count(),
+            'sending_absent_warnings_to_list' => $sendingWarningsToQuery->get(),
+            'sending_late_warnings_to_count' => $sendingLateWarningsQuery->count(),
+            'sending_late_warnings_to_list' => $sendingLateWarningsQuery->get(),
+        ]);
+    }
+
+    /**
+     * Approve the attendance sheet.
+     *
+     */
+    public function approve($course_batch_session_id)
+    {
+        $courseBatchSession = CourseBatchSession::findOrFail($course_batch_session_id);
+        CourseBatchSessionWarningsJob::dispatch($courseBatchSession);
+        return response()->redirectToRoute('teaching.courses.show', $courseBatchSession->course_id);
     }
 }

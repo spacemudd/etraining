@@ -306,4 +306,9 @@ return [
     'absent-with-excuse' => 'Absent with excuse',
     'send-message' => 'Send message',
     'private-message' => 'Private message',
+    'confirm' => 'Confirm',
+    'confirm-attendance-sheet' => 'Confirm attendance sheet',
+    'sending-absent-warnings-to-users' => 'ًAbsent warnings',
+    'sending-late-warnings-to-users' => 'Late warnings',
+    'present-but-late' => 'Present (late)',
 ];

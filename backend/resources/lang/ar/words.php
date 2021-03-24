@@ -309,4 +309,9 @@ return [
     'absent-with-excuse' => 'غياب بعذر',
     'send-message' => 'ارسال رسالة',
     'private-message' => 'رسالة خاصة',
+    'confirm' => 'اعتماد',
+    'confirm-attendance-sheet' => 'إعتمد الحضور',
+    'sending-absent-warnings-to-users' => 'إنذارات عدم الحضور',
+    'sending-late-warnings-to-users' => 'إنذارات تأخر الحضور',
+    'present-but-late' => 'موجود (متأخر)',
 ];
