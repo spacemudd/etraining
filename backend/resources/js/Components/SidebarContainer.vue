@@ -52,6 +52,15 @@
             </template>
         </sidebar-link>
 
+        <sidebar-link :link-value="route('back.reports')" :active="$page.currentRouteName == 'back.reports'">
+            <template #icon>
+                <img src="/img/bank.svg" alt="" class="w-5 h-5">
+            </template>
+            <template #title>
+                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.reports') }}</span>
+            </template>
+        </sidebar-link>
+
         <sidebar-link :link-value="route('back.settings')">
             <template #icon>
                 <ion-icon name="settings-outline" class="w-5 h-5"></ion-icon>

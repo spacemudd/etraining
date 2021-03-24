@@ -130,6 +130,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('courses/{course_id}/training-package', [\App\Http\Controllers\Back\CoursesController::class, 'storeTrainingPackage'])->name('courses.training-package');
         Route::delete('courses/{course_id}/training-package', [\App\Http\Controllers\Back\CoursesController::class, 'deleteTrainingPackage'])->name('courses.training-package.destroy');
         Route::resource('courses', \App\Http\Controllers\Back\CoursesController::class);
+
+        Route::prefix('reports')->group(function() {
+            Route::get('/', \App\Http\Controllers\Back\ReportsController::class, 'index')->name('reports.index');
+        });
     });
 
     // For instructors

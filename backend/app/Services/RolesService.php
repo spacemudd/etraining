@@ -36,6 +36,7 @@ class RolesService
         'reset-trainees-account-password',
         'can-impersonate',
         'send-messages-to-groups-of-trainees',
+        'view-backoffice-reports',
         // add the same name of the role to translation files.
     ];
 
