@@ -132,7 +132,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::resource('courses', \App\Http\Controllers\Back\CoursesController::class);
 
         Route::prefix('reports')->group(function() {
-            Route::get('/', \App\Http\Controllers\Back\ReportsController::class, 'index')->name('reports.index');
+            Route::get('/', [\App\Http\Controllers\Back\ReportsController::class, 'index'])->name('reports.index');
         });
     });
 

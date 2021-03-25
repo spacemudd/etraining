@@ -314,4 +314,6 @@ return [
     'sending-absent-warnings-to-users' => 'إنذارات عدم الحضور',
     'sending-late-warnings-to-users' => 'إنذارات تأخر الحضور',
     'present-but-late' => 'موجود (متأخر)',
+    'view-backoffice-reports' => 'عرض التقارير',
+    'course-attendances' => 'حضور الدورات',
 ];

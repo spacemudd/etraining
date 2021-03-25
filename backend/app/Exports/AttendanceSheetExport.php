@@ -102,7 +102,7 @@ class AttendanceSheetExport implements FromView, WithEvents, WithStyles, WithCol
             $course_name = $users->course->name_en;
         }
 
-        return view('exports.attendingSheet', [
+         return view('exports.attendingSheet', [
             'course_batch' => $users,
             'attendances' => $attendances,
             'users_who_didnt_attend' => $usersWhoDidntAttended,

@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Actions\Fortify\CreateNewUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\RefreshDatabaseState;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
@@ -24,6 +25,8 @@ abstract class TestCase extends BaseTestCase
             $this->artisan('db:seed');
             RefreshDatabaseState::$migrated = true;
         }
+
+        $this->app->make(\Spatie\Permission\PermissionRegistrar::class)->registerPermissions();
 
         TestResponse::macro('props', function ($key = null) {
             $props = json_decode(json_encode($this->original->getData()['page']['props']), JSON_OBJECT_AS_ARRAY);
@@ -60,5 +63,15 @@ abstract class TestCase extends BaseTestCase
 
             return $this;
         });
+    }
+
+    public function makeMeAnAdmin()
+    {
+        return (new CreateNewUser())->create([
+            'name' => 'Shafiq al-Shaar',
+            'email' => 'hello@getShafiq.com',
+            'password' => 'hello123123',
+            'password_confirmation' => 'hello123123',
+        ]);
     }
 }

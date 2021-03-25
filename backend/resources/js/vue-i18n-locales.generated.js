@@ -477,7 +477,9 @@ export default {
             "confirm-attendance-sheet": "إعتمد الحضور",
             "sending-absent-warnings-to-users": "إنذارات عدم الحضور",
             "sending-late-warnings-to-users": "إنذارات تأخر الحضور",
-            "present-but-late": "موجود (متأخر)"
+            "present-but-late": "موجود (متأخر)",
+            "view-backoffice-reports": "عرض التقارير",
+            "course-attendances": "حضور الدورات"
         }
     },
     "en": {
@@ -924,7 +926,9 @@ export default {
             "confirm-attendance-sheet": "Confirm attendance sheet",
             "sending-absent-warnings-to-users": "ًAbsent warnings",
             "sending-late-warnings-to-users": "Late warnings",
-            "present-but-late": "Present (late)"
+            "present-but-late": "Present (late)",
+            "view-backoffice-reports": "View backoffice reports",
+            "course-attendances": "Course attendances"
         }
     }
 }

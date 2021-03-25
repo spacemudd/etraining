@@ -52,9 +52,9 @@
             </template>
         </sidebar-link>
 
-        <sidebar-link :link-value="route('back.reports')" :active="$page.currentRouteName == 'back.reports'">
+        <sidebar-link v-can="'view-backoffice-reports'" :link-value="route('back.reports.index')" :active="$page.currentRouteName == 'back.reports.index'">
             <template #icon>
-                <img src="/img/bank.svg" alt="" class="w-5 h-5">
+                <img src="/img/reports.svg" alt="" class="w-5 h-5">
             </template>
             <template #title>
                 <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.reports') }}</span>
