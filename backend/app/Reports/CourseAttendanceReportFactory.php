@@ -11,8 +11,10 @@
 
 namespace App\Reports;
 
+use App\Exports\CourseSessionsAttendanceSummarySheetExport;
 use App\Models\Back\CourseBatchSession;
 use App\Models\Back\TraineeGroup;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CourseAttendanceReportFactory
 {
@@ -145,5 +147,19 @@ class CourseAttendanceReportFactory
         $q->whereBetween('starts_at', [$this->startDate, $this->endDate]);
 
         return $q->get();
+    }
+
+    public function getFileName()
+    {
+        return $this->startDate->format('Y-m-d')
+            .'-AttendanceReport-'.
+            $this->endDate->format('Y-m-d')
+            .'.xlsx';
+    }
+
+    public function toExcel()
+    {
+        (new CourseSessionsAttendanceSummarySheetExport($this->getCourseSessions()))
+            ->queue(storage_path('/reports/'.$this->getFileName()), 's3');
     }
 }
