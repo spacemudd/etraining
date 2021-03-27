@@ -159,7 +159,8 @@ class CourseAttendanceReportFactory
 
     public function toExcel()
     {
-        (new CourseSessionsAttendanceSummarySheetExport($this->getCourseSessions()))
-            ->queue(storage_path('/reports/'.$this->getFileName()), 's3');
+        return (new CourseSessionsAttendanceSummarySheetExport($this->getCourseSessions()))
+            ->download($this->getFileName());
+            //->queue(storage_path('/reports/'.$this->getFileName()), 's3');
     }
 }

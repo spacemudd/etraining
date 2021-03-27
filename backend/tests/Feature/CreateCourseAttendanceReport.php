@@ -31,6 +31,39 @@ class CreateCourseAttendanceReport extends TestCase
             ->assertForbidden();
     }
 
+    public function test_course_attendance_reports_page_index()
+    {
+        $shafiq = $this->makeMeAnAdmin();
+
+        $this->actingAs($shafiq)
+            ->get(route('back.reports.course-attendances.index'))
+            ->assertSuccessful();
+    }
+
+    public function test_course_attendance_generate_report_route()
+    {
+        $shafiq = $this->makeMeAnAdmin();
+        $team_id = $shafiq->personalTeam()->id;
+        $instructor = Instructor::factory()->create([
+            'team_id' => $team_id,
+        ]);
+        $company = Company::factory()->create([
+            'team_id' => $team_id,
+        ]);
+        $course = Course::factory()->create([
+            'team_id' => $company->team_id,
+            'instructor_id' => $instructor->id,
+        ]);
+
+        $this->actingAs($shafiq)
+            ->post(route('back.reports.course-attendances.generate'), [
+                'course_id' => $course->id,
+                'date_from' => '2020-01-01',
+                'date_to' => '2020-01-01',
+            ])
+            ->assertSessionDoesntHaveErrors();
+    }
+
     /** @noinspection PhpUnhandledExceptionInspection */
     public function test_course_attendance_report_factory_selects_correct_sessions_based_on_date()
     {
