@@ -21,7 +21,7 @@
                     </button>
                     </a>
 
-                    <div class="p-5">
+                    <div class="p-5" v-if="loaded">
                         <table class="w-full whitespace-no-wrap">
                             <colgroup>
                                 <col style="width:400px;">
@@ -69,6 +69,9 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <!--<pagination :links="course_batch_session.course_batch.trainee_group.trainees.links" />-->
+
                 </div>
 
                 <div class="bg-white rounded shadow overflow-x-auto mt-5 p-5">
@@ -94,6 +97,7 @@
     import IconNavigate from 'vue-ionicons/dist/ios-arrow-dropright'
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
     import BtnLoadingIndicator from "@/Components/BtnLoadingIndicator";
+    import Pagination from '@/Shared/Pagination'
 
     export default {
         metaInfo: { title: 'Attendance' },
@@ -102,24 +106,46 @@
             IconNavigate,
             AppLayout,
             BtnLoadingIndicator,
+            Pagination,
         },
         props: ['course_batch_session'],
         mounted() {
             this.$wait.end('SUBMITTING_ATTENDANCE');
-            this.course_batch_session.course_batch.trainee_group.trainees.forEach((trainee) => {
-                if (trainee.has_attended) {
-                    trainee.status = 'present';
+
+            let trainees = this.course_batch_session.course_batch.trainee_group.trainees;
+            for (var i=0, n=trainees.length; i < n; ++i) {
+                trainees[i].absence_reason = '';
+                if (trainees[i].attendances.length) {
+
+                    if (trainees[i].attendances[0].status === 1) {
+                        trainees[i].status = 'absent';
+                    } else if (trainees[i].attendances[0].status === 1 && trainees[i].attendances[0].attended === 1) {
+                        // When the status is both absent but has attended, then the user is late?
+                    } else if (trainees[i].attendances[0].status === 2) {
+                        trainees[i].status = 'absent_forgiven';
+                        trainees[i].absence_reason = trainees[i].attendances[0].absence_reason;
+                    } else if (trainees[i].attendances[0].status === 3) {
+                        trainees[i].status = 'present';
+                    } else if (trainees[i].attendances[0].status === 4) {
+                        trainees[i].status = 'present_late';
+                    } else if (!trainees[i].attendances[0].status) {
+                        trainees[i].status = trainees[i].attendances[0].attendance_status;
+                    }
+
                 } else {
-                    trainee.status = 'absent';
+                    trainees[i].status = 'absent';
                 }
-                trainee.absence_reason = '';
-                this.form.trainees.push(trainee);
-            })
+            }
+
+            this.form.trainees = trainees;
+
+            this.loaded = true;
 
             this.form.course_batch_session_id = this.course_batch_session.id;
         },
         data() {
             return {
+                loaded: false,
                 form: this.$inertia.form({
                     course_batch_session_id: null,
                     trainees: [],
