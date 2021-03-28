@@ -15,11 +15,12 @@ use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Str;
 
-class Trainee extends Model implements HasMedia, SearchableLabels
+class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
 {
     use HasFactory;
     use HasUuid;
@@ -27,6 +28,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels
     use InteractsWithMedia;
     use Searchable;
     use Notifiable;
+    use \OwenIt\Auditing\Auditable;
 
     const SEARCHABLE_FIELDS = ['id', 'identity_number', 'phone', 'name', 'email'];
 

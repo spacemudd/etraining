@@ -8,12 +8,14 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use JamesMills\LaravelTimezone\Facades\Timezone;
+use OwenIt\Auditing\Contracts\Auditable;
 use Str;
 
-class CourseBatch extends Model
+class CourseBatch extends Model implements Auditable
 {
     use HasFactory;
     use HasUuid;
+    use \OwenIt\Auditing\Auditable;
 
     public $incrementing = false;
 

@@ -6,12 +6,14 @@ use App\Scope\TeamScope;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 use Str;
 
-class RequiredTraineesFiles extends Model
+class RequiredTraineesFiles extends Model implements Auditable
 {
     use HasFactory;
     use HasUuid;
+    use \OwenIt\Auditing\Auditable;
 
     public $incrementing = false;
 

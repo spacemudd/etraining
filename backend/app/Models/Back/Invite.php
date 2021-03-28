@@ -6,12 +6,14 @@ use App\Scope\TeamScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use OwenIt\Auditing\Contracts\Auditable;
 use Str;
 
-class Invite extends Model
+class Invite extends Model implements Auditable
 {
     use HasFactory;
     use Notifiable;
+    use \OwenIt\Auditing\Auditable;
 
     public $incrementing = false;
 

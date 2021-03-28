@@ -13,17 +13,19 @@ use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Str;
 
-class Instructor extends Model implements HasMedia, SearchableLabels
+class Instructor extends Model implements HasMedia, SearchableLabels, Auditable
 {
     use HasFactory;
     use HasUuid;
     use SoftDeletes;
     use InteractsWithMedia;
     use Searchable;
+    use \OwenIt\Auditing\Auditable
 
     const SEARCHABLE_FIELDS = ['id', 'identity_number', 'phone', 'phone_additional', 'name', 'email'];
 

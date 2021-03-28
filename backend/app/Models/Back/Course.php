@@ -9,18 +9,20 @@ use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Laravel\Scout\Searchable;
 use Str;
 
-class Course extends Model implements HasMedia, SearchableLabels
+class Course extends Model implements HasMedia, SearchableLabels, Auditable
 {
     use HasFactory;
     use SoftDeletes;
     use HasUuid;
     use Searchable;
     use InteractsWithMedia;
+    use \OwenIt\Auditing\Auditable;
 
     const STATUS_PENDING = 0;
     const STATUS_APPROVED = 1;

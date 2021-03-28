@@ -15,12 +15,14 @@ use App\Scope\TeamScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable;
 use Str;
 
-class InboxMessage extends Model
+class InboxMessage extends Model implements Auditable
 {
     use HasFactory;
     use SoftDeletes;
+    use \OwenIt\Auditing\Auditable;
 
     public $incrementing = false;
 

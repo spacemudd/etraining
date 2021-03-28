@@ -7,12 +7,14 @@ use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use JamesMills\LaravelTimezone\Facades\Timezone;
+use OwenIt\Auditing\Contracts\Auditable;
 use Str;
 
-class CourseBatchSessionAttendance extends Model
+class CourseBatchSessionAttendance extends Model implements Auditable
 {
     use HasFactory;
     use HasUuid;
+    use \OwenIt\Auditing\Auditable;
 
     const STATUS_ABSENT = 1;
     const STATUS_ABSENT_FORGIVEN = 2;

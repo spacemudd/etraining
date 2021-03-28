@@ -9,15 +9,17 @@ use JamesMills\LaravelTimezone\Facades\Timezone;
 use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Str;
 
-class CompanyContract extends Model implements HasMedia, SearchableLabels
+class CompanyContract extends Model implements HasMedia, SearchableLabels, Auditable
 {
     use HasFactory;
     use InteractsWithMedia;
     use Searchable;
+    use \OwenIt\Auditing\Auditable;
 
     const SEARCHABLE_FIELDS = ['id', 'reference_number'];
 

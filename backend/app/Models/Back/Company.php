@@ -8,13 +8,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
+use OwenIt\Auditing\Contracts\Auditable;
 use Str;
 
-class Company extends Model implements SearchableLabels
+class Company extends Model implements SearchableLabels, Auditable
 {
     use HasFactory;
     use SoftDeletes;
     use Searchable;
+    use \OwenIt\Auditing\Auditable;
 
     public $incrementing = false;
 
