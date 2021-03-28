@@ -45,6 +45,7 @@ class CourseBatchSessionAttendance extends Model
 
     protected $appends = [
         'attended_at_timezone',
+        'attendance_status',
     ];
 
     protected static function boot(): void
@@ -68,6 +69,22 @@ class CourseBatchSessionAttendance extends Model
     {
         if ($this->attended_at) {
             return Timezone::convertToLocal($this->attended_at, 'Y-m-d H:i:s');
+        }
+    }
+
+    public function course_batch_session()
+    {
+        return $this->belongsTo(CourseBatchSession::class);
+    }
+
+    public function getAttendanceStatusAttribute()
+    {
+        if (!$this->status) {
+            $notLate = $this->attended_at->isBetween(
+                $this->course_batch_session->starts_at->subMinutes(5),
+                $this->course_batch_session->starts_at->addMinutes(15),
+            );
+            return $notLate ? 'present' : 'present_late';
         }
     }
 }

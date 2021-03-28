@@ -34,6 +34,13 @@ class CourseBatchSessionsAttendanceController extends Controller
                 }]);
             }])->findOrFail($course_batch_session_id);
 
+        //$courseBatchSession->course_batch->trainee_group
+        //    ->setRelation('trainees',
+        //        $courseBatchSession->course_batch->trainee_group->trainees()->with(['attendances' => function($q) use ($course_batch_session_id) {
+        //            $q->where('course_batch_session_id', $course_batch_session_id);
+        //        }])->paginate(100)
+        //    );
+
         return Inertia::render('Teaching/CourseBatchSessions/Attendance/Index', [
             'course_batch_session' => $courseBatchSession,
         ]);

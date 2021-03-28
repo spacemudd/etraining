@@ -1,4 +1,13 @@
 <?php
+/*
+ * Copyright (c) 2020 - Clarastars, LLC  - All Rights Reserved.
+ *
+ * Unauthorized copying of this file via any medium is strictly prohibited.
+ * This file is a proprietary of Clarastars LLC and is confidential / educational purpose only.
+ *
+ * https://clarastars.com - info@clarastars.com
+ * @author Shafiq al-Shaar <shafiqalshaar@gmail.com>
+ */
 
 namespace App\Exports;
 
@@ -9,13 +18,12 @@ use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Events\BeforeExport;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class AttendanceSheetExport implements FromView, WithEvents, WithStyles, WithColumnWidths
+class CourseBatchSessionAttendanceSheet implements FromView, WithEvents, WithStyles, WithColumnWidths, WithTitle
 {
-
     public function __construct($course_batch_session_id)
     {
         $this->course_batch_session_id = $course_batch_session_id;
@@ -89,8 +97,8 @@ class AttendanceSheetExport implements FromView, WithEvents, WithStyles, WithCol
 
         foreach ($users->course_batch->trainee_group->trainees as $trainee) {
             $hasAttended = CourseBatchSessionAttendance::where('course_batch_session_id', $this->course_batch_session_id)
-                                                        ->where('trainee_id', $trainee->id)
-                                                        ->first();
+                ->where('trainee_id', $trainee->id)
+                ->first();
             if (!$hasAttended) {
                 $usersWhoDidntAttended[] = $trainee;
             }
@@ -102,12 +110,17 @@ class AttendanceSheetExport implements FromView, WithEvents, WithStyles, WithCol
             $course_name = $users->course->name_en;
         }
 
-         return view('exports.attendingSheet', [
+        return view('exports.attendingSheet', [
             'course_batch' => $users,
             'attendances' => $attendances,
             'users_who_didnt_attend' => $usersWhoDidntAttended,
             'course_name' => $course_name,
         ]);
 
+    }
+
+    public function title(): string
+    {
+        return CourseBatchSession::find($this->course_batch_session_id)->starts_at->format('Y-m-d');
     }
 }
