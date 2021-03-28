@@ -25,7 +25,7 @@ class Instructor extends Model implements HasMedia, SearchableLabels, Auditable
     use SoftDeletes;
     use InteractsWithMedia;
     use Searchable;
-    use \OwenIt\Auditing\Auditable
+    use \OwenIt\Auditing\Auditable;
 
     const SEARCHABLE_FIELDS = ['id', 'identity_number', 'phone', 'phone_additional', 'name', 'email'];
 
