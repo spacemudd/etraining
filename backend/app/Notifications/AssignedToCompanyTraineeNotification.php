@@ -43,7 +43,6 @@ class AssignedToCompanyTraineeNotification extends Notification
         return (new MailMessage)
                     ->subject(__('words.congratulations-you-were-assigned-to-a-company'))
                     ->line(__('words.this-is-to-inform-you-that-your-file-was-assigned-to-a-company'))
-                    ->line('Thank you for using our application!')
                     ->salutation(trans('words.with-regards'));
     }
 
