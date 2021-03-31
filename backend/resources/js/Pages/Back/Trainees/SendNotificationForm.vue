@@ -23,7 +23,13 @@
 
                         <div class="col-span-4 sm:col-span-4">
                             <jet-label for="group" :value="$t('words.group')" />
-                            <jet-input id="to_trainee_status" type="text" class="mt-1 block w-full" value="المرشحين" disabled />
+                            <!--<jet-input id="to_trainee_status" type="text" class="mt-1 block w-full" value="المرشحين" disabled />-->
+                            <select class="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                    v-model="form.instructor_id"
+                                    id="instructor_id">
+                                <option value="1">المرشحين</option>
+                                <option value="0">ملف غير مكتمل</option>
+                            </select>
                             <jet-input-error :message="form.error('to_trainee_status')" class="mt-2" />
                         </div>
 
