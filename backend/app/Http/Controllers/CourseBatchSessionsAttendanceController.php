@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\Back\CourseBatchSessionAttendanceExport;
 use App\Jobs\CourseBatchSessionWarningsJob;
 use App\Models\Back\CourseBatchSession;
 use App\Models\Back\CourseBatchSessionAttendance;
@@ -92,17 +91,19 @@ class CourseBatchSessionsAttendanceController extends Controller
                 $attendance->status = $status;
                 $attendance->save();
             } else {
+                $traineeObject = Trainee::findOrFail($trainee['id']);
                 $att = CourseBatchSessionAttendance::make([
                     'course_batch_session_id' => $courseBatchSession->id,
                     'course_batch_id' => $courseBatchSession->course_batch->id,
                     'course_id' => $courseBatchSession->course->id,
                     'trainee_id' => $trainee['id'],
-                    'trainee_user_id' => Trainee::findOrFail($trainee['id'])->user_id,
+                    'trainee_user_id' => $traineeObject->user_id,
                     'session_starts_at' => $courseBatchSession->starts_at,
                     'session_ends_at' => $courseBatchSession->ends_at,
                     'attended' => false,
                     'absence_reason' => $trainee['absence_reason'],
                     'status' => $status,
+                    'last_login_at' => optional($traineeObject->user)->last_login_at,
                 ]);
                 $att->team_id = $courseBatchSession->team_id;
                 $att->save();
