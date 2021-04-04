@@ -13,7 +13,7 @@ class AddLastLoginAtRecordInCourseBatchSessionAttendanceTable extends Migration
      */
     public function up()
     {
-        Schema::table('course-batch_session_attendances', function (Blueprint $table) {
+        Schema::table('course_batch_session_attendances', function (Blueprint $table) {
             $table->timestamp('last_login_at')->nullable();
         });
     }
@@ -25,7 +25,7 @@ class AddLastLoginAtRecordInCourseBatchSessionAttendanceTable extends Migration
      */
     public function down()
     {
-        Schema::table('course-batch_session_attendances', function (Blueprint $table) {
+        Schema::table('course_batch_session_attendances', function (Blueprint $table) {
             //
         });
     }
