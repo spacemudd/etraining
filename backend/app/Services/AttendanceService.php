@@ -43,7 +43,7 @@ class AttendanceService
                 'attended_at' => now(),
                 'attended' => $attendance,
                 'status' => $attendance ? CourseBatchSessionAttendance::STATUS_PRESENT : CourseBatchSessionAttendance::STATUS_PRESENT_LATE_TO_COURSE,
-                'last_login_at' => $trainee->user()->last_login_at,
+                'last_login_at' => optional($trainee->user)->last_login_at,
             ]));
         }
 
