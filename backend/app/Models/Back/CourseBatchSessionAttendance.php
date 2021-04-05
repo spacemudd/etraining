@@ -38,6 +38,7 @@ class CourseBatchSessionAttendance extends Model implements Auditable
         'attended_at',
         'attended',
         'physical_attendance',
+        'last_login_at',
     ];
 
     protected $casts = [
