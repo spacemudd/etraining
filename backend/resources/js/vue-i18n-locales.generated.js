@@ -480,8 +480,9 @@ export default {
             "present-but-late": "موجود (متأخر)",
             "view-backoffice-reports": "عرض التقارير",
             "course-attendances": "حضور الدورات",
-            "candidates": "المرشحين",
-            "export": "إصدار",
+            "date-from": "تاريخ من",
+            "date-to": "تاريخ الى"
+            "export": "تصدير",
             "actions": "إجراءات",
             "new-bulk": "جديد (مجموعة)",
             "the-archive": "الأرشيف",
