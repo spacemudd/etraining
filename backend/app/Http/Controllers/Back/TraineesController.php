@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Back;
 use App\Actions\Fortify\CreateNewTraineeUser;
 use App\Exports\Back\TraineeExport;
 use App\Http\Controllers\Controller;
+use App\Jobs\ExportTraineesToExcelJob;
 use App\Models\Back\Company;
+use App\Models\Back\ExportTraineesToExcelJobTracker;
 use App\Models\Back\Instructor;
 use App\Models\Back\Trainee;
 use App\Models\Back\TraineeGroup;
@@ -464,9 +466,54 @@ class TraineesController extends Controller
         return redirect()->route('back.trainees.index');
     }
 
-    public function excel()
+    public function excel(Request $request)
     {
-        return Excel::download(new TraineeExport(), 'trainees.xlsx');
+        $request->validate([
+            'trainee_status_id' => 'nullable|numeric',
+        ]);
+
+        $validate = in_array((int) $request->trainee_status_id, [
+            Trainee::STATUS_PENDING_APPROVAL,
+            Trainee::STATUS_APPROVED,
+            Trainee::STATUS_PENDING_UPLOADING_FILES,
+            null,
+        ], true);
+
+        throw_if(!$validate, 'Unknown trainee status');
+
+        $excelJob = new ExportTraineesToExcelJobTracker();
+        $excelJob->trainee_status_id = $request->trainee_status_id;
+        $excelJob->queued_at = now();
+        $excelJob->user_id = auth()->user()->id;
+        $excelJob->team_id = auth()->user()->team_id;
+        $excelJob->save();
+
+        dispatch(new ExportTraineesToExcelJob($excelJob));
+
+        return $excelJob;
+    }
+
+    /**
+     *
+     * @param $id
+     * @return mixed
+     */
+    public function excelJob($id)
+    {
+        return ExportTraineesToExcelJobTracker::find($id);
+    }
+
+    public function excelJobDownload($id)
+    {
+        $tracker = ExportTraineesToExcelJobTracker::find($id);
+        $file = $tracker->getFirstMedia('excel');
+        if ($file->disk === 's3') {
+            return redirect()->to($file->getTemporaryUrl(now()->addMinutes(5), '', [
+                //'ResponseContentType' => 'application/octet-stream',
+            ]));
+        } else {
+            return response()->download($file->getPath());
+        }
     }
 
     public function resendInvitation($trainee_id)

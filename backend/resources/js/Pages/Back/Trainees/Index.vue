@@ -1,3 +1,20 @@
+<style lang="css">
+.v-dropdown-menu__container {
+    margin-top: 5px;
+    border-radius: 5px;
+    border-bottom: 1px solid red;
+}
+.dropdown-items {
+    border-radius: 5px;
+    padding: 10px;
+}
+.dropdown-items li {
+    margin: 10px 0;
+    border-bottom: 1px solid #e9e9e9;
+    padding-bottom: 10px;
+}
+</style>
+
 <template>
     <app-layout>
 
@@ -12,9 +29,19 @@
                 <h1 class="mb-8 font-bold text-3xl">{{ $t('words.trainees') }}</h1>
                 <div class="mb-6 flex justify-between items-center">
 
-                    <inertia-link :href="route('back.trainees.send-notification')"
-                                  class="rounded items-center justify-start mr-3 ml-3 float-left px-3 py-2.5 bg-yellow-200 hover:bg-yellow-300 text-left">
-                        {{ $t('words.send-messages-to-groups-of-trainees') }}
+                    <!--<search-filter v-model="form.search" class="w-full max-w-md mr-4" @reset="reset">-->
+                    <!--    <label class="block text-gray-700">Trashed:</label>-->
+                    <!--    <select v-model="form.trashed" class="mt-1 w-full form-select">-->
+                    <!--        <option :value="null" />-->
+                    <!--        <option value="with">With Trashed</option>-->
+                    <!--        <option value="only">Only Trashed</option>-->
+                    <!--    </select>-->
+                    <!--</search-filter>-->
+                    <inertia-link class="btn-gray mx-3" :href="route('back.trainees.create')">
+                        <span>{{ $t('words.new') }}</span>
+                    </inertia-link>
+                    <inertia-link class="btn-gray" :href="route('back.trainees.import')">
+                        <span>{{ $t('words.new-bulk') }}</span>
                     </inertia-link>
 
                     <button v-if="!this.isArchive" @click="showBlocked" :class="archiveBtn.class">
@@ -24,24 +51,27 @@
                     <button v-else @click="hideBlocked" :class="archiveBtn.class">
                         {{ archiveBtn.text }}
                     </button>
-                    <!--<search-filter v-model="form.search" class="w-full max-w-md mr-4" @reset="reset">-->
-                    <!--    <label class="block text-gray-700">Trashed:</label>-->
-                    <!--    <select v-model="form.trashed" class="mt-1 w-full form-select">-->
-                    <!--        <option :value="null" />-->
-                    <!--        <option value="with">With Trashed</option>-->
-                    <!--        <option value="only">Only Trashed</option>-->
-                    <!--    </select>-->
-                    <!--</search-filter>-->
-                    <inertia-link class="btn-gray mx-3" :href="route('back.trainees.excel')">
-                        <span>{{ $t('words.excel') }}</span>
-                    </inertia-link>
 
-                    <inertia-link class="btn-gray mx-3" :href="route('back.trainees.import')">
-                        <span>{{ $t('words.import') }}</span>
-                    </inertia-link>
-                    <inertia-link class="btn-gray" :href="route('back.trainees.create')">
-                        <span>{{ $t('words.new') }}</span>
-                    </inertia-link>
+                    <dropdown-menu :isOpen="actionsDropDownView" class="dropdown-container">
+                        <button class="btn-gray mx-3" slot="trigger">{{ $t('words.actions') }}</button>
+                        <ul class="dropdown-items" slot="body">
+                            <li>
+                                <export-trainees-to-excel @modal:opened="actionsDropDownView=!actionsDropDownView">
+                                    <template slot="buttonContent">
+                                        <button>
+                                            {{ $t('words.export') }}
+                                        </button>
+                                    </template>
+                                </export-trainees-to-excel>
+                            </li>
+                            <li>
+                                <inertia-link :href="route('back.trainees.send-notification')">
+                                    {{ $t('words.send-messages-to-groups-of-trainees') }}
+                                </inertia-link>
+                            </li>
+                            <!--<li v-for="i in 6" :key="i"><a href="">Item {{i}}</a></li>-->
+                        </ul>
+                    </dropdown-menu>
                 </div>
             </div>
             <div class="bg-white rounded shadow overflow-x-auto">
@@ -205,6 +235,9 @@
     import IconNavigate from 'vue-ionicons/dist/ios-arrow-dropright'
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
     import EmptySlate from "@/Components/EmptySlate";
+    import ExportTraineesToExcel from '@/Components/ExportTraineesToExcel';
+    import DropdownMenu from 'v-dropdown-menu'
+    import 'v-dropdown-menu/dist/v-dropdown-menu.css' // Base style, required.
 
     export default {
         metaInfo: { title: 'Trainees' },
@@ -217,6 +250,8 @@
             // Icon,
             Pagination,
             // SearchFilter,
+            ExportTraineesToExcel,
+            DropdownMenu,
         },
         props: {
             blocked_trainees: Object,
@@ -225,9 +260,10 @@
         },
         data() {
             return {
+                actionsDropDownView: false,
                 archiveBtn: {
                     text: this.$t('words.archive'),
-                    class: "rounded items-center justify-start mr-3 ml-3 float-left px-3 py-2.5 bg-yellow-200 hover:bg-yellow-300 text-left"
+                    class: "rounded items-center justify-start mr-3 float-left px-3 py-2.5 bg-yellow-200 hover:bg-yellow-300 text-left"
                 },
                 isArchive: false,
                 form: {
@@ -252,13 +288,13 @@
             showBlocked() {
                 this.isArchive = true;
                 this.archiveBtn.text =  this.$t('words.active');
-                this.archiveBtn.class = "rounded items-center justify-start mr-3 ml-3 float-left px-3 py-2.5 bg-green-200 hover:bg-green-300 text-left";
+                this.archiveBtn.class = "rounded items-center mr-3 justify-start float-left px-3 py-2.5 bg-green-200 hover:bg-green-300 text-left";
                 this.$forceUpdate();
             },
             hideBlocked() {
                 this.isArchive = false;
-                this.archiveBtn.text =  this.$t('words.archive');
-                this.archiveBtn.class = "rounded items-center justify-start mr-3 ml-3 float-left px-3 py-2.5 bg-yellow-200 hover:bg-yellow-300 text-left";
+                this.archiveBtn.text =  this.$t('words.the-archive');
+                this.archiveBtn.class = "rounded items-center mr-3 justify-start float-left px-3 py-2.5 bg-yellow-200 hover:bg-yellow-300 text-left";
             },
         },
     }
