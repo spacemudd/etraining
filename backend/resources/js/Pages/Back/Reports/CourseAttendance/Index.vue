@@ -19,7 +19,8 @@
                 ]"
             ></breadcrumb-container>
 
-            <form method="post" :action="route('back.reports.course-attendances.generate')" target="_blank">
+            <template v-if="report_status === 'new'">
+                <form @submit.prevent="generateReport">
                 <input type="hidden" name="_token" :value="token">
 
                 <div class="grid grid-cols-12 gap-6">
@@ -52,8 +53,35 @@
                     </div>
                 </div>
 
-                <button class="btn btn-gray mt-5" type="submit">{{ $t('words.submit') }}</button>
+                <button class="btn btn-gray mt-5" type="submit" :disabled="form.processing">{{ $t('words.submit') }}</button>
             </form>
+            </template>
+
+            <template v-if="report_status === 'processing'">
+                <div class="mt-10">
+                    <h1 class="text-center">{{ $t('words.report-work-on-progress') }}</h1>
+                    <p class="text-center text-gray-500 mt-2">{{ $t('words.please-dont-close-the-window') }}</p>
+                    <div class="flex justify-center mt-5">
+                        <btn-loading-indicator />
+                    </div>
+                </div>
+            </template>
+
+            <template v-if="report_status === 'finished'">
+                <div class="mt-10 flex justify-center">
+                    <a target="_blank"
+                       :href="route('job-trackers.download', this.job_tracker.id)"
+                       class="btn btn-gray">
+                        {{ $t('words.download-file') }}
+                    </a>
+                </div>
+            </template>
+
+            <template v-if="report_status === 'error'">
+                <div class="mt-10 flex justify-center">
+                    <p class="text-red-500">{{ $t('words.error-occurred') }}</p>
+                </div>
+            </template>
 
         </div>
     </app-layout>
@@ -64,6 +92,7 @@
     import AppLayout from '@/Layouts/AppLayout'
     import IconNavigate from 'vue-ionicons/dist/ios-arrow-dropright'
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
+    import BtnLoadingIndicator from "../../../../Components/BtnLoadingIndicator";
 
     export default {
         props: [
@@ -71,7 +100,7 @@
         ],
         metaInfo() {
             return {
-                title: this.$t('words.course-attendances')
+                title: this.$t('words.course-attendances'),
             }
         },
         components: {
@@ -79,6 +108,7 @@
             AppLayout,
             JetLabel,
             BreadcrumbContainer,
+            BtnLoadingIndicator,
         },
         computed: {
             token() {
@@ -92,18 +122,52 @@
         },
         data() {
             return {
-                form: this.$inertia.form({
+                report_status: 'new',
+                job_tracker: null,
+                form: {
+                    processing: false,
                     course_id: null,
                     date_from: new Date().toISOString().substring(0, 10),
                     date_to: new Date().toISOString().substring(0, 10),
-                }, {
-                    bag: 'createAttendanceReport',
-                })
+                },
             }
         },
         methods: {
-            sendForm() {
-                this.form.post(route('back.reports.course-attendances.generate'));
+            generateReport() {
+                this.form.processing = true;
+                axios.post(route('back.reports.course-attendances.generate'), this.form)
+                    .then(response => {
+                        this.job_tracker = response.data;
+                        this.report_status = 'processing';
+                        this.form.processing = true;
+                        let vm = this;
+                        setTimeout(function() {
+                            vm.checkJobTracker();
+                        }, 2000);
+                    })
+            },
+            checkJobTracker() {
+                axios.get(route('job-trackers.show', {id: this.job_tracker.id}))
+                    .then(response => {
+                        if (response.data.finished_at) {
+                            this.report_status = 'finished';
+                            this.job_tracker = response.data;
+                            return;
+                        }
+
+                        if (response.data.failure_reason) {
+                            this.report_status = 'error';
+                            alert('An error occurred');
+                            return;
+                        }
+
+                        if (!response.data.completed_at) {
+                            let vm = this;
+                            setTimeout(function() {
+                                vm.checkJobTracker();
+                            }, 5000);
+                        }
+                    })
             },
         },
     }

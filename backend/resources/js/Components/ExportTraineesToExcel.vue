@@ -106,6 +106,7 @@ export default {
             this.$emit('modal:opened');
             this.report_status = 'new';
             this.excelJob = null;
+            this.sendReportRequestForm.processing = null;
             this.$modal.toggle('exportTraineesToExcelSheet');
         },
         checkExcelJobStatus() {
@@ -124,24 +125,23 @@ export default {
                     }
 
                     if (!response.data.completed_at) {
-                        setTimeout(this.checkExcelJobStatus(), 10000);
+                        let vm = this;
+                        setTimeout(function() {
+                            vm.checkExcelJobStatus();
+                        }, 5000);
                     }
             })
         },
         sendReportRequest() {
-            this.processing = true;
+            this.sendReportRequestForm.processing = true;
             axios.post(route('back.trainees.excel'), this.sendReportRequestForm)
             .then(response => {
                 this.report_status = 'processing';
                 this.excelJob = response.data;
-                this.processing = false;
+                this.sendReportRequestForm.processing = false;
                 this.checkExcelJobStatus();
             })
         },
     },
 }
 </script>
-
-<style scoped>
-
-</style>

@@ -3,20 +3,10 @@
 namespace App\Exports;
 
 use App\Models\Back\CourseBatchSession;
-use App\Models\Back\CourseBatchSessionAttendance;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\WithColumnWidths;
-use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
-use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Events\BeforeExport;
-use Maatwebsite\Excel\Events\AfterSheet;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class CourseSessionsAttendanceSummarySheetExport implements ShouldQueue, WithMultipleSheets
+class CourseSessionsAttendanceSummarySheetExport implements WithMultipleSheets
 {
     use Exportable;
 
@@ -38,6 +28,7 @@ class CourseSessionsAttendanceSummarySheetExport implements ShouldQueue, WithMul
 
         foreach ($this->courseBatchSessions as $session) {
             $sheets[] = new CourseBatchSessionAttendanceSheet($session->id);
+
         }
 
         $sheets[] = new CourseBatchSessionAttendanceSummarySheet($this->courseBatchSessions);

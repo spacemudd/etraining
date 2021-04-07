@@ -149,6 +149,10 @@ class CourseAttendanceReportFactory
         return $q->get();
     }
 
+    /**
+     *
+     * @return string
+     */
     public function getFileName()
     {
         return $this->startDate->format('Y-m-d')
@@ -157,10 +161,15 @@ class CourseAttendanceReportFactory
             .'.xlsx';
     }
 
+    /**
+     *
+     * @return string
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function toExcel()
     {
-        return (new CourseSessionsAttendanceSummarySheetExport($this->getCourseSessions()))
-            ->download($this->getFileName());
-            //->queue(storage_path('/reports/'.$this->getFileName()), 's3');
+        Excel::store(new CourseSessionsAttendanceSummarySheetExport($this->getCourseSessions()), $this->getFileName());
+        return $this->getFileName();
     }
 }
