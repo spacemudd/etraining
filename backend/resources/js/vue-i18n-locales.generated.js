@@ -435,7 +435,7 @@ export default {
             "email-password-reset-link": "ارسل رابط إعادة كلمة السر",
             "reset-password": "إعادة تعيين كلمة السر",
             "excel": "إكسل",
-            "error-occurred": "حصل خطأ",
+            "error-occurred": "حدث خطاً",
             "you-must-delete-the-course-batches-first": "يجب عليك حذف كل اوقات الدورات لكي تحذف الدفعة",
             "online": "اونلاين",
             "contract": "العقد",
@@ -481,6 +481,16 @@ export default {
             "view-backoffice-reports": "عرض التقارير",
             "course-attendances": "حضور الدورات",
             "candidates": "المرشحين"
+            "export": "تصدير",
+            "actions": "إجراءات",
+            "new-bulk": "جديد (مجموعة)",
+            "the-archive": "الأرشيف",
+            "export-trainees": "إصدار بيانات المتدربات",
+            "nominated": "مرشح",
+            "all": "الكل",
+            "report-work-on-progress": "جاري العمل على التقرير",
+            "please-dont-close-the-window": "الرجاء عدم إغلاق الصفحة",
+            "download-file": "تحميل الملف"
         }
     },
     "en": {
@@ -930,7 +940,17 @@ export default {
             "sending-late-warnings-to-users": "Late warnings",
             "present-but-late": "Present (late)",
             "view-backoffice-reports": "View backoffice reports",
-            "course-attendances": "Course attendances"
+            "course-attendances": "Course attendances",
+            "export": "Export",
+            "actions": "Actions",
+            "new-bulk": "New (Bulk)",
+            "the-archive": "Archive",
+            "export-trainees": "Export trainees data",
+            "nominated": "Nominated",
+            "all": "All",
+            "report-work-on-progress": "Generating your report",
+            "please-dont-close-the-window": "Please dont close the window",
+            "download-file": "Download file"
         }
     }
 }
