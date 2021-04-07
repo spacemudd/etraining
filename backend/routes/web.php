@@ -160,6 +160,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('/course-batch-sessions/{course_batch_session_id}/confirm/approve', [\App\Http\Controllers\CourseBatchSessionsAttendanceController::class, 'approve'])->name('course-batch-sessions.attendance.confirm.approve');
         Route::get('/course-batch-sessions/{course_batch_session_id}/confirm', [\App\Http\Controllers\CourseBatchSessionsAttendanceController::class, 'confirm'])->name('course-batch-sessions.attendance.confirm');
         Route::get('/course-batch-sessions/{course_batch_session_id}/attendance', [\App\Http\Controllers\CourseBatchSessionsAttendanceController::class, 'index'])->name('course-batch-sessions.attendance.index');
+        Route::put('/course-batch-sessions/{course_batch_session_id}/attendance/{id}', [\App\Http\Controllers\CourseBatchSessionsAttendanceController::class, 'update'])->name('course-batch-sessions.attendances.update');
 
         Route::post('/course-batch-sessions/attendance', [\App\Http\Controllers\CourseBatchSessionsAttendanceController::class, 'store'])->name('course-batch-sessions.attendance.store');
 

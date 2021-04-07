@@ -82,12 +82,28 @@ class CourseBatchSessionAttendance extends Model implements Auditable
 
     public function getAttendanceStatusAttribute()
     {
-        if (!$this->status) {
+        if ($this->status) {
+            switch ($this->status) {
+                case self::STATUS_PRESENT:
+                    return 'present';
+                case self::STATUS_PRESENT_LATE_TO_COURSE:
+                    return 'present_late';
+                case self::STATUS_ABSENT:
+                    return 'absent';
+                case self::STATUS_ABSENT_FORGIVEN:
+                    return 'absent_forgiven';
+            }
+        }
+
+        if ($this->attended_at) {
             $notLate = $this->attended_at->isBetween(
                 $this->course_batch_session->starts_at->subMinutes(5),
                 $this->course_batch_session->starts_at->addMinutes(15),
             );
+
             return $notLate ? 'present' : 'present_late';
         }
+
+        return 'absent';
     }
 }
