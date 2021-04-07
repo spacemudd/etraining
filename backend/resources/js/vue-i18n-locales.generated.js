@@ -480,6 +480,7 @@ export default {
             "present-but-late": "موجود (متأخر)",
             "view-backoffice-reports": "عرض التقارير",
             "course-attendances": "حضور الدورات",
+            "candidates": "المرشحين"
             "export": "تصدير",
             "actions": "إجراءات",
             "new-bulk": "جديد (مجموعة)",
@@ -637,6 +638,7 @@ export default {
             "settings": "Settings",
             "logout": "Logout",
             "companies": "Companies",
+            "candidates": "Candidates",
             "instructors": "Instructors",
             "trainees": "Trainees",
             "courses": "Courses",

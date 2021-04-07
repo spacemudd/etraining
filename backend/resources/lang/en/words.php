@@ -10,6 +10,7 @@ return [
     'settings' => 'Settings',
     'logout' => 'Logout',
     'companies' => 'Companies',
+    'candidates' => 'Candidates',
     'instructors' => 'Instructors',
     'trainees' => 'Trainees',
     'courses' => 'Courses',

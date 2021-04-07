@@ -108,6 +108,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('trainees/blocked/show/{trainee_id}', [\App\Http\Controllers\Back\TraineesController::class, 'showBlocked'])->name('trainees.show.blocked');
         Route::post('trainees/blocked/show/{trainee_id}', [\App\Http\Controllers\Back\TraineesController::class, 'unblock'])->name('trainees.unblock');
         Route::resource('trainees', \App\Http\Controllers\Back\TraineesController::class);
+        Route::get('candidates', [\App\Http\Controllers\Back\CandidatesController::class, 'index'])->name('candidates.index');
+        Route::get('candidates/excel', [\App\Http\Controllers\Back\CandidatesController::class, 'excel'])->name('candidates.excel');
+
 
         Route::post('instructors/{instructor_id}/approve-user', [\App\Http\Controllers\Back\InstructorsController::class, 'approveUser'])->name('instructors.approve-user');
         Route::post('instructors/{instructor_id}/create-user', [\App\Http\Controllers\Back\InstructorsController::class, 'createUser'])->name('instructors.create-user');
