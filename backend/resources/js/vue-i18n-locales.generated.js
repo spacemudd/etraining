@@ -479,7 +479,8 @@ export default {
             "sending-late-warnings-to-users": "إنذارات تأخر الحضور",
             "present-but-late": "موجود (متأخر)",
             "view-backoffice-reports": "عرض التقارير",
-            "course-attendances": "حضور الدورات"
+            "course-attendances": "حضور الدورات",
+            "candidates": "المرشحين"
         }
     },
     "en": {
@@ -627,6 +628,7 @@ export default {
             "settings": "Settings",
             "logout": "Logout",
             "companies": "Companies",
+            "candidates": "Candidates",
             "instructors": "Instructors",
             "trainees": "Trainees",
             "courses": "Courses",
