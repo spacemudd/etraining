@@ -481,7 +481,7 @@ export default {
             "view-backoffice-reports": "عرض التقارير",
             "course-attendances": "حضور الدورات",
             "date-from": "تاريخ من",
-            "date-to": "تاريخ الى"
+            "date-to": "تاريخ الى",
             "export": "تصدير",
             "actions": "إجراءات",
             "new-bulk": "جديد (مجموعة)",
@@ -942,6 +942,8 @@ export default {
             "present-but-late": "Present (late)",
             "view-backoffice-reports": "View backoffice reports",
             "course-attendances": "Course attendances",
+            "date-from": "Date from",
+            "date-to": "Date to",
             "export": "Export",
             "actions": "Actions",
             "new-bulk": "New (Bulk)",

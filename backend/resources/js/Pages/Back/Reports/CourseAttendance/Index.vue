@@ -22,8 +22,8 @@
             <form method="post" :action="route('back.reports.course-attendances.generate')" target="_blank">
                 <input type="hidden" name="_token" :value="token">
 
-                <div class="grid grid-cols-6 gap-6">
-                    <div class="col-span-3 sm:col-span-2 mt-5">
+                <div class="grid grid-cols-12 gap-6">
+                    <div class="col-span-12 sm:col-span-6 mt-5">
                         <jet-label class="mb-2" for="course_id" :value="$t('words.course')" />
                         <div class="relative">
                             <select class="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
@@ -40,17 +40,19 @@
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-span-3 sm:col-span-2 mt-5">
-                    <div class="col-span-3 sm:col-span-2 mt-5">
-                        <input name="date_from" type="date" v-model="form.date_from" class="form-input rounded-md shadow-sm" required>
+                    <div class="col-span-12 sm:col-span-2 mt-5">
+                        <jet-label class="mb-2" for="date_from" :value="$t('words.date-from')" />
+                        <input name="date_from" type="date" v-model="form.date_from" class="form-input rounded-md shadow-sm w-full" required>
+                    </div>
+
+                    <div class="col-span-12 sm:col-span-2 mt-5">
+                        <jet-label class="mb-2" for="date_from" :value="$t('words.date-to')" />
+                        <input name="date_to" type="date" v-model="form.date_to" class="form-input rounded-md shadow-sm w-full" required>
                     </div>
                 </div>
 
-
-                <input name="date_to" type="date" v-model="form.date_to" required>
-                <button type="submit">{{ $t('words.submit') }}</button>
+                <button class="btn btn-gray mt-5" type="submit">{{ $t('words.submit') }}</button>
             </form>
 
         </div>
