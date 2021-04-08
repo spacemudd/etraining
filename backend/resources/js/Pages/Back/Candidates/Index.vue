@@ -25,7 +25,7 @@
                         <th class="px-6 pt-6 pb-4">{{ $t('words.phone') }}</th>
                         <th class="px-6 pt-6 pb-4">{{ $t('words.company') }}</th>
                     </tr>
-                    <tr v-for="candidates in candidates.data" :key="candidates.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
+                    <tr v-for="trainees in candidates.data" :key="candidates.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
                         <td class="border-t">
                             <div class="px-6 py-4 flex items-center focus:text-indigo-500">
                                 <inertia-link :href="route('back.trainees.show', candidates.id)">

@@ -62,6 +62,7 @@
             <jet-section-border></jet-section-border>
 
             <div v-can="'view-company-trainees'" class="grid grid-cols-1 md:grid-cols-6 gap-6 mt-2">
+
                 <div class="md:col-span-2 sm:col-span-3">
                     <div class="px-4 sm:px-0">
                         <h3 class="text-lg font-medium text-gray-900">
@@ -69,16 +70,65 @@
                         </h3>
                     </div>
                 </div>
-                <div class="md:col-span-4 sm:col-span-1">
-                    <ul>
-                        <li v-for="trainee in company.trainees">
-                            <inertia-link :href="route('back.trainees.show', {id: trainee.id})">
-                                {{ trainee.name }}
-                            </inertia-link>
-                        </li>
-                    </ul>
+
+                <div class="text-right justify-end items-center md:col-span-4">
+
+                    <inertia-link class="btn-gray text-right" :href="`/back/companies/${this.company.id}/excel/trainees`">
+                        <span>{{ $t('words.excel') }}</span>
+                    </inertia-link>
+
                 </div>
+
             </div>
+
+            <div v-can="'view-company-trainees'" class="bg-white rounded shadow overflow-x-auto" style="margin-top: 10px;">
+                    <table class="w-full whitespace-no-wrap">
+                        <tr class="text-left font-bold">
+                            <th class="px-6 pt-6 pb-4">{{ $t('words.name') }}</th>
+                            <th class="px-6 pt-6 pb-4">{{ $t('words.phone') }}</th>
+                        </tr>
+                        <tr v-for="trainees in company.trainees" :key="company.trainees.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
+                            <td class="border-t">
+                                <div class="px-6 py-4 flex items-center focus:text-indigo-500">
+                                    <inertia-link :href="route('back.trainees.show', trainees.id)">
+                                        {{ trainees.name }}
+                                        <br/>
+                                        <span v-if="trainees.is_pending_uploading_files" class="text-sm inline-block mt-2 p-1 px-2 bg-blue-300 rounded-lg">
+                                                {{ $t('words.incomplete-application') }}
+                                            </span>
+
+                                        <span v-if="trainees.is_pending_approval" class="text-sm inline-block mt-2 p-1 px-2 bg-yellow-200 rounded-lg">
+                                                {{ $t('words.nominated-instructor') }}
+                                            </span>
+
+                                        <span v-if="trainees.is_approved" class="text-sm inline-block mt-2 p-1 px-2 bg-green-300 rounded-lg">
+                                                {{ $t('words.approved') }}
+                                            </span>
+                                    </inertia-link>
+                                </div>
+                            </td>
+                            <td class="border-t">
+                                <inertia-link class="px-6 py-4 flex items-center" :href="route('back.trainees.show', trainees.id)" tabindex="-1">
+                                    <div v-if="trainees.phone">
+                                        {{ trainees.phone }}
+                                    </div>
+                                </inertia-link>
+                            </td>
+
+                            <td class="border-t w-px">
+                                <inertia-link class="px-4 flex items-center" :href="route('back.trainees.show', trainees.id)" tabindex="-1">
+                                    <ion-icon name="arrow-forward-outline" class="block w-6 h-6 fill-gray-400"></ion-icon>
+                                </inertia-link>
+                            </td>
+
+                        </tr>
+                        <tr v-if="company.trainees.length === 0">
+                            <td class="border-t px-6 py-4" colspan="4">
+                                <empty-slate/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
         </div>
     </app-layout>
 </template>

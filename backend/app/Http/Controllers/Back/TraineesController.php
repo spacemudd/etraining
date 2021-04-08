@@ -38,8 +38,7 @@ class TraineesController extends Controller
         $this->service = $services;
     }
 
-    public function index()
-    {
+    public function index() {
         return Inertia::render('Back/Trainees/Index', [
             'trainees' => Trainee::with('company')->with('trainee_group')->latest()->paginate(20),
             'blocked_trainees' => Trainee::with('company')->onlyTrashed()->latest()->paginate(20),
