@@ -327,4 +327,5 @@ return [
     'please-dont-close-the-window' => 'Please dont close the window',
     'download-file' => 'Download file',
     'error-occurred' => 'Error occurred',
+    'approve' => 'Approve',
 ];

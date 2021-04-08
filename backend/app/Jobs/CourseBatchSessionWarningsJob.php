@@ -13,8 +13,6 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Str;
 
 class CourseBatchSessionWarningsJob implements ShouldQueue
 {
@@ -42,17 +40,18 @@ class CourseBatchSessionWarningsJob implements ShouldQueue
     public function handle()
     {
         $attendances = $this->courseBatchSession->attendances;
+        Log::debug('[CourseBatchSessionWarningsJob] For course batch session ID: '.$this->courseBatchSession->id);
         foreach ($attendances as $attendance) {
-            if ($attendance->status === CourseBatchSessionAttendance::STATUS_ABSENT && !$attendance->attended) {
-                Log::info('Sending missed class notif to: '.$attendance->trainee->id);
+            if ($attendance->attendance_status === CourseBatchSessionAttendance::STATUS_ABSENT) {
+                Log::debug('[CourseBatchSessionWarningsJob] Sending absent notification: '.$attendance->id.' - User: '.$attendance->trainee->email);
                 $attendance->trainee->notify(new TraineeMissedClassNotification($this->courseBatchSession));
             }
 
-            if ($attendance->status === CourseBatchSessionAttendance::STATUS_PRESENT_LATE_TO_COURSE) {
-                Log::info('Sending late class notif to: '.$attendance->trainee->id);
+            if ($attendance->attendance_status === CourseBatchSessionAttendance::STATUS_PRESENT_LATE_TO_COURSE) {
+                Log::debug('[CourseBatchSessionWarningsJob] Sending present_late notification: '.$attendance->id.' - User: '.$attendance->trainee->email);
                 $attendance->trainee->notify(new TraineeLateToClassNotification($this->courseBatchSession));
             }
         }
-        Log::debug('Finished sending late notifications to trainees');
+        Log::debug('[CourseBatchSessionWarningsJob] Finished for course batch session ID: '.$this->courseBatchSession->id);
     }
 }

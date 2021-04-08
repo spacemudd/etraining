@@ -19,7 +19,7 @@
                             <colgroup>
                                 <col style="width:400px;">
                                 <col>
-                                <col style="width:300px;">
+                                <col style="width:250px;">
                             </colgroup>
                             <thead>
                                 <tr class="text-left font-bold">
@@ -29,10 +29,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="border-t" v-for="(attendance, key) in attendances.data">
+                                <tr class="border-t" v-for="(attendance, key) in attendances.data" :key="key">
                                     <td class="px-6 py-4">{{ attendance.trainee.name }}</td>
                                     <td class="px-6 py-4">
-                                        <button style="width:110px;height:32px;font-size:12px;"
+                                        <button style="width:95px;height:32px;font-size:12px;"
                                                 :class="{'bg-blue-600 border-blue-600 text-white': attendance.attendance_status === 'absent'}"
                                                 class="border-2 inline-block border-red-500 rounded-lg text-center"
                                                 @click.prevent="setTraineeAbsent(attendance, key)">
@@ -41,7 +41,7 @@
                                                 {{ $t('words.absent') }}
                                             </div>
                                         </button>
-                                        <button style="width:110px;height:32px;font-size:12px;"
+                                        <button style="width:95px;height:32px;font-size:12px;"
                                                 :class="{'bg-blue-600 border-blue-600 text-white': attendance.attendance_status === 'absent_forgiven'}"
                                                 class="border-2 inline-block border-red-500 rounded-lg"
                                                 @click.prevent="setTraineeAbsentWihExcuse(attendance, key)">
@@ -50,7 +50,7 @@
                                                 {{ $t('words.absent-with-excuse') }}
                                             </div>
                                         </button>
-                                        <button style="width:110px;height:32px;font-size:12px;"
+                                        <button style="width:95px;height:32px;font-size:12px;"
                                                 :class="{'bg-blue-600 border-blue-600 text-white': attendance.attendance_status === 'present_late'}"
                                                 class="border-2 inline-block border-red-500 rounded-lg"
                                                 @click.prevent="setTraineePresentLate(attendance, key)">
@@ -59,7 +59,7 @@
                                                 {{ $t('words.present-but-late') }}
                                             </div>
                                         </button>
-                                        <button style="width:110px;height:32px;font-size:12px;"
+                                        <button style="width:95px;height:32px;font-size:12px;"
                                                 :class="{'bg-blue-600 border-blue-600 text-white': attendance.attendance_status === 'present'}"
                                                 class="border-2 inline-block border-red-500 rounded-lg"
                                                 @click.prevent="setTraineePresent(attendance, key)">
@@ -88,9 +88,8 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <pagination :links="attendances.links" />
                     </div>
-
-                    <pagination :links="attendances.links" />
 
                 </div>
 
@@ -103,7 +102,7 @@
                             :class="{'opacity-50': $wait.is('SUBMITTING_ATTENDANCE')}"
                             class="flex items-center justify-start rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right mx-5">
                         <btn-loading-indicator v-if="$wait.is('SUBMITTING_ATTENDANCE')" />
-                        {{ $t('words.submit') }}
+                        {{ $t('words.approve') }}
                     </button>
                 </div>
             </div>
@@ -175,53 +174,48 @@
         methods: {
             setTraineePresent(attendance, key) {
                 this.$wait.start('ATTENDANCE_PRESENT_'+attendance.id);
-                let vm = this;
                 axios.put(route('teaching.course-batch-sessions.attendances.update', {course_batch_session_id: attendance.course_batch_session_id, id: attendance.id}), {
                     status: 'present',
                 }).then(response => {
-                    vm.$set(this.attendances, key, response.data);
-                    vm.$wait.end('ATTENDANCE_PRESENT_'+attendance.id);
+                    this.$set(this.attendances.data, key, response.data);
+                    this.$wait.end('ATTENDANCE_PRESENT_'+attendance.id);
                 });
             },
             setTraineePresentLate(attendance, key) {
                 this.$wait.start('ATTENDANCE_PRESENT_LATE_'+attendance.id);
-                let vm = this;
                 axios.put(route('teaching.course-batch-sessions.attendances.update', {course_batch_session_id: attendance.course_batch_session_id, id: attendance.id}), {
                     status: 'present_late',
                 }).then(response => {
-                    vm.$set(this.attendances, key, response.data);
-                    vm.$wait.end('ATTENDANCE_PRESENT_LATE_'+attendance.id);
+                    this.$set(this.attendances.data, key, response.data);
+                    this.$wait.end('ATTENDANCE_PRESENT_LATE_'+attendance.id);
                 });
             },
             setTraineeAbsent(attendance, key) {
                 this.$wait.start('ATTENDANCE_ABSENT_'+attendance.id);
-                let vm = this;
                 axios.put(route('teaching.course-batch-sessions.attendances.update', {course_batch_session_id: attendance.course_batch_session_id, id: attendance.id}), {
                     status: 'absent',
                 }).then(response => {
-                    vm.$set(this.attendances, key, response.data);
-                    vm.$wait.end('ATTENDANCE_ABSENT_'+attendance.id);
+                    this.$set(this.attendances.data, key, response.data);
+                    this.$wait.end('ATTENDANCE_ABSENT_'+attendance.id);
                 });
             },
             setTraineeAbsentWihExcuse(attendance, key) {
                 this.$wait.start('ATTENDANCE_ABSENT_WITH_EXCUSE_'+attendance.id);
-                let vm = this;
                 axios.put(route('teaching.course-batch-sessions.attendances.update', {course_batch_session_id: attendance.course_batch_session_id, id: attendance.id}), {
                     status: 'absent_forgiven',
                 }).then(response => {
-                    vm.$set(this.attendances, key, response.data);
-                    vm.$wait.end('ATTENDANCE_ABSENT_WITH_EXCUSE_'+attendance.id);
+                    this.$set(this.attendances.data, key, response.data);
+                    this.$wait.end('ATTENDANCE_ABSENT_WITH_EXCUSE_'+attendance.id);
                 });
             },
             saveAbsenceReason(attendance, key) {
                 this.$wait.start('ATTENDANCE_ABSENCE_REASON_'+attendance.id);
-                let vm = this;
                 axios.put(route('teaching.course-batch-sessions.attendances.update', {course_batch_session_id: attendance.course_batch_session_id, id: attendance.id}), {
                     absence_reason: attendance.absence_reason,
                     status: 'absent_forgiven',
                 }).then(response => {
-                    vm.$set(this.attendances, key, response.data);
-                    vm.$wait.end('ATTENDANCE_ABSENCE_REASON_'+attendance.id);
+                    this.$set(this.attendances.data, key, response.data);
+                    this.$wait.end('ATTENDANCE_ABSENCE_REASON_'+attendance.id);
                 });
             },
             submitAttendanceSheet() {

@@ -329,4 +329,5 @@ return [
     'please-dont-close-the-window' => 'الرجاء عدم إغلاق الصفحة',
     'download-file' => 'تحميل الملف',
     'error-occurred' => 'حدث خطاً',
+    'approve' => 'اعتماد',
 ];

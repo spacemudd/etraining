@@ -35,7 +35,7 @@ class CourseBatchSessionsAttendanceController extends Controller
 
         $attendances = CourseBatchSessionAttendance::where('course_batch_session_id', $course_batch_session_id)
             ->with('trainee')
-            ->paginate(10);
+            ->paginate(50);
 
         //$courseBatchSession->course_batch->trainee_group
         //    ->setRelation('trainees',
