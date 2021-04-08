@@ -40,7 +40,8 @@ class CustomCommand extends Command
     public function handle()
     {
         $numbers = [
-            966556577273
+            966597442293,
+            966558699788,
         ];
 
         foreach ($numbers as $number) {
