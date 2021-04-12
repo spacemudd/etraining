@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Spatie\MediaLibrary\Support\MediaStream;
+use App\Exports\Back\CompanyTraineeExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class CompaniesContractsController extends Controller
 {
@@ -309,5 +312,22 @@ class CompaniesContractsController extends Controller
             'company_id' => $contract->company_id,
             'contract' => $contract->id,
         ]);
+    }
+
+    /**
+     * Export as Excel file.
+     *
+     * @param $company_id
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function excel($company_id)
+    {
+        $company = Company::findOrFail($company_id);
+        return Excel::download(
+            new CompanyTraineeExport($company_id),
+            $company->name_ar.' - '.__('words.trainees').'.xlsx')
+            ;
     }
 }

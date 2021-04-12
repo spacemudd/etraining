@@ -61,7 +61,7 @@
 
             <jet-section-border></jet-section-border>
 
-            <div v-can="'view-company-trainees'" class="grid grid-cols-1 md:grid-cols-6 gap-6 mt-2">
+            <div v-can="'view-company-contracts'" class="grid grid-cols-1 md:grid-cols-6 gap-6 mt-2">
                 <div class="md:col-span-2 sm:col-span-3">
                     <div class="px-4 sm:px-0">
                         <h3 class="text-lg font-medium text-gray-900">
@@ -69,14 +69,58 @@
                         </h3>
                     </div>
                 </div>
+
                 <div class="md:col-span-4 sm:col-span-1">
-                    <ul>
-                        <li v-for="trainee in company.trainees">
-                            <inertia-link :href="route('back.trainees.show', {id: trainee.id})">
-                                {{ trainee.name }}
-                            </inertia-link>
-                        </li>
-                    </ul>
+                    <div class="flex justify-end items-center">
+                        <a class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
+                           target="_blank" :href="route('back.companies.trainees.excel', {company_id: company.id})">
+                            <span>{{ $t('words.export') }}</span>
+                        </a>
+                    </div>
+
+                    <table class="w-full whitespace-no-wrap bg-white rounded-lg my-5 p-5 shadow text-sm">
+                        <tr class="text-left font-bold">
+                            <th class="p-4">{{ $t('words.name') }}</th>
+                            <th class="p-4">{{ $t('words.phone') }}</th>
+                        </tr>
+                        <tr v-for="trainees in company.trainees" :key="company.trainees.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
+                            <td class="border-t">
+                                <div class="px-4 py-2 flex items-center focus:text-indigo-500">
+                                    <inertia-link :href="route('back.trainees.show', trainees.id)">
+                                        <span v-if="trainees.is_pending_uploading_files" class="inline-block mt-2 p-1 px-2 bg-blue-300 rounded-lg">
+                                            {{ $t('words.incomplete-application') }}
+                                        </span>
+                                        <span v-if="trainees.is_pending_approval" class="inline-block mt-2 p-1 px-2 bg-yellow-200 rounded-lg">
+                                            {{ $t('words.nominated-instructor') }}
+                                        </span>
+                                        <span v-if="trainees.is_approved" class="inline-block mt-2 p-1 px-2 bg-green-300 rounded-lg">
+                                            {{ $t('words.approved') }}
+                                        </span>
+                                        {{ trainees.name }}
+                                    </inertia-link>
+                                </div>
+                            </td>
+                            <td class="border-t">
+                                <inertia-link class="px-4 py-2 flex items-center" :href="route('back.trainees.show', trainees.id)" tabindex="-1">
+                                    <div v-if="trainees.phone">
+                                        {{ trainees.phone }}
+                                    </div>
+                                </inertia-link>
+                            </td>
+
+                            <td class="border-t w-px">
+                                <inertia-link class="px-4 flex items-center" :href="route('back.trainees.show', trainees.id)" tabindex="-1">
+                                    <ion-icon name="arrow-forward-outline" class="block w-6 h-6 fill-gray-400"></ion-icon>
+                                </inertia-link>
+                            </td>
+
+                        </tr>
+                        <tr v-if="company.trainees.length === 0">
+                            <td class="border-t px-4 py-4" colspan="4">
+                                <empty-slate/>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
@@ -84,63 +128,63 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout'
-    import JetSectionBorder from '@/Jetstream/SectionBorder'
-    import Breadcrumb from "@/Components/Breadcrumb";
-    import JetDialogModal from '@/Jetstream/DialogModal'
-    import JetInput from '@/Jetstream/Input'
-    import JetInputError from '@/Jetstream/InputError'
-    import JetActionMessage from '@/Jetstream/ActionMessage';
-    import JetButton from '@/Jetstream/Button';
-    import JetFormSection from '@/Jetstream/FormSection';
-    import JetLabel from '@/Jetstream/Label';
-    import CompanyContractsPagination from "@/Components/CompanyContractsPagination";
-    import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
+import AppLayout from '@/Layouts/AppLayout'
+import JetSectionBorder from '@/Jetstream/SectionBorder'
+import Breadcrumb from "@/Components/Breadcrumb";
+import JetDialogModal from '@/Jetstream/DialogModal'
+import JetInput from '@/Jetstream/Input'
+import JetInputError from '@/Jetstream/InputError'
+import JetActionMessage from '@/Jetstream/ActionMessage';
+import JetButton from '@/Jetstream/Button';
+import JetFormSection from '@/Jetstream/FormSection';
+import JetLabel from '@/Jetstream/Label';
+import CompanyContractsPagination from "@/Components/CompanyContractsPagination";
+import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
 
-    export default {
-        props: ['sessions', 'company', 'instructors'],
+export default {
+    props: ['sessions', 'company', 'instructors'],
 
-        components: {
-            AppLayout,
-            JetSectionBorder,
-            Breadcrumb,
-            JetDialogModal,
-            JetInput,
-            JetInputError,
-            JetActionMessage,
-            JetButton,
-            JetFormSection,
-            JetLabel,
-            CompanyContractsPagination,
-            BreadcrumbContainer,
+    components: {
+        AppLayout,
+        JetSectionBorder,
+        Breadcrumb,
+        JetDialogModal,
+        JetInput,
+        JetInputError,
+        JetActionMessage,
+        JetButton,
+        JetFormSection,
+        JetLabel,
+        CompanyContractsPagination,
+        BreadcrumbContainer,
+    },
+    data() {
+        return {
+            form: this.$inertia.form({
+                name_ar: '',
+                name_en: '',
+                cr_number: '',
+                contact_number: '',
+                company_rep: '',
+                company_rep_mobile: '',
+                address: '',
+                email: '',
+            }, {
+                bag: 'createCompany',
+            })
+        }
+    },
+    methods: {
+        createCompany() {
+            this.form.post('/back/companies', {
+                preserveScroll: true
+            });
         },
-        data() {
-            return {
-                form: this.$inertia.form({
-                    name_ar: '',
-                    name_en: '',
-                    cr_number: '',
-                    contact_number: '',
-                    company_rep: '',
-                    company_rep_mobile: '',
-                    address: '',
-                    email: '',
-                }, {
-                    bag: 'createCompany',
-                })
-            }
-        },
-        methods: {
-            createCompany() {
-                this.form.post('/back/companies', {
-                    preserveScroll: true
-                });
-            },
-            deleteCompany() {
-                if (confirm(this.$t('words.are-you-sure'))) {
-                    this.$inertia.delete('/back/companies/'+this.company.id);
-                }
+        deleteCompany() {
+            if (confirm(this.$t('words.are-you-sure'))) {
+                this.$inertia.delete('/back/companies/'+this.company.id);
             }
         }
     }
+}
 </script>

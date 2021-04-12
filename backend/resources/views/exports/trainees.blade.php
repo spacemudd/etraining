@@ -4,6 +4,7 @@
         <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong>{{ __('words.date') }}:</strong></th>
         <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong>{{ now()->format('Y-m-d') }}</strong></th>
     </tr>
+    @if (isset($trainee_status_id))
     <tr>
         <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong>{{ __('words.status') }}:</strong></th>
         <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;">
@@ -20,6 +21,7 @@
             </strong>
         </th>
     </tr>
+    @endif
     <tr></tr>
     <tr>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.name') }}</strong></th>
