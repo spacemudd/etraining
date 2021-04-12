@@ -481,7 +481,7 @@ export default {
             "view-backoffice-reports": "عرض التقارير",
             "course-attendances": "حضور الدورات",
             "candidates": "المرشحين",
-            "export": "تصدير",
+            "export": "إصدار",
             "actions": "إجراءات",
             "new-bulk": "جديد (مجموعة)",
             "the-archive": "الأرشيف",
