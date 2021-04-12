@@ -314,9 +314,20 @@ class CompaniesContractsController extends Controller
         ]);
     }
 
-    public function excel($company_id) {
-        return Excel::download(new CompanyTraineeExport($company_id),'Company Trainee Sheet.xlsx');
+    /**
+     * Export as Excel file.
+     *
+     * @param $company_id
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function excel($company_id)
+    {
+        $company = Company::findOrFail($company_id);
+        return Excel::download(
+            new CompanyTraineeExport($company_id),
+            $company->name_ar.' - '.__('words.trainees').'.xlsx')
+            ;
     }
-
-
 }
