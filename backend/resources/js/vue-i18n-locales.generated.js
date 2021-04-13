@@ -490,7 +490,8 @@ export default {
             "all": "الكل",
             "report-work-on-progress": "جاري العمل على التقرير",
             "please-dont-close-the-window": "الرجاء عدم إغلاق الصفحة",
-            "download-file": "تحميل الملف"
+            "download-file": "تحميل الملف",
+            "disable-website": "إقفال الموقع"
         }
     },
     "en": {
@@ -950,7 +951,8 @@ export default {
             "all": "All",
             "report-work-on-progress": "Generating your report",
             "please-dont-close-the-window": "Please dont close the window",
-            "download-file": "Download file"
+            "download-file": "Download file",
+            "disable-website": "Disable website"
         }
     }
 }

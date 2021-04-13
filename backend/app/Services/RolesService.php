@@ -37,6 +37,7 @@ class RolesService
         'can-impersonate',
         'send-messages-to-groups-of-trainees',
         'view-backoffice-reports',
+        'disable-website',
         // add the same name of the role to translation files.
     ];
 
