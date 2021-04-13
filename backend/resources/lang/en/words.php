@@ -324,6 +324,9 @@ return [
     'report-work-on-progress' => 'Generating your report',
     'please-dont-close-the-window' => 'Please dont close the window',
     'download-file' => 'Download file',
-    'error-occurred' => 'Error occurred',
     'disable-website' => 'Disable website',
+    'here-you-can-disable-the-website-and-specify-a-message' => 'Here you can disable the website and specify the message',
+    'yes' => 'Yes',
+    'no' => 'No',
+    'disable-website-notice' => 'Message for visitors',
 ];
