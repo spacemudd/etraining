@@ -488,9 +488,14 @@ export default {
             "export-trainees": "إصدار بيانات المتدربات",
             "nominated": "مرشح",
             "all": "الكل",
-            "report-work-on-progress": "جاري العمل على التقرير",
+            "report-work-on-progress": "wجاري العمل على التقرير",
             "please-dont-close-the-window": "الرجاء عدم إغلاق الصفحة",
-            "download-file": "تحميل الملف"
+            "download-file": "تحميل الملف",
+            "disable-website": "إقفال الموقع",
+            "here-you-can-disable-the-website-and-specify-a-message": "هنا يمكن لك إقاف الموقع و تحديد الرسالة الرئيسية",
+            "yes": "نعم",
+            "no": "لا",
+            "disable-website-notice": "الرسالة للزائرين"
         }
     },
     "en": {
@@ -950,7 +955,12 @@ export default {
             "all": "All",
             "report-work-on-progress": "Generating your report",
             "please-dont-close-the-window": "Please dont close the window",
-            "download-file": "Download file"
+            "download-file": "Download file",
+            "disable-website": "Disable website",
+            "here-you-can-disable-the-website-and-specify-a-message": "Here you can disable the website and specify the message",
+            "yes": "Yes",
+            "no": "No",
+            "disable-website-notice": "Message for visitors"
         }
     }
 }

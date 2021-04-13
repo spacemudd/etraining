@@ -2,6 +2,8 @@
 
 Route::impersonate();
 
+Route::get('/disabled', [\App\Http\Controllers\Back\DisableWebsiteController::class, 'showDisabledPage'])->name('disabled');
+
 Route::get('/loginas/{user_id}', [\App\Http\Controllers\DebugController::class, 'loginAsUser'])->middleware('auth');
 
 Route::get('invite/{invite_id}', [\App\Http\Controllers\InviteController::class, 'show'])->name('invite')->middleware('signed');
@@ -42,6 +44,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::prefix('back')->middleware('redirect-trainees-to-dashboard')->name('back.')->group(function() {
         Route::get('/settings', [\App\Http\Controllers\Back\SettingsController::class, 'index'])->name('settings');
 
+        Route::get('/settings/disable-website', [\App\Http\Controllers\Back\DisableWebsiteController::class, 'index'])->name('settings.disable-website.index');
+        Route::put('/settings/disable-website', [\App\Http\Controllers\Back\DisableWebsiteController::class, 'update'])->name('settings.disable-website.update');
         Route::delete('/settings/roles/{role_id}/users/{user_id}', [\App\Http\Controllers\Back\RolesController::class, 'deleteUser'])->name('settings.roles.users.delete');
         Route::post('/settings/roles/{id}/users/invite', [\App\Http\Controllers\Back\RolesController::class, 'sendInvite'])->name('settings.roles.users.invite.send');
         Route::get('/settings/roles/{id}/users/invite', [\App\Http\Controllers\Back\RolesController::class, 'invite'])->name('settings.roles.users.invite');

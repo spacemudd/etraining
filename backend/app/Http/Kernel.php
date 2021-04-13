@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\IsDisabledWebsiteMiddleware;
 use App\Http\Middleware\RedirectToApplication;
 use App\Http\Middleware\RedirectTraineesToDashboard;
 use App\Http\Middleware\RoleNavigator;
@@ -42,6 +43,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\SetLocale::class,
+            IsDisabledWebsiteMiddleware::class,
         ],
 
         'api' => [
