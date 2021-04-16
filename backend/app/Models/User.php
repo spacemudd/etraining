@@ -148,6 +148,11 @@ class User extends Authenticatable implements Auditable
         return $this->hasOne(Trainee::class);
     }
 
+    public function team()
+    {
+        return $this->belongsTo(Team::class, 'current_team_id');
+    }
+
     public function routeNotificationForClickSend()
     {
         return $this->phone;
