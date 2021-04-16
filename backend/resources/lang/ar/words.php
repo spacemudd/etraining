@@ -333,4 +333,7 @@ return [
     'yes' => 'نعم',
     'no' => 'لا',
     'disable-website-notice' => 'الرسالة للزائرين',
+    'email-course-notification-subject' => 'تذكير لحضور الدورة',
+    'email-course-notification-body' => "هذا تذكير لحضور الدورة غدًا",
+    'dear-trainee' => '،عزيزتي المتدربة',
 ];
