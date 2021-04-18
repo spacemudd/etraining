@@ -46,6 +46,7 @@ class SiteSearchController extends Controller
             ->orWhere('email', 'LIKE', '%'.$request->search.'%')
             ->orWhere('phone', 'LIKE', '%'.$request->search.'%')
             ->orWhere('identity_number', 'LIKE', '%'.$request->search.'%')
+            ->withTrashed()
             ->take(30)
             ->get();
 
