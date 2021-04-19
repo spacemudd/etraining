@@ -53,6 +53,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'children_count',
         'phone',
         'phone_additional',
+        'national_address',
         'deleted_remark',
         'trainee_group_id',
     ];

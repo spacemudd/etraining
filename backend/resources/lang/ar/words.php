@@ -336,4 +336,5 @@ return [
     'email-course-notification-subject' => 'تذكير لحضور الدورة',
     'email-course-notification-body' => "هذا تذكير لحضور الدورة غدًا",
     'dear-trainee' => '،عزيزتي المتدربة',
+    'national-address' => 'العنوان الوطني',
 ];
