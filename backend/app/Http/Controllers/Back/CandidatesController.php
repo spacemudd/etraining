@@ -18,7 +18,8 @@ class CandidatesController extends Controller
     //
     public function index() {
         return Inertia::render('Back/Candidates/Index', [
-            'candidates' => Trainee::where('company_id', null)->latest()->paginate(20),
+            'candidates' => Trainee::candidates()->latest()->paginate(20),
+            'candidates_count' => Trainee::candidates()->count(),
         ]);
     }
 

@@ -9,7 +9,7 @@
                 ]"
             ></breadcrumb-container>
             <div class="flex justify-between">
-                <h1 class="mb-8 font-bold text-3xl">{{ $t('words.candidates') }}</h1>
+                <h1 class="mb-8 font-bold text-3xl">{{ $t('words.candidates') }} ({{ candidates_count }})</h1>
                 <div class="mb-6 flex justify-between items-center">
 
                     <inertia-link class="btn-gray mx-3" :href="route('back.candidates.excel')">
@@ -102,9 +102,7 @@
             Pagination,
             // SearchFilter,
         },
-        props: {
-            candidates: Object,
-        },
+        props: ['candidates', 'candidates_count'],
         data() {
             return {
 
