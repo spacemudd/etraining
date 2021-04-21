@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\AdhocCommand;
+use App\Console\Commands\TraineeAlertUpcomingSessionCommand;
 use App\Console\Commands\DatabaseIndexTextCommand;
 use App\Console\Commands\InvitePeopleCommand;
 use App\Console\Commands\SeedPermissionsCommand;
@@ -27,6 +28,7 @@ class Kernel extends ConsoleKernel
         FixTraineeGroupsCommand::class,
         ZoomCommand::class,
         AdhocCommand::class,
+        TraineeAlertUpcomingSessionCommand::class,
     ];
 
     /**
@@ -40,6 +42,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->command('backup:clean')->daily()->at('01:00')->onOneServer();
         $schedule->command('backup:run')->daily()->at('01:30')->onOneServer();
+        $schedule->command('etrianing:coursereminder')->daily()->at('05:00');
     }
 
     /**

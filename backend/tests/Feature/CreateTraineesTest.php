@@ -6,13 +6,19 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Jetstream\AddTeamMember;
 use App\Actions\Jetstream\CreateTeam;
 use App\Models\Back\Company;
+use App\Models\Back\Course;
+use App\Models\Back\CourseBatch;
+use App\Models\Back\CourseBatchSession;
+use App\Models\Back\Instructor;
 use App\Models\Back\Trainee;
+use App\Models\Back\TraineeGroup;
 use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\InboxMessage;
 use App\Models\MaritalStatus;
 use App\Models\User;
 use App\Notifications\AssignedToCompanyTraineeNotification;
+use App\Notifications\TraineeAlertUpcomingSessionNotification;
 use App\Notifications\TraineeWelcomeNotification;
 use App\Services\RolesService;
 use Illuminate\Http\UploadedFile;
@@ -349,5 +355,107 @@ class CreateTraineesTest extends TestCase
         ])->assertSessionDoesntHaveErrors();
 
         Notification::assertSentTo($trainee, AssignedToCompanyTraineeNotification::class);
+    }
+
+    public function test_trainee_receives_an_email_reminder_for_an_upcoming_course()
+    {
+        Notification::fake();
+
+        $admin = (new CreateNewUser())->create([
+            'name' => 'Shafiq al-Shaar',
+            'email' => 'admin@getShafiq.com',
+            'password' => 'hello123123',
+            'password_confirmation' => 'hello123123',
+        ]);
+
+        $acmeCompany = Company::factory()->create(['team_id' => $admin->personalTeam()->id]);
+
+        $traineeGroup = TraineeGroup::factory()->create([
+            'team_id' => $acmeCompany->team_id,
+            'company_id' => $acmeCompany->id,
+        ]);
+
+        $instructor = Instructor::factory()->create([
+            'team_id' => $admin->personalTeam()->id,
+        ]);
+
+        $course = Course::factory()->create([
+            'team_id' => $acmeCompany->team_id,
+            'instructor_id' => $instructor->id,
+            'name_ar' => 'إدارة المشاريع',
+        ]);
+        $courseBatch = CourseBatch::factory()->create([
+            'team_id' => $acmeCompany->team_id,
+            'course_id' => $course->id,
+            'trainee_group_id' => $traineeGroup->id,
+        ]);
+        $courseBatchSession = CourseBatchSession::factory()->create([
+            'team_id' => $acmeCompany->team_id,
+            'course_id' => $course->id,
+            'course_batch_id' => $courseBatch->id,
+            'starts_at' => now()->setTime(11, 0, 0)->addDay(),
+            'ends_at' => now()->subMinute(10)
+        ]);
+
+        $trainee = Trainee::factory()->create([
+            'team_id' => $admin->personalTeam()->id,
+            'company_id' => $acmeCompany->id,
+            'trainee_group_id' => $traineeGroup->id,
+        ]);
+
+        $this->artisan('etrianing:coursereminder');
+
+        Notification::assertSentTo($trainee, TraineeAlertUpcomingSessionNotification::class);
+    }
+
+    public function test_trainee_doesnt_receive_an_email_reminder_for_an_old_course()
+    {
+        Notification::fake();
+
+        $admin = (new CreateNewUser())->create([
+            'name' => 'Shafiq al-Shaar',
+            'email' => 'admin@getShafiq.com',
+            'password' => 'hello123123',
+            'password_confirmation' => 'hello123123',
+        ]);
+
+        $acmeCompany = Company::factory()->create(['team_id' => $admin->personalTeam()->id]);
+
+        $traineeGroup = TraineeGroup::factory()->create([
+            'team_id' => $acmeCompany->team_id,
+            'company_id' => $acmeCompany->id,
+        ]);
+
+        $instructor = Instructor::factory()->create([
+            'team_id' => $admin->personalTeam()->id,
+        ]);
+
+        $course = Course::factory()->create([
+            'team_id' => $acmeCompany->team_id,
+            'instructor_id' => $instructor->id,
+            'name_ar' => 'إدارة المشاريع',
+        ]);
+        $courseBatch = CourseBatch::factory()->create([
+            'team_id' => $acmeCompany->team_id,
+            'course_id' => $course->id,
+            'trainee_group_id' => $traineeGroup->id,
+        ]);
+        $courseBatchSession = CourseBatchSession::factory()->create([
+            'team_id' => $acmeCompany->team_id,
+            'course_id' => $course->id,
+            'course_batch_id' => $courseBatch->id,
+            'starts_at' => now()->setTime(11, 0, 0)->subDay(),
+            'ends_at' => now()->subMinute(10)
+        ]);
+
+        $trainee = Trainee::factory()->create([
+            'team_id' => $admin->personalTeam()->id,
+            'company_id' => $acmeCompany->id,
+            'trainee_group_id' => $traineeGroup->id,
+        ]);
+
+        $this->artisan('etrianing:coursereminder');
+
+        Notification::assertNotSentTo($trainee, TraineeAlertUpcomingSessionNotification::class);
     }
 }
