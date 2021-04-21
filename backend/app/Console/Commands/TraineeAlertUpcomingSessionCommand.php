@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Back\CourseBatchSession;
+use App\Models\Back\Trainee;
 use Carbon\Carbon;
 use App\Models\Back\CourseBatch;
 use App\Models\Back\Course;
@@ -46,25 +48,14 @@ class TraineeAlertUpcomingSessionCommand extends Command
      */
     public function handle()
     {
-        $targetDate = date('Y-m-d', strtotime("+1 day"));
+        $sessions = CourseBatchSession::whereBetween('starts_at', [
+            now()->startOfDay(),
+            now()->addDay()->endOfDay()
+        ])->get();
 
-        $courseBatches = CourseBatch::whereDate('starts_at', new Carbon($targetDate))->get();
-
-
-
-
-        foreach($courseBatches as $batch) {
-
-            $course = Course::where('id', $batch->course_id)->get();
-
-            $traineeGroup = TraineeGroup::where('id', $batch->trainee_group_id)->with('trainees')->first();
-
-            $users = User::whereIn('id', $traineeGroup->trainees->pluck('user_id'));
-
-            $targetDate = $batch->starts_at;
-
-            $users->chunk(20, function($users) use ($traineeGroup, $course, $targetDate) {
-                Notification::send($users, new TraineeAlertUpcomingSessionNotification($traineeGroup, $course, $targetDate));
+        foreach($sessions as $session) {
+            Trainee::where('trainee_group_id', $session->course_batch->trainee_group_id)->chunk(20, function($trainees) use ($session) {
+                Notification::send($trainees, new TraineeAlertUpcomingSessionNotification($session));
             });
         }
     }
