@@ -2,8 +2,10 @@
 
 namespace App\Notifications;
 
+use App\Models\Back\CourseBatchSession;
 use App\Models\Back\TraineeGroup;
 use App\Models\Back\Course;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -14,15 +16,18 @@ class TraineeAlertUpcomingSessionNotification extends Notification implements Sh
     use Queueable;
 
     /**
+     * @var CourseBatchSession
+     */
+    private $session;
+
+    /**
      * Create a new notification instance.
      *
-     * @return void
+     * @param CourseBatchSession $session
      */
-    public function __construct(TraineeGroup $traineeGroup, Course $course, string $date)
+    public function __construct(CourseBatchSession $session)
     {
-        $this->traineeGroup = $traineeGroup;
-        $this->course = $course;
-        $this->$date = $date;
+        $this->session = $session;
     }
 
     /**
@@ -44,12 +49,14 @@ class TraineeAlertUpcomingSessionNotification extends Notification implements Sh
      */
     public function toMail($notifiable)
     {
+        $date = $this->session->starts_at
+            ->setTimezone($notifiable->timezone ?: 'Asia/Riyadh');
+
         return (new MailMessage)
-                    ->subject($this->date. trans('words.email-course-notification-subject'). ' - ' . $this->course->name_ar)
-                    ->line(trans('words.dear-trainee'))
-                    ->line(trans('words.email-course-notification-body'))
-                    ->action(trans('words.access-the-platform'), url('/'))
-                    ->salutation(trans('words.with-regards'));
+            ->subject($date->format('d-m-Y H:i').' - '.__('words.email-course-notification-subject-tomorrow').' (' . $this->session->course->name_ar.')')
+            ->line(trans('words.dear-trainee'))
+            ->line(trans('words.email-course-notification-body-at'). ' - '.$date->format('H:i'))
+            ->salutation(trans('words.with-regards'));
     }
 
     /**

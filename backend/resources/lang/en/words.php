@@ -329,7 +329,8 @@ return [
     'yes' => 'Yes',
     'no' => 'No',
     'disable-website-notice' => 'Message for visitors',
-    'email-course-notification-subject' => 'Reminder to attend course',
-    'email-course-notification-body' => "This is a reminder to attend the course",
+    'email-course-notification-subject-tomorrow' => 'Reminder for attendance tomorrow',
+    'email-course-notification-body-at' => "This is a reminder to attend the course at",
     'dear-trainee', 'Dear trainee,',
+    'at-hour' => 'at',
 ];
