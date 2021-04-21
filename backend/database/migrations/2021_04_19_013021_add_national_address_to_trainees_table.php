@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddCommittedAttendancesAtColToCourseBatchSessionsTable extends Migration
+class AddNationalAddressToTraineesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class AddCommittedAttendancesAtColToCourseBatchSessionsTable extends Migration
      */
     public function up()
     {
-        Schema::table('course_batch_sessions', function (Blueprint $table) {
-            $table->timestamp('committed_attendances_at')->nullable();
+        Schema::table('trainees', function (Blueprint $table) {
+            $table->string('national_address')->after('phone_additional')->nullable();
         });
-
     }
 
     /**
@@ -26,8 +25,8 @@ class AddCommittedAttendancesAtColToCourseBatchSessionsTable extends Migration
      */
     public function down()
     {
-        Schema::table('course_batch_sessions', function (Blueprint $table) {
-            $table->dropColumn(['committed_attendances_at']);
+        Schema::table('trainees', function (Blueprint $table) {
+            $table->dropColumn('national_address');
         });
     }
 }

@@ -151,6 +151,11 @@
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
+                    <jet-label for="national_address" :value="$t('words.national-address')" />
+                    <jet-input id="national_address" type="text" :class="editButton.inputClass" v-model="trainee.national_address" :disabled="!editButton.editOption" />
+                </div>
+
+                <div class="col-span-6 sm:col-span-2">
                     <jet-label for="email" :value="$t('words.email')" />
                     <jet-input id="email" type="text" :class="editButton.inputClass" v-model="trainee.email" :disabled="!editButton.editOption" />
                 </div>
@@ -432,6 +437,7 @@
                         birthday: this.trainee.birthday,
                         phone: this.trainee.phone,
                         phone_additional: this.trainee.phone_additional,
+                        national_address: this.trainee.national_address,
                         educational_level: this.trainee.educational_level_id,
                         city_id: this.trainee.city_id,
                         marital_status_id: this.trainee.marital_status_id,

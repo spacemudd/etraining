@@ -27,6 +27,7 @@ class CandidateExport implements FromCollection, WithHeadings
             'identity_number',
             'phone',
             'phone_additional',
+            'national_address',
             'birthday',
             'educational_level_id',
             'city_id',

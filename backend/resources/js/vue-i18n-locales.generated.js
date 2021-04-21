@@ -495,7 +495,11 @@ export default {
             "here-you-can-disable-the-website-and-specify-a-message": "هنا يمكن لك إقاف الموقع و تحديد الرسالة الرئيسية",
             "yes": "نعم",
             "no": "لا",
-            "disable-website-notice": "الرسالة للزائرين"
+            "disable-website-notice": "الرسالة للزائرين",
+            "email-course-notification-subject": "تذكير لحضور الدورة",
+            "email-course-notification-body": "هذا تذكير لحضور الدورة غدًا",
+            "dear-trainee": "،عزيزتي المتدربة",
+            "national-address": "العنوان الوطني"
         }
     },
     "en": {
@@ -960,7 +964,12 @@ export default {
             "here-you-can-disable-the-website-and-specify-a-message": "Here you can disable the website and specify the message",
             "yes": "Yes",
             "no": "No",
-            "disable-website-notice": "Message for visitors"
+            "disable-website-notice": "Message for visitors",
+            "email-course-notification-subject": "Reminder to attend course",
+            "email-course-notification-body": "This is a reminder to attend the course",
+            "0": "dear-trainee",
+            "1": "Dear trainee,",
+            "national-address": "National Address"
         }
     }
 }

@@ -333,4 +333,5 @@ return [
     'email-course-notification-body-at' => "This is a reminder to attend the course at",
     'dear-trainee', 'Dear trainee,',
     'at-hour' => 'at',
+    'national-address' => 'National Address',
 ];

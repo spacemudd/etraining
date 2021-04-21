@@ -50,6 +50,7 @@ class RegisterTraineeController extends Controller
             'phone_additional' => 'required|string|max:255',
             'educational_level_id' => 'required|exists:educational_levels,id',
             'city_id' => 'required|exists:cities,id',
+            'national_address' => ['required', 'string', 'max:255'],
             'marital_status_id' => 'required|exists:marital_statuses,id',
             'children_count' => 'nullable|numeric',
         ])->validate();
@@ -73,6 +74,7 @@ class RegisterTraineeController extends Controller
             'name' => $trainee->name,
             'email' => $trainee->email,
             'phone' => $trainee->phone,
+            'national_address' => $trainee->national_address,
             'password' => 'password',
             'password_confirmation' => 'password',
         ]);

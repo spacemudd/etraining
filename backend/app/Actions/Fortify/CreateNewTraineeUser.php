@@ -32,6 +32,7 @@ class CreateNewTraineeUser implements CreatesNewUsers
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => $this->passwordRules(),
+            'national_address' => ['required', 'string', 'max:255'],
         ])->validate();
 
         \DB::beginTransaction();
@@ -54,6 +55,7 @@ class CreateNewTraineeUser implements CreatesNewUsers
 
         $trainee = Trainee::where('id', $input['trainee_id'])->first();
         $trainee->user_id = $user->id;
+        $trainee->national_address = $input['national_address'];
         $trainee->save();
 
         \DB::commit();

@@ -53,6 +53,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'children_count',
         'phone',
         'phone_additional',
+        'national_address',
         'deleted_remark',
         'trainee_group_id',
     ];
@@ -228,7 +229,11 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
 
     public function getShowUrlAttribute(): string
     {
-        return route('back.trainees.show', $this->id);
+        if ($this->trashed()) {
+            return route('back.trainees.show.blocked', $this->id);
+        } else {
+            return route('back.trainees.show', $this->id);
+        }
     }
 
     public function getNameSelectableAttribute()
