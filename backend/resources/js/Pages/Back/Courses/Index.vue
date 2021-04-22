@@ -10,6 +10,7 @@
             <div class="flex justify-between">
                 <h1 class="mb-8 font-bold text-3xl">{{ $t('words.courses') }}</h1>
                 <div class="mb-6 flex justify-between items-center">
+
                     <!--<search-filter v-model="form.search" class="w-full max-w-md mr-4" @reset="reset">-->
                     <!--    <label class="block text-gray-700">Trashed:</label>-->
                     <!--    <select v-model="form.trashed" class="mt-1 w-full form-select">-->
@@ -18,9 +19,16 @@
                     <!--        <option value="only">Only Trashed</option>-->
                     <!--    </select>-->
                     <!--</search-filter>-->
+
                     <inertia-link class="btn-gray" :href="route('back.courses.create')">
                         <span>{{ $t('words.new') }}</span>
                     </inertia-link>
+
+                    <inertia-link :href="route('back.courses.today')" class="rounded items-center mr-3 justify-start float-left px-3 py-2.5 bg-yellow-200 hover:bg-yellow-300 text-left">
+                        {{ $t('words.show-today-courses') }}
+                    </inertia-link>
+
+
                 </div>
             </div>
             <div class="bg-white rounded shadow overflow-x-auto">
@@ -37,14 +45,37 @@
                                 <inertia-link :href="route('back.courses.show', course.id)">
                                     {{ course.name_ar }}
                                     <br/>
+
                                     <div v-if="course.is_pending_approval"
                                          class="text-sm inline-block mt-2 p-1 px-2 bg-red-300 rounded-lg">
                                         {{ $t('words.pending-approval') }}
                                     </div>
 
-                                    <span v-if="course.is_approved" class="text-sm inline-block mt-2 p-1 px-2 bg-green-300 rounded-lg">
+                                    <span v-else-if="course.is_approved" class="text-sm inline-block mt-2 p-1 px-2 bg-green-300 rounded-lg">
                                         {{ $t('words.approved') }}
                                     </span>
+
+
+                                    <span v-if="course.closest_course_batch == 'empty'" class="text-sm inline-block mt-2 p-1 px-2 bg-red-400 rounded-lg">
+                                        {{ $t('words.not-set') }}
+                                    </span>
+
+                                    <span v-else-if="course.closest_course_batch == 'Today'" class="text-sm inline-block mt-2 p-1 px-2 bg-yellow-400 rounded-lg">
+                                        {{ $t('words.today') }}
+                                    </span>
+
+                                    <span v-else-if="course.closest_course_batch < currentDate && course.closest_course_batch != 'empty'" class="text-sm inline-block mt-2 p-1 px-2 bg-blue-300 rounded-lg">
+                                        {{ course.closest_course_batch }}
+                                    </span>
+
+                                    <span v-else-if="course.closest_course_batch > currentDate" class="text-sm inline-block mt-2 p-1 px-2 bg-green-500 rounded-lg">
+
+                                        {{ course.closest_course_batch }}
+                                    </span>
+
+
+
+
                                 </inertia-link>
                             </div>
                         </td>
@@ -124,6 +155,7 @@
                     // search: this.filters.search,
                     // trashed: this.filters.trashed,
                 },
+                currentDate: '',
             }
         },
         watch: {
@@ -140,5 +172,20 @@
                 this.form = mapValues(this.form, () => null)
             },
         },
+        mounted() {
+
+            const today = new Date();
+
+            function formatDate(date, format) {
+
+                var newFormat = format.replace('mm', date.getMonth() + 1)
+                .replace('yy', date.getFullYear())
+                .replace('dd', date.getDate());
+
+                return newFormat;
+            }
+
+            this.currentDate = formatDate(today, 'yy-mm-dd');
+        }
     }
 </script>

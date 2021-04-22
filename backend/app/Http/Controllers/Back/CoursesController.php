@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Back;
 use App\Http\Controllers\Controller;
 use App\Models\Back\Course;
 use App\Models\Back\Instructor;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -20,6 +21,18 @@ class CoursesController extends Controller
         return Inertia::render('Back/Courses/Index', [
             'courses' => Course::with('instructor')->latest()->paginate(10),
         ]);
+    }
+
+    public function indexToday() {
+
+        $course = Course::with('instructor')->whereHas('batches', function ($q) {
+             $q->whereDate('starts_at', new Carbon(date('Y-m-d', time())));
+        })->latest()->paginate(10);
+
+        return Inertia::render('Back/Courses/IndexToday', [
+            'courses' => $course,
+        ]);
+
     }
 
     /**

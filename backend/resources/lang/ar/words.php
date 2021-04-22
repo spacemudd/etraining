@@ -337,4 +337,9 @@ return [
     'email-course-notification-body' => "هذا تذكير لحضور الدورة غدًا",
     'dear-trainee' => '،عزيزتي المتدربة',
     'national-address' => 'العنوان الوطني',
+    'show-today-courses' => 'عرض دورات اليوم',
+    'show-all-courses' => 'عرض جميع الدورات',
+    'not-set' => 'لم يتم تحديد وقت',
+    'today' => 'اليوم',
+    'today-courses' => 'دورات اليوم',
 ];

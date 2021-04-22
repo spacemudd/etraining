@@ -112,6 +112,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('trainees/{trainee_id}/block', [\App\Http\Controllers\Back\TraineesController::class, 'block'])->name('trainees.block.store');
         Route::get('trainees/blocked/show/{trainee_id}', [\App\Http\Controllers\Back\TraineesController::class, 'showBlocked'])->name('trainees.show.blocked');
         Route::post('trainees/blocked/show/{trainee_id}', [\App\Http\Controllers\Back\TraineesController::class, 'unblock'])->name('trainees.unblock');
+        Route::get('trainees/archived', [\App\Http\Controllers\Back\TraineesController::class, 'indexArchived'])->name('trainees.index.archived');
         Route::resource('trainees', \App\Http\Controllers\Back\TraineesController::class);
         Route::get('candidates', [\App\Http\Controllers\Back\CandidatesController::class, 'index'])->name('candidates.index');
         Route::get('candidates/excel', [\App\Http\Controllers\Back\CandidatesController::class, 'excel'])->name('candidates.excel');
@@ -139,6 +140,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('courses/{course_id}/approve', [\App\Http\Controllers\Back\CoursesController::class, 'approve'])->name('courses.approve');
         Route::post('courses/{course_id}/training-package', [\App\Http\Controllers\Back\CoursesController::class, 'storeTrainingPackage'])->name('courses.training-package');
         Route::delete('courses/{course_id}/training-package', [\App\Http\Controllers\Back\CoursesController::class, 'deleteTrainingPackage'])->name('courses.training-package.destroy');
+        Route::get('courses/today', [\App\Http\Controllers\Back\CoursesController::class, 'indexToday'])->name('courses.today');
         Route::resource('courses', \App\Http\Controllers\Back\CoursesController::class);
 
         Route::prefix('reports')->group(function() {

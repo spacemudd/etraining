@@ -1,6 +1,7 @@
 require('./bootstrap');
 
 import Vue from 'vue';
+import Vuex from "vuex";
 Vue.config.ignoredElements = [/^ion-/]
 Vue.config.productionTip = false
 
@@ -33,6 +34,7 @@ Vue.use(InertiaForm);
 Vue.use(PortalVue);
 Vue.use(VueMeta);
 Vue.use(VueWait);
+Vue.use(Vuex);
 Vue.use(Skeleton);
 Vue.use(VModal);
 Vue.use(LottieAnimation);
@@ -81,6 +83,8 @@ const i18n = new VueInternationalization({
     locale: lang,
     messages: Locale
 });
+
+
 
 const appName = lang === 'ar' ? 'منصة التدريب' : 'eTraining';
 

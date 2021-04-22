@@ -333,4 +333,9 @@ return [
     'email-course-notification-body' => "This is a reminder to attend the course",
     'dear-trainee', 'Dear trainee,',
     'national-address' => 'National Address',
+    'show-today-courses' => "Show Today's Courses",
+    'show-all-courses' => 'Show All Courses',
+    'not-set' => 'No Date Set',
+    'today' => 'Today',
+    'today-courses' => "Today's Courses",
 ];
