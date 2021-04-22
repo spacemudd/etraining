@@ -328,4 +328,7 @@ return [
     'download-file' => 'Download file',
     'error-occurred' => 'Error occurred',
     'approve' => 'Approve',
+    'auto_renewal' => 'Auto Renewal',
+    'activated' => 'Activated',
+    'deactivated'=> 'De-activated',
 ];

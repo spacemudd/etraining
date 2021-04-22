@@ -8,6 +8,8 @@ use App\Jobs\CourseAttendanceReportJob;
 use App\Models\Back\Course;
 use App\Models\JobTracker;
 use App\Reports\CourseAttendanceReportFactory;
+use App\Reports\ContractsReportFactory;
+use App\Jobs\ContractsReportJob;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -62,4 +64,33 @@ class ReportsController extends Controller
 
         return $tracker;
     }
+
+    public function generateContractsReport(Request $request)
+    {
+        $request->validate([
+            'date_from' => 'required',
+            'date_to' => 'required',
+        ]);
+
+        $tracker = new JobTracker();
+        $tracker->user_id = auth()->user()->id;
+        $tracker->metadata = $request->except('_token');
+        $tracker->reportable_id = null;
+        $tracker->reportable_type = ContractsReportFactory::class;
+        $tracker->queued_at = now();
+        $tracker->save();
+
+        $tracker = $tracker->refresh();
+
+        ContractsReportJob::dispatch($tracker);
+
+        return $tracker;
+    }
+
+    public function formContractsReport()
+    {
+        $this->authorize('view-backoffice-reports');
+        return Inertia::render('Back/Reports/Contracts/Index');
+    }
+
 }

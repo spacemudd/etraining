@@ -330,4 +330,7 @@ return [
     'download-file' => 'تحميل الملف',
     'error-occurred' => 'حدث خطاً',
     'approve' => 'اعتماد',
+    'auto_renewal' => 'التجديد التلقائي',
+    'activated' => 'مفعل',
+    'deactivated'=> 'غير مفعل',
 ];

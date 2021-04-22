@@ -492,7 +492,10 @@ export default {
             "report-work-on-progress": "جاري العمل على التقرير",
             "please-dont-close-the-window": "الرجاء عدم إغلاق الصفحة",
             "download-file": "تحميل الملف",
-            "approve": "اعتماد"
+            "approve": "اعتماد",
+            "auto_renewal": "التجديد التلقائي",
+            "activated": "مفعل",
+            "deactivated": "غير مفعل"
         }
     },
     "en": {
@@ -955,7 +958,10 @@ export default {
             "report-work-on-progress": "Generating your report",
             "please-dont-close-the-window": "Please dont close the window",
             "download-file": "Download file",
-            "approve": "Approve"
+            "approve": "Approve",
+            "auto_renewal": "Auto Renewal",
+            "activated": "Activated",
+            "deactivated": "De-activated"
         }
     }
 }
