@@ -34,6 +34,13 @@ class ContractsReportFactory
     private $endDate;
 
     /**
+     * Language of the app.
+     *
+     *
+     */
+    private $language;
+
+    /**
      * Create a new instance.
      *
      * @return \App\Reports\ContractsReportFactory

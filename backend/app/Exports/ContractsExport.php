@@ -84,6 +84,6 @@ class ContractsExport implements FromView, WithEvents, WithStyles, WithColumnWid
 
     public function title(): string
     {
-        return 'Summary';
+        return 'Contracts Report';
     }
 }

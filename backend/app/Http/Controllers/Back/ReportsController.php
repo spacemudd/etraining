@@ -72,6 +72,7 @@ class ReportsController extends Controller
             'date_to' => 'required',
         ]);
 
+
         $tracker = new JobTracker();
         $tracker->user_id = auth()->user()->id;
         $tracker->metadata = $request->except('_token');

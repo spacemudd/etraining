@@ -5,10 +5,10 @@
     <thead>
         <tr>
             <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong>{{ __('words.company') }}:</strong></th>
-            @if (app()->getLocale() == 'ar')
-                <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong><a href="{{ $company->show_url }}">{{ $company->name_ar }}</a></strong></th>
+            @if (app()->getLocale() === 'ar')
+                <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong><a href="{{ $company->show_url }}">{{ $company->name_ar }} Arabic</a></strong></th>
             @else
-                 <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong><a href="{{ $company->show_url }}">{{ $company->name_en }}</a></strong></th>
+                 <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong><a href="{{ $company->show_url }}">{{ $company->name_en }} English</a></strong></th>
             @endif
         </tr>
 
