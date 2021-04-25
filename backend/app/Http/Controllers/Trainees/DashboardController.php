@@ -22,7 +22,8 @@ class DashboardController extends Controller
                 $q->with(['course' => function($q) {
                     $q->with('instructor');
                 }]);
-            }])->latest()
+            }])->where('starts_at', '>=', now()->startOfDay())
+                ->latest()
                 ->paginate(15);
         } else {
             $sessions = [];

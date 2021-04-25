@@ -343,4 +343,8 @@ return [
     'auto_renewal' => 'التجديد التلقائي',
     'activated' => 'مفعل',
     'deactivated'=> 'غير مفعل',
+    'show-today-courses' => 'عرض دورات اليوم',
+    'show-all-courses' => 'عرض جميع الدورات',
+    'today' => 'اليوم',
+    'today-courses' => 'دورات اليوم',
 ];

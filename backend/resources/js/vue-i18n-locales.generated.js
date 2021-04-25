@@ -504,7 +504,12 @@ export default {
             "email-course-notification-subject": "تذكير لحضور الدورة",
             "email-course-notification-body": "هذا تذكير لحضور الدورة غدًا",
             "dear-trainee": "،عزيزتي المتدربة",
-            "national-address": "العنوان الوطني"
+            "national-address": "العنوان الوطني",
+            "show-today-courses": "عرض دورات اليوم",
+            "show-all-courses": "عرض جميع الدورات",
+            "not-set": "لم يتم تحديد وقت",
+            "today": "اليوم",
+            "today-courses": "دورات اليوم"
         }
     },
     "en": {
@@ -976,7 +981,12 @@ export default {
             "email-course-notification-body": "This is a reminder to attend the course",
             "0": "dear-trainee",
             "1": "Dear trainee,",
-            "national-address": "National Address"
+            "national-address": "National Address",
+            "show-today-courses": "Show Today's Courses",
+            "show-all-courses": "Show All Courses",
+            "not-set": "No Date Set",
+            "today": "Today",
+            "today-courses": "Today's Courses"
         }
     }
 }

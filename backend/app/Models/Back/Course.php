@@ -53,6 +53,7 @@ class Course extends Model implements HasMedia, SearchableLabels, Auditable
         'resource_label',
         'resource_type',
         'can_show_certificate',
+        'closest_course_batch',
     ];
 
     protected static function boot(): void
@@ -188,5 +189,44 @@ class Course extends Model implements HasMedia, SearchableLabels, Auditable
 
         return $can_show_certificate;
     }
+
+    public function getClosestCourseBatchAttribute() {
+
+        $course_batches = CourseBatch::where('course_id', $this->id)->with(['course_batch_sessions' => function ($q) {
+            $q->orderBy('starts_at', 'ASC');
+        }])
+        ->orderBy('ends_at', 'ASC')->get();
+
+        $nearest_date = 'empty';
+
+        foreach ($course_batches as $course_batch) {
+
+            // So the algorithm is that the first one that has the end date higher than our current date, we will look into the
+            // course sessions and look at the first one with start date higher than or equal our current date.
+            //
+            if(strtotime($course_batch->ends_at) >= time()) {
+                // $nearest_date = date('Y-m-d',strtotime($course_batch->ends_at));
+                foreach ($course_batch->course_batch_sessions as $course_batch_session) {
+                    if (strtotime($course_batch_session->starts_at) >= time()) {
+                        $nearest_date = date('Y-m-d',strtotime($course_batch_session->starts_at));
+                        if ($nearest_date == date('Y-m-d',time())) {
+                            $nearest_date = 'Today';
+                        }
+                        return $nearest_date;
+                    }
+                }
+                $nearest_date = date('Y-m-d',strtotime($course_batch->ends_at));
+                break;
+            }
+
+
+            $nearest_date = date('Y-m-d',strtotime($course_batch->ends_at));
+
+
+        }
+
+        return $nearest_date;
+    }
+
 }
 

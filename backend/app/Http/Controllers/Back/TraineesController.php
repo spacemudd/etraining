@@ -41,7 +41,12 @@ class TraineesController extends Controller
     public function index() {
         return Inertia::render('Back/Trainees/Index', [
             'trainees' => Trainee::with('company')->with('trainee_group')->latest()->paginate(20),
-            'blocked_trainees' => Trainee::with('company')->onlyTrashed()->latest()->paginate(20),
+        ]);
+    }
+
+    public function indexArchived() {
+        return Inertia::render('Back/Trainees/IndexArchived', [
+            'blocked_trainees' => Trainee::with('company')->with('trainee_group')->onlyTrashed()->latest()->paginate(20),
         ]);
     }
 
