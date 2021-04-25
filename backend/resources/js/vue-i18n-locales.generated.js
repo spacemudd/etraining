@@ -510,7 +510,9 @@ export default {
             "show-all-courses": "عرض جميع الدورات",
             "today": "اليوم",
             "today-courses": "دورات اليوم",
-            "candidates": "المشرحين"
+            "candidates": "المشرحين",
+            "prepare-attendance": "رفع الحضور",
+            "draft": "مسودة"
         }
     },
     "en": {
@@ -988,7 +990,9 @@ export default {
             "show-all-courses": "Show All Courses",
             "not-set": "No Date Set",
             "today-courses": "Today's Courses",
-            "today": "Today"
+            "today": "Today",
+            "prepare-attendance": "Prepare attendance",
+            "draft": "Draft"
         }
     }
 }

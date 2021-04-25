@@ -73,6 +73,11 @@ class CourseBatchSession extends Model implements Auditable
         return $this->hasMany(CourseBatchSessionAttendance::class);
     }
 
+    public function attendance_snapshots()
+    {
+        return $this->hasMany(AttendanceSnapshot::class);
+    }
+
     public function absentees()
     {
         return $this->attendances()->where('attended', false);

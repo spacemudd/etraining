@@ -348,4 +348,6 @@ return [
     'today' => 'اليوم',
     'today-courses' => 'دورات اليوم',
     'candidates' => 'المشرحين',
+    'prepare-attendance' => 'رفع الحضور',
+    'draft' => 'مسودة',
 ];

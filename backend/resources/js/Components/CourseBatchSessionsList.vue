@@ -28,15 +28,15 @@
                 <span class="text-xs">{{ session.ends_at_timezone | timestampDate }}</span>
             </td>
             <td class="border-t py-3 text-left flex flex-col">
-                <a v-if="can('download-attendance-sheet-for-course-batch')"
-                              :href="route('teaching.course-batch-sessions.attendance.export', {course_batch_session_id: session.id})"
-                              class="bg-gray-200 py-1 px-2 rounded text-black text-sm hover:bg-gray-300 w-full text-center">
-                    <img src="/img/excel.svg" class="float inline-block ml-2" style="max-width:16px;">
-                    {{ $t('words.download-attendance') }}
-                </a>
-                <inertia-link :href="route('teaching.course-batch-sessions.attendance.index', {course_batch_session_id: session.id})"
+                <!--<a v-if="can('download-attendance-sheet-for-course-batch')"-->
+                <!--              :href="route('teaching.course-batch-sessions.attendance.export', {course_batch_session_id: session.id})"-->
+                <!--              class="bg-gray-200 py-1 px-2 rounded text-black text-sm hover:bg-gray-300 w-full text-center">-->
+                <!--    <img src="/img/excel.svg" class="float inline-block ml-2" style="max-width:16px;">-->
+                <!--    {{ $t('words.download-attendance') }}-->
+                <!--</a>-->
+                <inertia-link :href="route('teaching.course-batch-sessions.attendance-snapshots-reports.show', {course_batch_session_id: session.id})"
                               class="bg-blue-600 py-1 px-2 rounded text-white text-sm hover:bg-blue-800 mt-5 w-full text-center">
-                    {{ $t('words.attendance') }}
+                    {{ $t('words.prepare-attendance') }}
                 </inertia-link>
 
                 <button class="bg-red-600 py-1 px-2 rounded text-white text-sm hover:bg-red-800 mt-5 w-full disabled:bg-gray-500"

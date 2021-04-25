@@ -489,7 +489,7 @@ class TraineesController extends Controller
         $excelJob->trainee_status_id = $request->trainee_status_id;
         $excelJob->queued_at = now();
         $excelJob->user_id = auth()->user()->id;
-        $excelJob->team_id = auth()->user()->team_id;
+        $excelJob->team_id = auth()->user()->current_team_id;
         $excelJob->save();
 
         dispatch(new ExportTraineesToExcelJob($excelJob));

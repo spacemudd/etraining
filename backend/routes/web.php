@@ -165,6 +165,12 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         // WIP
         Route::put('/course-batch-sessions/{course_batch_session_id}/attendance/trainee', [\App\Http\Controllers\CourseBatchSessionsAttendanceController::class, 'updateTraineeAttendance'])->name('course-batch-sessions.attendance.trainee.status');
 
+        // Preparing attendance
+        Route::get('/course-batch-sessions/{course_batch_session_id}/attendance-snapshots-reports', [\App\Http\Controllers\AttendanceSnapshotsReportsController::class, 'show'])->name('course-batch-sessions.attendance-snapshots-reports.show');
+        Route::post('/attendance-reports/{attendance_report_id}/close-attendance', [\App\Http\Controllers\AttendanceSnapshotsReportsController::class, 'close'])->name('course-batch-sessions.attendance-snapshots-reports.close-attendance');
+        Route::get('/attendance-reports/{attendance_report_id}', [\App\Http\Controllers\AttendanceSnapshotsReportsController::class, 'showReport'])->name('course-batch-sessions.attendance-snapshots-reports.show-report');
+        Route::get('/attendance-reports/{attendance_report_id}/attendances', [\App\Http\Controllers\AttendanceSnapshotsReportsController::class, 'attendances'])->name('course-batches-sessions.attendances');
+
         Route::get('/course-batch-sessions/{course_batch_session_id}/attendance/excel', [\App\Http\Controllers\CourseBatchSessionsAttendanceController::class, 'excel'])->name('course-batch-sessions.attendance.excel');
         Route::get('/course-batch-sessions/{course_batch_session_id}/attendance/export', [\App\Http\Controllers\CourseBatchSessionsAttendanceController::class, 'attendingExcel'])->name('course-batch-sessions.attendance.export');
         Route::post('/course-batch-sessions/{course_batch_session_id}/confirm/approve', [\App\Http\Controllers\CourseBatchSessionsAttendanceController::class, 'approve'])->name('course-batch-sessions.attendance.confirm.approve');
