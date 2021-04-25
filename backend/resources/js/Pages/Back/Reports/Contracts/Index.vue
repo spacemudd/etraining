@@ -37,7 +37,7 @@
 
                 </div>
 
-                <button class="btn btn-gray mt-5" type="submit" :disabled="form.processing">{{ $t('words.submit') }}</button>
+                <button class="btn btn-gray mt-5" type="submit" :disabled="form.processing">{{ $t('words.export') }}</button>
             </form>
             </template>
 
@@ -120,6 +120,11 @@
                             vm.checkJobTracker();
                         }, 2000);
                     })
+                .catch(error => {
+                    this.job_tracker = null;
+                    this.report_status = 'new';
+                    this.form.processing = false;
+                })
             },
             checkJobTracker() {
                 axios.get(route('job-trackers.show', {id: this.job_tracker.id}))

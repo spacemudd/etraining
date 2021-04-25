@@ -13,7 +13,6 @@ namespace App\Reports;
 
 use App\Exports\ContractsExport;
 use App\Models\Back\Company;
-use App\Models\Back\CompanyContract;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ContractsReportFactory
@@ -97,7 +96,7 @@ class ContractsReportFactory
     public function getContracts()
     {
         $q = Company::whereHas('contracts', function($query) {
-            $query->whereBetween('contract_starts_at', [date('Y-m-d', strtotime($this->startDate)), date('Y-m-d', strtotime($this->endDate))]);
+            $query->whereBetween('contract_starts_at', [$this->startDate->startOfDay(), $this->endDate->endOfDay()]);
         })->get();
 
         return $q;
@@ -111,13 +110,16 @@ class ContractsReportFactory
             .'.xlsx';
     }
 
+    /**
+     * Saves excel to disk.
+     *
+     * @return string
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function toExcel()
     {
-
-            //->queue(storage_path('/reports/'.$this->getFileName()), 's3');
-
-            Excel::store(new ContractsExport($this->getContracts()), $this->getFileName());
-
-            return $this->getFileName();
+        Excel::store(new ContractsExport($this->getContracts()), $this->getFileName());
+        return $this->getFileName();
     }
 }

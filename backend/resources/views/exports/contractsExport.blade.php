@@ -6,14 +6,11 @@
         <tr>
             <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong>{{ __('words.company') }}:</strong></th>
             @if (app()->getLocale() === 'ar')
-                <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong><a href="{{ $company->show_url }}">{{ $company->name_ar }} Arabic</a></strong></th>
+                <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong><a href="{{ $company->show_url }}">{{ $company->name_ar }}</a></strong></th>
             @else
-                 <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong><a href="{{ $company->show_url }}">{{ $company->name_en }} English</a></strong></th>
+                 <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong><a href="{{ $company->show_url }}">{{ $company->name_en ?: $company->name_ar }}</a></strong></th>
             @endif
         </tr>
-
-        <tr></tr>
-
         <tr>
             <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.reference_number') }}</strong></th>
             <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.contract-start-date') }}</strong></th>
@@ -39,10 +36,10 @@
                     {{ $contract->reference_number }}
                 </td>
 
-                <td style="border:1px solid black;">{{ $contract->contract_starts_at }}</td>
+                <td style="border:1px solid black;">{{ optional($contract->contract_starts_at)->format('d-m-Y') }}</td>
 
                 <td style="text-align:center;border:1px solid black;">
-                    {{ $contract->contract_ends_at }}
+                    {{ optional($contract->contract_ends_at)->format('d-m-Y') }}
                 </td>
 
                 <td style="border:1px solid black;">
@@ -76,7 +73,7 @@
                 </td>
 
                 <td style="border:1px solid black;">
-                    {{ $contract->notes }}
+                    {{ $contract->notes === 'undefined' ? ''  : $contract->notes }}
                 </td>
 
             </tr>
