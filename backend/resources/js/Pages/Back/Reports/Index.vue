@@ -19,10 +19,17 @@
             ></breadcrumb-container>
 
             <div class="grid md:grid-cols-4 grid-cols-1 gap-6">
+
                 <inertia-link :href="route('back.reports.course-attendances.index')"
                               class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
                     {{ $t('words.course-attendances') }}
                 </inertia-link>
+
+                <inertia-link :href="route('back.reports.contracts.index')"
+                              class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
+                    {{ $t('words.contracts') }}
+                </inertia-link>
+
             </div>
 
         </div>

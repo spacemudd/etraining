@@ -40,6 +40,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::post('back/zoom/meetings', [\App\Http\Controllers\ZoomMeetingsController::class, 'store'])->name('back.zoom.meetings.store');
     Route::post('back/zoom/meetings/configs', [\App\Http\Controllers\ZoomMeetingsController::class, 'configs'])->name('back.zoom.meetings.configs');
 
+    Route::get('job-trackers/{id}', [\App\Http\Controllers\JobTrackersController::class, 'show'])->name('job-trackers.show');
+    Route::get('job-trackers/{id}/download', [\App\Http\Controllers\JobTrackersController::class, 'download'])->name('job-trackers.download');
+
     // For admins
     Route::prefix('back')->middleware('redirect-trainees-to-dashboard')->name('back.')->group(function() {
         Route::get('/settings', [\App\Http\Controllers\Back\SettingsController::class, 'index'])->name('settings');
@@ -142,9 +145,13 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::resource('courses', \App\Http\Controllers\Back\CoursesController::class);
 
         Route::prefix('reports')->group(function() {
+
             Route::get('/', [\App\Http\Controllers\Back\ReportsController::class, 'index'])->name('reports.index');
             Route::post('course-attendances/generate', [\App\Http\Controllers\Back\ReportsController::class, 'generateCourseAttendanceReport'])->name('reports.course-attendances.generate');
             Route::get('course-attendances', [\App\Http\Controllers\Back\ReportsController::class, 'formCourseAttendanceReport'])->name('reports.course-attendances.index');
+            Route::get('contracts', [\App\Http\Controllers\Back\ReportsController::class, 'formContractsReport'])->name('reports.contracts.index');
+            Route::post('contracts/generate', [\App\Http\Controllers\Back\ReportsController::class, 'generateContractsReport'])->name('reports.contracts.generate');
+
         });
     });
 
@@ -161,6 +168,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('/course-batch-sessions/{course_batch_session_id}/confirm/approve', [\App\Http\Controllers\CourseBatchSessionsAttendanceController::class, 'approve'])->name('course-batch-sessions.attendance.confirm.approve');
         Route::get('/course-batch-sessions/{course_batch_session_id}/confirm', [\App\Http\Controllers\CourseBatchSessionsAttendanceController::class, 'confirm'])->name('course-batch-sessions.attendance.confirm');
         Route::get('/course-batch-sessions/{course_batch_session_id}/attendance', [\App\Http\Controllers\CourseBatchSessionsAttendanceController::class, 'index'])->name('course-batch-sessions.attendance.index');
+        Route::put('/course-batch-sessions/{course_batch_session_id}/attendance/{id}', [\App\Http\Controllers\CourseBatchSessionsAttendanceController::class, 'update'])->name('course-batch-sessions.attendances.update');
 
         Route::post('/course-batch-sessions/attendance', [\App\Http\Controllers\CourseBatchSessionsAttendanceController::class, 'store'])->name('course-batch-sessions.attendance.store');
 

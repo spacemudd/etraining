@@ -59,7 +59,8 @@
                 </div>
 
                 <div class="flex mt-5">
-                    <inertia-link :href="route('teaching.courses.show', course_batch_session.course_id)" class="flex items-center justify-start rounded-md px-4 py-2 hover:bg-gray-300 text-right">
+                    <inertia-link :href="route('teaching.course-batch-sessions.attendance.index', {course_batch_session_id: course_batch_session.id})"
+                                  class="flex items-center justify-start rounded-md px-4 py-2 hover:bg-gray-300 text-right">
                         {{ $t('words.cancel') }}
                     </inertia-link>
                     <button @click.prevent="confirmAttendanceSheet"

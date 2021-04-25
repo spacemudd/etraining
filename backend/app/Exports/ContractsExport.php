@@ -12,7 +12,6 @@
 namespace App\Exports;
 
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithEvents;
@@ -21,16 +20,11 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class CourseBatchSessionAttendanceSummarySheet implements FromView, WithEvents, WithStyles, WithColumnWidths, WithTitle
+class ContractsExport implements FromView, WithEvents, WithStyles, WithColumnWidths, WithTitle
 {
-    /**
-     * @var
-     */
-    public $courseBatchSessions;
-
-    public function __construct(Collection $courseBatchSessions)
+    public function __construct($companies)
     {
-        $this->courseBatchSessions = $courseBatchSessions;
+        $this->companies = $companies;
     }
 
     public function registerEvents(): array
@@ -81,25 +75,15 @@ class CourseBatchSessionAttendanceSummarySheet implements FromView, WithEvents, 
      */
     public function view(): View
     {
-        $trainees = [];
 
-        // TODO: Bring in all the trainees for these sessions and to create this obj:
-        // Trainees
-        //        ...
-        //        Sessions
-        //                ID
-        //                Date
-        //                Attended
-
-        return view('exports.attendingSummarySheet', [
-            'courseName' => optional(optional($this->courseBatchSessions)->first())->name_ar,
-            'courseBatchSessions' => $this->courseBatchSessions,
-            'trainees' => $trainees,
+        return view('exports.contractsExport', [
+            'companies' => $this->companies,
         ]);
+
     }
 
     public function title(): string
     {
-        return 'Summary';
+        return 'Contracts Report';
     }
 }

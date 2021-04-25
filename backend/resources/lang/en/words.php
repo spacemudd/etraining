@@ -314,6 +314,8 @@ return [
     'present-but-late' => 'Present (late)',
     'view-backoffice-reports' => 'View backoffice reports',
     'course-attendances' => 'Course attendances',
+    'date-from' => 'Date from',
+    'date-to' => 'Date to',
     'export' => 'Export',
     'actions' => 'Actions',
     'new-bulk' => 'New (Bulk)',
@@ -334,4 +336,9 @@ return [
     'dear-trainee', 'Dear trainee,',
     'at-hour' => 'at',
     'national-address' => 'National Address',
+    'error-occurred' => 'Error occurred',
+    'approve' => 'Approve',
+    'auto_renewal' => 'Auto Renewal',
+    'activated' => 'Activated',
+    'deactivated'=> 'De-activated',
 ];

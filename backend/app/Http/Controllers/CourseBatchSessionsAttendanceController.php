@@ -28,10 +28,14 @@ class CourseBatchSessionsAttendanceController extends Controller
                     $q->with(['trainees' => function($q) use ($course_batch_session_id) {
                         $q->with(['attendances' => function($q) use ($course_batch_session_id) {
                             $q->where('course_batch_session_id', $course_batch_session_id);
-                        }]);
+                        }])->paginate(10);
                     }]);
                 }]);
             }])->findOrFail($course_batch_session_id);
+
+        $attendances = CourseBatchSessionAttendance::where('course_batch_session_id', $course_batch_session_id)
+            ->with('trainee')
+            ->paginate(50);
 
         //$courseBatchSession->course_batch->trainee_group
         //    ->setRelation('trainees',
@@ -42,6 +46,7 @@ class CourseBatchSessionsAttendanceController extends Controller
 
         return Inertia::render('Teaching/CourseBatchSessions/Attendance/Index', [
             'course_batch_session' => $courseBatchSession,
+            'attendances' => $attendances,
         ]);
     }
 
@@ -120,6 +125,39 @@ class CourseBatchSessionsAttendanceController extends Controller
     public function attendingExcel($course_batch_session_id)
     {
         return Excel::download(new AttendanceSheetExport($course_batch_session_id),'Attendance Sheet.xlsx');
+    }
+
+    public function update(Request $request, $course_batch_session_id, $attendance_id)
+    {
+        $request->validate([
+            'status' => 'required|string',
+            'absence_reason' => 'nullable|string',
+        ]);
+
+        $attendance = CourseBatchSessionAttendance::with('trainee')->findOrFail($attendance_id);
+
+        switch ($request->status) {
+            case 'present':
+                $attendance->status = CourseBatchSessionAttendance::STATUS_PRESENT;
+                $attendance->absence_reason = null;
+                break;
+            case 'present_late':
+                $attendance->status = CourseBatchSessionAttendance::STATUS_PRESENT_LATE_TO_COURSE;
+                $attendance->absence_reason = null;
+                break;
+            case 'absent_forgiven':
+                $attendance->status = CourseBatchSessionAttendance::STATUS_ABSENT_FORGIVEN;
+                $attendance->absence_reason = $request->absence_reason;
+                break;
+            case 'absent':
+                $attendance->status = CourseBatchSessionAttendance::STATUS_ABSENT;
+                $attendance->absence_reason = null;
+                break;
+        }
+
+        $attendance->save();
+
+        return $attendance;
     }
 
     public function updateTraineeAttendance(Request $request, $session_id)
