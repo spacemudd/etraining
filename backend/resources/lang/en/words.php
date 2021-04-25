@@ -341,4 +341,5 @@ return [
     'not-set' => 'No Date Set',
     'today-courses' => "Today's Courses",
     'today' => 'Today',
+    'candidates' => 'Candidates',
 ];

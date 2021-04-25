@@ -509,7 +509,8 @@ export default {
             "show-today-courses": "عرض دورات اليوم",
             "show-all-courses": "عرض جميع الدورات",
             "today": "اليوم",
-            "today-courses": "دورات اليوم"
+            "today-courses": "دورات اليوم",
+            "candidates": "المشرحين"
         }
     },
     "en": {

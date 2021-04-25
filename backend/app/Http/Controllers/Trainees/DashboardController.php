@@ -17,7 +17,6 @@ class DashboardController extends Controller
             $coursesIds = Course::where('instructor_id', $instructor->id)->pluck('id');
 
             $sessions = CourseBatchSession::whereIn('course_id', $coursesIds)
-            ->whereDate('starts_at', '>=', date('Y-m-d', time()))
             ->with(['course_batch' => function($q) {
                 $q->with(['course' => function($q) {
                     $q->with('instructor');

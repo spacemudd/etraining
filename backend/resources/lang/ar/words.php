@@ -347,4 +347,5 @@ return [
     'show-all-courses' => 'عرض جميع الدورات',
     'today' => 'اليوم',
     'today-courses' => 'دورات اليوم',
+    'candidates' => 'المشرحين',
 ];
