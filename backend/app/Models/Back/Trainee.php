@@ -15,6 +15,7 @@ use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -65,6 +66,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'bank_account_copy_url',
         'name_selectable',
         'show_url',
+        'created_at_date',
         'is_pending_uploading_files',
         'is_pending_approval',
         'is_approved',
@@ -257,6 +259,15 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     public function getResourceTypeAttribute(): string
     {
         return trans('words.trainee');
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getCreatedAtDateAttribute(): string
+    {
+        return (date('Y-m-d', strtotime($this->created_at)));
     }
 
     public function toSearchableArray()

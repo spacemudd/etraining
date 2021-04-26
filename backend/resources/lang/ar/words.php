@@ -348,4 +348,5 @@ return [
     'today' => 'اليوم',
     'today-courses' => 'دورات اليوم',
     'candidates' => 'المشرحين',
+    'joining_date' => 'تاريخ التسجيل',
 ];

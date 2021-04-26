@@ -342,4 +342,5 @@ return [
     'today-courses' => "Today's Courses",
     'today' => 'Today',
     'candidates' => 'Candidates',
+    'joining_date' => "Joining Date",
 ];
