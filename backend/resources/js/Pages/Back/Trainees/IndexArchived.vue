@@ -33,6 +33,14 @@
                     <inertia-link :href="route('back.trainees.index')" class="rounded items-center justify-start mr-3 float-left px-3 py-2.5 bg-green-200 hover:bg-green-300 text-left">
                         <span> {{ $t('words.active') }} </span>
                     </inertia-link>
+
+                    <export-archived-trainees-to-excel class="rounded items-center justify-start mr-3 float-left px-3 py-2.5 btn-gray text-left" @modal:opened="actionsDropDownView=!actionsDropDownView">
+                                    <template slot="buttonContent">
+                                        <button>
+                                            {{ $t('words.excel') }}
+                                        </button>
+                                    </template>
+                    </export-archived-trainees-to-excel>
                     <!--<search-filter v-model="form.search" class="w-full max-w-md mr-4" @reset="reset">-->
                     <!--    <label class="block text-gray-700">Trashed:</label>-->
                     <!--    <select v-model="form.trashed" class="mt-1 w-full form-select">-->
@@ -114,7 +122,7 @@
     import IconNavigate from 'vue-ionicons/dist/ios-arrow-dropright'
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
     import EmptySlate from "@/Components/EmptySlate";
-    import ExportTraineesToExcel from '@/Components/ExportTraineesToExcel';
+    import ExportArchivedTraineesToExcel from '@/Components/ExportArchivedTraineesToExcel';
     import DropdownMenu from 'v-dropdown-menu'
     import 'v-dropdown-menu/dist/v-dropdown-menu.css' // Base style, required.
 
@@ -129,7 +137,7 @@
             // Icon,
             Pagination,
             // SearchFilter,
-            ExportTraineesToExcel,
+            ExportArchivedTraineesToExcel,
             DropdownMenu,
         },
         props: {
