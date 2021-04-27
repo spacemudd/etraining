@@ -482,7 +482,7 @@ export default {
             "course-attendances": "حضور الدورات",
             "date-from": "تاريخ من",
             "date-to": "تاريخ الى",
-            "export": "تصدير",
+            "export": "إصدار",
             "actions": "إجراءات",
             "new-bulk": "جديد (مجموعة)",
             "the-archive": "الأرشيف",

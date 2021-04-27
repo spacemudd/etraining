@@ -146,6 +146,8 @@ class CourseAttendanceReportFactory
 
         $q->whereBetween('starts_at', [$this->startDate, $this->endDate]);
 
+        $q->whereHas('attendance_report');
+
         return $q->get();
     }
 

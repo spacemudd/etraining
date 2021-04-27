@@ -7,6 +7,7 @@ use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use JamesMills\LaravelTimezone\Facades\Timezone;
 use OwenIt\Auditing\Contracts\Auditable;
 
 class AttendanceReportRecord extends Model implements Auditable
@@ -28,6 +29,8 @@ class AttendanceReportRecord extends Model implements Auditable
 
     protected $appends = [
         'status_name',
+        'status_color',
+        'attended_at_timezone',
     ];
 
     protected static function boot(): void
@@ -74,5 +77,38 @@ class AttendanceReportRecord extends Model implements Auditable
         }
 
         return $status;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getStatusColorAttribute()
+    {
+        $color = '';
+
+        switch ($this->status) {
+            case self::STATUS_ABSENT:
+                $color = 'red';
+                break;
+            case self::STATUS_ABSENT_WITH_EXCUSE;
+                $color = 'blue';
+                break;
+            case self::STATUS_LATE_TO_CLASS:
+                $color = 'purple';
+                break;
+            case self::STATUS_PRESENT:
+                $color = 'darkgreen';
+                break;
+        }
+
+        return $color;
+    }
+
+    public function getAttendedAtTimezoneAttribute()
+    {
+        if ($this->attended_at) {
+            return Timezone::convertToLocal($this->attended_at, 'Y-m-d H:i:s');
+        }
     }
 }
