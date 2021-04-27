@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use OwenIt\Auditing\Contracts\Auditable;
 
-class AttendanceSnapshotsReport extends Model implements Auditable
+class AttendanceReport extends Model implements Auditable
 {
     use HasFactory;
     use \OwenIt\Auditing\Auditable;
@@ -48,7 +48,7 @@ class AttendanceSnapshotsReport extends Model implements Auditable
 
     public function attendances()
     {
-        return $this->hasMany(AttendanceSnapshot::class);
+        return $this->hasMany(AttendanceReportRecord::class);
     }
 
     public function getStatusNameAttribute()

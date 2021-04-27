@@ -11,8 +11,8 @@
 
 namespace App\Services;
 
-use App\Models\Back\AttendanceSnapshot;
-use App\Models\Back\AttendanceSnapshotsReport;
+use App\Models\Back\AttendanceReportRecord;
+use App\Models\Back\AttendanceReport;
 use App\Models\Back\CourseBatchSession;
 use App\Models\Back\CourseBatchSessionAttendance;
 use App\Models\Back\Trainee;
@@ -51,23 +51,23 @@ class AttendanceService
 
         // TODO:
         // The above code will be removed in favor for the bottom one.
-        $report = AttendanceSnapshotsReport::where('course_batch_session_id', $course_batch_session->id)
+        $report = AttendanceReport::where('course_batch_session_id', $course_batch_session->id)
             ->first();
 
         if (!$report) {
-            $report = new AttendanceSnapshotsReport();
+            $report = new AttendanceReport();
             $report->course_batch_session_id = $course_batch_session->id;
-            $report->status = AttendanceSnapshotsReport::STATUS_DRAFT_REPORT;
+            $report->status = AttendanceReport::STATUS_DRAFT_REPORT;
             $report->submitted_by = null;
             $report->save();
         }
 
-        $alreadyPunched = AttendanceSnapshot::where('trainee_id', $trainee->id)
+        $alreadyPunched = AttendanceReportRecord::where('trainee_id', $trainee->id)
             ->where('course_batch_session_id', $course_batch_session->id)
             ->first();
 
         if (! $alreadyPunched) {
-            $course_batch_session->attendance_snapshots()->save(new AttendanceSnapshot([
+            $course_batch_session->attendance_snapshots()->save(new AttendanceReportRecord([
                 'attendance_snapshots_report_id' => $report->id,
                 'course_id' => $course_batch_session->course_id,
                 'course_batch_id' => $course_batch_session->course_batch_id,
@@ -77,7 +77,7 @@ class AttendanceService
                 'session_starts_at' => $course_batch_session->starts_at,
                 'session_ends_at' => $course_batch_session->ends_at,
                 'attended_at' => now(),
-                'status' => $attendance ? AttendanceSnapshot::STATUS_PRESENT : AttendanceSnapshot::STATUS_LATE_TO_CLASS,
+                'status' => $attendance ? AttendanceReportRecord::STATUS_PRESENT : AttendanceReportRecord::STATUS_LATE_TO_CLASS,
                 'last_login_at' => optional($trainee->user)->last_login_at,
             ]));
         }

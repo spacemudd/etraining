@@ -512,7 +512,8 @@ export default {
             "today-courses": "دورات اليوم",
             "candidates": "المشرحين",
             "prepare-attendance": "رفع الحضور",
-            "draft": "مسودة"
+            "draft": "مسودة",
+            "report-status": "حالة التقرير"
         }
     },
     "en": {
@@ -992,7 +993,8 @@ export default {
             "today-courses": "Today's Courses",
             "today": "Today",
             "prepare-attendance": "Prepare attendance",
-            "draft": "Draft"
+            "draft": "Draft",
+            "report-status": "Report status"
         }
     }
 }

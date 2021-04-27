@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAttendanceSnapshotsTable extends Migration
+class CreateAttendanceReportRecordsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateAttendanceSnapshotsTable extends Migration
      */
     public function up()
     {
-        Schema::create('attendance_snapshots', function (Blueprint $table) {
+        Schema::create('attendance_report_records', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('team_id');
             $table->foreign('team_id')->references('id')->on('teams')->cascadeOnDelete();
-            $table->uuid('attendance_snapshots_report_id');
-            $table->foreign('attendance_snapshots_report_id')->references('id')->on('attendance_snapshots_reports');
+            $table->uuid('attendance_report_id');
+            $table->foreign('attendance_report_id')->references('id')->on('attendance_reports');
             $table->uuid('course_id');
             $table->foreign('course_id')->references('id')->on('courses')->cascadeOnDelete();
             $table->uuid('course_batch_id');
@@ -48,6 +48,6 @@ class CreateAttendanceSnapshotsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('attendance_snapshots');
+        Schema::dropIfExists('attendance_report_records');
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Models\Back\AttendanceSnapshot;
-use App\Models\Back\AttendanceSnapshotsReport;
+use App\Models\Back\AttendanceReportRecord;
+use App\Models\Back\AttendanceReport;
 use App\Models\Back\CourseBatchSession;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -12,18 +12,22 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class MakeAttendanceSnapshotJob implements ShouldQueue
+class MakeAttendanceReportJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $course_batch_session_id;
 
+    /**
+     * @var string AttendanceReport
+     */
     public $report_id;
 
     /**
      * Create a new job instance.
      *
      * @param string $course_batch_session_id
+     * @param $report_id
      */
     public function __construct(string $course_batch_session_id, $report_id)
     {
@@ -38,7 +42,7 @@ class MakeAttendanceSnapshotJob implements ShouldQueue
      */
     public function handle()
     {
-        $report = AttendanceSnapshotsReport::find($this->report_id);
+        $report = AttendanceReport::find($this->report_id);
 
         $session = CourseBatchSession::with('course')
             ->with(['attendances' => function($q) {
@@ -58,7 +62,7 @@ class MakeAttendanceSnapshotJob implements ShouldQueue
 
         foreach ($session->course_batch->trainee_group->trainees as $trainee) {
 
-            $hasAttended = AttendanceSnapshot::where('course_batch_session_id', $session->id)
+            $hasAttended = AttendanceReportRecord::where('course_batch_session_id', $session->id)
                 ->where('trainee_id', $trainee->id)
                 ->first();
 
@@ -68,8 +72,8 @@ class MakeAttendanceSnapshotJob implements ShouldQueue
         }
 
         foreach ($usersWhoDidntAttended as $trainee) {
-            AttendanceSnapshot::create([
-                'attendance_snapshots_report_id' => $this->report_id,
+            AttendanceReportRecord::create([
+                'attendance_report_id' => $this->report_id,
                 'course_id' => $session->course_id,
                 'course_batch_id' => $session->course_batch_id,
                 'course_batch_session_id' => $session->id,
@@ -79,7 +83,7 @@ class MakeAttendanceSnapshotJob implements ShouldQueue
                 'session_starts_at' => $session->starts_at,
                 'session_ends_at' => $session->ends_at,
                 'attended_at' => null,
-                'status' => AttendanceSnapshot::STATUS_ABSENT,
+                'status' => AttendanceReportRecord::STATUS_ABSENT,
                 'last_login_at' => optional($trainee->user)->last_login_at,
                 'team_id' => $report->team_id,
             ]);

@@ -350,4 +350,5 @@ return [
     'candidates' => 'المشرحين',
     'prepare-attendance' => 'رفع الحضور',
     'draft' => 'مسودة',
+    'report-status' => 'حالة التقرير',
 ];

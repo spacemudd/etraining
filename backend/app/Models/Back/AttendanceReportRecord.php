@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use OwenIt\Auditing\Contracts\Auditable;
 
-class AttendanceSnapshot extends Model implements Auditable
+class AttendanceReportRecord extends Model implements Auditable
 {
     use HasFactory;
     use HasUuid;
@@ -22,9 +22,13 @@ class AttendanceSnapshot extends Model implements Auditable
     protected $keyType = 'string';
 
     const STATUS_ABSENT = 0;
-    const STATUS_ABSENT_WITH_REASON = 1;
+    const STATUS_ABSENT_WITH_EXCUSE = 1;
     const STATUS_LATE_TO_CLASS = 2;
     const STATUS_PRESENT = 3;
+
+    protected $appends = [
+        'status_name',
+    ];
 
     protected static function boot(): void
     {
@@ -56,16 +60,16 @@ class AttendanceSnapshot extends Model implements Auditable
 
         switch ($this->status) {
             case self::STATUS_ABSENT:
-                $status = __('words.absent');
+                $status = 'absent';
                 break;
-            case self::STATUS_ABSENT_WITH_REASON;
-                $status = __('words.absent-with-excuse');
+            case self::STATUS_ABSENT_WITH_EXCUSE;
+                $status = 'absent-with-excuse';
                 break;
             case self::STATUS_LATE_TO_CLASS:
-                $status = __('words.present-but-late');
+                $status = 'present-but-late';
                 break;
             case self::STATUS_PRESENT:
-                $status = __('words.present');
+                $status = 'present';
                 break;
         }
 

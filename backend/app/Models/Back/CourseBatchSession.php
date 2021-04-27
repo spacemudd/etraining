@@ -75,7 +75,7 @@ class CourseBatchSession extends Model implements Auditable
 
     public function attendance_snapshots()
     {
-        return $this->hasMany(AttendanceSnapshot::class);
+        return $this->hasMany(AttendanceReportRecord::class);
     }
 
     public function absentees()

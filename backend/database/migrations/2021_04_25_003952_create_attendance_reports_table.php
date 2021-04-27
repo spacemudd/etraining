@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAttendanceSnapshotsReportsTable extends Migration
+class CreateAttendanceReportsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateAttendanceSnapshotsReportsTable extends Migration
      */
     public function up()
     {
-        Schema::create('attendance_snapshots_reports', function (Blueprint $table) {
+        Schema::create('attendance_reports', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('team_id');
             $table->foreign('team_id')->references('id')->on('teams');
@@ -34,6 +34,6 @@ class CreateAttendanceSnapshotsReportsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('attendance_snapshots_reports');
+        Schema::dropIfExists('attendance_reports');
     }
 }

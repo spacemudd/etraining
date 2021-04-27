@@ -343,4 +343,5 @@ return [
     'today' => 'Today',
     'prepare-attendance' => 'Prepare attendance',
     'draft' => 'Draft',
+    'report-status' => 'Report status',
 ];
