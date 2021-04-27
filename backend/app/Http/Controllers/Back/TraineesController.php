@@ -6,6 +6,7 @@ use App\Actions\Fortify\CreateNewTraineeUser;
 use App\Exports\Back\TraineeExport;
 use App\Http\Controllers\Controller;
 use App\Jobs\ExportTraineesToExcelJob;
+use App\Jobs\ExportArchivedTraineesToExcelJob;
 use App\Models\Back\Company;
 use App\Models\Back\ExportTraineesToExcelJobTracker;
 use App\Models\Back\Instructor;
@@ -518,6 +519,20 @@ class TraineesController extends Controller
         } else {
             return response()->download($file->getPath());
         }
+    }
+
+    public function archivedExcel()
+    {
+
+        $excelJob = new ExportTraineesToExcelJobTracker();
+        $excelJob->queued_at = now();
+        $excelJob->user_id = auth()->user()->id;
+        $excelJob->team_id = auth()->user()->team_id;
+        $excelJob->save();
+
+        dispatch(new ExportArchivedTraineesToExcelJob($excelJob));
+
+        return $excelJob;
     }
 
     public function resendInvitation($trainee_id)

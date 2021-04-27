@@ -487,9 +487,10 @@ export default {
             "new-bulk": "جديد (مجموعة)",
             "the-archive": "الأرشيف",
             "export-trainees": "إصدار بيانات المتدربات",
+            "export-archived-trainees": "إصدار بيانات المتدربات الموقوفات",
             "nominated": "مرشح",
             "all": "الكل",
-            "report-work-on-progress": "wجاري العمل على التقرير",
+            "report-work-on-progress": "جاري العمل على التقرير",
             "please-dont-close-the-window": "الرجاء عدم إغلاق الصفحة",
             "download-file": "تحميل الملف",
             "disable-website": "إقفال الموقع",
@@ -510,7 +511,8 @@ export default {
             "show-all-courses": "عرض جميع الدورات",
             "today": "اليوم",
             "today-courses": "دورات اليوم",
-            "candidates": "المشرحين"
+            "candidates": "المشرحين",
+            "joining_date": "تاريخ التسجيل"
         }
     },
     "en": {
@@ -968,6 +970,7 @@ export default {
             "new-bulk": "New (Bulk)",
             "the-archive": "Archive",
             "export-trainees": "Export trainees data",
+            "export-archived-trainees": "Export blocked trainees data",
             "nominated": "Nominated",
             "all": "All",
             "report-work-on-progress": "Generating your report",
@@ -988,7 +991,8 @@ export default {
             "show-all-courses": "Show All Courses",
             "not-set": "No Date Set",
             "today-courses": "Today's Courses",
-            "today": "Today"
+            "today": "Today",
+            "joining_date": "Joining Date"
         }
     }
 }

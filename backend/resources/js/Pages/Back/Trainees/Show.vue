@@ -233,6 +233,15 @@
                                disabled />
                 </div>
 
+                <div class="col-span-6 sm:col-span-1">
+                    <jet-label for="joining_date" :value="$t('words.joining_date')" />
+                    <jet-input id="joining_date"
+                               type="text"
+                               class="form-input rounded-md shadow-sm mt-1 block w-full bg-gray-200"
+                               :value="trainee.user ? trainee.created_at_date : ''"
+                               disabled />
+                </div>
+
                 <div class="col-span-6 sm:col-span-6">
                     <jet-label for="name" :value="$t('words.status')" />
                     <p>

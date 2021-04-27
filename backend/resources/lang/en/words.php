@@ -321,6 +321,7 @@ return [
     'new-bulk' => 'New (Bulk)',
     'the-archive' => 'Archive',
     'export-trainees' => 'Export trainees data',
+    'export-archived-trainees' => 'Export blocked trainees data',
     'nominated' => 'Nominated',
     'all' => 'All',
     'report-work-on-progress' => 'Generating your report',
@@ -342,4 +343,5 @@ return [
     'today-courses' => "Today's Courses",
     'today' => 'Today',
     'candidates' => 'Candidates',
+    'joining_date' => "Joining Date",
 ];

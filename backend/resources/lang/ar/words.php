@@ -323,9 +323,10 @@ return [
     'new-bulk' => 'جديد (مجموعة)',
     'the-archive' => 'الأرشيف',
     'export-trainees' => 'إصدار بيانات المتدربات',
+    'export-archived-trainees' => 'إصدار بيانات المتدربات الموقوفات',
     'nominated' => 'مرشح',
     'all' => 'الكل',
-    'report-work-on-progress' => 'wجاري العمل على التقرير',
+    'report-work-on-progress' => 'جاري العمل على التقرير',
     'please-dont-close-the-window' => 'الرجاء عدم إغلاق الصفحة',
     'download-file' => 'تحميل الملف',
     'error-occurred' => 'حدث خطاً',
@@ -348,4 +349,5 @@ return [
     'today' => 'اليوم',
     'today-courses' => 'دورات اليوم',
     'candidates' => 'المشرحين',
+    'joining_date' => 'تاريخ التسجيل',
 ];
