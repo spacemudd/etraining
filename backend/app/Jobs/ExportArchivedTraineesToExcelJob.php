@@ -42,7 +42,7 @@ class ExportArchivedTraineesToExcelJob implements ShouldQueue
 
         $this->excelJob->update(['started_at' => now()]);
 
-        $fileName = uniqid('trainees-', true).'.xlsx';
+        $fileName = uniqid('archivedTrainees-', true).'.xlsx';
         Excel::store(new ArchivedTraineeExport(), $fileName, 'local');
 
         $this->excelJob->addMedia(storage_path('app/'.$fileName))
