@@ -48,6 +48,8 @@ class CourseBatchSessionWarningsJob implements ShouldQueue
         $attendances = $this->report->attendances;
         Log::debug('[CourseBatchSessionWarningsJob] For report ID: '.$this->report->id. ' with attendances: '.$attendances->count());
         foreach ($attendances as $attendance) {
+            if (!$attendance->trainee) continue;
+
             if ($attendance->status === AttendanceReportRecord::STATUS_ABSENT) {
                 Log::debug('[CourseBatchSessionWarningsJob] Sending absent notification: '.$attendance->id.' - User: '.$attendance->trainee->email);
 

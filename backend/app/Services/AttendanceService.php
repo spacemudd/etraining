@@ -28,47 +28,15 @@ class AttendanceService
             $course_batch_session->starts_at->addMinutes(15)
         );
 
-        $alreadyPunched = CourseBatchSessionAttendance::where('trainee_id', $trainee->id)
-            ->where('course_batch_session_id', $course_batch_session->id)
-            ->first();
-
-        if ($alreadyPunched) {
-            // Do nothing
-        } else {
-            $course_batch_session->attendances()->save(new CourseBatchSessionAttendance([
-                'course_batch_id' => $course_batch_session->course_batch_id,
-                'course_id' => $course_batch_session->course_id,
-                'trainee_id' => $trainee->id,
-                'trainee_user_id' => $trainee->user->id,
-                'session_starts_at' => $course_batch_session->starts_at,
-                'session_ends_at' => $course_batch_session->ends_at,
-                'attended_at' => now(),
-                'attended' => $attendance,
-                'status' => $attendance ? CourseBatchSessionAttendance::STATUS_PRESENT : CourseBatchSessionAttendance::STATUS_PRESENT_LATE_TO_COURSE,
-                'last_login_at' => optional($trainee->user)->last_login_at,
-            ]));
-        }
-
-        // TODO:
-        // The above code will be removed in favor for the bottom one.
-        $report = AttendanceReport::where('course_batch_session_id', $course_batch_session->id)
-            ->first();
-
-        if (!$report) {
-            $report = new AttendanceReport();
-            $report->course_batch_session_id = $course_batch_session->id;
-            $report->status = AttendanceReport::STATUS_DRAFT_REPORT;
-            $report->submitted_by = null;
-            $report->save();
-        }
-
         $alreadyPunched = AttendanceReportRecord::where('trainee_id', $trainee->id)
             ->where('course_batch_session_id', $course_batch_session->id)
             ->first();
 
         if (! $alreadyPunched) {
             $course_batch_session->attendance_snapshots()->save(new AttendanceReportRecord([
-                'attendance_snapshots_report_id' => $report->id,
+                'attendance_report_id' => AttendanceReport::where('course_batch_session_id', $course_batch_session->id)
+                    ->first()
+                    ->id,
                 'course_id' => $course_batch_session->course_id,
                 'course_batch_id' => $course_batch_session->course_batch_id,
                 'instructor_id' => $course_batch_session->course->instructor_id,

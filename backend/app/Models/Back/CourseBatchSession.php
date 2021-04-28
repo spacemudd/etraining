@@ -68,6 +68,11 @@ class CourseBatchSession extends Model implements Auditable
         return $this->belongsTo(TraineeGroup::class);
     }
 
+    public function trainee()
+    {
+        return $this->belongsTo(Trainee::class);
+    }
+
     public function attendances()
     {
         return $this->hasMany(CourseBatchSessionAttendance::class);

@@ -24,7 +24,7 @@ class CreateAttendanceReportRecordsTable extends Migration
             $table->uuid('course_batch_id');
             $table->foreign('course_batch_id')->references('id')->on('course_batches')->cascadeOnDelete();
             $table->uuid('course_batch_session_id');
-            $table->foreign('course_batch_session_id')->references('id')->on('course_batch_sessions');
+            $table->foreign('course_batch_session_id')->references('id')->on('course_batch_sessions')->cascadeOnDelete();
             $table->timestamp('session_starts_at');
             $table->timestamp('session_ends_at');
             $table->uuid('instructor_id');

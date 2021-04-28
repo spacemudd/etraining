@@ -89,6 +89,7 @@
                     <div class="mt-5">
                         <jet-label for="training_group_id" :value="$t('words.group-name')" />
                         <select-trainee-group class="mt-2"
+                                              :loadTrainees="false"
                                               @input="selectGroupName"
                                               v-model="form.trainee_group_id"
                                               :required="true"

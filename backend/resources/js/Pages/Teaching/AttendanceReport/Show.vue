@@ -18,15 +18,19 @@
                 <div class="bg-white rounded shadow overflow-x-auto mt-5 p-5">
 
                     <div class="flex justify-between">
-                        <div>
-                            <table class="table">
+                        <div class="mx-10">
+                            <table>
                                 <colgroup>
                                     <col width="100px">
                                 </colgroup>
                                 <tbody>
                                 <tr>
                                     <td>{{ $t('words.report-status') }}:</td>
-                                    <td>{{ attendance_report.status_name }}</td>
+                                    <td>{{ $t('words.'+attendance_report.status_name) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ $t('words.total') }}:</td>
+                                    <td>{{ attendances_count }}</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -59,7 +63,10 @@
                             </thead>
                             <tbody>
                             <tr class="border-t" v-for="(attendance, key) in attendances.data" :key="key">
-                                <td class="px-6 py-4">{{ attendance.trainee.name }}</td>
+                                <td class="px-6 py-4">
+                                    <span class="bg-red-600 text-white p-1 rounded" v-if="attendance.trainee.deleted_at">({{ $t('words.trainee-blacklisted') }})</span>
+                                    {{ attendance.trainee.name }}
+                                </td>
                                 <td class="px-6 py-4">
                                     <button style="width:95px;height:32px;font-size:12px;"
                                             :class="{'bg-blue-600 border-blue-600 text-white': attendance.status_name === 'absent'}"
@@ -159,6 +166,7 @@ export default {
         'course_batch_session',
         'attendance_report_prop',
         'attendances_prop',
+        'attendances_count',
     ],
     data() {
         return {

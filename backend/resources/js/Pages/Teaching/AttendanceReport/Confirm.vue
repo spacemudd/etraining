@@ -15,17 +15,24 @@
             <template>
                 <div class="bg-white rounded shadow overflow-x-auto">
                     <div class="p-5">
-                        <div>
+                        <div class="mx-5">
                             <table class="table">
+                                <colgroup>
+                                    <col width="160px">
+                                </colgroup>
                             	<tbody>
-                            			<tr>
-                            				<td>{{ $t('words.sending-absent-warnings-to-users') }}:</td>
-                                            <td>{{ sending_absent_warnings_to_count }}</td>
-                            			</tr>
+                                        <tr>
+                                            <td>{{ $t('words.present') }}:</td>
+                                            <td>{{ present_count }}</td>
+                                        </tr>
                                         <tr>
                                             <td>{{ $t('words.sending-late-warnings-to-users') }}:</td>
                                             <td>{{ sending_late_warnings_to_count }}</td>
                                         </tr>
+                            			<tr>
+                            				<td>{{ $t('words.sending-absent-warnings-to-users') }}:</td>
+                                            <td>{{ sending_absent_warnings_to_count }}</td>
+                            			</tr>
                             	</tbody>
                             </table>
                         </div>
@@ -42,10 +49,18 @@
                             </thead>
                             <tbody>
                                 <tr class="border-t" v-for="(warning, key) in sending_absent_warnings_to_list">
-                                    <td class="px-6 py-4"><span class="py-1 px-2 bg-red-600 text-white rounded">{{ $t('words.absent') }}</span> {{ warning.trainee.name }}</td>
+                                    <td class="px-6 py-4">
+                                        <span v-if="warning.trainee.deleted_at" class="py-1 px-2 bg-red-600 text-white rounded">{{ $t('words.trainee-blacklisted') }}</span>
+                                        <span class="py-1 px-2 bg-red-600 text-white rounded">{{ $t('words.absent') }}</span>
+                                        {{ warning.trainee.name }}
+                                    </td>
                                 </tr>
                                 <tr class="border-t" v-for="(warning, key) in sending_late_warnings_to_list">
-                                    <td class="px-6 py-4"><span class="py-1 px-2 bg-red-400 text-white rounded">{{ $t('words.present-but-late') }}</span> {{ warning.trainee.name }}</td>
+                                    <td class="px-6 py-4">
+                                        <span v-if="warning.trainee.deleted_at" class="py-1 px-2 bg-red-600 text-white rounded">{{ $t('words.trainee-blacklisted') }}</span>
+                                        <span class="py-1 px-2 bg-red-400 text-white rounded">{{ $t('words.present-but-late') }}</span>
+                                        {{ warning.trainee.name }}
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -59,7 +74,7 @@
                 </div>
 
                 <div class="flex mt-5">
-                    <inertia-link :href="route('teaching.course-batch-sessions.attendance.index', {course_batch_session_id: course_batch_session.id})"
+                    <inertia-link :href="route('teaching.course-batch-sessions.attendance-reports.show', {course_batch_session_id: course_batch_session.id})"
                                   class="flex items-center justify-start rounded-md px-4 py-2 hover:bg-gray-300 text-right">
                         {{ $t('words.cancel') }}
                     </inertia-link>
@@ -93,6 +108,7 @@
         props: [
             'report',
             'course_batch_session',
+            'present_count',
             'sending_absent_warnings_to_count',
             'sending_absent_warnings_to_list',
             'sending_late_warnings_to_count',

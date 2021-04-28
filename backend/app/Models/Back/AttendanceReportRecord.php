@@ -33,6 +33,12 @@ class AttendanceReportRecord extends Model implements Auditable
         'attended_at_timezone',
     ];
 
+    protected $dates = [
+        'attended_at',
+        'created_at',
+        'updated_at',
+    ];
+
     protected static function boot(): void
     {
         parent::boot();

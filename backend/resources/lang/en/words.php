@@ -346,4 +346,7 @@ return [
     'report-status' => 'Report status',
     'registration-date' => 'Registration date',
     'absent-counts' => 'Absent counts',
+    'trainee-blacklisted' => 'Blocked account',
+    'total' => 'Total',
+    'please-wait-until-session-is-over' => 'Attendance upload enabled after session is over',
 ];

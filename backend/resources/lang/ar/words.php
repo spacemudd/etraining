@@ -353,4 +353,7 @@ return [
     'report-status' => 'حالة التقرير',
     'registration-date' => 'تاريخ التسجيل',
     'absent-counts' => 'عدد الغيابات',
+    'trainee-blacklisted' => 'حساب محظور',
+    'total' => 'الإجمالي',
+    'please-wait-until-session-is-over' => 'رفع الحضور متاح بعد انتهاء الدورة',
 ];

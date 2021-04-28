@@ -34,10 +34,18 @@
                 <!--    <img src="/img/excel.svg" class="float inline-block ml-2" style="max-width:16px;">-->
                 <!--    {{ $t('words.download-attendance') }}-->
                 <!--</a>-->
-                <inertia-link :href="route('teaching.course-batch-sessions.attendance-reports.show', {course_batch_session_id: session.id})"
-                              class="bg-blue-600 py-1 px-2 rounded text-white text-sm hover:bg-blue-800 mt-5 w-full text-center">
-                    {{ $t('words.prepare-attendance') }}
-                </inertia-link>
+
+                <template v-if="session.attendance_report.can_prepare_attendance">
+                    <inertia-link :href="route('teaching.course-batch-sessions.attendance-reports.show', {course_batch_session_id: session.id})"
+                                  class="bg-blue-600 py-1 px-2 rounded text-white text-sm hover:bg-blue-800 mt-5 w-full text-center">
+                        {{ $t('words.prepare-attendance') }}
+                    </inertia-link>
+                </template>
+                <template v-else>
+                    <p class="bg-gray-500 py-1 px-2 rounded text-white text-sm mt-5 w-full text-center opacity-75">
+                        {{ $t('words.please-wait-until-session-is-over') }}
+                    </p>
+                </template>
 
                 <button class="bg-red-600 py-1 px-2 rounded text-white text-sm hover:bg-red-800 mt-5 w-full disabled:bg-gray-500"
                         v-if="session.can_be_deleted"

@@ -35,7 +35,9 @@ class AttendanceReportsController extends Controller
         }
 
         $paginator = AttendanceReportRecord::where('attendance_report_id', $report->id)
-            ->with('trainee');
+            ->with(['trainee' => function($q) {
+                $q->withTrashed();
+            }]);
 
         if ($request->searchTraineeName) {
             $paginator->whereHas('trainee', function($q) use ($request) {
@@ -46,7 +48,8 @@ class AttendanceReportsController extends Controller
         return Inertia::render('Teaching/AttendanceReport/Show', [
             'course_batch_session' => $report->course_batch_session->load('course'),
             'attendance_report_prop' => $report,
-            'attendances_prop' => $paginator->paginate(20),
+            'attendances_count' => $paginator->count(),
+            'attendances_prop' => $paginator->paginate(30),
         ]);
     }
 
@@ -91,27 +94,41 @@ class AttendanceReportsController extends Controller
         }])->find($report_id);
 
         $sendingWarningsToQuery = $report->attendances()
-            ->with('trainee')
+            ->with(['trainee' => function($q) {
+                $q->withTrashed();
+            }])
             ->where('status', AttendanceReportRecord::STATUS_ABSENT);
 
         $sendingLateWarningsQuery = $report->attendances()
-            ->with('trainee')
+            ->with(['trainee' => function($q) {
+                $q->withTrashed();
+            }])
             ->where('status', AttendanceReportRecord::STATUS_LATE_TO_CLASS);
+
+        $presentCount = $report->attendances()
+            ->where('status', AttendanceReportRecord::STATUS_PRESENT)
+            ->count();
 
         return Inertia::render('Teaching/AttendanceReport/Confirm', [
             'course_batch_session' => $report->course_batch_session,
             'report' => $report,
-            'sending_absent_warnings_to_count' => $sendingWarningsToQuery->count(),
-            'sending_absent_warnings_to_list' => $sendingWarningsToQuery->take(10)->get(),
+            'present_count' => $presentCount,
             'sending_late_warnings_to_count' => $sendingLateWarningsQuery->count(),
-            'sending_late_warnings_to_list' => $sendingLateWarningsQuery->take(10)->get(),
+            'sending_late_warnings_to_list' => $sendingLateWarningsQuery->take(50)->get(),
+            'sending_absent_warnings_to_count' => $sendingWarningsToQuery->count(),
+            'sending_absent_warnings_to_list' => $sendingWarningsToQuery->take(50)->get(),
         ]);
     }
 
     public function approve($report_id)
     {
         $report = AttendanceReport::find($report_id);
+        $report->status = AttendanceReport::STATUS_SUBMITTED_REPORT;
+        $report->submitted_by = auth()->user()->id;
+        $report->save();
+
         CourseBatchSessionWarningsJob::dispatch($report);
+
         return redirect()->route('teaching.courses.show', ['course' => $report->course_batch_session->course_id]);
     }
 }

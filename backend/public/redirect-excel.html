@@ -1,0 +1,24 @@
+<!--
+  ~ Copyright (c) 2020 - Clarastars, LLC  - All Rights Reserved.
+  ~
+  ~ Unauthorized copying of this file via any medium is strictly prohibited.
+  ~ This file is a proprietary of Clarastars LLC and is confidential / educational purpose only.
+  ~
+  ~ https://clarastars.com - info@clarastars.com
+  ~ @author Shafiq al-Shaar <shafiqalshaar@gmail.com>
+  -->
+
+<html>
+<body>
+Loading...
+<script type="text/javascript">
+    function getQuerystring(key) {
+        key = key.replace(/[\[]/,"\\\[").replace(/    [\]]/,"\\\]");
+        var regex = new RegExp("[\\?&]"+key+"=([^&#]*)");
+        var query = regex.exec(window.location.href);
+        return query[1];
+    }
+    window.location = "https://" + window.location.host + "/" + getQuerystring('page');
+</script>
+</body>
+</html>

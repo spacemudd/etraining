@@ -489,7 +489,7 @@ export default {
             "export-trainees": "إصدار بيانات المتدربات",
             "nominated": "مرشح",
             "all": "الكل",
-            "report-work-on-progress": "wجاري العمل على التقرير",
+            "report-work-on-progress": "جاري العمل على التقرير",
             "please-dont-close-the-window": "الرجاء عدم إغلاق الصفحة",
             "download-file": "تحميل الملف",
             "disable-website": "إقفال الموقع",
@@ -513,7 +513,12 @@ export default {
             "candidates": "المشرحين",
             "prepare-attendance": "رفع الحضور",
             "draft": "مسودة",
-            "report-status": "حالة التقرير"
+            "report-status": "حالة التقرير",
+            "registration-date": "تاريخ التسجيل",
+            "absent-counts": "عدد الغيابات",
+            "trainee-blacklisted": "حساب محظور",
+            "total": "الإجمالي",
+            "please-wait-until-session-is-over": "رفع الحضور متاح بعد انتهاء الدورة"
         }
     },
     "en": {
@@ -994,7 +999,12 @@ export default {
             "today": "Today",
             "prepare-attendance": "Prepare attendance",
             "draft": "Draft",
-            "report-status": "Report status"
+            "report-status": "Report status",
+            "registration-date": "Registration date",
+            "absent-counts": "Absent counts",
+            "trainee-blacklisted": "Blocked account",
+            "total": "Total",
+            "please-wait-until-session-is-over": "Attendance upload enabled after session is over"
         }
     }
 }

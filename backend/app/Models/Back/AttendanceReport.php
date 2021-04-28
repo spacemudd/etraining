@@ -22,8 +22,15 @@ class AttendanceReport extends Model implements Auditable
     const STATUS_DRAFT_REPORT = 1;
     const STATUS_SUBMITTED_REPORT = 2;
 
+    protected $fillable = [
+        'course_batch_session_id',
+        'is_ready_for_review',
+        'status',
+    ];
+
     protected $appends = [
         'status_name',
+        'can_prepare_attendance',
     ];
 
     protected static function boot(): void
@@ -55,9 +62,14 @@ class AttendanceReport extends Model implements Auditable
     {
         switch ($this->status) {
             case self::STATUS_DRAFT_REPORT:
-                return __('words.draft');
+                return 'draft';
             case self::STATUS_SUBMITTED_REPORT:
-                return __('words.approved');
+                return 'approved';
         }
+    }
+
+    public function getCanPrepareAttendanceAttribute()
+    {
+        return $this->course_batch_session->ends_at->isBefore(now());
     }
 }

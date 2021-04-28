@@ -18,7 +18,7 @@ class CreateAttendanceReportsTable extends Migration
             $table->uuid('team_id');
             $table->foreign('team_id')->references('id')->on('teams');
             $table->uuid('course_batch_session_id');
-            $table->foreign('course_batch_session_id')->references('id')->on('course_batch_sessions');
+            $table->foreign('course_batch_session_id')->references('id')->on('course_batch_sessions')->cascadeOnDelete();
             $table->boolean('is_ready_for_review')->nullable();
             $table->tinyInteger('status');
             $table->uuid('submitted_by')->nullable();
