@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Back\AttendanceReport;
 use App\Models\Back\AttendanceReportRecord;
+use App\Models\Back\AttendanceReportRecordWarning;
 use App\Models\Back\CourseBatchSession;
 use App\Models\Back\CourseBatchSessionAttendance;
 use App\Notifications\TraineeLateToClassNotification;
@@ -49,6 +50,13 @@ class CourseBatchSessionWarningsJob implements ShouldQueue
         foreach ($attendances as $attendance) {
             if ($attendance->status === AttendanceReportRecord::STATUS_ABSENT) {
                 Log::debug('[CourseBatchSessionWarningsJob] Sending absent notification: '.$attendance->id.' - User: '.$attendance->trainee->email);
+
+                $warning = new AttendanceReportRecordWarning();
+                $warning->attendance_report_id = $this->report->id;
+                $warning->attendance_report_record_id = $attendance->id;
+                $warning->trainee_id = $attendance->trainee_id;
+                $warning->save();
+
                 $attendance->trainee->notify(new TraineeMissedClassNotification($this->courseBatchSession));
             }
 

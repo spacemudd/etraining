@@ -171,7 +171,7 @@ class CourseAttendanceReportFactory
      */
     public function toExcel()
     {
-        Excel::store(new CourseSessionsAttendanceSummarySheetExport($this->getCourseSessions()), $this->getFileName());
+        Excel::store(new CourseSessionsAttendanceSummarySheetExport($this->getCourseSessions(), $this->startDate, $this->endDate), $this->getFileName());
         return $this->getFileName();
     }
 }

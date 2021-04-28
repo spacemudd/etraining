@@ -352,4 +352,5 @@ return [
     'draft' => 'مسودة',
     'report-status' => 'حالة التقرير',
     'registration-date' => 'تاريخ التسجيل',
+    'absent-counts' => 'عدد الغيابات',
 ];

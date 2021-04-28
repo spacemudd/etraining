@@ -345,4 +345,5 @@ return [
     'draft' => 'Draft',
     'report-status' => 'Report status',
     'registration-date' => 'Registration date',
+    'absent-counts' => 'Absent counts',
 ];

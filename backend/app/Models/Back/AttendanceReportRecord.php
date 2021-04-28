@@ -111,4 +111,9 @@ class AttendanceReportRecord extends Model implements Auditable
             return Timezone::convertToLocal($this->attended_at, 'Y-m-d H:i:s');
         }
     }
+
+    public function warnings()
+    {
+        return $this->hasMany(AttendanceReportRecordWarning::class);
+    }
 }
