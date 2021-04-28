@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\AttendanceSheetExport;
 use App\Jobs\CourseBatchSessionWarningsJob;
 use App\Jobs\MakeAttendanceReportJob;
 use App\Models\Back\AttendanceReportRecord;
 use App\Models\Back\AttendanceReport;
 use App\Models\Back\CourseBatchSession;
 use App\Models\Back\CourseBatchSessionAttendance;
+use Excel;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -130,5 +132,19 @@ class AttendanceReportsController extends Controller
         CourseBatchSessionWarningsJob::dispatch($report);
 
         return redirect()->route('teaching.courses.show', ['course' => $report->course_batch_session->course_id]);
+    }
+
+    /**
+     * Download attendances in Excel format.
+     *
+     * @param $report_id
+     * @return mixed
+     */
+    public function excel($report_id)
+    {
+        $report = AttendanceReport::with('course_batch_session')->findOrFail($report_id);
+        $courseName = $report->course_batch_session->course->name_ar;
+        $sessionDate = $report->course_batch_session->starts_at->format('Y-m-d');
+        return Excel::download(new AttendanceSheetExport($report), $sessionDate.'-'.$courseName.'-.xlsx');
     }
 }

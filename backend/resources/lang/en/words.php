@@ -349,4 +349,6 @@ return [
     'trainee-blacklisted' => 'Blocked account',
     'total' => 'Total',
     'please-wait-until-session-is-over' => 'Attendance upload enabled after session is over',
+    'attendance-submitted' => 'Attendance sheet approved',
+    'attendance-rate' => 'Attendance rate',
 ];

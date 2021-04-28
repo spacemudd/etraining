@@ -518,7 +518,8 @@ export default {
             "absent-counts": "عدد الغيابات",
             "trainee-blacklisted": "حساب محظور",
             "total": "الإجمالي",
-            "please-wait-until-session-is-over": "رفع الحضور متاح بعد انتهاء الدورة"
+            "please-wait-until-session-is-over": "رفع الحضور متاح بعد انتهاء الدورة",
+            "attendance-submitted": "تم اعتماد الحضور"
         }
     },
     "en": {
@@ -1004,7 +1005,8 @@ export default {
             "absent-counts": "Absent counts",
             "trainee-blacklisted": "Blocked account",
             "total": "Total",
-            "please-wait-until-session-is-over": "Attendance upload enabled after session is over"
+            "please-wait-until-session-is-over": "Attendance upload enabled after session is over",
+            "attendance-submitted": "Attendance sheet approved"
         }
     }
 }

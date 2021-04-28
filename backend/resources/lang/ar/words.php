@@ -356,4 +356,6 @@ return [
     'trainee-blacklisted' => 'حساب محظور',
     'total' => 'الإجمالي',
     'please-wait-until-session-is-over' => 'رفع الحضور متاح بعد انتهاء الدورة',
+    'attendance-submitted' => 'تم اعتماد الحضور',
+    'attendance-rate' => 'نسبة الحضور',
 ];
