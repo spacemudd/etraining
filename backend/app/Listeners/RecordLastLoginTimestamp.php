@@ -26,8 +26,6 @@ class RecordLastLoginTimestamp
      */
     public function handle($event)
     {
-        if ($user = auth()->user()) {
-            LoginTimestampJob::dispatch($user->id, now());
-        }
+        LoginTimestampJob::dispatch($event->user->id, now());
     }
 }
