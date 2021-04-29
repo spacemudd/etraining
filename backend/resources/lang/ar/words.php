@@ -288,6 +288,7 @@ return [
     'last-login-to-platform' => 'آخر دخول للمنصة',
     'copy' => 'نسخة',
     'singular-contract' => 'عقد',
+    'without-contract' => 'من دون عقد',
     'can-impersonate' => 'دخول عبر حساب آخر (متدرب \ مدرب)',
     'login-as-user' => 'الدخول من عبر الحساب',
     'view-payments' => 'عرض المدفوعات',

@@ -32,6 +32,7 @@
                                         <option value="0">{{ $t('words.incomplete-application') }}</option>
                                         <option value="2">{{ $t('words.nominated') }}</option>
                                         <option value="1">{{ $t('words.approved') }}</option>
+                                        <option value="3">{{ $t('words.without-contract') }}</option>
                                     </select>
                                 </div>
                             </label>

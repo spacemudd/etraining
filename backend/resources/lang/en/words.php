@@ -324,6 +324,7 @@ return [
     'export-archived-trainees' => 'Export blocked trainees data',
     'export-candidates' => 'Export Candidates data',
     'nominated' => 'Nominated',
+    'without-contract' => "Without Contract",
     'all' => 'All',
     'report-work-on-progress' => 'Generating your report',
     'please-dont-close-the-window' => 'Please dont close the window',
