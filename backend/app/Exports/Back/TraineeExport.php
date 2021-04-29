@@ -56,8 +56,10 @@ class TraineeExport implements FromView, WithEvents, WithStyles
     {
         $q = Trainee::query();
 
-        if ($this->trainee_status_id) {
+        if ($this->trainee_status_id != 3) {
             $q->where('status', $this->trainee_status_id);
+        } else {
+            $q->where('company_id', null)->orWhere('trainee_group_id', null);
         }
 
         $trainees = $q->with('company')->get()->toBase();

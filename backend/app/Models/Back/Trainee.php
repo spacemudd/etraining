@@ -36,6 +36,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     const STATUS_PENDING_UPLOADING_FILES = 0;
     const STATUS_PENDING_APPROVAL = 1;
     const STATUS_APPROVED = 2;
+    const STATUS_NO_CONTRACTS = 3;
 
     public $incrementing = false;
 

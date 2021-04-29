@@ -17,6 +17,8 @@
                     {{ __('words.approved') }}
                 @elseif ($trainee_status_id === \App\Models\Back\Trainee::STATUS_PENDING_APPROVAL)
                     {{ __('words.nominated-instructor') }}
+                @elseif ($trainee_status_id == "3")
+                    {{ __('words.without-contract') }}
                 @endif
             </strong>
         </th>

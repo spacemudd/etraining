@@ -481,6 +481,7 @@ class TraineesController extends Controller
             Trainee::STATUS_PENDING_APPROVAL,
             Trainee::STATUS_APPROVED,
             Trainee::STATUS_PENDING_UPLOADING_FILES,
+            Trainee::STATUS_NO_CONTRACTS,
             null,
         ], true);
 
