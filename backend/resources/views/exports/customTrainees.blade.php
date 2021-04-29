@@ -21,7 +21,9 @@
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.educational_level') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.marital_status') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.children_count') }}</strong></th>
-        <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.delete-remark') }}</strong></th>
+        @if($archived)
+            <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.delete-remark') }}</strong></th>
+        @endif
     </tr>
     </thead>
 
@@ -47,7 +49,9 @@
             <td style="border:1px solid black;">{{ optional($trainee->educational_level)->name_ar }}</td>
             <td style="border:1px solid black;">{{ optional($trainee->marital_status)->name_ar }}</td>
             <td style="border:1px solid black;">{{ $trainee->children_count ?: '' }}</td>
-            <td style="border:1px solid black;">{{ $trainee->deleted_remark }}</td>
+            @if($archived)
+                <td style="border:1px solid black;">{{ $trainee->deleted_remark }}</td>
+            @endif
         </tr>
     @endforeach
     </tbody>

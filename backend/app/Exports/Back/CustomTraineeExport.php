@@ -11,8 +11,14 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ArchivedTraineeExport implements FromView, WithEvents, WithStyles
+class CustomTraineeExport implements FromView, WithEvents, WithStyles
 {
+
+    public function __construct($trainees_type)
+    {
+        $this->trainees_type = $trainees_type;
+    }
+
     public function registerEvents(): array
     {
         if (app()->getLocale() === 'ar') {
@@ -48,12 +54,20 @@ class ArchivedTraineeExport implements FromView, WithEvents, WithStyles
     public function view(): View
     {
         $q = Trainee::query();
+        $archived = false;
 
+        if($this->trainees_type == 'archived') {
+            $trainees = $q->with('company')->onlyTrashed()->get()->toBase();
 
-        $archived_trainees = $q->with('company')->onlyTrashed()->get()->toBase();
+            $archived = true;
 
-        return view('exports.archivedTrainees', [
-            'trainees' => $archived_trainees,
+        } else {
+            $trainees = Trainee::candidates()->get()->toBase();
+        }
+
+        return view('exports.customTrainees', [
+            'trainees' => $trainees,
+            'archived' => $archived,
         ]);
     }
 }

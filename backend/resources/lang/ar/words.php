@@ -324,6 +324,7 @@ return [
     'the-archive' => 'الأرشيف',
     'export-trainees' => 'إصدار بيانات المتدربات',
     'export-archived-trainees' => 'إصدار بيانات المتدربات الموقوفات',
+    'export-candidates' => 'إصدار بيانات المتدربات المرشحات',
     'nominated' => 'مرشح',
     'all' => 'الكل',
     'report-work-on-progress' => 'جاري العمل على التقرير',

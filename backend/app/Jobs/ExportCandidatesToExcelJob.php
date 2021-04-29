@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Throwable;
 
-class ExportArchivedTraineesToExcelJob implements ShouldQueue
+class ExportCandidatesToExcelJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -38,12 +38,12 @@ class ExportArchivedTraineesToExcelJob implements ShouldQueue
      */
     public function handle()
     {
-        Log::info('[ExportArchivedTraineesToExcelJob] Initiated for Team ID: '.$this->excelJob->team_id. ' and User: '.$this->excelJob->user->email);
+        Log::info('[ExportCandidatesToExcelJob] Initiated for Team ID: '.$this->excelJob->team_id. ' and User: '.$this->excelJob->user->email);
 
         $this->excelJob->update(['started_at' => now()]);
 
-        $fileName = uniqid('archivedTrainees-', true).'.xlsx';
-        Excel::store(new CustomTraineeExport('archived'), $fileName, 'local');
+        $fileName = uniqid('candidates-', true).'.xlsx';
+        Excel::store(new CustomTraineeExport('candidates'), $fileName, 'local');
 
         $this->excelJob->addMedia(storage_path('app/'.$fileName))
             ->withAttributes([
@@ -53,12 +53,12 @@ class ExportArchivedTraineesToExcelJob implements ShouldQueue
 
         $this->excelJob->update(['finished_at' => now()]);
 
-        Log::info('[ExportArchivedTraineesToExcelJob] Completed for Team ID: '.$this->excelJob->team_id. ' and User: '.$this->excelJob->user->email);
+        Log::info('[ExportCandidatesToExcelJob] Completed for Team ID: '.$this->excelJob->team_id. ' and User: '.$this->excelJob->user->email);
     }
 
     public function failed(Throwable $e)
     {
-        Log::error('[ExportArchivedTraineesToExcelJob] Failed for Team ID: '.$this->excelJob->team_id. ' and User: '.$this->excelJob->user->email);
+        Log::error('[ExportCandidatesToExcelJob] Failed for Team ID: '.$this->excelJob->team_id. ' and User: '.$this->excelJob->user->email);
         $this->excelJob->failure_reason = $e->getMessage();
         $this->excelJob->save();
     }

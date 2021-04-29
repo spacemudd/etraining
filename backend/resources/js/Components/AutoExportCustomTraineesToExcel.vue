@@ -15,9 +15,9 @@
         </div>
 
         <portal to="app-modal-container">
-            <modal name="exportArchivedTraineesToExcelSheet" classes="force-overflow-auto">
+            <modal name="autoExportCustomTraineesToExcelSheet" classes="force-overflow-auto">
                 <div class="bg-white block h-5 p-10">
-                    <h1 class="text-lg font-bold">{{ $t('words.export-archived-trainees') }}</h1>
+                    <h1 class="text-lg font-bold">{{ $t(header) }}</h1>
 
                     <!-- Form -->
                     <template v-if="report_status === 'processing'">
@@ -57,7 +57,10 @@ import JetButton from "../Jetstream/Button";
 import BtnLoadingIndicator from "./BtnLoadingIndicator";
 
 export default {
-    name: "ExportArchivedTraineesToExcel",
+    name: "AutoExportCustomTraineesToExcel",
+    props: [
+        'traineesType',
+    ],
     components: {
         DialogModal,
         JetButton,
@@ -70,21 +73,33 @@ export default {
             sendReportRequestForm: {
                 processing: true,
             },
+            header: null,
+            url: {
+
+            },
         }
     },
     mounted() {
-
+        if (this.traineesType == 'archived') {
+            this.header = 'words.export-archived-trainees';
+            this.url.post = 'back.trainees.archived.excel';
+            this.url.check = 'back.trainees.excel.job';
+        } else {
+            this.header = 'words.export-candidates';
+            this.url.post = 'back.candidates.excel';
+            this.url.check = 'back.candidates.excel.job';
+        }
     },
     methods: {
         openModal() {
             this.$emit('modal:opened');
             this.report_status = 'processing';
             this.excelJob = null;
-            this.$modal.toggle('exportArchivedTraineesToExcelSheet');
+            this.$modal.toggle('autoExportCustomTraineesToExcelSheet');
 
             //
             this.sendReportRequestForm.processing = true;
-            axios.post(route('back.trainees.archived.excel'))
+            axios.post(route(this.url.post))
             .then(response => {
                 this.report_status = 'processing';
                 this.excelJob = response.data;
@@ -93,7 +108,7 @@ export default {
             });
         },
         checkExcelJobStatus() {
-            axios.get(route('back.trainees.excel.job', {id: this.excelJob.id}))
+            axios.get(route(this.url.check, {id: this.excelJob.id}))
                 .then(response => {
                     if (response.data.finished_at) {
                         this.report_status = 'finished';

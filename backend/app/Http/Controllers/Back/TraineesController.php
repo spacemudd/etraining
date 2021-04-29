@@ -535,6 +535,7 @@ class TraineesController extends Controller
         return $excelJob;
     }
 
+
     public function resendInvitation($trainee_id)
     {
         $trainee = Trainee::findOrFail($trainee_id);

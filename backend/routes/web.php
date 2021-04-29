@@ -109,7 +109,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('trainees/archived/excel/{id}/download', [\App\Http\Controllers\Back\TraineesController::class, 'excelJobDownload'])->name('trainees.archived.excel.job.download');
         Route::get('trainees/archived/excel/{id}', [\App\Http\Controllers\Back\TraineesController::class, 'excelJob'])->name('trainees.archived.excel.job');
         Route::post('trainees/archived/excel', [\App\Http\Controllers\Back\TraineesController::class, 'archivedExcel'])->name('trainees.archived.excel');
-
         Route::post('trainees/{trainee_id}/approve-user', [\App\Http\Controllers\Back\TraineesController::class, 'approveUser'])->name('trainees.approve-user');
         Route::post('trainees/{trainee_id}/create-user', [\App\Http\Controllers\Back\TraineesController::class, 'createUser'])->name('trainees.create-user');
         Route::post('trainees/assign-instructor', [\App\Http\Controllers\Back\TraineesController::class, 'assignInstructor'])->name('trainees.assign-instructor');
@@ -126,8 +125,11 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('trainees/archived', [\App\Http\Controllers\Back\TraineesController::class, 'indexArchived'])->name('trainees.index.archived');
         Route::resource('trainees', \App\Http\Controllers\Back\TraineesController::class);
         Route::get('candidates', [\App\Http\Controllers\Back\CandidatesController::class, 'index'])->name('candidates.index');
-        Route::get('candidates/excel', [\App\Http\Controllers\Back\CandidatesController::class, 'excel'])->name('candidates.excel');
 
+        // Export For Candidates.
+        Route::get('candidates/excel/{id}/download', [\App\Http\Controllers\Back\TraineesController::class, 'excelJobDownload'])->name('candidates.excel.job.download');
+        Route::get('candidates/excel/{id}', [\App\Http\Controllers\Back\TraineesController::class, 'excelJob'])->name('candidates.excel.job');
+        Route::post('candidates/excel', [\App\Http\Controllers\Back\CandidatesController::class, 'excel'])->name('candidates.excel');
 
         Route::post('instructors/{instructor_id}/approve-user', [\App\Http\Controllers\Back\InstructorsController::class, 'approveUser'])->name('instructors.approve-user');
         Route::post('instructors/{instructor_id}/create-user', [\App\Http\Controllers\Back\InstructorsController::class, 'createUser'])->name('instructors.create-user');
