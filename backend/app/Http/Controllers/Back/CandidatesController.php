@@ -26,7 +26,6 @@ class CandidatesController extends Controller
 
     public function excel()
     {
-
         $excelJob = new ExportTraineesToExcelJobTracker();
         $excelJob->queued_at = now();
         $excelJob->user_id = auth()->user()->id;

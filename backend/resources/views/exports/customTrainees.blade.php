@@ -1,7 +1,7 @@
 <table>
     <thead>
     <tr>
-        <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong>{{ __('words.blocked-trainees') }}:</strong></th>
+        <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong>{{ $excel_title }}</strong></th>
     </tr>
     <tr></tr>
     <tr>

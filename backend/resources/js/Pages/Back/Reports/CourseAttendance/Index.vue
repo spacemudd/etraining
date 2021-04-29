@@ -53,7 +53,7 @@
                     </div>
                 </div>
 
-                <button class="btn btn-gray mt-5" type="submit" :disabled="form.processing">{{ $t('words.submit') }}</button>
+                <button class="btn btn-gray mt-5" type="submit" :disabled="form.processing">{{ $t('words.export') }}</button>
             </form>
             </template>
 

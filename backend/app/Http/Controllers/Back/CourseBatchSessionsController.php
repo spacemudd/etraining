@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ZoomMeetingsController;
+use App\Models\Back\AttendanceReport;
 use App\Models\Back\CourseBatch;
 use App\Models\Back\CourseBatchSession;
 use App\Models\Back\TraineeGroup;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use MacsiDigital\Zoom\Support\Entry;
 use MacsiDigital\Zoom\User;
@@ -54,6 +56,7 @@ class CourseBatchSessionsController extends Controller
             'course_batch_id' => 'required|exists:course_batches,id',
         ]);
 
+        DB::beginTransaction();
         $batch = CourseBatch::findOrFail($request->course_batch_id);
         $session = CourseBatchSession::create([
             'course_id' => $batch->course_id,
@@ -61,6 +64,12 @@ class CourseBatchSessionsController extends Controller
             'starts_at' => $request->starts_at,
             'ends_at' => $request->ends_at,
         ]);
+        $report = new AttendanceReport();
+        $report->course_batch_session_id = $session->id;
+        $report->status = AttendanceReport::STATUS_DRAFT_REPORT;
+        $report->submitted_by = null;
+        $report->save();
+        DB::commit();
 
         if ($request->wantsJson()) {
             return response()->json($session->toArray());

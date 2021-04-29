@@ -10,4 +10,13 @@ class WelcomeController extends Controller
     {
         return view('welcome');
     }
+
+    public function redirectTo(Request $request)
+    {
+        $request->validate([
+            'url' => 'required|string',
+        ]);
+
+        return redirect()->to($request->url);
+    }
 }

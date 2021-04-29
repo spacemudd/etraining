@@ -57,15 +57,16 @@ class CustomTraineeExport implements FromView, WithEvents, WithStyles
         $archived = false;
 
         if($this->trainees_type == 'archived') {
-            $trainees = $q->with('company')->onlyTrashed()->get()->toBase();
-
+            $excel_title = __('words.blocked-trainees');
+            $trainees = $q->with('company')->onlyTrashed()->get();
             $archived = true;
-
         } else {
-            $trainees = Trainee::candidates()->get()->toBase();
+            $excel_title = __('words.candidates');
+            $trainees = Trainee::candidates()->with('company')->get();
         }
 
         return view('exports.customTrainees', [
+            'excel_title' => $excel_title,
             'trainees' => $trainees,
             'archived' => $archived,
         ]);
