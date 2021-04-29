@@ -521,7 +521,7 @@ export default {
             "total": "الإجمالي",
             "please-wait-until-session-is-over": "رفع الحضور متاح بعد انتهاء الدورة",
             "attendance-submitted": "تم اعتماد الحضور",
-            "attendance-rate": "نسبة الحضور"
+            "attendance-rate": "نسبة الحضور",
             "joining_date": "تاريخ التسجيل"
         }
     },
@@ -1011,7 +1011,8 @@ export default {
             "total": "Total",
             "please-wait-until-session-is-over": "Attendance upload enabled after session is over",
             "attendance-submitted": "Attendance sheet approved",
-            "attendance-rate": "Attendance rate"
+            "attendance-rate": "Attendance rate",
+            "joining_date": "Joining Date"
         }
     }
 }
