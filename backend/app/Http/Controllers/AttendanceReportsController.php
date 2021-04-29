@@ -139,6 +139,8 @@ class AttendanceReportsController extends Controller
      *
      * @param $report_id
      * @return mixed
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
     public function excel($report_id)
     {

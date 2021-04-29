@@ -510,7 +510,7 @@ export default {
             "show-all-courses": "عرض جميع الدورات",
             "today": "اليوم",
             "today-courses": "دورات اليوم",
-            "candidates": "المشرحين",
+            "candidates": "المرشحين",
             "prepare-attendance": "رفع الحضور",
             "draft": "مسودة",
             "report-status": "حالة التقرير",
@@ -519,7 +519,8 @@ export default {
             "trainee-blacklisted": "حساب محظور",
             "total": "الإجمالي",
             "please-wait-until-session-is-over": "رفع الحضور متاح بعد انتهاء الدورة",
-            "attendance-submitted": "تم اعتماد الحضور"
+            "attendance-submitted": "تم اعتماد الحضور",
+            "attendance-rate": "نسبة الحضور"
         }
     },
     "en": {
@@ -1006,7 +1007,8 @@ export default {
             "trainee-blacklisted": "Blocked account",
             "total": "Total",
             "please-wait-until-session-is-over": "Attendance upload enabled after session is over",
-            "attendance-submitted": "Attendance sheet approved"
+            "attendance-submitted": "Attendance sheet approved",
+            "attendance-rate": "Attendance rate"
         }
     }
 }
