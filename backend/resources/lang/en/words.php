@@ -355,5 +355,6 @@ return [
     'attendance-submitted' => 'Attendance sheet approved',
     'attendance-rate' => 'Attendance rate',
     'joining_date' => "Joining Date",
+    'attendance-sheet' => 'Attendance sheet',
     'please-enter-valid-phone-number' => 'Please enter a valid phone number for verification purposes',
 ];

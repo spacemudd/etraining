@@ -102,10 +102,10 @@
         },
         filters: {
             toDate(timestamp) {
-                return moment(timestamp).format('DD-MM-YYYY');
+                return moment(timestamp, 'YYYY-MM-DD LT').format('DD-MM-YYYY');
             },
             toHours(timestamp) {
-                return moment(timestamp).format('hh:mm A');
+                return moment(timestamp, 'YYYY-MM-DD LT').format('hh:mm A');
             }
         },
         mounted() {
