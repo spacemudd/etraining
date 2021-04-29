@@ -114,7 +114,7 @@ class AttendanceReportRecord extends Model implements Auditable
     public function getAttendedAtTimezoneAttribute()
     {
         if ($this->attended_at) {
-            return Timezone::convertToLocal($this->attended_at, 'Y-m-d H:i:s');
+            return Timezone::convertToLocal($this->attended_at, 'Y-m-d h:i A');
         }
     }
 
