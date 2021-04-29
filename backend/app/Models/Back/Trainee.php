@@ -8,6 +8,7 @@ use App\Models\MaritalStatus;
 use App\Models\SearchableLabels;
 use App\Notifications\AssignedToCompanyTraineeNotification;
 use Illuminate\Notifications\Notifiable;
+use JamesMills\LaravelTimezone\Facades\Timezone;
 use Laravel\Scout\Searchable;
 use App\Models\User;
 use App\Scope\TeamScope;
@@ -73,6 +74,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'is_approved',
         'resource_label',
         'resource_type',
+        'deleted_at_timezone',
     ];
 
     protected static function boot(): void
@@ -260,6 +262,13 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     public function getResourceTypeAttribute(): string
     {
         return trans('words.trainee');
+    }
+
+    public function getDeletedAtTimezoneAttribute()
+    {
+        if ($this->deleted_at) {
+            return Timezone::convertToLocal($this->deleted_at, 'Y-m-d h:i A');
+        }
     }
 
     /**
