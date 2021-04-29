@@ -12,9 +12,13 @@
                 <h1 class="mb-8 font-bold text-3xl">{{ $t('words.candidates') }} ({{ candidates_count }})</h1>
                 <div class="mb-6 flex justify-between items-center">
 
-                    <inertia-link class="btn-gray mx-3" :href="route('back.candidates.excel')">
-                        <span>{{ $t('words.excel') }}</span>
-                    </inertia-link>
+                    <auto-export-custom-trainees-to-excel trainees-type='candidates' class="rounded items-center justify-start mr-3 float-left px-3 py-2.5 btn-gray text-left" @modal:opened="actionsDropDownView=!actionsDropDownView">
+                                    <template slot="buttonContent">
+                                        <button>
+                                            {{ $t('words.excel') }}
+                                        </button>
+                                    </template>
+                    </auto-export-custom-trainees-to-excel>
 
                 </div>
             </div>
@@ -89,6 +93,8 @@
     import IconNavigate from 'vue-ionicons/dist/ios-arrow-dropright'
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
     import EmptySlate from "@/Components/EmptySlate";
+    import AutoExportCustomTraineesToExcel from '@/Components/AutoExportCustomTraineesToExcel';
+
 
     export default {
         metaInfo: { title: 'Candidates' },
@@ -101,6 +107,7 @@
             // Icon,
             Pagination,
             // SearchFilter,
+            AutoExportCustomTraineesToExcel,
         },
         props: ['candidates', 'candidates_count'],
         data() {

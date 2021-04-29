@@ -322,6 +322,7 @@ return [
     'the-archive' => 'Archive',
     'export-trainees' => 'Export trainees data',
     'export-archived-trainees' => 'Export blocked trainees data',
+    'export-candidates' => 'Export Candidates data',
     'nominated' => 'Nominated',
     'all' => 'All',
     'report-work-on-progress' => 'Generating your report',
