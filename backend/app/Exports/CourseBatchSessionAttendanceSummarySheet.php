@@ -11,8 +11,10 @@
 
 namespace App\Exports;
 
+use App\Models\Back\AttendanceReportRecord;
+use App\Models\Back\AttendanceReportRecordWarning;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithEvents;
@@ -28,9 +30,21 @@ class CourseBatchSessionAttendanceSummarySheet implements FromView, WithEvents, 
      */
     public $courseBatchSessions;
 
-    public function __construct(Collection $courseBatchSessions)
+    /**
+     * @var
+     */
+    public $reportIds;
+
+    public $startDate;
+
+    public $endDate;
+
+    public function __construct($courseBatchSessions, array $reportIds, $startDate, $endDate)
     {
         $this->courseBatchSessions = $courseBatchSessions;
+        $this->reportIds = $reportIds;
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
     }
 
     public function registerEvents(): array
@@ -81,25 +95,29 @@ class CourseBatchSessionAttendanceSummarySheet implements FromView, WithEvents, 
      */
     public function view(): View
     {
-        $trainees = [];
+        $attendanceRecords = AttendanceReportRecord::whereIn('attendance_report_id', $this->reportIds)
+            ->whereHas('warnings')
+            ->with(['trainee' => function($q) {
+                $q->with('company');
+            }])
+            ->groupBy('trainee_id')
+            ->get();
 
-        // TODO: Bring in all the trainees for these sessions and to create this obj:
-        // Trainees
-        //        ...
-        //        Sessions
-        //                ID
-        //                Date
-        //                Attended
+        foreach ($attendanceRecords as $record) {
+            $record->warnings_count = AttendanceReportRecordWarning::whereIn('attendance_report_id', $this->reportIds)
+                ->where('trainee_id', $record->trainee_id)
+                ->count();
+        }
 
         return view('exports.attendingSummarySheet', [
-            'courseName' => optional(optional($this->courseBatchSessions)->first())->name_ar,
+            'courseName' => optional(optional($this->courseBatchSessions)->first())->course->name_ar,
             'courseBatchSessions' => $this->courseBatchSessions,
-            'trainees' => $trainees,
+            'attendanceRecords' => $attendanceRecords,
         ]);
     }
 
     public function title(): string
     {
-        return 'Summary';
+        return 'الملخص';
     }
 }

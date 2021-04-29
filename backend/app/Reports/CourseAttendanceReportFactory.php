@@ -146,6 +146,8 @@ class CourseAttendanceReportFactory
 
         $q->whereBetween('starts_at', [$this->startDate, $this->endDate]);
 
+        $q->whereHas('attendance_report');
+
         return $q->get();
     }
 
@@ -169,7 +171,7 @@ class CourseAttendanceReportFactory
      */
     public function toExcel()
     {
-        Excel::store(new CourseSessionsAttendanceSummarySheetExport($this->getCourseSessions()), $this->getFileName());
+        Excel::store(new CourseSessionsAttendanceSummarySheetExport($this->getCourseSessions(), $this->startDate, $this->endDate), $this->getFileName());
         return $this->getFileName();
     }
 }

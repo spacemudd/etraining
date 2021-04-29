@@ -11,6 +11,8 @@
 
 namespace App\Exports;
 
+use App\Models\Back\AttendanceReport;
+use App\Models\Back\AttendanceReportRecord;
 use App\Models\Back\CourseBatchSession;
 use App\Models\Back\CourseBatchSessionAttendance;
 use Illuminate\Contracts\View\View;
@@ -61,13 +63,14 @@ class CourseBatchSessionAttendanceSheet implements FromView, WithEvents, WithSty
     public function columnWidths(): array
     {
         return [
-            'A' => 25,
+            'A' => 15,
             'B' => 25,
-            'C' => 20,
+            'C' => 25,
             'D' => 20,
-            'E' => 15,
-            'F' => 22,
+            'E' => 20,
+            'F' => 15,
             'G' => 22,
+            'H' => 22,
 
         ];
     }
@@ -77,43 +80,29 @@ class CourseBatchSessionAttendanceSheet implements FromView, WithEvents, WithSty
      */
     public function view(): View
     {
-        $users = CourseBatchSession::with('course')
-            ->with(['attendances' => function($q) {
-                $q->with(['trainee' => function($q) {
-                    $q->with('company');
-                }]);
+        $report = AttendanceReport::where('course_batch_session_id', $this->course_batch_session_id)
+            ->with(['course_batch_session' => function($q) {
+                $q->with('course');
             }])
-            ->with(['course_batch' => function($q) {
-                $q->with(['trainee_group' => function($q) {
-                    $q->with(['trainees' => function($q) {
-                        $q->withTrashed()->with('company');
-                    }]);
-                }]);
-            }])->findOrFail($this->course_batch_session_id);
-
-        $attendances = $users->attendances;
-
-        $usersWhoDidntAttended = [];
-
-        foreach ($users->course_batch->trainee_group->trainees as $trainee) {
-            $hasAttended = CourseBatchSessionAttendance::where('course_batch_session_id', $this->course_batch_session_id)
-                ->where('trainee_id', $trainee->id)
-                ->first();
-            if (!$hasAttended) {
-                $usersWhoDidntAttended[] = $trainee;
-            }
-        }
+            ->latest()
+            ->first();
 
         if (app()->getLocale() === 'ar') {
-            $course_name = $users->course->name_ar;
+            $course_name = $report->course_batch_session->course->name_ar;
         } else {
-            $course_name = $users->course->name_en;
+            $course_name = $report->course_batch_session->course->name_en;
         }
 
         return view('exports.attendingSheet', [
-            'course_batch' => $users,
-            'attendances' => $attendances,
-            'users_who_didnt_attend' => $usersWhoDidntAttended,
+            'course_batch' => $report->course_batch_session,
+            'attendances' => AttendanceReportRecord::where('attendance_report_id', $report->id)
+                ->with('trainee')
+                ->whereIn('status', [AttendanceReportRecord::STATUS_PRESENT, AttendanceReportRecord::STATUS_LATE_TO_CLASS])
+                ->get(),
+            'users_who_didnt_attend' => AttendanceReportRecord::where('attendance_report_id', $report->id)
+                ->with('trainee')
+                ->whereIn('status', [AttendanceReportRecord::STATUS_ABSENT, AttendanceReportRecord::STATUS_ABSENT_WITH_EXCUSE])
+                ->get(),
             'course_name' => $course_name,
         ]);
 

@@ -23,8 +23,8 @@ class CourseBatchesController extends Controller
                 $q->withCount('trainees');
             }])
             ->with(['course_batch_sessions' => function($q) {
-            $q->orderBy('starts_at', 'desc');
-        }])->get();
+                $q->with('attendance_report')->orderBy('starts_at', 'desc');
+            }])->get();
     }
 
     /**

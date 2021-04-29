@@ -482,7 +482,7 @@ export default {
             "course-attendances": "حضور الدورات",
             "date-from": "تاريخ من",
             "date-to": "تاريخ الى",
-            "export": "تصدير",
+            "export": "إصدار",
             "actions": "إجراءات",
             "new-bulk": "جديد (مجموعة)",
             "the-archive": "الأرشيف",
@@ -511,7 +511,17 @@ export default {
             "show-all-courses": "عرض جميع الدورات",
             "today": "اليوم",
             "today-courses": "دورات اليوم",
-            "candidates": "المشرحين",
+            "candidates": "المرشحين",
+            "prepare-attendance": "رفع الحضور",
+            "draft": "مسودة",
+            "report-status": "حالة التقرير",
+            "registration-date": "تاريخ التسجيل",
+            "absent-counts": "عدد الغيابات",
+            "trainee-blacklisted": "حساب محظور",
+            "total": "الإجمالي",
+            "please-wait-until-session-is-over": "رفع الحضور متاح بعد انتهاء الدورة",
+            "attendance-submitted": "تم اعتماد الحضور",
+            "attendance-rate": "نسبة الحضور"
             "joining_date": "تاريخ التسجيل"
         }
     },
@@ -992,7 +1002,16 @@ export default {
             "not-set": "No Date Set",
             "today-courses": "Today's Courses",
             "today": "Today",
-            "joining_date": "Joining Date"
+            "prepare-attendance": "Prepare attendance",
+            "draft": "Draft",
+            "report-status": "Report status",
+            "registration-date": "Registration date",
+            "absent-counts": "Absent counts",
+            "trainee-blacklisted": "Blocked account",
+            "total": "Total",
+            "please-wait-until-session-is-over": "Attendance upload enabled after session is over",
+            "attendance-submitted": "Attendance sheet approved",
+            "attendance-rate": "Attendance rate"
         }
     }
 }

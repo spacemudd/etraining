@@ -2,6 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Models\Back\AttendanceReport;
+use App\Models\Back\AttendanceReportRecord;
+use App\Models\Back\AttendanceReportRecordWarning;
 use App\Models\Back\CourseBatchSession;
 use App\Models\Back\CourseBatchSessionAttendance;
 use App\Notifications\TraineeLateToClassNotification;
@@ -18,6 +21,8 @@ class CourseBatchSessionWarningsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $report;
+
     public $courseBatchSession;
 
     public $timeout = 3600;
@@ -25,11 +30,12 @@ class CourseBatchSessionWarningsJob implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @param \App\Models\Back\CourseBatchSession $session
+     * @param \App\Models\Back\AttendanceReport $report
      */
-    public function __construct(CourseBatchSession $session)
+    public function __construct(AttendanceReport $report)
     {
-        $this->courseBatchSession = $session;
+        $this->report = $report;
+        $this->courseBatchSession = $report->course_batch_session;
     }
 
     /**
@@ -39,19 +45,28 @@ class CourseBatchSessionWarningsJob implements ShouldQueue
      */
     public function handle()
     {
-        $attendances = $this->courseBatchSession->attendances;
-        Log::debug('[CourseBatchSessionWarningsJob] For course batch session ID: '.$this->courseBatchSession->id);
+        $attendances = $this->report->attendances;
+        Log::debug('[CourseBatchSessionWarningsJob] For report ID: '.$this->report->id. ' with attendances: '.$attendances->count());
         foreach ($attendances as $attendance) {
-            if ($attendance->attendance_status === CourseBatchSessionAttendance::STATUS_ABSENT) {
+            if (!$attendance->trainee) continue;
+
+            if ($attendance->status === AttendanceReportRecord::STATUS_ABSENT) {
                 Log::debug('[CourseBatchSessionWarningsJob] Sending absent notification: '.$attendance->id.' - User: '.$attendance->trainee->email);
+
+                $warning = new AttendanceReportRecordWarning();
+                $warning->attendance_report_id = $this->report->id;
+                $warning->attendance_report_record_id = $attendance->id;
+                $warning->trainee_id = $attendance->trainee_id;
+                $warning->save();
+
                 $attendance->trainee->notify(new TraineeMissedClassNotification($this->courseBatchSession));
             }
 
-            if ($attendance->attendance_status === CourseBatchSessionAttendance::STATUS_PRESENT_LATE_TO_COURSE) {
+            if ($attendance->status === AttendanceReportRecord::STATUS_LATE_TO_CLASS) {
                 Log::debug('[CourseBatchSessionWarningsJob] Sending present_late notification: '.$attendance->id.' - User: '.$attendance->trainee->email);
                 $attendance->trainee->notify(new TraineeLateToClassNotification($this->courseBatchSession));
             }
         }
-        Log::debug('[CourseBatchSessionWarningsJob] Finished for course batch session ID: '.$this->courseBatchSession->id);
+        Log::debug('[CourseBatchSessionWarningsJob] Finished for report ID: '.$this->report->id);
     }
 }
