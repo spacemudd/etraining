@@ -57,6 +57,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'national_address',
         'deleted_remark',
         'trainee_group_id',
+        'national_address',
     ];
 
     protected $appends = [

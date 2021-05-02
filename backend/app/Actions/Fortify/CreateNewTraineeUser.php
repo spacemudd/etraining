@@ -55,7 +55,6 @@ class CreateNewTraineeUser implements CreatesNewUsers
 
         $trainee = Trainee::where('id', $input['trainee_id'])->first();
         $trainee->user_id = $user->id;
-        $trainee->national_address = $input['national_address'];
         $trainee->save();
 
         \DB::commit();
