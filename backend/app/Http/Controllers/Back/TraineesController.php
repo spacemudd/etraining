@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Back;
 
 use App\Actions\Fortify\CreateNewTraineeUser;
-use App\Exports\Back\TraineeExport;
 use App\Http\Controllers\Controller;
 use App\Jobs\ExportTraineesToExcelJob;
 use App\Jobs\ExportArchivedTraineesToExcelJob;
@@ -28,7 +27,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
-use Maatwebsite\Excel\Facades\Excel;
 
 class TraineesController extends Controller
 {
@@ -563,7 +561,7 @@ class TraineesController extends Controller
         ]);
 
         $user = Trainee::findOrFail($trainee_id)->user;
-        $user->password = bcrypt($request->new_trainee_password);
+        $user->password = Hash::make($request->new_trainee_password);
         $user->save();
 
         return redirect()->route('back.trainees.show', $trainee_id);

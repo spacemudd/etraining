@@ -32,7 +32,7 @@ class CreateNewTraineeUser implements CreatesNewUsers
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => $this->passwordRules(),
-            'national_address' => ['required', 'string', 'max:255'],
+            'national_address' => ['nullable', 'string', 'max:255'],
         ])->validate();
 
         \DB::beginTransaction();
