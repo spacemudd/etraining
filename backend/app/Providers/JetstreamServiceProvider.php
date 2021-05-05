@@ -23,7 +23,7 @@ class JetstreamServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->registerComponent('intel-tel-input');
     }
 
     /**
@@ -83,6 +83,9 @@ class JetstreamServiceProvider extends ServiceProvider
         });
     }
 
+    protected function registerComponent(string $component) {
+        \Illuminate\Support\Facades\Blade::component('jetstream::components.'.$component, 'jet-'.$component);
+    }
     /**
      * Configure the roles and permissions that are available within the application.
      *

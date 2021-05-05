@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <x-guest-layout>
     <x-jet-authentication-card>
         <x-slot name="logo">
@@ -41,7 +42,7 @@
 
             <div class="mt-4">
                 <x-jet-label value="{{ __('words.phone') }}" />
-                <x-jet-input class="block mt-1 w-full" type="text" name="phone" :value="old('phone')" required />
+                <x-jet-intel-tel-input class="block mt-1 w-full" type="text" name="phone" :value="old('phone')" required />
             </div>
 
 

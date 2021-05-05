@@ -362,4 +362,5 @@ return [
     'attendance-submitted' => 'تم اعتماد الحضور',
     'attendance-rate' => 'نسبة الحضور',
     'joining_date' => 'تاريخ التسجيل',
+    'please-enter-valid-phone-number' => 'الرجاء استخدام رقم جوال لتوثيق الحساب',
 ];

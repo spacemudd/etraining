@@ -7,21 +7,6 @@ export default {
         "Reset Password": "إعادة تعيين كلمة السر",
         "This password reset link will expire in {count} minutes.": "رابط إعادة كلمة السر سوف ينتهي صلاحيته خلال {count} دقائق.",
         "If you did not request a password reset, no further action is required.": "إذا لم تطلب إعادة ضبط كلمة السر ، يرجى تجاهل هذا البريد.",
-        "auth": {
-            "failed": "بيانات الاعتماد هذه غير متطابقة مع البيانات المسجلة لدينا.",
-            "throttle": "عدد كبير جدا من محاولات الدخول. يرجى المحاولة مرة أخرى بعد {seconds} ثانية."
-        },
-        "pagination": {
-            "previous": "&laquo; السابق",
-            "next": "التالي &raquo;"
-        },
-        "passwords": {
-            "reset": "تمت إعادة تعيين كلمة المرور!",
-            "sent": "تم إرسال تفاصيل استعادة كلمة المرور الخاصة بك إلى بريدك الإلكتروني!",
-            "throttled": "الرجاء الانتظار قبل إعادة المحاولة.",
-            "token": "رمز استعادة كلمة المرور الذي أدخلته غير صحيح.",
-            "user": "لم يتم العثور على أيّ حسابٍ بهذا العنوان الإلكتروني."
-        },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
             "active_url": "{attribute} لا يُمثّل رابطًا صحيحًا.",
@@ -524,7 +509,23 @@ export default {
             "please-wait-until-session-is-over": "رفع الحضور متاح بعد انتهاء الدورة",
             "attendance-submitted": "تم اعتماد الحضور",
             "attendance-rate": "نسبة الحضور",
-            "joining_date": "تاريخ التسجيل"
+            "joining_date": "تاريخ التسجيل",
+            "please-enter-valid-phone-number": "الرجاء استخدام رقم جوال لتوثيق الحساب"
+        },
+        "pagination": {
+            "previous": "&laquo; السابق",
+            "next": "التالي &raquo;"
+        },
+        "auth": {
+            "failed": "بيانات الاعتماد هذه غير متطابقة مع البيانات المسجلة لدينا.",
+            "throttle": "عدد كبير جدا من محاولات الدخول. يرجى المحاولة مرة أخرى بعد {seconds} ثانية."
+        },
+        "passwords": {
+            "reset": "تمت إعادة تعيين كلمة المرور!",
+            "sent": "تم إرسال تفاصيل استعادة كلمة المرور الخاصة بك إلى بريدك الإلكتروني!",
+            "throttled": "الرجاء الانتظار قبل إعادة المحاولة.",
+            "token": "رمز استعادة كلمة المرور الذي أدخلته غير صحيح.",
+            "user": "لم يتم العثور على أيّ حسابٍ بهذا العنوان الإلكتروني."
         }
     },
     "en": {
@@ -535,21 +536,6 @@ export default {
         "Reset Password": "Reset Password",
         "This password reset link will expire in {count} minutes.": "This password reset link will expire in {count} minutes.",
         "If you did not request a password reset, no further action is required.": "If you did not request a password reset, no further action is required.",
-        "auth": {
-            "failed": "These credentials do not match our records.",
-            "throttle": "Too many login attempts. Please try again in {seconds} seconds."
-        },
-        "pagination": {
-            "previous": "&laquo; Previous",
-            "next": "Next &raquo;"
-        },
-        "passwords": {
-            "reset": "Your password has been reset!",
-            "sent": "We have emailed your password reset link!",
-            "throttled": "Please wait before retrying.",
-            "token": "This password reset token is invalid.",
-            "user": "We can't find a user with that email address."
-        },
         "validation": {
             "accepted": "The {attribute} must be accepted.",
             "active_url": "The {attribute} is not a valid URL.",
@@ -1016,7 +1002,23 @@ export default {
             "please-wait-until-session-is-over": "Attendance upload enabled after session is over",
             "attendance-submitted": "Attendance sheet approved",
             "attendance-rate": "Attendance rate",
-            "joining_date": "Joining Date"
+            "joining_date": "Joining Date",
+            "please-enter-valid-phone-number": "Please enter a valid phone number for verification purposes"
+        },
+        "pagination": {
+            "previous": "&laquo; Previous",
+            "next": "Next &raquo;"
+        },
+        "auth": {
+            "failed": "These credentials do not match our records.",
+            "throttle": "Too many login attempts. Please try again in {seconds} seconds."
+        },
+        "passwords": {
+            "reset": "Your password has been reset!",
+            "sent": "We have emailed your password reset link!",
+            "throttled": "Please wait before retrying.",
+            "token": "This password reset token is invalid.",
+            "user": "We can't find a user with that email address."
         }
     }
 }

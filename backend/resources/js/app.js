@@ -11,7 +11,6 @@ import PortalVue from 'portal-vue';
 import VueMeta from 'vue-meta'
 import Skeleton from 'vue-loading-skeleton';
 import VueWait from 'vue-wait'
-import Store from './store';
 import LottieAnimation from 'lottie-vuejs/src/LottieAnimation.vue';
 import VueInternationalization from 'vue-i18n';
 import Locale from './vue-i18n-locales.generated';
@@ -100,7 +99,6 @@ const appName = lang === 'ar' ? 'منصة التدريب' : 'eTraining';
 
 new Vue({
     i18n,
-    Store,
     wait: new VueWait({
         // Defaults values are following:
         useVuex: false,              // Uses Vuex to manage wait state
