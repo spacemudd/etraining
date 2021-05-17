@@ -64,7 +64,11 @@ class MigrateAttendances extends Command
                     foreach ($oldAttendances as $oldAttendance) {
                         if (!optional($session->course)->instructor_id) continue;
 
-                        if ($oldAttendance->trainee->created_at->isAfter($session->created_at)) continue;
+                        if ($oldAttendance->trainee->created_at->isAfter($session->starts_at)) continue;
+
+                        if ($oldAttendance->trainee->deleted_at) {
+                            if ($oldAttendance->trainee->deleted_at->isBefore($session->starts_at)) continue;
+                        }
 
                         $newAttendance = new AttendanceReportRecord();
                         $newAttendance->team_id = $oldAttendance->team_id;

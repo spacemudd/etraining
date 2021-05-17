@@ -93,17 +93,36 @@ class CourseBatchSessionAttendanceSheet implements FromView, WithEvents, WithSty
             $course_name = $report->course_batch_session->course->name_en;
         }
 
+        $attendances = AttendanceReportRecord::where('attendance_report_id', $report->id)
+            ->whereHas('trainee', function($q) {
+                $q->withTrashed();
+            })
+            ->with(['trainee' => function($q) {
+                $q->withTrashed();
+            }])
+            ->whereIn('status', [AttendanceReportRecord::STATUS_PRESENT, AttendanceReportRecord::STATUS_LATE_TO_CLASS]);
+
+        $absentees = AttendanceReportRecord::where('attendance_report_id', $report->id)
+            ->whereHas('trainee', function($q) {
+                $q->withTrashed();
+            })
+            ->with(['trainee' => function($q) {
+                $q->withTrashed();
+            }])
+            ->whereIn('status', [AttendanceReportRecord::STATUS_ABSENT, AttendanceReportRecord::STATUS_ABSENT_WITH_EXCUSE]);
+
+        $attendancesCount = $attendances->count();
+        $absenteesCount = (clone $absentees)->where('status', AttendanceReportRecord::STATUS_ABSENT)->count();
+
         return view('exports.attendingSheet', [
             'course_batch' => $report->course_batch_session,
-            'attendances' => AttendanceReportRecord::where('attendance_report_id', $report->id)
-                ->with('trainee')
-                ->whereIn('status', [AttendanceReportRecord::STATUS_PRESENT, AttendanceReportRecord::STATUS_LATE_TO_CLASS])
-                ->get(),
-            'users_who_didnt_attend' => AttendanceReportRecord::where('attendance_report_id', $report->id)
-                ->with('trainee')
-                ->whereIn('status', [AttendanceReportRecord::STATUS_ABSENT, AttendanceReportRecord::STATUS_ABSENT_WITH_EXCUSE])
-                ->get(),
+            'attendances' => $attendances->get(),
+            'users_who_didnt_attend' => $absentees->get(),
             'course_name' => $course_name,
+            'total_attendances' => $attendancesCount + $absenteesCount,
+            'attendeesCount' => $attendancesCount,
+            'absenteesCount' => $absenteesCount,
+            'attendanceRate' => $attendancesCount+$absenteesCount ? round($attendancesCount / ($attendancesCount+$absenteesCount) * 100, 1) : '-',
         ]);
 
     }

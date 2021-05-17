@@ -135,6 +135,16 @@
                     <jet-input id="children_count" type="text" :class="editButton.inputClass" v-model="trainee.children_count" :disabled="!editButton.editOption" />
                 </div>
 
+                <div class="col-span-6 sm:col-span-2">
+                    <jet-label for="deleted-at" :value="$t('words.blocked-at')" />
+                    <jet-input id="deleted-at" type="text" :class="editButton.inputClass" v-model="trainee.deleted_at_timezone" :disabled="!editButton.editOption" />
+                </div>
+
+                <div class="col-span-6 sm:col-span-2">
+                    <jet-label for="reason" :value="$t('words.delete-remark')" />
+                    <jet-input id="reason" type="text" :class="editButton.inputClass" v-model="trainee.deleted_remark" :disabled="!editButton.editOption" />
+                </div>
+
                 <div class="col-span-6 sm:col-span-6">
                     <jet-label for="name" :value="$t('words.status')" />
                     <p>

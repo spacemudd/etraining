@@ -17,13 +17,15 @@
     </tr>
 
     @foreach ($attendanceRecords as $attendance)
-        <tr>
-            <th style="width:50px;border:1px solid black;">{{ $attendance->trainee->name }}</th>
-            <th style="width:50px; text-align:left;border:1px solid black;">{{ $attendance->trainee->email }}</th>
-            <th style="width:50px; text-align:center;border:1px solid black;">{{ '="'.$attendance->trainee->phone.'"' }}</th>
-            <th style="width:50px; text-align:center;border:1px solid black;">{{ optional($attendance->trainee->company)->name_ar }}</th>
-            <th style="width:50px; text-align:center;border:1px solid black;{{ $attendance->warnings_count >= 4 ? 'background-color:red;' : '' }}">{{ $attendance->warnings_count }}</th>
-        </tr>
+        @if ($attendance->trainee)
+            <tr>
+                <th style="width:50px;border:1px solid black;">{{ optional($attendance->trainee)->name }}</th>
+                <th style="width:50px; text-align:left;border:1px solid black;">{{ optional($attendance->trainee)->email }}</th>
+                <th style="width:50px; text-align:center;border:1px solid black;">{{ '="'.optional($attendance->trainee)->phone.'"' }}</th>
+                <th style="width:50px; text-align:center;border:1px solid black;">{{ optional(optional($attendance->trainee)->company)->name_ar }}</th>
+                <th style="width:50px; text-align:center;border:1px solid black;{{ $attendance->warnings_count >= 4 ? 'background-color:red;' : '' }}">{{ $attendance->warnings_count }}</th>
+            </tr>
+        @endif
     @endforeach
 
     </thead>

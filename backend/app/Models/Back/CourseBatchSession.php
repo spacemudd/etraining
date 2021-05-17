@@ -106,14 +106,14 @@ class CourseBatchSession extends Model implements Auditable
     public function getStartsAtTimezoneAttribute()
     {
         if ($this->starts_at) {
-            return Timezone::convertToLocal($this->starts_at, 'Y-m-d H:i:s');
+            return Timezone::convertToLocal($this->starts_at, 'Y-m-d h:i A');
         }
     }
 
     public function getEndsAtTimezoneAttribute()
     {
         if ($this->ends_at) {
-            return Timezone::convertToLocal($this->ends_at, 'Y-m-d H:i:s');
+            return Timezone::convertToLocal($this->ends_at, 'Y-m-d h:i A');
         }
     }
 

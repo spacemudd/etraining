@@ -59,6 +59,11 @@ class AttendanceReportRecord extends Model implements Auditable
         return $this->belongsTo(Trainee::class);
     }
 
+    public function course_batch_session()
+    {
+        return $this->belongsTo(CourseBatchSession::class);
+    }
+
     /**
      *
      * @return string
@@ -114,7 +119,7 @@ class AttendanceReportRecord extends Model implements Auditable
     public function getAttendedAtTimezoneAttribute()
     {
         if ($this->attended_at) {
-            return Timezone::convertToLocal($this->attended_at, 'Y-m-d H:i:s');
+            return Timezone::convertToLocal($this->attended_at, 'Y-m-d h:i A');
         }
     }
 

@@ -75,11 +75,11 @@
         filters: {
             timestampDate(dateString) {
                 if (!dateString) return '';
-                return moment(dateString).format('YYYY-MM-DD');
+                return moment(dateString, 'YYYY-MM-DD LT').format('YYYY-MM-DD');
             },
             timestampHours(dateString) {
                 if (!dateString) return '';
-                return moment(dateString).format('hh:mm A');
+                return moment(dateString, 'YYYY-MM-DD LT').format('hh:mm A');
             },
         },
         methods: {

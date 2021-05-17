@@ -318,6 +318,24 @@
                     ></vue-dropzone>
                 </div>
             </div>
+
+            <jet-section-border></jet-section-border>
+
+            <div class="grid grid-cols-1 md:grid-cols-6 gap-6 my-2">
+                <div class="md:col-span-4 lg:col-span-3 sm:col-span-3">
+                    <div class="px-4 sm:px-0">
+                        <h3 class="text-lg font-medium text-gray-900">
+                            {{ $t('words.attendance-sheet') }}
+                        </h3>
+                    </div>
+                </div>
+
+                <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
+                    <attendance-sheet-management-for-trainee :trainee_id="trainee.id">
+                    </attendance-sheet-management-for-trainee>
+                </div>
+            </div>
+
         </div>
     </app-layout>
 </template>
@@ -339,6 +357,7 @@
     import 'vue2-dropzone/dist/vue2Dropzone.min.css'
     import SelectTraineeGroup from "@/Components/SelectTraineeGroup";
     import ChangeTraineePassword from '@/Components/ChangeTraineePassword';
+    import AttendanceSheetManagementForTrainee from "../../../Components/AttendanceSheetManagementForTrainee";
 
 
     export default {
@@ -354,6 +373,7 @@
         ],
 
         components: {
+            AttendanceSheetManagementForTrainee,
             ChangeTraineePassword,
             AppLayout,
             JetSectionBorder,
