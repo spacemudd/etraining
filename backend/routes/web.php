@@ -100,6 +100,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('trainees/{trainee_id}/set-password', [\App\Http\Controllers\Back\TraineesController::class, 'setPassword'])->name('trainees.set-password');
         Route::post('trainees/{trainee_id}/re-send-invitation', [\App\Http\Controllers\Back\TraineesController::class, 'resendInvitation'])->name('trainees.re-send-invitation');
 
+        // Attendance management of trainee.
+        Route::get('trainees/{trainee_id}/warnings', [\App\Http\Controllers\Back\TraineesController::class, 'warnings'])->name('trainees.warnings');
+
         // Export For Trainees.
         Route::get('trainees/excel/{id}/download', [\App\Http\Controllers\Back\TraineesController::class, 'excelJobDownload'])->name('trainees.excel.job.download');
         Route::get('trainees/excel/{id}', [\App\Http\Controllers\Back\TraineesController::class, 'excelJob'])->name('trainees.excel.job');

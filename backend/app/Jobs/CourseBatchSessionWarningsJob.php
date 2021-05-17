@@ -54,6 +54,7 @@ class CourseBatchSessionWarningsJob implements ShouldQueue
                 Log::debug('[CourseBatchSessionWarningsJob] Sending absent notification: '.$attendance->id.' - User: '.$attendance->trainee->email);
 
                 $warning = new AttendanceReportRecordWarning();
+                $warning->team_id = $attendance->team_id;
                 $warning->attendance_report_id = $this->report->id;
                 $warning->attendance_report_record_id = $attendance->id;
                 $warning->trainee_id = $attendance->trainee_id;

@@ -6,6 +6,7 @@ use App\Actions\Fortify\CreateNewTraineeUser;
 use App\Http\Controllers\Controller;
 use App\Jobs\ExportTraineesToExcelJob;
 use App\Jobs\ExportArchivedTraineesToExcelJob;
+use App\Models\Back\AttendanceReportRecordWarning;
 use App\Models\Back\Company;
 use App\Models\Back\ExportTraineesToExcelJobTracker;
 use App\Models\Back\Instructor;
@@ -628,5 +629,10 @@ class TraineesController extends Controller
             'Body: '.$request->email_body,
         ]);
         return redirect()->route('back.trainees.show', $trainee->id);
+    }
+
+    public function warnings($trainee_id)
+    {
+        return AttendanceReportRecordWarning::where('trainee_id', $trainee_id)->get();
     }
 }

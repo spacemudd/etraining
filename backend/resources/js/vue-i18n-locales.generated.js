@@ -510,6 +510,8 @@ export default {
             "attendance-submitted": "تم اعتماد الحضور",
             "attendance-rate": "نسبة الحضور",
             "joining_date": "تاريخ التسجيل",
+            "attendance-sheet": "تاريخ الحضور",
+            "blocked-at": "تاريخ الحظر"
             "please-enter-valid-phone-number": "الرجاء استخدام رقم جوال لتوثيق الحساب"
         },
         "pagination": {
@@ -1002,6 +1004,9 @@ export default {
             "please-wait-until-session-is-over": "Attendance upload enabled after session is over",
             "attendance-submitted": "Attendance sheet approved",
             "attendance-rate": "Attendance rate",
+            "joining_date": "Joining Date",
+            "attendance-sheet": "Attendance sheet",
+            "blocked-at": "Block date"
             "joining_date": "Joining Date",
             "please-enter-valid-phone-number": "Please enter a valid phone number for verification purposes"
         },

@@ -52,8 +52,14 @@
                 <td style="width:50px; text-align:center;border:1px solid black;">
                     {{ $attendanceRecord->trainee->created_at->format('d-m-Y') }}
                 </td>
-                <td style="width:50px; text-align:center;border:1px solid black;">
-                    <a href="{{ $attendanceRecord->trainee->show_url }}">{{ $attendanceRecord->trainee->name }}</a>
+                <td style="width:50px; text-align:center;border:1px solid black;{{ $attendanceRecord->trainee->deleted_at ? 'background-color:#f95d5d' : '' }}">
+                    @if ($attendanceRecord->trainee->deleted_at)
+                        <a href="{{ $attendanceRecord->trainee->show_url }}">
+                          ({{ __('words.blocked') }}) {{ $attendanceRecord->trainee->name }}
+                        </a>
+                    @else
+                        <a href="{{ $attendanceRecord->trainee->show_url }}">{{ $attendanceRecord->trainee->name }}</a>
+                    @endif
                 </td>
                 <td style="border:1px solid black;">{{ $attendanceRecord->trainee->email }}</td>
                 <td style="text-align:center;border:1px solid black;">
@@ -83,8 +89,14 @@
                 <td style="width:50px; text-align:center;border:1px solid black;">
                     {{ $attendanceRecord->trainee->created_at->format('d-m-Y') }}
                 </td>
-                <td style="width:50px;text-align:center;border:1px solid black;">
-                    <a href="{{ $attendanceRecord->trainee->show_url }}">{{ $attendanceRecord->trainee->name }}</a>
+                <td style="width:50px; text-align:center;border:1px solid black;{{ $attendanceRecord->trainee->deleted_at ? 'background-color:#f95d5d' : '' }}">
+                    @if ($attendanceRecord->trainee->deleted_at)
+                        <a href="{{ $attendanceRecord->trainee->show_url }}">
+                            ({{ __('words.blocked') }}) {{ $attendanceRecord->trainee->name }}
+                        </a>
+                    @else
+                        <a href="{{ $attendanceRecord->trainee->show_url }}">{{ $attendanceRecord->trainee->name }}</a>
+                    @endif
                 </td>
                 <td style="border:1px solid black;">{{ $attendanceRecord->trainee->email }}</td>
                 <td style="text-align:center;border:1px solid black;">
