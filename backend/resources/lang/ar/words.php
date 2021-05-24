@@ -365,4 +365,5 @@ return [
     'attendance-sheet' => 'تاريخ الحضور',
     'blocked-at' => 'تاريخ الحظر',
     'please-enter-valid-phone-number' => 'الرجاء استخدام رقم جوال لتوثيق الحساب',
+    'warnings-sheet' => 'تاريخ الإنذارات',
 ];

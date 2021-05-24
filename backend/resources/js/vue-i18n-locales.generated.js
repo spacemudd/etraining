@@ -527,7 +527,8 @@ export default {
             "joining_date": "تاريخ التسجيل",
             "attendance-sheet": "تاريخ الحضور",
             "blocked-at": "تاريخ الحظر",
-            "please-enter-valid-phone-number": "الرجاء استخدام رقم جوال لتوثيق الحساب"
+            "please-enter-valid-phone-number": "الرجاء استخدام رقم جوال لتوثيق الحساب",
+            "warnings-sheet": "تاريخ الإنذارات"
         }
     },
     "en": {
@@ -1022,7 +1023,8 @@ export default {
             "joining_date": "Joining Date",
             "attendance-sheet": "Attendance sheet",
             "blocked-at": "Block date",
-            "please-enter-valid-phone-number": "Please enter a valid phone number for verification purposes"
+            "please-enter-valid-phone-number": "Please enter a valid phone number for verification purposes",
+            "warnings-sheet": "Warnings sheet"
         }
     }
 }

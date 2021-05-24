@@ -358,4 +358,5 @@ return [
     'attendance-sheet' => 'Attendance sheet',
     'blocked-at' => 'Block date',
     'please-enter-valid-phone-number' => 'Please enter a valid phone number for verification purposes',
+    'warnings-sheet' => 'Warnings sheet',
 ];

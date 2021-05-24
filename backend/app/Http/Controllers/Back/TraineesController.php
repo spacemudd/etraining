@@ -633,6 +633,27 @@ class TraineesController extends Controller
 
     public function warnings($trainee_id)
     {
-        return AttendanceReportRecordWarning::where('trainee_id', $trainee_id)->get();
+        return AttendanceReportRecordWarning::where('trainee_id', $trainee_id)
+            ->with(['attendance_report_record' => function($q) {
+                $q->with(['course_batch_session' => function($q) {
+                    $q->with(['course' => function($q) {
+                        $q->with('instructor');
+                    }]);
+                }]);
+            }])
+            ->get();
+    }
+
+    /**
+     * Deletes a warning.
+     *
+     * @param $trainee_id
+     * @param $id
+     * @return mixed
+     */
+    public function warningDelete($trainee_id, $id)
+    {
+        return AttendanceReportRecordWarning::find($id)
+            ->delete();
     }
 }

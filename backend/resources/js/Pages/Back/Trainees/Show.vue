@@ -325,12 +325,12 @@
                 <div class="md:col-span-4 lg:col-span-3 sm:col-span-3">
                     <div class="px-4 sm:px-0">
                         <h3 class="text-lg font-medium text-gray-900">
-                            {{ $t('words.attendance-sheet') }}
+                            {{ $t('words.warnings-sheet') }}
                         </h3>
                     </div>
                 </div>
 
-                <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
+                <div class="md:col-span-3 lg:col-span-3 sm:col-span-3">
                     <attendance-sheet-management-for-trainee :trainee_id="trainee.id">
                     </attendance-sheet-management-for-trainee>
                 </div>
