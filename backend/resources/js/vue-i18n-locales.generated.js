@@ -452,22 +452,7 @@ export default {
             "last-login-to-platform": "آخر دخول للمنصة",
             "copy": "نسخة",
             "singular-contract": "عقد",
-<<<<<<< main
             "without-contract": "من دون عقد",
-=======
-            "monthly-invoicing": "الفوترة الشهرية",
-            "invoice-current-students-for-the-month": "فوترة المتدربين لهذا الشهر",
-            "invoices-date": "تاريخ الفواتير",
-            "period-from": "المدة من",
-            "period-to": "المدة الى",
-            "draft": "مسودة",
-            "created-by": "من قبل",
-            "total-value": "الإجمالي",
-<<<<<<< main
-            "customer-name": "اسم العميل"
-            "created-by": "من قبل"
-            "invoices-date": "تاريخ الفواتير"
->>>>>>> Add 'create' page for monthly invoicing
             "can-impersonate": "دخول عبر حساب آخر (متدرب \\ مدرب)",
             "login-as-user": "الدخول من عبر الحساب",
             "view-payments": "عرض المدفوعات",
@@ -509,7 +494,6 @@ export default {
             "all": "الكل",
             "report-work-on-progress": "جاري العمل على التقرير",
             "please-dont-close-the-window": "الرجاء عدم إغلاق الصفحة",
-<<<<<<< main
             "download-file": "تحميل الملف",
             "disable-website": "إقفال الموقع",
             "here-you-can-disable-the-website-and-specify-a-message": "هنا يمكن لك إقاف الموقع و تحديد الرسالة الرئيسية",
@@ -544,76 +528,29 @@ export default {
             "attendance-sheet": "تاريخ الحضور",
             "blocked-at": "تاريخ الحظر",
             "please-enter-valid-phone-number": "الرجاء استخدام رقم جوال لتوثيق الحساب",
-            "warnings-sheet": "تاريخ الإنذارات"
-=======
-            "download-file": "تحميل الملف"
-            "monthly-invoicing": "الفوترة الشهرية"
-<<<<<<< main
->>>>>>> Show monthly invoicing page
-=======
-=======
+            "warnings-sheet": "تاريخ الإنذارات",
+            "monthly-invoicing": "الفوترة الشهرية",
+            "invoice-current-students-for-the-month": "فوترة المتدربين لهذا الشهر",
+            "invoices-date": "تاريخ الفواتير",
+            "period-from": "المدة من",
+            "period-to": "المدة الى",
+            "created-by": "من قبل",
+            "total-value": "الإجمالي",
             "customer-name": "اسم العميل",
             "start-sending-invoices": "البدء بإرسال الفواتير",
             "stages": "المراحل",
-<<<<<<< main
-            "generated-draft-invoices": "تم إنشاء الفواتير (مسودة)",
-            "completed-issuing-invoices": "تم إصدار الفواتير",
-            "completed-sending-invoices": "تم ارسال الفواتير"
->>>>>>> Display job status for issuing invoices
-<<<<<<< main
->>>>>>> Display job status for issuing invoices
-=======
-=======
             "generated-draft-invoices": "إنشاء الفواتير (مسودة)",
             "completed-issuing-invoices": "إصدار الفواتير",
-<<<<<<< main
-            "completed-sending-invoices": "ارسال الفواتير"
->>>>>>> Fix positioning
-<<<<<<< main
->>>>>>> Fix positioning
-=======
-=======
             "completed-sending-invoices": "ارسال الفواتير",
             "training-fees-is-issued": "تم إصدار رسوم التدريب",
             "please-transfer-the-amount": "نرجو منكم تسديد المبلغ",
-<<<<<<< main
-            "please-wait": "يرجى الإنتظار"
->>>>>>> WIP: Improve UX after approving monthly invoicing batches
-<<<<<<< main
->>>>>>> WIP: Improve UX after approving monthly invoicing batches
-=======
-=======
             "please-wait": "يرجى الإنتظار",
             "generating-draft-invoices": "جاري محاسبة الفواتير",
             "generating-invoices": "جاري ترحيل الفواتير",
-<<<<<<< main
-<<<<<<< main
-            "ending-invoices-via-email": "جاري ارسال الفواتير من خلال البريد الإكتروني"
->>>>>>> Add reason of processing
-<<<<<<< main
->>>>>>> Add reason of processing
-=======
-=======
-            "ending-invoices-via-email": "جاري ارسال الفواتير من خلال البريد الإكتروني",
-            "pay-link": "رابط الدفع"
->>>>>>> Add bank transfer page
-<<<<<<< main
->>>>>>> Add bank transfer page
-=======
-=======
             "sending-invoices-via-email": "جاري ارسال الفواتير من خلال البريد الإكتروني",
             "pay-link": "رابط الدفع",
-<<<<<<< main
-            "payments": "المدفوعات"
->>>>>>> WIP: Adding payments index page
-<<<<<<< main
->>>>>>> WIP: Adding payments index page
-=======
-=======
             "payments": "المدفوعات",
             "under-manual-review": "قيد المراجعة اليدوية"
->>>>>>> Display payments
->>>>>>> Display payments
         }
     },
     "en": {
@@ -1038,17 +975,6 @@ export default {
             "copy": "Copy",
             "singular-contract": "Contract",
             "monthly-invoicing": "Monthly invoicing",
-            "invoice-current-students-for-the-month": "Invoice current students for the month",
-            "invoices-date": "Invoices date",
-            "period-from": "Period from",
-            "period-to": "Period to",
-            "draft": "Draft",
-            "created-by": "Created by",
-            "total-value": "Total value",
-<<<<<<< main
-            "customer-name": "Customer name"
-            "created-by": "Created by"
-            "invoices-date": "Invoices date"
             "can-impersonate": "Login as other user",
             "login-as-user": "Login as user",
             "view-payments": "View payments",
@@ -1090,7 +1016,6 @@ export default {
             "all": "All",
             "report-work-on-progress": "Generating your report",
             "please-dont-close-the-window": "Please dont close the window",
-<<<<<<< main
             "download-file": "Download file",
             "disable-website": "Disable website",
             "here-you-can-disable-the-website-and-specify-a-message": "Here you can disable the website and specify the message",
@@ -1122,63 +1047,29 @@ export default {
             "attendance-sheet": "Attendance sheet",
             "blocked-at": "Block date",
             "please-enter-valid-phone-number": "Please enter a valid phone number for verification purposes",
-            "warnings-sheet": "Warnings sheet"
-=======
-            "download-file": "Download file"
-=======
+            "warnings-sheet": "Warnings sheet",
+            "invoicing": "Monthly invoicing",
+            "invoice-current-students-for-the-month": "Invoice current students for the month",
+            "invoices-date": "Invoices date",
+            "period-from": "Period from",
+            "period-to": "Period to",
+            "created-by": "Created by",
+            "total-value": "Total value",
             "customer-name": "Customer name",
             "start-sending-invoices": "Start sending invoices",
             "stages": "Stages",
             "generated-draft-invoices": "Generated draft invoices",
             "completed-issuing-invoices": "Completed issuing invoices",
-<<<<<<< main
-            "completed-sending-invoices": "Completed sending invoices"
->>>>>>> Display job status for issuing invoices
-<<<<<<< main
->>>>>>> Display job status for issuing invoices
-=======
-=======
             "completed-sending-invoices": "Completed sending invoices",
             "training-fees-is-issued": "Training fees is issued",
             "please-transfer-the-amount": "Please transfer the amount",
-<<<<<<< main
-            "please-wait": "Please wait"
->>>>>>> WIP: Improve UX after approving monthly invoicing batches
-<<<<<<< main
->>>>>>> WIP: Improve UX after approving monthly invoicing batches
-=======
-=======
             "please-wait": "Please wait",
             "generating-draft-invoices": "Generating draft invoices",
             "generating-invoices": "Generating invoices",
-<<<<<<< main
-<<<<<<< main
-            "ending-invoices-via-email": "Sending invoices via email"
->>>>>>> Add reason of processing
-<<<<<<< main
->>>>>>> Add reason of processing
-=======
-=======
-            "ending-invoices-via-email": "Sending invoices via email",
-            "pay-link": "Pay link"
->>>>>>> Add bank transfer page
-<<<<<<< main
->>>>>>> Add bank transfer page
-=======
-=======
             "sending-invoices-via-email": "Sending invoices via email",
             "pay-link": "Pay link",
-<<<<<<< main
-            "payments": "Payments"
->>>>>>> WIP: Adding payments index page
-<<<<<<< main
->>>>>>> WIP: Adding payments index page
-=======
-=======
             "payments": "Payments",
             "under-manual-review": "Under manual review"
->>>>>>> Display payments
->>>>>>> Display payments
         }
     }
 }
