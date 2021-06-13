@@ -36,14 +36,14 @@
                             </table>
                         </div>
                         <div>
-                            <!--<div class="col-span-12 sm:col-span-2 mt-5">-->
-                            <!--    <input :placeholder="$t('words.search')"-->
-                            <!--           name="searchString"-->
-                            <!--           type="string"-->
-                            <!--           v-model="searchTraineeName"-->
-                            <!--           @input="searchTrainees"-->
-                            <!--           class="form-input rounded-md shadow-sm w-full">-->
-                            <!--</div>-->
+                            <div class="col-span-12 sm:col-span-2 mt-5">
+                                <input :placeholder="$t('words.search')"
+                                       name="searchString"
+                                       type="string"
+                                       v-model="searchTraineeName"
+                                       @input="searchTrainees"
+                                       class="form-input rounded-md shadow-sm w-full">
+                            </div>
                         </div>
                     </div>
 

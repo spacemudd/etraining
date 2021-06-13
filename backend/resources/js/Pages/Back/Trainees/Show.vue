@@ -116,7 +116,8 @@
                     <jet-label for="company_id" :value="$t('words.company')" />
                     <select :class="editButton.selectInputClass"
                             v-model="trainee.company_id"
-                            id="company_id"
+                            ref="company_id_selector"
+                            id="company_id_selector"
                             :disabled="!editButton.editOption" >
                         <option value=""></option>
                         <option v-for="company in companies" :key="company.id" :value="company.id">
@@ -358,7 +359,7 @@
     import SelectTraineeGroup from "@/Components/SelectTraineeGroup";
     import ChangeTraineePassword from '@/Components/ChangeTraineePassword';
     import AttendanceSheetManagementForTrainee from "../../../Components/AttendanceSheetManagementForTrainee";
-
+    import 'selectize/dist/js/standalone/selectize.min';
 
     export default {
         props: [
@@ -371,7 +372,6 @@
             'trainee_group_trainees',
             'companies',
         ],
-
         components: {
             AttendanceSheetManagementForTrainee,
             ChangeTraineePassword,
@@ -388,7 +388,7 @@
             CompanyContractsPagination,
             BreadcrumbContainer,
             VueDropzone,
-            SelectTraineeGroup,
+            SelectTraineeGroup
         },
         data() {
             return {
@@ -427,6 +427,7 @@
                     thumbnailWidth: 150,
                     maxFilesize: 20,
                 },
+                companySelector: null,
             }
         },
         mounted() {
@@ -448,6 +449,9 @@
                 this.editButton.inputClass = 'mt-1 block w-full bg-gray-200';
                 this.editButton.selectInputClass = 'mt-1 block w-full border border-gray-200 bg-gray-200 py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none';
                 this.editButton.text = this.$t('words.edit');
+                $(document).ready(function () {
+                    $('#company_id_selector').selectize()[0].selectize.destroy();
+                });
                 window.location.reload();
             },
             editTrainee() {
@@ -456,7 +460,23 @@
                     this.editButton.inputClass = 'mt-1 block w-full bg-white';
                     this.editButton.selectInputClass = "mt-1 block w-full border border-gray-200 bg-white py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none"
                     this.editButton.text = this.$t('words.save');
+
+
+                    let vm = this;
+                    $(document).ready(function () {
+                        vm.companySelector = $('#company_id_selector').selectize({
+                            sortField: 'text',
+                            onChange: function (value) {
+                                vm.trainee.company_id = value;
+                                vm.trainee.company = null; // For better UX?
+                            }
+                        })
+                    });
+
                 } else {
+                    $(document).ready(function () {
+                        $('#company_id_selector').selectize()[0].selectize.destroy();
+                    });
                     let newForm = {
                         trainee_group_name: this.trainee.trainee_group ? this.trainee.trainee_group.name : '',
                         company_id: this.trainee.company_id,
