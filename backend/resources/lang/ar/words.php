@@ -171,7 +171,7 @@ return [
     'add' => 'أضف',
     'privacy-policy' => 'سياسة الخصوصية',
     'academic-integrity-policy' => 'سياسات وقوانین النزاهة الأكاديمية',
-    'intellectual-property-rights' => 'حقوق المكلية الفكرية',
+    'intellectual-property-rights' => 'حقوق الملكية الفكرية',
     'attendance-policy' => 'سياسية الحضور',
     'support-policy' => 'سياسة المساعدة والدعم الفني',
     'submit' => 'ارسال',
