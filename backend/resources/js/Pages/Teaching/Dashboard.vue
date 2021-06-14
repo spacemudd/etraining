@@ -68,8 +68,8 @@
                                     </a>
                                 </template>
 
-                                <button class="btn-disabled" disabled>{{ $t('words.print-attendance') }}</button>
-                                <button class="btn-disabled" disabled>{{ $t('words.print-certificate') }}</button>
+                                <!--<button class="btn-disabled" disabled>{{ $t('words.print-attendance') }}</button>-->
+                                <!--<button class="btn-disabled" disabled>{{ $t('words.print-certificate') }}</button>-->
                             </div>
                         </div>
                     </div>
