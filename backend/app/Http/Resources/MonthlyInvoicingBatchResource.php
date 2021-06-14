@@ -20,6 +20,7 @@ class MonthlyInvoicingBatchResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'company_id' => $this->company_id,
             'invoices_date' => $this->invoices_date->format('d-m-Y'),
             'period_from' => $this->period_from->format('d-m-Y'),
             'period_to' => $this->period_to->format('d-m-Y'),

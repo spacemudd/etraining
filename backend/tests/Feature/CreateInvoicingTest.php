@@ -71,14 +71,19 @@ class CreateInvoicingTest extends TestCase
         ]);
 
         $this->actingAs($this->admin)
-            ->post(route('back.finance.invoicing.store'))
+            ->post(route('back.finance.invoicing.store'), [
+                'company_id' => $company->id,
+                'year' => now()->startOfMonth()->format('Y'),
+                'month' => now()->endOfMonth()->format('m'),
+            ])
             ->assertSessionDoesntHaveErrors();
 
         $this->assertDatabaseHas('monthly_invoicing_batches', [
             'team_id' => $this->admin->current_team_id,
+            'company_id' => $company->id,
             'invoices_date' => now()->startOfMonth(),
-            'period_from' => now()->subMonth()->startOfMonth(),
-            'period_to' => now()->subMonth()->endOfMonth(),
+            'period_from' => now()->startOfMonth(),
+            'period_to' => now()->endOfMonth(),
             'job_status' => MonthlyInvoicingBatch::JOB_STATUS_COMPLETED,
             'status' => MonthlyInvoicingBatch::STATUS_DRAFT,
             'progress' => 1,
@@ -88,8 +93,10 @@ class CreateInvoicingTest extends TestCase
 
     public function test_viewing_monthly_invoicing_batch()
     {
+        $company = Company::factory()->create(['team_id' => $this->admin->current_team_id]);
         $savedBatch = MonthlyInvoicingBatch::factory([
             'team_id' => $this->admin->current_team_id,
+            'company_id' => $company->id,
             'invoices_date' => now()->startOfMonth(),
             'period_from' => now()->subMonth()->startOfMonth(),
             'period_to' => now()->subMonth()->endOfMonth(),
@@ -103,6 +110,7 @@ class CreateInvoicingTest extends TestCase
             ->get(route('back.finance.invoicing.show', $savedBatch->id))
             ->assertPropValue('batch', function($batch) use ($savedBatch) {
                 $this->assertEquals($batch['id'], $savedBatch->id);
+                $this->assertEquals($batch['company_id'], $savedBatch->company_id);
             });
     }
 
@@ -119,7 +127,11 @@ class CreateInvoicingTest extends TestCase
         ]);
 
         $this->actingAs($this->admin)
-            ->post(route('back.finance.invoicing.store'))
+            ->post(route('back.finance.invoicing.store'), [
+                'company_id' => $company->id,
+                'year' => now()->format('Y'),
+                'month' => now()->format('m'),
+            ])
             ->assertSessionDoesntHaveErrors();
 
         $batch = MonthlyInvoicingBatch::first();
@@ -143,7 +155,11 @@ class CreateInvoicingTest extends TestCase
         ]);
 
         $this->actingAs($this->admin)
-            ->post(route('back.finance.invoicing.store'))
+            ->post(route('back.finance.invoicing.store'), [
+                'company_id' => $company->id,
+                'year' => now()->format('Y'),
+                'month' => now()->format('m'),
+            ])
             ->assertSessionDoesntHaveErrors();
 
         $cost_per_month = FinancialSetting::where('team_id', $this->admin->current_team_id)->firstOrFail()
@@ -172,7 +188,11 @@ class CreateInvoicingTest extends TestCase
         ]);
 
         $this->actingAs($this->admin)
-            ->post(route('back.finance.invoicing.store'))
+            ->post(route('back.finance.invoicing.store'), [
+                'company_id' => $company->id,
+                'year' => now()->format('Y'),
+                'month' => now()->format('m'),
+            ])
             ->assertSessionDoesntHaveErrors();
 
         $savedBatch = MonthlyInvoicingBatch::withCount('sale_invoices')->first();
@@ -194,7 +214,11 @@ class CreateInvoicingTest extends TestCase
         ]);
 
         $this->actingAs($this->admin)
-            ->post(route('back.finance.invoicing.store'))
+            ->post(route('back.finance.invoicing.store'), [
+                'company_id' => $company->id,
+                'year' => now()->format('Y'),
+                'month' => now()->format('m'),
+            ])
             ->assertSessionDoesntHaveErrors();
 
         $savedBatch = MonthlyInvoicingBatch::withCount('sale_invoices')->first();
@@ -220,7 +244,11 @@ class CreateInvoicingTest extends TestCase
         ]);
 
         $this->actingAs($this->admin)
-            ->post(route('back.finance.invoicing.store'))
+            ->post(route('back.finance.invoicing.store'), [
+                'company_id' => $company->id,
+                'year' => now()->format('Y'),
+                'month' => now()->format('m'),
+            ])
             ->assertSessionDoesntHaveErrors();
 
         $savedBatch = MonthlyInvoicingBatch::withCount('sale_invoices')->first();
@@ -236,7 +264,7 @@ class CreateInvoicingTest extends TestCase
         ]);
 
         $this->assertDatabaseHas('sale_invoices', [
-            'number' => 'TI-021001',
+            'number' => 'TI-'.now()->format('m').'1001',
         ]);
     }
 
@@ -252,7 +280,11 @@ class CreateInvoicingTest extends TestCase
         ]);
 
         $this->actingAs($this->admin)
-            ->post(route('back.finance.invoicing.store'))
+            ->post(route('back.finance.invoicing.store'), [
+                'company_id' => $company->id,
+                'year' => now()->format('Y'),
+                'month' => now()->format('m'),
+            ])
             ->assertSessionDoesntHaveErrors();
 
         $savedBatch = MonthlyInvoicingBatch::withCount('sale_invoices')->first();

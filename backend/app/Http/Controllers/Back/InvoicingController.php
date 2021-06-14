@@ -44,10 +44,17 @@ class InvoicingController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'company_id' => 'required|exists:companies,id',
+            'year' => 'required|string',
+            'month' => 'required|string',
+        ]);
+
         $batch = MonthlyInvoicingBatch::create([
-            'invoices_date' => now()->startOfMonth(),
-            'period_from' => now()->subMonth()->startOfMonth(),
-            'period_to' => now()->subMonth()->endOfMonth(),
+            'company_id' => $request->company_id,
+            'invoices_date' => now()->setYear($request->year)->setMonth($request->month)->startOfMonth(),
+            'period_from' => now()->setYear($request->year)->setMonth($request->month)->startOfMonth(),
+            'period_to' => now()->setYear($request->year)->setMonth($request->month)->endOfMonth(),
             'job_status' => MonthlyInvoicingBatch::JOB_STATUS_QUEUED,
             'status' => MonthlyInvoicingBatch::STATUS_DRAFT,
             'progress' => 0,

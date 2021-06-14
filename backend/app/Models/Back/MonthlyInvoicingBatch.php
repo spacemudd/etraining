@@ -33,6 +33,7 @@ class MonthlyInvoicingBatch extends Model implements Auditable
     const STATUS_APPROVED = 1;
 
     protected $fillable = [
+        'company_id',
         'invoices_date',
         'period_from',
         'period_to',
