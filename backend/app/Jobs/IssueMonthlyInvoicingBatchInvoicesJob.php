@@ -41,7 +41,6 @@ class IssueMonthlyInvoicingBatchInvoicesJob implements ShouldQueue
         $this->batch->save();
 
         $this->batch->sale_invoices()->chunk(100, function($invoices) {
-            sleep(2);
             $invoices->each(function($invoice) {
                 $this->issue_invoice($invoice);
             });

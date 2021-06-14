@@ -34,4 +34,32 @@ class MaxNumber extends Model
             }
         });
     }
+
+    /**
+     * Start a new prefix.
+     * You're required to update
+     *
+     * @param string $prefix The prefix string.
+     * @param string $team_id Uses logged in user's team ID if null.
+     * @param int $initial_value The starting number.
+     * @return string
+     */
+    public static function generateForPrefix(string $prefix, string $team_id, int $initial_value=1000): string
+    {
+        $maxNumber = MaxNumber::firstOrCreate([
+            'team_id' => $team_id,
+            'name' => $prefix,
+        ], [
+            'team_id' => $team_id,
+            'name' => $prefix,
+            'value' => $initial_value,
+        ]);
+
+        $number = ++$maxNumber->value;
+        $maxNumber->value = $number;
+        $maxNumber->save();
+
+        return $maxNumber->name.$number;
+    }
+
 }

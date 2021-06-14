@@ -7,9 +7,11 @@ use App\Http\Resources\MonthlyInvoicingBatchResource;
 use App\Jobs\IssueMonthlyInvoicingBatchInvoicesJob;
 use App\Jobs\MakeTraineesDraftInvoicesJob;
 use App\Jobs\SendMonthlyInvoicingBatchNotificationsJob;
+use App\Models\Back\Company;
 use App\Models\Back\FinancialSetting;
 use App\Models\Back\MonthlyInvoicingBatch;
 use App\Models\Back\Trainee;
+use App\Models\MaxNumber;
 use App\Services\MonthlyInvoicingService;
 use Brick\Money\Money;
 use Illuminate\Http\Request;
@@ -31,7 +33,9 @@ class InvoicingController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Back/Finance/Invoicing/Create');
+        return Inertia::render('Back/Finance/Invoicing/Create', [
+            'companies' => Company::get(),
+        ]);
     }
 
     /**
@@ -127,6 +131,7 @@ class InvoicingController extends Controller
 
         $monthlyBatch->status = MonthlyInvoicingBatch::STATUS_APPROVED;
         $monthlyBatch->job_status = MonthlyInvoicingBatch::JOB_STATUS_COMMITTING_PROCESSING;
+        $monthlyBatch->unified_invoice_number = MaxNumber::generateForPrefix('TIU-'.now()->format('Y-m'), $monthlyBatch->team_id);
         $monthlyBatch->save();
 
         Bus::chain([

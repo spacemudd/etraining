@@ -21,6 +21,20 @@
 
                     <template #form>
                         <div class="col-span-6 sm:col-span-2">
+                            <jet-label for="company_id" :value="$t('words.company')" />
+                            <select class="mt-1 block w-full border border-gray-200 bg-white py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none"
+                                    v-model="form.company_id"
+                                    id="company_id"
+                                    required>
+                                <option value=""></option>
+                                <option v-for="company in companies"
+                                        :key="company.id"
+                                        :value="company.id">
+                                    {{ company.name_ar }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-span-6 sm:col-span-2">
                             <jet-label for="invoice_date" :value="$t('words.invoices-date')" />
                             <jet-input id="invoice_date" type="text" class="mt-1 block w-full" v-model="invoiceDate" disabled />
                         </div>
@@ -59,7 +73,7 @@
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
 
     export default {
-        props: [],
+        props: ['companies'],
 
         components: {
             AppLayout,
@@ -86,7 +100,9 @@
         data() {
             return {
                 form: this.$inertia.form({
-
+                    company_id: '',
+                    year: 2021,
+                    month: 1,
                 }, {
                     bag: 'createInvoicingBatch',
                 })
