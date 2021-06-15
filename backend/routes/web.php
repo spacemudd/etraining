@@ -6,7 +6,7 @@ Route::get('/disabled', [\App\Http\Controllers\Back\DisableWebsiteController::cl
 
 Route::get('/loginas/{user_id}', [\App\Http\Controllers\DebugController::class, 'loginAsUser'])->middleware('auth');
 
-Route::get('invite/{invite_id}', [\App\Http\Controllers\InviteController::class, 'show'])->name('invite')->middleware('signed');
+Route::get('invite/{invite_id}', [\App\Http\Controllers\InviteController::class, 'show'])->name('invite');
 Route::post('invite/{invite_id}/accept', [\App\Http\Controllers\InviteController::class, 'accept'])->name('invite.accept');
 
 Route::get('setup-account/{user_id}', [\App\Http\Controllers\ProfileController::class, 'setupAccount'])->name('setup-account')->middleware('signed');

@@ -55,7 +55,8 @@ class InvitationToSystemNotification extends Notification implements ShouldQueue
         return (new MailMessage)
             ->subject(trans('words.invitation-to-system'))
             ->line(trans('words.we-would-like-to-inform-you-that-you-have-been-invited-to-create-an-account'))
-            ->action(trans('words.access-the-platform'), URL::temporarySignedRoute('invite', now()->addDays(7), $notifiable->id))
+            // ->action(trans('words.access-the-platform'), URL::temporarySignedRoute('invite', now()->addDays(7), $notifiable->id))
+            ->action(trans('words.access-the-platform'), route('invite', $notifiable->id))
             ->salutation(trans('words.with-regards'));
     }
 
@@ -67,7 +68,8 @@ class InvitationToSystemNotification extends Notification implements ShouldQueue
      */
     public function getMessage($notifiable)
     {
-        return trans('words.invitation-to-system').' '.URL::temporarySignedRoute('invite', now()->addDays(7), $notifiable->id);
+        // return trans('words.invitation-to-system').' '.URL::temporarySignedRoute('invite', now()->addDays(7), $notifiable->id);
+        return trans('words.invitation-to-system').' '.route('invite', $notifiable->id);
     }
 
     /**
