@@ -99,6 +99,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('trainees/send-notification/send', [\App\Http\Controllers\Back\TraineesController::class, 'sendNotification'])->name('trainees.send-notification.send');
         Route::post('trainees/{trainee_id}/set-password', [\App\Http\Controllers\Back\TraineesController::class, 'setPassword'])->name('trainees.set-password');
         Route::post('trainees/{trainee_id}/re-send-invitation', [\App\Http\Controllers\Back\TraineesController::class, 'resendInvitation'])->name('trainees.re-send-invitation');
+        Route::put('/trainees/{id}/update-deleted-remark', [\App\Http\Controllers\Back\TraineesController::class, 'updatedDeletedRemark'])->name('trainees.update-deleted-remark');
 
         // Attendance management of trainee.
         Route::get('trainees/{trainee_id}/warnings', [\App\Http\Controllers\Back\TraineesController::class, 'warnings'])->name('trainees.warnings');

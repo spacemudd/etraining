@@ -656,4 +656,17 @@ class TraineesController extends Controller
         return AttendanceReportRecordWarning::find($id)
             ->delete();
     }
+
+    public function updatedDeletedRemark($trainee_id, Request $request)
+    {
+        $request->validate([
+            'deleted_remark' => 'nullable|string|max:255',
+        ]);
+
+        $t = Trainee::withTrashed()->find($trainee_id);
+        $t->deleted_remark = $request->deleted_remark;
+        $t->save();
+
+        return $t;
+    }
 }
