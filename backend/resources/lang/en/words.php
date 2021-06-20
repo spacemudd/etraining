@@ -359,4 +359,7 @@ return [
     'blocked-at' => 'Block date',
     'please-enter-valid-phone-number' => 'Please enter a valid phone number for verification purposes',
     'warnings-sheet' => 'Warnings sheet',
+    'blocked-list' => 'Blocked list',
+    'add-new-block-entry' => 'Add new block entry',
+    'reason' => 'Reason',
 ];

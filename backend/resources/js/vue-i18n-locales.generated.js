@@ -336,7 +336,7 @@ export default {
             "add": "أضف",
             "privacy-policy": "سياسة الخصوصية",
             "academic-integrity-policy": "سياسات وقوانین النزاهة الأكاديمية",
-            "intellectual-property-rights": "حقوق المكلية الفكرية",
+            "intellectual-property-rights": "حقوق الملكية الفكرية",
             "attendance-policy": "سياسية الحضور",
             "support-policy": "سياسة المساعدة والدعم الفني",
             "submit": "ارسال",
@@ -528,7 +528,10 @@ export default {
             "attendance-sheet": "تاريخ الحضور",
             "blocked-at": "تاريخ الحظر",
             "please-enter-valid-phone-number": "الرجاء استخدام رقم جوال لتوثيق الحساب",
-            "warnings-sheet": "تاريخ الإنذارات"
+            "warnings-sheet": "تاريخ الإنذارات",
+            "blocked-list": "قائمة الحظر",
+            "add-new-block-entry": "إضافة جديدة",
+            "reason": "السبب"
         }
     },
     "en": {
@@ -1024,7 +1027,10 @@ export default {
             "attendance-sheet": "Attendance sheet",
             "blocked-at": "Block date",
             "please-enter-valid-phone-number": "Please enter a valid phone number for verification purposes",
-            "warnings-sheet": "Warnings sheet"
+            "warnings-sheet": "Warnings sheet",
+            "blocked-list": "Blocked list",
+            "add-new-block-entry": "Add new block entry",
+            "reason": "Reason"
         }
     }
 }

@@ -1,4 +1,4 @@
-<style lang="css">
+<style lang="css" xmlns="http://www.w3.org/1999/html">
 .v-dropdown-menu__container {
     margin-top: 5px;
     border-radius: 5px;
@@ -23,33 +23,17 @@
                 :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
                     {title: 'trainees', link: route('back.trainees.index')},
+                    {title: 'blocked-list'},
                 ]"
             ></breadcrumb-container>
             <div class="flex justify-between">
-                <h1 class="mb-8 font-bold text-3xl">{{ $t('words.trainees') }}</h1>
+                <h1 class="mb-8 font-bold text-3xl">{{ $t('words.blocked-list') }}</h1>
                 <div class="mb-6 flex justify-between items-center">
-
-                    <!--<search-filter v-model="form.search" class="w-full max-w-md mr-4" @reset="reset">-->
-                    <!--    <label class="block text-gray-700">Trashed:</label>-->
-                    <!--    <select v-model="form.trashed" class="mt-1 w-full form-select">-->
-                    <!--        <option :value="null" />-->
-                    <!--        <option value="with">With Trashed</option>-->
-                    <!--        <option value="only">Only Trashed</option>-->
-                    <!--    </select>-->
-                    <!--</search-filter>-->
-                    <inertia-link class="btn-gray mx-3" :href="route('back.trainees.create')">
+                    <inertia-link class="btn-gray mx-3" :href="route('back.trainees.block-list.create')">
                         <span>{{ $t('words.new') }}</span>
                     </inertia-link>
                     <inertia-link class="btn-gray" :href="route('back.trainees.import')">
                         <span>{{ $t('words.new-bulk') }}</span>
-                    </inertia-link>
-
-                    <inertia-link :href="route('back.trainees.block-list.index')" class="rounded items-center mr-3 justify-start float-left px-3 py-2.5 bg-yellow-200 hover:bg-yellow-300 text-left">
-                        {{ $t('words.blocked-list') }}
-                    </inertia-link>
-
-                    <inertia-link :href="route('back.trainees.index.archived')" class="rounded items-center mr-3 justify-start float-left px-3 py-2.5 bg-yellow-200 hover:bg-yellow-300 text-left">
-                        {{ $t('words.archive') }}
                     </inertia-link>
 
                     <dropdown-menu :isOpen="actionsDropDownView" class="dropdown-container">
@@ -69,7 +53,6 @@
                                     {{ $t('words.send-messages-to-groups-of-trainees') }}
                                 </inertia-link>
                             </li>
-                            <!--<li v-for="i in 6" :key="i"><a href="">Item {{i}}</a></li>-->
                         </ul>
                     </dropdown-menu>
                 </div>
@@ -79,71 +62,69 @@
                     <tr class="text-left font-bold">
                         <th class="px-6 pt-6 pb-4">{{ $t('words.name') }}</th>
                         <th class="px-6 pt-6 pb-4">{{ $t('words.phone') }}</th>
-                        <th class="px-6 pt-6 pb-4">{{ $t('words.company') }}</th>
+                        <th class="px-6 pt-6 pb-4">{{ $t('words.reason') }}</th>
                     </tr>
-                    <tr v-for="trainees in trainees.data" :key="trainees.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
+                    <tr v-for="trainees in blocked_list.data" :key="trainees.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
                         <td class="border-t">
                             <div class="px-6 py-4 flex items-center focus:text-indigo-500">
-                                <inertia-link :href="route('back.trainees.show', trainees.id)">
+                                <div>
+                                <!--<inertia-link :href="route('back.trainees.show', trainees.id)">-->
                                     {{ trainees.name }}
                                     <br/>
-                                    <span v-if="trainees.is_pending_uploading_files" class="text-sm inline-block mt-2 p-1 px-2 bg-blue-300 rounded-lg">
-                                            {{ $t('words.incomplete-application') }}
-                                        </span>
-
-                                    <span v-if="trainees.is_pending_approval" class="text-sm inline-block mt-2 p-1 px-2 bg-yellow-200 rounded-lg">
-                                            {{ $t('words.nominated-instructor') }}
-                                        </span>
-
-                                    <span v-if="trainees.is_approved" class="text-sm inline-block mt-2 p-1 px-2 bg-green-300 rounded-lg">
-                                            {{ $t('words.approved') }}
-                                        </span>
-                                </inertia-link>
+                                    <span v-if="trainees.identity_number" class="text-sm inline-block text-gray-800">
+                                        {{ trainees.identity_number }}
+                                    </span>
+                                    <br/>
+                                    <span v-if="trainees.email" class="text-sm inline-block text-gray-800">
+                                        {{ trainees.email }}
+                                    </span>
+                                    </div>
+                                <!--</inertia-link>-->
                             </div>
                         </td>
                         <td class="border-t">
-                            <inertia-link class="px-6 py-4 flex items-center" :href="route('back.trainees.show', trainees.id)" tabindex="-1">
-                                <div v-if="trainees.phone">
+                            <div class="px-6 py-4 flex items-center">
+                                <!--<inertia-link :href="route('back.trainees.show', trainees.id)" tabindex="-1">-->
+                                <div>
                                     {{ trainees.phone }}
+                                    <br/>
+                                    <span v-if="trainees.phone_additional" class="text-sm inline-block text-gray-800">
+                                        {{ trainees.phone_additional }}
+                                    </span>
                                 </div>
-                            </inertia-link>
+                                <!--</inertia-link>-->
+                            </div>
                         </td>
                         <td class="border-t">
-                            <inertia-link class="px-6 py-4 flex items-center" :href="route('back.trainees.show', trainees.id)" tabindex="-1">
-                                <span v-if="trainees.company">{{ trainees.company.name_ar }}</span>
-                                <span v-else class="italic text-gray-500 text-xs">{{ $t('words.not-assigned-to-a-company') }}</span>
-                            </inertia-link>
-                            <p class="px-6 flex items-center text-xs text-gray-500"
-                               style=""
-                               v-if="trainees.trainee_group">
-                                {{ trainees.trainee_group.name }}
-                            </p>
+                            <div class="px-6 py-4 flex items-center">
+                                <div v-if="trainees.reason">
+                                    {{ trainees.reason }}
+                                </div>
+                            </div>
                         </td>
                         <td class="border-t w-px">
-                            <inertia-link class="px-4 flex items-center" :href="route('back.trainees.show', trainees.id)" tabindex="-1">
-                                <ion-icon name="arrow-forward-outline" class="block w-6 h-6 fill-gray-400"></ion-icon>
-                            </inertia-link>
+                            <button @click="deleteBlockRecord(trainees.id)" class="px-4 flex items-center cursor-pointer">
+                                <!--<ion-icon name="arrow-forward-outline" class="block w-6 h-6 fill-gray-400"></ion-icon>-->
+                                <ion-icon name="trash-bin-outline" class="block w-6 h-6 fill-red-400"></ion-icon>
+                            </button>
                         </td>
                     </tr>
-                    <tr v-if="trainees.data.length === 0">
+                    <tr v-if="blocked_list.data.length === 0">
                         <td class="border-t px-6 py-4" colspan="4">
                             <empty-slate/>
                         </td>
                     </tr>
                 </table>
             </div>
-            <pagination :links="trainees.links" />
+            <pagination :links="blocked_list.links" />
         </div>
     </app-layout>
 </template>
 
 <script>
-    // import Icon from '@/Shared/Icon'
-    // import Layout from '@/Shared/Layout'
     import mapValues from 'lodash/mapValues'
     import Pagination from '@/Shared/Pagination'
     import pickBy from 'lodash/pickBy'
-    // import SearchFilter from '@/Shared/SearchFilter'
     import throttle from 'lodash/throttle'
     import AppLayout from '@/Layouts/AppLayout'
     import IconNavigate from 'vue-ionicons/dist/ios-arrow-dropright'
@@ -155,21 +136,19 @@
 
     export default {
         metaInfo: { title: 'Trainees' },
-        // layout: Layout,
         components: {
             EmptySlate,
             BreadcrumbContainer,
             IconNavigate,
             AppLayout,
-            // Icon,
             Pagination,
-            // SearchFilter,
             ExportTraineesToExcel,
             DropdownMenu,
         },
         props: {
             trainees: Object,
             filters: Object,
+            blocked_list: Object,
         },
         data() {
             return {
@@ -193,6 +172,14 @@
             reset() {
                 this.form = mapValues(this.form, () => null)
             },
+            deleteBlockRecord(block_list_id) {
+                if (confirm(this.$t('words.are-you-sure'))) {
+                    axios.delete(route('back.trainees.block-list.delete', {id: block_list_id}))
+                        .then(response => {
+                            this.$inertia.get(route('back.trainees.block-list.index'));
+                        })
+                }
+            }
         },
     }
 </script>

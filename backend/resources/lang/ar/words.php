@@ -366,4 +366,7 @@ return [
     'blocked-at' => 'تاريخ الحظر',
     'please-enter-valid-phone-number' => 'الرجاء استخدام رقم جوال لتوثيق الحساب',
     'warnings-sheet' => 'تاريخ الإنذارات',
+    'blocked-list' => 'قائمة الحظر',
+    'add-new-block-entry' => 'إضافة جديدة',
+    'reason' => 'السبب',
 ];

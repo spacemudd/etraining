@@ -12,9 +12,6 @@
 namespace Database\Factories\Back;
 
 use App\Models\Back\Trainee;
-use App\Models\City;
-use App\Models\EducationalLevel;
-use App\Models\MaritalStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Str;
