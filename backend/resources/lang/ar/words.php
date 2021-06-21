@@ -369,4 +369,7 @@ return [
     'blocked-list' => 'قائمة الحظر',
     'add-new-block-entry' => 'إضافة جديدة',
     'reason' => 'السبب',
+    'please-use-the-excel-template-below' => 'الرجاء استخدام صيغة ملف الإكسل ادناه',
+    'download-excel-file' => 'تحميل صيغة الإكسل',
+    'suspend' => 'حظر',
 ];

@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Back;
 
+use App\Exports\TraineesBlocklistExport;
 use App\Http\Controllers\Controller;
+use App\Imports\TraineesBlocklistImport;
 use App\Models\Back\TraineeBlockList;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TraineesBlockListController extends Controller
 {
@@ -53,5 +56,31 @@ class TraineesBlockListController extends Controller
         return response()->json([
             'success' => true,
         ]);
+    }
+
+    public function import()
+    {
+        return Inertia::render('Back/Trainees/BlockedList/Import');
+    }
+
+    public function importCsv(Request $request)
+    {
+        $request->validate([
+            'excel_file' => 'required',
+        ]);
+
+        $path = request()->file('excel_file')->store('tmp');
+        $filepath = storage_path('app').'/'.$path;
+
+        Excel::import(new TraineesBlocklistImport(), $filepath);
+
+        return response()->json([
+            'success' => true,
+        ]);
+    }
+
+    public function download()
+    {
+        return Excel::download(new TraineesBlocklistExport(), 'block_list_'.now()->format('d-m-Y').'.xlsx', \Maatwebsite\Excel\Excel::XLSX);
     }
 }

@@ -531,7 +531,10 @@ export default {
             "warnings-sheet": "تاريخ الإنذارات",
             "blocked-list": "قائمة الحظر",
             "add-new-block-entry": "إضافة جديدة",
-            "reason": "السبب"
+            "reason": "السبب",
+            "please-use-the-excel-template-below": "الرجاء استخدام صيغة ملف الإكسل ادناه",
+            "download-excel-file": "تحميل صيغة الإكسل",
+            "suspend": "حظر"
         }
     },
     "en": {
@@ -1030,7 +1033,10 @@ export default {
             "warnings-sheet": "Warnings sheet",
             "blocked-list": "Blocked list",
             "add-new-block-entry": "Add new block entry",
-            "reason": "Reason"
+            "reason": "Reason",
+            "please-use-the-excel-template-below": "Please use the Excel template below",
+            "download-excel-file": "Download Excel template",
+            "suspend": "Suspend"
         }
     }
 }

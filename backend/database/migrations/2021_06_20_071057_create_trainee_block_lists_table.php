@@ -19,8 +19,8 @@ class CreateTraineeBlockListsTable extends Migration
             $table->foreign('team_id')->references('id')->on('teams');
             $table->uuid('trainee_id')->nullable();
             $table->foreign('trainee_id')->references('id')->on('trainees')->nullOnDelete();
-            $table->string('name');
-            $table->string('identity_number');
+            $table->string('name')->nullable();
+            $table->string('identity_number')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->string('phone_additional')->nullable();

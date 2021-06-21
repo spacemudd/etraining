@@ -11,6 +11,7 @@ use App\Models\Back\Company;
 use App\Models\Back\ExportTraineesToExcelJobTracker;
 use App\Models\Back\Instructor;
 use App\Models\Back\Trainee;
+use App\Models\Back\TraineeBlockList;
 use App\Models\Back\TraineeGroup;
 use App\Models\City;
 use App\Models\EducationalLevel;
@@ -38,15 +39,22 @@ class TraineesController extends Controller
         $this->service = $services;
     }
 
-    public function index() {
+    public function index()
+    {
         return Inertia::render('Back/Trainees/Index', [
             'trainees' => Trainee::with('company')->with('trainee_group')->latest()->paginate(20),
         ]);
     }
 
-    public function indexArchived() {
+    public function indexArchived()
+    {
         return Inertia::render('Back/Trainees/IndexArchived', [
-            'blocked_trainees' => Trainee::with('company')->with('trainee_group')->onlyTrashed()->latest()->paginate(20),
+            'blocked_trainees' => Trainee::with('company')
+                ->with('trainee_group')
+                ->onlyTrashed()
+                ->where('suspended_at', null)
+                ->latest()
+                ->paginate(20),
         ]);
     }
 
@@ -451,7 +459,14 @@ class TraineesController extends Controller
 
     public function unblock(Request $request, $trainee_id)
     {
-        $trainee = Trainee::onlyTrashed()->findOrFail($trainee_id)->restore();
+        $trainee = Trainee::onlyTrashed()->findOrFail($trainee_id);
+        $trainee->suspended_at = null;
+        $trainee->save();
+        $trainee->restore();
+        $blockList = TraineeBlockList::where('trainee_id', $trainee->id)->first();
+        if ($blockList) {
+            $blockList->delete();
+        }
         return redirect()->route('back.trainees.show', $trainee_id);
     }
 
@@ -468,6 +483,41 @@ class TraineesController extends Controller
         }
         DB::commit();
         return redirect()->route('back.trainees.index');
+    }
+
+    public function suspendCreate($trainee_id)
+    {
+        return Inertia::render('Back/Trainees/Suspend', [
+            'trainee' => Trainee::findOrFail($trainee_id),
+        ]);
+    }
+
+    public function suspend(Request $request, $trainee_id)
+    {
+        $request->validate([
+            'reason' => 'required|string|max:255',
+        ]);
+
+        DB::beginTransaction();
+        $trainee = Trainee::findOrFail($trainee_id);
+        $trainee->deleted_remark = $request->reason;
+        $trainee->suspended_at = now()->setSecond(0);
+        $trainee->save();
+        $trainee->delete();
+        if ($trainee->user) {
+            $trainee->user->delete();
+        }
+        $block = TraineeBlockList::create([
+            'trainee_id' => $trainee->id,
+            'identity_number' => $trainee->identity_number,
+            'name' => $trainee->name,
+            'email' => $trainee->email,
+            'phone' => $trainee->phone,
+            'phone_additional' => $trainee->phone_additional,
+            'reason' => $request->reason,
+        ]);
+        DB::commit();
+        return redirect()->route('back.trainees.block-list.index');
     }
 
     public function excel(Request $request)

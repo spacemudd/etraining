@@ -362,4 +362,7 @@ return [
     'blocked-list' => 'Blocked list',
     'add-new-block-entry' => 'Add new block entry',
     'reason' => 'Reason',
+    'please-use-the-excel-template-below' => 'Please use the Excel template below',
+    'download-excel-file' => 'Download Excel template',
+    'suspend' => 'Suspend',
 ];

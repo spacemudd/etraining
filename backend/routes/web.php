@@ -115,6 +115,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('trainees/block-list/create', [\App\Http\Controllers\Back\TraineesBlockListController::class, 'create'])->name('trainees.block-list.create');
         Route::post('trainees/block-list', [\App\Http\Controllers\Back\TraineesBlockListController::class, 'store'])->name('trainees.block-list.store');
         Route::delete('trainees/block-list/{id}', [\App\Http\Controllers\Back\TraineesBlockListController::class, 'destroy'])->name('trainees.block-list.delete');
+        Route::get('trainees/block-list/import', [\App\Http\Controllers\Back\TraineesBlockListController::class, 'import'])->name('trainees.block-list.import');
+        Route::post('trainees/block-list/import', [\App\Http\Controllers\Back\TraineesBlockListController::class, 'importCsv'])->name('trainees.block-list.import-csv');
+        Route::get('trainees/block-list/download', [\App\Http\Controllers\Back\TraineesBlockListController::class, 'download'])->name('trainees.block-list.download');
         Route::get('trainees/archived/excel/{id}/download', [\App\Http\Controllers\Back\TraineesController::class, 'excelJobDownload'])->name('trainees.archived.excel.job.download');
         Route::get('trainees/archived/excel/{id}', [\App\Http\Controllers\Back\TraineesController::class, 'excelJob'])->name('trainees.archived.excel.job');
         Route::post('trainees/archived/excel', [\App\Http\Controllers\Back\TraineesController::class, 'archivedExcel'])->name('trainees.archived.excel');
@@ -129,6 +132,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::delete('trainees/{trainee_id}/attachments/bank-account', [\App\Http\Controllers\Back\TraineesController::class, 'deleteBankAccount'])->name('trainees.attachments.bank-account.destroy');
         Route::get('trainees/{trainee_id}/block', [\App\Http\Controllers\Back\TraineesController::class, 'blockView'])->name('trainees.block');
         Route::post('trainees/{trainee_id}/block', [\App\Http\Controllers\Back\TraineesController::class, 'block'])->name('trainees.block.store');
+        Route::post('trainees/{trainee_id}/suspend', [\App\Http\Controllers\Back\TraineesController::class, 'suspend'])->name('trainees.suspend.store');
+        Route::get('trainees/{trainee_id}/suspend/create', [\App\Http\Controllers\Back\TraineesController::class, 'suspendCreate'])->name('trainees.suspend.create');
         Route::get('trainees/blocked/show/{trainee_id}', [\App\Http\Controllers\Back\TraineesController::class, 'showBlocked'])->name('trainees.show.blocked');
         Route::post('trainees/blocked/show/{trainee_id}', [\App\Http\Controllers\Back\TraineesController::class, 'unblock'])->name('trainees.unblock');
         Route::get('trainees/archived', [\App\Http\Controllers\Back\TraineesController::class, 'indexArchived'])->name('trainees.index.archived');

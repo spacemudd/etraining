@@ -68,6 +68,11 @@
                     <button @click="blockTrainee" class=" items-center justify-start text-left float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right">
                         {{ $t('words.block-trainee') }}
                     </button>
+
+                    <inertia-link :href="route('back.trainees.suspend.create', {trainee_id: trainee.id})"
+                                  class=" items-center justify-start text-left float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right">
+                        {{ $t('words.suspend') }}
+                    </inertia-link>
                 </div>
 
                 <div v-if="!editButton.editOption" class="col-span-6 sm:col-span-2">

@@ -32,7 +32,7 @@
                     <inertia-link class="btn-gray mx-3" :href="route('back.trainees.block-list.create')">
                         <span>{{ $t('words.new') }}</span>
                     </inertia-link>
-                    <inertia-link class="btn-gray" :href="route('back.trainees.import')">
+                    <inertia-link class="btn-gray" :href="route('back.trainees.block-list.import')">
                         <span>{{ $t('words.new-bulk') }}</span>
                     </inertia-link>
 
@@ -40,18 +40,9 @@
                         <button class="btn-gray mx-3" slot="trigger">{{ $t('words.actions') }}</button>
                         <ul class="dropdown-items" slot="body">
                             <li>
-                                <export-trainees-to-excel @modal:opened="actionsDropDownView=!actionsDropDownView">
-                                    <template slot="buttonContent">
-                                        <button>
-                                            {{ $t('words.export') }}
-                                        </button>
-                                    </template>
-                                </export-trainees-to-excel>
-                            </li>
-                            <li>
-                                <inertia-link :href="route('back.trainees.send-notification')">
-                                    {{ $t('words.send-messages-to-groups-of-trainees') }}
-                                </inertia-link>
+                                <a target="_blank" :href="route('back.trainees.block-list.download')">
+                                    {{ $t('words.download') }}
+                                </a>
                             </li>
                         </ul>
                     </dropdown-menu>
@@ -67,8 +58,20 @@
                     <tr v-for="trainees in blocked_list.data" :key="trainees.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
                         <td class="border-t">
                             <div class="px-6 py-4 flex items-center focus:text-indigo-500">
-                                <div>
-                                <!--<inertia-link :href="route('back.trainees.show', trainees.id)">-->
+                                <div v-if="trainees.trainee_id">
+                                    <inertia-link :href="route('back.trainees.show.blocked', trainees.trainee_id)">
+                                        {{ trainees.name }}
+                                        <br/>
+                                        <span v-if="trainees.identity_number" class="text-sm inline-block text-gray-800">
+                                            {{ trainees.identity_number }}
+                                        </span>
+                                        <br/>
+                                        <span v-if="trainees.email" class="text-sm inline-block text-gray-800">
+                                            {{ trainees.email }}
+                                        </span>
+                                    </inertia-link>
+                                </div>
+                                <div v-else>
                                     {{ trainees.name }}
                                     <br/>
                                     <span v-if="trainees.identity_number" class="text-sm inline-block text-gray-800">
@@ -78,8 +81,7 @@
                                     <span v-if="trainees.email" class="text-sm inline-block text-gray-800">
                                         {{ trainees.email }}
                                     </span>
-                                    </div>
-                                <!--</inertia-link>-->
+                                </div>
                             </div>
                         </td>
                         <td class="border-t">
