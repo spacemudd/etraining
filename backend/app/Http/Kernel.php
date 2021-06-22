@@ -6,6 +6,7 @@ use App\Http\Middleware\IsDisabledWebsiteMiddleware;
 use App\Http\Middleware\RedirectToApplication;
 use App\Http\Middleware\RedirectTraineesToDashboard;
 use App\Http\Middleware\RoleNavigator;
+use App\Http\Middleware\SuspendedAccountsMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
@@ -44,6 +45,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\SetLocale::class,
             IsDisabledWebsiteMiddleware::class,
+            SuspendedAccountsMiddleware::class,
         ],
 
         'api' => [

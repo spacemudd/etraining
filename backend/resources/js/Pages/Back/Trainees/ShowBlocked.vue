@@ -98,12 +98,10 @@
                     <jet-label for="city_id" :value="$t('words.city')" />
 
                     <select :class="editButton.selectInputClass"
-                                        v-model="trainee.city_id"
-                                        id="city_id"  :disabled="!editButton.editOption" >
-                                    <option v-for="city in cities" :key="city.id" :value="city.id">{{ city.name_ar }}</option>
+                            v-model="trainee.city_id"
+                            id="city_id"  :disabled="!editButton.editOption">
+                        <option v-for="city in cities" :key="city.id" :value="city.id">{{ city.name_ar }}</option>
                     </select>
-
-
                 </div>
 
                 <div class="col-span-6 sm:col-span-1" v-if="this.lang=='ar'">
@@ -123,9 +121,9 @@
                     <jet-label for="marital_status" :value="$t('words.marital_status')" />
 
                     <select :class="editButton.selectInputClass"
-                                        v-model="trainee.marital_status_id"
-                                        id="city_id"  :disabled="!editButton.editOption" >
-                                    <option  v-for="marital_status in marital_statuses" :key="marital_status.id" :value="marital_status.id">{{ marital_status.name_en }}</option>
+                            v-model="trainee.marital_status_id"
+                            id="city_id"  :disabled="!editButton.editOption" >
+                        <option  v-for="marital_status in marital_statuses" :key="marital_status.id" :value="marital_status.id">{{ marital_status.name_en }}</option>
                     </select>
 
                 </div>
@@ -142,7 +140,11 @@
 
                 <div class="col-span-6 sm:col-span-2">
                     <jet-label for="reason" :value="$t('words.delete-remark')" />
-                    <jet-input id="reason" type="text" :class="editButton.inputClass" v-model="trainee.deleted_remark" :disabled="!editButton.editOption" />
+                    <input id="reason"
+                               type="text"
+                               class="mt-1 block w-full border-2 border-gray-200 bg-white py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none focus:border-blue-300"
+                               @blur="saveDeletedRemark(trainee)"
+                               v-model="trainee.deleted_remark"/>
                 </div>
 
                 <div class="col-span-6 sm:col-span-6">
@@ -235,7 +237,7 @@
     import VueDropzone from 'vue2-dropzone'
     import 'vue2-dropzone/dist/vue2Dropzone.min.css'
     import SelectTraineeGroup from "@/Components/SelectTraineeGroup";
-
+    import NProgress from 'nprogress'
 
     export default {
         props: ['sessions', 'trainee', 'cities', 'marital_statuses', 'educational_levels', 'trainee_groups', 'trainee_group_trainees'],
@@ -301,6 +303,16 @@
             }
         },
         methods: {
+            saveDeletedRemark(trainee) {
+                NProgress.start()
+                axios.put(route('back.trainees.update-deleted-remark', trainee.id), {
+                    deleted_remark: trainee.deleted_remark,
+                }).then(response => {
+                    NProgress.stop();
+                }).catch(error => {
+                    throw error;
+                })
+            },
             sendingCsrf(file, xhr, formData) {
                 xhr.setRequestHeader('X-CSRF-TOKEN', window.token ? window.token.content : '');
             },
