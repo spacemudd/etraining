@@ -33,7 +33,9 @@ class TraineeBlockList extends Model implements Auditable
         static::addGlobalScope(new TeamScope());
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string) Str::uuid();
-            $model->team_id = $model->team_id = auth()->user()->currentTeam()->first()->id;
+            if (!auth()->guest()) {
+                $model->team_id = auth()->user()->currentTeam()->first()->id;
+            }
         });
     }
 }

@@ -16,7 +16,6 @@ class RedirectTraineesToDashboard
      */
     public function handle(Request $request, Closure $next)
     {
-
         if (auth()->user()->trainee) {
             return redirect()->route('dashboard');
         }

@@ -66,6 +66,15 @@ class RegisterTraineeController extends Controller
             'phone' => ['required', 'string', 'max:255', 'unique:trainees'],
         ])->validate();
 
+        // Check for the blocked list.
+        Validator::make($request->toArray(), [
+            'identity_number' => ['required', 'unique:trainee_block_lists'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:trainee_block_lists'],
+            'name' => ['required', 'string', 'max:255', 'unique:trainee_block_lists'],
+            'phone' => ['required', 'string', 'max:255', 'unique:trainee_block_lists'],
+            'phone_additional' => ['required', 'string', 'max:255', 'unique:trainee_block_lists'],
+        ])->validate();
+
         \DB::beginTransaction();
         $trainee = $this->service->store($request->except('_token'));
 

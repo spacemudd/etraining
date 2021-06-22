@@ -176,5 +176,7 @@ return [
         'time'                  => 'الوقت',
         'available'             => 'مُتاح',
         'size'                  => 'الحجم',
+        'identity_number'       => 'رقم الهوية',
+        'phone_additional'      => 'الجوال الإضافي',
     ],
 ];
