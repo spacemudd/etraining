@@ -20,7 +20,7 @@ class SuspendedAccountsMiddleware
         if ($trainee = optional(auth()->user())->trainee) {
             $suspended = TraineeBlockList::where('name', $trainee->name)
                 ->orWhere('phone', $trainee->phone)
-                ->orWhere('phone_additional', $trainee->phone_additional)
+                // ->orWhere('phone_additional', $trainee->phone_additional)
                 ->orWhere('email', $trainee->email)
                 ->orWhere('identity_number', $trainee->identity_number)
                 ->exists();
