@@ -492,9 +492,34 @@ class TraineesController extends Controller
         ]);
     }
 
+    public function suspendEdit($trainee_block_list_id)
+    {
+        return Inertia::render('Back/Trainees/BlockedList/Edit', [
+            'traineeBlockList' => TraineeBlockList::with('trainee')->findOrFail($trainee_block_list_id),
+        ]);
+    }
+
+    public function suspendUpdate($trainee_block_list_id, Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'reason' => 'required|string|max:255',
+        ]);
+
+        $traineeBlockList = TraineeBlockList::findOrFail($trainee_block_list_id);
+        $traineeBlockList->update($request->except('_token'));
+        if ($traineeBlockList->trainee) {
+            $traineeBlockList->trainee->deleted_remark = $request->reason;
+            $traineeBlockList->trainee->save();
+        }
+
+        return redirect()->route('back.trainees.block-list.index');
+    }
+
     public function suspend(Request $request, $trainee_id)
     {
         $request->validate([
+            'name' => 'required|string|max:255',
             'reason' => 'required|string|max:255',
         ]);
 

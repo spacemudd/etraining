@@ -206,4 +206,36 @@ class CreateTraineesBlocklistTest extends TestCase
             ->get(route('dashboard'))
             ->assertSuccessful();
     }
+
+    public function test_user_can_edit_suspended_user()
+    {
+        $admin = (new CreateNewUser())->create([
+            'name' => 'Shafiq al-Shaar',
+            'email' => 'admin@getShafiq.com',
+            'password' => 'hello123123',
+            'password_confirmation' => 'hello123123',
+        ]);
+
+        $acmeCompany = Company::factory()->create(['team_id' => $admin->personalTeam()->id]);
+
+        $trainee = Trainee::factory()->make([
+            'team_id' => $admin->personalTeam()->id,
+            'company_id' => $acmeCompany->id,
+            'skip_uploading_id' => true,
+        ]);
+        $blockList = TraineeBlockList::factory()->create([
+            'team_id' => $admin->personalTeam()->id,
+            'name' => $trainee->name,
+            'email' => $trainee->email,
+            'identity_number' => $trainee->identity_number,
+            'phone' => $trainee->phone,
+            'phone_additional' => $trainee->phone_additional,
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('back.trainees.suspend.edit', ['trainee_block_list_id' => $blockList->id]))
+            ->assertPropValue('trainee_block_list', function ($traineeBlockList) use ($blockList) {
+                $this->assertEquals($blockList->id, $traineeBlockList['id']);
+            });
+    }
 }

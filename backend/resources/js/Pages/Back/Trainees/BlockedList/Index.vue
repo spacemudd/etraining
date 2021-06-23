@@ -105,6 +105,11 @@
                             </div>
                         </td>
                         <td class="border-t w-px">
+                            <a :href="route('back.trainees.suspend.edit', {trainee_block_list_id: trainees.id})" class="px-4 flex items-center cursor-pointer">
+                                <ion-icon name="create-outline" class="block w-6 h-6 fill-red-400"></ion-icon>
+                            </a>
+                        </td>
+                        <td class="border-t w-px">
                             <button @click="deleteBlockRecord(trainees.id)" class="px-4 flex items-center cursor-pointer">
                                 <!--<ion-icon name="arrow-forward-outline" class="block w-6 h-6 fill-gray-400"></ion-icon>-->
                                 <ion-icon name="trash-bin-outline" class="block w-6 h-6 fill-red-400"></ion-icon>

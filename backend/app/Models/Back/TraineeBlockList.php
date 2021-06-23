@@ -38,4 +38,9 @@ class TraineeBlockList extends Model implements Auditable
             }
         });
     }
+
+    public function trainee()
+    {
+        return $this->belongsTo(Trainee::class);
+    }
 }
