@@ -37,7 +37,6 @@ class Course extends Model implements HasMedia, SearchableLabels, Auditable
         'name_ar',
         'name_en',
         'instructor_id',
-        'company_id',
         'description',
         'classroom_count',
         'approval_code',

@@ -13,6 +13,7 @@ namespace App\Exports;
 
 use App\Models\Back\AttendanceReportRecord;
 use App\Models\Back\AttendanceReportRecordWarning;
+use App\Models\Back\Company;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\FromView;
@@ -39,12 +40,15 @@ class CourseBatchSessionAttendanceSummarySheet implements FromView, WithEvents, 
 
     public $endDate;
 
-    public function __construct($courseBatchSessions, array $reportIds, $startDate, $endDate)
+    public $companyId;
+
+    public function __construct($courseBatchSessions, array $reportIds, $startDate, $endDate, $companyId=null)
     {
         $this->courseBatchSessions = $courseBatchSessions;
         $this->reportIds = $reportIds;
         $this->startDate = $startDate;
         $this->endDate = $endDate;
+        $this->companyId = $companyId;
     }
 
     public function registerEvents(): array
@@ -100,8 +104,15 @@ class CourseBatchSessionAttendanceSummarySheet implements FromView, WithEvents, 
             ->with(['trainee' => function($q) {
                 $q->with('company');
             }])
-            ->groupBy('trainee_id')
-            ->get();
+            ->groupBy('trainee_id');
+
+        if ($this->companyId) {
+            $attendanceRecords->whereHas('trainee', function($q) {
+                $q->where('company_id', $this->companyId);
+            });
+        }
+
+        $attendanceRecords = $attendanceRecords->get();
 
         foreach ($attendanceRecords as $record) {
             $record->warnings_count = AttendanceReportRecordWarning::whereIn('attendance_report_id', $this->reportIds)
@@ -110,9 +121,12 @@ class CourseBatchSessionAttendanceSummarySheet implements FromView, WithEvents, 
         }
 
         return view('exports.attendingSummarySheet', [
-            'courseName' => optional(optional(optional($this->courseBatchSessions)->first())->course)->name_ar,
+            'courseName' => optional(optional(optional($this->courseBatchSessions)->first())->course)->name_ar ?: optional(optional(optional($this->courseBatchSessions)->first())->course)->name_en,
             'courseBatchSessions' => $this->courseBatchSessions,
             'attendanceRecords' => $attendanceRecords,
+            'company' => Company::find($this->companyId),
+            'startDate' => $this->startDate,
+            'endDate' => $this->endDate,
         ]);
     }
 

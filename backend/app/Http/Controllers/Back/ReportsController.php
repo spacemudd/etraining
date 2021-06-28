@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Back;
 use App\Exports\CourseSessionsAttendanceSummarySheetExport;
 use App\Http\Controllers\Controller;
 use App\Jobs\CourseAttendanceReportJob;
+use App\Models\Back\Company;
 use App\Models\Back\Course;
 use App\Models\JobTracker;
 use App\Reports\CourseAttendanceReportFactory;
@@ -32,6 +33,7 @@ class ReportsController extends Controller
     {
         $this->authorize('view-backoffice-reports');
         return Inertia::render('Back/Reports/CourseAttendance/Index', [
+            'companies' => Company::get(),
             'courses' => Course::with('instructor')->get(),
         ]);
     }
@@ -46,6 +48,7 @@ class ReportsController extends Controller
     {
         $request->validate([
             'course_id' => 'required|exists:courses,id',
+            'company_id' => 'nullable|exists:companies,id',
             'date_from' => 'required',
             'date_to' => 'required',
         ]);

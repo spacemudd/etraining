@@ -5,6 +5,21 @@
         <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong>{{ $courseName }}</strong></th>
     </tr>
 
+    <tr>
+        <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong>{{ __('words.company') }}:</strong></th>
+        <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong>{{ optional($company)->name_ar }}</strong></th>
+    </tr>
+
+    <tr>
+        <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong>{{ __('words.start-date') }}:</strong></th>
+        <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong>{{ optional($startDate)->format('d-m-Y') }}</strong></th>
+    </tr>
+
+    <tr>
+        <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong>{{ __('words.end-date') }}:</strong></th>
+        <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong>{{ optional($endDate)->format('d-m-Y') }}</strong></th>
+    </tr>
+
     <tr></tr>
     <tr></tr>
 

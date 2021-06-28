@@ -13,6 +13,7 @@ namespace App\Exports;
 
 use App\Models\Back\AttendanceReport;
 use App\Models\Back\AttendanceReportRecord;
+use App\Models\Back\Company;
 use App\Models\Back\CourseBatchSession;
 use App\Models\Back\CourseBatchSessionAttendance;
 use Illuminate\Contracts\View\View;
@@ -26,9 +27,13 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class CourseBatchSessionAttendanceSheet implements FromView, WithEvents, WithStyles, WithColumnWidths, WithTitle
 {
-    public function __construct($course_batch_session_id)
+    public $course_batch_session_id;
+    public $companyId;
+
+    public function __construct($course_batch_session_id, $company_id=null)
     {
         $this->course_batch_session_id = $course_batch_session_id;
+        $this->companyId = $company_id;
     }
 
     public function registerEvents(): array
@@ -96,18 +101,30 @@ class CourseBatchSessionAttendanceSheet implements FromView, WithEvents, WithSty
         $attendances = AttendanceReportRecord::where('attendance_report_id', $report->id)
             ->whereHas('trainee', function($q) {
                 $q->withTrashed();
+                if ($this->company_id) {
+                    $q->where('company_id', $this->companyId);
+                }
             })
             ->with(['trainee' => function($q) {
                 $q->withTrashed();
+                if ($this->company_id) {
+                    $q->where('company_id', $this->companyId);
+                }
             }])
             ->whereIn('status', [AttendanceReportRecord::STATUS_PRESENT, AttendanceReportRecord::STATUS_LATE_TO_CLASS]);
 
         $absentees = AttendanceReportRecord::where('attendance_report_id', $report->id)
             ->whereHas('trainee', function($q) {
                 $q->withTrashed();
+                if ($this->company_id) {
+                    $q->where('company_id', $this->companyId);
+                }
             })
             ->with(['trainee' => function($q) {
                 $q->withTrashed();
+                if ($this->company_id) {
+                    $q->where('company_id', $this->companyId);
+                }
             }])
             ->whereIn('status', [AttendanceReportRecord::STATUS_ABSENT, AttendanceReportRecord::STATUS_ABSENT_WITH_EXCUSE]);
 
