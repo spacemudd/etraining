@@ -155,11 +155,28 @@ class User extends Authenticatable implements Auditable
 
     public function routeNotificationForClickSend()
     {
-        return $this->phone;
+        return $this->cleanUpThePhoneNumber($this->phone);
     }
 
     public function canImpersonate()
     {
         return $this->hasPermissionTo('can-impersonate');
+    }
+
+    public function cleanUpThePhoneNumber($phone)
+    {
+        $convertPhone = $this->arabicE2w($phone);
+
+        if (!Str::startsWith($phone, '966')) {
+            return Str::replaceFirst('05', '9665', $convertPhone);
+        }
+
+        return $phone;
+    }
+
+    public function arabicE2w($str) {
+        $arabic_eastern = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+        $arabic_western = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        return str_replace($arabic_eastern, $arabic_western, $str);
     }
 }

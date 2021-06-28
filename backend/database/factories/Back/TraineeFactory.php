@@ -40,11 +40,11 @@ class TraineeFactory extends Factory
             'identity_number' => $this->faker('ar_SA')->idNumber(),
             'phone' => $this->faker('ar_SA')->phoneNumber,
             'phone_additional' => $this->faker('ar_SA')->phoneNumber,
-            'birthday' => $this->faker->date('Y-m-d', '-24 years'),
+            'birthday' => now(),
             'educational_level_id' => null,
             'city_id' => null,
             'marital_status_id' => null,
-            'children_count' => $this->faker->randomDigit,
+            'children_count' => $this->faker->randomNumber(),
             'company_id' => null,
             'email' => $this->faker->email,
         ];

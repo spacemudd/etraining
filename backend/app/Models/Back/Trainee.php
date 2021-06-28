@@ -8,6 +8,7 @@ use App\Models\MaritalStatus;
 use App\Models\SearchableLabels;
 use App\Notifications\AssignedToCompanyTraineeNotification;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use JamesMills\LaravelTimezone\Facades\Timezone;
 use Laravel\Scout\Searchable;
 use App\Models\User;
@@ -20,7 +21,6 @@ use Illuminate\Support\Carbon;
 use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Str;
 
 class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
 {
@@ -323,6 +323,33 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
 
     public function routeNotificationForClickSend()
     {
-        return $this->phone;
+        return $this->cleanUpThePhoneNumber($this->phone);
+    }
+
+    public function cleanUpThePhoneNumber($phone)
+    {
+        $convertPhone = $this->arabicE2w($phone);
+
+        if (! Str::startsWith($convertPhone, '966')) {
+            $convertPhone = Str::replaceFirst('05', '9665', $convertPhone);
+        }
+
+        if (Str::startsWith($convertPhone, '5')) {
+            $convertPhone = Str::replaceFirst('5', '9665', $convertPhone);
+        }
+
+
+        if (Str::length($convertPhone) != 12) { // KSA number.
+            return null;
+        }
+
+        return $convertPhone;
+    }
+
+    public function arabicE2w($str)
+    {
+        $arabic_eastern = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+        $arabic_western = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        return str_replace($arabic_eastern, $arabic_western, $str);
     }
 }
