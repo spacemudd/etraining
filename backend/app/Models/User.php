@@ -167,11 +167,20 @@ class User extends Authenticatable implements Auditable
     {
         $convertPhone = $this->arabicE2w($phone);
 
-        if (!Str::startsWith($phone, '966')) {
-            return Str::replaceFirst('05', '9665', $convertPhone);
+        if (! Str::startsWith($convertPhone, '966')) {
+            $convertPhone = Str::replaceFirst('05', '9665', $convertPhone);
         }
 
-        return $phone;
+        if (Str::startsWith($convertPhone, '5')) {
+            $convertPhone = Str::replaceFirst('5', '9665', $convertPhone);
+        }
+
+
+        if (Str::length($convertPhone) != 12) { // KSA number.
+            return null;
+        }
+
+        return $convertPhone;
     }
 
     public function arabicE2w($str) {
