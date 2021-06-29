@@ -42,44 +42,6 @@
     </thead>
 
     <tbody>
-        @if (count($users_who_didnt_attend))
-            <tr>
-                <td colspan="8" style="border:1px solid black;text-align:center;background-color:#d4d4d4">{{ __('words.didnt-attend-at-all') }}</td>
-            </tr>
-        @endif
-        @foreach ($users_who_didnt_attend as $attendanceRecord)
-            <tr>
-                <td style="width:50px; text-align:center;border:1px solid black;">
-                    {{ $attendanceRecord->trainee->created_at->format('d-m-Y') }}
-                </td>
-                <td style="width:50px; text-align:center;border:1px solid black;{{ $attendanceRecord->trainee->deleted_at ? 'background-color:#f95d5d' : '' }}">
-                    @if ($attendanceRecord->trainee->deleted_at)
-                        <a href="{{ $attendanceRecord->trainee->show_url }}">
-                          ({{ __('words.blocked') }}) {{ $attendanceRecord->trainee->name }}
-                        </a>
-                    @else
-                        <a href="{{ $attendanceRecord->trainee->show_url }}">{{ $attendanceRecord->trainee->name }}</a>
-                    @endif
-                </td>
-                <td style="border:1px solid black;">{{ $attendanceRecord->trainee->email }}</td>
-                <td style="text-align:center;border:1px solid black;">
-                    ="{{ $attendanceRecord->trainee->phone }}"
-                </td>
-                <td style="border:1px solid black;">{{ optional($attendanceRecord->trainee->company)->name_ar }}</td>
-                <td style="width:50px; text-align:center; color:{{ $attendanceRecord->status_color }}; background-color:darkgrey;border:1px solid black;">
-                    {{ __('words.'.$attendanceRecord->status_name) }} @if ($attendanceRecord->absence_reason) ({{ $attendanceRecord->absence_reason }}) @endif
-                </td>
-                <td style="border:1px solid black;"></td>
-                <td style="border:1px solid black;">
-                    @if ($attendanceRecord->trainee->user)
-                        {{ $attendanceRecord->trainee->user->last_login_at ?: 'لم يدخل إطلاقاً الى المنصة'}}
-                    @else
-                        لا يوجد حساب
-                    @endif
-                </td>
-            </tr>
-        @endforeach
-
         <tr>
             <td colspan="8" style="border:1px solid black;;text-align:center;background-color:#d4d4d4">{{ __('words.attendees-plus-late-attendees') }}</td>
         </tr>
@@ -111,6 +73,44 @@
                 </td>
                 <td style="border:1px solid black;">
                     {{ optional($attendanceRecord->trainee->user)->last_login_at_timezone }}
+                </td>
+            </tr>
+        @endforeach
+
+        @if (count($users_who_didnt_attend))
+            <tr>
+                <td colspan="8" style="border:1px solid black;text-align:center;background-color:#d4d4d4">{{ __('words.didnt-attend-at-all') }}</td>
+            </tr>
+        @endif
+        @foreach ($users_who_didnt_attend as $attendanceRecord)
+            <tr>
+                <td style="width:50px; text-align:center;border:1px solid black;">
+                    {{ $attendanceRecord->trainee->created_at->format('d-m-Y') }}
+                </td>
+                <td style="width:50px; text-align:center;border:1px solid black;{{ $attendanceRecord->trainee->deleted_at ? 'background-color:#f95d5d' : '' }}">
+                    @if ($attendanceRecord->trainee->deleted_at)
+                        <a href="{{ $attendanceRecord->trainee->show_url }}">
+                            ({{ __('words.blocked') }}) {{ $attendanceRecord->trainee->name }}
+                        </a>
+                    @else
+                        <a href="{{ $attendanceRecord->trainee->show_url }}">{{ $attendanceRecord->trainee->name }}</a>
+                    @endif
+                </td>
+                <td style="border:1px solid black;">{{ $attendanceRecord->trainee->email }}</td>
+                <td style="text-align:center;border:1px solid black;">
+                    ="{{ $attendanceRecord->trainee->phone }}"
+                </td>
+                <td style="border:1px solid black;">{{ optional($attendanceRecord->trainee->company)->name_ar }}</td>
+                <td style="width:50px; text-align:center; color:{{ $attendanceRecord->status_color }}; background-color:darkgrey;border:1px solid black;">
+                    {{ __('words.'.$attendanceRecord->status_name) }} @if ($attendanceRecord->absence_reason) ({{ $attendanceRecord->absence_reason }}) @endif
+                </td>
+                <td style="border:1px solid black;"></td>
+                <td style="border:1px solid black;">
+                    @if ($attendanceRecord->trainee->user)
+                        {{ $attendanceRecord->trainee->user->last_login_at ?: 'لم يدخل إطلاقاً الى المنصة'}}
+                    @else
+                        لا يوجد حساب
+                    @endif
                 </td>
             </tr>
         @endforeach
