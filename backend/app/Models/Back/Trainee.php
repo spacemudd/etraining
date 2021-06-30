@@ -28,7 +28,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     use HasUuid;
     use SoftDeletes;
     use InteractsWithMedia;
-    use Searchable;
+    // use Searchable;
     use Notifiable;
     use \OwenIt\Auditing\Auditable;
 

@@ -1,5 +1,5 @@
 docker login -u AWS -p $(aws ecr get-login-password) https://$(aws sts get-caller-identity --query 'Account' --output text).dkr.ecr.eu-central-1.amazonaws.com
-docker-compose build
+docker-compose build backend backend-worker
 
 # Tagging
 docker tag etraining_backend:latest 175380537962.dkr.ecr.eu-central-1.amazonaws.com/backend
