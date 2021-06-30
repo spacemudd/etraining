@@ -40,11 +40,13 @@ class SuspendTraineesWhoDidntPayCommand extends Command
     public function handle()
     {
         $trainees = Trainee::where('deleted_remark', 'عدم السداد')
+            ->withTrashed()
             ->get();
 
         foreach ($trainees as $trainee) {
-            TraineeBlockList::create([
-                'team_id' => $trainee->team_id,
+            TraineeBlockList::create(TraineeBlockList::firstOrCreate([
+                'trainee_id' => $trainee->id,
+            ], ['team_id' => $trainee->team_id,
                 'trainee_id' => $trainee->id,
                 'identity_number' => $trainee->identity_number,
                 'name' => $trainee->name,
@@ -56,14 +58,19 @@ class SuspendTraineesWhoDidntPayCommand extends Command
             if ($trainee->user) {
                 $trainee->user->delete();
             }
+            $trainee->suspended_at = now()->setSecond(0);
+            $trainee->save();
             $trainee->delete();
         }
 
         $trainees = Trainee::where('deleted_remark', 'عدم سداد المستحق المالي')
+            ->withTrashed()
             ->get();
 
         foreach ($trainees as $trainee) {
-            TraineeBlockList::create([
+            TraineeBlockList::firstOrCreate([
+                'trainee_id' => $trainee->id,
+            ], [
                 'team_id' => $trainee->team_id,
                 'trainee_id' => $trainee->id,
                 'identity_number' => $trainee->identity_number,
@@ -76,6 +83,8 @@ class SuspendTraineesWhoDidntPayCommand extends Command
             if ($trainee->user) {
                 $trainee->user->delete();
             }
+            $trainee->suspended_at = now()->setSecond(0);
+            $trainee->save();
             $trainee->delete();
         }
 
