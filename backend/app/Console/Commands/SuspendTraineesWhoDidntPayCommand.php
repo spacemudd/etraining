@@ -44,7 +44,8 @@ class SuspendTraineesWhoDidntPayCommand extends Command
             ->get();
 
         foreach ($trainees as $trainee) {
-            TraineeBlockList::create(TraineeBlockList::firstOrCreate([
+            $this->info($trainee->email);
+            TraineeBlockList::firstOrCreate([
                 'trainee_id' => $trainee->id,
             ], ['team_id' => $trainee->team_id,
                 'trainee_id' => $trainee->id,
@@ -68,6 +69,7 @@ class SuspendTraineesWhoDidntPayCommand extends Command
             ->get();
 
         foreach ($trainees as $trainee) {
+            $this->info($trainee->email);
             TraineeBlockList::firstOrCreate([
                 'trainee_id' => $trainee->id,
             ], [
