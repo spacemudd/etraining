@@ -519,7 +519,6 @@ class TraineesController extends Controller
     public function suspend(Request $request, $trainee_id)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
             'reason' => 'required|string|max:255',
         ]);
 

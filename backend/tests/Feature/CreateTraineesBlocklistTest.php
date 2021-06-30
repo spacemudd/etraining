@@ -110,10 +110,10 @@ class CreateTraineesBlocklistTest extends TestCase
             'birthday' => '10-12-1994',
             'phone' => $blockedTrainee->phone,
             'phone_additional' => $blockedTrainee->phone_additional,
-            'educational_level_id' => EducationalLevel::withoutGlobalScopes()->first()->id,
-            'city_id' => City::first()->id,
+            'educational_level_id' => optional(EducationalLevel::withoutGlobalScopes()->first())->id,
+            'city_id' => optional(City::withoutGlobalScopes()->first())->id,
             'national_address' => 'Riyadh',
-            'marital_status_id' => MaritalStatus::withoutGlobalScopes()->first()->id,
+            'marital_status_id' => optional(MaritalStatus::withoutGlobalScopes()->first())->id,
             'children_count' => 1,
             ])->assertSessionHasErrors();
     }
@@ -234,7 +234,7 @@ class CreateTraineesBlocklistTest extends TestCase
 
         $this->actingAs($admin)
             ->get(route('back.trainees.suspend.edit', ['trainee_block_list_id' => $blockList->id]))
-            ->assertPropValue('trainee_block_list', function ($traineeBlockList) use ($blockList) {
+            ->assertPropValue('traineeBlockList', function ($traineeBlockList) use ($blockList) {
                 $this->assertEquals($blockList->id, $traineeBlockList['id']);
             });
     }
