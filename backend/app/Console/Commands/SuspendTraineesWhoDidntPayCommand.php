@@ -44,6 +44,7 @@ class SuspendTraineesWhoDidntPayCommand extends Command
 
         foreach ($trainees as $trainee) {
             TraineeBlockList::create([
+                'team_id' => $trainee->team_id,
                 'trainee_id' => $trainee->id,
                 'identity_number' => $trainee->identity_number,
                 'name' => $trainee->name,
@@ -63,6 +64,7 @@ class SuspendTraineesWhoDidntPayCommand extends Command
 
         foreach ($trainees as $trainee) {
             TraineeBlockList::create([
+                'team_id' => $trainee->team_id,
                 'trainee_id' => $trainee->id,
                 'identity_number' => $trainee->identity_number,
                 'name' => $trainee->name,

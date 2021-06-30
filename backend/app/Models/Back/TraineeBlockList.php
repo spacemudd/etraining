@@ -18,6 +18,7 @@ class TraineeBlockList extends Model implements Auditable
     protected $keyType = 'string';
 
     protected $fillable = [
+        'team_id',
         'name',
         'trainee_id',
         'identity_number',
