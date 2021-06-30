@@ -1,0 +1,82 @@
+<?php
+
+namespace App\Console\Commands;
+
+use App\Models\Back\Trainee;
+use App\Models\Back\TraineeBlockList;
+use Illuminate\Console\Command;
+
+class SuspendTraineesWhoDidntPayCommand extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'suspend:trainees';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Command description';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle()
+    {
+        $trainees = Trainee::where('deleted_remark', 'عدم السداد')
+            ->get();
+
+        foreach ($trainees as $trainee) {
+            TraineeBlockList::create([
+                'trainee_id' => $trainee->id,
+                'identity_number' => $trainee->identity_number,
+                'name' => $trainee->name,
+                'email' => $trainee->email,
+                'phone' => $trainee->phone,
+                'phone_additional' => $trainee->phone_additional,
+                'reason' => $trainee->deleted_remark,
+            ]);
+            if ($trainee->user) {
+                $trainee->user->delete();
+            }
+            $trainee->delete();
+        }
+
+        $trainees = Trainee::where('deleted_remark', 'عدم سداد المستحق المالي')
+            ->get();
+
+        foreach ($trainees as $trainee) {
+            TraineeBlockList::create([
+                'trainee_id' => $trainee->id,
+                'identity_number' => $trainee->identity_number,
+                'name' => $trainee->name,
+                'email' => $trainee->email,
+                'phone' => $trainee->phone,
+                'phone_additional' => $trainee->phone_additional,
+                'reason' => $trainee->deleted_remark,
+            ]);
+            if ($trainee->user) {
+                $trainee->user->delete();
+            }
+            $trainee->delete();
+        }
+
+        return 1;
+    }
+}

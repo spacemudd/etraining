@@ -527,10 +527,6 @@ class TraineesController extends Controller
         $trainee->deleted_remark = $request->reason;
         $trainee->suspended_at = now()->setSecond(0);
         $trainee->save();
-        $trainee->delete();
-        if ($trainee->user) {
-            $trainee->user->delete();
-        }
         $block = TraineeBlockList::create([
             'trainee_id' => $trainee->id,
             'identity_number' => $trainee->identity_number,
@@ -540,6 +536,10 @@ class TraineesController extends Controller
             'phone_additional' => $trainee->phone_additional,
             'reason' => $request->reason,
         ]);
+        if ($trainee->user) {
+            $trainee->user->delete();
+        }
+        $trainee->delete();
         DB::commit();
         return redirect()->route('back.trainees.block-list.index');
     }
