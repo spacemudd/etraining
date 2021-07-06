@@ -19,3 +19,4 @@ aws ecs update-service --cluster prod-ecs-cluster --service worker-service --for
 aws ecs update-service --cluster prod-ecs-cluster --service scheduler --force-new-deployment
 aws ecs update-service --cluster prod-ecs-cluster --service frontend-service --force-new-deployment
 
+docker image prune --force

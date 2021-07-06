@@ -47,7 +47,7 @@ class TraineePrivateMessage extends Notification implements ShouldQueue
             $notify_via[] = 'mail';
         }
 
-        if (Str::start($notifiable->phone, '9665')) {
+        if ($notifiable->routeNotificationForClickSend()) {
             $notify_via[] = ClickSendChannel::class;
         }
 

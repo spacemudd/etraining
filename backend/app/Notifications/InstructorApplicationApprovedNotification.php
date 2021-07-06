@@ -36,7 +36,7 @@ class InstructorApplicationApprovedNotification extends Notification implements 
             $notify_via[] = 'mail';
         }
 
-        if ($notifiable->phone) {
+        if ($notifiable->routeNotificationForClickSend()) {
             $notify_via[] = ClickSendChannel::class;
         }
 
