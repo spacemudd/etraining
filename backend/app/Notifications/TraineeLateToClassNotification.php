@@ -10,7 +10,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Support\Str;
 use NotificationChannels\ClickSend\ClickSendChannel;
 
-class TraineeLateToClassNotification extends Notification
+class TraineeLateToClassNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -40,7 +40,7 @@ class TraineeLateToClassNotification extends Notification
             $notify_via[] = 'mail';
         }
 
-        if (Str::start($notifiable->phone, '9665')) {
+        if ($notifiable->routeNotificationForClickSend()) {
             $notify_via[] = ClickSendChannel::class;
         }
 
