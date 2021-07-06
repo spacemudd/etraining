@@ -65,10 +65,10 @@ class CourseAttendanceReportFactory
     }
 
     /**
-     * @param string $companyId
+     * @param string|null $companyId
      * @return \App\Reports\CourseAttendanceReportFactory
      */
-    public function setCompanyId(string $companyId): CourseAttendanceReportFactory
+    public function setCompanyId(string $companyId=null): CourseAttendanceReportFactory
     {
         $this->companyId = $companyId;
         return $this;

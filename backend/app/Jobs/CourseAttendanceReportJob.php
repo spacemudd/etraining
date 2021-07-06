@@ -49,7 +49,7 @@ class CourseAttendanceReportJob implements ShouldQueue
             ->setStartDate(Carbon::parse($this->tracker->metadata['date_from'])->startOfDay())
             ->setEndDate(Carbon::parse($this->tracker->metadata['date_to'])->endOfDay())
             ->setCourseId($this->tracker->metadata['course_id'])
-            ->setCompanyId($this->tracker->metadata['company_id'])
+            ->setCompanyId($this->tracker->metadata['company_id'] ?? null)
             ->toExcel();
 
         $this->tracker->addMedia(storage_path('app/'.$fileName))

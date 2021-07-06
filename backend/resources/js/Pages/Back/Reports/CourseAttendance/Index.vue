@@ -47,8 +47,7 @@
                         <div class="relative">
                             <select class="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                     v-model="form.company_id"
-                                    name="course_id"
-                                    required
+                                    name="company_id"
                                     id="company_id">
                                 <option v-for="company in companies" :key="company.id" :value="company.id">
                                     {{ company.name_ar }}
