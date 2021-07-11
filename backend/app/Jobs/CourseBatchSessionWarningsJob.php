@@ -60,12 +60,20 @@ class CourseBatchSessionWarningsJob implements ShouldQueue
                 $warning->trainee_id = $attendance->trainee_id;
                 $warning->save();
 
-                $attendance->trainee->notify(new TraineeMissedClassNotification($this->courseBatchSession));
+                try {
+                    $attendance->trainee->notify(new TraineeMissedClassNotification($this->courseBatchSession));
+                } catch (\Exception $exception) {
+                    \Log::error('Error for trainee ID: '.$attendance->trainee->id.' - '.$exception->getMessage());
+                }
             }
 
             if ($attendance->status === AttendanceReportRecord::STATUS_LATE_TO_CLASS) {
                 Log::debug('[CourseBatchSessionWarningsJob] Sending present_late notification: '.$attendance->id.' - User: '.$attendance->trainee->email);
-                $attendance->trainee->notify(new TraineeLateToClassNotification($this->courseBatchSession));
+                try {
+                    $attendance->trainee->notify(new TraineeLateToClassNotification($this->courseBatchSession));
+                } catch (\Exception $exception) {
+                    \Log::error('Error for trainee ID: '.$attendance->trainee->id.' - '.$exception->getMessage());
+                }
             }
         }
         Log::debug('[CourseBatchSessionWarningsJob] Finished for report ID: '.$this->report->id);

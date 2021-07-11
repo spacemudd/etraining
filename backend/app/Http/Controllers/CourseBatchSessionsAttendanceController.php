@@ -219,7 +219,7 @@ class CourseBatchSessionsAttendanceController extends Controller
     public function approve($course_batch_session_id)
     {
         $courseBatchSession = CourseBatchSession::findOrFail($course_batch_session_id);
-        CourseBatchSessionWarningsJob::dispatch($courseBatchSession);
+        // CourseBatchSessionWarningsJob::dispatch($courseBatchSession);
         return response()->redirectToRoute('teaching.courses.show', $courseBatchSession->course_id);
     }
 }
