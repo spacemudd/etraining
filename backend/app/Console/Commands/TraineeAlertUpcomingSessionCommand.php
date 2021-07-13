@@ -4,15 +4,8 @@ namespace App\Console\Commands;
 
 use App\Models\Back\CourseBatchSession;
 use App\Models\Back\Trainee;
-use Carbon\Carbon;
-use App\Models\Back\CourseBatch;
-use App\Models\Back\Course;
-use App\Models\Back\TraineeGroup;
-use App\Models\User;
 use Illuminate\Console\Command;
 use App\Notifications\TraineeAlertUpcomingSessionNotification;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
 class TraineeAlertUpcomingSessionCommand extends Command
@@ -49,8 +42,8 @@ class TraineeAlertUpcomingSessionCommand extends Command
     public function handle()
     {
         $sessions = CourseBatchSession::whereBetween('starts_at', [
-            now()->startOfDay(),
-            now()->addDay()->endOfDay()
+            now()->addDay()->startOfDay(),
+            now()->addDay()->endOfDay(),
         ])->get();
 
         foreach($sessions as $session) {
