@@ -16,6 +16,8 @@ class TraineeLateToClassNotification extends Notification implements ShouldQueue
 
     public $session;
 
+    public $tries = 0;
+
     /**
      * Create a new notification instance.
      *
