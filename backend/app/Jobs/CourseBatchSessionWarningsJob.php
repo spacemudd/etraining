@@ -54,7 +54,7 @@ class CourseBatchSessionWarningsJob implements ShouldQueue
             if ($attendance->status === AttendanceReportRecord::STATUS_ABSENT) {
                 Log::debug('[CourseBatchSessionWarningsJob] Sending absent notification: '.$attendance->id.' - User: '.$attendance->trainee->email);
 
-                $alreadyIssued = AttendanceReportRecord::where('team_id', $attendance->team_id)
+                $alreadyIssued = AttendanceReportRecordWarning::where('team_id', $attendance->team_id)
                     ->where('attendance_report_id', $this->report->id)
                     ->where('attendance_report_record_id', $attendance->id)
                     ->where('trainee_id', $attendance->trainee_id)
@@ -82,7 +82,7 @@ class CourseBatchSessionWarningsJob implements ShouldQueue
                 Log::debug('[CourseBatchSessionWarningsJob] Sending present_late notification: '.$attendance->id.' - User: '.$attendance->trainee->email);
 
                 $alreadySent = MissedCourseNotice::where('team_id', $attendance->team_id)
-                    ->where('course_batch_session', $this->courseBatchSession->id)
+                    ->where('course_batch_session_id', $this->courseBatchSession->id)
                     ->where('trainee_id', $attendance->trainee_id)
                     ->exists();
 
