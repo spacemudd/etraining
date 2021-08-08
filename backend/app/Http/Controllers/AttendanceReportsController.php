@@ -125,6 +125,11 @@ class AttendanceReportsController extends Controller
     public function approve($report_id)
     {
         $report = AttendanceReport::find($report_id);
+
+        if ($report->status == AttendanceReport::STATUS_SUBMITTED_REPORT) {
+            abort(404);
+        }
+
         $report->status = AttendanceReport::STATUS_SUBMITTED_REPORT;
         $report->submitted_by = auth()->user()->id;
         $report->save();
