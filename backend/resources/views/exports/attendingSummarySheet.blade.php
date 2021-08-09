@@ -26,6 +26,7 @@
     <tr>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.name') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.email') }}</strong></th>
+        <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.identity_number') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.phone') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.company') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.absent-counts') }}</strong></th>
@@ -36,6 +37,7 @@
             <tr>
                 <th style="width:50px;border:1px solid black;">{{ optional($attendance->trainee)->name }}</th>
                 <th style="width:50px; text-align:left;border:1px solid black;">{{ optional($attendance->trainee)->email }}</th>
+                <th style="width:50px; text-align:left;border:1px solid black;">{{ optional($attendance->trainee)->identity_number }}</th>
                 <th style="width:50px; text-align:center;border:1px solid black;">{{ '="'.optional($attendance->trainee)->phone.'"' }}</th>
                 <th style="width:50px; text-align:center;border:1px solid black;">{{ optional(optional($attendance->trainee)->company)->name_ar }}</th>
                 <th style="width:50px; text-align:center;border:1px solid black;{{ $attendance->warnings_count >= 4 ? 'background-color:red;' : '' }}">{{ $attendance->warnings_count }}</th>

@@ -33,6 +33,7 @@
             <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.registration-date') }}</strong></th>
             <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.name') }}</strong></th>
             <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.email') }}</strong></th>
+            <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.identity_number') }}</strong></th>
             <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.phone') }}</strong></th>
             <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.company') }}</strong></th>
             <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.attendance') }}</strong></th>
@@ -61,6 +62,7 @@
                     @endif
                 </td>
                 <td style="border:1px solid black;">{{ $attendanceRecord->trainee->email }}</td>
+                <td style="border:1px solid black;">{{ $attendanceRecord->trainee->identity_number }}</td>
                 <td style="text-align:center;border:1px solid black;">
                     ="{{ $attendanceRecord->trainee->phone }}"
                 </td>
