@@ -655,13 +655,19 @@ class TraineesController extends Controller
 
         $request->validate([
             'registered_today_only' => 'nullable|boolean',
-            'to_trainees_status' => 'required|numeric',
+            'to_trainees_status' => 'required',
             'email_title' => 'nullable|string|max:255',
             'email_body' => 'nullable|string|max:500',
             'sms_body' => 'nullable|string|max:500',
         ]);
 
-        $trainees = Trainee::where('status', $request->to_trainees_status);
+        if ($request->to_trainee_status === 'linked_to_company_and_contract') {
+            $trainees = Trainee::where('company_id', '!=', null)
+                ->where('trainee_group_id', '!=', null)
+                ->where('instructor_id', '!=', null);
+        } else {
+            $trainees = Trainee::where('status', $request->to_trainees_status);
+        }
 
         if ($request->registered_today_only) {
             $trainees->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()]);

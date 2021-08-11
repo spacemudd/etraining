@@ -29,6 +29,7 @@
                                     id="instructor_id">
                                 <option value="1">المرشحين</option>
                                 <option value="0">ملف غير مكتمل</option>
+                                <option value="linked_to_company_and_contract">مسجلين في شركة + دورة</option>
                             </select>
                             <jet-input-error :message="form.error('to_trainee_status')" class="mt-2" />
                         </div>
