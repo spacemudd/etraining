@@ -16,7 +16,7 @@ class TrainingPackagesController extends Controller
     public function index()
     {
         $instructor = optional(auth()->user()->trainee)->instructor;
-        $courses = Course::where('instructor_id', $instructor->id)->get();
+        $courses = Course::where('instructor_id', optional($instructor)->id)->get();
 
         return Inertia::render('Trainees/TrainingPackages/Index', [
             'courses' => $courses,
