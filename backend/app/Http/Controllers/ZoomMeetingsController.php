@@ -65,7 +65,7 @@ class ZoomMeetingsController extends Controller
         return response()->json([
             'apiKey' => $zoomSettings->ZOOM_CLIENT_KEY,
             'meetingNumber' => $meeting->id,
-            'leaveUrl' => url('/dashboard'),
+            'leaveUrl' => url('/session-completed-landing'),
             'userName' => auth()->user()->name,
             'role' => auth()->user()->isTrainee() ? self::ZOOM_ATTENDEE_ROLE : self::ZOOM_HOST_ROLE,
             'password' => '123123',

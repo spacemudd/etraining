@@ -41,12 +41,17 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::post('back/zoom/meetings', [\App\Http\Controllers\ZoomMeetingsController::class, 'store'])->name('back.zoom.meetings.store');
     Route::post('back/zoom/meetings/configs', [\App\Http\Controllers\ZoomMeetingsController::class, 'configs'])->name('back.zoom.meetings.configs');
 
+    Route::get('session-completed-landing', [\App\Http\Controllers\Back\SurveyLinksController::class, 'landed'])->name('back.session-completed-landing');
+
     Route::get('job-trackers/{id}', [\App\Http\Controllers\JobTrackersController::class, 'show'])->name('job-trackers.show');
     Route::get('job-trackers/{id}/download', [\App\Http\Controllers\JobTrackersController::class, 'download'])->name('job-trackers.download');
 
     // For admins
     Route::prefix('back')->middleware('redirect-trainees-to-dashboard')->name('back.')->group(function() {
         Route::get('/settings', [\App\Http\Controllers\Back\SettingsController::class, 'index'])->name('settings');
+
+        Route::get('/settings/survey-links', [\App\Http\Controllers\Back\SurveyLinksController::class, 'index'])->name('settings.survey-links.index');
+        Route::post('/settings/survey-links/store', [\App\Http\Controllers\Back\SurveyLinksController::class, 'store'])->name('settings.survey-links.store');
 
         Route::get('/settings/disable-website', [\App\Http\Controllers\Back\DisableWebsiteController::class, 'index'])->name('settings.disable-website.index');
         Route::put('/settings/disable-website', [\App\Http\Controllers\Back\DisableWebsiteController::class, 'update'])->name('settings.disable-website.update');

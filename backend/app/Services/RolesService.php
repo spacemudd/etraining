@@ -38,6 +38,7 @@ class RolesService
         'send-messages-to-groups-of-trainees',
         'view-backoffice-reports',
         'disable-website',
+        'edit-survey-links',
         // add the same name of the role to translation files.
     ];
 

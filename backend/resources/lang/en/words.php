@@ -368,4 +368,5 @@ return [
     'whatsapp' => 'WhatsApp',
     'instructor-start-time' => 'Instructor start time',
     'system-requirements' => 'System requirements',
+    'edit-survey-links' => 'Edit survey links',
 ];

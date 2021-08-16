@@ -537,7 +537,12 @@ export default {
             "please-use-the-excel-template-below": "الرجاء استخدام صيغة ملف الإكسل ادناه",
             "download-excel-file": "تحميل صيغة الإكسل",
             "suspend": "حظر",
-            "whatsapp": "إسألني"
+            "whatsapp": "إسألني",
+            "instructor-start-time": "وقت دخول المدربة",
+            "system-requirements": "متطلبات التقنية للمنصة",
+            "edit-survey-links": "تعديل روابط الإستبيان",
+            "instructor-survey-url": "رابط استبيان المدربة",
+            "trainee-survey-url": "رابط استبيان المتدربة"
         }
     },
     "en": {
@@ -1040,7 +1045,10 @@ export default {
             "please-use-the-excel-template-below": "Please use the Excel template below",
             "download-excel-file": "Download Excel template",
             "suspend": "Suspend",
-            "whatsapp": "WhatsApp"
+            "whatsapp": "WhatsApp",
+            "instructor-start-time": "Instructor start time",
+            "system-requirements": "System requirements",
+            "edit-survey-links": "Edit survey links"
         }
     }
 }

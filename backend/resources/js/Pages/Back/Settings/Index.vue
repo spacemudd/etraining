@@ -23,6 +23,10 @@
                     {{ $t('words.roles-settings') }}
                 </inertia-link>
 
+                <inertia-link v-can="'edit-survey-links'" :href="route('back.settings.survey-links.index')" class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
+                    {{ $t('words.edit-survey-links') }}
+                </inertia-link>
+
                 <inertia-link :href="route('back.settings.trainees-application')" class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
                     {{ $t('words.trainee-application-settings') }}
                 </inertia-link>

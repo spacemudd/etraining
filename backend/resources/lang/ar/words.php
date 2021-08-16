@@ -375,4 +375,7 @@ return [
     'whatsapp' => 'إسألني',
     'instructor-start-time' => 'وقت دخول المدربة',
     'system-requirements' => 'متطلبات التقنية للمنصة',
+    'edit-survey-links' => 'تعديل روابط الإستبيان',
+    'instructor-survey-url' => 'رابط استبيان المدربة',
+    'trainee-survey-url' => 'رابط استبيان المتدربة',
 ];
