@@ -372,4 +372,5 @@ return [
     'please-use-the-excel-template-below' => 'الرجاء استخدام صيغة ملف الإكسل ادناه',
     'download-excel-file' => 'تحميل صيغة الإكسل',
     'suspend' => 'حظر',
+    'whatsapp' => 'إسألني',
 ];

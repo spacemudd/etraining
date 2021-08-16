@@ -365,4 +365,5 @@ return [
     'please-use-the-excel-template-below' => 'Please use the Excel template below',
     'download-excel-file' => 'Download Excel template',
     'suspend' => 'Suspend',
+    'whatsapp' => 'WhatsApp',
 ];

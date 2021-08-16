@@ -162,7 +162,9 @@ export default {
                 "date": "التاريخ",
                 "time": "الوقت",
                 "available": "مُتاح",
-                "size": "الحجم"
+                "size": "الحجم",
+                "identity_number": "رقم الهوية",
+                "phone_additional": "الجوال الإضافي"
             }
         },
         "words": {
@@ -534,7 +536,8 @@ export default {
             "reason": "السبب",
             "please-use-the-excel-template-below": "الرجاء استخدام صيغة ملف الإكسل ادناه",
             "download-excel-file": "تحميل صيغة الإكسل",
-            "suspend": "حظر"
+            "suspend": "حظر",
+            "whatsapp": "إسألني"
         }
     },
     "en": {
@@ -1036,7 +1039,8 @@ export default {
             "reason": "Reason",
             "please-use-the-excel-template-below": "Please use the Excel template below",
             "download-excel-file": "Download Excel template",
-            "suspend": "Suspend"
+            "suspend": "Suspend",
+            "whatsapp": "WhatsApp"
         }
     }
 }
