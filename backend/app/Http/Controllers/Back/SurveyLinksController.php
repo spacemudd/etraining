@@ -66,6 +66,7 @@ class SurveyLinksController extends Controller
         if (auth()->user()->trainee) {
             if ($target = optional(SurveyLink::where('type', 'trainee')->first())->url) {
                 return Inertia::render('Back/Survey/Index', [
+                    'type' => 'trainee',
                     'url' => $target,
                 ]);
             }
@@ -74,6 +75,7 @@ class SurveyLinksController extends Controller
         if (auth()->user()->instructor) {
             if ($target = optional(SurveyLink::where('type', 'instructor')->first())->url) {
                 return Inertia::render('Back/Survey/Index', [
+                    'type' => 'instructor',
                     'url' => $target,
                 ]);
             }
