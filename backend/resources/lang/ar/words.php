@@ -378,4 +378,5 @@ return [
     'edit-survey-links' => 'تعديل روابط الإستبيان',
     'instructor-survey-url' => 'رابط استبيان المدربة',
     'trainee-survey-url' => 'رابط استبيان المتدربة',
+    'training-packages' => 'الحقائب التدريبية',
 ];

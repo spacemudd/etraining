@@ -19,7 +19,7 @@ class SurveyLink extends Model implements Auditable
 
         static::creating(function ($surveyLink) {
             if (auth()->user()) {
-                $surveyLink->team_id = auth()->user()->current_team_id;
+                $surveyLink->team_id = auth()->user()->currentTeam()->first()->id;
             }
         });
 

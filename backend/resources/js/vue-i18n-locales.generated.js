@@ -542,7 +542,8 @@ export default {
             "system-requirements": "متطلبات التقنية للمنصة",
             "edit-survey-links": "تعديل روابط الإستبيان",
             "instructor-survey-url": "رابط استبيان المدربة",
-            "trainee-survey-url": "رابط استبيان المتدربة"
+            "trainee-survey-url": "رابط استبيان المتدربة",
+            "training-packages": "الحقائب التدريبية"
         }
     },
     "en": {
@@ -1048,7 +1049,8 @@ export default {
             "whatsapp": "WhatsApp",
             "instructor-start-time": "Instructor start time",
             "system-requirements": "System requirements",
-            "edit-survey-links": "Edit survey links"
+            "edit-survey-links": "Edit survey links",
+            "training-packages": "Training packages"
         }
     }
 }

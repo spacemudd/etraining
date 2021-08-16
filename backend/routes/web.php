@@ -231,6 +231,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::prefix('trainees')->name('trainees.')->group(function() {
 
         Route::get('attendance-sheet', [\App\Http\Controllers\Trainees\AttendanceSheetController::class, 'index'])->name('attendance-sheet.index');
+        Route::get('training-packages', [\App\Http\Controllers\Trainees\TrainingPackagesController::class, 'index'])->name('training-packages.index');
 
         Route::get('/courses/{course_id}/certificate', [\App\Http\Controllers\Trainees\CoursesController::class, 'generateCertificate'])->name('courses.generate-certificate');
         Route::get('/courses/{course_id}/training-package', [\App\Http\Controllers\Teaching\CoursesController::class, 'trainingPackage'])->name('courses.training-package');

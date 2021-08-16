@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Teaching;
 
 use App\Http\Controllers\Controller;
 use App\Models\Back\Course;
+use App\Models\Media;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -90,6 +91,17 @@ class CoursesController extends Controller
      */
     public function trainingPackage($course_id)
     {
+        $course = Course::findOrFail($course_id);
+        $media = $course->media()->where('collection_name', 'training-package')->firstOrFail();
 
+        if ($media->disk === 's3') {
+            $file_url = $media->getTemporaryUrl(now()->addMinutes(5), '', [
+                //'ResponseContentType' => 'application/octet-stream', // this forces the item to be downloaded.
+            ]);
+        } else {
+            return response()->file($media->getPath());
+        }
+
+        return redirect()->to($file_url);
     }
 }
