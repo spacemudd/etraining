@@ -16,6 +16,16 @@
             </template>
         </sidebar-link>
 
+        <sidebar-link :link-value="route('trainees.attendance-sheet.index')"
+                      :active="$page.currentRouteName == 'trainees.attendance-sheet.index'">
+            <template #icon>
+                <ion-icon name="calendar-outline" class="w-5 h-5"></ion-icon>
+            </template>
+            <template #title>
+                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.attendance') }}</span>
+            </template>
+        </sidebar-link>
+
         <sidebar-link :link-value="route('inbox.index')" :active="$page.currentRouteName == 'inbox.index'">
             <template #icon>
                 <ion-icon name="mail-outline" class="w-5 h-5"></ion-icon>
@@ -59,7 +69,7 @@
             }
         },
         mounted() {
-            //
+
         },
         methods: {
 
