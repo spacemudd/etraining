@@ -14,6 +14,7 @@ Route::post('setup-account', [\App\Http\Controllers\ProfileController::class, 'u
 
 Route::get('language/{language}', [\App\Http\Controllers\LanguageController::class, 'changeLanguage'])->name('language');
 
+Route::get('/requirements', [\App\Http\Controllers\RequirementsController::class, 'index'])->name('requirements');
 Route::get('/terms', [\App\Http\Controllers\TermsController::class, 'index'])->name('terms');
 
 Route::post('/register/trainees', [\App\Http\Controllers\Auth\RegisterTraineeController::class, 'store'])->name('register.trainees.store');

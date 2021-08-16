@@ -374,4 +374,5 @@ return [
     'suspend' => 'حظر',
     'whatsapp' => 'إسألني',
     'instructor-start-time' => 'وقت دخول المدربة',
+    'system-requirements' => 'متطلبات التقنية للمنصة',
 ];

@@ -55,6 +55,7 @@
         <x-slot name="bottomCard">
             <div class="mt-5">
                 <ul class="list-disc">
+                    <li class="mt-2"><a href="https://app.ptc-ksa.com/requirements">{{ __('words.system-requirements') }}</a></li>
                     <li class="mt-2"><a href="https://app.ptc-ksa.com/terms#support-policy">{{ __('words.support-policy') }}</a></li>
                     <li class="mt-2"><a href="https://app.ptc-ksa.com/terms#attendance-policy">{{ __('words.attendance-policy') }}</a></li>
                     <li class="mt-2"><a href="https://app.ptc-ksa.com/terms#academic-integrity-policy">{{ __('words.academic-integrity-policy') }}</a></li>

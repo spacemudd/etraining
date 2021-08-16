@@ -367,4 +367,5 @@ return [
     'suspend' => 'Suspend',
     'whatsapp' => 'WhatsApp',
     'instructor-start-time' => 'Instructor start time',
+    'system-requirements' => 'System requirements',
 ];
