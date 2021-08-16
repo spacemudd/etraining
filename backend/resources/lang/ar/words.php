@@ -373,4 +373,5 @@ return [
     'download-excel-file' => 'تحميل صيغة الإكسل',
     'suspend' => 'حظر',
     'whatsapp' => 'إسألني',
+    'instructor-start-time' => 'وقت دخول المدربة',
 ];

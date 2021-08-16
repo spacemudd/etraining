@@ -366,4 +366,5 @@ return [
     'download-excel-file' => 'Download Excel template',
     'suspend' => 'Suspend',
     'whatsapp' => 'WhatsApp',
+    'instructor-start-time' => 'Instructor start time',
 ];

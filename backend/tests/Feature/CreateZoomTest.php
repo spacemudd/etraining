@@ -32,7 +32,7 @@ class CreateZoomTest extends TestCase
     {
         $instructor = Instructor::factory()->create();
 
-       ZoomAccount::factory()->create([
+        ZoomAccount::factory()->create([
             'team_id' => $this->user->personalTeam()->id,
             'instructor_id' => $instructor->id,
         ]);

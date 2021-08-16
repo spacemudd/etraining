@@ -32,6 +32,7 @@ class CourseBatchSession extends Model implements Auditable
     protected $casts = [
         'starts_at' => 'datetime',
         'ends_at' => 'datetime',
+        'instructor_started_at' => 'datetime',
     ];
 
     protected $appends = [
@@ -114,6 +115,13 @@ class CourseBatchSession extends Model implements Auditable
     {
         if ($this->ends_at) {
             return Timezone::convertToLocal($this->ends_at, 'Y-m-d h:i A');
+        }
+    }
+
+    public function getInstructorStartedAtTimezoneAttribute()
+    {
+        if ($this->instructor_started_at) {
+            return Timezone::convertToLocal($this->instructor_started_at, 'Y-m-d h:i A');
         }
     }
 

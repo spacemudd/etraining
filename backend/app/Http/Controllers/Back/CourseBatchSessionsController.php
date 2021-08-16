@@ -79,7 +79,7 @@ class CourseBatchSessionsController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Start the Zoom session.
      *
      * @param $course_id
      * @param $course_batch_id
@@ -95,6 +95,9 @@ class CourseBatchSessionsController extends Controller
         $user = new User($zoom);
 
         if (! $session->zoom_meeting_id) {
+            // if the user is a trainee, give them an error.
+            throw_if(auth()->user()->trainee, "The user is a trainee that's making a Zoom session before the instructor");
+
 	        // https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingcreate
             $meeting = $user->find('me')->meetings()->create([
                 'topic' => $session->course->course_name,
@@ -122,6 +125,7 @@ class CourseBatchSessionsController extends Controller
             $session->zoom_meeting_id = $meeting->id;
             $session->start_url = $meeting->start_url;
             $session->join_url = $meeting->join_url;
+            $session->instructor_started_at = now();
             $session->save();
         }
 

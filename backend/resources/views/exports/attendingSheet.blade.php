@@ -9,6 +9,10 @@
             <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong>{{ optional($course_batch->course->instructor)->name }}</strong></th>
         </tr>
         <tr>
+            <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong>{{ __('words.instructor-start-time') }}:</strong></th>
+            <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong>{{ $course_batch->instructor_started_at_timezone ?: '-' }}</strong></th>
+        </tr>
+        <tr>
             <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong>{{ __('words.start-date') }}:</strong></th>
             <th style="border:1px solid black;width:50px; text-align:center;background-color:yellow;"><strong>{{ $course_batch->starts_at_timezone }}</strong></th>
         </tr>
