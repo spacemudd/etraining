@@ -15,6 +15,7 @@ use App\Models\Back\TraineeBlockList;
 use App\Models\Back\TraineeGroup;
 use App\Models\City;
 use App\Models\EducationalLevel;
+use App\Models\InboxMessage;
 use App\Models\MaritalStatus;
 use App\Notifications\CustomTraineeNotification;
 use App\Notifications\TraineeApplicationApprovedNotification;
@@ -326,6 +327,12 @@ class TraineesController extends Controller
         ]);
 
         Notification::send($user, new TraineeSetupAccountNotification());
+
+        $message = new InboxMessage();
+        $message->body = 'لقد تم قبولك في منصة التدريب';
+        $message->to_id = $user->id;
+        $message->is_system_message = true;
+        $message->save();
 
         return redirect()->route('back.trainees.show', $trainee->id);
     }

@@ -8,6 +8,7 @@ use App\Models\Back\AttendanceReportRecordWarning;
 use App\Models\Back\CourseBatchSession;
 use App\Models\Back\CourseBatchSessionAttendance;
 use App\Models\Back\MissedCourseNotice;
+use App\Models\InboxMessage;
 use App\Notifications\TraineeLateToClassNotification;
 use App\Notifications\TraineeMissedClassNotification;
 use Illuminate\Bus\Queueable;
@@ -73,6 +74,17 @@ class CourseBatchSessionWarningsJob implements ShouldQueue
 
                 try {
                     $attendance->trainee->notify(new TraineeMissedClassNotification($this->courseBatchSession));
+
+                    $dayName = $this->courseBatchSession->starts_at->locale('ar')->getTranslatedDayName();
+                    $dayDate = $this->courseBatchSession->starts_at->now()->toDateString();
+                    if ($attendance->trainee_user_id) {
+                        $message = new InboxMessage();
+                        $message->team_id = $this->courseBatchSession->team_id;
+                        $message->body = 'نظرا لتغيبكم اليوم '.$dayName.' الموافق لـ '.$dayDate.'وعدم حضوركم للبرنامج التدريبي وبناء عليه تم انذاركم.';
+                        $message->to_id = $attendance->trainee_user_id;
+                        $message->is_system_message = true;
+                        $message->save();
+                    }
                 } catch (\Exception $exception) {
                     \Log::error('Error for trainee ID: '.$attendance->trainee->id.' - '.$exception->getMessage());
                 }
@@ -97,6 +109,16 @@ class CourseBatchSessionWarningsJob implements ShouldQueue
                         'course_batch_session_id' => $this->courseBatchSession->id,
                         'trainee_id' => $attendance->trainee_id,
                     ]);
+                    $dayName = $this->courseBatchSession->starts_at->locale('ar')->getTranslatedDayName();
+                    $dayDate = $this->courseBatchSession->starts_at->now()->toDateString();
+                    if ($attendance->trainee_user_id) {
+                        $message = new InboxMessage();
+                        $message->team_id = $this->courseBatchSession->team_id;
+                        $message->body = 'نظرا لتأخركم اليوم '.$dayName.' الموافق لـ '.$dayDate.' للبرنامج التدريبي وبناء عليه تم انذاركم.';
+                        $message->to_id = $attendance->trainee_user_id;
+                        $message->is_system_message = true;
+                        $message->save();
+                    }
                 } catch (\Exception $exception) {
                     \Log::error('Error for trainee ID: '.$attendance->trainee->id.' - '.$exception->getMessage());
                 }

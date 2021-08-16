@@ -11,7 +11,7 @@
             <div class="bg-white rounded shadow overflow-x-auto my-5 p-5" v-for="message in messages">
                 <div class="flex justify-between">
                     <div>
-                        <div class="text-gray-500 text-xs font-bold">{{ $t('words.from') }}:</div>
+                        <div v-if="message.from" class="text-gray-500 text-xs font-bold">{{ $t('words.from') }}:</div>
                         <div v-if="message.from">{{ message.from.name }}</div>
                     </div>
                     <div>
