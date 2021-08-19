@@ -440,11 +440,11 @@
         </div>
 
         <div class="whatsapp-bubble-head">
-            <inertia-link
+            <a target="_blank"
                 class="inline-flex items-center w-full text-sm text-gray-800 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100"
-                href="/">
+                href="https://api.whatsapp.com/send?phone=+966555094487">
                 <ion-icon name="logo-whatsapp" class="w-10 h-10 text-green-600"></ion-icon>
-            </inertia-link>
+            </a>
         </div>
     </div>
 </template>
