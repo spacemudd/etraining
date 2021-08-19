@@ -371,4 +371,5 @@ return [
     'edit-survey-links' => 'Edit survey links',
     'training-packages' => 'Training packages',
     'my-attendance' => 'My attendance',
+    'training-plan' => 'Training plan',
 ];

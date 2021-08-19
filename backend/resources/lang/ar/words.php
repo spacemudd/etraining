@@ -380,4 +380,5 @@ return [
     'trainee-survey-url' => 'رابط استبيان المتدربة',
     'training-packages' => 'الحقائب التدريبية',
     'my-attendance' => 'حضوري',
+    'training-plan' => 'خطة التدريبية',
 ];

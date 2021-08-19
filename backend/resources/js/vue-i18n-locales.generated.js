@@ -544,7 +544,8 @@ export default {
             "instructor-survey-url": "رابط استبيان المدربة",
             "trainee-survey-url": "رابط استبيان المتدربة",
             "training-packages": "الحقائب التدريبية",
-            "my-attendance": "حضوري"
+            "my-attendance": "حضوري",
+            "training-plan": "خطة التدريبية"
         }
     },
     "en": {
@@ -1052,7 +1053,8 @@ export default {
             "system-requirements": "System requirements",
             "edit-survey-links": "Edit survey links",
             "training-packages": "Training packages",
-            "my-attendance": "My attendance"
+            "my-attendance": "My attendance",
+            "training-plan": "Training plan"
         }
     }
 }
