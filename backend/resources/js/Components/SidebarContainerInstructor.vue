@@ -34,10 +34,8 @@
             </inertia-link>
         </li>
 
-        <li class="pr-8 mt-2 text-xs"><a class="hover:text-blue-600" href="/terms#attendance-policy">{{ $t('words.attendance-policy') }}</a></li>
-        <li class="pr-8 text-xs"><a class="hover:text-blue-600" href="/terms#privacy-policy">{{ $t('words.privacy-policy') }}</a></li>
+        <li class="pr-8 mt-2 text-xs"><a class="hover:text-blue-600" href="/terms#attendance-policy">السياسة الاكاديمية والتدريبية</a>
         <li class="pr-8 text-xs"><a class="hover:text-blue-600" href="/terms">{{ $t('words.support-policy') }}</a></li>
-        <li class="pr-8 text-xs"><a class="hover:text-blue-600" href="/terms#academic-integrity-policy">{{ $t('words.academic-integrity-policy') }}</a></li>
     </ul>
 </template>
 

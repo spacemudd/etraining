@@ -1,3 +1,10 @@
+<style lang="css">
+.whatsapp-bubble-head {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+}
+</style>
 <template>
     <div
         class="flex h-screen bg-gray-50 dark:bg-gray-900"
@@ -430,6 +437,14 @@
                 <div id="zoom-container"></div>
                 <slot></slot>
             </main>
+        </div>
+
+        <div class="whatsapp-bubble-head">
+            <inertia-link
+                class="inline-flex items-center w-full text-sm text-gray-800 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100"
+                href="/">
+                <ion-icon name="logo-whatsapp" class="w-10 h-10 text-green-600"></ion-icon>
+            </inertia-link>
         </div>
     </div>
 </template>

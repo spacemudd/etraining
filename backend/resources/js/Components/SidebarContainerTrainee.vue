@@ -44,19 +44,8 @@
             </template>
         </sidebar-link>
 
-        <li class="relative px-6 py-3">
-            <a target="_blank"
-                class="inline-flex items-center w-full text-sm text-gray-800 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100"
-                href="https://api.whatsapp.com/send?phone=+966555094487">
-                <ion-icon name="logo-whatsapp" class="w-5 h-5 text-green-600"></ion-icon>
-                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.whatsapp') }}</span>
-            </a>
-        </li>
-
-        <li class="pr-8 mt-2 text-xs"><a class="hover:text-blue-600" href="/terms#attendance-policy">{{ $t('words.attendance-policy') }}</a></li>
-        <li class="pr-8 text-xs"><a class="hover:text-blue-600" href="/terms#privacy-policy">{{ $t('words.privacy-policy') }}</a></li>
+        <li class="pr-8 mt-2 text-xs"><a class="hover:text-blue-600" href="/terms#attendance-policy">السياسة الاكاديمية والتدريبية</a>
         <li class="pr-8 text-xs"><a class="hover:text-blue-600" href="/terms">{{ $t('words.support-policy') }}</a></li>
-        <li class="pr-8 text-xs"><a class="hover:text-blue-600" href="/terms#academic-integrity-policy">{{ $t('words.academic-integrity-policy') }}</a></li>
     </ul>
 </template>
 
