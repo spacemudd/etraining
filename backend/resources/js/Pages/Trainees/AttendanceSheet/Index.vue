@@ -14,7 +14,7 @@
             <breadcrumb-container
                 :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
-                    {title: 'attendance', link: route('trainees.attendance-sheet.index')},
+                    {title: 'my-attendance', link: route('trainees.attendance-sheet.index')},
                 ]"
             ></breadcrumb-container>
 

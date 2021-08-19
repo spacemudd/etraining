@@ -379,4 +379,5 @@ return [
     'instructor-survey-url' => 'رابط استبيان المدربة',
     'trainee-survey-url' => 'رابط استبيان المتدربة',
     'training-packages' => 'الحقائب التدريبية',
+    'my-attendance' => 'حضوري',
 ];

@@ -31,7 +31,7 @@
                 <ion-icon name="calendar-outline" class="w-5 h-5"></ion-icon>
             </template>
             <template #title>
-                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.attendance') }}</span>
+                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.my-attendance') }}</span>
             </template>
         </sidebar-link>
 
