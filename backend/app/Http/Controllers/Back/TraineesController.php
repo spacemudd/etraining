@@ -230,12 +230,98 @@ class TraineesController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param $trainee_id
+     * @return
+     */
+    public function storeNationalAddress(Request $request, $trainee_id)
+    {
+        $request->validate([
+            'national_address_copy' => 'required_without:file',
+            'file' => 'required_without:national_address_copy',
+        ]);
+
+        $trainee = Trainee::findOrFail($trainee_id);
+        $file = $request->file('national_address_copy') ?: $request->file('file');
+        $uploaded_file = $trainee->uploadToFolder($file, 'national-address');
+
+        // When the other has been filled, mark the application as pending approval from the administration.
+        if ($trainee->national_address_copy) {
+            $trainee->status = Trainee::STATUS_PENDING_APPROVAL;
+            $trainee->save();
+        }
+
+        return $uploaded_file;
+    }
+
+    /**
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param $trainee_id
+     * @return
+     */
+    public function storeCv(Request $request, $trainee_id)
+    {
+        $request->validate([
+            'cv' => 'required_without:file',
+            'file' => 'required_without:cv',
+        ]);
+
+        $trainee = Trainee::findOrFail($trainee_id);
+        $file = $request->file('cv') ?: $request->file('file');
+        $uploaded_file = $trainee->uploadToFolder($file, 'cv');
+
+        // When the other has been filled, mark the application as pending approval from the administration.
+        if ($trainee->cv_url) {
+            $trainee->status = Trainee::STATUS_PENDING_APPROVAL;
+            $trainee->save();
+        }
+
+        return $uploaded_file;
+    }
+
+    /**
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param $trainee_id
      * @return \Illuminate\Http\RedirectResponse
      */
     public function deleteBankAccount(Request $request, $trainee_id)
     {
         $trainee = Trainee::findOrFail($trainee_id);
         $trainee->getMedia('bank-account')->each->forceDelete();
+
+        $trainee->status = Instructor::STATUS_PENDING_UPLOADING_FILES;
+        $trainee->save();
+
+        return response()->redirectToRoute('back.trainees.show', $trainee->id);
+    }
+
+    /**
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param $trainee_id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function deleteNationalAddress(Request $request, $trainee_id)
+    {
+        $trainee = Trainee::findOrFail($trainee_id);
+        $trainee->getMedia('national-address')->each->forceDelete();
+
+        $trainee->status = Instructor::STATUS_PENDING_UPLOADING_FILES;
+        $trainee->save();
+
+        return response()->redirectToRoute('back.trainees.show', $trainee->id);
+    }
+
+    /**
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param $trainee_id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function deleteCv(Request $request, $trainee_id)
+    {
+        $trainee = Trainee::findOrFail($trainee_id);
+        $trainee->getMedia('cv')->each->forceDelete();
 
         $trainee->status = Instructor::STATUS_PENDING_UPLOADING_FILES;
         $trainee->save();
@@ -348,11 +434,15 @@ class TraineesController extends Controller
             'identity_card_copy' => 'required',
             'qualification_copy' => 'required',
             'bank_account_copy' => 'required',
+            'national_address_copy' => 'required',
+            'cv' => 'required',
         ]);
 
         $this->storeIdentity($request, auth()->user()->trainee->id);
         $this->storeQualification($request, auth()->user()->trainee->id);
         $this->storeBankAccount($request, auth()->user()->trainee->id);
+        $this->storeNationalAddress($request, auth()->user()->trainee->id);
+        $this->storeCv($request, auth()->user()->trainee->id);
 
         $trainee = auth()->user()->trainee;
         $trainee->status = Trainee::STATUS_PENDING_APPROVAL;

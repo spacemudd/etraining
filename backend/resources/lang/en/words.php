@@ -372,4 +372,6 @@ return [
     'training-packages' => 'Training packages',
     'my-attendance' => 'My attendance',
     'training-plan' => 'Training plan',
+    'national-address-copy' => 'National Address Photocopy',
+    'cv' => 'CV',
 ];

@@ -116,6 +116,56 @@
                         </label>
                     </div>
 
+                    <div class="mt-4">
+                        <label class="block font-medium text-sm text-gray-700 text-center">
+                            {{ $t('words.national-address-copy') }}
+                        </label>
+
+                        <label class="mt-5 mx-auto w-64 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg border border-blue cursor-pointer hover:bg-blue hover:text-red-500">
+                            <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                            </svg>
+
+                            <span v-if="national_address_copy" class="mt-2 text-base leading-normal text-center">
+                                {{ $t('words.file-selected') }} ✅<br/>
+                                <div class="text-sm text-gray-500 mt-5" v-if="national_address_copy.name">{{ national_address_copy.name }}</div   >
+                            </span>
+                            <span v-else class="mt-2 text-base leading-normal">{{ $t('words.select-file') }}</span>
+
+                            <input type='file'
+                                   class="hidden"
+                                   :ref="$t('words.national-address-copy')"
+                                   @change="uploadFile($event, ('national_address_copy'))"
+                                   :name="$t('words.national-address-copy')"
+                                   required />
+                        </label>
+                    </div>
+
+                    <div class="mt-4">
+                        <label class="block font-medium text-sm text-gray-700 text-center">
+                            {{ $t('words.cv') }}
+                        </label>
+
+                        <label class="mt-5 mx-auto w-64 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg border border-blue cursor-pointer hover:bg-blue hover:text-red-500">
+                            <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                            </svg>
+
+                            <span v-if="cv" class="mt-2 text-base leading-normal text-center">
+                                {{ $t('words.file-selected') }} ✅<br/>
+                                <div class="text-sm text-gray-500 mt-5" v-if="cv.name">{{ cv.name }}</div   >
+                            </span>
+                            <span v-else class="mt-2 text-base leading-normal">{{ $t('words.select-file') }}</span>
+
+                            <input type='file'
+                                   class="hidden"
+                                   :ref="$t('words.cv')"
+                                   @change="uploadFile($event, ('cv'))"
+                                   :name="$t('words.cv')"
+                                   required />
+                        </label>
+                    </div>
+
                     <div class="flex items-center justify-center mt-4">
                         <button type="submit" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150 mx-4 tracking-normal">
                             {{ $t('words.submit') }}
@@ -146,6 +196,8 @@ export default {
             identity_card_copy: null,
             qualification_copy: null,
             bank_account_copy: null,
+            national_address_copy: null,
+            cv: null,
             formData: new FormData(),
 
             progressValue: null,
@@ -168,10 +220,15 @@ export default {
             } else if (filename === 'qualification_copy') {
                 this.qualification_copy = e.target.files[0];
                 this.formData.append('qualification_copy', this.qualification_copy);
-
             } else if (filename === 'bank_account_copy') {
                 this.bank_account_copy = e.target.files[0];
                 this.formData.append('bank_account_copy', this.bank_account_copy);
+            } else if (filename === 'national_address_copy') {
+                this.national_address_copy = e.target.files[0];
+                this.formData.append('national_address_copy', this.national_address_copy);
+            } else if (filename === 'cv') {
+                this.cv = e.target.files[0];
+                this.formData.append('cv', this.cv);
             }
         },
         submitForm() {

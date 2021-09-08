@@ -84,11 +84,6 @@
         </div>
 
             <div class="mt-4">
-                <x-jet-label value="{{ __('words.national-address') }}" />
-                <x-jet-input class="block mt-1 w-full" type="text" name="national_address" :value="old('national_address')" required />
-            </div>
-
-            <div class="mt-4">
                 <x-jet-label value="{{ __('words.city') }}" />
                 <div class="relative">
                     <select class="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"

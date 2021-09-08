@@ -66,6 +66,8 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'identity_copy_url',
         'qualification_copy_url',
         'bank_account_copy_url',
+        'national_address_copy_url',
+        'cv_url',
         'name_selectable',
         'show_url',
         'created_at_date',
@@ -221,6 +223,16 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     public function getBankAccountCopyUrlAttribute()
     {
         return $this->getCopyUrl('bank-account');
+    }
+
+    public function getNationalAddressCopyUrlAttribute()
+    {
+        return $this->getCopyUrl('national-address');
+    }
+
+    public function getCvUrlAttribute()
+    {
+        return $this->getCopyUrl('cv');
     }
 
     public function getCopyUrl($collection_name)

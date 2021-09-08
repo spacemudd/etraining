@@ -545,7 +545,9 @@ export default {
             "trainee-survey-url": "رابط استبيان المتدربة",
             "training-packages": "الحقائب التدريبية",
             "my-attendance": "حضوري",
-            "training-plan": "خطة التدريبية"
+            "training-plan": "خطة التدريبية",
+            "national-address-copy": "العنوان الوطني (صورة)",
+            "cv": "السيرة الذاتية"
         }
     },
     "en": {
@@ -1054,7 +1056,9 @@ export default {
             "edit-survey-links": "Edit survey links",
             "training-packages": "Training packages",
             "my-attendance": "My attendance",
-            "training-plan": "Training plan"
+            "training-plan": "Training plan",
+            "national-address-copy": "National Address Photocopy",
+            "cv": "CV"
         }
     }
 }

@@ -381,4 +381,6 @@ return [
     'training-packages' => 'الحقائب التدريبية',
     'my-attendance' => 'حضوري',
     'training-plan' => 'خطة التدريبية',
+    'national-address-copy' => 'العنوان الوطني (صورة)',
+    'cv' => 'السيرة الذاتية',
 ];
