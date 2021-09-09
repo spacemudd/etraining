@@ -44,10 +44,11 @@ class TraineeWelcomeNotification extends Notification implements ShouldQueue
     {
         return (new MailMessage)
                 ->subject(trans('words.welcome-to-ptc'))
-                ->line(trans('words.welcome-to-our-center-we-will-inform-you-when-your-application-is-approved'))
-                ->action(trans('words.access-the-platform'), url('/'))
-                ->line(trans('words.thank-you-for-applying'))
-                ->salutation(trans('words.with-regards'));
+                ->markdown('emails.welcome-trainees');
+                //->line(trans('words.welcome-to-our-center-we-will-inform-you-when-your-application-is-approved'))
+                //->action(trans('words.access-the-platform'), url('/'))
+                //->line(trans('words.thank-you-for-applying'))
+                //->salutation(trans('words.with-regards'));
     }
 
     /**
