@@ -7,7 +7,7 @@
     <img src="{{ url('/img/welcome-to-ptc.png') }}">
 </div>
 
-@component('mail::button', ['url' => url('/'), 'color' => $color])
+@component('mail::button', ['url' => url('/'), 'color' => 'primary'])
 @lang('words.access-the-platform')
 @endcomponent
 
