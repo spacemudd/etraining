@@ -19,26 +19,29 @@
 
                 </div>
 
-                <div v-if="!editButton.editOption" class="col-span-6 sm:col-span-2">
+                <div class="col-span-6 sm:col-span-2">
                     <jet-label for="trainee_group_name" :value="$t('words.group-name')" />
-                    <jet-input id="group-name" type="text" :class="editButton.inputClass" v-model="trainee.trainee_group_object.name" autocomplete="off" :disabled="!editButton.editOption" />
-                </div>
-                <div v-else class="col-span-6 sm:col-span-2">
-                    <jet-label for="trainee_group_name" :value="$t('words.group-name')" />
-                    <select-trainee-group
-                                        class="mt-1.5"
-                                          :selectedItem="trainee.trainee_group_object"
-                                          @input="selectGroupName"
-                                          v-model="trainee.trainee_group_object"
-                                          :disabled="!editButton.editOption"
-                    />
+                    <jet-input id="trainee_group_name"
+                               type="text"
+                               :class="editButton.inputClass"
+                               :value="trainee.trainee_group ? trainee.trainee_group.name : ''"
+                               autocomplete="off"
+                               :disabled="!editButton.editOption" />
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
+                    <jet-label for="company_id" :value="$t('words.company')" />
+                    <jet-input id="company_id"
+                               type="text"
+                               :class="editButton.inputClass"
+                               :value="trainee.company ? trainee.company.name_ar : ''"
+                               autocomplete="off"
+                               :disabled="!editButton.editOption" />
+                </div>
 
+                <div class="col-span-6 sm:col-span-2">
                     <jet-label for="name" :value="$t('words.name')" />
                     <jet-input id="name" type="text" :class="editButton.inputClass" v-model="trainee.name" autocomplete="off" :disabled="!editButton.editOption" />
-
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
@@ -298,9 +301,9 @@
             }
         },
         mounted() {
-            if(!this.trainee.trainee_group_object) {
-                this.trainee.trainee_group_object = this.new_trainee_group;
-            }
+            // if(!this.trainee.trainee_group_object) {
+            //     this.trainee.trainee_group_object = this.new_trainee_group;
+            // }
         },
         methods: {
             saveDeletedRemark(trainee) {

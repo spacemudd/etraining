@@ -52,8 +52,8 @@ class TraineesController extends Controller
         return Inertia::render('Back/Trainees/IndexArchived', [
             'blocked_trainees' => Trainee::with('company')
                 ->with('trainee_group')
-                ->onlyTrashed()
                 ->where('suspended_at', null)
+                ->onlyTrashed()
                 ->latest()
                 ->paginate(20),
         ]);
@@ -545,7 +545,9 @@ class TraineesController extends Controller
     public function showBlocked($id)
     {
         return Inertia::render('Back/Trainees/ShowBlocked', [
-            'trainee' => Trainee::with(['educational_level', 'city', 'marital_status', 'trainee_group'])->onlyTrashed()->findOrFail($id),
+            'trainee' => Trainee::with(['educational_level', 'city', 'marital_status', 'trainee_group', 'company'])
+                ->onlyTrashed()
+                ->findOrFail($id),
             'trainee_groups' => TraineeGroup::get(),
             'cities' => City::orderBy('name_ar')->get(),
             'marital_statuses' => MaritalStatus::orderBy('order')->get(),
