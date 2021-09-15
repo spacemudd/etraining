@@ -303,7 +303,7 @@ return [
     'email-body' => 'محتوى البريد',
     'sms-body' => 'محتوى الرسالة النصية',
     'group' => 'المجموعة',
-    'congratulations-you-were-assigned-to-a-company' => 'متم ربط ملفك مع شركة بنجاح',
+    'congratulations-you-were-assigned-to-a-company' => 'تم ربط ملفك مع شركة بنجاح',
     'this-is-to-inform-you-that-your-file-was-assigned-to-a-company' => 'نفيدك بأنه تم ربط ملفك مع الشركة بنجاح',
     'registered-today-online' => 'تسجيلات اليوم فقط',
     'absence-reason' => 'سبب الغياب',
