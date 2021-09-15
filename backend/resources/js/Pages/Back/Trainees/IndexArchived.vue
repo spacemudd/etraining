@@ -83,7 +83,7 @@
                         </td>
                         <td class="border-t">
                             <inertia-link class="px-6 py-4 flex items-center" :href="route('back.trainees.show.blocked', trainees.id)" tabindex="-1">
-                                <span v-if="trainees.company">{{ trainees.company.name }}</span>
+                                <span v-if="trainees.company">{{ trainees.company.name_ar ? trainees.company.name_ar : trainees.company.name_en }}</span>
                             </inertia-link>
                         </td>
                         <td class="border-t">

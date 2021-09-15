@@ -60,7 +60,7 @@
                             {{ $t('words.saved-successfully') }}
                         </jet-action-message>
 
-                        <inertia-link href="/back/trainees" class="flex items-center justify-start rtl:ml-4 ltr:mr-4 rounded-md px-4 py-2 bg-white hover:bg-gray-300 text-right">
+                        <inertia-link :href="route('back.trainees.block-list.index')" class="flex items-center justify-start rtl:ml-4 ltr:mr-4 rounded-md px-4 py-2 bg-white hover:bg-gray-300 text-right">
                             {{ $t('words.cancel') }}
                         </inertia-link>
 
