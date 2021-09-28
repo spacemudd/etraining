@@ -469,8 +469,8 @@ export default {
             "email-body": "محتوى البريد",
             "sms-body": "محتوى الرسالة النصية",
             "group": "المجموعة",
-            "congratulations-you-were-assigned-to-a-company": "مبروك! تم ربط ملفك مع شركة",
-            "this-is-to-inform-you-that-your-file-was-assigned-to-a-company": "هذه إشعار انه تم ربط ملفك على شركة",
+            "congratulations-you-were-assigned-to-a-company": "تم ربط ملفك بالبرنامج التدريبي بنجاح",
+            "this-is-to-inform-you-that-your-file-was-assigned-to-a-company": "نفيدك بأنه تم ربط ملفك بالبرنامج التدريبي بنجاح",
             "registered-today-online": "تسجيلات اليوم فقط",
             "absence-reason": "سبب الغياب",
             "absent-with-excuse": "غياب بعذر",
@@ -547,7 +547,8 @@ export default {
             "my-attendance": "حضوري",
             "training-plan": "خطة التدريبية",
             "national-address-copy": "العنوان الوطني (صورة)",
-            "cv": "السيرة الذاتية"
+            "cv": "السيرة الذاتية",
+            "remove-all": "حذف الكل"
         }
     },
     "en": {
@@ -1058,7 +1059,8 @@ export default {
             "my-attendance": "My attendance",
             "training-plan": "Training plan",
             "national-address-copy": "National Address Photocopy",
-            "cv": "CV"
+            "cv": "CV",
+            "remove-all": "Remove all"
         }
     }
 }

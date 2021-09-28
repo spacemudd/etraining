@@ -383,4 +383,5 @@ return [
     'training-plan' => 'خطة التدريبية',
     'national-address-copy' => 'العنوان الوطني (صورة)',
     'cv' => 'السيرة الذاتية',
+    'remove-all' => 'حذف الكل',
 ];

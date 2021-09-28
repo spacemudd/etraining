@@ -1,5 +1,8 @@
 <template>
     <div class="bg-white rounded shadow overflow-x-auto">
+        <div class="flex justify-end mx-5">
+            <button class="mt-5 bg-red-500 p-2 text-white rounded" @click="removeAll">{{ $t('words.remove-all') }}</button>
+        </div>
         <table class="w-full whitespace-no-wrap">
         <colgroup>
             <col>
@@ -70,6 +73,11 @@ export default {
                     .then(response => {
                         this.getWarnings();
                     })
+            }
+        },
+        removeAll() {
+            if (confirm(this.$t('words.are-you-sure'))) {
+                this.$inertia.delete(route('back.trainees.warnings.delete.all', {trainee_id: this.trainee_id}))
             }
         }
     }

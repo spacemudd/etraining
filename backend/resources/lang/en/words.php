@@ -374,4 +374,5 @@ return [
     'training-plan' => 'Training plan',
     'national-address-copy' => 'National Address Photocopy',
     'cv' => 'CV',
+    'remove-all' => 'Remove all',
 ];

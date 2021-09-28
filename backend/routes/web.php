@@ -109,6 +109,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
         // Attendance management of trainee.
         Route::get('trainees/{trainee_id}/warnings', [\App\Http\Controllers\Back\TraineesController::class, 'warnings'])->name('trainees.warnings');
+        Route::delete('trainees/{trainee_id}/warnings/all', [\App\Http\Controllers\Back\TraineesController::class, 'warningDeleteAll'])->name('trainees.warnings.delete.all');
         Route::delete('trainees/{trainee_id}/warnings/{id}', [\App\Http\Controllers\Back\TraineesController::class, 'warningDelete'])->name('trainees.warnings.delete');
 
         // Export For Trainees.

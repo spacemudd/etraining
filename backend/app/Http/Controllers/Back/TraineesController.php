@@ -836,6 +836,19 @@ class TraineesController extends Controller
             ->delete();
     }
 
+    /**
+     * Delete all warnings under trainee.
+     *
+     * @param $trainee_id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function warningDeleteAll($trainee_id)
+    {
+        AttendanceReportRecordWarning::where('trainee_id', $trainee_id)
+            ->delete();
+        return redirect()->route('back.trainees.show', $trainee_id);
+    }
+
     public function updatedDeletedRemark($trainee_id, Request $request)
     {
         $request->validate([
