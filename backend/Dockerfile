@@ -21,6 +21,7 @@ RUN mkdir -p /var/run/php && \
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 USER root
+RUN apk add apt-transport-https
 RUN apk update
 
 RUN apk add \
@@ -53,37 +54,12 @@ RUN apk add \
     php7-simplexml \
     php7-xmlwriter \
     php7-zip \
-    php7-exif
+    php7-exif \
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
-
-#RUN apt-get install -y php7.4-dev
-#
-#RUN pecl channel-update pecl.php.net \
-#    && pecl install redis
-#
-# # Clean the image \
-#RUN apt-get remove -qq -y php7.4-dev pkg-config libmagickwand-dev build-essential \
-#     && apt-get auto-remove -qq -y \
-#     && apt-get clean \
-#     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-# Install Composer
-# Create system user to run Composer and Artisan Commands
-#RUN adduser -G www-data,root -u 1000 -h /var/www/html www
-#RUN mkdir -p /var/www/html/.composer && \
-#    chown -R www:www /var/www/html
-
-# RUN cp .env.example .env && \
-#    php artisan key:generate
-
-# RUN php artisan key:generate --force
 
 USER nobody
 
 EXPOSE 8900
-
-# Let supervisord start nginx & php-fpm
-# CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
 HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1:9000/fpm-ping
