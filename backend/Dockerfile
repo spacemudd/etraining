@@ -53,7 +53,7 @@ RUN apk add \
     php7-simplexml \
     php7-xmlwriter \
     php7-zip \
-    php7-exif \
+    php7-exif
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
