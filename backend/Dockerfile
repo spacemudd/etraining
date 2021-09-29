@@ -21,7 +21,6 @@ RUN mkdir -p /var/run/php && \
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 USER root
-RUN apk add apt-transport-https
 RUN apk update
 
 RUN apk add \
