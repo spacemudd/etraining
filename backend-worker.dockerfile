@@ -2,6 +2,8 @@ FROM php:7.4-fpm
 
 LABEL description="A supervisor configured to run with artisan horizon command"
 
+RUN apt-get install -y apt-transport-https
+
 RUN apt-get update
 
 RUN apt-get install -y \
@@ -12,8 +14,7 @@ RUN apt-get install -y \
     libbz2-dev \
     libzip-dev \
     zip \
-    libbz2-dev \
-     apt-transport-https
+    libbz2-dev
 
 RUN pecl channel-update pecl.php.net \
     && pecl install redis
