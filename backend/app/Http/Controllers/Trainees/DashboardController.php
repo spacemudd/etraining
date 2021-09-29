@@ -17,8 +17,7 @@ class DashboardController extends Controller
         if ($instructor) {
             $coursesIds = Course::where('instructor_id', $instructor->id)->pluck('id');
 
-            $courseBatchesIds = CourseBatch::where('instructor_id', $instructor->id)
-                ->whereIn('course_id', $coursesIds)
+            $courseBatchesIds = CourseBatch::whereIn('course_id', $coursesIds)
                 ->where('trainee_group_id', optional(auth()->user()->trainee)->trainee_group_id)
                 ->pluck('id');
 
