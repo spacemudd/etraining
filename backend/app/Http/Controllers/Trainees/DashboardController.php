@@ -18,9 +18,10 @@ class DashboardController extends Controller
 
             $sessions = CourseBatchSession::whereIn('course_id', $coursesIds)
             ->with(['course_batch' => function($q) {
-                $q->with(['course' => function($q) {
-                    $q->with('instructor');
-                }]);
+                $q->where('trainee_group_id', optional(auth()->user()->trainee)->trainee_group_id)
+                    ->with(['course' => function($q) {
+                        $q->with('instructor');
+                    }]);
             }])->where('starts_at', '>=', now()->startOfDay())
                 ->latest()
                 ->paginate(15);
