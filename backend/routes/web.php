@@ -1,5 +1,26 @@
 <?php
 
+Route::get('shafiq', function() {
+    $trainees = \App\Models\Back\Trainee::where('company_id', '9d6ad117-d2e5-4148-a8de-fc92fefffea7')
+        ->where('absents_last_week', function($q) {
+            $q->select('status')
+                ->from('attendance_report_records')
+                ->where('attendance_report_records.status', 0)
+                ->whereColumn('attendance_report_records.trainee_id', 'trainees.id')
+                ->whereBetween('date', [now()->setDay(19)->startOfDay(), now()->setDay(24)->endOfDay()])
+                ->count();
+        }, 'absents_last_week')
+        ->where('absents_this_week', function($q) {
+            $q->select('status')
+                ->from('attendance_report_records')
+                ->where('attendance_report_records.status', 0)
+                ->whereColumn('attendance_report_records.trainee_id', 'trainees.id')
+                ->whereBetween('date', [now()->setDay(19)->startOfDay(), now()->setDay(24)->endOfDay()])
+                ->count();
+        })
+        ->get();
+});
+
 Route::impersonate();
 
 Route::get('/disabled', [\App\Http\Controllers\Back\DisableWebsiteController::class, 'showDisabledPage'])->name('disabled');

@@ -173,5 +173,6 @@ class CourseAttendanceReportFactory
     {
         Excel::store(new CourseSessionsAttendanceSummarySheetExport($this->getCourseSessions(), $this->startDate, $this->endDate, $this->companyId), $this->getFileName());
         return $this->getFileName();
+        ["731ea8d7-e884-4a5c-a6e7-0b54cafc4c6d","50e9fb28-84ec-4f0a-a124-c4623dca72e0","e7e44955-e525-4ecb-948d-b5424db650c0","a421e741-a53b-4073-9f6c-54302854d237","6a4b2d25-118b-423b-ac86-1f341ccfde32","8ef03b04-6220-4aab-958f-ec3ea150c32c","97903520-4fc0-4ba8-a7b4-e561f85c6bb6","332c29bf-c16d-405e-9f23-739624544230","7f4faec9-48b9-4be3-b8d9-9ff710567228","ff31cfa7-9527-400f-8b59-d97b2f056d16","4f53a321-5c65-4e0d-ac66-19896a6727b3","c12b13aa-e80d-435a-891b-278565eac071",];
     }
 }
