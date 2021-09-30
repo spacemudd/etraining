@@ -2,22 +2,8 @@
 
 Route::get('shafiq', function() {
     $trainees = \App\Models\Back\Trainee::where('company_id', '9d6ad117-d2e5-4148-a8de-fc92fefffea7')
-        ->where(function($q) {
-            $q->select('status')
-                ->from('attendance_report_records')
-                ->where('attendance_report_records.status', 0)
-                //->whereColumn('attendance_report_records.trainee_id', '=' ,'trainees.id')
-                ->whereBetween('session_starts_at', [now()->setDay(19)->startOfDay(), now()->setDay(24)->endOfDay()])
-                ->count();
-        }, 'absents_last_week')
-        ->where(function($q) {
-            $q->select('status')
-                ->from('attendance_report_records')
-                ->where('attendance_report_records.status', 0)
-                //->whereColumn('attendance_report_records.trainee_id', '=', 'trainees.id')
-                ->whereBetween('session_starts_at', [now()->setDay(19)->startOfDay(), now()->setDay(24)->endOfDay()])
-                ->count();
-        }, 'absents_this_week')
+        ->withCount('absences_last_week')
+        ->withCount('absences_current_week')
         ->get();
 });
 
