@@ -7,7 +7,7 @@ Route::get('shafiq', function() {
                 ->from('attendance_report_records')
                 ->where('attendance_report_records.status', 0)
                 //->whereColumn('attendance_report_records.trainee_id', '=' ,'trainees.id')
-                ->whereBetween('date', [now()->setDay(19)->startOfDay(), now()->setDay(24)->endOfDay()])
+                ->whereBetween('session_starts_at', [now()->setDay(19)->startOfDay(), now()->setDay(24)->endOfDay()])
                 ->count();
         }, 'absents_last_week')
         ->where(function($q) {
@@ -15,7 +15,7 @@ Route::get('shafiq', function() {
                 ->from('attendance_report_records')
                 ->where('attendance_report_records.status', 0)
                 //->whereColumn('attendance_report_records.trainee_id', '=', 'trainees.id')
-                ->whereBetween('date', [now()->setDay(19)->startOfDay(), now()->setDay(24)->endOfDay()])
+                ->whereBetween('session_starts_at', [now()->setDay(19)->startOfDay(), now()->setDay(24)->endOfDay()])
                 ->count();
         }, 'absents_this_week')
         ->get();
