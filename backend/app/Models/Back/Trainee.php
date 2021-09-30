@@ -250,7 +250,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         if ($this->trashed()) {
             return route('back.trainees.show.blocked', $this->id);
         } else {
-            return route('back.trainees.show', $this->id);
+            return route('back.trainees.show', ['trainee' => $this->id]);
         }
     }
 
