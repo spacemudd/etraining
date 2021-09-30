@@ -378,4 +378,18 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
             ->where('status', 0)
             ->whereBetween('session_starts_at', [now()->setDay(26)->startOfDay(), now()->setDay(30)->endOfDay()]);
     }
+
+    public function attendances_last_week()
+    {
+        return $this->hasMany(AttendanceReportRecord::class)
+            ->where('status', 3)
+            ->whereBetween('session_starts_at', [now()->setDay(19)->startOfDay(), now()->setDay(24)->endOfDay()]);
+    }
+
+    public function attendances_current_week()
+    {
+        return $this->hasMany(AttendanceReportRecord::class)
+            ->where('status', 3)
+            ->whereBetween('session_starts_at', [now()->setDay(26)->startOfDay(), now()->setDay(30)->endOfDay()]);
+    }
 }
