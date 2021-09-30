@@ -77,6 +77,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'resource_label',
         'resource_type',
         'deleted_at_timezone',
+        'clean_phone',
     ];
 
     protected static function boot(): void
@@ -356,6 +357,11 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         }
 
         return $convertPhone;
+    }
+
+    public function getCleanPhoneAttribute()
+    {
+        return $this->cleanUpThePhoneNumber($this->phone);
     }
 
     public function arabicE2w($str)

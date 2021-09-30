@@ -1,10 +1,14 @@
 <?php
 
 Route::get('shafiq', function() {
-    return $trainees = \App\Models\Back\Trainee::withCount('absences_last_week')
-        ->withCount('absences_current_week')
-        ->withCount('attendances_last_week')
-        ->withCount('attendances_current_week')
+    //return $trainees = \App\Models\Back\Trainee::withCount('absences_last_week')
+    //    ->withCount('absences_current_week')
+    //    ->withCount('attendances_last_week')
+    //    ->withCount('attendances_current_week')
+    //    ->get();
+
+    return Trainee::where('company_id', '!=', null)->where('suspended_at', null)->where('deleted_remark', null)->where('trainee_group_id', '!=', null)->where('deleted_at', null)->whereHas('company', function($q) {$q->where('deleted_at', null);})
+        ->select(['name', 'phone', 'email'])
         ->get();
 });
 
