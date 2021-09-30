@@ -1,7 +1,7 @@
 <?php
 
 Route::get('shafiq', function() {
-    $trainees = \App\Models\Back\Trainee::where('company_id', '9d6ad117-d2e5-4148-a8de-fc92fefffea7')
+    return $trainees = \App\Models\Back\Trainee::where('company_id', '9d6ad117-d2e5-4148-a8de-fc92fefffea7')
         ->withCount('absences_last_week')
         ->withCount('absences_current_week')
         ->get();
