@@ -8,7 +8,7 @@ Route::get('shafiq', function() {
     //    ->get();
 
     return \App\Models\Back\Trainee::where('company_id', '!=', null)->where('suspended_at', null)->where('deleted_remark', null)->where('trainee_group_id', '!=', null)->where('deleted_at', null)->whereHas('company', function($q) {$q->where('deleted_at', null);})
-        ->select(['name', 'phone', 'email'])
+        ->select(['id', 'name', 'phone', 'email'])
         ->get();
 });
 
