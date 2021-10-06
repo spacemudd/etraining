@@ -15,7 +15,7 @@ Route::get('shafiq', function() {
         ->where('deleted_at', null)
         ->with('company')
         ->whereHas('company', function($q) {$q->where('deleted_at', null);})
-        ->select(['id', 'name', 'phone', 'email'])
+        //->select(['id', 'name', 'phone', 'email'])
         ->withCount([
             'absences_19to25',
             'absences_26to2',
