@@ -78,10 +78,11 @@ export default {
     },
     props: [
         'complaints_settings',
+        'emails',
     ],
     mounted() {
         this.form.option_enabled = this.complaints_settings.enabled;
-        this.form.option_emails = this.complaints_settings.emails;
+        this.form.option_emails = this.emails ? this.emails.join(', ') : '';
         debugger;
     },
     data() {

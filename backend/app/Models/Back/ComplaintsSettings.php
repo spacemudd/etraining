@@ -12,6 +12,6 @@ class ComplaintsSettings extends Model
     protected $guarded = ['id'];
 
     protected $casts = [
-        'emails' => 'json',
+        'emails' => 'array',
     ];
 }

@@ -19,26 +19,31 @@ class ComplaintsSettingsController extends Controller
     {
         $this->authorize('edit-complaint-settings');
 
+        $setting = ComplaintsSettings::firstOrCreate(['team_id' => auth()->user()->currentTeam()->first()->id], [
+            'team_id' => auth()->user()->currentTeam()->first()->id,
+            'enabled' => false,
+            'emails' => null,
+        ]);
+
+        //dd($setting);
+
         return Inertia::render('Back/Settings/ComplaintsSettings', [
-            'complaints_settings' => ComplaintsSettings::firstOrCreate(['team_id' => auth()->user()->currentTeam()->first()->id], [
-                'team_id' => auth()->user()->currentTeam()->first()->id,
-                'enabled' => false,
-                'emails' => null,
-            ])
+            'complaints_settings' => $setting,
+            'emails' => $setting->emails,
         ]);
     }
 
     public function update(Request $request)
     {
         $request->validate([
-            'option_emails' => 'required|string|max:255',
+            'option_emails' => 'required|max:255',
             'option_enabled' => 'required|boolean',
         ]);
 
         ComplaintsSettings::where('team_id', auth()->user()->currentTeam()->first()->id)
             ->update([
                 'enabled' => $request->option_enabled,
-                'emails' => $request->option_emails,
+                'emails' => explode(', ', $request->option_emails),
             ]);
 
         return redirect()->route('back.settings');
