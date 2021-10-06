@@ -21,7 +21,7 @@ Route::get('shafiq', function() {
             'absences_26to2',
             'absences_3to9',
         ])
-        ->take(5)
+        //->take(5)
         ->get();
 
     $traineeData = [];
@@ -36,7 +36,7 @@ Route::get('shafiq', function() {
             'group' => $trainee->trainee_group->name,
             'absences_19to25' => $trainee->absences_19to25_count,
             'absences_26to2' => $trainee->absences_26to2_count,
-            'absences_3to9' => $trainee->absences_3to9,
+            'absences_3to9' => $trainee->absences_3to9_count,
         ];
     }
 
