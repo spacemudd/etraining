@@ -102,6 +102,9 @@ Route::middleware(['guest'])->get('/', [\App\Http\Controllers\WelcomeController:
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('/register/instructors/application', [\App\Http\Controllers\Auth\RegisterInstructorController::class, 'application'])->name('register.instructors.application');
     Route::get('/register/trainees/application', [\App\Http\Controllers\Auth\RegisterTraineeController::class, 'application'])->name('register.trainees.application');
+
+    Route::get('complaints', [\App\Http\Controllers\ComplaintsController::class, 'index'])->name('complaints.index');
+    Route::post('complaints', [\App\Http\Controllers\ComplaintsController::class, 'store'])->name('complaints.store');
 });
 
 Route::middleware(['auth:sanctum'])->get('/trainees/application', [\App\Http\Controllers\TraineesApplicationController::class, 'index']);
