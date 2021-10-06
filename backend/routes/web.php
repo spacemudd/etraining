@@ -8,7 +8,7 @@ Route::get('shafiq', function() {
     //    ->withCount('attendances_last_week')
     //    ->withCount('attendances_current_week')
     //    ->get();
-    return $trainees = Trainee::where('company_id', '!=', null)
+    $trainees = Trainee::where('company_id', '!=', null)
         ->where('suspended_at', null)
         ->where('deleted_remark', null)
         ->where('trainee_group_id', '!=', null)
@@ -21,9 +21,23 @@ Route::get('shafiq', function() {
             'absences_26to2',
             'absences_3to9',
         ])
-        ->toBase()
         ->take(5)
         ->get();
+
+    $traineeData = [];
+
+    foreach ($trainees as $trainee) {
+        $traineeData[] = [
+            'name' => $trainee->name,
+            'company' => $trainee->company->name_ar,
+            'email' => $trainee->email,
+            'phone' => $trainee->phone,
+            'instructor' => $trainee->instructor->name,
+            'group' => $trainee->trainee_group->name,
+        ];
+    }
+
+    return $traineeData;
 });
 
 Route::impersonate();
