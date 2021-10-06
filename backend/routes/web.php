@@ -29,11 +29,11 @@ Route::get('shafiq', function() {
     foreach ($trainees as $trainee) {
         $traineeData[] = [
             'name' => $trainee->name,
-            'company' => $trainee->company->name_ar,
+            'company' => optional($trainee->company)->name_ar,
             'email' => $trainee->email,
             'phone' => $trainee->phone,
-            'instructor' => $trainee->instructor->name,
-            'group' => $trainee->trainee_group->name,
+            'instructor' => optional($trainee->instructor)->name,
+            'group' => optional($trainee->trainee_group)->name,
             'absences_19to25' => $trainee->absences_19to25_count,
             'absences_26to2' => $trainee->absences_26to2_count,
             'absences_3to9' => $trainee->absences_3to9_count,
