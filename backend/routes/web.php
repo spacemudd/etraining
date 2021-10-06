@@ -4,12 +4,12 @@ use App\Models\Back\Trainee;
 
 Route::get('shafiq', function() {
 
-    $table = DB::table('attendance_report_records')
-        ->select('trainee_id', DB::raw('count(`trainee_id`) as occurences'))
-        ->where('course_batch_session_id', 'c5319fff-a6a4-45cb-a78f-13b8a693730c')
-        ->groupBy('trainee_id')
-        ->having('occurences', '>', 1)
-        ->get();
+    //$table = DB::table('attendance_report_records')
+    //    ->select('trainee_id', DB::raw('count(`trainee_id`) as occurences'))
+    //    ->where('course_batch_session_id', 'c5319fff-a6a4-45cb-a78f-13b8a693730c')
+    //    ->groupBy('trainee_id')
+    //    ->having('occurences', '>', 1)
+    //    ->get();
 
     //foreach ($table as $record) {
     //    $count = \App\Models\Back\AttendanceReportRecord::where('course_batch_session_id', 'c5319fff-a6a4-45cb-a78f-13b8a693730c')
@@ -24,7 +24,7 @@ Route::get('shafiq', function() {
     //    }
     //}
 
-    return $table;
+    //return $table;
 
     //return $trainees = \App\Models\Back\Trainee::withCount('absences_last_week')
     //    ->withCount('absences_current_week')
