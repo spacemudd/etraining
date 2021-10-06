@@ -384,4 +384,8 @@ return [
     'national-address-copy' => 'العنوان الوطني (صورة)',
     'cv' => 'السيرة الذاتية',
     'remove-all' => 'حذف الكل',
+    'complaints-settings' => 'إعدادت الشكاوى والملاحظات',
+    'edit-complaint-settings' => 'تعديل إعدادت الشكواى والملاحظات',
+    'emails' => 'الإيميلات',
+    'enabled' => 'مفعل',
 ];

@@ -375,4 +375,7 @@ return [
     'national-address-copy' => 'National Address Photocopy',
     'cv' => 'CV',
     'remove-all' => 'Remove all',
+    'complaints-settings' => 'Complaints settings',
+    'emails' => 'Emails',
+    'enabled' => 'Enabled',
 ];
