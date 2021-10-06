@@ -4,27 +4,27 @@ use App\Models\Back\Trainee;
 
 Route::get('shafiq', function() {
 
-    $table = DB::table('attendance_report_records')
-        ->select('trainee_id', DB::raw('count(`trainee_id`) as occurences'))
-        ->where('course_batch_session_id', '24729755-5bad-4bf3-8440-6c25a4c4e8db')
-        ->groupBy('trainee_id')
-        ->having('occurences', '>', 1)
-        ->get();
-
-    foreach ($table as $record) {
-        $count = \App\Models\Back\AttendanceReportRecord::where('course_batch_session_id', '24729755-5bad-4bf3-8440-6c25a4c4e8db')
-            ->where('trainee_id', $record->trainee_id)
-            ->count();
-
-        if ($count > 1) {
-            \App\Models\Back\AttendanceReportRecord::where('course_batch_session_id', '24729755-5bad-4bf3-8440-6c25a4c4e8db')
-                ->where('trainee_id', $record->trainee_id)
-                ->first()
-                ->delete();
-        }
-    }
-
-    return $table;
+    //$table = DB::table('attendance_report_records')
+    //    ->select('trainee_id', DB::raw('count(`trainee_id`) as occurences'))
+    //    ->where('course_batch_session_id', '24729755-5bad-4bf3-8440-6c25a4c4e8db')
+    //    ->groupBy('trainee_id')
+    //    ->having('occurences', '>', 1)
+    //    ->get();
+    //
+    //foreach ($table as $record) {
+    //    $count = \App\Models\Back\AttendanceReportRecord::where('course_batch_session_id', '24729755-5bad-4bf3-8440-6c25a4c4e8db')
+    //        ->where('trainee_id', $record->trainee_id)
+    //        ->count();
+    //
+    //    if ($count > 1) {
+    //        \App\Models\Back\AttendanceReportRecord::where('course_batch_session_id', '24729755-5bad-4bf3-8440-6c25a4c4e8db')
+    //            ->where('trainee_id', $record->trainee_id)
+    //            ->first()
+    //            ->delete();
+    //    }
+    //}
+    //
+    //return $table;
 
     //return $trainees = \App\Models\Back\Trainee::withCount('absences_last_week')
     //    ->withCount('absences_current_week')
