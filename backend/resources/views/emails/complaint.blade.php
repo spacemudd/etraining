@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
 </head>
-<body>
+<body style="text-align:right;">
 <h5>اسم الدورة:</h5>
 <p>{{ $complaint->course_name }}</p>
 <h5>اسم المتدربة:</h5>
