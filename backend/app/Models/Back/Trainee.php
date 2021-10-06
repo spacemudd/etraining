@@ -78,6 +78,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'resource_type',
         'deleted_at_timezone',
         'clean_phone',
+        'company_name',
     ];
 
     protected static function boot(): void
@@ -209,6 +210,11 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     public function attendances()
     {
         return $this->hasMany(CourseBatchSessionAttendance::class);
+    }
+
+    public function getCompanyNameAttribute()
+    {
+        return $this->company->name;
     }
 
     public function getIdentityCopyUrlAttribute()
@@ -371,31 +377,33 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         return str_replace($arabic_eastern, $arabic_western, $str);
     }
 
-    public function absences_last_week()
+    public function absences_19to25()
     {
         return $this->hasMany(AttendanceReportRecord::class)
             ->where('status', 0)
-            ->whereBetween('session_starts_at', [now()->setDay(19)->startOfDay(), now()->setDay(24)->endOfDay()]);
+            ->whereBetween('session_starts_at', [
+                now()->setDate(2021, 9, 19)->startOfDay(),
+                now()->setDate(2021, 9, 25)->endOfDay(),
+            ]);
     }
 
-    public function absences_current_week()
+    public function absences_26to2()
     {
         return $this->hasMany(AttendanceReportRecord::class)
             ->where('status', 0)
-            ->whereBetween('session_starts_at', [now()->setDay(26)->startOfDay(), now()->setDay(30)->endOfDay()]);
+            ->whereBetween('session_starts_at', [
+                now()->setDate(2021, 9, 26)->startOfDay(),
+                now()->setDate(2021, 10, 2)->endOfDay(),
+            ]);
     }
 
-    public function attendances_last_week()
+    public function absences_3to9()
     {
         return $this->hasMany(AttendanceReportRecord::class)
-            ->where('status', 3)
-            ->whereBetween('session_starts_at', [now()->setDay(19)->startOfDay(), now()->setDay(24)->endOfDay()]);
-    }
-
-    public function attendances_current_week()
-    {
-        return $this->hasMany(AttendanceReportRecord::class)
-            ->where('status', 3)
-            ->whereBetween('session_starts_at', [now()->setDay(26)->startOfDay(), now()->setDay(30)->endOfDay()]);
+            ->where('status', 0)
+            ->whereBetween('session_starts_at', [
+                now()->setDate(2021, 10, 3)->startOfDay(),
+                now()->setDate(2021, 10, 9)->endOfDay(),
+            ]);
     }
 }
