@@ -22,6 +22,7 @@ Route::get('shafiq', function() {
             'absences_3to9',
         ])
         ->toBase()
+        ->take(5)
         ->get();
 });
 
