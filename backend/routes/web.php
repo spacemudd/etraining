@@ -8,19 +8,20 @@ Route::get('shafiq', function() {
     //    ->withCount('attendances_last_week')
     //    ->withCount('attendances_current_week')
     //    ->get();
-    return Trainee::where('company_id', '!=', null)
+    return $trainees = Trainee::where('company_id', '!=', null)
         ->where('suspended_at', null)
         ->where('deleted_remark', null)
         ->where('trainee_group_id', '!=', null)
         ->where('deleted_at', null)
         ->with('company')
         ->whereHas('company', function($q) {$q->where('deleted_at', null);})
-        ->select(['id', 'name', 'phone', 'email'])
+        //->select(['id', 'name', 'phone', 'email'])
         ->withCount([
             'absences_19to25',
             'absences_26to2',
             'absences_3to9',
         ])
+        ->toBase()
         ->get();
 });
 
