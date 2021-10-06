@@ -40,6 +40,7 @@
                         <div class="mt-2">
                             <div class="col-sm-1 relative">
                                 <jet-input type="text"
+                                           dir="ltr"
                                            class="mt-1 block w-full"
                                            v-model="form.option_emails"
                                            autocomplete="off"
