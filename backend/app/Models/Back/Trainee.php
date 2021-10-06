@@ -214,7 +214,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
 
     public function getCompanyNameAttribute()
     {
-        return $this->company->name;
+        return optional($this->company)->name;
     }
 
     public function getIdentityCopyUrlAttribute()
