@@ -11,18 +11,18 @@ Route::get('shafiq', function() {
         ->having('occurences', '>', 1)
         ->get();
 
-    //foreach ($table as $record) {
-    //    $count = \App\Models\Back\AttendanceReportRecord::where('course_batch_session_id', 'c5319fff-a6a4-45cb-a78f-13b8a693730c')
-    //        ->where('trainee_id', $record->trainee_id)
-    //        ->count();
-    //
-    //    if ($count > 1) {
-    //        \App\Models\Back\AttendanceReportRecord::where('course_batch_session_id', 'c5319fff-a6a4-45cb-a78f-13b8a693730c')
-    //            ->where('trainee_id', $record->trainee_id)
-    //            ->first()
-    //            ->delete();
-    //    }
-    //}
+    foreach ($table as $record) {
+        $count = \App\Models\Back\AttendanceReportRecord::where('course_batch_session_id', '24729755-5bad-4bf3-8440-6c25a4c4e8db')
+            ->where('trainee_id', $record->trainee_id)
+            ->count();
+
+        if ($count > 1) {
+            \App\Models\Back\AttendanceReportRecord::where('course_batch_session_id', '24729755-5bad-4bf3-8440-6c25a4c4e8db')
+                ->where('trainee_id', $record->trainee_id)
+                ->first()
+                ->delete();
+        }
+    }
 
     return $table;
 
