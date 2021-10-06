@@ -105,6 +105,10 @@ Route::middleware(['auth:sanctum'])->group(function() {
 
     Route::get('complaints', [\App\Http\Controllers\ComplaintsController::class, 'index'])->name('complaints.index');
     Route::post('complaints', [\App\Http\Controllers\ComplaintsController::class, 'store'])->name('complaints.store');
+
+    Route::get('suggestions', [\App\Http\Controllers\SuggestionsController::class, 'index'])->name('suggestions.index');
+
+    Route::get('company-roles', [\App\Http\Controllers\CompanyRolesController::class, 'index'])->name('company-roles.index');
 });
 
 Route::middleware(['auth:sanctum'])->get('/trainees/application', [\App\Http\Controllers\TraineesApplicationController::class, 'index']);
