@@ -39,6 +39,11 @@ Route::get('shafiq', function() {
         ->with('company')
         ->whereHas('company', function($q) {$q->where('deleted_at', null);})
         //->select(['id', 'name', 'phone', 'email'])
+        ->with([
+            'absences_19to25',
+            'absences_26to2',
+            'absences_3to9',
+        ])
         ->withCount([
             'absences_19to25',
             'absences_26to2',
@@ -57,9 +62,12 @@ Route::get('shafiq', function() {
             'phone' => $trainee->phone,
             'instructor' => optional($trainee->instructor)->name,
             'group' => optional($trainee->trainee_group)->name,
-            'absences_19to25' => $trainee->absences_19to25_count,
-            'absences_26to2' => $trainee->absences_26to2_count,
-            'absences_3to9' => $trainee->absences_3to9_count,
+            'absences_19to25_count' => $trainee->absences_19to25_count,
+            'absences_26to2_count' => $trainee->absences_26to2_count,
+            'absences_3to9_count' => $trainee->absences_3to9_count,
+            'absences_19to25' => $trainee->absences_19to25,
+            'absences_26to2' => $trainee->absences_26to2,
+            'absences_3to9' => $trainee->absences_3to9,
         ];
     }
 
