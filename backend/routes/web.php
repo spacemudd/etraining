@@ -117,6 +117,10 @@ Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('management-roles', [\App\Http\Controllers\ManagementRolesController::class, 'index'])->name('management-roles.index');
 
     Route::get('obligations', [\App\Http\Controllers\ObligationsController::class, 'index'])->name('obligations.index');
+
+    Route::get('user-guides', [\App\Http\Controllers\UserGuidesController::class, 'index'])->name('user-guides.index');
+
+    Route::get('training-plan', [\App\Http\Controllers\UserGuidesController::class, 'index'])->name('training-plan.index');
 });
 
 Route::middleware(['auth:sanctum'])->get('/trainees/application', [\App\Http\Controllers\TraineesApplicationController::class, 'index']);
