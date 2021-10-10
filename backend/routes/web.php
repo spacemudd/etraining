@@ -121,6 +121,8 @@ Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('user-guides', [\App\Http\Controllers\UserGuidesController::class, 'index'])->name('user-guides.index');
 
     Route::get('training-plan', [\App\Http\Controllers\TrainingPlanController::class, 'index'])->name('training-plan.index');
+
+    Route::get('training-schedule', [\App\Http\Controllers\TrainingScheduleController::class, 'index'])->name('training-schedule.index');
 });
 
 Route::middleware(['auth:sanctum'])->get('/trainees/application', [\App\Http\Controllers\TraineesApplicationController::class, 'index']);
