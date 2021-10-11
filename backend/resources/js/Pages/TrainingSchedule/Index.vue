@@ -3,10 +3,20 @@
         <div class="container px-6 mx-auto grid">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
                 <div class="col text-center h-20">
-                    <iframe class="w-full" src="/TrainingSchedule2021.pdf" height="600" frameborder="0"></iframe>
+                    <a target="_blank"
+                       rel="noopener noreferrer"
+                       href="/TrainingSchedule2021.pdf"
+                       class="bg-red-500 px-2 py-1 rounded mx-auto text-white hover:bg-red-700">
+                        الخطة التدريبية
+                    </a>
                 </div>
                 <div class="col text-center h-20">
-                    <iframe class="w-full" src="/TrainingScheduleTimings.pdf" height="600" frameborder="0"></iframe>
+                    <a target="_blank"
+                       rel="noopener noreferrer"
+                       href="/TrainingScheduleTimings.pdf"
+                       class="bg-red-500 px-2 py-1 rounded mx-auto text-white hover:bg-red-700">
+                        الجدول الزمني
+                    </a>
                 </div>
             </div>
         </div>

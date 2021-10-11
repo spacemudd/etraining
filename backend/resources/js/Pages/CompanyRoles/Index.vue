@@ -14,7 +14,7 @@
             </thead>
             	<tbody>
             			<tr class="border-t">
-            				<td class="px-6 py-4">مر احمد ابو دش</td>
+            				<td class="px-6 py-4">سمر احمد ابو دش</td>
                             <td class="px-6 py-4">التدريب+ تقديم برامج تدريبية + متابعة المتدربات في التدريب جدولة اختبارات واوراق عمل</td>
                             <td class="px-6 py-4">samar@ptc-ksa.com</td>
             			</tr>

@@ -9,13 +9,19 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
-                <div class="col text-center h-20">
-                    <iframe class="w-full" src="/obligations1.pdf" height="600" frameborder="0"></iframe>
-                </div>
-                <div class="col text-center h-20">
-                    <iframe class="w-full" src="/obligations2.pdf" height="600" frameborder="0"></iframe>
-                </div>
+            <div class="flex justify-center mt-5">
+                    <a target="_blank"
+                       rel="noopener noreferrer"
+                       href="/obligations1.pdf"
+                       class="bg-red-500 px-2 py-1 rounded mx-2 text-white hover:bg-red-700">
+                        اقرار الالتزام
+                    </a>
+                    <a target="_blank"
+                       rel="noopener noreferrer"
+                       href="/obligations2.pdf"
+                       class="bg-red-500 px-2 py-1 rounded mx-2 text-white hover:bg-red-700">
+                        التعهد
+                    </a>
             </div>
 
 
