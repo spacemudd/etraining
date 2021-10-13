@@ -77,6 +77,8 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'resource_label',
         'resource_type',
         'deleted_at_timezone',
+        'clean_phone',
+        'company_name',
     ];
 
     protected static function boot(): void
@@ -208,6 +210,11 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     public function attendances()
     {
         return $this->hasMany(CourseBatchSessionAttendance::class);
+    }
+
+    public function getCompanyNameAttribute()
+    {
+        return optional($this->company)->name_ar;
     }
 
     public function getIdentityCopyUrlAttribute()
@@ -358,10 +365,45 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         return $convertPhone;
     }
 
+    public function getCleanPhoneAttribute()
+    {
+        return $this->cleanUpThePhoneNumber($this->phone);
+    }
+
     public function arabicE2w($str)
     {
         $arabic_eastern = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
         $arabic_western = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
         return str_replace($arabic_eastern, $arabic_western, $str);
+    }
+
+    public function absences_19to25()
+    {
+        return $this->hasMany(AttendanceReportRecord::class)
+            ->where('status', 0)
+            ->whereBetween('session_starts_at', [
+                now()->setDate(2021, 9, 19)->startOfDay(),
+                now()->setDate(2021, 9, 25)->endOfDay(),
+            ]);
+    }
+
+    public function absences_26to2()
+    {
+        return $this->hasMany(AttendanceReportRecord::class)
+            ->where('status', 0)
+            ->whereBetween('session_starts_at', [
+                now()->setDate(2021, 9, 26)->startOfDay(),
+                now()->setDate(2021, 10, 2)->endOfDay(),
+            ]);
+    }
+
+    public function absences_3to9()
+    {
+        return $this->hasMany(AttendanceReportRecord::class)
+            ->where('status', 0)
+            ->whereBetween('session_starts_at', [
+                now()->setDate(2021, 10, 3)->startOfDay(),
+                now()->setDate(2021, 10, 9)->endOfDay(),
+            ]);
     }
 }

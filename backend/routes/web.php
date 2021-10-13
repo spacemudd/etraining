@@ -1,5 +1,79 @@
 <?php
 
+use App\Models\Back\Trainee;
+
+Route::get('shafiq', function() {
+
+    //$table = DB::table('attendance_report_records')
+    //    ->select('trainee_id', DB::raw('count(`trainee_id`) as occurences'))
+    //    ->where('course_batch_session_id', '24729755-5bad-4bf3-8440-6c25a4c4e8db')
+    //    ->groupBy('trainee_id')
+    //    ->having('occurences', '>', 1)
+    //    ->get();
+    //
+    //foreach ($table as $record) {
+    //    $count = \App\Models\Back\AttendanceReportRecord::where('course_batch_session_id', '24729755-5bad-4bf3-8440-6c25a4c4e8db')
+    //        ->where('trainee_id', $record->trainee_id)
+    //        ->count();
+    //
+    //    if ($count > 1) {
+    //        \App\Models\Back\AttendanceReportRecord::where('course_batch_session_id', '24729755-5bad-4bf3-8440-6c25a4c4e8db')
+    //            ->where('trainee_id', $record->trainee_id)
+    //            ->first()
+    //            ->delete();
+    //    }
+    //}
+    //
+    //return $table;
+
+    //return $trainees = \App\Models\Back\Trainee::withCount('absences_last_week')
+    //    ->withCount('absences_current_week')
+    //    ->withCount('attendances_last_week')
+    //    ->withCount('attendances_current_week')
+    //    ->get();
+    $trainees = Trainee::where('company_id', '!=', null)
+        ->where('suspended_at', null)
+        ->where('deleted_remark', null)
+        ->where('trainee_group_id', '!=', null)
+        ->where('deleted_at', null)
+        ->with('company')
+        ->whereHas('company', function($q) {$q->where('deleted_at', null);})
+        //->select(['id', 'name', 'phone', 'email'])
+        ->with([
+            'absences_19to25',
+            'absences_26to2',
+            'absences_3to9',
+        ])
+        ->withCount([
+            'absences_19to25',
+            'absences_26to2',
+            'absences_3to9',
+        ])
+        //->take(5)
+        ->get();
+
+    $traineeData = [];
+
+    foreach ($trainees as $trainee) {
+        $traineeData[] = [
+            'name' => $trainee->name,
+            'company' => optional($trainee->company)->name_ar,
+            'email' => $trainee->email,
+            'phone' => $trainee->phone,
+            'instructor' => optional($trainee->instructor)->name,
+            'group' => optional($trainee->trainee_group)->name,
+            'absences_19to25_count' => $trainee->absences_19to25_count,
+            'absences_26to2_count' => $trainee->absences_26to2_count,
+            'absences_3to9_count' => $trainee->absences_3to9_count,
+            //'absences_19to25' => $trainee->absences_19to25,
+            //'absences_26to2' => $trainee->absences_26to2,
+            //'absences_3to9' => $trainee->absences_3to9,
+        ];
+    }
+
+    return $traineeData;
+});
+
 Route::impersonate();
 
 Route::get('/disabled', [\App\Http\Controllers\Back\DisableWebsiteController::class, 'showDisabledPage'])->name('disabled');
@@ -28,6 +102,29 @@ Route::middleware(['guest'])->get('/', [\App\Http\Controllers\WelcomeController:
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('/register/instructors/application', [\App\Http\Controllers\Auth\RegisterInstructorController::class, 'application'])->name('register.instructors.application');
     Route::get('/register/trainees/application', [\App\Http\Controllers\Auth\RegisterTraineeController::class, 'application'])->name('register.trainees.application');
+
+    Route::get('complaints', [\App\Http\Controllers\ComplaintsController::class, 'index'])->name('complaints.index');
+    Route::post('complaints', [\App\Http\Controllers\ComplaintsController::class, 'store'])->name('complaints.store');
+
+    Route::get('suggestions', [\App\Http\Controllers\SuggestionsController::class, 'index'])->name('suggestions.index');
+
+    Route::get('company-roles', [\App\Http\Controllers\CompanyRolesController::class, 'index'])->name('company-roles.index');
+
+    Route::get('company-roles', [\App\Http\Controllers\CompanyRolesController::class, 'index'])->name('company-roles.index');
+
+    Route::get('management-roles', [\App\Http\Controllers\ManagementRolesController::class, 'index'])->name('management-roles.index');
+
+    Route::get('management-roles', [\App\Http\Controllers\ManagementRolesController::class, 'index'])->name('management-roles.index');
+
+    Route::get('obligations', [\App\Http\Controllers\ObligationsController::class, 'index'])->name('obligations.index');
+
+    Route::get('user-guides', [\App\Http\Controllers\UserGuidesController::class, 'index'])->name('user-guides.index');
+
+    Route::get('training-plan', [\App\Http\Controllers\TrainingPlanController::class, 'index'])->name('training-plan.index');
+
+    Route::get('training-schedule', [\App\Http\Controllers\TrainingScheduleController::class, 'index'])->name('training-schedule.index');
+
+    Route::get('survey', [\App\Http\Controllers\SurveyController::class, 'index'])->name('survey.index');
 });
 
 Route::middleware(['auth:sanctum'])->get('/trainees/application', [\App\Http\Controllers\TraineesApplicationController::class, 'index']);
@@ -49,6 +146,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     // For admins
     Route::prefix('back')->middleware('redirect-trainees-to-dashboard')->name('back.')->group(function() {
         Route::get('/settings', [\App\Http\Controllers\Back\SettingsController::class, 'index'])->name('settings');
+
+        Route::get('/settings/complaints', [\App\Http\Controllers\Back\ComplaintsSettingsController::class, 'index'])->name('settings.complaints.index');
+        Route::put('/settings/complaints/update', [\App\Http\Controllers\Back\ComplaintsSettingsController::class, 'update'])->name('settings.complaints.update');
 
         Route::get('/settings/survey-links', [\App\Http\Controllers\Back\SurveyLinksController::class, 'index'])->name('settings.survey-links.index');
         Route::post('/settings/survey-links/store', [\App\Http\Controllers\Back\SurveyLinksController::class, 'store'])->name('settings.survey-links.store');

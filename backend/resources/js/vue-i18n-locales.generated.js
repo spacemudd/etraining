@@ -548,7 +548,11 @@ export default {
             "training-plan": "خطة التدريبية",
             "national-address-copy": "العنوان الوطني (صورة)",
             "cv": "السيرة الذاتية",
-            "remove-all": "حذف الكل"
+            "remove-all": "حذف الكل",
+            "complaints-settings": "إعدادت الشكاوى والملاحظات",
+            "edit-complaint-settings": "تعديل إعدادت الشكواى والملاحظات",
+            "emails": "الإيميلات",
+            "enabled": "مفعل"
         }
     },
     "en": {
@@ -1060,7 +1064,10 @@ export default {
             "training-plan": "Training plan",
             "national-address-copy": "National Address Photocopy",
             "cv": "CV",
-            "remove-all": "Remove all"
+            "remove-all": "Remove all",
+            "complaints-settings": "Complaints settings",
+            "emails": "Emails",
+            "enabled": "Enabled"
         }
     }
 }

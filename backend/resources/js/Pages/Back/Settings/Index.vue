@@ -34,6 +34,12 @@
                 <inertia-link v-can="'disable-website'" :href="route('back.settings.disable-website.index')" class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
                     {{ $t('words.disable-website') }}
                 </inertia-link>
+
+                <inertia-link :href="route('back.settings.complaints.index')"
+                              v-can="'edit-complaint-settings'"
+                              class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
+                    {{ $t('words.complaints-settings') }}
+                </inertia-link>
             </div>
         </div>
     </app-layout>

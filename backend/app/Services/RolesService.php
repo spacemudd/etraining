@@ -39,6 +39,7 @@ class RolesService
         'view-backoffice-reports',
         'disable-website',
         'edit-survey-links',
+        'edit-complaint-settings',
         // add the same name of the role to translation files.
     ];
 
