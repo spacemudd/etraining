@@ -24,7 +24,7 @@
                     <br/>
                     <br/>
                     <p>تقديم الدعم من خلال الايميل الخاص بمركز احترافية المدرب</p>
-                    <p>training@ptc-ksa.com</p>
+                    <p><a href="mailto:training@ptc-ksa.com">training@ptc-ksa.com</a></p>
                 </div>
             </div>
 
