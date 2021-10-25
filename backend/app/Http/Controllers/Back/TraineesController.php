@@ -6,6 +6,7 @@ use App\Actions\Fortify\CreateNewTraineeUser;
 use App\Http\Controllers\Controller;
 use App\Jobs\ExportTraineesToExcelJob;
 use App\Jobs\ExportArchivedTraineesToExcelJob;
+use App\Models\Back\AttendanceReportRecord;
 use App\Models\Back\AttendanceReportRecordWarning;
 use App\Models\Back\Company;
 use App\Models\Back\ExportTraineesToExcelJobTracker;
@@ -832,8 +833,13 @@ class TraineesController extends Controller
      */
     public function warningDelete($trainee_id, $id)
     {
-        return AttendanceReportRecordWarning::find($id)
-            ->delete();
+        $warning = AttendanceReportRecordWarning::find($id);
+        $warning->attendance_report_record->status = AttendanceReportRecord::STATUS_ABSENT_WITH_EXCUSE;
+        $warning->attendance_report_record->save();
+        $warning->delete();
+        return response()->json([
+            'success' => true,
+        ]);
     }
 
     /**
@@ -841,11 +847,19 @@ class TraineesController extends Controller
      *
      * @param $trainee_id
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Throwable
      */
     public function warningDeleteAll($trainee_id)
     {
-        AttendanceReportRecordWarning::where('trainee_id', $trainee_id)
-            ->delete();
+        DB::beginTransaction();
+        $warnings = AttendanceReportRecordWarning::where('trainee_id', $trainee_id)->get();
+        foreach ($warnings as $warning) {
+            $warning->attendance_report_record->status = AttendanceReportRecord::STATUS_ABSENT_WITH_EXCUSE;
+            $warning->attendance_report_record->save();
+        }
+        $warnings->delete();
+        DB::commit();
+
         return redirect()->route('back.trainees.show', $trainee_id);
     }
 
