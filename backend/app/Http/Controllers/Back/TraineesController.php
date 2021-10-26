@@ -857,7 +857,7 @@ class TraineesController extends Controller
             $warning->attendance_report_record->status = AttendanceReportRecord::STATUS_ABSENT_WITH_EXCUSE;
             $warning->attendance_report_record->save();
         }
-        AttendanceReportRecordWarning::where('trainee_id', $trainee_id)-delete();
+        AttendanceReportRecordWarning::where('trainee_id', $trainee_id)->delete();
         DB::commit();
 
         return redirect()->route('back.trainees.show', $trainee_id);
