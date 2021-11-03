@@ -833,7 +833,7 @@ class TraineesController extends Controller
      */
     public function warningDelete($trainee_id, $id)
     {
-        $warning = AttendanceReportRecordWarning::find($id);
+        $warning = AttendanceReportRecordWarning::findOrFail($id);
         $warning->attendance_report_record->status = AttendanceReportRecord::STATUS_ABSENT_WITH_EXCUSE;
         $warning->attendance_report_record->save();
         $warning->delete();
