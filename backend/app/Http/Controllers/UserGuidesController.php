@@ -9,6 +9,9 @@ class UserGuidesController extends Controller
 {
     public function index()
     {
-        return Inertia::render('UserGuides/Index');
+        $is_trainee = auth()->user()->trainee;
+        return Inertia::render('UserGuides/Index', [
+            'is_trainee' => $is_trainee,
+        ]);
     }
 }

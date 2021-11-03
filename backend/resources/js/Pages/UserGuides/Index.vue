@@ -2,7 +2,7 @@
     <app-layout>
         <div class="container px-6 mx-auto grid">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
-                <div class="col text-center h-20">
+                <div class="col text-center h-20" v-if="is_trainee">
                     <a target="_blank"
                        rel="noopener noreferrer"
                        href="/TraineeGuide.pdf"
@@ -10,7 +10,7 @@
                         دليل استخدام المنصة للمتدربين
                     </a>
                 </div>
-                <div class="col text-center h-20">
+                <div class="col text-center h-20" v-else>
                     <a target="_blank"
                        rel="noopener noreferrer"
                        href="/InstructorGuide.pdf"
@@ -46,6 +46,7 @@ export default {
         JetTextarea,
         JetButton,
     },
+    props: ['is_trainee'],
     data() {
         return {
             createComplaintForm: this.$inertia.form({
