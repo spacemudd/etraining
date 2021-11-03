@@ -18,8 +18,9 @@
                     <tr class="text-left font-bold">
                         <th class="px-6 pt-6 pb-4">{{ $t('words.name') }}</th>
                         <th class="px-6 pt-6 pb-4">{{ $t('words.course-approval-code') }}</th>
+                        <th class="px-6 pt-6 pb-4">{{ $t('words.absent-counts') }}</th>
                     </tr>
-                    <tr v-for="course in courses.data" :key="course.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
+                    <tr v-for="(course, index) in courses.data" :key="course.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
                         <td class="border-t">
                             <div class="px-6 py-4 flex items-center focus:text-indigo-500">
                                 <inertia-link :href="route('trainees.courses.show', course.id)">
@@ -33,8 +34,10 @@
                             </inertia-link>
                         </td>
                         <td class="border-t">
-                            <inertia-link class="px-6 py-4 flex items-center" :href="route('trainees.courses.show', course.id)" tabindex="-1">
-                                {{ course.classroom_count }}
+                            <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500 text-center" :href="route('trainees.courses.show', course.id)">
+                                <span :class="{'bg-red-600 px-2 text-white rounded':withAttendances[index].my_attendance>3}">
+                                    {{ withAttendances[index].my_attendance }}
+                                </span>
                             </inertia-link>
                         </td>
                         <td class="border-t w-px">
@@ -77,6 +80,7 @@
         },
         props: {
             courses: Object,
+            withAttendances: Array,
             filters: Object,
         },
         data() {

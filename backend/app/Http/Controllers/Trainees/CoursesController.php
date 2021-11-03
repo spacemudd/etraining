@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Trainees;
 
 use App\Http\Controllers\Controller;
+use App\Models\Back\AttendanceReportRecord;
+use App\Models\Back\AttendanceReportRecordWarning;
 use App\Models\Back\Course;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -21,13 +23,22 @@ class CoursesController extends Controller
         // The attending() problem is that when the user is not assigned to an instructor,
         // they can view all courses that have instructor_id = null.
         if (optional(auth()->user()->trainee)->instructor_id) {
-            $courses = Course::attending()->with('instructor')->latest()->paginate(10);
+            $courses = Course::attending()
+                ->with('instructor')
+                ->latest()
+                ->paginate(10);
+
+            $withAttendances = $courses->each(function ($c) {
+                $c->append('my_attendance');
+            });
         } else {
             $courses = [];
+            $withAttendances = [];
         }
 
         return Inertia::render('Trainees/Courses/Index', [
             'courses' => $courses,
+            'withAttendances' => $withAttendances,
         ]);
     }
 

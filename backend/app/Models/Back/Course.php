@@ -113,7 +113,6 @@ class Course extends Model implements HasMedia, SearchableLabels, Auditable
             ->toMediaCollection($folder);
     }
 
-
     public function getTrainingPackageUrlAttribute()
     {
         return $this->getCopyUrl('training-package');
@@ -227,5 +226,14 @@ class Course extends Model implements HasMedia, SearchableLabels, Auditable
         return $nearest_date;
     }
 
+    public function getMyAttendanceAttribute()
+    {
+        if ($trainee_id = auth()->user()->trainee->id) {
+            return AttendanceReportRecord::where('trainee_id', $trainee_id)
+                ->where('course_id', $this->id)
+                ->where('status', AttendanceReportRecord::STATUS_ABSENT)
+                ->count();
+        }
+    }
 }
 
