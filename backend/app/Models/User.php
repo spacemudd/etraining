@@ -87,6 +87,14 @@ class User extends Authenticatable implements Auditable
         return 'https://ui-avatars.com/api/?name='.urlencode($this->name).'&color=FFFFFF&background=EA1D3C';
     }
 
+    public function logrocketEnabled()
+    {
+        return in_array($this->email, [
+            'sara@ptc-ksa.com',
+            'leena@ptc-ksa.com',
+        ]);
+    }
+
     public function logrocketId()
     {
         return $this->id;
