@@ -32,8 +32,8 @@ Route::get('shafiq', function() {
             'phone' => $trainee->phone,
             'instructor' => optional($trainee->instructor)->name,
             'group' => optional($trainee->trainee_group)->name,
-            'absences_30to5_count' => $trainee->absences_19to25_count,
-            'attendances_30to5_count' => $trainee->absences_19to25_count,
+            'absences_30to5_count' => $trainee->absences_30to5_count,
+            'attendances_30to5_count' => $trainee->absences_30to5_count,
         ];
     }
 
