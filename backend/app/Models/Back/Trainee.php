@@ -390,7 +390,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     public function attendances_30to5()
     {
         return $this->hasMany(AttendanceReportRecord::class)
-            ->whereIn('status', [AttendanceReportRecord::STATUS_PRESENT, AttendanceReportRecord::STATUS_ABSENT_WITH_EXCUSE])
+            ->whereIn('status', [AttendanceReportRecord::STATUS_PRESENT, AttendanceReportRecord::STATUS_LATE_TO_CLASS, AttendanceReportRecord::STATUS_ABSENT_WITH_EXCUSE])
             ->whereBetween('session_starts_at', [
                 now()->setDate(2021, 10, 30)->startOfDay(),
                 now()->setDate(2021, 11, 5)->endOfDay(),
