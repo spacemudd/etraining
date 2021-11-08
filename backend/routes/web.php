@@ -3,34 +3,6 @@
 use App\Models\Back\Trainee;
 
 Route::get('shafiq', function() {
-
-    //$table = DB::table('attendance_report_records')
-    //    ->select('trainee_id', DB::raw('count(`trainee_id`) as occurences'))
-    //    ->where('course_batch_session_id', '24729755-5bad-4bf3-8440-6c25a4c4e8db')
-    //    ->groupBy('trainee_id')
-    //    ->having('occurences', '>', 1)
-    //    ->get();
-    //
-    //foreach ($table as $record) {
-    //    $count = \App\Models\Back\AttendanceReportRecord::where('course_batch_session_id', '24729755-5bad-4bf3-8440-6c25a4c4e8db')
-    //        ->where('trainee_id', $record->trainee_id)
-    //        ->count();
-    //
-    //    if ($count > 1) {
-    //        \App\Models\Back\AttendanceReportRecord::where('course_batch_session_id', '24729755-5bad-4bf3-8440-6c25a4c4e8db')
-    //            ->where('trainee_id', $record->trainee_id)
-    //            ->first()
-    //            ->delete();
-    //    }
-    //}
-    //
-    //return $table;
-
-    //return $trainees = \App\Models\Back\Trainee::withCount('absences_last_week')
-    //    ->withCount('absences_current_week')
-    //    ->withCount('attendances_last_week')
-    //    ->withCount('attendances_current_week')
-    //    ->get();
     $trainees = Trainee::where('company_id', '!=', null)
         ->where('suspended_at', null)
         ->where('deleted_remark', null)
@@ -40,14 +12,12 @@ Route::get('shafiq', function() {
         ->whereHas('company', function($q) {$q->where('deleted_at', null);})
         //->select(['id', 'name', 'phone', 'email'])
         ->with([
-            'absences_19to25',
-            'absences_26to2',
-            'absences_3to9',
+            'absences_30to5',
+            'attendances_30to5',
         ])
         ->withCount([
-            'absences_19to25',
-            'absences_26to2',
-            'absences_3to9',
+            'absences_30to5',
+            'attendances_30to5',
         ])
         //->take(5)
         ->get();
@@ -62,12 +32,8 @@ Route::get('shafiq', function() {
             'phone' => $trainee->phone,
             'instructor' => optional($trainee->instructor)->name,
             'group' => optional($trainee->trainee_group)->name,
-            'absences_19to25_count' => $trainee->absences_19to25_count,
-            'absences_26to2_count' => $trainee->absences_26to2_count,
-            'absences_3to9_count' => $trainee->absences_3to9_count,
-            //'absences_19to25' => $trainee->absences_19to25,
-            //'absences_26to2' => $trainee->absences_26to2,
-            //'absences_3to9' => $trainee->absences_3to9,
+            'absences_30to5_count' => $trainee->absences_19to25_count,
+            'attendances_30to5_count' => $trainee->absences_19to25_count,
         ];
     }
 

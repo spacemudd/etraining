@@ -377,13 +377,23 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         return str_replace($arabic_eastern, $arabic_western, $str);
     }
 
-    public function absences_19to25()
+    public function absences_30to5()
     {
         return $this->hasMany(AttendanceReportRecord::class)
-            ->where('status', 0)
+            ->where('status', AttendanceReportRecord::STATUS_ABSENT)
             ->whereBetween('session_starts_at', [
-                now()->setDate(2021, 9, 19)->startOfDay(),
-                now()->setDate(2021, 9, 25)->endOfDay(),
+                now()->setDate(2021, 10, 30)->startOfDay(),
+                now()->setDate(2021, 11, 5)->endOfDay(),
+            ]);
+    }
+
+    public function attendances_30to5()
+    {
+        return $this->hasMany(AttendanceReportRecord::class)
+            ->whereIn('status', [AttendanceReportRecord::STATUS_PRESENT, AttendanceReportRecord::STATUS_ABSENT_WITH_EXCUSE])
+            ->whereBetween('session_starts_at', [
+                now()->setDate(2021, 10, 30)->startOfDay(),
+                now()->setDate(2021, 11, 5)->endOfDay(),
             ]);
     }
 
