@@ -12,6 +12,10 @@ class DashboardController extends Controller
     public function index()
     {
         if (Str::contains(auth()->user()->roles()->first()->name, 'instructors')) {
+            if (!auth()->user()->instructor) {
+                auth()->logout();
+                return url('/');
+            }
             return app()->make(TeachingController::class)->dashboard();
         }
 
