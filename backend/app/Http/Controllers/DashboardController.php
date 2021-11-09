@@ -14,7 +14,7 @@ class DashboardController extends Controller
         if (Str::contains(auth()->user()->roles()->first()->name, 'instructors')) {
             if (!auth()->user()->instructor) {
                 auth('web')->logout();
-                return url('/');
+                return redirect()->to('/');
             }
             return app()->make(TeachingController::class)->dashboard();
         }
