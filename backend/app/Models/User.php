@@ -92,6 +92,7 @@ class User extends Authenticatable implements Auditable
         return in_array($this->email, [
             'sara@ptc-ksa.com',
             'leena@ptc-ksa.com',
+            'hello@getshafiq.com',
         ]);
     }
 
