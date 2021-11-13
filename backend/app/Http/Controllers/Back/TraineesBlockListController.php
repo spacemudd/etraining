@@ -6,6 +6,8 @@ use App\Exports\TraineesBlocklistExport;
 use App\Http\Controllers\Controller;
 use App\Imports\TraineesBlocklistImport;
 use App\Models\Back\TraineeBlockList;
+use App\Models\User;
+use App\Notifications\TraineeRestoredNotification;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
@@ -52,7 +54,14 @@ class TraineesBlockListController extends Controller
      */
     public function destroy($id)
     {
-        TraineeBlockList::findOrFail($id)->delete();
+        $trainee = TraineeBlockList::findOrFail($id);
+
+        optional(User::where('email', 'sara@ptc-ksa.com')
+            ->first())
+            ->notify(new TraineeRestoredNotification($trainee->name, $trainee->phone, $trainee->email, auth()->user(), $trainee->deleted_remark));
+
+        $trainee->delete();
+
         return response()->json([
             'success' => true,
         ]);

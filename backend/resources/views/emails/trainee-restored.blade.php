@@ -4,9 +4,9 @@
 ⚠ Trainee restored<br/><br/>
 ---<br/>
 <br/>
-Name: {{ $trainee->name }}<br/>
-Email: {{ $trainee->email }}<br/>
-Phone: {{ $trainee->phone }}<br/>
+Name: {{ $trainee_name }}<br/>
+Email: {{ $trainee_email }}<br/>
+Phone: {{ $trainee_phone }}<br/>
 Remark: {{ $block_reason }}<br/>
 <br/>
 ---<br/>

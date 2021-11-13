@@ -572,7 +572,7 @@ class TraineesController extends Controller
 
         optional(User::where('email', 'sara@ptc-ksa.com')
             ->first())
-            ->notify(new TraineeRestoredNotification($trainee_id, auth()->user(), $trainee->deleted_remark));
+            ->notify(new TraineeRestoredNotification($trainee->name, $trainee->phone, $trainee->email, auth()->user(), $trainee->deleted_remark));
 
         return redirect()->route('back.trainees.show', $trainee_id);
     }

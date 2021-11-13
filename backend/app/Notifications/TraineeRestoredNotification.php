@@ -8,23 +8,30 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class TraineeRestoredNotification extends Notification
+class TraineeRestoredNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public $trainee_id;
+    public $trainee_name;
+    public $trainee_email;
+    public $trainee_phone;
     public $done_by;
     public $block_reason;
 
     /**
      * Create a new notification instance.
      *
-     * @param $trainee_id
+     * @param $trainee_name
+     * @param $trainee_email
+     * @param $trainee_phone
      * @param $done_by
+     * @param $block_reason
      */
-    public function __construct($trainee_id, $done_by, $block_reason)
+    public function __construct($trainee_name, $trainee_email, $trainee_phone, $done_by, $block_reason)
     {
-        $this->trainee_id = $trainee_id;
+        $this->trainee_name = $trainee_name;
+        $this->trainee_phone = $trainee_phone;
+        $this->trainee_email = $trainee_email;
         $this->done_by = $done_by;
         $this->block_reason = $block_reason;
     }
@@ -48,13 +55,13 @@ class TraineeRestoredNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        $trainee = Trainee::withoutGlobalScopes()->find($this->trainee_id);
-
         return (new MailMessage)
-            ->subject('⚠ Notification: Trainee restored - '.$trainee->name)
+            ->subject('⚠ Notification: Trainee restored - '.$this->trainee_name)
             ->bcc('sean.spilot@gmail.com')
             ->view('emails.trainee-restored', [
-                'trainee' => $trainee,
+                'trainee_name' => $this->trainee_name,
+                'trainee_phone' => $this->trainee_phone,
+                'trainee_email' => $this->trainee_email,
                 'done_by' => $this->done_by,
                 'block_reason' => $this->block_reason,
             ]);
