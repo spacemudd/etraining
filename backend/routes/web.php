@@ -2,7 +2,28 @@
 
 use App\Models\Back\Trainee;
 
-Route::get('shafiq', function() {
+Route::get('zzwarnings', function() {
+    $trainee_ids = \App\Models\Back\AttendanceReportRecord::where('attendance_report_id', 'd66634c9-d756-49c2-9181-00371fce6c4e')
+        ->pluck('trainee_id');
+
+    foreach ($trainee_ids as $trainee) {
+        $trainee_model = Trainee::find($trainee);
+        if ($trainee_model) {
+            $warnings = \App\Models\Back\AttendanceReportRecordWarning::where('trainee_id', $trainee_model->id)
+                ->where('attendance_report_id', 'd66634c9-d756-49c2-9181-00371fce6c4e')
+                ->count();
+
+            if ($warnings > 1) {
+                $warnings = \App\Models\Back\AttendanceReportRecordWarning::where('trainee_id', $trainee_model->id)
+                    ->where('attendance_report_id', 'd66634c9-d756-49c2-9181-00371fce6c4e')
+                    ->first()
+                    ->delete();
+            }
+        }
+    }
+});
+
+Route::get('ttreport', function() {
     $trainees = Trainee::where('company_id', '!=', null)
         ->where('suspended_at', null)
         ->where('deleted_remark', null)
