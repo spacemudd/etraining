@@ -18,9 +18,11 @@ use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\InboxMessage;
 use App\Models\MaritalStatus;
+use App\Models\User;
 use App\Notifications\CustomTraineeNotification;
 use App\Notifications\TraineeApplicationApprovedNotification;
 use App\Notifications\TraineePrivateMessage;
+use App\Notifications\TraineeRestoredNotification;
 use App\Notifications\TraineeSetupAccountNotification;
 use App\Notifications\TraineeWelcomeNotification;
 use App\Services\TraineesServices;
@@ -567,6 +569,11 @@ class TraineesController extends Controller
         if ($blockList) {
             $blockList->delete();
         }
+
+        optional(User::where('email', 'sara@ptc-ksa.com')
+            ->first())
+            ->notify(new TraineeRestoredNotification($trainee_id, auth()->user(), $trainee->deleted_remark));
+
         return redirect()->route('back.trainees.show', $trainee_id);
     }
 
