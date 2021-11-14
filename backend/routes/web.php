@@ -53,8 +53,8 @@ Route::get('ttreport', function() {
             'phone' => $trainee->phone,
             'instructor' => optional($trainee->instructor)->name,
             'group' => optional($trainee->trainee_group)->name,
-            'absences_30to5_count' => $trainee->absences_7to11_count,
-            'attendances_30to5_count' => $trainee->attendances_7to11_count,
+            'absences_7to11_count' => $trainee->absences_7to11_count,
+            //'attendances_30to5_count' => $trainee->attendances_7to11_count,
         ];
     }
 
