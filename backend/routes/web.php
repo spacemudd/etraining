@@ -33,12 +33,12 @@ Route::get('ttreport', function() {
         ->whereHas('company', function($q) {$q->where('deleted_at', null);})
         //->select(['id', 'name', 'phone', 'email'])
         ->with([
-            'absences_30to5',
-            'attendances_30to5',
+            'absences_7to11',
+            'attendances_7to11',
         ])
         ->withCount([
-            'absences_30to5',
-            'attendances_30to5',
+            'absences_7to11',
+            'attendances_7to11',
         ])
         //->take(5)
         ->get();
