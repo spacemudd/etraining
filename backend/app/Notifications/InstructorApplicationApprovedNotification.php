@@ -53,7 +53,7 @@ class InstructorApplicationApprovedNotification extends Notification implements 
     {
         return (new MailMessage)
             ->subject(trans('words.welcome-to-ptc').' - '.trans('words.you-are-approved'))
-            ->line(trans('words.your-application-has-been-approved'))
+            ->line(trans('words.your-instructor-application-has-been-approved'))
             ->action(trans('words.access-the-platform'), url('/'))
             ->salutation(trans('words.with-regards'));
     }
@@ -66,7 +66,7 @@ class InstructorApplicationApprovedNotification extends Notification implements 
      */
     public function getMessage($notifiable)
     {
-        return trans('words.your-application-has-been-approved').' '.url('/');
+        return trans('words.your-instructor-application-has-been-approved').' '.url('/');
     }
 
     /**
