@@ -22,7 +22,7 @@
                 <div v-for="course in courses"
                     class="col-span-1 bg-white shadow rounded p-5 transition-all duration-500 ease-in-out hover:bg-gray-200">
                     <h2>{{ course.name_ar }}</h2>
-                    <p class="text-xs h-10">{{ course.description }}</p>
+                    <p class="text-xs h-10 truncate">{{ course.description }}</p>
                     <div class="mt-2">
                         <a :href="route('trainees.courses.training-package', {course_id: course.id})"
                            v-show="course.training_package_url"
