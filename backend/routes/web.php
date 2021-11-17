@@ -2,6 +2,23 @@
 
 use App\Models\Back\Trainee;
 
+Route::get('instructor-company-report', function() {
+    $contracts = \App\Models\Back\CompanyContract::get();
+    $data = [];
+    foreach ($contracts as $contract) {
+        if ($contract->instructors()->count()) {
+            foreach ($contract->instructors as $instructor) {
+                $data[] = [
+                    'company_name' => $contract->company->name,
+                    'instructor_name' => $instructor->name,
+                ];
+            }
+        }
+    }
+
+    return response()->json($data);
+});
+
 Route::get('zzwarnings', function() {
     $trainee_ids = \App\Models\Back\AttendanceReportRecord::where('attendance_report_id', 'd66634c9-d756-49c2-9181-00371fce6c4e')
         ->pluck('trainee_id');
