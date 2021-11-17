@@ -9,7 +9,7 @@ Route::get('instructor-company-report', function() {
         if ($contract->instructors()->count()) {
             foreach ($contract->instructors as $instructor) {
                 $data[] = [
-                    'company_name' => optional($contract->company)->name,
+                    'company_name' => optional($contract->company)->name_ar,
                     'instructor_name' => optional($instructor)->name,
                 ];
             }
