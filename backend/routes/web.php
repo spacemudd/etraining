@@ -9,6 +9,8 @@ Route::get('instructor-company-report', function() {
         if ($contract->instructors()->count()) {
             foreach ($contract->instructors as $instructor) {
                 $data[] = [
+                    'company_id' => $contract->company_id,
+                    'company_name_en' => ($contract->company)->name_en,
                     'company_name' => optional($contract->company)->name_ar,
                     'instructor_name' => optional($instructor)->name,
                 ];
