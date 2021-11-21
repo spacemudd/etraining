@@ -52,12 +52,12 @@ Route::get('ttreport', function() {
         ->whereHas('company', function($q) {$q->where('deleted_at', null);})
         //->select(['id', 'name', 'phone', 'email'])
         ->with([
-            'absences_7to11',
-            'attendances_7to11',
+            'absences_14to20',
+            'attendances_14to20',
         ])
         ->withCount([
-            'absences_7to11',
-            'attendances_7to11',
+            'absences_14to20',
+            'attendances_14to20',
         ])
         //->take(5)
         ->get();
@@ -72,7 +72,7 @@ Route::get('ttreport', function() {
             'phone' => $trainee->phone,
             'instructor' => optional($trainee->instructor)->name,
             'group' => optional($trainee->trainee_group)->name,
-            'absences_7to11_count' => $trainee->absences_7to11_count,
+            'absences_14to20' => $trainee->absences_14to20_count,
             //'attendances_30to5_count' => $trainee->attendances_7to11_count,
         ];
     }
