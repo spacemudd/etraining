@@ -53,11 +53,11 @@ Route::get('ttreport', function() {
         //->select(['id', 'name', 'phone', 'email'])
         ->with([
             'absences_14to20',
-            'attendances_14to20',
+            //'attendances_14to20',
         ])
         ->withCount([
             'absences_14to20',
-            'attendances_14to20',
+            //'attendances_14to20',
         ])
         //->take(5)
         ->get();
