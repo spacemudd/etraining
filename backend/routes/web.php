@@ -93,7 +93,7 @@ Route::get('ttreport', function() {
             'phone' => $trainee->phone,
             'instructor' => optional($trainee->instructor)->name,
             'group' => optional($trainee->trainee_group)->name,
-            'absences_14to20' => $trainee->absences_14to20_count,
+            'absences_14to20' => $trainee->absences_21to27_count,
             //'attendances_30to5_count' => $trainee->attendances_7to11_count,
         ];
     }
