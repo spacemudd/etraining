@@ -3,7 +3,7 @@
 use App\Models\Back\Trainee;
 
 Route::get('s1s1', function() {
-
+    $ids = [];
    $trainees = Trainee::whereIn('identity_number', $ids)
    ->get();
 
@@ -71,16 +71,12 @@ Route::get('ttreport', function() {
         ->where('deleted_at', null)
         ->with('company')
         ->whereHas('company', function($q) {$q->where('deleted_at', null);})
-        //->select(['id', 'name', 'phone', 'email'])
         ->with([
-            'absences_21to27',
-            //'attendances_14to20',
+            'absences_28to04',
         ])
         ->withCount([
-            'absences_21to27',
-            //'attendances_14to20',
+            'absences_28to04',
         ])
-        //->take(5)
         ->get();
 
     $traineeData = [];
@@ -93,8 +89,7 @@ Route::get('ttreport', function() {
             'phone' => $trainee->phone,
             'instructor' => optional($trainee->instructor)->name,
             'group' => optional($trainee->trainee_group)->name,
-            'absences_14to20' => $trainee->absences_21to27_count,
-            //'attendances_30to5_count' => $trainee->attendances_7to11_count,
+            'absences_28to04' => $trainee->absences_28to04_count,
         ];
     }
 
