@@ -772,6 +772,8 @@ class TraineesController extends Controller
             $trainees = Trainee::where('company_id', '!=', null)
                 ->where('trainee_group_id', '!=', null)
                 ->where('instructor_id', '!=', null);
+        } elseif ($request->to_trainee_status === 'not_linked_to_a_company') {
+            $trainees = Trainee::where('company_id', null);
         } else {
             $trainees = Trainee::where('status', $request->to_trainees_status);
         }
