@@ -37,15 +37,18 @@
         <thead>
         <tr>
             <th style="text-align:right">{{ __('words.course') }}</th>
-            <th style="text-align:right">{{ __('words.date') }}</th>
+            <th style="text-align:right">وقت الحضور</th>
             <th style="text-align:right">{{ __('words.status') }}</th>
         </tr>
         </thead>
         <tbody>
         @foreach ($records as $record)
             <tr class="hover:bg-gray-100 focus-within:bg-gray-100">
-                <td style="text-align:right;" class="border-t">{{ $record->course_batch_session->course->name_ar }}</td>
-                <td style="text-align:right;" class="border-t" dir="ltr">{{ $record->course_batch_session->starts_at_timezone }}</td>
+                <td style="text-align:right;" class="border-t">
+                    {{ $record->course_batch_session->course->name_ar }}<br/>
+                    <span dir="ltr">{{ $record->course_batch_session->starts_at_timezone }}</span>
+                </td>
+                <td style="text-align:right;" class="border-t" dir="ltr">{{ $record->attendance_at }}</td>
                 <td style="text-align:right;" class="border-t">{{ __('words.'.$record->status_name) }}</td>
             </tr>
         @endforeach
