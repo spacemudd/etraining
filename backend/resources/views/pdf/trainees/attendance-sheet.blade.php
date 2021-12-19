@@ -44,9 +44,9 @@
         <tbody>
         <tr class="hover:bg-gray-100 focus-within:bg-gray-100">
             @foreach ($records as $record)
-                <td class="border-t">{{ $record->course_batch_session->course->name_ar }}</td>
-                <td class="border-t" dir="ltr">{{ $record->course_batch_session->starts_at_timezone }}</td>
-                <td class="border-t">{{ __('words.'.$record->status_name) }}</td>
+                <td style="text-align:right;" class="border-t">{{ $record->course_batch_session->course->name_ar }}</td>
+                <td style="text-align:right; class="border-t" dir="ltr">{{ $record->course_batch_session->starts_at_timezone }}</td>
+                <td style="text-align:right; class="border-t">{{ __('words.'.$record->status_name) }}</td>
             @endforeach
         </tr>
         </tbody>
