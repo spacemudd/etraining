@@ -43,13 +43,13 @@
         </thead>
         <tbody>
         @foreach ($records as $record)
-            <tr style="page-break-inside: avoid;border:1px solid black;">
-                <td style="text-align:right;" class="border-t">
+            <tr style="page-break-inside: avoid;">
+                <td style="text-align:right;border:1px solid black;" class="border-t">
                     {{ $record->course_batch_session->course->name_ar }}<br/>
                     <span dir="ltr">{{ $record->course_batch_session->starts_at_timezone }}</span>
                 </td>
-                <td style="text-align:right;" class="border-t" dir="ltr">{{ $record->attended_at }}</td>
-                <td style="text-align:right;" class="border-t">{{ __('words.'.$record->status_name) }}</td>
+                <td style="text-align:right;border:1px solid black;" class="border-t" dir="ltr">{{ $record->attended_at }}</td>
+                <td style="text-align:right;border:1px solid black;" class="border-t">{{ __('words.'.$record->status_name) }}</td>
             </tr>
         @endforeach
         </tbody>
