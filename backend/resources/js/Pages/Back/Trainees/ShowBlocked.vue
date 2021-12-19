@@ -13,6 +13,12 @@
 
                 <div class="col-span-6 items-center justify-end bg-gray-50 text-right gap-6">
 
+                    <a :href="route('back.trainees.admin.attendance-sheet.pdf', trainee.id)"
+                       target="_blank"
+                       class="items-center justify-start text-left float-left rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
+                        {{ $t('words.attendance-sheet') }}
+                    </a>
+
                     <button @click="unblock" class=" items-center justify-end rounded-md px-4 py-2 bg-blue-200 hover:bg-blue-300 text-right">
                         {{ $t('words.unblock') }}
                     </button>
