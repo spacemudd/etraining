@@ -889,6 +889,7 @@ class TraineesController extends Controller
     public function attendanceSheetPdf($id)
     {
         $pdf = PDF::loadView('pdf.trainees.attendance-sheet', [
+            'trainee' => Trainee::findOrFail($id),
             'records' => AttendanceReportRecord::where('trainee_id', $id)
                 ->with(['course_batch_session' => function($q) {
                     $q->with('course');
