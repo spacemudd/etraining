@@ -36,9 +36,9 @@
         </colgroup>
         <thead>
         <tr>
-            <th>{{ __('words.course') }}</th>
-            <th>{{ __('words.date') }}</th>
-            <th>{{ __('words.status') }}</th>
+            <th style="text-align:right">{{ __('words.course') }}</th>
+            <th style="text-align:right">{{ __('words.date') }}</th>
+            <th style="text-align:right">{{ __('words.status') }}</th>
         </tr>
         </thead>
         <tbody>
