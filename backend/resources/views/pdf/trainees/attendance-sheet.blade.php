@@ -25,22 +25,23 @@
 
     <hr>
 
-    <table class="w-full whitespace-no-wrap">
+    <table style="width:100%;">
         <colgroup>
+            <col style="width:200px;">
             <col style="width:200px;">
         </colgroup>
         <thead>
         <tr>
-            <th class="text-right">{{ __('words.date') }}</th>
             <th class="text-right">{{ __('words.course') }}</th>
+            <th class="text-right">{{ __('words.date') }}</th>
             <th>{{ __('words.status') }}</th>
         </tr>
         </thead>
         <tbody>
         <tr class="hover:bg-gray-100 focus-within:bg-gray-100">
             @foreach ($records as $record)
-                <td class="border-t text-right" dir="ltr">{{ $record->course_batch_session->starts_at_timezone }}</td>
                 <td class="border-t">{{ $record->course_batch_session->course->name_ar }}</td>
+                <td class="border-t text-right" dir="ltr">{{ $record->course_batch_session->starts_at_timezone }}</td>
                 <td class="border-t text-center">{{ __('words.'.$record->status_name) }}</td>
             @endforeach
         </tr>
