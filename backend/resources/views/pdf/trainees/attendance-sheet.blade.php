@@ -47,6 +47,8 @@
                 <td style="text-align:right;border:1px solid black;" class="border-t">
                     {{ $record->course_batch_session->course->name_ar }}<br/>
                     <span dir="ltr">{{ $record->course_batch_session->starts_at_timezone }}</span>
+                    <br/>
+                    {{ $record->id }}
                 </td>
                 <td style="text-align:right;border:1px solid black;" class="border-t" dir="ltr">{{ $record->attended_at_timezone }}</td>
                 <td style="text-align:right;border:1px solid black;{{ $record->status === \App\Models\Back\AttendanceReportRecord::STATUS_ABSENT ? 'background-color:#fa8686' : '' }}" class="border-t">{{ __('words.'.$record->status_name) }}</td>
