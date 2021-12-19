@@ -389,4 +389,5 @@ return [
     'emails' => 'الإيميلات',
     'enabled' => 'مفعل',
     'your-instructor-application-has-been-approved' => 'لقد تم قبولك في منصة التدريب كمدرب ويمكن الدخول عليها من: ',
+    'trainee-groups' => 'مجموعات المتدربين',
 ];

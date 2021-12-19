@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use PDF;
 
 class TraineesController extends Controller
 {
@@ -883,5 +884,18 @@ class TraineesController extends Controller
         $t->save();
 
         return $t;
+    }
+
+    public function attendanceSheetPdf($id)
+    {
+        $pdf = PDF::loadView('pdf.trainees.attendance-sheet', [
+            'records' => AttendanceReportRecord::where('trainee_id', $id)
+                ->with(['course_batch_session' => function($q) {
+                    $q->with('course');
+                }])
+                ->get(),
+        ]);
+
+        return $pdf->inline();
     }
 }

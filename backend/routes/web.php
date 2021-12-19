@@ -221,6 +221,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('trainees/import', [\App\Http\Controllers\Back\TraineesImportController::class, 'index'])->name('trainees.import');
         Route::post('trainees/import', [\App\Http\Controllers\Back\TraineesImportController::class, 'store'])->name('trainees.import.store');
 
+        Route::get('/trainees/{id}/attendance-sheet', [\App\Http\Controllers\Back\TraineesController::class, 'attendanceSheetPdf'])->name('trainees.admin.attendance-sheet.pdf');
         Route::get('/trainees/{id}/send-private-notification', [\App\Http\Controllers\Back\TraineesController::class, 'sendPrivateNotificationForm'])->name('trainees.private-notifications.create');
         Route::post('/trainees/{id}/send-private-notification/send', [\App\Http\Controllers\Back\TraineesController::class, 'sendPrivateNotification'])->name('trainees.private-notifications.send');
         Route::get('trainees/send-notification', [\App\Http\Controllers\Back\TraineesController::class, 'sendNotificationForm'])->name('trainees.send-notification');

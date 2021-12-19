@@ -552,7 +552,9 @@ export default {
             "complaints-settings": "إعدادت الشكاوى والملاحظات",
             "edit-complaint-settings": "تعديل إعدادت الشكواى والملاحظات",
             "emails": "الإيميلات",
-            "enabled": "مفعل"
+            "enabled": "مفعل",
+            "your-instructor-application-has-been-approved": "لقد تم قبولك في منصة التدريب كمدرب ويمكن الدخول عليها من: ",
+            "trainee-groups": "مجموعات المتدربين"
         }
     },
     "en": {
@@ -1067,7 +1069,9 @@ export default {
             "remove-all": "Remove all",
             "complaints-settings": "Complaints settings",
             "emails": "Emails",
-            "enabled": "Enabled"
+            "enabled": "Enabled",
+            "your-instructor-application-has-been-approved": "Your instructor application has been approved to PTC. You can access via: ",
+            "trainee-groups": "Trainee groups"
         }
     }
 }

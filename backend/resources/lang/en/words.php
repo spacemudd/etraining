@@ -379,4 +379,5 @@ return [
     'emails' => 'Emails',
     'enabled' => 'Enabled',
     'your-instructor-application-has-been-approved' => 'Your instructor application has been approved to PTC. You can access via: ',
+    'trainee-groups' => 'Trainee groups',
 ];

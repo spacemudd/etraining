@@ -16,12 +16,21 @@
             </template>
         </sidebar-link>
 
-        <sidebar-link :link-value="route('teaching.trainee-groups.index')" :active="$page.currentRouteName == 'teaching.trainee-groups.index'">
+        <sidebar-link :link-value="route('back.trainees.index')" :active="$page.currentRouteName == 'back.trainees.index'">
             <template #icon>
                 <img src="/img/student.svg" alt="" class="w-5 h-5">
             </template>
             <template #title>
                 <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.trainees') }}</span>
+            </template>
+        </sidebar-link>
+
+        <sidebar-link :link-value="route('teaching.trainee-groups.index')" :active="$page.currentRouteName == 'teaching.trainee-groups.index'">
+            <template #icon>
+                <img src="/img/student.svg" alt="" class="w-5 h-5">
+            </template>
+            <template #title>
+                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.trainee-groups') }}</span>
             </template>
         </sidebar-link>
 
