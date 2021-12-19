@@ -30,6 +30,7 @@
 
     <table style="width:100%;">
         <colgroup>
+            <col>
             <col style="width:200px;">
             <col style="width:200px;">
         </colgroup>
