@@ -36,8 +36,8 @@
         </colgroup>
         <thead>
         <tr>
-            <th class="text-right">{{ __('words.course') }}</th>
-            <th class="text-right">{{ __('words.date') }}</th>
+            <th>{{ __('words.course') }}</th>
+            <th>{{ __('words.date') }}</th>
             <th>{{ __('words.status') }}</th>
         </tr>
         </thead>
@@ -45,8 +45,8 @@
         <tr class="hover:bg-gray-100 focus-within:bg-gray-100">
             @foreach ($records as $record)
                 <td class="border-t">{{ $record->course_batch_session->course->name_ar }}</td>
-                <td class="border-t text-right" dir="ltr">{{ $record->course_batch_session->starts_at_timezone }}</td>
-                <td class="border-t text-center">{{ __('words.'.$record->status_name) }}</td>
+                <td class="border-t" dir="ltr">{{ $record->course_batch_session->starts_at_timezone }}</td>
+                <td class="border-t">{{ __('words.'.$record->status_name) }}</td>
             @endforeach
         </tr>
         </tbody>
