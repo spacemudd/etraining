@@ -43,7 +43,7 @@
         </thead>
         <tbody>
         @foreach ($records as $record)
-            <tr class="hover:bg-gray-100 focus-within:bg-gray-100" style="page-break-inside: avoid">
+            <tr style="page-break-inside: avoid;border:1px solid black;">
                 <td style="text-align:right;" class="border-t">
                     {{ $record->course_batch_session->course->name_ar }}<br/>
                     <span dir="ltr">{{ $record->course_batch_session->starts_at_timezone }}</span>
