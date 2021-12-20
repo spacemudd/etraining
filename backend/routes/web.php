@@ -2,6 +2,15 @@
 
 use App\Models\Back\Trainee;
 
+Route::get('phone-numbers/{company_id}', function() {
+    $t = Trainee::where('company_id')->pluck('phone');
+    $numbers = [];
+    foreach ($t as $phone) {
+        $numbers[] = app()->make(Trainee::class)->cleanUpThePhoneNumber($phone);
+    }
+    return $numbers;
+});
+
 Route::get('s1s1', function() {
     $ids = [];
    $trainees = Trainee::whereIn('identity_number', $ids)
