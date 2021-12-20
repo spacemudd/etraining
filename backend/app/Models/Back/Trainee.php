@@ -359,7 +359,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
 
 
         if (Str::length($convertPhone) != 12) { // KSA number.
-            return $convertPhone;
+            return null;
         }
 
         return $convertPhone;

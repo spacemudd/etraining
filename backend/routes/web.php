@@ -6,7 +6,12 @@ Route::get('phone-numbers/{company_id}', function() {
     $t = Trainee::where('company_id')->pluck('phone');
     $numbers = [];
     foreach ($t as $phone) {
-        $numbers[] = app()->make(Trainee::class)->cleanUpThePhoneNumber($phone);
+        $parsed = app()->make(Trainee::class)->cleanUpThePhoneNumber($phone);
+        if ($parsed) {
+            $numbers[] = app()->make(Trainee::class)->cleanUpThePhoneNumber($phone);
+        } else {
+            $numbers[] = $phone;
+        }
     }
     return $numbers;
 });
