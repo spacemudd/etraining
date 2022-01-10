@@ -3,6 +3,10 @@
 use App\Models\Back\Trainee;
 
 Route::get('phone-numbers/{company_id}', function() {
+
+    AttendanceReportRecordWarning::whereBetween('created_at', [now()->setDate(2022, 1, 3)->startOfDay(), now()->setDate(2022, 1, 9)->endOfDay()])->whereHas('trainee', function ($q) { $q->whereIn('company_id', ['a980c16d-b3c9-4064-aaf7-f0b6174197de', '07b45abe-da70-48b9-816e-b092e1868ae7', '4a69b7ae-25ba-43a4-a8b1-a2936647f026', 'b8f17f79-c0c4-401f-9924-d7afec100c44', '9891d1d3-103d-4af9-ab70-2028d438fd03', '022ab58a-8a4b-4a46-8c0b-350ac5ea17c5', 'd72becb3-6e03-4546-85fa-4dbd008fccb6', 'a0bc0fcb-20e3-45a3-a057-be5d47d26d19', 'e24ce28c-2cd7-496e-9eb5-202d75df5176', 'ac7393a9-d56d-49ae-9c43-a9031f244416', '6e61eded-aa67-419c-ada3-a6182214b361', 'b5d59d5a-b899-4919-bb74-43d0080b3800']); })->delete();
+    AttendanceReportRecord::whereBetween('created_at', [now()->setDate(2022, 1, 3)->startOfDay(), now()->setDate(2022, 1, 9)->endOfDay()])->whereHas('trainee', function ($q) { $q->whereIn('company_id', ['a980c16d-b3c9-4064-aaf7-f0b6174197de', '07b45abe-da70-48b9-816e-b092e1868ae7', '4a69b7ae-25ba-43a4-a8b1-a2936647f026', 'b8f17f79-c0c4-401f-9924-d7afec100c44', '9891d1d3-103d-4af9-ab70-2028d438fd03', '022ab58a-8a4b-4a46-8c0b-350ac5ea17c5', 'd72becb3-6e03-4546-85fa-4dbd008fccb6', 'a0bc0fcb-20e3-45a3-a057-be5d47d26d19', 'e24ce28c-2cd7-496e-9eb5-202d75df5176', 'ac7393a9-d56d-49ae-9c43-a9031f244416', '6e61eded-aa67-419c-ada3-a6182214b361', 'b5d59d5a-b899-4919-bb74-43d0080b3800']); })->update(['status' => 3]);
+
     $t = Trainee::where('company_id')->pluck('phone');
     $numbers = [];
     foreach ($t as $phone) {
@@ -86,10 +90,10 @@ Route::get('ttreport', function() {
         ->with('company')
         ->whereHas('company', function($q) {$q->where('deleted_at', null);})
         ->with([
-            'absences_20to26',
+            'absences_03to09',
         ])
         ->withCount([
-            'absences_20to26',
+            'absences_03to09',
         ])
         ->get();
 
@@ -103,7 +107,7 @@ Route::get('ttreport', function() {
             'phone' => $trainee->phone,
             'instructor' => optional($trainee->instructor)->name,
             'group' => optional($trainee->trainee_group)->name,
-            'absences_20to26' => $trainee->absences_20to26_count,
+            'absences_03to09' => $trainee->absences_03to09_count,
         ];
     }
 
