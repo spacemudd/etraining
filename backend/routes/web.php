@@ -90,10 +90,10 @@ Route::get('ttreport', function() {
         ->with('company')
         ->whereHas('company', function($q) {$q->where('deleted_at', null);})
         ->with([
-            'absences_03to09',
+            'absences_10to16',
         ])
         ->withCount([
-            'absences_03to09',
+            'absences_10to16',
         ])
         ->get();
 
@@ -107,7 +107,7 @@ Route::get('ttreport', function() {
             'phone' => $trainee->phone,
             'instructor' => optional($trainee->instructor)->name,
             'group' => optional($trainee->trainee_group)->name,
-            'absences_03to09' => $trainee->absences_03to09_count,
+            'absences_10to16' => $trainee->absences_10to16_count,
         ];
     }
 
