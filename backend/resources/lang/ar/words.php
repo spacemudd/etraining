@@ -390,4 +390,5 @@ return [
     'enabled' => 'مفعل',
     'your-instructor-application-has-been-approved' => 'لقد تم قبولك في منصة التدريب كمدرب ويمكن الدخول عليها من: ',
     'trainee-groups' => 'مجموعات المتدربين',
+    'monthly_subscription_per_trainee' => 'Monthly Subscription Per Trainee',
 ];

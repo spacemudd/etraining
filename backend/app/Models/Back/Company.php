@@ -33,6 +33,7 @@ class Company extends Model implements SearchableLabels, Auditable
         'company_rep_mobile',
         'email',
         'address',
+        'monthly_subscription_per_trainee',
     ];
 
     protected $appends = [

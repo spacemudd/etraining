@@ -554,7 +554,8 @@ export default {
             "emails": "الإيميلات",
             "enabled": "مفعل",
             "your-instructor-application-has-been-approved": "لقد تم قبولك في منصة التدريب كمدرب ويمكن الدخول عليها من: ",
-            "trainee-groups": "مجموعات المتدربين"
+            "trainee-groups": "مجموعات المتدربين",
+            "monthly_subscription_per_trainee": "Monthly Subscription Per Trainee"
         }
     },
     "en": {
@@ -1071,7 +1072,8 @@ export default {
             "emails": "Emails",
             "enabled": "Enabled",
             "your-instructor-application-has-been-approved": "Your instructor application has been approved to PTC. You can access via: ",
-            "trainee-groups": "Trainee groups"
+            "trainee-groups": "Trainee groups",
+            "monthly_subscription_per_trainee": "Monthly Subscription Per Trainee"
         }
     }
 }

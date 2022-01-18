@@ -29,6 +29,7 @@
                             'company_rep_mobile',
                             'address',
                             'email',
+                            'monthly_subscription_per_trainee',
                             ]">
                             <div class="col-span-2 sm:col-span-2">
                                 <jet-label for="name" :value="$t('words.'+fieldName)" />
@@ -95,6 +96,7 @@
                     company_rep_mobile: '',
                     address: '',
                     email: '',
+                    monthly_subscription_per_trainee: '',
                 }, {
                     bag: 'createCompany',
                 })

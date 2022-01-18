@@ -45,7 +45,7 @@ class CompaniesController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name_ar' => 'required|string|max:255',
             'name_en' => 'nullable|string|max:255',
             'cr_number' => 'nullable|max:255',
@@ -54,9 +54,10 @@ class CompaniesController extends Controller
             'company_rep_mobile' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
             'address' => 'nullable|string|max:255',
+            'monthly_subscription_per_trainee' => 'nullable|numeric|min:0|max:100000',
         ]);
 
-        $company = Company::create($request->except('_token'));
+        $company = Company::create($validated);
 
         return redirect()->route('back.companies.show', ['company' => $company])->with('success', __('words.created-successfully'));
     }

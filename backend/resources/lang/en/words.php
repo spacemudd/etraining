@@ -380,4 +380,5 @@ return [
     'enabled' => 'Enabled',
     'your-instructor-application-has-been-approved' => 'Your instructor application has been approved to PTC. You can access via: ',
     'trainee-groups' => 'Trainee groups',
+    'monthly_subscription_per_trainee' => 'Monthly Subscription Per Trainee',
 ];
