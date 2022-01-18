@@ -361,8 +361,8 @@
 
             <jet-section-border></jet-section-border>
 
-            <div class="grid grid-cols-1 md:grid-cols-6 gap-6 my-2">
-                <div class="md:col-span-4 lg:col-span-3 sm:col-span-3">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-2">
+                <div class="md:col-span-4 lg:col-span-1 sm:col-span-3">
                     <div class="px-4 sm:px-0">
                         <h3 class="text-lg font-medium text-gray-900">
                             {{ $t('words.warnings-sheet') }}
@@ -370,12 +370,32 @@
                     </div>
                 </div>
 
-                <div class="md:col-span-3 lg:col-span-3 sm:col-span-3">
+                <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
                     <attendance-sheet-management-for-trainee :trainee_id="trainee.id">
                     </attendance-sheet-management-for-trainee>
                 </div>
             </div>
 
+            <jet-section-border></jet-section-border>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-2">
+                <div class="md:col-span-4 lg:col-span-1 sm:col-span-3">
+                    <div class="px-4 sm:px-0">
+                        <h3 class="text-lg font-medium text-gray-900">
+                            {{ $t('words.invoices') }}
+                        </h3>
+
+                        <p class="mt-1 text-sm text-gray-600">
+                            {{ $t('words.invoices-help') }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
+                    <invoice-management-for-trainee :trainee_id="trainee.id">
+                    </invoice-management-for-trainee>
+                </div>
+            </div>
         </div>
     </app-layout>
 </template>
@@ -397,7 +417,8 @@
     import 'vue2-dropzone/dist/vue2Dropzone.min.css'
     import SelectTraineeGroup from "@/Components/SelectTraineeGroup";
     import ChangeTraineePassword from '@/Components/ChangeTraineePassword';
-    import AttendanceSheetManagementForTrainee from "../../../Components/AttendanceSheetManagementForTrainee";
+    import AttendanceSheetManagementForTrainee from "@/Components/AttendanceSheetManagementForTrainee";
+    import InvoiceManagementForTrainee from "@/Components/InvoiceManagementForTrainee";
     import 'selectize/dist/js/standalone/selectize.min';
 
     export default {
@@ -412,22 +433,23 @@
             'companies',
         ],
         components: {
-            AttendanceSheetManagementForTrainee,
-            ChangeTraineePassword,
             AppLayout,
-            JetSectionBorder,
+            AttendanceSheetManagementForTrainee,
             Breadcrumb,
-            JetDialogModal,
-            JetInput,
-            JetInputError,
+            BreadcrumbContainer,
+            ChangeTraineePassword,
+            CompanyContractsPagination,
+            InvoiceManagementForTrainee,
             JetActionMessage,
             JetButton,
+            JetDialogModal,
             JetFormSection,
+            JetInput,
+            JetInputError,
             JetLabel,
-            CompanyContractsPagination,
-            BreadcrumbContainer,
+            JetSectionBorder,
+            SelectTraineeGroup,
             VueDropzone,
-            SelectTraineeGroup
         },
         data() {
             return {

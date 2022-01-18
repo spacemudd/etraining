@@ -88,6 +88,7 @@ return [
     'confirmed' => 'Confirmed',
     'date' => 'Date',
     'invoices' => 'Invoices',
+    'invoices-help' => 'You can view all the invoices issued to this trainee over here',
     'view-monthly-subscription-settings' => 'View monthly subscription settings',
     'trainee_monthly_subscription' => 'Trainee monthly subscription',
     'phone' => 'Phone',
@@ -381,4 +382,6 @@ return [
     'your-instructor-application-has-been-approved' => 'Your instructor application has been approved to PTC. You can access via: ',
     'trainee-groups' => 'Trainee groups',
     'monthly_subscription_per_trainee' => 'Monthly Subscription Per Trainee',
+    'issue-monthly-invoices' => 'Issue Monthly Invoices',
+    'issue-invoice' => 'Issue Invoice',
 ];

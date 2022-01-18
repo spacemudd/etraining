@@ -40,6 +40,7 @@ class RolesService
         'disable-website',
         'edit-survey-links',
         'edit-complaint-settings',
+        'issue-monthly-invoices',
         // add the same name of the role to translation files.
     ];
 

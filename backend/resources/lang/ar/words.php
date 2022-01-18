@@ -87,6 +87,7 @@ return [
     'confirmed' => 'موثق',
     'date' => 'التاريخ',
     'invoices' => 'الفواتير',
+    'invoices-help' => 'You can view all the invoices issued to this trainee over here',
     'view-monthly-subscription-settings' => 'إعدادات تكاليف الإشتراك الشهري',
     'monthly-subscription' => 'تكلفة الشهرية',
     'trainee_monthly_subscription' => 'تكلفة اشتراك الشهري للمتدرب',
@@ -391,4 +392,6 @@ return [
     'your-instructor-application-has-been-approved' => 'لقد تم قبولك في منصة التدريب كمدرب ويمكن الدخول عليها من: ',
     'trainee-groups' => 'مجموعات المتدربين',
     'monthly_subscription_per_trainee' => 'Monthly Subscription Per Trainee',
+    'issue-monthly-invoices' => 'Issue Monthly Invoices',
+    'issue-invoice' => 'Issue Invoice',
 ];

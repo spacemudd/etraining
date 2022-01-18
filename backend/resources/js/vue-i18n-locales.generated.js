@@ -254,6 +254,7 @@ export default {
             "confirmed": "موثق",
             "date": "التاريخ",
             "invoices": "الفواتير",
+            "invoices-help": "You can view all the invoices issued to this trainee over here",
             "view-monthly-subscription-settings": "إعدادات تكاليف الإشتراك الشهري",
             "monthly-subscription": "تكلفة الشهرية",
             "trainee_monthly_subscription": "تكلفة اشتراك الشهري للمتدرب",
@@ -555,7 +556,9 @@ export default {
             "enabled": "مفعل",
             "your-instructor-application-has-been-approved": "لقد تم قبولك في منصة التدريب كمدرب ويمكن الدخول عليها من: ",
             "trainee-groups": "مجموعات المتدربين",
-            "monthly_subscription_per_trainee": "Monthly Subscription Per Trainee"
+            "monthly_subscription_per_trainee": "Monthly Subscription Per Trainee",
+            "issue-monthly-invoices": "Issue Monthly Invoices",
+            "issue-invoice": "Issue Invoice"
         }
     },
     "en": {
@@ -781,6 +784,7 @@ export default {
             "confirmed": "Confirmed",
             "date": "Date",
             "invoices": "Invoices",
+            "invoices-help": "You can view all the invoices issued to this trainee over here",
             "view-monthly-subscription-settings": "View monthly subscription settings",
             "trainee_monthly_subscription": "Trainee monthly subscription",
             "phone": "Phone",
@@ -1073,7 +1077,9 @@ export default {
             "enabled": "Enabled",
             "your-instructor-application-has-been-approved": "Your instructor application has been approved to PTC. You can access via: ",
             "trainee-groups": "Trainee groups",
-            "monthly_subscription_per_trainee": "Monthly Subscription Per Trainee"
+            "monthly_subscription_per_trainee": "Monthly Subscription Per Trainee",
+            "issue-monthly-invoices": "Issue Monthly Invoices",
+            "issue-invoice": "Issue Invoice"
         }
     }
 }
