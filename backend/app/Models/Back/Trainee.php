@@ -61,6 +61,10 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'national_address',
     ];
 
+    protected $dates = [
+        "to_bill_from",
+    ];
+
     protected $appends = [
         'trainee_group_object',
         'identity_copy_url',
