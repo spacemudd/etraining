@@ -394,4 +394,8 @@ return [
     'monthly_subscription_per_trainee' => 'Monthly Subscription Per Trainee',
     'issue-monthly-invoices' => 'Issue Monthly Invoices',
     'issue-invoice' => 'Issue Invoice',
+    'issue-invoice-trainee' => 'Issue Invoice to Trainee',
+    'issue-invoice-trainee-description' => 'Here you can issue a new invoice to trainee based on date',
+    'new-invoice' => 'New Invoice',
+    'expected-invoice-value-per-trainee' => 'Expected invoice value per trainee',
 ];

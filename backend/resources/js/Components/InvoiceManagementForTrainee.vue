@@ -1,7 +1,12 @@
 <template>
     <div class="bg-white rounded shadow overflow-x-auto">
         <div class="flex justify-end mx-5">
-            <button class="mt-5 bg-blue-600 p-2 text-white rounded" @click="removeAll">{{ $t('words.issue-invoice') }}</button>
+            <inertia-link
+                :href="`/back/trainees/${trainee_id}/invoices/create`"
+                class="mt-5 bg-blue-600 p-2 text-white rounded"
+            >
+                {{ $t('words.issue-invoice') }}
+            </inertia-link>
         </div>
         <table class="w-full whitespace-no-wrap">
         <colgroup>

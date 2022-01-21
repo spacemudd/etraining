@@ -11,6 +11,7 @@ use App\Models\Back\AttendanceReportRecordWarning;
 use App\Models\Back\Company;
 use App\Models\Back\ExportTraineesToExcelJobTracker;
 use App\Models\Back\Instructor;
+use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
 use App\Models\Back\TraineeBlockList;
 use App\Models\Back\TraineeGroup;
@@ -901,5 +902,11 @@ class TraineesController extends Controller
         ]);
 
         return $pdf->inline();
+    }
+
+    public function invoices($trainee_id)
+    {
+        return Invoice::where('trainee_id', $trainee_id)
+            ->get();
     }
 }
