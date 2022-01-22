@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Back;
 
 use App\Actions\Fortify\CreateNewTraineeUser;
 use App\Http\Controllers\Controller;
-use App\Jobs\ExportTraineesToExcelJob;
 use App\Jobs\ExportArchivedTraineesToExcelJob;
+use App\Jobs\ExportTraineesToExcelJob;
 use App\Models\Back\AttendanceReportRecord;
 use App\Models\Back\AttendanceReportRecordWarning;
 use App\Models\Back\Company;
@@ -48,7 +48,10 @@ class TraineesController extends Controller
     public function index()
     {
         return Inertia::render('Back/Trainees/Index', [
-            'trainees' => Trainee::with('company')->with('trainee_group')->latest()->paginate(20),
+            'trainees' => Trainee::with('company')
+                ->with('trainee_group')
+                ->latest()
+                ->paginate(20),
         ]);
     }
 
@@ -78,6 +81,7 @@ class TraineesController extends Controller
     /**
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
@@ -105,13 +109,24 @@ class TraineesController extends Controller
     /**
      *
      * @param $id
+     *
      * @return \Inertia\Response
      */
     public function show($id)
     {
         return Inertia::render('Back/Trainees/Show', [
             'companies' => Company::get(),
-            'trainee' => Trainee::with(['company', 'educational_level', 'city', 'marital_status', 'trainee_group', 'user'])->findOrFail($id),
+            'trainee' => Trainee::query()
+                ->with([
+                    'company',
+                    'educational_level',
+                    'city',
+                    'marital_status',
+                    'trainee_group',
+                    'user',
+                    'invoices',
+                ])
+                ->findOrFail($id),
             'trainee_groups' => TraineeGroup::get(),
             'cities' => City::orderBy('name_ar')->get(),
             'marital_statuses' => MaritalStatus::orderBy('order')->get(),
@@ -122,7 +137,8 @@ class TraineesController extends Controller
     /**
      *
      * @param \Illuminate\Http\Request $request
-     * @param $trainee_id
+     * @param                          $trainee_id
+     *
      * @return
      */
     public function storeIdentity(Request $request, $trainee_id)
@@ -148,7 +164,8 @@ class TraineesController extends Controller
     /**
      *
      * @param \Illuminate\Http\Request $request
-     * @param $trainee_id
+     * @param                          $trainee_id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function deleteIdentity(Request $request, $trainee_id)
@@ -165,7 +182,8 @@ class TraineesController extends Controller
     /**
      *
      * @param \Illuminate\Http\Request $request
-     * @param $trainee_id
+     * @param                          $trainee_id
+     *
      * @return
      */
     public function storeQualification(Request $request, $trainee_id)
@@ -191,7 +209,8 @@ class TraineesController extends Controller
     /**
      *
      * @param \Illuminate\Http\Request $request
-     * @param $trainee_id
+     * @param                          $trainee_id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function deleteQualification(Request $request, $trainee_id)
@@ -208,7 +227,8 @@ class TraineesController extends Controller
     /**
      *
      * @param \Illuminate\Http\Request $request
-     * @param $trainee_id
+     * @param                          $trainee_id
+     *
      * @return
      */
     public function storeBankAccount(Request $request, $trainee_id)
@@ -234,7 +254,8 @@ class TraineesController extends Controller
     /**
      *
      * @param \Illuminate\Http\Request $request
-     * @param $trainee_id
+     * @param                          $trainee_id
+     *
      * @return
      */
     public function storeNationalAddress(Request $request, $trainee_id)
@@ -260,7 +281,8 @@ class TraineesController extends Controller
     /**
      *
      * @param \Illuminate\Http\Request $request
-     * @param $trainee_id
+     * @param                          $trainee_id
+     *
      * @return
      */
     public function storeCv(Request $request, $trainee_id)
@@ -286,7 +308,8 @@ class TraineesController extends Controller
     /**
      *
      * @param \Illuminate\Http\Request $request
-     * @param $trainee_id
+     * @param                          $trainee_id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function deleteBankAccount(Request $request, $trainee_id)
@@ -303,7 +326,8 @@ class TraineesController extends Controller
     /**
      *
      * @param \Illuminate\Http\Request $request
-     * @param $trainee_id
+     * @param                          $trainee_id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function deleteNationalAddress(Request $request, $trainee_id)
@@ -320,7 +344,8 @@ class TraineesController extends Controller
     /**
      *
      * @param \Illuminate\Http\Request $request
-     * @param $trainee_id
+     * @param                          $trainee_id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function deleteCv(Request $request, $trainee_id)
@@ -342,11 +367,13 @@ class TraineesController extends Controller
     public function withGroups(): array
     {
         if (filter_var(request()->load_trainees, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
-            $groups = TraineeGroup::with(['trainees' => function($q) {
-                if (request()->company_id) {
-                    return $q->where('company_id', request()->company_id);
-                }
-            }])
+            $groups = TraineeGroup::with([
+                'trainees' => function ($q) {
+                    if (request()->company_id) {
+                        return $q->where('company_id', request()->company_id);
+                    }
+                },
+            ])
                 ->get()
                 ->toArray();
         } else {
@@ -354,7 +381,7 @@ class TraineesController extends Controller
                 ->toArray();
         }
 
-        foreach ($groups as &$group)  {
+        foreach ($groups as &$group) {
             $group['id'] .= '-group';
         }
 
@@ -364,6 +391,7 @@ class TraineesController extends Controller
     /**
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return mixed
      */
     public function assignInstructor(Request $request)
@@ -402,6 +430,7 @@ class TraineesController extends Controller
      * Open a new account for the trainee where they can login with it.
      *
      * @param $trainee_id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function createUser($trainee_id)
@@ -431,6 +460,7 @@ class TraineesController extends Controller
     /**
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return mixed
      */
     public function storeCvFromApplication(Request $request)
@@ -462,6 +492,7 @@ class TraineesController extends Controller
      * Approving the instructor to use the platform and start broadcasting.
      *
      * @param $trainee_id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function approveUser($trainee_id)
@@ -476,7 +507,7 @@ class TraineesController extends Controller
 
         Notification::send($trainee->user ?: $trainee, new TraineeApplicationApprovedNotification());
 
-        Log::info('Trainee ID: '.$trainee->id.' has been approved by user: '.auth()->user()->email);
+        Log::info('Trainee ID: ' . $trainee->id . ' has been approved by user: ' . auth()->user()->email);
 
         return redirect()->route('back.trainees.show', $trainee->id);
     }
@@ -485,7 +516,8 @@ class TraineesController extends Controller
      * Update trainee data.
      *
      * @param \Illuminate\Http\Request $request
-     * @param $trainee_id
+     * @param                          $trainee_id
+     *
      * @return \Illuminate\Http\RedirectResponse|string
      * @throws \Throwable
      */
@@ -494,7 +526,7 @@ class TraineesController extends Controller
         $request->validate([
             'company_id' => 'nullable|exists:companies,id',
             'trainee_group_name' => 'nullable|string|max:255',
-            'email' => 'required|string|max:255|unique:trainees,email,'.$trainee_id,
+            'email' => 'required|string|max:255|unique:trainees,email,' . $trainee_id,
             'name' => 'required|string|max:255',
             'identity_number' => 'required|string|max:255',
             'birthday' => 'nullable|date',
@@ -513,7 +545,7 @@ class TraineesController extends Controller
 
         if ($trainee->user) {
             $request->validate([
-                'email' => 'required|string|max:255|unique:users,email,'.$trainee->user->id,
+                'email' => 'required|string|max:255|unique:users,email,' . $trainee->user->id,
             ]);
         }
 
@@ -538,13 +570,12 @@ class TraineesController extends Controller
         return redirect()->route('back.trainees.show', $trainee_id);
     }
 
-    public function blockView($trainee_id) {
-
+    public function blockView($trainee_id)
+    {
         $trainee = Trainee::findOrFail($trainee_id);
         return Inertia::render('Back/Trainees/Block', [
             'trainee' => $trainee,
         ]);
-
     }
 
     public function showBlocked($id)
@@ -572,9 +603,19 @@ class TraineesController extends Controller
             $blockList->delete();
         }
 
-        optional(User::where('email', 'sara@ptc-ksa.com')
-            ->first())
-            ->notify(new TraineeRestoredNotification($trainee->name, $trainee->phone, $trainee->email, auth()->user(), $trainee->deleted_remark));
+        optional(
+            User::where('email', 'sara@ptc-ksa.com')
+                ->first()
+        )
+            ->notify(
+                new TraineeRestoredNotification(
+                    $trainee->name,
+                    $trainee->phone,
+                    $trainee->email,
+                    auth()->user(),
+                    $trainee->deleted_remark
+                )
+            );
 
         return redirect()->route('back.trainees.show', $trainee_id);
     }
@@ -585,7 +626,7 @@ class TraineesController extends Controller
         $trainee = Trainee::findOrFail($trainee_id);
         $trainee->update([
             'deleted_remark' => $request->deleted_remark,
-            ]);
+        ]);
         $trainee->delete();
         if ($trainee->user) {
             $trainee->user->delete();
@@ -659,7 +700,7 @@ class TraineesController extends Controller
             'trainee_status_id' => 'nullable|numeric',
         ]);
 
-        $validate = in_array((int) $request->trainee_status_id, [
+        $validate = in_array((int)$request->trainee_status_id, [
             Trainee::STATUS_PENDING_APPROVAL,
             Trainee::STATUS_APPROVED,
             Trainee::STATUS_PENDING_UPLOADING_FILES,
@@ -683,6 +724,7 @@ class TraineesController extends Controller
     /**
      *
      * @param $id
+     *
      * @return mixed
      */
     public function excelJob($id)
@@ -695,9 +737,11 @@ class TraineesController extends Controller
         $tracker = ExportTraineesToExcelJobTracker::find($id);
         $file = $tracker->getFirstMedia('excel');
         if ($file->disk === 's3') {
-            return redirect()->to($file->getTemporaryUrl(now()->addMinutes(5), '', [
-                //'ResponseContentType' => 'application/octet-stream',
-            ]));
+            return redirect()->to(
+                $file->getTemporaryUrl(now()->addMinutes(5), '', [
+                    //'ResponseContentType' => 'application/octet-stream',
+                ])
+            );
         } else {
             return response()->download($file->getPath());
         }
@@ -705,7 +749,6 @@ class TraineesController extends Controller
 
     public function archivedExcel()
     {
-
         $excelJob = new ExportTraineesToExcelJobTracker();
         $excelJob->queued_at = now();
         $excelJob->user_id = auth()->user()->id;
@@ -734,8 +777,9 @@ class TraineesController extends Controller
     /**
      * Assign a password for the trainee's account.
      *
-     * @param $trainee_id
+     * @param                          $trainee_id
      * @param \Illuminate\Http\Request $request
+     *
      * @return mixed
      */
     public function setPassword($trainee_id, Request $request)
@@ -788,7 +832,8 @@ class TraineesController extends Controller
 
         $trainees = $trainees->get();
 
-        Notification::send($trainees,
+        Notification::send(
+            $trainees,
             new CustomTraineeNotification($request->email_title, $request->email_body, $request->sms_body)
         );
 
@@ -805,7 +850,8 @@ class TraineesController extends Controller
     /**
      *
      * @param \Illuminate\Http\Request $request
-     * @param $id
+     * @param                          $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function sendPrivateNotification(Request $request, $id)
@@ -818,8 +864,8 @@ class TraineesController extends Controller
         $trainee = Trainee::findOrFail($id);
         $trainee->notify(new TraineePrivateMessage($request->email_title, $request->email_body, $request->sms_body));
         Log::info([
-            'Sending message to: '.$trainee->email,
-            'Body: '.$request->email_body,
+            'Sending message to: ' . $trainee->email,
+            'Body: ' . $request->email_body,
         ]);
         return redirect()->route('back.trainees.show', $trainee->id);
     }
@@ -827,13 +873,19 @@ class TraineesController extends Controller
     public function warnings($trainee_id)
     {
         return AttendanceReportRecordWarning::where('trainee_id', $trainee_id)
-            ->with(['attendance_report_record' => function($q) {
-                $q->with(['course_batch_session' => function($q) {
-                    $q->with(['course' => function($q) {
-                        $q->with('instructor');
-                    }]);
-                }]);
-            }])
+            ->with([
+                'attendance_report_record' => function ($q) {
+                    $q->with([
+                        'course_batch_session' => function ($q) {
+                            $q->with([
+                                'course' => function ($q) {
+                                    $q->with('instructor');
+                                },
+                            ]);
+                        },
+                    ]);
+                },
+            ])
             ->get();
     }
 
@@ -842,6 +894,7 @@ class TraineesController extends Controller
      *
      * @param $trainee_id
      * @param $id
+     *
      * @return mixed
      */
     public function warningDelete($trainee_id, $id)
@@ -859,6 +912,7 @@ class TraineesController extends Controller
      * Delete all warnings under trainee.
      *
      * @param $trainee_id
+     *
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Throwable
      */
@@ -895,9 +949,11 @@ class TraineesController extends Controller
             'trainee' => Trainee::withTrashed()->findOrFail($id),
             'records' => AttendanceReportRecord::where('trainee_id', $id)
                 ->orderBy('session_starts_at')
-                ->with(['course_batch_session' => function($q) {
-                    $q->with('course');
-                }])
+                ->with([
+                    'course_batch_session' => function ($q) {
+                        $q->with('course');
+                    },
+                ])
                 ->get(),
         ]);
 

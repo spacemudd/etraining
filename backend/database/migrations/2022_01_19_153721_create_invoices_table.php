@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Back\Invoice;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -26,12 +27,18 @@ class CreateInvoicesTable extends Migration
                 ->constrained()
                 ->nullOnDelete();
 
+            $table->foreignUuid('created_by_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+
             $table->string('number');
             $table->unsignedTinyInteger('month');
             $table->unsignedSmallInteger('year');
-            $table->unsignedInteger('amount');
-            $table->tinyInteger('status');
-
+            $table->unsignedInteger('total_amount');
+            $table->tinyInteger('status')->default(Invoice::STATUS_UNPAID);
+            $table->tinyInteger('payment_method')->nullable();
+            $table->timestamp('paid_at')->nullable();
             $table->timestamps();
         });
     }

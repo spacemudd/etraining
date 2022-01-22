@@ -577,7 +577,24 @@ export default {
             "october": "October",
             "november": "November",
             "december": "December",
-            "trainees-to-invoice": "Trainees to Invoice"
+            "trainees-to-invoice": "Trainees to Invoice",
+            "date-created": "Date Created",
+            "date-period": "Date Period",
+            "grand-total": "Grand Total",
+            "initiated-by": "Initiated By",
+            "unpaid": "Unpaid",
+            "paid": "Paid",
+            "audit-required": "Audit Required",
+            "print": "Print",
+            "upload-payment-receipt": "Upload Payment Receipt",
+            "mark-as-paid": "Mark as Paid",
+            "client-name": "Client Name",
+            "total-amount": "Total Amount",
+            "verified": "Verified",
+            "subtotal": "Subtotal",
+            "tax": "Tax",
+            "items": "Items",
+            "comments": "Comments"
         }
     },
     "en": {
@@ -1117,7 +1134,24 @@ export default {
             "october": "October",
             "november": "November",
             "december": "December",
-            "trainees-to-invoice": "Trainees to Invoice"
+            "trainees-to-invoice": "Trainees to Invoice",
+            "date-created": "Date Created",
+            "date-period": "Date Period",
+            "grand-total": "Grand Total",
+            "initiated-by": "Initiated By",
+            "unpaid": "Unpaid",
+            "paid": "Paid",
+            "audit-required": "Audit Required",
+            "print": "Print",
+            "upload-payment-receipt": "Upload Payment Receipt",
+            "mark-as-paid": "Mark as Paid",
+            "client-name": "Client Name",
+            "total-amount": "Total Amount",
+            "verified": "Verified",
+            "subtotal": "Subtotal",
+            "tax": "Tax",
+            "items": "Items",
+            "comments": "Comments"
         }
     }
 }

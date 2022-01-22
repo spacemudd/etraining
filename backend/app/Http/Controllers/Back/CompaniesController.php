@@ -19,6 +19,7 @@ class CompaniesController extends Controller
     public function index()
     {
         $this->authorize('view-companies');
+
         return Inertia::render('Back/Companies/Index', [
             'companies' => Company::paginate(20),
         ]);
@@ -40,11 +41,14 @@ class CompaniesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
+        $this->authorize('create-companies');
+
         $validated = $request->validate([
             'name_ar' => 'required|string|max:255',
             'name_en' => 'nullable|string|max:255',
@@ -59,23 +63,49 @@ class CompaniesController extends Controller
 
         $company = Company::create($validated);
 
-        return redirect()->route('back.companies.show', ['company' => $company])->with('success', __('words.created-successfully'));
+        return redirect()->route('back.companies.show', ['company' => $company])->with(
+            'success',
+            __('words.created-successfully')
+        );
     }
 
     /**
      * Display the specified resource.
      *
      * @param int $id
+     *
      * @return \Inertia\Response
      */
     public function show($id)
     {
+        $company = Company::query()
+            ->with([
+                'trainees',
+                'contracts' => function ($model) {
+                    $model->with([
+                        'instructors' => function ($q) {
+                            $q->withCount('trainees');
+                        },
+                    ]);
+                },
+            ])
+            ->withCount([
+                'trainees',
+            ])
+            ->findOrFail($id);
+
+        $invoices = $company->invoices()
+            ->select('*')
+            ->selectRaw('COUNT(id) as trainee_count')
+            ->selectRaw('SUM(total_amount) as grand_total')
+            ->groupByRaw('month, year, created_by_id, DATE(created_at)')
+            ->with(['created_by'])
+            ->latest()
+            ->get();
+
         return Inertia::render('Back/Companies/Show', [
-            'company' => Company::with('trainees')->withCount('trainees')->with(['contracts' => function($model) {
-                $model->with(['instructors' => function($q) {
-                    $q->withCount('trainees');
-                }]);
-            }])->findOrFail($id),
+            'company' => $company,
+            'invoices' => $invoices,
             'instructors' => Instructor::get(),
         ]);
     }
@@ -84,6 +114,7 @@ class CompaniesController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param int $id
+     *
      * @return \Inertia\Response
      */
     public function edit($id)
@@ -96,21 +127,26 @@ class CompaniesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         $company = Company::findOrFail($id);
         $company->update($request->except('_token'));
-        return redirect()->route('back.companies.show', ['company' => $company])->with('success', __('words.updated-successfully'));
+        return redirect()->route('back.companies.show', ['company' => $company])->with(
+            'success',
+            __('words.updated-successfully')
+        );
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

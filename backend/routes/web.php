@@ -221,6 +221,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::delete('{company_id}/contracts/{contract}/attachments/delete', [\App\Http\Controllers\Back\CompaniesContractsController::class, 'deleteAttachments'])->name('contracts.attachments.delete');
             Route::get('{company_id}/trainees/excel', [\App\Http\Controllers\Back\CompaniesContractsController::class, 'excel'])->name('trainees.excel');
             Route::resource('{company_id}/contracts', \App\Http\Controllers\Back\CompaniesContractsController::class);
+            Route::get('{company_id}/invoices/pdf', [\App\Http\Controllers\Back\CompanyInvoicesController::class, 'pdf'])->name('invoices.pdf');
         });
 
         Route::post('company-contracts/attach-instructor', [\App\Http\Controllers\Back\CompaniesContractsController::class, 'attachInstructor'])->name('company-contracts.attach-instructor');
