@@ -214,6 +214,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::delete('/settings/trainees-applications/required-files/{id}', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'delete'])->name('settings.trainees-application.required-files.delete');
 
         Route::resource('companies', \App\Http\Controllers\Back\CompaniesController::class);
+        Route::resource('companies.invoices', \App\Http\Controllers\Back\CompanyInvoicesController::class)->only(['create', 'store']);
         Route::prefix('companies')->name('companies.')->group(function() {
             Route::get('{company_id}/contracts/{contract_id}/attachments', [\App\Http\Controllers\Back\CompaniesContractsController::class, 'attachments'])->name('contracts.attachments');
             Route::post('{company_id}/contracts/{contract}/attachments/upload', [\App\Http\Controllers\Back\CompaniesContractsController::class, 'storeAttachments'])->name('contracts.attachments.store');
@@ -293,7 +294,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('trainees/blocked/show/{trainee_id}', [\App\Http\Controllers\Back\TraineesController::class, 'unblock'])->name('trainees.unblock');
         Route::get('trainees/archived', [\App\Http\Controllers\Back\TraineesController::class, 'indexArchived'])->name('trainees.index.archived');
         Route::resource('trainees', \App\Http\Controllers\Back\TraineesController::class);
-        Route::resource('trainees.invoices', \App\Http\Controllers\Back\TraineeInvoicesController::class);
+        Route::resource('trainees.invoices', \App\Http\Controllers\Back\TraineeInvoicesController::class)->only(['create', 'store']);
         Route::get('candidates', [\App\Http\Controllers\Back\CandidatesController::class, 'index'])->name('candidates.index');
 
         // Export For Candidates.

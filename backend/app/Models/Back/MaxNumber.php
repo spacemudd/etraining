@@ -30,7 +30,7 @@ class MaxNumber extends Model
             $maxNumber->{$maxNumber->getKeyName()} = (string)Str::uuid();
 
             if (auth()->user()) {
-                $maxNumber->team_id = auth()->user()->team_id;
+                $maxNumber->team_id = auth()->user()->current_team_id;
             }
         });
     }
@@ -40,10 +40,11 @@ class MaxNumber extends Model
      *
      * @param     $string
      * @param int $startFrom
+     * @param int $digits
      *
      * @return \App\Models\Back\MaxNumber
      */
-    public static function generateForPrefix($string, int $startFrom = 0): string
+    public static function generateForPrefix($string, int $startFrom = 0, int $digits = 4): string
     {
         $maxNumber = MaxNumber::lockForUpdate()->firstOrCreate([
             'name' => $string,
@@ -55,12 +56,23 @@ class MaxNumber extends Model
         $maxNumber->value = $number;
         $maxNumber->save();
 
-        $digits = 4;
-
         $prependDigits = sprintf('%0' . $digits . 'd', $number);
 
         return $prependDigits;
         //return $maxNumber->name.$prependDigits;
     }
 
+    /**
+     * Create a new number for a prefix.
+     *
+     * @return \App\Models\Back\MaxNumber
+     */
+    public static function generatePrefixForInvoice(): string
+    {
+        return self::generateForPrefix(
+            "invoice",
+            100,
+            7
+        );
+    }
 }

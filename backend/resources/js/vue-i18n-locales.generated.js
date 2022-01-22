@@ -562,7 +562,22 @@ export default {
             "issue-invoice-trainee": "Issue Invoice to Trainee",
             "issue-invoice-trainee-description": "Here you can issue a new invoice to trainee based on date",
             "new-invoice": "New Invoice",
-            "expected-invoice-value-per-trainee": "Expected invoice value per trainee"
+            "expected-invoice-value-per-trainee": "Expected invoice value per trainee",
+            "month": "Month",
+            "year": "Year",
+            "january": "January",
+            "february": "February",
+            "march": "March",
+            "april": "April",
+            "may": "May",
+            "june": "June",
+            "july": "July",
+            "august": "August",
+            "september": "September",
+            "october": "October",
+            "november": "November",
+            "december": "December",
+            "trainees-to-invoice": "Trainees to Invoice"
         }
     },
     "en": {
@@ -1087,7 +1102,22 @@ export default {
             "issue-invoice-trainee": "Issue Invoice to Trainee",
             "issue-invoice-trainee-description": "Here you can issue a new invoice to trainee based on date",
             "new-invoice": "New Invoice",
-            "expected-invoice-value-per-trainee": "Expected invoice value per trainee"
+            "expected-invoice-value-per-trainee": "Expected invoice value per trainee",
+            "month": "Month",
+            "year": "Year",
+            "january": "January",
+            "february": "February",
+            "march": "March",
+            "april": "April",
+            "may": "May",
+            "june": "June",
+            "july": "July",
+            "august": "August",
+            "september": "September",
+            "october": "October",
+            "november": "November",
+            "december": "December",
+            "trainees-to-invoice": "Trainees to Invoice"
         }
     }
 }

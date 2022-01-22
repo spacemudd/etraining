@@ -23,49 +23,78 @@
                     <template #form>
                         <div class="col-span-2 sm:col-span-2">
                             <jet-label
-                                for="from_date"
-                                :value="$t('words.date-from')"
+                                for="month"
+                                :value="$t('words.month')"
                             />
-                            <jet-input
-                                id="from_date"
-                                type="date"
-                                class="mt-1 block w-full"
-                                v-model="form.from_date"
-                                autocomplete="off"
-                            />
+
+                            <div class="relative">
+                                <select
+                                    class="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                    v-model="form.month"
+                                    id="month"
+                                >
+                                    <option value="1">{{ $t('words.january') }}</option>
+                                    <option value="2">{{ $t('words.february') }}</option>
+                                    <option value="3">{{ $t('words.march') }}</option>
+                                    <option value="4">{{ $t('words.april') }}</option>
+                                    <option value="5">{{ $t('words.may') }}</option>
+                                    <option value="6">{{ $t('words.june') }}</option>
+                                    <option value="7">{{ $t('words.july') }}</option>
+                                    <option value="8">{{ $t('words.august') }}</option>
+                                    <option value="9">{{ $t('words.september') }}</option>
+                                    <option value="10">{{ $t('words.october') }}</option>
+                                    <option value="11">{{ $t('words.november') }}</option>
+                                    <option value="12">{{ $t('words.december') }}</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                    <svg
+                                        class="fill-current h-4 w-4"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                    </svg>
+                                </div>
+                            </div>
+
                             <jet-input-error
-                                :message="form.error('from_date')"
+                                :message="form.error('month')"
+                                class="mt-2"
+                            />
+                        </div>
+                        <div class="col-span-2 sm:col-span-2">
+                            <jet-label
+                                for="year"
+                                :value="$t('words.year')"
+                            />
+
+                            <jet-input
+                                type="number"
+                                min="2021"
+                                :max="current_year + 1"
+                                class="mt-1 block w-full"
+                                v-model="form.year"
+                                autocomplete="off"
+                                required="true"
+                                step="1"
+                            />
+
+                            <jet-input-error
+                                :message="form.error('year')"
                                 class="mt-2"
                             />
                         </div>
 
                         <div class="col-span-2 sm:col-span-2">
                             <jet-label
-                                for="to_date"
-                                :value="$t('words.date-to')"
-                            />
-                            <jet-input
-                                id="to_date"
-                                type="date"
-                                class="mt-1 block w-full"
-                                v-model="form.to_date"
-                                autocomplete="off"
-                            />
-                            <jet-input-error
-                                :message="form.error('to_date')"
-                                class="mt-2"
-                            />
-                        </div>
-
-                        <div class="col-span-2 sm:col-span-2">
-                            <jet-label
-                                for="to_date"
+                                for="amount"
                                 :value="$t('words.expected-invoice-value-per-trainee')"
                             />
+
                             <jet-input
-                                id="expected_amount"
-                                class="mt-1 block w-full bg-gray-100 cursor-not-allowed"
-                                :value="amountBreakdown"
+                                class="mt-1 block w-full"
+                                id="amount"
+                                :value="trainee.company.monthly_subscription_per_trainee"
                                 disabled
                             />
                         </div>
@@ -134,38 +163,18 @@ export default {
     },
     data() {
         return {
-            addressSearch: '',
+            current_year: moment().utc().year(),
             form: this.$inertia.form({
-                from_date: '',
-                to_date: '',
+                month: moment().utc().month() + 1,
+                year: moment().utc().year(),
             }, {
                 bag: 'createTraineeInvoice',
             })
         }
     },
-    computed: {
-        amountBreakdown() {
-            if (!!!this.form.from_date && !!!this.form.to_date) {
-                return 0;
-            }
-
-            const months = moment(this.form.to_date).diff(moment(this.form.from_date), 'months');
-            const days = moment(this.form.to_date).diff(moment(this.form.from_date), 'days');
-
-            let amount = 0;
-
-            if(months > 0) {
-
-            }
-
-            console.log(days);
-
-            return `${days} days * 50 SR = 800 SR`;
-        },
-    },
     methods: {
         createTraineeInvoice() {
-            this.form.post(`/back/trainees/${this.trainee.id}/invoices/create`, {
+            this.form.post(`/back/trainees/${this.trainee.id}/invoices/`, {
                 preserveScroll: true
             }).catch(error => {
                 this.form.processing = false;

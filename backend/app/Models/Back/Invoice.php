@@ -4,6 +4,7 @@ namespace App\Models\Back;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Invoice extends Model
 {
@@ -18,14 +19,22 @@ class Invoice extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-
+        'company_id',
+        'trainee_id',
+        'amount',
+        'month',
+        'number',
+        'status',
+        'year',
     ];
 
     protected static function boot(): void
     {
         parent::boot();
+
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string)Str::uuid();
+            $model->number = MaxNumber::generatePrefixForInvoice();
         });
     }
 }

@@ -27,7 +27,8 @@ class CreateInvoicesTable extends Migration
                 ->nullOnDelete();
 
             $table->string('number');
-            $table->date('date');
+            $table->unsignedTinyInteger('month');
+            $table->unsignedSmallInteger('year');
             $table->unsignedInteger('amount');
             $table->tinyInteger('status');
 
