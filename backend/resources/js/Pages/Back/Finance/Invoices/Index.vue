@@ -22,7 +22,7 @@
                     <tr v-for="invoice in invoices.data" :key="invoice.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
                         <td class="border-t">
                             <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('back.finance.invoices.show', invoice.id)">
-                                {{ invoice.reference_number }}
+                                {{ invoice.number_formatted }}
                             </inertia-link>
                         </td>
                         <td class="border-t">
@@ -32,7 +32,7 @@
                         </td>
                         <td class="border-t">
                             <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('back.finance.invoices.show', invoice.id)">
-                                {{ invoice.status }}
+                                {{ invoice.status_formatted }}
                             </inertia-link>
                         </td>
                         <td class="border-t">
@@ -42,7 +42,7 @@
                         </td>
                         <td class="border-t">
                             <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('back.finance.invoices.show', invoice.id)">
-                                {{ invoice.grand_total }}
+                                {{ invoice.total_amount }}
                             </inertia-link>
                         </td>
                         <td class="border-t">
@@ -52,7 +52,7 @@
                         </td>
                         <td class="border-t">
                             <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('back.finance.invoices.show', invoice.id)">
-                                {{ invoice.created_at }}
+                                {{ invoice.created_at_date }}
                             </inertia-link>
                         </td>
                         <td class="border-t w-px">

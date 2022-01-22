@@ -23,6 +23,8 @@ module.exports = {
         padding: ['responsive', 'direction'],
         right: ['responsive', 'direction'],
         textAlign: ['responsive', 'direction'],
+        backgroundColor: ['disabled'],
+        cursor: ['disabled'],
     },
 
     plugins: [

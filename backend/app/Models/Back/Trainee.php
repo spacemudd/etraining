@@ -7,6 +7,7 @@ use App\Models\EducationalLevel;
 use App\Models\MaritalStatus;
 use App\Models\SearchableLabels;
 use App\Notifications\AssignedToCompanyTraineeNotification;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use JamesMills\LaravelTimezone\Facades\Timezone;
@@ -59,6 +60,10 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'deleted_remark',
         'trainee_group_id',
         'national_address',
+    ];
+
+    protected $dates = [
+        "to_bill_from",
     ];
 
     protected $appends = [
@@ -210,6 +215,11 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     public function attendances()
     {
         return $this->hasMany(CourseBatchSessionAttendance::class);
+    }
+
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class);
     }
 
     public function getCompanyNameAttribute()
