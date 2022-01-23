@@ -410,6 +410,7 @@ return [
     'initiated-by' => 'Initiated By',
     'unpaid' => 'Unpaid',
     'paid' => 'Paid',
+    'not-paid' => 'Not Paid',
     'audit-required' => 'Audit Required',
     'print' => 'Print',
     'upload-payment-receipt' => 'Upload Payment Receipt',
@@ -421,4 +422,7 @@ return [
     'tax' => 'Tax',
     'items' => 'Items',
     'comments' => 'Comments',
+    'invoice-no' => 'Invoice No',
+    'created-by' => 'Created By',
+    'is-paid' => 'Is Paid',
 ];

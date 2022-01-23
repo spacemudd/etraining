@@ -584,6 +584,7 @@ export default {
             "initiated-by": "Initiated By",
             "unpaid": "Unpaid",
             "paid": "Paid",
+            "not-paid": "Not Paid",
             "audit-required": "Audit Required",
             "print": "Print",
             "upload-payment-receipt": "Upload Payment Receipt",
@@ -594,7 +595,10 @@ export default {
             "subtotal": "Subtotal",
             "tax": "Tax",
             "items": "Items",
-            "comments": "Comments"
+            "comments": "Comments",
+            "invoice-no": "Invoice No",
+            "created-by": "Created By",
+            "is-paid": "Is Paid"
         }
     },
     "en": {
@@ -1141,6 +1145,7 @@ export default {
             "initiated-by": "Initiated By",
             "unpaid": "Unpaid",
             "paid": "Paid",
+            "not-paid": "Not Paid",
             "audit-required": "Audit Required",
             "print": "Print",
             "upload-payment-receipt": "Upload Payment Receipt",
@@ -1151,7 +1156,9 @@ export default {
             "subtotal": "Subtotal",
             "tax": "Tax",
             "items": "Items",
-            "comments": "Comments"
+            "comments": "Comments",
+            "invoice-no": "Invoice No",
+            "created-by": "Created By"
         }
     }
 }
