@@ -31,6 +31,7 @@
                                 <option value="0">ملف غير مكتمل</option>
                                 <option value="linked_to_company_and_contract">مسجلين في شركة + دورة</option>
                                 <option value="not_linked_to_a_company">غير مسجلين في شركة</option>
+                                <option value="all_trainees">الكل</option>
                             </select>
                             <jet-input-error :message="form.error('to_trainee_status')" class="mt-2" />
                         </div>
