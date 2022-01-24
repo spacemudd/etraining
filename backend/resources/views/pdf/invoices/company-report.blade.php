@@ -20,9 +20,9 @@
         <tr>
             <td>{{ __('words.date-period') }}</td>
             <td>
-                {{ $invoice_group->date_period_start }}
+                {{ $invoice_group->from_date->toDateString() }}
                 <br>
-                {{ $invoice_group->date_period_end }}
+                {{ $invoice_group->to_date->toDateString() }}
             </td>
         </tr>
         <tr>

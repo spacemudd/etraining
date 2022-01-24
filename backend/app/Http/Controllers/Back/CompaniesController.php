@@ -98,7 +98,7 @@ class CompaniesController extends Controller
             ->select('*')
             ->selectRaw('COUNT(id) as trainee_count')
             ->selectRaw('SUM(total_amount) as grand_total')
-            ->groupByRaw('month, year, created_by_id, DATE(created_at)')
+            ->groupByRaw('from_date, to_date, created_by_id, DATE(created_at)')
             ->with(['created_by'])
             ->latest()
             ->get();

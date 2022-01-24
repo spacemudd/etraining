@@ -43,11 +43,13 @@
                         <div class="w-full p-4">
                             <div class="grid grid-cols-2">
                                 <div class="font-bold">{{ $t('words.date') }}</div>
-                                <div>{{ invoice.created_at_date }}</div>
+                                <div>{{ invoice.created_at | formatDate }}</div>
                                 <div class="font-bold">{{ $t('words.no') }}.</div>
                                 <div>{{ invoice.number_formatted }}</div>
-                                <div class="font-bold">{{ $t('words.paid') }}</div>
-                                <div>{{ invoice.is_paid ? $t('words.yes') : $t('words.no') }}</div>
+                                <div class="font-bold">{{ $t('words.from-date') }}</div>
+                                <div>{{ invoice.from_date | formatDate }}</div>
+                                <div class="font-bold">{{ $t('words.to-date') }}</div>
+                                <div>{{ invoice.to_date | formatDate }}</div>
                             </div>
                         </div>
                         <div class="w-full p-4">
@@ -57,6 +59,8 @@
                                 <div class="font-bold">{{ $t('words.total-amount') }}.</div>
                                 <div>{{ invoice.total_amount }}</div>
                                 <div class="font-bold">{{ $t('words.verified') }}</div>
+                                <div>{{ invoice.is_paid ? $t('words.yes') : $t('words.no') }}</div>
+                                <div class="font-bold">{{ $t('words.paid') }}</div>
                                 <div>{{ invoice.is_paid ? $t('words.yes') : $t('words.no') }}</div>
                             </div>
                         </div>

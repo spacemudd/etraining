@@ -425,4 +425,8 @@ return [
     'invoice-no' => 'Invoice No',
     'created-by' => 'Created By',
     'is-paid' => 'Is Paid',
+    'from-date' => 'From Date',
+    'to-date' => 'To Date',
+    'value-per-invoice' => 'Value Per Invoice',
+    'invoice-value' => 'Invoice Value',
 ];

@@ -30,20 +30,22 @@ class Invoice extends Model
         'trainee_id',
         'created_by_id',
         'total_amount',
-        'month',
+        'from_date',
+        'to_date',
         'number',
         'status',
-        'year',
     ];
 
     protected $appends = [
         'number_formatted',
         'status_formatted',
         'created_at_date',
-        'date_period',
-        'date_period_start',
-        'date_period_end',
         'is_paid',
+    ];
+
+    protected $dates = [
+        'from_date',
+        'to_date',
     ];
 
     protected static function boot(): void
@@ -82,8 +84,8 @@ class Invoice extends Model
 
     public function getNumberFormattedAttribute(): string
     {
-        return $this->year
-            . str_pad($this->month, 2, "0", STR_PAD_LEFT)
+        return $this->from_date->year
+            . str_pad($this->from_date->month, 2, "0", STR_PAD_LEFT)
             . "-"
             . $this->number;
     }
@@ -91,21 +93,6 @@ class Invoice extends Model
     public function getCreatedAtDateAttribute(): string
     {
         return $this->created_at->toDateString();
-    }
-
-    public function getDatePeriodAttribute(): Carbon
-    {
-        return Carbon::create($this->year, $this->month);
-    }
-
-    public function getDatePeriodStartAttribute(): string
-    {
-        return $this->getDatePeriodAttribute()->startOfMonth()->toDateString();
-    }
-
-    public function getDatePeriodEndAttribute(): string
-    {
-        return $this->getDatePeriodAttribute()->endOfMonth()->toDateString();
     }
 
     public function getIsPaidAttribute(): bool

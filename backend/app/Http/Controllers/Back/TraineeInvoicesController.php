@@ -36,18 +36,20 @@ class TraineeInvoicesController extends Controller
             ->with(['company'])
             ->findOrFail($trainee_id);
 
-        DB::transaction(function () use ($request, $trainee) {
+        $validatedData = $this->validateStoreRequest($request, $trainee->id);
+
+        DB::transaction(function () use ($trainee, $validatedData) {
             $invoice = $trainee->invoices()->create(
                 array_merge([
                     'company_id' => $trainee->company->id,
-                    'total_amount' => $trainee->company->monthly_subscription_per_trainee,
-                ], $this->validateStoreRequest($request, $trainee->id))
+                    'total_amount' => $validatedData['invoice_value'],
+                ], $validatedData)
             );
 
             $invoice->items()->create([
                 'name' => 'Monthly Subscription Fees',
-                'amount' => $trainee->company->monthly_subscription_per_trainee,
-                'tax' => round($trainee->company->monthly_subscription_per_trainee * 0.15, 2)
+                'amount' => $validatedData['invoice_value'],
+                'tax' => round($validatedData['invoice_value'] * 0.15, 2),
             ]);
         });
 
@@ -57,20 +59,21 @@ class TraineeInvoicesController extends Controller
     private function validateStoreRequest(Request $request, string $trainee_id): array
     {
         return $request->validate([
-            'month' => [
+            'from_date' => [
                 'required',
-                'numeric',
-                'min:1',
-                'max:12',
-                Rule::unique('invoices', 'month')
-                    ->where('year', now()->year)
-                    ->where('trainee_id', $trainee_id),
+                'date',
+                'before:to_date'
             ],
-            'year' => [
+            'to_date' => [
                 'required',
-                'numeric',
-                'min:2021',
-                'max:' . (now()->addYear()->year),
+                'date',
+                'after:from_date'
+            ],
+            'invoice_value' => [
+                'required',
+                'integer',
+                "min:1",
+                "max:10000000",
             ],
         ]);
     }

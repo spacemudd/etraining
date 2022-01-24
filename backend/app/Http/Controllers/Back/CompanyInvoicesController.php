@@ -41,14 +41,14 @@ class CompanyInvoicesController extends Controller
                 $invoice = $company->invoices()->create(
                     array_merge([
                         'trainee_id' => $trainee_id,
-                        'total_amount' => $company->monthly_subscription_per_trainee,
+                        'total_amount' => $validatedData['value_per_invoice'],
                     ], $validatedData)
                 );
 
                 $invoice->items()->create([
                     'name' => 'Monthly Subscription Fees',
-                    'amount' => $company->monthly_subscription_per_trainee,
-                    'tax' => round($company->monthly_subscription_per_trainee * 0.15, 2),
+                    'amount' => $validatedData['value_per_invoice'],
+                    'tax' => round($validatedData['value_per_invoice'] * 0.15, 2),
                 ]);
             }
         });
@@ -69,21 +69,21 @@ class CompanyInvoicesController extends Controller
                 Rule::exists('trainees', 'id')->where('company_id', $company_id),
                 'bail',
             ],
-            'month' => [
+            'from_date' => [
                 'required',
-                'numeric',
-                'min:1',
-                'max:12',
-                Rule::unique('invoices', 'month')
-                    ->where('year', now()->year)
-                    ->where('company_id', $company_id)
-                    ->whereIn('trainee_id', $request->input('trainees', [])),
+                'date',
+                'before:to_date'
             ],
-            'year' => [
+            'to_date' => [
                 'required',
-                'numeric',
-                'min:2021',
-                'max:' . (now()->addYear()->year),
+                'date',
+                'after:from_date'
+            ],
+            'value_per_invoice' => [
+                'required',
+                'integer',
+                "min:1",
+                "max:10000000",
             ],
         ]);
     }
@@ -96,18 +96,18 @@ class CompanyInvoicesController extends Controller
             ->select('*')
             ->selectRaw('COUNT(id) as trainee_count')
             ->selectRaw('SUM(total_amount) as grand_total')
-            ->where('month', $request->input('month', now()->month))
-            ->where('year', $request->input('year', now()->year))
+            ->where('from_date', $request->input('from_date'))
+            ->where('to_date', $request->input('to_date'))
             ->where('created_by_id', $request->input('created_by_id', auth()->id()))
             ->whereDate('created_at', $request->input('created_at_date', now()->toDateString()))
             ->with(['created_by'])
-            ->groupByRaw('month, year, created_by_id, DATE(created_at)')
+            ->groupByRaw('from_date, to_date, created_by_id, DATE(created_at)')
             ->latest()
             ->firstOrFail();
 
         $invoices = $company->invoices()
-            ->where('month', $request->input('month', now()->month))
-            ->where('year', $request->input('year', now()->year))
+            ->where('from_date', $request->input('from_date'))
+            ->where('to_date', $request->input('to_date'))
             ->where('created_by_id', $request->input('created_by_id', auth()->id()))
             ->whereDate('created_at', $request->input('created_at_date', now()->toDateString()))
             ->get();
