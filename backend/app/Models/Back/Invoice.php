@@ -3,7 +3,6 @@
 namespace App\Models\Back;
 
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -112,5 +111,24 @@ class Invoice extends Model
             default:
                 return "Unknown";
         }
+    }
+
+    public function scopeIsPaid($query, bool $is_paid)
+    {
+        if ($is_paid) {
+            return $query->whereNotNull('paid_at');
+        }
+
+        return $query->whereNull('paid_at');
+    }
+
+    public function scopePaid($query)
+    {
+        return $this->scopeIsPaid($query, true);
+    }
+
+    public function scopeNotPaid($query)
+    {
+        return $this->scopeIsPaid($query, false);
     }
 }
