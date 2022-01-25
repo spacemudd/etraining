@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html dir="ltr">
 <head>
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta
+        http-equiv="Content-Type"
+        content="text/html;charset=UTF-8"
+    >
     <title>{{ $company->resource_label }}</title>
 </head>
 <body class="font-sans antialiased  bg-gray-50 dark:bg-gray-900">

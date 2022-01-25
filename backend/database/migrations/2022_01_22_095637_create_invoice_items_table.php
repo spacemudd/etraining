@@ -20,7 +20,8 @@ class CreateInvoiceItemsTable extends Migration
                 ->constrained()
                 ->cascadeOnDelete();
 
-            $table->string('name');
+            $table->string('name_en');
+            $table->string('name_ar');
             $table->unsignedInteger('quantity')->default(1);
             $table->unsignedDecimal('tax', 10)->default(0);
             $table->unsignedInteger('amount');

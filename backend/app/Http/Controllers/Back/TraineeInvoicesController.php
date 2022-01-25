@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
 use App\Models\Back\Trainee;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -46,8 +47,14 @@ class TraineeInvoicesController extends Controller
                 ], $validatedData)
             );
 
+            $period = [
+                'start' => Carbon::parse($validatedData['from_date'])->format('jS F'),
+                'end' => Carbon::parse($validatedData['to_date'])->format('jS F'),
+            ];
+
             $invoice->items()->create([
-                'name' => 'Monthly Subscription Fees',
+                'name_en' => __('words.training-costs-for-the-period-of', $period, 'en'),
+                'name_ar' => __('words.training-costs-for-the-period-of', $period, 'ar'),
                 'amount' => $validatedData['invoice_value'],
                 'tax' => round($validatedData['invoice_value'] * 0.15, 2),
             ]);

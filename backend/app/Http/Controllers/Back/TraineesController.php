@@ -99,6 +99,7 @@ class TraineesController extends Controller
             'city_id' => 'nullable|exists:cities,id',
             'marital_status_id' => 'nullable|exists:marital_statuses,id',
             'children_count' => 'nullable|integer|max:20',
+            'bill_from_date' => ['nullable', 'date'],
         ]);
 
         $trainee = $this->service->store($request->except('_token'));
@@ -533,6 +534,7 @@ class TraineesController extends Controller
             'educational_level_id' => 'nullable|exists:educational_levels,id',
             'city_id' => 'nullable|exists:cities,id',
             'marital_status_id' => 'nullable|exists:marital_statuses,id',
+            'bill_from_date' => ['nullable', 'date'],
         ]);
 
         $request->validate([

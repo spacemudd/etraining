@@ -373,8 +373,6 @@
                         >{{ educational_level.name_en }}
                         </option>
                     </select>
-
-
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
@@ -396,8 +394,20 @@
                         >{{ city.name_ar }}
                         </option>
                     </select>
+                </div>
 
-
+                <div class="col-span-6 sm:col-span-2">
+                    <jet-label
+                        for="bill-from-date"
+                        :value="$t('words.bill-from-date')"
+                    />
+                    <jet-input
+                        id="bill-from-date"
+                        type="date"
+                        :class="editButton.inputClass"
+                        v-model="trainee.bill_from_date_formatted"
+                        :disabled="!editButton.editOption"
+                    />
                 </div>
 
                 <div
@@ -422,8 +432,6 @@
                         >{{ marital_status.name_ar }}
                         </option>
                     </select>
-
-
                 </div>
 
                 <div
@@ -937,6 +945,7 @@ export default {
                     city_id: this.trainee.city_id,
                     marital_status_id: this.trainee.marital_status_id,
                     children_count: this.trainee.children_count,
+                    bill_from_date: this.trainee.bill_from_date_formatted,
                 };
                 this.$inertia.put(route('back.trainees.update', this.trainee.id), newForm).then(response => {
                     this.editButton.editOption = false;

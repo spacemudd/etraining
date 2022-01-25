@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddToBillFromColToTraineesTable extends Migration
+class AddBillFromDateColToTraineesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddToBillFromColToTraineesTable extends Migration
     public function up()
     {
         Schema::table('trainees', function (Blueprint $table) {
-            $table->date('to_bill_from')->nullable();
+            $table->date('bill_from_date')->nullable();
         });
     }
 
@@ -26,7 +26,7 @@ class AddToBillFromColToTraineesTable extends Migration
     public function down()
     {
         Schema::table('trainees', function (Blueprint $table) {
-            $table->dropColumn(['to_bill_from']);
+            $table->dropColumn(['bill_from_date']);
         });
     }
 }

@@ -139,6 +139,26 @@
                             <jet-input-error :message="form.error('children_count')" class="mt-2" />
                         </div>
 
+                        <div class="col-span-2 sm:col-span-2">
+                            <jet-label
+                                for="bill-from-date"
+                                :value="$t('words.bill-from-date')"
+                            />
+
+                            <jet-input
+                                id="bill-from-date"
+                                type="date"
+                                class="mt-1 block w-full"
+                                v-model="form.bill_from_date"
+                                autocomplete="off"
+                            />
+
+                            <jet-input-error
+                                :message="form.error('bill_from_date')"
+                                class="mt-2"
+                            />
+                        </div>
+
                         <!--<jet-input class="col-span-4 sm:col-span-4" type="text" v-model="addressSearch" @input="findAddress"/>-->
                     </template>
 
@@ -214,6 +234,7 @@
                     city_id: '',
                     marital_status_id: '',
                     children_count: '',
+                    bill_from_date: '',
                 }, {
                     bag: 'createTrainee',
                 })

@@ -438,4 +438,6 @@ return [
     'to-date' => 'To Date',
     'value-per-invoice' => 'Value Per Invoice',
     'invoice-value' => 'Invoice Value',
+    'bill-from-date' => 'Bill From Date',
+    'training-costs-for-the-period-of' => 'Training costs for the period of :start - :end',
 ];

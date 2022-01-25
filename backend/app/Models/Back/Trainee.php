@@ -60,10 +60,11 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'deleted_remark',
         'trainee_group_id',
         'national_address',
+        'bill_from_date',
     ];
 
     protected $dates = [
-        "to_bill_from",
+        "bill_from_date",
     ];
 
     protected $appends = [
@@ -84,6 +85,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'deleted_at_timezone',
         'clean_phone',
         'company_name',
+        'bill_from_date_formatted'
     ];
 
     protected static function boot(): void
@@ -378,6 +380,11 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     public function getCleanPhoneAttribute()
     {
         return $this->cleanUpThePhoneNumber($this->phone);
+    }
+
+    public function getBillFromDateFormattedAttribute()
+    {
+        return optional($this->bill_from_date)->toDateString();
     }
 
     public function arabicE2w($str)
