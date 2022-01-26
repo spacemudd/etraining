@@ -445,7 +445,10 @@ export default {
             "invoice-value": "قيمة الفاتورة",
             "bill-from-date": "تاريخ بدء الإستحقاق",
             "training-costs-for-the-period-of": "تكاليف التدريب للمدة الزمنية {start} - {end}",
-            "without-vat": "من دون الضريبة"
+            "without-vat": "من دون الضريبة",
+            "account-statement": "كشف حساب",
+            "print-date": "تاريخ الطباعة",
+            "expected-cost-per-invoice": "متوقع مبلغ كل فاتورة"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1046,7 +1049,10 @@ export default {
             "invoice-value": "Invoice Value",
             "bill-from-date": "Bill From Date",
             "training-costs-for-the-period-of": "Training costs for the period of {start} - {end}",
-            "without-vat": "Without VAT"
+            "without-vat": "Without VAT",
+            "account-statement": "Account statement",
+            "print-date": "Print date",
+            "expected-cost-per-invoice": "Expected cost per invoice"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

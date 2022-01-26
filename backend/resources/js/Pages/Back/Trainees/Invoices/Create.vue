@@ -30,6 +30,7 @@
                             <jet-input
                                 id="from"
                                 type="date"
+                                @input="updateExpectedAmountPerInvoice"
                                 class="mt-1 block w-full"
                                 v-model="form.from_date"
                                 autocomplete="off"
@@ -50,6 +51,7 @@
                             <jet-input
                                 id="to"
                                 type="date"
+                                @input="updateExpectedAmountPerInvoice"
                                 class="mt-1 block w-full"
                                 v-model="form.to_date"
                                 autocomplete="off"
@@ -64,7 +66,7 @@
                         <div class="col-span-4">
                             <jet-label
                                 for="invoice-value"
-                                :value="$t('words.invoice-value')"
+                                :value="$t('words.value-per-invoice')+' ('+$t('words.without-vat')+')'"
                             />
 
                             <jet-input
@@ -79,6 +81,12 @@
                                 :message="form.error('invoice_value')"
                                 class="mt-2"
                             />
+                        </div>
+
+                        <div class="col-span-4" v-if="expectedToPay">
+                            <p class="col-span-4 bg-black text-white p-2">
+                                {{ $t('words.expected-cost-per-invoice') }}: {{ expectedToPay }}
+                            </p>
                         </div>
                     </template>
 
@@ -145,6 +153,7 @@ export default {
     },
     data() {
         return {
+            expectedToPay: null,
             current_year: moment().utc().year(),
             form: this.$inertia.form({
                 from_date: null,
@@ -154,6 +163,18 @@ export default {
         }
     },
     methods: {
+        updateExpectedAmountPerInvoice() {
+            debugger;
+            if (this.form.from_date && this.form.to_date) {
+                axios.post('/back/finance/expected-amount-per-invoice', {
+                    from_date: this.form.from_date,
+                    to_date: this.form.to_date,
+                    company_id: this.trainee.company_id,
+                }).then(response => {
+                    this.expectedToPay = response.data.cost;
+                });
+            }
+        },
         createTraineeInvoice() {
             this.form.post(`/back/trainees/${this.trainee.id}/invoices/`, {
                 preserveScroll: true
@@ -163,6 +184,6 @@ export default {
                 this.form.processing = false;
             });
         },
-    }
+    },
 }
 </script>

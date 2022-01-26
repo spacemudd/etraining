@@ -434,4 +434,5 @@ return [
     'without-vat' => 'Without VAT',
     'account-statement' => 'Account statement',
     'print-date' => 'Print date',
+    'expected-cost-per-invoice' => 'Expected cost per invoice',
 ];

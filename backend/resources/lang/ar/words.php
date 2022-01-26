@@ -443,4 +443,5 @@ return [
     'without-vat' => 'من دون الضريبة',
     'account-statement' => 'كشف حساب',
     'print-date' => 'تاريخ الطباعة',
+    'expected-cost-per-invoice' => 'متوقع مبلغ كل فاتورة',
 ];

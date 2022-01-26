@@ -234,6 +234,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::prefix('finance')->name('finance.')->group(function() {
             Route::resource('accounts', \App\Http\Controllers\Back\FinancialAccountsController::class);
             Route::resource('invoices', \App\Http\Controllers\Back\FinancialInvoicesController::class);
+            Route::post('expected-amount-per-invoice', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'expectedAmountPerInvoice']);
         });
 
         Route::get('trainees/import', [\App\Http\Controllers\Back\TraineesImportController::class, 'index'])->name('trainees.import');
