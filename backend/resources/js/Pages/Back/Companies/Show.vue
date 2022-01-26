@@ -259,7 +259,7 @@
                         <tr v-if="invoices.length === 0">
                             <td
                                 class="border-t px-4 py-4"
-                                colspan="4"
+                                colspan="6"
                             >
                                 <empty-slate />
                             </td>

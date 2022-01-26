@@ -740,7 +740,7 @@
 
                     <table class="w-full whitespace-no-wrap bg-white rounded-lg my-5 p-5 shadow text-sm">
                         <tr class="text-left font-bold text-center">
-                            <th class="px-6 pt-6 pb-4 text-left">{{ $t('words.no') }}.</th>
+                            <th class="px-6 pt-6 pb-4 text-left">{{ $t('words.invoice-no') }}</th>
                             <th class="px-6 pt-6 pb-4">{{ $t('words.amount') }}</th>
                             <th class="px-6 pt-6 pb-4">{{ $t('words.status') }}</th>
                         </tr>

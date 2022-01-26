@@ -431,4 +431,7 @@ return [
     'invoice-value' => 'Invoice Value',
     'bill-from-date' => 'Bill From Date',
     'training-costs-for-the-period-of' => 'Training costs for the period of :start - :end',
+    'without-vat' => 'Without VAT',
+    'account-statement' => 'Account statement',
+    'print-date' => 'Print date',
 ];

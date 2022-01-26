@@ -64,7 +64,7 @@
                         <div class="col-span-4">
                             <jet-label
                                 for="value-per-invoice"
-                                :value="$t('words.value-per-invoice')"
+                                :value="$t('words.value-per-invoice')+' ('+$t('words.without-vat')+')'"
                             />
 
                             <jet-input
@@ -99,7 +99,7 @@
                                             :value="trainee_id"
                                             v-model="form.trainees"
                                         >
-                                        <span class="ml-2 text-sm text-gray-600">{{ trainee_name }}</span>
+                                        <span class="mx-2 text-sm text-gray-600">{{ trainee_name }}</span>
                                     </label>
                                 </div>
                             </div>
