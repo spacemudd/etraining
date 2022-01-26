@@ -164,7 +164,6 @@ export default {
     },
     methods: {
         updateExpectedAmountPerInvoice() {
-            debugger;
             if (this.form.from_date && this.form.to_date) {
                 axios.post('/back/finance/expected-amount-per-invoice', {
                     from_date: this.form.from_date,
