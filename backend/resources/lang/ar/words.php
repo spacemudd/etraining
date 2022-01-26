@@ -444,4 +444,5 @@ return [
     'account-statement' => 'كشف حساب',
     'print-date' => 'تاريخ الطباعة',
     'expected-cost-per-invoice' => 'متوقع مبلغ كل فاتورة',
+    'linked-date' => 'تاريخ الربط',
 ];

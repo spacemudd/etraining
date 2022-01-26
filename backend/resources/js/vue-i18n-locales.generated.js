@@ -448,7 +448,8 @@ export default {
             "without-vat": "من دون الضريبة",
             "account-statement": "كشف حساب",
             "print-date": "تاريخ الطباعة",
-            "expected-cost-per-invoice": "متوقع مبلغ كل فاتورة"
+            "expected-cost-per-invoice": "متوقع مبلغ كل فاتورة",
+            "linked-date": "تاريخ الربط"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1052,7 +1053,8 @@ export default {
             "without-vat": "Without VAT",
             "account-statement": "Account statement",
             "print-date": "Print date",
-            "expected-cost-per-invoice": "Expected cost per invoice"
+            "expected-cost-per-invoice": "Expected cost per invoice",
+            "linked-date": "Linked date"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

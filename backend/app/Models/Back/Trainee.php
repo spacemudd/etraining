@@ -61,10 +61,12 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'trainee_group_id',
         'national_address',
         'bill_from_date',
+        'linked_date',
     ];
 
     protected $dates = [
-        "bill_from_date",
+        'bill_from_date',
+        'linked_date',
     ];
 
     protected $appends = [
@@ -85,7 +87,8 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'deleted_at_timezone',
         'clean_phone',
         'company_name',
-        'bill_from_date_formatted'
+        'bill_from_date_formatted',
+        'linked_date_formatted',
     ];
 
     protected static function boot(): void
@@ -385,6 +388,11 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     public function getBillFromDateFormattedAttribute()
     {
         return optional($this->bill_from_date)->toDateString();
+    }
+
+    public function getLinkedDateFormattedAttribute()
+    {
+        return optional($this->linked_date)->toDateString();
     }
 
     public function getTotalAmountOwedAttribute(): float

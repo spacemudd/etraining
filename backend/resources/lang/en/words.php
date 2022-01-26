@@ -435,4 +435,5 @@ return [
     'account-statement' => 'Account statement',
     'print-date' => 'Print date',
     'expected-cost-per-invoice' => 'Expected cost per invoice',
+    'linked-date' => 'Linked date',
 ];

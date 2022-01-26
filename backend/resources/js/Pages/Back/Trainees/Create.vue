@@ -141,6 +141,26 @@
 
                         <div class="col-span-2 sm:col-span-2">
                             <jet-label
+                                for="linked-date"
+                                :value="$t('words.linked-date')"
+                            />
+
+                            <jet-input
+                                id="linked-date"
+                                type="date"
+                                class="mt-1 block w-full"
+                                v-model="form.linked_date"
+                                autocomplete="off"
+                            />
+
+                            <jet-input-error
+                                :message="form.error('linked_date')"
+                                class="mt-2"
+                            />
+                        </div>
+
+                        <div class="col-span-2 sm:col-span-2">
+                            <jet-label
                                 for="bill-from-date"
                                 :value="$t('words.bill-from-date')"
                             />
@@ -235,6 +255,7 @@
                     marital_status_id: '',
                     children_count: '',
                     bill_from_date: '',
+                    linked_date: '',
                 }, {
                     bag: 'createTrainee',
                 })
