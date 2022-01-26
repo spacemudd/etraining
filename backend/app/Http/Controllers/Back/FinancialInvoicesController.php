@@ -24,7 +24,8 @@ class FinancialInvoicesController extends Controller
         $invoice = Invoice::query()
             ->with([
                 'items',
-                'company'
+                'company',
+                'trainee',
             ])
             ->findOrFail($invoice_id);
 
