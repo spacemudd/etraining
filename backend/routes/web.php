@@ -254,7 +254,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::delete('trainees/{trainee_id}/warnings/{id}', [\App\Http\Controllers\Back\TraineesController::class, 'warningDelete'])->name('trainees.warnings.delete');
 
         // Invoice management of trainee
-        Route::get('trainees/{trainee_id}/warnings', [\App\Http\Controllers\Back\TraineesController::class, 'invoices'])->name('trainees.invoices');
+        Route::get('trainees/{trainee_id}/invoices', [\App\Http\Controllers\Back\TraineesController::class, 'invoices'])->name('trainees.invoices');
 
         // Export For Trainees.
         Route::get('trainees/excel/{id}/download', [\App\Http\Controllers\Back\TraineesController::class, 'excelJobDownload'])->name('trainees.excel.job.download');
