@@ -14,9 +14,10 @@
                     <div class="flex justify-between">
                         <h1 class="mb-8 font-bold text-2xl">{{ $t('words.invoice') }}</h1>
 
-                        <div class="mb-6 flex justify-end items-center space-x-2">
+                        <div class="mb-6 flex justify-end items-center">
                             <jet-button
                                 :href="route('back.companies.create')"
+                                class="mx-2 btn-disabled"
                                 type="button"
                                 disabled
                             >
@@ -24,6 +25,7 @@
                             </jet-button>
                             <jet-button
                                 :href="route('back.companies.create')"
+                                class="mx-2 btn-disabled"
                                 type="button"
                                 disabled
                             >
@@ -31,6 +33,7 @@
                             </jet-button>
                             <jet-button
                                 :href="route('back.companies.create')"
+                                class="mx-2 btn-disabled"
                                 type="button"
                                 disabled
                             >
@@ -44,7 +47,7 @@
                             <div class="grid grid-cols-2">
                                 <div class="font-bold">{{ $t('words.date') }}</div>
                                 <div>{{ invoice.created_at | formatDate }}</div>
-                                <div class="font-bold">{{ $t('words.no') }}.</div>
+                                <div class="font-bold">{{ $t('words.invoice-no') }}</div>
                                 <div>{{ invoice.number_formatted }}</div>
                                 <div class="font-bold">{{ $t('words.from-date') }}</div>
                                 <div>{{ invoice.from_date | formatDate }}</div>
@@ -55,8 +58,12 @@
                         <div class="w-full p-4">
                             <div class="grid grid-cols-2">
                                 <div class="font-bold">{{ $t('words.client-name') }}</div>
-                                <div>{{ invoice.company ? invoice.company.name_ar : 'Unknown' }}</div>
-                                <div class="font-bold">{{ $t('words.total-amount') }}.</div>
+                                <div>
+                                    <inertia-link class="text-blue-500 hover:text-blue-600" :href="invoice.trainee.show_url">{{ invoice.trainee ? invoice.trainee.name : '-' }}</inertia-link>
+                                    -
+                                    <inertia-link class="text-blue-500 hover:text-blue-600" :href="invoice.company.show_url">({{ invoice.company ? invoice.company.name_ar : 'Unknown' }})</inertia-link>
+                                </div>
+                                <div class="font-bold">{{ $t('words.total-amount') }}</div>
                                 <div>{{ invoice.total_amount }}</div>
                                 <div class="font-bold">{{ $t('words.verified') }}</div>
                                 <div>{{ invoice.is_paid ? $t('words.yes') : $t('words.no') }}</div>
@@ -67,7 +74,7 @@
                     </div>
                 </div>
                 <div class="w-full md:w-4/12">
-                    <h1 class="mb-8 font-bold text-2xl">{{ $t('words.comments') }}</h1>
+                    <h1 class="mb-8 font-bold text-2xl mx-5">{{ $t('words.comments') }}</h1>
                 </div>
             </div>
 
@@ -89,7 +96,7 @@
                                 class="border-t hover:bg-gray-100 focus-within:bg-gray-100"
                             >
                                 <td class="px-4 py-4">
-                                    {{ item.name }}
+                                    {{ item.name_ar }}
                                 </td>
 
                                 <td class="px-4 py-4">
@@ -117,7 +124,7 @@
                     </div>
                 </div>
                 <div class="w-full md:w-4/12">
-                    <h1 class="mb-8 font-bold text-2xl">{{ $t('words.documents') }}</h1>
+                    <h1 class="mb-8 font-bold text-2xl mx-5">{{ $t('words.documents') }}</h1>
                 </div>
             </div>
         </div>

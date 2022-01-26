@@ -48,8 +48,8 @@ class TraineeInvoicesController extends Controller
             );
 
             $period = [
-                'start' => Carbon::parse($validatedData['from_date'])->format('jS F'),
-                'end' => Carbon::parse($validatedData['to_date'])->format('jS F'),
+                'start' => Carbon::parse($validatedData['from_date'])->format('Y-m-d'),
+                'end' => Carbon::parse($validatedData['to_date'])->format('Y-m-d'),
             ];
 
             $invoice->items()->create([
