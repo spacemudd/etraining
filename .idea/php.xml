@@ -367,6 +367,7 @@
       <path value="$PROJECT_DIR$/backend/vendor/spatie/laravel-backup" />
       <path value="$PROJECT_DIR$/backend/vendor/laravel/framework" />
       <path value="$PROJECT_DIR$/backend/vendor/lab404/laravel-impersonate" />
+      <path value="$PROJECT_DIR$/backend/vendor/doctrine/deprecations" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.3">

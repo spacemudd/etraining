@@ -35,7 +35,9 @@ class CreateInvoicesTable extends Migration
             $table->string('number');
             $table->date('from_date');
             $table->date('to_date');
-            $table->unsignedInteger('total_amount');
+            $table->unsignedDecimal('sub_total');
+            $table->unsignedDecimal('tax');
+            $table->unsignedDecimal('grand_total');
             $table->tinyInteger('status')->default(Invoice::STATUS_UNPAID);
             $table->tinyInteger('payment_method')->nullable();
             $table->timestamp('paid_at')->nullable();

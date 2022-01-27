@@ -770,7 +770,7 @@
                             </td>
 
                             <td class="px-4 py-4">
-                                {{ invoice.total_amount }} SR
+                                {{ invoice.grand_total }}
                             </td>
 
                             <td class="px-4 py-4">

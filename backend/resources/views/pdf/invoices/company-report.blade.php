@@ -63,6 +63,8 @@
             <tr>
                 <th>{{ __('words.name') }}</th>
                 <th>{{ __('words.invoice-no') }}</th>
+                <th>{{ __('words.subtotal') }}</th>
+                <th>{{ __('words.vat') }}</th>
                 <th>{{ __('words.grand-total') }}</th>
                 <th>{{ __('words.is-paid') }}</th>
             </tr>
@@ -70,9 +72,13 @@
             <tbody>
             @foreach ($invoices as $invoice)
                 <tr style="page-break-inside: avoid;">
-                    <td>{{ optional($invoice->trainee)->name }}</td>
+                    <td>
+                        {{ optional($invoice->trainee)->name }}
+                    </td>
                     <td>{{ $invoice->number_formatted }}</td>
-                    <td>{{ number_format($invoice->total_amount, 2) }}</td>
+                    <td>{{ number_format($invoice->sub_total, 2) }}</td>
+                    <td>{{ number_format($invoice->tax, 2) }}</td>
+                    <td>{{ number_format($invoice->grand_total, 2) }}</td>
                     <td>{{ $invoice->id_paid ? __('words.paid') : __('words.not-paid') }}</td>
                 </tr>
             @endforeach

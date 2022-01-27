@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
+use App\Models\Back\InvoiceItem;
 use App\Models\Back\Trainee;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -56,7 +57,7 @@ class TraineeInvoicesController extends Controller
                 'name_en' => __('words.training-costs-for-the-period-of', $period, 'en'),
                 'name_ar' => __('words.training-costs-for-the-period-of', $period, 'ar'),
                 'amount' => $validatedData['invoice_value'],
-                'tax' => round($validatedData['invoice_value'] * 0.15, 2),
+                'tax' => round($validatedData['invoice_value'] * InvoiceItem::DEFAULT_TAX, 2),
             ]);
         });
 

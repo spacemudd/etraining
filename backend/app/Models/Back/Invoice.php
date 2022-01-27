@@ -3,6 +3,9 @@
 namespace App\Models\Back;
 
 use App\Models\User;
+use Brick\Math\RoundingMode;
+use Brick\Money\Context\CustomContext;
+use Brick\Money\Money;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -33,6 +36,9 @@ class Invoice extends Model
         'to_date',
         'number',
         'status',
+        'sub_total',
+        'tax',
+        'grand_total',
     ];
 
     protected $appends = [

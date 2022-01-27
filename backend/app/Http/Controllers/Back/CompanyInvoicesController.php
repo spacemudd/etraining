@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
 use App\Models\Back\Company;
+use App\Models\Back\InvoiceItem;
 use App\Models\Back\Trainee;
+use Brick\Math\RoundingMode;
+use Brick\Money\Context\CustomContext;
+use Brick\Money\Money;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -37,12 +41,18 @@ class CompanyInvoicesController extends Controller
 
         $validatedData = $this->validateStoreRequest($request, $company->id);
 
-        DB::transaction(function () use ($request, $company, $validatedData) {
+        $sub_total = Money::of($validatedData['value_per_invoice'], 'SAR', new CustomContext(2), RoundingMode::HALF_UP);
+        $tax = $sub_total->multipliedBy(InvoiceItem::DEFAULT_TAX, RoundingMode::HALF_UP);
+        $grand_total = $sub_total->plus($tax);
+
+        DB::transaction(function () use ($request, $company, $validatedData, $sub_total, $tax, $grand_total) {
             foreach ($request->input('trainees') as $trainee_id) {
                 $invoice = $company->invoices()->create(
                     array_merge([
                         'trainee_id' => $trainee_id,
-                        'total_amount' => $validatedData['value_per_invoice'],
+                        'sub_total' => $sub_total->getAmount()->toFloat(),
+                        'tax' => $tax->getAmount()->toFloat(),
+                        'grand_total' => $grand_total->getAmount()->toFloat(),
                     ], $validatedData)
                 );
 
@@ -54,8 +64,9 @@ class CompanyInvoicesController extends Controller
                 $invoice->items()->create([
                     'name_en' => __('words.training-costs-for-the-period-of', $period, 'en'),
                     'name_ar' => __('words.training-costs-for-the-period-of', $period, 'ar'),
-                    'amount' => $validatedData['value_per_invoice'],
-                    'tax' => round($validatedData['value_per_invoice'] * 0.15, 2),
+                    'sub_total' => $sub_total->getAmount()->toFloat(),
+                    'tax' => $tax->getAmount()->toFloat(),
+                    'grand_total' => $grand_total->getAmount()->toFloat(),
                 ]);
             }
         });
@@ -102,7 +113,9 @@ class CompanyInvoicesController extends Controller
         $invoice_group = $company->invoices()
             ->select('*')
             ->selectRaw('COUNT(id) as trainee_count')
-            ->selectRaw('SUM(total_amount) as grand_total')
+            ->selectRaw('SUM(sub_total) as sub_total')
+            ->selectRaw('SUM(tax) as tax')
+            ->selectRaw('SUM(grand_total) as grand_total')
             ->where('from_date', $request->input('from_date'))
             ->where('to_date', $request->input('to_date'))
             ->where('created_by_id', $request->input('created_by_id', auth()->id()))

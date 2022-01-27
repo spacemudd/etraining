@@ -64,7 +64,7 @@
                                     <inertia-link class="text-blue-500 hover:text-blue-600" :href="invoice.company.show_url">({{ invoice.company ? invoice.company.name_ar : 'Unknown' }})</inertia-link>
                                 </div>
                                 <div class="font-bold">{{ $t('words.total-amount') }}</div>
-                                <div>{{ invoice.total_amount }}</div>
+                                <div>{{ invoice.grand_total }}</div>
                                 <div class="font-bold">{{ $t('words.verified') }}</div>
                                 <div>{{ invoice.is_paid ? $t('words.yes') : $t('words.no') }}</div>
                                 <div class="font-bold">{{ $t('words.paid') }}</div>
@@ -108,7 +108,7 @@
                                 </td>
 
                                 <td class="px-4 py-4">
-                                    {{ item.total }}
+                                    {{ item.grand_total }}
                                 </td>
                             </tr>
 
