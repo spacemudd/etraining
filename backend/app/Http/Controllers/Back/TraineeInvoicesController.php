@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Back;
 use App\Http\Controllers\Controller;
 use App\Models\Back\InvoiceItem;
 use App\Models\Back\Trainee;
+use Brick\Math\RoundingMode;
+use Brick\Money\Context\CustomContext;
+use Brick\Money\Money;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -40,11 +43,17 @@ class TraineeInvoicesController extends Controller
 
         $validatedData = $this->validateStoreRequest($request, $trainee->id);
 
-        DB::transaction(function () use ($trainee, $validatedData) {
+        $sub_total = Money::of($validatedData['invoice_value'], 'SAR', new CustomContext(2), RoundingMode::HALF_UP);
+        $tax = $sub_total->multipliedBy(InvoiceItem::DEFAULT_TAX, RoundingMode::HALF_UP);
+        $grand_total = $sub_total->plus($tax);
+
+        DB::transaction(function () use ($trainee, $validatedData, $grand_total, $tax, $sub_total) {
             $invoice = $trainee->invoices()->create(
                 array_merge([
                     'company_id' => $trainee->company->id,
-                    'total_amount' => $validatedData['invoice_value'],
+                    'sub_total' => $sub_total->getAmount()->toFloat(),
+                    'tax' => $tax->getAmount()->toFloat(),
+                    'grand_total' => $grand_total->getAmount()->toFloat(),
                 ], $validatedData)
             );
 
@@ -56,8 +65,9 @@ class TraineeInvoicesController extends Controller
             $invoice->items()->create([
                 'name_en' => __('words.training-costs-for-the-period-of', $period, 'en'),
                 'name_ar' => __('words.training-costs-for-the-period-of', $period, 'ar'),
-                'amount' => $validatedData['invoice_value'],
-                'tax' => round($validatedData['invoice_value'] * InvoiceItem::DEFAULT_TAX, 2),
+                'sub_total' => $sub_total->getAmount()->toFloat(),
+                'tax' => $tax->getAmount()->toFloat(),
+                'grand_total' => $grand_total->getAmount()->toFloat(),
             ]);
         });
 

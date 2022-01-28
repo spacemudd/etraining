@@ -397,7 +397,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
 
     public function getTotalAmountOwedAttribute(): float
     {
-        return round($this->invoices()->notPaid()->sum('total_amount'), 2);
+        return round($this->invoices()->notPaid()->sum('grand_total'), 2);
     }
 
     public function arabicE2w($str)

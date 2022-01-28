@@ -39,6 +39,9 @@ class Invoice extends Model
         'sub_total',
         'tax',
         'grand_total',
+        'payment_method',
+        'payment_reference_id',
+        'paid_at',
     ];
 
     protected $appends = [

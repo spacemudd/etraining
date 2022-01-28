@@ -40,6 +40,7 @@ class CreateInvoicesTable extends Migration
             $table->unsignedDecimal('grand_total');
             $table->tinyInteger('status')->default(Invoice::STATUS_UNPAID);
             $table->tinyInteger('payment_method')->nullable();
+            $table->string('payment_reference_id')->nullable();
             $table->timestamp('paid_at')->nullable();
             $table->timestamps();
         });
