@@ -437,4 +437,5 @@ return [
     'expected-cost-per-invoice' => 'Expected cost per invoice',
     'linked-date' => 'Linked date',
     'vat' => 'VAT',
+    'select-all' => 'Select All',
 ];

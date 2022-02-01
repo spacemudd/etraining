@@ -446,4 +446,5 @@ return [
     'expected-cost-per-invoice' => 'متوقع مبلغ كل فاتورة',
     'linked-date' => 'تاريخ الربط',
     'vat' => 'الضريبة',
+    'select-all' => 'Select All',
 ];

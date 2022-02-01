@@ -90,11 +90,21 @@
                             </p>
                         </div>
 
-                        <div class="col-span-4 sm:col-span-2">
-                            <jet-label
-                                for="amount"
-                                :value="$t('words.trainees-to-invoice')"
-                            />
+                        <div class="col-span-4 sm:col-span-4">
+                            <div class="flex justify-between">
+                                <jet-label
+                                    for="amount"
+                                    :value="$t('words.trainees-to-invoice')"
+                                />
+
+                                <button
+                                    class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
+                                    type="button"
+                                    @click.prevent="selectAllTrainees"
+                                >
+                                    Select All
+                                </button>
+                            </div>
 
                             <div class="mt-2 grid grid-cols-1 gap-4">
                                 <div
@@ -212,6 +222,9 @@ export default {
             }).finally(() => {
                 this.form.processing = false;
             });
+        },
+        selectAllTrainees() {
+            this.form.trainees = Object.keys(this.trainees);
         },
     }
 }
