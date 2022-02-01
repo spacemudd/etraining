@@ -102,7 +102,7 @@
                                     type="button"
                                     @click.prevent="selectAllTrainees"
                                 >
-                                    Select All
+                                    {{ $t('words.select-all') }}
                                 </button>
                             </div>
 
