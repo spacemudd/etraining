@@ -233,6 +233,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
         Route::prefix('finance')->name('finance.')->group(function() {
             Route::resource('accounts', \App\Http\Controllers\Back\FinancialAccountsController::class);
+            Route::get('invoices/{id}/pdf', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'pdf'])->name('invoices.pdf');
             Route::resource('invoices', \App\Http\Controllers\Back\FinancialInvoicesController::class);
             Route::post('expected-amount-per-invoice', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'expectedAmountPerInvoice']);
         });

@@ -92,8 +92,8 @@ class Invoice extends Model
 
     public function getNumberFormattedAttribute(): string
     {
-        return $this->from_date->year
-            . str_pad($this->from_date->month, 2, "0", STR_PAD_LEFT)
+        return $this->created_at->year
+            . str_pad($this->created_at->month, 2, "0", STR_PAD_LEFT)
             . "-"
             . $this->number;
     }

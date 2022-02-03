@@ -414,7 +414,7 @@ return [
     'december' => 'ديسمبر',
     'trainees-to-invoice' => 'المتدربين المستحقين',
     'date-created' => 'تاريخ الإنشاء',
-    'date-period' => 'فترة الخدمة',
+    'date-period' => 'فترة الإستحقاق',
     'grand-total' => 'الإجمالي',
     'initiated-by' => 'تمت من',
     'unpaid' => 'غير مدفوع',

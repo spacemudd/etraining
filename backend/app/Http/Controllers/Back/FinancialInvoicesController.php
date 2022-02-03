@@ -11,6 +11,7 @@ use Brick\Money\Money;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use PDF;
 
 class FinancialInvoicesController extends Controller
 {
@@ -67,5 +68,17 @@ class FinancialInvoicesController extends Controller
         return response()->json([
             'cost' => $cost,
         ]);
+    }
+
+    public function pdf($id)
+    {
+        $invoice = Invoice::findOrFail($id);
+        $pdf = PDF::setOption('footer-html', resource_path('views/pdf/invoices/client-invoice-footer.html'))
+            ->setOption('margin-bottom', 30)
+        ->loadView('pdf.invoices.show', [
+            'title' => 'Invoice',
+            'invoice' => $invoice,
+        ]);
+        return $pdf->inline();
     }
 }

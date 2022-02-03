@@ -15,14 +15,11 @@
                         <h1 class="mb-8 font-bold text-2xl">{{ $t('words.invoice') }}</h1>
 
                         <div class="mb-6 flex justify-end items-center">
-                            <jet-button
-                                :href="route('back.companies.create')"
-                                class="mx-2 btn-disabled"
-                                type="button"
-                                disabled
-                            >
-                                <span>{{ $t('words.print') }}</span>
-                            </jet-button>
+                            <a class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
+                               target="_blank"
+                               :href="route('back.finance.invoices.pdf', invoice.id)">
+                                {{ $t('words.print') }}
+                            </a>
                             <jet-button
                                 :href="route('back.companies.create')"
                                 class="mx-2 btn-disabled"
