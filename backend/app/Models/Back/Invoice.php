@@ -2,6 +2,7 @@
 
 namespace App\Models\Back;
 
+use App\Models\TraineeBankPaymentReceipt;
 use App\Models\User;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context\CustomContext;
@@ -42,6 +43,7 @@ class Invoice extends Model
         'payment_method',
         'payment_reference_id',
         'paid_at',
+        'trainee_bank_payment_receipt_id',
     ];
 
     protected $appends = [
@@ -50,6 +52,7 @@ class Invoice extends Model
         'payment_method_formatted',
         'created_at_date',
         'is_paid',
+        'is_verified',
     ];
 
     protected $dates = [
@@ -84,6 +87,11 @@ class Invoice extends Model
     public function created_by(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by_id');
+    }
+
+    public function trainee_bank_payment_receipt()
+    {
+        return $this->hasOne(TraineeBankPaymentReceipt::class, 'id', 'trainee_bank_payment_receipt_id');
     }
 
     public function items(): HasMany
@@ -147,5 +155,13 @@ class Invoice extends Model
         if ($this->payment_method ===  Invoice::PAYMENT_METHOD_CREDIT_CARD) return __('words.credit-card-method');
         if ($this->payment_method ===  Invoice::PAYMENT_METHOD_BANK_RECEIPT) return __('words.bank-transfer');
         return '';
+    }
+
+    public function getIsVerifiedAttribute()
+    {
+        if ($this->payment_method === Invoice::PAYMENT_METHOD_CREDIT_CARD && $this->paid_at) return true;
+        if ($this->payment_method === Invoice::PAYMENT_METHOD_BANK_RECEIPT && $this->verified_by_id) return true;
+
+        return false;
     }
 }

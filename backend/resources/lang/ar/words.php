@@ -454,4 +454,10 @@ return [
     'credit-card-method' => 'عبر البطاقة',
     'bank-transfer-upload-receipt' => 'تحويل بنكي (ارفاق الإصال)',
     'bank-transfer' => 'تحويل بنكي',
+    'payment-receipt-notice' => 'يرجى ارفاق الوصل مع ذكر البنك المحول اليه واسم المحول',
+    'sender-name' => 'اسم المحول',
+    'sender-bank-name' => 'البنك المحول منه',
+    'receiver-bank-name' => 'البنك المحول أليه',
+    'upload-receipts' => 'رفع الإصال',
+    'receipt' => 'ايصال',
 ];

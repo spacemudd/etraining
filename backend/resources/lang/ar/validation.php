@@ -178,5 +178,10 @@ return [
         'size'                  => 'الحجم',
         'identity_number'       => 'رقم الهوية',
         'phone_additional'      => 'الجوال الإضافي',
+        'bank_name_from'        => 'البنك المحول منه',
+        'bank_name_to'          => 'البنك المحول اليه',
+        'sender_name'           => 'اسم المحول',
+        'amount'                => 'المبلغ',
+
     ],
 ];

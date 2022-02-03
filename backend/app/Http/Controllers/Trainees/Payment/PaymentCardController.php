@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Trainees\Payment;
 
 use App\Http\Controllers\Controller;
 use App\Models\Back\Invoice;
+use App\Models\TraineeBankPaymentReceipt;
 use Brick\PhoneNumber\PhoneNumber;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
@@ -156,5 +157,58 @@ class PaymentCardController extends Controller
         return Inertia::render('Trainees/Payment/Index', [
             'pending_amount' => $pending_amount,
         ]);
+    }
+
+    public function uploadReceipt()
+    {
+        $pending_amount = auth()->user()->trainee->total_amount_owed;
+        return Inertia::render('Trainees/Payment/UploadReceipt', [
+            'pending_amount' =>  number_format($pending_amount, 2),
+            'pending_amount_raw' => $pending_amount,
+            'trainee' => auth()->user()->trainee,
+        ]);
+    }
+
+    public function storeReceipt(Request $request)
+    {
+        $request->validate([
+            'amount' => 'required|numeric|min:1',
+            'sender_name' => 'required|string|max:255|min:3',
+            'bank_name_to' => 'required|string|max:255|min:5',
+            'bank_name_from' => 'required|string|max:255|min:5',
+            'files.*' => 'required|file',
+        ]);
+
+        \DB::beginTransaction();
+        $receipt = new TraineeBankPaymentReceipt();
+        $receipt->trainee_id = auth()->user()->trainee->id;
+        $receipt->amount = $request->amount;
+        $receipt->sender_name = $request->sender_name;
+        $receipt->bank_from = $request->bank_name_from;
+        $receipt->bank_to = $request->bank_name_to;
+        $receipt->uploaded_by_id = auth()->user()->id;
+        $receipt->save();
+
+        foreach ($request->file('files', []) as $key => $file) {
+            $receipt->uploadToFolder($file, 'receipts');
+        }
+
+        $invoices = auth()->user()
+            ->trainee
+            ->invoices()
+            ->notPaid()
+            ->get();
+
+        $invoices->each(function ($invoice) use ($receipt) {
+            $invoice->update([
+                'payment_method' => Invoice::PAYMENT_METHOD_BANK_RECEIPT,
+                'trainee_bank_payment_receipt_id' => $receipt->id,
+                'paid_at' => now(),
+                'status' => Invoice::STATUS_AUDIT_REQUIRED,
+            ]);
+        });
+        \DB::commit();
+
+        return redirect()->route('dashboard');
     }
 }

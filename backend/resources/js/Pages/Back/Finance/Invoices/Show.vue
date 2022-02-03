@@ -62,16 +62,42 @@
                                 </div>
                                 <div class="font-bold">{{ $t('words.total-amount') }}</div>
                                 <div>{{ invoice.grand_total }}</div>
-                                <div class="font-bold">{{ $t('words.verified') }}</div>
-                                <div>{{ invoice.is_paid ? $t('words.yes') : $t('words.no') }}</div>
                                 <div class="font-bold">{{ $t('words.paid') }}</div>
                                 <div>{{ invoice.is_paid ? $t('words.yes') : $t('words.no') }} <span v-if="invoice.is_paid">({{ invoice.payment_method_formatted }})</span></div>
+                                <div class="font-bold">{{ $t('words.verified') }}</div>
+                                <div>
+                                    <span v-if="invoice.is_verified"
+                                          class="bg-green-500 text-white rounded px-2">
+                                        {{ $t('words.yes') }}
+                                    </span>
+                                    <span v-else
+                                          class="bg-red-600 text-white rounded px-2">
+                                        {{ $t('words.no') }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="w-full md:w-4/12">
-                    <h1 class="mb-8 font-bold text-2xl mx-5">{{ $t('words.comments') }}</h1>
+                    <div class="mx-5">
+                        <h1 class="mb-8 font-bold text-2xl">{{ $t('words.documents') }}</h1>
+                        <div class="white-bg rounded shadow p-5">
+                            <ul class="list-disc">
+                                <template v-if="invoice.trainee_bank_payment_receipt">
+                                    <li v-for="file in invoice.trainee_bank_payment_receipt.attachments">
+                                        <a :href="file.download_url" target="_blank" class="hover:text-blue-600">
+                                            {{ $t('words.receipt') }}: {{ file.file_name }}<br/>
+                                            <span class="text-sm text-gray-800" dir="ltr">{{ file.created_at_timezone }}</span>
+                                        </a>
+                                    </li>
+                                </template>
+                                <template v-else>
+                                    <empty-slate />
+                                </template>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -120,9 +146,14 @@
                         </table>
                     </div>
                 </div>
-                <div class="w-full md:w-4/12">
-                    <h1 class="mb-8 font-bold text-2xl mx-5">{{ $t('words.documents') }}</h1>
-                </div>
+                <!--<div class="w-full md:w-4/12">-->
+                <!--    <div class="mx-5">-->
+                <!--        <h1 class="mb-8 font-bold text-2xl">{{ $t('words.comments') }}</h1>-->
+                <!--        <div class="white-bg rounded shadow p-5">-->
+
+                <!--        </div>-->
+                <!--    </div>-->
+                <!--</div>-->
             </div>
         </div>
     </app-layout>
@@ -147,6 +178,7 @@ import SelectTraineeGroup from "@/Components/SelectTraineeGroup";
 import ChangeTraineePassword from '@/Components/ChangeTraineePassword';
 import AttendanceSheetManagementForTrainee from "@/Components/AttendanceSheetManagementForTrainee";
 import 'selectize/dist/js/standalone/selectize.min';
+import EmptySlate from "@/Components/EmptySlate";
 
 export default {
     props: [
@@ -169,6 +201,7 @@ export default {
         JetSectionBorder,
         SelectTraineeGroup,
         VueDropzone,
+        EmptySlate,
     },
     mounted() {
 

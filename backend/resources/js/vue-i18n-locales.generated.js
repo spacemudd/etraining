@@ -458,7 +458,13 @@ export default {
             "choose-payment-method": "اختيار طريقة الدفع",
             "credit-card-method": "عبر البطاقة",
             "bank-transfer-upload-receipt": "تحويل بنكي (ارفاق الإصال)",
-            "bank-transfer": "تحويل بنكي"
+            "bank-transfer": "تحويل بنكي",
+            "payment-receipt-notice": "يرجى ارفاق الوصل مع ذكر البنك المحول اليه واسم المحول",
+            "sender-name": "اسم المحول",
+            "sender-bank-name": "البنك المحول منه",
+            "receiver-bank-name": "البنك المحول أليه",
+            "upload-receipts": "رفع الإصال",
+            "receipt": "ايصال"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -602,7 +608,11 @@ export default {
                 "available": "مُتاح",
                 "size": "الحجم",
                 "identity_number": "رقم الهوية",
-                "phone_additional": "الجوال الإضافي"
+                "phone_additional": "الجوال الإضافي",
+                "bank_name_from": "البنك المحول منه",
+                "bank_name_to": "البنك المحول اليه",
+                "sender_name": "اسم المحول",
+                "amount": "المبلغ"
             }
         },
         "passwords": {
@@ -1072,7 +1082,13 @@ export default {
             "choose-payment-method": "Choose payment method",
             "credit-card-method": "Card",
             "bank-transfer-upload-receipt": "Bank Transfer (upload receipt)",
-            "bank-transfer": "Bank Transfer"
+            "bank-transfer": "Bank Transfer",
+            "payment-receipt-notice": "Please attach the original receipt with noting the bank sender name, the bank receive name, and the transferer name",
+            "sender-name": "Sender name",
+            "sender-bank-name": "Sender bank name",
+            "receiver-bank-name": "Receive bank name",
+            "upload-receipts": "Upload receipts",
+            "receipt": "Receipt"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

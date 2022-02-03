@@ -8896,6 +8896,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Components_AttendanceSheetManagementForTrainee__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @/Components/AttendanceSheetManagementForTrainee */ "./resources/js/Components/AttendanceSheetManagementForTrainee.vue");
 /* harmony import */ var selectize_dist_js_standalone_selectize_min__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! selectize/dist/js/standalone/selectize.min */ "./node_modules/selectize/dist/js/standalone/selectize.min.js");
 /* harmony import */ var selectize_dist_js_standalone_selectize_min__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(selectize_dist_js_standalone_selectize_min__WEBPACK_IMPORTED_MODULE_17__);
+/* harmony import */ var _Components_EmptySlate__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @/Components/EmptySlate */ "./resources/js/Components/EmptySlate.vue");
 //
 //
 //
@@ -9026,6 +9027,38 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -9062,7 +9095,8 @@ __webpack_require__.r(__webpack_exports__);
     JetLabel: _Jetstream_Label__WEBPACK_IMPORTED_MODULE_9__["default"],
     JetSectionBorder: _Jetstream_SectionBorder__WEBPACK_IMPORTED_MODULE_1__["default"],
     SelectTraineeGroup: _Components_SelectTraineeGroup__WEBPACK_IMPORTED_MODULE_14__["default"],
-    VueDropzone: vue2_dropzone__WEBPACK_IMPORTED_MODULE_12___default.a
+    VueDropzone: vue2_dropzone__WEBPACK_IMPORTED_MODULE_12___default.a,
+    EmptySlate: _Components_EmptySlate__WEBPACK_IMPORTED_MODULE_18__["default"]
   },
   mounted: function mounted() {},
   methods: {}
@@ -20848,6 +20882,178 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {//
   },
   methods: {//
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Trainees/Payment/UploadReceipt.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Pages/Trainees/Payment/UploadReceipt.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Layouts_AppLayoutTrainee__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Layouts/AppLayoutTrainee */ "./resources/js/Layouts/AppLayoutTrainee.vue");
+/* harmony import */ var _Components_BreadcrumbContainer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Components/BreadcrumbContainer */ "./resources/js/Components/BreadcrumbContainer.vue");
+/* harmony import */ var _Jetstream_Input__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Jetstream/Input */ "./resources/js/Jetstream/Input.vue");
+/* harmony import */ var _Jetstream_InputError__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Jetstream/InputError */ "./resources/js/Jetstream/InputError.vue");
+/* harmony import */ var _Jetstream_Label__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Jetstream/Label */ "./resources/js/Jetstream/Label.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    AppLayoutTrainee: _Layouts_AppLayoutTrainee__WEBPACK_IMPORTED_MODULE_0__["default"],
+    BreadcrumbContainer: _Components_BreadcrumbContainer__WEBPACK_IMPORTED_MODULE_1__["default"],
+    JetInput: _Jetstream_Input__WEBPACK_IMPORTED_MODULE_2__["default"],
+    JetInputError: _Jetstream_InputError__WEBPACK_IMPORTED_MODULE_3__["default"],
+    JetLabel: _Jetstream_Label__WEBPACK_IMPORTED_MODULE_4__["default"]
+  },
+  props: ['pending_amount', 'pending_amount_raw', 'trainee'],
+  data: function data() {
+    return {
+      form: this.$inertia.form({
+        amount: 0,
+        sender_name: '',
+        bank_name_to: '',
+        bank_name_from: '',
+        files: ''
+      }, {
+        bag: 'uploadReceipt'
+      })
+    };
+  },
+  mounted: function mounted() {
+    this.form.sender_name = this.trainee.name;
+    this.form.amount = this.pending_amount_raw;
+  },
+  methods: {
+    saveForm: function saveForm() {
+      this.form.amount = this.pending_amount_raw;
+      this.form.post(route('trainees.payment.upload-receipt.store'));
+    }
   }
 });
 
@@ -38733,20 +38939,6 @@ var render = function() {
                     _c("div", [_vm._v(_vm._s(_vm.invoice.grand_total))]),
                     _vm._v(" "),
                     _c("div", { staticClass: "font-bold" }, [
-                      _vm._v(_vm._s(_vm.$t("words.verified")))
-                    ]),
-                    _vm._v(" "),
-                    _c("div", [
-                      _vm._v(
-                        _vm._s(
-                          _vm.invoice.is_paid
-                            ? _vm.$t("words.yes")
-                            : _vm.$t("words.no")
-                        )
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "font-bold" }, [
                       _vm._v(_vm._s(_vm.$t("words.paid")))
                     ]),
                     _vm._v(" "),
@@ -38767,6 +38959,41 @@ var render = function() {
                             )
                           ])
                         : _vm._e()
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "font-bold" }, [
+                      _vm._v(_vm._s(_vm.$t("words.verified")))
+                    ]),
+                    _vm._v(" "),
+                    _c("div", [
+                      _vm.invoice.is_verified
+                        ? _c(
+                            "span",
+                            {
+                              staticClass:
+                                "bg-green-500 text-white rounded px-2"
+                            },
+                            [
+                              _vm._v(
+                                "\n                                    " +
+                                  _vm._s(_vm.$t("words.yes")) +
+                                  "\n                                "
+                              )
+                            ]
+                          )
+                        : _c(
+                            "span",
+                            {
+                              staticClass: "bg-red-600 text-white rounded px-2"
+                            },
+                            [
+                              _vm._v(
+                                "\n                                    " +
+                                  _vm._s(_vm.$t("words.no")) +
+                                  "\n                                "
+                              )
+                            ]
+                          )
                     ])
                   ])
                 ])
@@ -38775,8 +39002,57 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "w-full md:w-4/12" }, [
-            _c("h1", { staticClass: "mb-8 font-bold text-2xl mx-5" }, [
-              _vm._v(_vm._s(_vm.$t("words.comments")))
+            _c("div", { staticClass: "mx-5" }, [
+              _c("h1", { staticClass: "mb-8 font-bold text-2xl" }, [
+                _vm._v(_vm._s(_vm.$t("words.documents")))
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "white-bg rounded shadow p-5" }, [
+                _c(
+                  "ul",
+                  { staticClass: "list-disc" },
+                  [
+                    _vm.invoice.trainee_bank_payment_receipt
+                      ? _vm._l(
+                          _vm.invoice.trainee_bank_payment_receipt.attachments,
+                          function(file) {
+                            return _c("li", [
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "hover:text-blue-600",
+                                  attrs: {
+                                    href: file.download_url,
+                                    target: "_blank"
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                                        " +
+                                      _vm._s(_vm.$t("words.receipt")) +
+                                      ": " +
+                                      _vm._s(file.file_name)
+                                  ),
+                                  _c("br"),
+                                  _vm._v(" "),
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass: "text-sm text-gray-800",
+                                      attrs: { dir: "ltr" }
+                                    },
+                                    [_vm._v(_vm._s(file.created_at_timezone))]
+                                  )
+                                ]
+                              )
+                            ])
+                          }
+                        )
+                      : [_c("empty-slate")]
+                  ],
+                  2
+                )
+              ])
             ])
           ])
         ]),
@@ -38876,12 +39152,6 @@ var render = function() {
                   ],
                   2
                 )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "w-full md:w-4/12" }, [
-              _c("h1", { staticClass: "mb-8 font-bold text-2xl mx-5" }, [
-                _vm._v(_vm._s(_vm.$t("words.documents")))
               ])
             ])
           ]
@@ -59742,12 +60012,7 @@ var render = function() {
                       expression: "paymentMethod"
                     }
                   ],
-                  attrs: {
-                    type: "radio",
-                    name: "payment-method",
-                    value: "cc",
-                    id: "cc"
-                  },
+                  attrs: { type: "radio", name: "payment-method", value: "cc" },
                   domProps: { checked: _vm._q(_vm.paymentMethod, "cc") },
                   on: {
                     change: function($event) {
@@ -59756,7 +60021,7 @@ var render = function() {
                   }
                 }),
                 _vm._v(" "),
-                _c("label", { attrs: { for: "cc" } }, [
+                _c("label", [
                   _vm._v(_vm._s(_vm.$t("words.credit-card-method")))
                 ])
               ]),
@@ -59774,8 +60039,7 @@ var render = function() {
                   attrs: {
                     type: "radio",
                     name: "payment-method",
-                    value: "bank-transfer",
-                    id: "bank_transfer"
+                    value: "bank-transfer"
                   },
                   domProps: {
                     checked: _vm._q(_vm.paymentMethod, "bank-transfer")
@@ -59787,7 +60051,7 @@ var render = function() {
                   }
                 }),
                 _vm._v(" "),
-                _c("label", { attrs: { for: "bank_transfer" } }, [
+                _c("label", [
                   _vm._v(_vm._s(_vm.$t("words.bank-transfer-upload-receipt")))
                 ])
               ]),
@@ -59809,7 +60073,7 @@ var render = function() {
                     href:
                       _vm.paymentMethod === "cc"
                         ? _vm.route("trainees.payment.card")
-                        : _vm.route("dashboard")
+                        : _vm.route("trainees.payment.upload-receipt")
                   }
                 },
                 [
@@ -59823,6 +60087,326 @@ var render = function() {
             ]
           )
         ])
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Trainees/Payment/UploadReceipt.vue?vue&type=template&id=b4baa5da&":
+/*!****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Pages/Trainees/Payment/UploadReceipt.vue?vue&type=template&id=b4baa5da& ***!
+  \****************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("app-layout-trainee", [
+    _c(
+      "div",
+      { staticClass: "container px-6 mx-auto grid pt-6" },
+      [
+        _c("breadcrumb-container", {
+          attrs: {
+            crumbs: [
+              { title: "dashboard", link: _vm.route("dashboard") },
+              { title: "payment", link: _vm.route("trainees.payment.options") },
+              { title: "bank-transfer" }
+            ]
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass:
+              "grid md:grid-cols-1 grid-cols-1 gap-6 flex justify-center"
+          },
+          [
+            _c("div", { staticClass: "bg-white shadow-lg p-5 mx-auto" }, [
+              _c("div", { staticClass: "mb-10" }, [
+                _c("p", { staticClass: "text-center" }, [
+                  _c(
+                    "span",
+                    { staticClass: "bg-gray-400 text-white rounded p-2" },
+                    [_vm._v(_vm._s(_vm.$t("words.bank-transfer")))]
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "bg-yellow-300 p-3 rounded flex" }, [
+                _c(
+                  "svg",
+                  {
+                    staticClass: "h-6 w-6",
+                    staticStyle: { "margin-left": "10px" },
+                    attrs: {
+                      xmlns: "http://www.w3.org/2000/svg",
+                      fill: "none",
+                      viewBox: "0 0 24 24",
+                      stroke: "currentColor"
+                    }
+                  },
+                  [
+                    _c("path", {
+                      attrs: {
+                        "stroke-linecap": "round",
+                        "stroke-linejoin": "round",
+                        "stroke-width": "2",
+                        d:
+                          "M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      }
+                    })
+                  ]
+                ),
+                _vm._v(
+                  "\n                    " +
+                    _vm._s(_vm.$t("words.payment-receipt-notice")) +
+                    "\n                "
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "form",
+                {
+                  staticClass: "mt-5",
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.saveForm.apply(null, arguments)
+                    }
+                  }
+                },
+                [
+                  _c(
+                    "div",
+                    [
+                      _c("jet-label", {
+                        attrs: { for: "amount", value: _vm.$t("words.amount") }
+                      }),
+                      _vm._v(" "),
+                      _c("jet-input", {
+                        staticClass: "mt-1 block w-full",
+                        attrs: {
+                          id: "amount",
+                          type: "number",
+                          required: "",
+                          autocomplete: "off",
+                          disabled: ""
+                        },
+                        model: {
+                          value: _vm.pending_amount_raw,
+                          callback: function($$v) {
+                            _vm.pending_amount_raw = $$v
+                          },
+                          expression: "pending_amount_raw"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("jet-input-error", {
+                        staticClass: "mt-2",
+                        attrs: { message: _vm.form.error("amount") }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "mt-3" },
+                    [
+                      _c("jet-label", {
+                        attrs: {
+                          for: "amount",
+                          value: _vm.$t("words.sender-name")
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("jet-input", {
+                        staticClass: "mt-1 block w-full",
+                        attrs: {
+                          id: "sender_name",
+                          type: "text",
+                          required: "",
+                          autocomplete: "off"
+                        },
+                        model: {
+                          value: _vm.form.sender_name,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "sender_name", $$v)
+                          },
+                          expression: "form.sender_name"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("jet-input-error", {
+                        staticClass: "mt-2",
+                        attrs: { message: _vm.form.error("sender_name") }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "mt-3" },
+                    [
+                      _c("jet-label", {
+                        attrs: {
+                          for: "bank_name_from",
+                          value: _vm.$t("words.sender-bank-name")
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("jet-input", {
+                        staticClass: "mt-1 block w-full",
+                        attrs: {
+                          id: "bank_name_from",
+                          type: "text",
+                          autofocus: "autofocus",
+                          required: "",
+                          autocomplete: "off"
+                        },
+                        model: {
+                          value: _vm.form.bank_name_from,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "bank_name_from", $$v)
+                          },
+                          expression: "form.bank_name_from"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("jet-input-error", {
+                        staticClass: "mt-2",
+                        attrs: { message: _vm.form.error("bank_name_from") }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "mt-3" },
+                    [
+                      _c("jet-label", {
+                        attrs: {
+                          for: "bank_name_to",
+                          value: _vm.$t("words.receiver-bank-name")
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("jet-input", {
+                        staticClass: "mt-1 block w-full",
+                        attrs: {
+                          id: "bank_name_to",
+                          type: "text",
+                          required: "",
+                          autocomplete: "off"
+                        },
+                        model: {
+                          value: _vm.form.bank_name_to,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "bank_name_to", $$v)
+                          },
+                          expression: "form.bank_name_to"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("jet-input-error", {
+                        staticClass: "mt-2",
+                        attrs: { message: _vm.form.error("bank_name_to") }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "mt-3" },
+                    [
+                      _c("jet-label", {
+                        attrs: {
+                          for: "files",
+                          value: _vm.$t("words.upload-receipts")
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "flex justify-center" }, [
+                        _c("div", { staticClass: "mb-3 w-full" }, [
+                          _c("input", {
+                            staticClass:
+                              "form-control block w-full mt-2 px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none",
+                            attrs: {
+                              type: "file",
+                              id: "formFileMultiple",
+                              required: "",
+                              multiple: ""
+                            },
+                            on: {
+                              input: function($event) {
+                                _vm.form.files = $event.target.files
+                              }
+                            }
+                          })
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("jet-input-error", {
+                        staticClass: "mt-2",
+                        attrs: { message: _vm.form.error("files") }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _vm.form.progress
+                    ? _c(
+                        "progress",
+                        {
+                          attrs: { max: "100" },
+                          domProps: { value: _vm.form.progress.percentage }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        " +
+                              _vm._s(_vm.form.progress.percentage) +
+                              "%\n                    "
+                          )
+                        ]
+                      )
+                    : _c(
+                        "button",
+                        {
+                          staticClass:
+                            "w-full text-center mt-5 items-center px-4 py-2 bg-blue-500 hover:bg-blue-700 active:bg-blue-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-",
+                          attrs: { type: "submit" }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        " +
+                              _vm._s(_vm.$t("words.save")) +
+                              "\n                    "
+                          )
+                        ]
+                      )
+                ]
+              )
+            ])
+          ]
+        )
       ],
       1
     )
@@ -64320,6 +64904,8 @@ var map = {
 	"./Trainees/Inbox/Index.vue": "./resources/js/Pages/Trainees/Inbox/Index.vue",
 	"./Trainees/Payment/Index": "./resources/js/Pages/Trainees/Payment/Index.vue",
 	"./Trainees/Payment/Index.vue": "./resources/js/Pages/Trainees/Payment/Index.vue",
+	"./Trainees/Payment/UploadReceipt": "./resources/js/Pages/Trainees/Payment/UploadReceipt.vue",
+	"./Trainees/Payment/UploadReceipt.vue": "./resources/js/Pages/Trainees/Payment/UploadReceipt.vue",
 	"./Trainees/TrainingPackages/Index": "./resources/js/Pages/Trainees/TrainingPackages/Index.vue",
 	"./Trainees/TrainingPackages/Index.vue": "./resources/js/Pages/Trainees/TrainingPackages/Index.vue",
 	"./Trainees/TrainingPlan/Index": "./resources/js/Pages/Trainees/TrainingPlan/Index.vue",
@@ -71113,6 +71699,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/Pages/Trainees/Payment/UploadReceipt.vue":
+/*!***************************************************************!*\
+  !*** ./resources/js/Pages/Trainees/Payment/UploadReceipt.vue ***!
+  \***************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _UploadReceipt_vue_vue_type_template_id_b4baa5da___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UploadReceipt.vue?vue&type=template&id=b4baa5da& */ "./resources/js/Pages/Trainees/Payment/UploadReceipt.vue?vue&type=template&id=b4baa5da&");
+/* harmony import */ var _UploadReceipt_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./UploadReceipt.vue?vue&type=script&lang=js& */ "./resources/js/Pages/Trainees/Payment/UploadReceipt.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _UploadReceipt_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _UploadReceipt_vue_vue_type_template_id_b4baa5da___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _UploadReceipt_vue_vue_type_template_id_b4baa5da___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/Pages/Trainees/Payment/UploadReceipt.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/Pages/Trainees/Payment/UploadReceipt.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/Pages/Trainees/Payment/UploadReceipt.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UploadReceipt_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./UploadReceipt.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Trainees/Payment/UploadReceipt.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UploadReceipt_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/Pages/Trainees/Payment/UploadReceipt.vue?vue&type=template&id=b4baa5da&":
+/*!**********************************************************************************************!*\
+  !*** ./resources/js/Pages/Trainees/Payment/UploadReceipt.vue?vue&type=template&id=b4baa5da& ***!
+  \**********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UploadReceipt_vue_vue_type_template_id_b4baa5da___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./UploadReceipt.vue?vue&type=template&id=b4baa5da& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Trainees/Payment/UploadReceipt.vue?vue&type=template&id=b4baa5da&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UploadReceipt_vue_vue_type_template_id_b4baa5da___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UploadReceipt_vue_vue_type_template_id_b4baa5da___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/Pages/Trainees/TrainingPackages/Index.vue":
 /*!****************************************************************!*\
   !*** ./resources/js/Pages/Trainees/TrainingPackages/Index.vue ***!
@@ -72327,7 +72982,13 @@ __webpack_require__.r(__webpack_exports__);
       "choose-payment-method": "اختيار طريقة الدفع",
       "credit-card-method": "عبر البطاقة",
       "bank-transfer-upload-receipt": "تحويل بنكي (ارفاق الإصال)",
-      "bank-transfer": "تحويل بنكي"
+      "bank-transfer": "تحويل بنكي",
+      "payment-receipt-notice": "يرجى ارفاق الوصل مع ذكر البنك المحول اليه واسم المحول",
+      "sender-name": "اسم المحول",
+      "sender-bank-name": "البنك المحول منه",
+      "receiver-bank-name": "البنك المحول أليه",
+      "upload-receipts": "رفع الإصال",
+      "receipt": "ايصال"
     },
     "validation": {
       "accepted": "يجب قبول {attribute}.",
@@ -72471,7 +73132,11 @@ __webpack_require__.r(__webpack_exports__);
         "available": "مُتاح",
         "size": "الحجم",
         "identity_number": "رقم الهوية",
-        "phone_additional": "الجوال الإضافي"
+        "phone_additional": "الجوال الإضافي",
+        "bank_name_from": "البنك المحول منه",
+        "bank_name_to": "البنك المحول اليه",
+        "sender_name": "اسم المحول",
+        "amount": "المبلغ"
       }
     },
     "passwords": {
@@ -72941,7 +73606,13 @@ __webpack_require__.r(__webpack_exports__);
       "choose-payment-method": "Choose payment method",
       "credit-card-method": "Card",
       "bank-transfer-upload-receipt": "Bank Transfer (upload receipt)",
-      "bank-transfer": "Bank Transfer"
+      "bank-transfer": "Bank Transfer",
+      "payment-receipt-notice": "Please attach the original receipt with noting the bank sender name, the bank receive name, and the transferer name",
+      "sender-name": "Sender name",
+      "sender-bank-name": "Sender bank name",
+      "receiver-bank-name": "Receive bank name",
+      "upload-receipts": "Upload receipts",
+      "receipt": "Receipt"
     },
     "validation": {
       "accepted": "The {attribute} must be accepted.",

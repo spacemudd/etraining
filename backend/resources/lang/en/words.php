@@ -445,4 +445,10 @@ return [
     'credit-card-method' => 'Card',
     'bank-transfer-upload-receipt' => 'Bank Transfer (upload receipt)',
     'bank-transfer' => 'Bank Transfer',
+    'payment-receipt-notice' => 'Please attach the original receipt with noting the bank sender name, the bank receive name, and the transferer name',
+    'sender-name' => 'Sender name',
+    'sender-bank-name' => 'Sender bank name',
+    'receiver-bank-name' => 'Receive bank name',
+    'upload-receipts' => 'Upload receipts',
+    'receipt' => 'Receipt',
 ];
