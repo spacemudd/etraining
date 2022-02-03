@@ -89,6 +89,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'company_name',
         'bill_from_date_formatted',
         'linked_date_formatted',
+        'has_outstanding_amount',
     ];
 
     protected static function boot(): void
@@ -445,5 +446,10 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
                 now()->setDate(2021, 10, 3)->startOfDay(),
                 now()->setDate(2021, 10, 9)->endOfDay(),
             ]);
+    }
+
+    public function getHasOutstandingAmountAttribute()
+    {
+        return $this->invoices()->notPaid()->count();
     }
 }

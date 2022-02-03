@@ -65,7 +65,7 @@
                                 <div class="font-bold">{{ $t('words.verified') }}</div>
                                 <div>{{ invoice.is_paid ? $t('words.yes') : $t('words.no') }}</div>
                                 <div class="font-bold">{{ $t('words.paid') }}</div>
-                                <div>{{ invoice.is_paid ? $t('words.yes') : $t('words.no') }}</div>
+                                <div>{{ invoice.is_paid ? $t('words.yes') : $t('words.no') }} <span v-if="invoice.is_paid">({{ invoice.payment_method_formatted }})</span></div>
                             </div>
                         </div>
                     </div>

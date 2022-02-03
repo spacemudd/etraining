@@ -393,6 +393,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
         Route::get('/courses/{course_id}/course-batches/{course_batch_id}/course-batch-sessions/{course_batch_session}', [\App\Http\Controllers\Trainees\CourseBatchSessionsController::class, 'show'])->name('course-batch-session.show');
 
+        Route::get('payment/options', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'showOptions'])->name('payment.options');
+
         Route::get('payment/card', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'showPaymentForm'])
             ->name('payment.card');
 

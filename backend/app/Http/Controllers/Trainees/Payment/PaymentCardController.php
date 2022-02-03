@@ -10,6 +10,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Inertia\Inertia;
 use Tap\TapPayment\Facade\TapPayment;
 
 class PaymentCardController extends Controller
@@ -24,7 +25,7 @@ class PaymentCardController extends Controller
      */
     public function showPaymentForm(Request $request): RedirectResponse
     {
-        $trainee = auth()->user()->trainee()->firstOrFail();
+        $trainee = auth()->user()->trainee;
 
         $pending_invoices_count = $trainee->invoices()->notPaid()->count();
         $pending_amount = optional($trainee)->total_amount_owed;
@@ -65,7 +66,7 @@ class PaymentCardController extends Controller
         }
 
         $user = auth()->user();
-        $trainee = $user->trainee()->firstOrFail();
+        $trainee = $user->trainee;
 
         $invoices = explode(",", json_decode($tap_invoice->getMetaData()['invoices']));
         $invoices = $trainee->invoices()->notPaid()->findMany($invoices);
@@ -76,6 +77,9 @@ class PaymentCardController extends Controller
         }
 
         if (!$tap_invoice->isSuccess()) {
+            \Log::error(['msg' => 'A CC payment failed', 'trainee_id' => auth()->user()->trainee->id, collect($tap_invoice)]);
+            return redirect()->route('dashboard');
+            //if ($tap_invoice->status);
             // dd($tap_invoice->status); // DECLINED,
             // Handle error logic, Payment failed
             abort(500);
@@ -87,11 +91,12 @@ class PaymentCardController extends Controller
                 'payment_method' => Invoice::PAYMENT_METHOD_CREDIT_CARD,
                 'payment_reference_id' => $tap_invoice->getId(),
                 'paid_at' => now(),
+                'status' => Invoice::STATUS_PAID,
             ]);
         });
 
         // Show success page
-        return "success";
+        return redirect()->route('dashboard');
     }
 
     /**
@@ -117,8 +122,8 @@ class PaymentCardController extends Controller
             $payment->setCurrency("SAR");
             $payment->setSource("src_card");
 
-            if (!empty($trainee->phone)) {
-                $phone = PhoneNumber::parse($trainee->phone);
+            if (!empty($trainee->clean_phone)) {
+                $phone = PhoneNumber::parse('+'.$trainee->clean_phone);
                 if ($phone->isPossibleNumber()) {
                     $payment->setCustomerPhone($phone->getCountryCode(), $phone->getNationalNumber());
                 }
@@ -139,5 +144,17 @@ class PaymentCardController extends Controller
         }
 
         return $payment_url;
+    }
+
+    public function showOptions()
+    {
+        $trainee = auth()->user()->trainee;
+
+        $pending_invoices_count = $trainee->invoices()->notPaid()->count();
+        $pending_amount = number_format($trainee->total_amount_owed, 2);
+
+        return Inertia::render('Trainees/Payment/Index', [
+            'pending_amount' => $pending_amount,
+        ]);
     }
 }

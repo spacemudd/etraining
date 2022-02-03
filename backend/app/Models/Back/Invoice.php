@@ -47,6 +47,7 @@ class Invoice extends Model
     protected $appends = [
         'number_formatted',
         'status_formatted',
+        'payment_method_formatted',
         'created_at_date',
         'is_paid',
     ];
@@ -139,5 +140,12 @@ class Invoice extends Model
     public function scopeNotPaid($query)
     {
         return $this->scopeIsPaid($query, false);
+    }
+
+    public function getPaymentMethodFormattedAttribute()
+    {
+        if ($this->payment_method ===  Invoice::PAYMENT_METHOD_CREDIT_CARD) return __('words.credit-card-method');
+        if ($this->payment_method ===  Invoice::PAYMENT_METHOD_BANK_RECEIPT) return __('words.bank-transfer');
+        return '';
     }
 }

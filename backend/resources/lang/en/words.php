@@ -438,4 +438,11 @@ return [
     'linked-date' => 'Linked date',
     'vat' => 'VAT',
     'select-all' => 'Select All',
+    'due-balance-notice' => 'Your account has a past due balance. Please submit a payment to prevent account suspension.',
+    'pay-now' => 'Pay now',
+    'payment' => 'Payment',
+    'choose-payment-method' => 'Choose payment method',
+    'credit-card-method' => 'Card',
+    'bank-transfer-upload-receipt' => 'Bank Transfer (upload receipt)',
+    'bank-transfer' => 'Bank Transfer',
 ];

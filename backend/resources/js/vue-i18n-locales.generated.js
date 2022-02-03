@@ -433,7 +433,7 @@ export default {
             "total-amount": "اجمالي المبلغ",
             "verified": "موثق",
             "subtotal": "المجموع",
-            "tax": "ضريبة",
+            "tax": "الضريبة",
             "items": "الأصناف",
             "comments": "ملاحظات",
             "invoice-no": "رقم الفاتورة",
@@ -451,7 +451,14 @@ export default {
             "expected-cost-per-invoice": "متوقع مبلغ كل فاتورة",
             "linked-date": "تاريخ الربط",
             "vat": "الضريبة",
-            "select-all": "Select All"
+            "select-all": "اختيار الكل",
+            "due-balance-notice": "حسابك لديه مبلغ مستحق. يرجى دفع رسوم التدريب لمنع تعليق الحساب.",
+            "pay-now": "ادفع الان",
+            "payment": "تسديد",
+            "choose-payment-method": "اختيار طريقة الدفع",
+            "credit-card-method": "عبر البطاقة",
+            "bank-transfer-upload-receipt": "تحويل بنكي (ارفاق الإصال)",
+            "bank-transfer": "تحويل بنكي"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1058,7 +1065,14 @@ export default {
             "expected-cost-per-invoice": "Expected cost per invoice",
             "linked-date": "Linked date",
             "vat": "VAT",
-            "select-all": "Select All"
+            "select-all": "Select All",
+            "due-balance-notice": "Your account has a past due balance. Please submit a payment to prevent account suspension.",
+            "pay-now": "Pay now",
+            "payment": "Payment",
+            "choose-payment-method": "Choose payment method",
+            "credit-card-method": "Card",
+            "bank-transfer-upload-receipt": "Bank Transfer (upload receipt)",
+            "bank-transfer": "Bank Transfer"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

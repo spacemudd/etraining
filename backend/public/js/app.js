@@ -20492,6 +20492,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -20751,6 +20767,85 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {//
     };
+  },
+  methods: {//
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Trainees/Payment/Index.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Pages/Trainees/Payment/Index.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Layouts_AppLayoutTrainee__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Layouts/AppLayoutTrainee */ "./resources/js/Layouts/AppLayoutTrainee.vue");
+/* harmony import */ var _Components_BreadcrumbContainer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Components/BreadcrumbContainer */ "./resources/js/Components/BreadcrumbContainer.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    AppLayoutTrainee: _Layouts_AppLayoutTrainee__WEBPACK_IMPORTED_MODULE_0__["default"],
+    BreadcrumbContainer: _Components_BreadcrumbContainer__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  props: ['pending_amount'],
+  data: function data() {
+    return {
+      paymentMethod: 'cc'
+    };
+  },
+  mounted: function mounted() {//
   },
   methods: {//
   }
@@ -38661,8 +38756,17 @@ var render = function() {
                           _vm.invoice.is_paid
                             ? _vm.$t("words.yes")
                             : _vm.$t("words.no")
-                        )
-                      )
+                        ) + " "
+                      ),
+                      _vm.invoice.is_paid
+                        ? _c("span", [
+                            _vm._v(
+                              "(" +
+                                _vm._s(_vm.invoice.payment_method_formatted) +
+                                ")"
+                            )
+                          ])
+                        : _vm._e()
                     ])
                   ])
                 ])
@@ -58945,6 +59049,68 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("app-layout", [
     _c("div", { staticClass: "container px-6 mx-auto grid" }, [
+      _vm.user.trainee.has_outstanding_amount
+        ? _c("div", { staticClass: "container mx-auto grid p-6" }, [
+            _c(
+              "div",
+              {
+                staticClass:
+                  "bg-red-100 rounded-lg p-10 border-red-500 border-2"
+              },
+              [
+                _c("p", { staticClass: "text-red-800 flex" }, [
+                  _c(
+                    "svg",
+                    {
+                      staticClass: "h-6 w-6",
+                      staticStyle: { "margin-left": "10px" },
+                      attrs: {
+                        xmlns: "http://www.w3.org/2000/svg",
+                        fill: "none",
+                        viewBox: "0 0 24 24",
+                        stroke: "currentColor"
+                      }
+                    },
+                    [
+                      _c("path", {
+                        attrs: {
+                          "stroke-linecap": "round",
+                          "stroke-linejoin": "round",
+                          "stroke-width": "2",
+                          d:
+                            "M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        }
+                      })
+                    ]
+                  ),
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(_vm.$t("words.due-balance-notice")) +
+                      "\n                "
+                  )
+                ]),
+                _vm._v(" "),
+                _c(
+                  "inertia-link",
+                  {
+                    staticClass:
+                      "mt-5 inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-",
+                    attrs: { href: _vm.route("trainees.payment.options") }
+                  },
+                  [
+                    _vm._v(
+                      "\n                    " +
+                        _vm._s(_vm.$t("words.pay-now")) +
+                        "\n                "
+                    )
+                  ]
+                )
+              ],
+              1
+            )
+          ])
+        : _vm._e(),
+      _vm._v(" "),
       _c("div", { staticClass: "container mx-auto grid p-6" }, [
         _c("div", { staticClass: "bg-white rounded-lg p-10 flex gap-10" }, [
           _c("img", {
@@ -59515,6 +59681,150 @@ var render = function() {
         })
       ],
       2
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Trainees/Payment/Index.vue?vue&type=template&id=a4616924&":
+/*!********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Pages/Trainees/Payment/Index.vue?vue&type=template&id=a4616924& ***!
+  \********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("app-layout-trainee", [
+    _c(
+      "div",
+      { staticClass: "container px-6 mx-auto grid pt-6" },
+      [
+        _c("breadcrumb-container", {
+          attrs: {
+            crumbs: [
+              { title: "dashboard", link: _vm.route("dashboard") },
+              { title: "payment", link: _vm.route("trainees.payment.options") }
+            ]
+          }
+        }),
+        _vm._v(" "),
+        _c("div", { staticClass: "grid md:grid-cols-4 grid-cols-1 gap-6" }, [
+          _c(
+            "div",
+            {
+              staticClass:
+                "col-span-1 p-5 transition-all duration-500 ease-in-out hover:bg-gray-200"
+            },
+            [
+              _c("p", { staticClass: "text-2xl" }, [
+                _vm._v(_vm._s(_vm.$t("words.choose-payment-method")) + ":")
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "payment-options mt-2" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.paymentMethod,
+                      expression: "paymentMethod"
+                    }
+                  ],
+                  attrs: {
+                    type: "radio",
+                    name: "payment-method",
+                    value: "cc",
+                    id: "cc"
+                  },
+                  domProps: { checked: _vm._q(_vm.paymentMethod, "cc") },
+                  on: {
+                    change: function($event) {
+                      _vm.paymentMethod = "cc"
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("label", { attrs: { for: "cc" } }, [
+                  _vm._v(_vm._s(_vm.$t("words.credit-card-method")))
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "payment-options" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.paymentMethod,
+                      expression: "paymentMethod"
+                    }
+                  ],
+                  attrs: {
+                    type: "radio",
+                    name: "payment-method",
+                    value: "bank-transfer",
+                    id: "bank_transfer"
+                  },
+                  domProps: {
+                    checked: _vm._q(_vm.paymentMethod, "bank-transfer")
+                  },
+                  on: {
+                    change: function($event) {
+                      _vm.paymentMethod = "bank-transfer"
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("label", { attrs: { for: "bank_transfer" } }, [
+                  _vm._v(_vm._s(_vm.$t("words.bank-transfer-upload-receipt")))
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "mt-5" }, [
+                _c("p", [_vm._v(_vm._s(_vm.$t("words.amount")))]),
+                _c("p"),
+                _c("p", { staticClass: "text-2xl" }, [
+                  _vm._v(_vm._s(_vm.pending_amount))
+                ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "a",
+                {
+                  staticClass:
+                    "mt-5 inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-",
+                  attrs: {
+                    href:
+                      _vm.paymentMethod === "cc"
+                        ? _vm.route("trainees.payment.card")
+                        : _vm.route("dashboard")
+                  }
+                },
+                [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(_vm.$t("words.pay-now")) +
+                      "\n                "
+                  )
+                ]
+              )
+            ]
+          )
+        ])
+      ],
+      1
     )
   ])
 }
@@ -64008,6 +64318,8 @@ var map = {
 	"./Trainees/Import/Index.vue": "./resources/js/Pages/Trainees/Import/Index.vue",
 	"./Trainees/Inbox/Index": "./resources/js/Pages/Trainees/Inbox/Index.vue",
 	"./Trainees/Inbox/Index.vue": "./resources/js/Pages/Trainees/Inbox/Index.vue",
+	"./Trainees/Payment/Index": "./resources/js/Pages/Trainees/Payment/Index.vue",
+	"./Trainees/Payment/Index.vue": "./resources/js/Pages/Trainees/Payment/Index.vue",
 	"./Trainees/TrainingPackages/Index": "./resources/js/Pages/Trainees/TrainingPackages/Index.vue",
 	"./Trainees/TrainingPackages/Index.vue": "./resources/js/Pages/Trainees/TrainingPackages/Index.vue",
 	"./Trainees/TrainingPlan/Index": "./resources/js/Pages/Trainees/TrainingPlan/Index.vue",
@@ -70732,6 +71044,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/Pages/Trainees/Payment/Index.vue":
+/*!*******************************************************!*\
+  !*** ./resources/js/Pages/Trainees/Payment/Index.vue ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Index_vue_vue_type_template_id_a4616924___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Index.vue?vue&type=template&id=a4616924& */ "./resources/js/Pages/Trainees/Payment/Index.vue?vue&type=template&id=a4616924&");
+/* harmony import */ var _Index_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Index.vue?vue&type=script&lang=js& */ "./resources/js/Pages/Trainees/Payment/Index.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Index_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Index_vue_vue_type_template_id_a4616924___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Index_vue_vue_type_template_id_a4616924___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/Pages/Trainees/Payment/Index.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/Pages/Trainees/Payment/Index.vue?vue&type=script&lang=js&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/Pages/Trainees/Payment/Index.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./Index.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Trainees/Payment/Index.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/Pages/Trainees/Payment/Index.vue?vue&type=template&id=a4616924&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/Pages/Trainees/Payment/Index.vue?vue&type=template&id=a4616924& ***!
+  \**************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_template_id_a4616924___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./Index.vue?vue&type=template&id=a4616924& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Trainees/Payment/Index.vue?vue&type=template&id=a4616924&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_template_id_a4616924___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_template_id_a4616924___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/Pages/Trainees/TrainingPackages/Index.vue":
 /*!****************************************************************!*\
   !*** ./resources/js/Pages/Trainees/TrainingPackages/Index.vue ***!
@@ -71921,7 +72302,7 @@ __webpack_require__.r(__webpack_exports__);
       "total-amount": "اجمالي المبلغ",
       "verified": "موثق",
       "subtotal": "المجموع",
-      "tax": "ضريبة",
+      "tax": "الضريبة",
       "items": "الأصناف",
       "comments": "ملاحظات",
       "invoice-no": "رقم الفاتورة",
@@ -71939,7 +72320,14 @@ __webpack_require__.r(__webpack_exports__);
       "expected-cost-per-invoice": "متوقع مبلغ كل فاتورة",
       "linked-date": "تاريخ الربط",
       "vat": "الضريبة",
-      "select-all": "Select All"
+      "select-all": "اختيار الكل",
+      "due-balance-notice": "حسابك لديه مبلغ مستحق. يرجى دفع رسوم التدريب لمنع تعليق الحساب.",
+      "pay-now": "ادفع الان",
+      "payment": "تسديد",
+      "choose-payment-method": "اختيار طريقة الدفع",
+      "credit-card-method": "عبر البطاقة",
+      "bank-transfer-upload-receipt": "تحويل بنكي (ارفاق الإصال)",
+      "bank-transfer": "تحويل بنكي"
     },
     "validation": {
       "accepted": "يجب قبول {attribute}.",
@@ -72546,7 +72934,14 @@ __webpack_require__.r(__webpack_exports__);
       "expected-cost-per-invoice": "Expected cost per invoice",
       "linked-date": "Linked date",
       "vat": "VAT",
-      "select-all": "Select All"
+      "select-all": "Select All",
+      "due-balance-notice": "Your account has a past due balance. Please submit a payment to prevent account suspension.",
+      "pay-now": "Pay now",
+      "payment": "Payment",
+      "choose-payment-method": "Choose payment method",
+      "credit-card-method": "Card",
+      "bank-transfer-upload-receipt": "Bank Transfer (upload receipt)",
+      "bank-transfer": "Bank Transfer"
     },
     "validation": {
       "accepted": "The {attribute} must be accepted.",
