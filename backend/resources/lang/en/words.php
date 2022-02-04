@@ -451,4 +451,5 @@ return [
     'receiver-bank-name' => 'Receive bank name',
     'upload-receipts' => 'Upload receipts',
     'receipt' => 'Receipt',
+    'invoice-number' => 'Invoice number',
 ];

@@ -464,7 +464,8 @@ export default {
             "sender-bank-name": "البنك المحول منه",
             "receiver-bank-name": "البنك المحول أليه",
             "upload-receipts": "رفع الإصال",
-            "receipt": "ايصال"
+            "receipt": "ايصال",
+            "invoice-number": "رقم الفاتورة"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -628,7 +629,11 @@ export default {
         },
         "pagination": {
             "previous": "&laquo; السابق",
-            "next": "التالي &raquo;"
+            "next": "التالي &raquo;",
+            "to": "الى",
+            "of": "من اجمالي",
+            "results": "نتائج",
+            "filter": "بحث"
         }
     },
     "en": {
@@ -1088,7 +1093,8 @@ export default {
             "sender-bank-name": "Sender bank name",
             "receiver-bank-name": "Receive bank name",
             "upload-receipts": "Upload receipts",
-            "receipt": "Receipt"
+            "receipt": "Receipt",
+            "invoice-number": "Invoice number"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",
@@ -1215,7 +1221,11 @@ export default {
         },
         "pagination": {
             "previous": "&laquo; Previous",
-            "next": "Next &raquo;"
+            "next": "Next &raquo;",
+            "to": "to",
+            "of": "of",
+            "results": "Results",
+            "filter": "Filter"
         }
     }
 }

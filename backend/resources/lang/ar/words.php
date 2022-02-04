@@ -460,4 +460,5 @@ return [
     'receiver-bank-name' => 'البنك المحول أليه',
     'upload-receipts' => 'رفع الإصال',
     'receipt' => 'ايصال',
+    'invoice-number' => 'رقم الفاتورة',
 ];

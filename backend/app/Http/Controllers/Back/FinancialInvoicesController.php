@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use PDF;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class FinancialInvoicesController extends Controller
 {
@@ -19,9 +20,37 @@ class FinancialInvoicesController extends Controller
     {
         $this->authorize('issue-monthly-invoices');
 
+        $invoices = QueryBuilder::for(Invoice::class)
+            ->with(['trainee' => function($q) {
+                $q->with('company');
+            }])
+            ->with('company')
+            ->defaultSort('created_at')
+            ->allowedSorts(['created_at', 'number', 'status', 'payment_method', 'grand_total', 'is_verified', 'created_at'])
+            ->allowedFilters(['created_at', 'trainee.name', 'number', 'company.name_ar', 'status'])
+            ->allowedFields(['trainee.id', 'trainee.name', 'company.id', 'company.name_ar'])
+            ->allowedIncludes(['company', 'trainee'])
+            ->paginate()
+            ->withQueryString();
+
         return Inertia::render('Back/Finance/Invoices/Index', [
-            'invoices' => Invoice::latest()->paginate(20),
-        ]);
+            'invoices' => $invoices,
+        ])->table(function ($table) {
+            $table->disableGlobalSearch();
+
+            $table->addSearchRows([
+                'number' => __('words.invoice-number'),
+                'company.name_ar' => __('words.company'),
+                'trainee.name' => __('words.trainee'),
+                'created_at' => __('words.date'),
+            ]);
+
+            $table->addFilter('status', __('words.status'), [
+                Invoice::STATUS_UNPAID => __('words.unpaid'),
+                Invoice::STATUS_AUDIT_REQUIRED => __('words.audit-required'),
+                Invoice::STATUS_PAID =>  __('words.paid'),
+            ]);
+        });
     }
 
     public function show(string $invoice_id)
