@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Back;
 
+use App\Exports\CompanyAccountSummary;
 use App\Exports\TraineeAccountSummary;
 use App\Http\Controllers\Controller;
 use App\Models\Back\Company;
@@ -31,8 +32,8 @@ class AccountStatementsController extends Controller
             return Excel::download(new TraineeAccountSummary($request->trainee_id), 'account-statement.xlsx');
         }
 
-        //if ($request->trainee_id) {
-        //    return Excel::download(new TraineeAccountSummary($request->trainee_id), 'account-statement.xlsx');
-        //}
+        if ($request->company_id) {
+            return Excel::download(new CompanyAccountSummary($request->company_id), 'account-statement.xlsx');
+        }
     }
 }
