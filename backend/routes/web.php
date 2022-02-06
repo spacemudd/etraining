@@ -4,8 +4,7 @@ use App\Models\Back\Trainee;
 
 Route::get('s1s1', function() {
     $ids = [];
-   $trainees = Trainee::whereIn('identity_number', $ids)
-   ->get();
+   $trainees = Trainee::get();
 
     $traineeData = [];
 
