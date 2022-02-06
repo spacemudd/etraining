@@ -463,4 +463,5 @@ return [
     'invoice-number' => 'رقم الفاتورة',
     'reject-payment-receipt' => 'رفض الإصال',
     'rejection-reason' => 'سبب الرفض',
+    'reject-payment-receipt-reason' => 'سبب رفض الإيصال',
 ];

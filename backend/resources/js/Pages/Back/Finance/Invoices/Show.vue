@@ -22,6 +22,7 @@
                             </a>
 
                             <button @click="rejectPaymentReceipt"
+                                    v-if="invoice.status === 3 || invoice.status === 2"
                                     class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700"
                                     type="button">
                                 {{ $t('words.reject-payment-receipt') }}
@@ -73,6 +74,14 @@
                                           class="bg-red-600 text-white rounded px-2">
                                         {{ $t('words.no') }}
                                     </span>
+                                </div>
+                                <div v-if="invoice.rejection_reason_payment_receipt" class="bg-red-200 border-2 border-red-500 text-black p-3 mt-2 border-l-0">
+                                    <div class="font-bold">{{ $t('words.reject-payment-receipt-reason') }}</div>
+                                </div>
+                                <div v-if="invoice.rejection_reason_payment_receipt" class="bg-red-200 border-2 border-red-500 text-black py-3 mt-2 border-r-0">
+                                    <div>
+                                        <span>{{ invoice.rejection_reason_payment_receipt }}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -207,10 +216,8 @@ export default {
     },
     methods: {
         rejectPaymentReceipt() {
-            alert('showing');
             let reason = prompt(this.$t('words.rejection-reason'));
-
-            this.$inertia.post(route('back.finance.invoices.reject-payment-receipt', this.inoice.id), {
+            this.$inertia.post(route('back.finance.invoices.reject-payment-receipt', this.invoice.id), {
                 reason: reason,
             });
         },

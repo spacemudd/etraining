@@ -129,6 +129,8 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
                 return __("words.paid");
             case self::STATUS_AUDIT_REQUIRED:
                 return __("words.audit-required");
+            case self::STATUS_PAYMENT_RECEIPT_REJECTED:
+                return __('words.reject-payment-receipt');
             default:
                 return "Unknown";
         }

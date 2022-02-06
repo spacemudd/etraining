@@ -9808,6 +9808,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -9851,7 +9856,10 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {},
   methods: {
     rejectPaymentReceipt: function rejectPaymentReceipt() {
-      alert('showing'); //let reason = prompt(this.$t('words.rejection-reason'));
+      var reason = prompt(this.$t('words.rejection-reason'));
+      this.$inertia.post(route('back.finance.invoices.reject-payment-receipt', this.invoice.id), {
+        reason: reason
+      });
     }
   }
 });
@@ -40786,31 +40794,24 @@ var render = function() {
                     ]
                   ),
                   _vm._v(" "),
-                  _c("button", { on: { click: _vm.rejectPaymentReceipt } }, [
-                    _vm._v(
-                      "\n                            ???\n                        "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "jet-button",
-                    {
-                      staticClass:
-                        "mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700",
-                      attrs: { type: "button" },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.rejectPaymentReceipt.apply(null, arguments)
-                        }
-                      }
-                    },
-                    [
-                      _c("span", [
-                        _vm._v(_vm._s(_vm.$t("words.reject-payment-receipt")))
-                      ])
-                    ]
-                  ),
+                  _vm.invoice.status === 3 || _vm.invoice.status === 2
+                    ? _c(
+                        "button",
+                        {
+                          staticClass:
+                            "inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700",
+                          attrs: { type: "button" },
+                          on: { click: _vm.rejectPaymentReceipt }
+                        },
+                        [
+                          _vm._v(
+                            "\n                            " +
+                              _vm._s(_vm.$t("words.reject-payment-receipt")) +
+                              "\n                        "
+                          )
+                        ]
+                      )
+                    : _vm._e(),
                   _vm._v(" "),
                   _c(
                     "jet-button",
@@ -40986,7 +40987,47 @@ var render = function() {
                               )
                             ]
                           )
-                    ])
+                    ]),
+                    _vm._v(" "),
+                    _vm.invoice.rejection_reason_payment_receipt
+                      ? _c(
+                          "div",
+                          {
+                            staticClass:
+                              "bg-red-200 border-2 border-red-500 text-black p-3 mt-2 border-l-0"
+                          },
+                          [
+                            _c("div", { staticClass: "font-bold" }, [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.$t("words.reject-payment-receipt-reason")
+                                )
+                              )
+                            ])
+                          ]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.invoice.rejection_reason_payment_receipt
+                      ? _c(
+                          "div",
+                          {
+                            staticClass:
+                              "bg-red-200 border-2 border-red-500 text-black py-3 mt-2 border-r-0"
+                          },
+                          [
+                            _c("div", [
+                              _c("span", [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm.invoice.rejection_reason_payment_receipt
+                                  )
+                                )
+                              ])
+                            ])
+                          ]
+                        )
+                      : _vm._e()
                   ])
                 ])
               ]
@@ -75605,7 +75646,9 @@ __webpack_require__.r(__webpack_exports__);
       "upload-receipts": "رفع الإصال",
       "receipt": "ايصال",
       "invoice-number": "رقم الفاتورة",
-      "reject-payment-receipt": "رفض الإصال"
+      "reject-payment-receipt": "رفض الإصال",
+      "rejection-reason": "سبب الرفض",
+      "reject-payment-receipt-reason": "سبب رفض الإيصال"
     },
     "validation": {
       "accepted": "يجب قبول {attribute}.",
@@ -76235,7 +76278,9 @@ __webpack_require__.r(__webpack_exports__);
       "upload-receipts": "Upload receipts",
       "receipt": "Receipt",
       "invoice-number": "Invoice number",
-      "reject-payment-receipt": "Reject payment receipt"
+      "reject-payment-receipt": "Reject payment receipt",
+      "rejection-reason": "Rejection reason",
+      "reject-payment-receipt-reason": "Reject payment receipt reason"
     },
     "validation": {
       "accepted": "The {attribute} must be accepted.",

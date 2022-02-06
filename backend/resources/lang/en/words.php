@@ -454,4 +454,5 @@ return [
     'invoice-number' => 'Invoice number',
     'reject-payment-receipt' => 'Reject payment receipt',
     'rejection-reason' => 'Rejection reason',
+    'reject-payment-receipt-reason' => 'Reject payment receipt reason',
 ];

@@ -48,6 +48,7 @@ class FinancialInvoicesController extends Controller
             $table->addFilter('status', __('words.status'), [
                 Invoice::STATUS_UNPAID => __('words.unpaid'),
                 Invoice::STATUS_AUDIT_REQUIRED => __('words.audit-required'),
+                Invoice::STATUS_PAYMENT_RECEIPT_REJECTED => __('words.reject-payment-receipt'),
                 Invoice::STATUS_PAID =>  __('words.paid'),
             ]);
         });
@@ -112,10 +113,17 @@ class FinancialInvoicesController extends Controller
         return $pdf->inline();
     }
 
-    public function rejectPaymentReceipt($id)
+    public function rejectPaymentReceipt($id, Request $request)
     {
+        $request->validate([
+            'reason' => 'required|string|max:255',
+        ]);
+
         $invoice = Invoice::findOrFail($id);
         $invoice->status = Invoice::STATUS_PAYMENT_RECEIPT_REJECTED;
+        $invoice->rejection_reason_payment_receipt = $request->reason;
         $invoice->save();
+
+        return redirect()->route('back.finance.invoices.show', $invoice->id);
     }
 }
