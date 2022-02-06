@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
+use App\Models\Back\AccountingLedgerBook;
 use App\Models\Back\Company;
 use App\Models\Back\InvoiceItem;
 use App\Models\Back\Trainee;
@@ -57,8 +58,8 @@ class CompanyInvoicesController extends Controller
                 );
 
                 $period = [
-                    'start' => Carbon::parse($validatedData['from_date'])->format('jS F'),
-                    'end' => Carbon::parse($validatedData['to_date'])->format('jS F'),
+                    'start' => Carbon::parse($validatedData['from_date'])->format('Y-m-d'),
+                    'end' => Carbon::parse($validatedData['to_date'])->format('Y-m-d'),
                 ];
 
                 $invoice->items()->create([
@@ -67,6 +68,19 @@ class CompanyInvoicesController extends Controller
                     'sub_total' => $sub_total->getAmount()->toFloat(),
                     'tax' => $tax->getAmount()->toFloat(),
                     'grand_total' => $grand_total->getAmount()->toFloat(),
+                ]);
+
+                AccountingLedgerBook::create([
+                    'team_id' => $invoice->team_id,
+                    'company_id' => $invoice->company_id,
+                    'trainee_id' => $invoice->trainee_id,
+                    'invoice_id' => $invoice->id,
+                    'date' => now(),
+                    'description' => __('words.training-costs-for-the-period-of', $period, 'ar'),
+                    'reference'  => __('words.training-costs-for-the-period-of', $period, 'ar'),
+                    'account_name' => $invoice->trainee->name,
+                    'debit' => $invoice->grand_total,
+                    'balance' => AccountingLedgerBook::getBalanceForTrainee($invoice->trainee->id) + $invoice->grand_total,
                 ]);
             }
         });

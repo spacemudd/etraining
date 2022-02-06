@@ -9085,6 +9085,179 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Back/Finance/AccountStatements.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Pages/Back/Finance/AccountStatements.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var lodash_mapValues__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash/mapValues */ "./node_modules/lodash/mapValues.js");
+/* harmony import */ var lodash_mapValues__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash_mapValues__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Shared_Pagination__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Shared/Pagination */ "./resources/js/Shared/Pagination.vue");
+/* harmony import */ var lodash_pickBy__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! lodash/pickBy */ "./node_modules/lodash/pickBy.js");
+/* harmony import */ var lodash_pickBy__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(lodash_pickBy__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var lodash_throttle__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash/throttle */ "./node_modules/lodash/throttle.js");
+/* harmony import */ var lodash_throttle__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash_throttle__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Layouts/AppLayout */ "./resources/js/Layouts/AppLayout.vue");
+/* harmony import */ var vue_ionicons_dist_ios_arrow_dropright__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue-ionicons/dist/ios-arrow-dropright */ "./node_modules/vue-ionicons/dist/ios-arrow-dropright.vue");
+/* harmony import */ var _Components_EmptySlate__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/Components/EmptySlate */ "./resources/js/Components/EmptySlate.vue");
+/* harmony import */ var _Components_BreadcrumbContainer__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/Components/BreadcrumbContainer */ "./resources/js/Components/BreadcrumbContainer.vue");
+/* harmony import */ var _Jetstream_Input__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/Jetstream/Input */ "./resources/js/Jetstream/Input.vue");
+/* harmony import */ var _Jetstream_InputError__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @/Jetstream/InputError */ "./resources/js/Jetstream/InputError.vue");
+/* harmony import */ var _Jetstream_Label__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @/Jetstream/Label */ "./resources/js/Jetstream/Label.vue");
+/* harmony import */ var selectize_dist_js_standalone_selectize_min__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! selectize/dist/js/standalone/selectize.min */ "./node_modules/selectize/dist/js/standalone/selectize.min.js");
+/* harmony import */ var selectize_dist_js_standalone_selectize_min__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(selectize_dist_js_standalone_selectize_min__WEBPACK_IMPORTED_MODULE_11__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+// import Icon from '@/Shared/Icon'
+// import Layout from '@/Shared/Layout'
+
+
+ // import SearchFilter from '@/Shared/SearchFilter'
+
+
+
+
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  metaInfo: {
+    title: 'Financial invoices'
+  },
+  components: {
+    BreadcrumbContainer: _Components_BreadcrumbContainer__WEBPACK_IMPORTED_MODULE_7__["default"],
+    IconNavigate: vue_ionicons_dist_ios_arrow_dropright__WEBPACK_IMPORTED_MODULE_5__["default"],
+    AppLayout: _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_4__["default"],
+    // Icon,
+    Pagination: _Shared_Pagination__WEBPACK_IMPORTED_MODULE_1__["default"],
+    // SearchFilter,
+    EmptySlate: _Components_EmptySlate__WEBPACK_IMPORTED_MODULE_6__["default"],
+    JetInput: _Jetstream_Input__WEBPACK_IMPORTED_MODULE_8__["default"],
+    JetInputError: _Jetstream_InputError__WEBPACK_IMPORTED_MODULE_9__["default"],
+    JetLabel: _Jetstream_Label__WEBPACK_IMPORTED_MODULE_10__["default"]
+  },
+  props: ['companies', 'trainees'],
+  data: function data() {
+    return {
+      form: this.$inertia.form({
+        company_id: null,
+        trainee_id: null
+      }, {
+        bag: 'accountStatementReport'
+      })
+    };
+  },
+  mounted: function mounted() {
+    var vm = this;
+    $(document).ready(function () {
+      vm.companySelector = $('#company_id').selectize({
+        sortField: 'text',
+        onChange: function onChange(value) {
+          vm.form.company_id = value;
+          vm.form.trainee_id = null;
+          $('#trainee_id').selectize()[0].selectize.clear();
+        }
+      });
+    });
+    $(document).ready(function () {
+      vm.companySelector = $('#trainee_id').selectize({
+        sortField: 'text',
+        onChange: function onChange(value) {
+          vm.form.company_id = null;
+          vm.form.trainee_id = value;
+          $('#company_id').selectize()[0].selectize.clear();
+        }
+      });
+    });
+  },
+  beforeDestroy: function beforeDestroy() {
+    $(document).ready(function () {
+      $('#company_id').selectize()[0].selectize.destroy();
+      $('#trainee_id').selectize()[0].selectize.destroy();
+    });
+  },
+  methods: {
+    saveForm: function saveForm() {
+      this.form.post();
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Back/Finance/Accounts/Index.vue?vue&type=script&lang=js&":
 /*!*********************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Pages/Back/Finance/Accounts/Index.vue?vue&type=script&lang=js& ***!
@@ -40110,6 +40283,205 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Back/Finance/AccountStatements.vue?vue&type=template&id=e0079306&":
+/*!****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Pages/Back/Finance/AccountStatements.vue?vue&type=template&id=e0079306& ***!
+  \****************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("app-layout", [
+    _c(
+      "div",
+      { staticClass: "container px-6 mx-auto grid pt-6" },
+      [
+        _c("breadcrumb-container", {
+          attrs: {
+            crumbs: [
+              { title: "dashboard", link: _vm.route("dashboard") },
+              { title: "finance", link: _vm.route("back.finance") },
+              { title: "account-statements" }
+            ]
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass:
+              "grid md:grid-cols-1 grid-cols-1 gap-6 flex justify-center"
+          },
+          [
+            _c("div", { staticClass: "bg-white shadow-lg p-5 mx-auto w-1/2" }, [
+              _c("div", { staticClass: "mb-10" }, [
+                _c("p", { staticClass: "text-center" }, [
+                  _c(
+                    "span",
+                    { staticClass: "bg-gray-400 text-white rounded p-2" },
+                    [_vm._v(_vm._s(_vm.$t("words.account-statements")))]
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "form",
+                {
+                  staticClass: "mt-5",
+                  attrs: {
+                    action: _vm.route("back.finance.account-statements.excel"),
+                    method: "get"
+                  }
+                },
+                [
+                  _c(
+                    "div",
+                    [
+                      _c("jet-label", {
+                        attrs: {
+                          for: "company_id",
+                          value: _vm.$t("words.company")
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "select",
+                        {
+                          ref: "company_id",
+                          attrs: { name: "company_id", id: "company_id" }
+                        },
+                        [
+                          _c("option", { attrs: { value: "" } }),
+                          _vm._v(" "),
+                          _vm._l(_vm.companies, function(company) {
+                            return _c(
+                              "option",
+                              {
+                                key: company.id,
+                                domProps: { value: company.id }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                " +
+                                    _vm._s(company.name_ar) +
+                                    "\n                            "
+                                )
+                              ]
+                            )
+                          })
+                        ],
+                        2
+                      ),
+                      _vm._v(" "),
+                      _c("jet-input-error", {
+                        staticClass: "mt-2",
+                        attrs: { message: _vm.form.error("company_id") }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    [
+                      _c("jet-label", {
+                        attrs: {
+                          for: "trainee_id",
+                          value: _vm.$t("words.trainee")
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "select",
+                        {
+                          ref: "trainee_id",
+                          attrs: { name: "trainee_id", id: "trainee_id" }
+                        },
+                        [
+                          _c("option", { attrs: { value: "" } }),
+                          _vm._v(" "),
+                          _vm._l(_vm.trainees, function(trainee) {
+                            return _c(
+                              "option",
+                              {
+                                key: trainee.id,
+                                domProps: { value: trainee.id }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                " +
+                                    _vm._s(trainee.name) +
+                                    "\n                            "
+                                )
+                              ]
+                            )
+                          })
+                        ],
+                        2
+                      ),
+                      _vm._v(" "),
+                      _c("jet-input-error", {
+                        staticClass: "mt-2",
+                        attrs: { message: _vm.form.error("trainee_id") }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _vm.form.progress
+                    ? _c(
+                        "progress",
+                        {
+                          attrs: { max: "100" },
+                          domProps: { value: _vm.form.progress.percentage }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        " +
+                              _vm._s(_vm.form.progress.percentage) +
+                              "%\n                    "
+                          )
+                        ]
+                      )
+                    : _c(
+                        "button",
+                        {
+                          staticClass:
+                            "w-full text-center mt-5 items-center px-4 py-2 bg-blue-500 hover:bg-blue-700 active:bg-blue-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-",
+                          attrs: { type: "submit" }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        " +
+                              _vm._s(_vm.$t("words.export")) +
+                              "\n                    "
+                          )
+                        ]
+                      )
+                ]
+              )
+            ])
+          ]
+        )
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Back/Finance/Accounts/Index.vue?vue&type=template&id=56fda26d&":
 /*!*************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Pages/Back/Finance/Accounts/Index.vue?vue&type=template&id=56fda26d& ***!
@@ -67792,6 +68164,8 @@ var map = {
 	"./Back/Courses/IndexToday.vue": "./resources/js/Pages/Back/Courses/IndexToday.vue",
 	"./Back/Courses/Show": "./resources/js/Pages/Back/Courses/Show.vue",
 	"./Back/Courses/Show.vue": "./resources/js/Pages/Back/Courses/Show.vue",
+	"./Back/Finance/AccountStatements": "./resources/js/Pages/Back/Finance/AccountStatements.vue",
+	"./Back/Finance/AccountStatements.vue": "./resources/js/Pages/Back/Finance/AccountStatements.vue",
 	"./Back/Finance/Accounts/Index": "./resources/js/Pages/Back/Finance/Accounts/Index.vue",
 	"./Back/Finance/Accounts/Index.vue": "./resources/js/Pages/Back/Finance/Accounts/Index.vue",
 	"./Back/Finance/Index": "./resources/js/Pages/Back/Finance/Index.vue",
@@ -69052,6 +69426,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Show_vue_vue_type_template_id_bbe2d9fa___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Show_vue_vue_type_template_id_bbe2d9fa___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/Pages/Back/Finance/AccountStatements.vue":
+/*!***************************************************************!*\
+  !*** ./resources/js/Pages/Back/Finance/AccountStatements.vue ***!
+  \***************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _AccountStatements_vue_vue_type_template_id_e0079306___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AccountStatements.vue?vue&type=template&id=e0079306& */ "./resources/js/Pages/Back/Finance/AccountStatements.vue?vue&type=template&id=e0079306&");
+/* harmony import */ var _AccountStatements_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AccountStatements.vue?vue&type=script&lang=js& */ "./resources/js/Pages/Back/Finance/AccountStatements.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _AccountStatements_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _AccountStatements_vue_vue_type_template_id_e0079306___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _AccountStatements_vue_vue_type_template_id_e0079306___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/Pages/Back/Finance/AccountStatements.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/Pages/Back/Finance/AccountStatements.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/Pages/Back/Finance/AccountStatements.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountStatements_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./AccountStatements.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Back/Finance/AccountStatements.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountStatements_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/Pages/Back/Finance/AccountStatements.vue?vue&type=template&id=e0079306&":
+/*!**********************************************************************************************!*\
+  !*** ./resources/js/Pages/Back/Finance/AccountStatements.vue?vue&type=template&id=e0079306& ***!
+  \**********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountStatements_vue_vue_type_template_id_e0079306___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./AccountStatements.vue?vue&type=template&id=e0079306& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Back/Finance/AccountStatements.vue?vue&type=template&id=e0079306&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountStatements_vue_vue_type_template_id_e0079306___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountStatements_vue_vue_type_template_id_e0079306___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -76111,7 +76554,8 @@ __webpack_require__.r(__webpack_exports__);
       "approve-payment-receipt": "اعتماد الإيصال",
       "approve-payment-receipt-notice": "يرجى ارفاق ما يثبت التحويل",
       "receipt-approval": "اعتماد التحويل",
-      "approved-by": "موثق من قبل"
+      "approved-by": "موثق من قبل",
+      "account-statements": "كشف حساب"
     },
     "validation": {
       "accepted": "يجب قبول {attribute}.",
@@ -76747,7 +77191,8 @@ __webpack_require__.r(__webpack_exports__);
       "approve-payment-receipt": "Approve payment receipt",
       "approve-payment-receipt-notice": "Please attach what proves the transfer",
       "receipt-approval": "Receipt approval",
-      "approved-by": "ِApproved by"
+      "approved-by": "ِApproved by",
+      "account-statements": "Account statements"
     },
     "validation": {
       "accepted": "The {attribute} must be accepted.",

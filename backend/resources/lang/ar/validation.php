@@ -182,6 +182,7 @@ return [
         'bank_name_to'          => 'البنك المحول اليه',
         'sender_name'           => 'اسم المحول',
         'amount'                => 'المبلغ',
-
+        'trainee_id' => 'متدرب',
+        'company' => 'شركة',
     ],
 ];

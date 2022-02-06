@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
+use App\Models\Back\AccountingLedgerBook;
 use App\Models\Back\Company;
 use App\Models\Back\Invoice;
 use Brick\Math\RoundingMode;
@@ -141,16 +142,33 @@ class FinancialInvoicesController extends Controller
             'files.*' => 'required|file',
         ]);
 
+        \DB::beginTransaction();
+
         $invoice = Invoice::findOrFail($id);
         $invoice->status = Invoice::STATUS_PAID;
         $invoice->rejection_reason_payment_receipt = null;
         $invoice->verified_by_id = auth()->user()->id;
         $invoice->save();
 
-
         foreach ($request->file('files', []) as $key => $file) {
             $invoice->trainee_bank_payment_receipt->uploadToFolder($file, 'receipt-approvals');
         }
+
+        AccountingLedgerBook::create([
+            'team_id' => $invoice->team_id,
+            'company_id' => $invoice->company_id,
+            'trainee_id' => $invoice->trainee_id,
+            'invoice_id' => $invoice->id,
+            'trainee_bank_payment_receipt_id' => $invoice->trainee_bank_payment_receipt->id,
+            'date' => now(),
+            'description' => 'اعتماد ايصال دفع',
+            'reference'  => '',
+            'account_name' => $invoice->trainee->name,
+            'credit' => $invoice->grand_total,
+            'balance' => AccountingLedgerBook::getBalanceForTrainee($invoice->trainee->id) - $invoice->grand_total,
+        ]);
+
+        \DB::commit();
 
         return redirect()->route('back.finance.invoices.show', $id);
     }

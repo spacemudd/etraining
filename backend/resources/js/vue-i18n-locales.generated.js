@@ -472,7 +472,8 @@ export default {
             "approve-payment-receipt": "اعتماد الإيصال",
             "approve-payment-receipt-notice": "يرجى ارفاق ما يثبت التحويل",
             "receipt-approval": "اعتماد التحويل",
-            "approved-by": "موثق من قبل"
+            "approved-by": "موثق من قبل",
+            "account-statements": "كشف حساب"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1108,7 +1109,8 @@ export default {
             "approve-payment-receipt": "Approve payment receipt",
             "approve-payment-receipt-notice": "Please attach what proves the transfer",
             "receipt-approval": "Receipt approval",
-            "approved-by": "ِApproved by"
+            "approved-by": "ِApproved by",
+            "account-statements": "Account statements"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

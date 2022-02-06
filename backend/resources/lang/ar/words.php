@@ -469,4 +469,9 @@ return [
     'receipt-approval' => 'اعتماد التحويل',
     'approved-by' => 'موثق من قبل',
     'account-statements' => 'كشف حساب',
+    'credit' => 'دائن',
+    'debit' => 'مدين',
+    'balance' => 'الحساب',
+    'id' => '#',
+    'transaction-date' => 'تاريخ العملية',
 ];

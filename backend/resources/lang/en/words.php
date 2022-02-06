@@ -460,4 +460,5 @@ return [
     'receipt-approval' => 'Receipt approval',
     'approved-by' => 'ِApproved by',
     'account-statements' => 'Account statements',
+    'transaction-date' => 'Transaction date',
 ];
