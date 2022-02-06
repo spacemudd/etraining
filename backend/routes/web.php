@@ -232,6 +232,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('finance', [\App\Http\Controllers\Back\FinanceController::class, 'index'])->name('finance');
 
         Route::prefix('finance')->name('finance.')->group(function() {
+            Route::get('account-statements', [\App\Http\Controllers\Back\AccountStatementsController::class, 'index'])
             Route::resource('accounts', \App\Http\Controllers\Back\FinancialAccountsController::class);
             Route::post('invoices/{id}/approve-payment-receipt/store', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'storePaymentReceiptProof'])->name('invoices.approve-payment-receipt.store');
             Route::get('invoices/{id}/approve-payment-receipt', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'approvePaymentReceipt'])->name('invoices.approve-payment-receipt');

@@ -468,4 +468,5 @@ return [
     'approve-payment-receipt-notice' => 'يرجى ارفاق ما يثبت التحويل',
     'receipt-approval' => 'اعتماد التحويل',
     'approved-by' => 'موثق من قبل',
+    'account-statements' => 'كشف حساب',
 ];

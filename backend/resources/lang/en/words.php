@@ -459,4 +459,5 @@ return [
     'approve-payment-receipt-notice' => 'Please attach what proves the transfer',
     'receipt-approval' => 'Receipt approval',
     'approved-by' => 'ِApproved by',
+    'account-statements' => 'Account statements',
 ];

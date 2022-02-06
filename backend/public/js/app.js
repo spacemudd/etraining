@@ -9288,6 +9288,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 // import Icon from '@/Shared/Icon'
 // import Layout from '@/Shared/Layout'
 
@@ -40417,12 +40424,12 @@ var render = function() {
               {
                 staticClass:
                   "col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center",
-                attrs: { href: _vm.route("back.finance.accounts.index") }
+                attrs: { href: _vm.route("back.finance.invoices.index") }
               },
               [
                 _vm._v(
-                  "\n               " +
-                    _vm._s(_vm.$t("words.view-client-accounts")) +
+                  "\n                " +
+                    _vm._s(_vm.$t("words.invoices")) +
                     "\n            "
                 )
               ]
@@ -40433,12 +40440,12 @@ var render = function() {
               {
                 staticClass:
                   "col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center",
-                attrs: { href: _vm.route("back.finance.invoices.index") }
+                attrs: { href: _vm.route("back.finance.account-statements") }
               },
               [
                 _vm._v(
                   "\n                " +
-                    _vm._s(_vm.$t("words.view-invoices")) +
+                    _vm._s(_vm.$t("words.account-statements")) +
                     "\n            "
                 )
               ]
