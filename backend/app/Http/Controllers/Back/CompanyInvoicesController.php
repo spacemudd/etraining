@@ -7,6 +7,7 @@ use App\Models\Back\AccountingLedgerBook;
 use App\Models\Back\Company;
 use App\Models\Back\InvoiceItem;
 use App\Models\Back\Trainee;
+use App\Notifications\NewInvoiceIssued;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context\CustomContext;
 use Brick\Money\Money;
@@ -82,6 +83,8 @@ class CompanyInvoicesController extends Controller
                     'debit' => $invoice->grand_total,
                     'balance' => AccountingLedgerBook::getBalanceForTrainee($invoice->trainee->id) + $invoice->grand_total,
                 ]);
+
+                Trainee::find($trainee_id)->notify(new NewInvoiceIssued());
             }
         });
 

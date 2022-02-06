@@ -474,4 +474,7 @@ return [
     'balance' => 'الحساب',
     'id' => '#',
     'transaction-date' => 'تاريخ العملية',
+    'training-fees' => 'رسوم التدريب',
+    'please-login-to-your-account-pay-the-costs' => 'الرجاء الدخول على حسابك لعرض الرسوم التدريبية المستحقة',
+    'training-fees-have-been-issued-for-your-account-ptc' => 'تم إصدار رسوم التدريب لحسابك - مركز احترافية التدريب',
 ];

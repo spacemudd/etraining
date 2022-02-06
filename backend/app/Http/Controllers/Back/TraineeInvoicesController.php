@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
+use App\Models\Back\AccountingLedgerBook;
 use App\Models\Back\InvoiceItem;
 use App\Models\Back\Trainee;
+use App\Notifications\NewInvoiceIssued;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context\CustomContext;
 use Brick\Money\Money;
@@ -69,6 +71,21 @@ class TraineeInvoicesController extends Controller
                 'tax' => $tax->getAmount()->toFloat(),
                 'grand_total' => $grand_total->getAmount()->toFloat(),
             ]);
+
+            AccountingLedgerBook::create([
+                'team_id' => $invoice->team_id,
+                'company_id' => $invoice->company_id,
+                'trainee_id' => $invoice->trainee_id,
+                'invoice_id' => $invoice->id,
+                'date' => now(),
+                'description' => __('words.training-costs-for-the-period-of', $period, 'ar'),
+                'reference'  => __('words.training-costs-for-the-period-of', $period, 'ar'),
+                'account_name' => $invoice->trainee->name,
+                'debit' => $invoice->grand_total,
+                'balance' => AccountingLedgerBook::getBalanceForTrainee($invoice->trainee->id) + $invoice->grand_total,
+            ]);
+
+            Trainee::find($invoice->trainee->id)->notify(new NewInvoiceIssued());
         });
 
         return redirect()->route('back.trainees.show', $trainee_id);
