@@ -111,4 +111,11 @@ class FinancialInvoicesController extends Controller
         ]);
         return $pdf->inline();
     }
+
+    public function rejectPaymentReceipt($id)
+    {
+        $invoice = Invoice::findOrFail($id);
+        $invoice->status = Invoice::STATUS_PAYMENT_RECEIPT_REJECTED;
+        $invoice->save();
+    }
 }

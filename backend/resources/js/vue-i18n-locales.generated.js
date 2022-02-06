@@ -465,7 +465,8 @@ export default {
             "receiver-bank-name": "البنك المحول أليه",
             "upload-receipts": "رفع الإصال",
             "receipt": "ايصال",
-            "invoice-number": "رقم الفاتورة"
+            "invoice-number": "رقم الفاتورة",
+            "reject-payment-receipt": "رفض الإصال"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1094,7 +1095,8 @@ export default {
             "receiver-bank-name": "Receive bank name",
             "upload-receipts": "Upload receipts",
             "receipt": "Receipt",
-            "invoice-number": "Invoice number"
+            "invoice-number": "Invoice number",
+            "reject-payment-receipt": "Reject payment receipt"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

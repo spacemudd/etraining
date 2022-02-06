@@ -12,14 +12,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
+use OwenIt\Auditing\Auditable;
 
-class Invoice extends Model
+class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
 {
+    use Auditable;
     use HasFactory;
 
     const STATUS_UNPAID = 0;
     const STATUS_PAID = 1;
     const STATUS_AUDIT_REQUIRED = 2;
+    const STATUS_PAYMENT_RECEIPT_REJECTED = 3;
 
     const PAYMENT_METHOD_BANK_RECEIPT = 0;
     const PAYMENT_METHOD_CREDIT_CARD = 1;

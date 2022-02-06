@@ -9805,6 +9805,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -9846,7 +9849,11 @@ __webpack_require__.r(__webpack_exports__);
     EmptySlate: _Components_EmptySlate__WEBPACK_IMPORTED_MODULE_18__["default"]
   },
   mounted: function mounted() {},
-  methods: {}
+  methods: {
+    rejectPaymentReceipt: function rejectPaymentReceipt() {
+      alert('showing'); //let reason = prompt(this.$t('words.rejection-reason'));
+    }
+  }
 });
 
 /***/ }),
@@ -40779,19 +40786,28 @@ var render = function() {
                     ]
                   ),
                   _vm._v(" "),
+                  _c("button", { on: { click: _vm.rejectPaymentReceipt } }, [
+                    _vm._v(
+                      "\n                            ???\n                        "
+                    )
+                  ]),
+                  _vm._v(" "),
                   _c(
                     "jet-button",
                     {
-                      staticClass: "mx-2 btn-disabled",
-                      attrs: {
-                        href: _vm.route("back.companies.create"),
-                        type: "button",
-                        disabled: ""
+                      staticClass:
+                        "mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.rejectPaymentReceipt.apply(null, arguments)
+                        }
                       }
                     },
                     [
                       _c("span", [
-                        _vm._v(_vm._s(_vm.$t("words.upload-payment-receipt")))
+                        _vm._v(_vm._s(_vm.$t("words.reject-payment-receipt")))
                       ])
                     ]
                   ),
@@ -75588,7 +75604,8 @@ __webpack_require__.r(__webpack_exports__);
       "receiver-bank-name": "البنك المحول أليه",
       "upload-receipts": "رفع الإصال",
       "receipt": "ايصال",
-      "invoice-number": "رقم الفاتورة"
+      "invoice-number": "رقم الفاتورة",
+      "reject-payment-receipt": "رفض الإصال"
     },
     "validation": {
       "accepted": "يجب قبول {attribute}.",
@@ -76217,7 +76234,8 @@ __webpack_require__.r(__webpack_exports__);
       "receiver-bank-name": "Receive bank name",
       "upload-receipts": "Upload receipts",
       "receipt": "Receipt",
-      "invoice-number": "Invoice number"
+      "invoice-number": "Invoice number",
+      "reject-payment-receipt": "Reject payment receipt"
     },
     "validation": {
       "accepted": "The {attribute} must be accepted.",

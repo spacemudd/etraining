@@ -461,4 +461,6 @@ return [
     'upload-receipts' => 'رفع الإصال',
     'receipt' => 'ايصال',
     'invoice-number' => 'رقم الفاتورة',
+    'reject-payment-receipt' => 'رفض الإصال',
+    'rejection-reason' => 'سبب الرفض',
 ];

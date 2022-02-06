@@ -20,14 +20,13 @@
                                :href="route('back.finance.invoices.pdf', invoice.id)">
                                 {{ $t('words.print') }}
                             </a>
-                            <jet-button
-                                :href="route('back.companies.create')"
-                                class="mx-2 btn-disabled"
-                                type="button"
-                                disabled
-                            >
-                                <span>{{ $t('words.upload-payment-receipt') }}</span>
-                            </jet-button>
+
+                            <button @click="rejectPaymentReceipt"
+                                    class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700"
+                                    type="button">
+                                {{ $t('words.reject-payment-receipt') }}
+                            </button>
+
                             <jet-button
                                 :href="route('back.companies.create')"
                                 class="mx-2 btn-disabled"
@@ -206,7 +205,16 @@ export default {
     mounted() {
 
     },
-    methods: {}
+    methods: {
+        rejectPaymentReceipt() {
+            alert('showing');
+            let reason = prompt(this.$t('words.rejection-reason'));
+
+            this.$inertia.post(route('back.finance.invoices.reject-payment-receipt', this.inoice.id), {
+                reason: reason,
+            });
+        },
+    }
 }
 </script>
 
