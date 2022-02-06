@@ -64,6 +64,7 @@ class FinancialInvoicesController extends Controller
                 'company',
                 'trainee',
                 'trainee_bank_payment_receipt',
+                'verified_by',
             ])
             ->findOrFail($invoice_id);
 
@@ -125,5 +126,32 @@ class FinancialInvoicesController extends Controller
         $invoice->save();
 
         return redirect()->route('back.finance.invoices.show', $invoice->id);
+    }
+
+    public function approvePaymentReceipt($id)
+    {
+        return Inertia::render('Back/Finance/Invoices/ApprovePaymentReceipt', [
+            'invoice' => Invoice::findOrFail($id),
+        ]);
+    }
+
+    public function storePaymentReceiptProof($id, Request $request)
+    {
+        $request->validate([
+            'files.*' => 'required|file',
+        ]);
+
+        $invoice = Invoice::findOrFail($id);
+        $invoice->status = Invoice::STATUS_PAID;
+        $invoice->rejection_reason_payment_receipt = null;
+        $invoice->verified_by_id = auth()->user()->id;
+        $invoice->save();
+
+
+        foreach ($request->file('files', []) as $key => $file) {
+            $invoice->trainee_bank_payment_receipt->uploadToFolder($file, 'receipt-approvals');
+        }
+
+        return redirect()->route('back.finance.invoices.show', $id);
     }
 }

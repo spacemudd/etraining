@@ -455,4 +455,8 @@ return [
     'reject-payment-receipt' => 'Reject payment receipt',
     'rejection-reason' => 'Rejection reason',
     'reject-payment-receipt-reason' => 'Reject payment receipt reason',
+    'approve-payment-receipt' => 'Approve payment receipt',
+    'approve-payment-receipt-notice' => 'Please attach what proves the transfer',
+    'receipt-approval' => 'Receipt approval',
+    'approved-by' => 'ِApproved by',
 ];

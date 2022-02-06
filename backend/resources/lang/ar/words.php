@@ -464,4 +464,8 @@ return [
     'reject-payment-receipt' => 'رفض الإصال',
     'rejection-reason' => 'سبب الرفض',
     'reject-payment-receipt-reason' => 'سبب رفض الإيصال',
+    'approve-payment-receipt' => 'اعتماد الإيصال',
+    'approve-payment-receipt-notice' => 'يرجى ارفاق ما يثبت التحويل',
+    'receipt-approval' => 'اعتماد التحويل',
+    'approved-by' => 'موثق من قبل',
 ];

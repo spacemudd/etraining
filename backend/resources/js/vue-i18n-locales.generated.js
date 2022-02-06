@@ -468,7 +468,11 @@ export default {
             "invoice-number": "رقم الفاتورة",
             "reject-payment-receipt": "رفض الإصال",
             "rejection-reason": "سبب الرفض",
-            "reject-payment-receipt-reason": "سبب رفض الإيصال"
+            "reject-payment-receipt-reason": "سبب رفض الإيصال",
+            "approve-payment-receipt": "اعتماد الإيصال",
+            "approve-payment-receipt-notice": "يرجى ارفاق ما يثبت التحويل",
+            "receipt-approval": "اعتماد التحويل",
+            "approved-by": "موثق من قبل"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1100,7 +1104,11 @@ export default {
             "invoice-number": "Invoice number",
             "reject-payment-receipt": "Reject payment receipt",
             "rejection-reason": "Rejection reason",
-            "reject-payment-receipt-reason": "Reject payment receipt reason"
+            "reject-payment-receipt-reason": "Reject payment receipt reason",
+            "approve-payment-receipt": "Approve payment receipt",
+            "approve-payment-receipt-notice": "Please attach what proves the transfer",
+            "receipt-approval": "Receipt approval",
+            "approved-by": "ِApproved by"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

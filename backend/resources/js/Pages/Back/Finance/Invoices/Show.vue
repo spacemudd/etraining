@@ -23,19 +23,16 @@
 
                             <button @click="rejectPaymentReceipt"
                                     v-if="invoice.status === 3 || invoice.status === 2"
-                                    class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700"
+                                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700"
                                     type="button">
                                 {{ $t('words.reject-payment-receipt') }}
                             </button>
 
-                            <jet-button
-                                :href="route('back.companies.create')"
-                                class="mx-2 btn-disabled"
-                                type="button"
-                                disabled
-                            >
-                                <span>{{ $t('words.mark-as-paid') }}</span>
-                            </jet-button>
+                            <inertia-link :href="route('back.finance.invoices.approve-payment-receipt', invoice.id)"
+                                        v-if="invoice.status === 3 || invoice.status === 2"
+                                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-green-500 hover:bg-green-600 active:bg-green-700 foucs:bg-green-700">
+                                {{ $t('words.approve-payment-receipt') }}
+                            </inertia-link>
                         </div>
                     </div>
 
@@ -75,6 +72,10 @@
                                         {{ $t('words.no') }}
                                     </span>
                                 </div>
+                                <div v-if="invoice.verified_by" class="font-bold">{{ $t('words.approved-by') }}</div>
+                                <div v-if="invoice.verified_by">
+                                    <span>{{ invoice.verified_by.name }}</span>
+                                </div>
                                 <div v-if="invoice.rejection_reason_payment_receipt" class="bg-red-200 border-2 border-red-500 text-black p-3 mt-2 border-l-0">
                                     <div class="font-bold">{{ $t('words.reject-payment-receipt-reason') }}</div>
                                 </div>
@@ -92,6 +93,15 @@
                         <h1 class="mb-8 font-bold text-2xl">{{ $t('words.documents') }}</h1>
                         <div class="white-bg rounded shadow p-5">
                             <ul class="list-disc">
+                                <template v-if="invoice.trainee_bank_payment_receipt">
+                                    <li v-for="file in invoice.trainee_bank_payment_receipt.approvals">
+                                        <a :href="file.download_url" target="_blank" class="hover:text-blue-600" alt="invoice.">
+                                            {{ $t('words.receipt-approval') }}: {{ file.file_name }}<br/>
+                                            <span class="text-sm text-gray-800" dir="ltr">{{ file.created_at_timezone }}</span>
+                                        </a>
+                                    </li>
+                                </template>
+
                                 <template v-if="invoice.trainee_bank_payment_receipt">
                                     <li v-for="file in invoice.trainee_bank_payment_receipt.attachments">
                                         <a :href="file.download_url" target="_blank" class="hover:text-blue-600">
@@ -221,6 +231,9 @@ export default {
                 reason: reason,
             });
         },
+        approvePaymentReceipt() {
+
+        }
     }
 }
 </script>

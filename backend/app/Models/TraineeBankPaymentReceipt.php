@@ -23,6 +23,7 @@ class TraineeBankPaymentReceipt extends Model implements Auditable, HasMedia
 
     protected $with = [
         'attachments',
+        'approvals',
     ];
 
     protected static function boot(): void
@@ -58,5 +59,10 @@ class TraineeBankPaymentReceipt extends Model implements Auditable, HasMedia
     public function attachments($folder = 'receipts')
     {
         return $this->media()->where('collection_name', $folder);
+    }
+
+    public function approvals()
+    {
+        return $this->media()->where('collection_name', 'receipt-approvals');
     }
 }

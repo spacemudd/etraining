@@ -9344,6 +9344,127 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Back/Finance/Invoices/ApprovePaymentReceipt.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Pages/Back/Finance/Invoices/ApprovePaymentReceipt.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Shared_Pagination__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Shared/Pagination */ "./resources/js/Shared/Pagination.vue");
+/* harmony import */ var _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Layouts/AppLayout */ "./resources/js/Layouts/AppLayout.vue");
+/* harmony import */ var vue_ionicons_dist_ios_arrow_dropright__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-ionicons/dist/ios-arrow-dropright */ "./node_modules/vue-ionicons/dist/ios-arrow-dropright.vue");
+/* harmony import */ var _Components_EmptySlate__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Components/EmptySlate */ "./resources/js/Components/EmptySlate.vue");
+/* harmony import */ var _Components_BreadcrumbContainer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Components/BreadcrumbContainer */ "./resources/js/Components/BreadcrumbContainer.vue");
+/* harmony import */ var _Jetstream_Input__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Jetstream/Input */ "./resources/js/Jetstream/Input.vue");
+/* harmony import */ var _Jetstream_InputError__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/Jetstream/InputError */ "./resources/js/Jetstream/InputError.vue");
+/* harmony import */ var _Jetstream_Label__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/Jetstream/Label */ "./resources/js/Jetstream/Label.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  metaInfo: {
+    title: 'تعميد'
+  },
+  components: {
+    BreadcrumbContainer: _Components_BreadcrumbContainer__WEBPACK_IMPORTED_MODULE_4__["default"],
+    IconNavigate: vue_ionicons_dist_ios_arrow_dropright__WEBPACK_IMPORTED_MODULE_2__["default"],
+    AppLayout: _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_1__["default"],
+    Pagination: _Shared_Pagination__WEBPACK_IMPORTED_MODULE_0__["default"],
+    EmptySlate: _Components_EmptySlate__WEBPACK_IMPORTED_MODULE_3__["default"],
+    JetInput: _Jetstream_Input__WEBPACK_IMPORTED_MODULE_5__["default"],
+    JetInputError: _Jetstream_InputError__WEBPACK_IMPORTED_MODULE_6__["default"],
+    JetLabel: _Jetstream_Label__WEBPACK_IMPORTED_MODULE_7__["default"]
+  },
+  props: ['invoice'],
+  data: function data() {
+    return {
+      form: this.$inertia.form({
+        files: ''
+      }, {
+        bag: 'uploadProof'
+      })
+    };
+  },
+  computed: {},
+  watch: {},
+  mounted: function mounted() {},
+  methods: {
+    saveForm: function saveForm() {
+      this.form.post(route('back.finance.invoices.approve-payment-receipt.store', this.invoice.id));
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Back/Finance/Invoices/Index.vue?vue&type=script&lang=js&":
 /*!*********************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Pages/Back/Finance/Invoices/Index.vue?vue&type=script&lang=js& ***!
@@ -9813,6 +9934,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -9860,7 +9991,8 @@ __webpack_require__.r(__webpack_exports__);
       this.$inertia.post(route('back.finance.invoices.reject-payment-receipt', this.invoice.id), {
         reason: reason
       });
-    }
+    },
+    approvePaymentReceipt: function approvePaymentReceipt() {}
   }
 });
 
@@ -40326,6 +40458,192 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Back/Finance/Invoices/ApprovePaymentReceipt.vue?vue&type=template&id=6dcc861a&":
+/*!*****************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Pages/Back/Finance/Invoices/ApprovePaymentReceipt.vue?vue&type=template&id=6dcc861a& ***!
+  \*****************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("app-layout", [
+    _c(
+      "div",
+      { staticClass: "container px-6 mx-auto grid pt-6" },
+      [
+        _c("breadcrumb-container", {
+          attrs: {
+            crumbs: [
+              { title: "dashboard", link: _vm.route("dashboard") },
+              { title: "finance", link: _vm.route("back.finance") },
+              {
+                title: "invoices",
+                link: _vm.route("back.finance.invoices.index")
+              },
+              {
+                title_raw: _vm.invoice.number_formatted,
+                link: _vm.route("back.finance.invoices.show", _vm.invoice.id)
+              },
+              { title: "approve-payment-receipt" }
+            ]
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass:
+              "grid md:grid-cols-1 grid-cols-1 gap-6 flex justify-center"
+          },
+          [
+            _c("div", { staticClass: "bg-white shadow-lg p-5 mx-auto" }, [
+              _c("div", { staticClass: "mb-10" }, [
+                _c("p", { staticClass: "text-center" }, [
+                  _c(
+                    "span",
+                    { staticClass: "bg-gray-400 text-white rounded p-2" },
+                    [_vm._v(_vm._s(_vm.$t("words.approve-payment-receipt")))]
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "bg-yellow-300 p-3 rounded flex" }, [
+                _c(
+                  "svg",
+                  {
+                    staticClass: "h-6 w-6",
+                    staticStyle: { "margin-left": "10px" },
+                    attrs: {
+                      xmlns: "http://www.w3.org/2000/svg",
+                      fill: "none",
+                      viewBox: "0 0 24 24",
+                      stroke: "currentColor"
+                    }
+                  },
+                  [
+                    _c("path", {
+                      attrs: {
+                        "stroke-linecap": "round",
+                        "stroke-linejoin": "round",
+                        "stroke-width": "2",
+                        d:
+                          "M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      }
+                    })
+                  ]
+                ),
+                _vm._v(
+                  "\n                    " +
+                    _vm._s(_vm.$t("words.approve-payment-receipt-notice")) +
+                    "\n                "
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "form",
+                {
+                  staticClass: "mt-5",
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.saveForm.apply(null, arguments)
+                    }
+                  }
+                },
+                [
+                  _c(
+                    "div",
+                    { staticClass: "mt-3" },
+                    [
+                      _c("jet-label", {
+                        attrs: {
+                          for: "files",
+                          value: _vm.$t("words.upload-receipts")
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "flex justify-center" }, [
+                        _c("div", { staticClass: "mb-3 w-full" }, [
+                          _c("input", {
+                            staticClass:
+                              "form-control block w-full mt-2 px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none",
+                            attrs: {
+                              type: "file",
+                              id: "formFileMultiple",
+                              required: "",
+                              multiple: ""
+                            },
+                            on: {
+                              input: function($event) {
+                                _vm.form.files = $event.target.files
+                              }
+                            }
+                          })
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("jet-input-error", {
+                        staticClass: "mt-2",
+                        attrs: { message: _vm.form.error("files") }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _vm.form.progress
+                    ? _c(
+                        "progress",
+                        {
+                          attrs: { max: "100" },
+                          domProps: { value: _vm.form.progress.percentage }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        " +
+                              _vm._s(_vm.form.progress.percentage) +
+                              "%\n                    "
+                          )
+                        ]
+                      )
+                    : _c(
+                        "button",
+                        {
+                          staticClass:
+                            "w-full text-center mt-5 items-center px-4 py-2 bg-blue-500 hover:bg-blue-700 active:bg-blue-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-",
+                          attrs: { type: "submit" }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        " +
+                              _vm._s(_vm.$t("words.save")) +
+                              "\n                    "
+                          )
+                        ]
+                      )
+                ]
+              )
+            ])
+          ]
+        )
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Back/Finance/Invoices/Index.vue?vue&type=template&id=673d496d&":
 /*!*************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Pages/Back/Finance/Invoices/Index.vue?vue&type=template&id=673d496d& ***!
@@ -40799,7 +41117,7 @@ var render = function() {
                         "button",
                         {
                           staticClass:
-                            "inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700",
+                            "inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700",
                           attrs: { type: "button" },
                           on: { click: _vm.rejectPaymentReceipt }
                         },
@@ -40813,18 +41131,28 @@ var render = function() {
                       )
                     : _vm._e(),
                   _vm._v(" "),
-                  _c(
-                    "jet-button",
-                    {
-                      staticClass: "mx-2 btn-disabled",
-                      attrs: {
-                        href: _vm.route("back.companies.create"),
-                        type: "button",
-                        disabled: ""
-                      }
-                    },
-                    [_c("span", [_vm._v(_vm._s(_vm.$t("words.mark-as-paid")))])]
-                  )
+                  _vm.invoice.status === 3 || _vm.invoice.status === 2
+                    ? _c(
+                        "inertia-link",
+                        {
+                          staticClass:
+                            "inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-green-500 hover:bg-green-600 active:bg-green-700 foucs:bg-green-700",
+                          attrs: {
+                            href: _vm.route(
+                              "back.finance.invoices.approve-payment-receipt",
+                              _vm.invoice.id
+                            )
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                            " +
+                              _vm._s(_vm.$t("words.approve-payment-receipt")) +
+                              "\n                        "
+                          )
+                        ]
+                      )
+                    : _vm._e()
                 ],
                 1
               )
@@ -40989,6 +41317,20 @@ var render = function() {
                           )
                     ]),
                     _vm._v(" "),
+                    _vm.invoice.verified_by
+                      ? _c("div", { staticClass: "font-bold" }, [
+                          _vm._v(_vm._s(_vm.$t("words.approved-by")))
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.invoice.verified_by
+                      ? _c("div", [
+                          _c("span", [
+                            _vm._v(_vm._s(_vm.invoice.verified_by.name))
+                          ])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
                     _vm.invoice.rejection_reason_payment_receipt
                       ? _c(
                           "div",
@@ -41045,6 +41387,45 @@ var render = function() {
                   "ul",
                   { staticClass: "list-disc" },
                   [
+                    _vm.invoice.trainee_bank_payment_receipt
+                      ? _vm._l(
+                          _vm.invoice.trainee_bank_payment_receipt.approvals,
+                          function(file) {
+                            return _c("li", [
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "hover:text-blue-600",
+                                  attrs: {
+                                    href: file.download_url,
+                                    target: "_blank",
+                                    alt: "invoice."
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                                        " +
+                                      _vm._s(_vm.$t("words.receipt-approval")) +
+                                      ": " +
+                                      _vm._s(file.file_name)
+                                  ),
+                                  _c("br"),
+                                  _vm._v(" "),
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass: "text-sm text-gray-800",
+                                      attrs: { dir: "ltr" }
+                                    },
+                                    [_vm._v(_vm._s(file.created_at_timezone))]
+                                  )
+                                ]
+                              )
+                            ])
+                          }
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
                     _vm.invoice.trainee_bank_payment_receipt
                       ? _vm._l(
                           _vm.invoice.trainee_bank_payment_receipt.attachments,
@@ -67408,6 +67789,8 @@ var map = {
 	"./Back/Finance/Accounts/Index.vue": "./resources/js/Pages/Back/Finance/Accounts/Index.vue",
 	"./Back/Finance/Index": "./resources/js/Pages/Back/Finance/Index.vue",
 	"./Back/Finance/Index.vue": "./resources/js/Pages/Back/Finance/Index.vue",
+	"./Back/Finance/Invoices/ApprovePaymentReceipt": "./resources/js/Pages/Back/Finance/Invoices/ApprovePaymentReceipt.vue",
+	"./Back/Finance/Invoices/ApprovePaymentReceipt.vue": "./resources/js/Pages/Back/Finance/Invoices/ApprovePaymentReceipt.vue",
 	"./Back/Finance/Invoices/Index": "./resources/js/Pages/Back/Finance/Invoices/Index.vue",
 	"./Back/Finance/Invoices/Index.vue": "./resources/js/Pages/Back/Finance/Invoices/Index.vue",
 	"./Back/Finance/Invoices/Show": "./resources/js/Pages/Back/Finance/Invoices/Show.vue",
@@ -68800,6 +69183,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_template_id_3b18bdde___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_template_id_3b18bdde___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/Pages/Back/Finance/Invoices/ApprovePaymentReceipt.vue":
+/*!****************************************************************************!*\
+  !*** ./resources/js/Pages/Back/Finance/Invoices/ApprovePaymentReceipt.vue ***!
+  \****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ApprovePaymentReceipt_vue_vue_type_template_id_6dcc861a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ApprovePaymentReceipt.vue?vue&type=template&id=6dcc861a& */ "./resources/js/Pages/Back/Finance/Invoices/ApprovePaymentReceipt.vue?vue&type=template&id=6dcc861a&");
+/* harmony import */ var _ApprovePaymentReceipt_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ApprovePaymentReceipt.vue?vue&type=script&lang=js& */ "./resources/js/Pages/Back/Finance/Invoices/ApprovePaymentReceipt.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ApprovePaymentReceipt_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ApprovePaymentReceipt_vue_vue_type_template_id_6dcc861a___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ApprovePaymentReceipt_vue_vue_type_template_id_6dcc861a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/Pages/Back/Finance/Invoices/ApprovePaymentReceipt.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/Pages/Back/Finance/Invoices/ApprovePaymentReceipt.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************!*\
+  !*** ./resources/js/Pages/Back/Finance/Invoices/ApprovePaymentReceipt.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ApprovePaymentReceipt_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./ApprovePaymentReceipt.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Back/Finance/Invoices/ApprovePaymentReceipt.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ApprovePaymentReceipt_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/Pages/Back/Finance/Invoices/ApprovePaymentReceipt.vue?vue&type=template&id=6dcc861a&":
+/*!***********************************************************************************************************!*\
+  !*** ./resources/js/Pages/Back/Finance/Invoices/ApprovePaymentReceipt.vue?vue&type=template&id=6dcc861a& ***!
+  \***********************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ApprovePaymentReceipt_vue_vue_type_template_id_6dcc861a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./ApprovePaymentReceipt.vue?vue&type=template&id=6dcc861a& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Back/Finance/Invoices/ApprovePaymentReceipt.vue?vue&type=template&id=6dcc861a&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ApprovePaymentReceipt_vue_vue_type_template_id_6dcc861a___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ApprovePaymentReceipt_vue_vue_type_template_id_6dcc861a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -75648,7 +76100,11 @@ __webpack_require__.r(__webpack_exports__);
       "invoice-number": "رقم الفاتورة",
       "reject-payment-receipt": "رفض الإصال",
       "rejection-reason": "سبب الرفض",
-      "reject-payment-receipt-reason": "سبب رفض الإيصال"
+      "reject-payment-receipt-reason": "سبب رفض الإيصال",
+      "approve-payment-receipt": "اعتماد الإيصال",
+      "approve-payment-receipt-notice": "يرجى ارفاق ما يثبت التحويل",
+      "receipt-approval": "اعتماد التحويل",
+      "approved-by": "موثق من قبل"
     },
     "validation": {
       "accepted": "يجب قبول {attribute}.",
@@ -76280,7 +76736,11 @@ __webpack_require__.r(__webpack_exports__);
       "invoice-number": "Invoice number",
       "reject-payment-receipt": "Reject payment receipt",
       "rejection-reason": "Rejection reason",
-      "reject-payment-receipt-reason": "Reject payment receipt reason"
+      "reject-payment-receipt-reason": "Reject payment receipt reason",
+      "approve-payment-receipt": "Approve payment receipt",
+      "approve-payment-receipt-notice": "Please attach what proves the transfer",
+      "receipt-approval": "Receipt approval",
+      "approved-by": "ِApproved by"
     },
     "validation": {
       "accepted": "The {attribute} must be accepted.",
