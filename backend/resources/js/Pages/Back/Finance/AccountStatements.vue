@@ -116,6 +116,7 @@
             $(document).ready(function () {
                 vm.companySelector = $('#company_id').selectize({
                     sortField: 'text',
+                    maxOptions: 9999,
                     onChange: function (value) {
                         vm.form.company_id = value;
                         vm.form.trainee_id = null;
@@ -125,8 +126,9 @@
             });
 
             $(document).ready(function () {
-                vm.companySelector = $('#trainee_id').selectize({
+                vm.traineeSelector = $('#trainee_id').selectize({
                     sortField: 'text',
+                    maxOptions: 9999,
                     onChange: function (value) {
                         vm.form.company_id = null;
                         vm.form.trainee_id = value;
