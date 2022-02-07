@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Trainees\Payment;
 
 use App\Http\Controllers\Controller;
+use App\Models\Back\AccountingLedgerBook;
 use App\Models\Back\Invoice;
 use App\Models\TraineeBankPaymentReceipt;
 use Brick\PhoneNumber\PhoneNumber;
@@ -93,6 +94,20 @@ class PaymentCardController extends Controller
                 'payment_reference_id' => $tap_invoice->getId(),
                 'paid_at' => now(),
                 'status' => Invoice::STATUS_PAID,
+            ]);
+
+            AccountingLedgerBook::create([
+                'team_id' => $invoice->team_id,
+                'company_id' => $invoice->company_id,
+                'trainee_id' => $invoice->trainee_id,
+                'invoice_id' => $invoice->id,
+                'trainee_bank_payment_receipt_id' => $invoice->trainee_bank_payment_receipt->id,
+                'date' => now(),
+                'description' => $tap_invoice->getId(),
+                'reference'  => 'دفع عبر الموقع',
+                'account_name' => $invoice->trainee->name,
+                'credit' => $invoice->grand_total,
+                'balance' => AccountingLedgerBook::getBalanceForTrainee($invoice->trainee->id) - $invoice->grand_total,
             ]);
         });
 
