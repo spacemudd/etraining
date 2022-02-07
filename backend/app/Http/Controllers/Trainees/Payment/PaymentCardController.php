@@ -101,7 +101,6 @@ class PaymentCardController extends Controller
                 'company_id' => $invoice->company_id,
                 'trainee_id' => $invoice->trainee_id,
                 'invoice_id' => $invoice->id,
-                'trainee_bank_payment_receipt_id' => $invoice->trainee_bank_payment_receipt->id,
                 'date' => now(),
                 'description' => $tap_invoice->getId(),
                 'reference'  => 'دفع عبر الموقع',
