@@ -223,9 +223,9 @@
                             </td>
 
                             <td class="px-4 py-4">
-                                {{ invoice.date_period_start }}
+                                {{ invoice.from_date | formatDate }}
                                 <br />
-                                {{ invoice.date_period_end }}
+                                {{ invoice.to_date | formatDate }}
                             </td>
 
                             <td class="px-4 py-4">
@@ -243,7 +243,7 @@
                             <td class="w-px">
                                 <a
                                     class="px-4 flex items-center"
-                                    :href="route('back.companies.invoices.pdf', {company_id: company.id, month: invoice.month, year: invoice.year, created_by_id: invoice.created_by_id, created_at_date: invoice.created_at_date,})"
+                                    :href="route('back.companies.invoices.pdf', {company_id: company.id, from_date: invoice.from_date, to_date: invoice.to_date, created_by_id: invoice.created_by_id, created_at_date: invoice.created_at_date,})"
                                     tabindex="-1"
                                     target="_blank"
                                 >
@@ -259,7 +259,7 @@
                         <tr v-if="invoices.length === 0">
                             <td
                                 class="border-t px-4 py-4"
-                                colspan="4"
+                                colspan="6"
                             >
                                 <empty-slate />
                             </td>

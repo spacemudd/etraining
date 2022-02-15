@@ -16,6 +16,7 @@ import VueInternationalization from 'vue-i18n';
 import Locale from './vue-i18n-locales.generated';
 import VModal from 'vue-js-modal';
 import { InertiaProgress } from '@inertiajs/progress';
+import DateMixin from "./Mixins/DateMixin";
 InertiaProgress.init({
     // The delay after which the progress bar will
     // appear during navigation, in milliseconds.
@@ -39,6 +40,7 @@ Vue.use(VModal);
 Vue.use(LottieAnimation);
 Vue.use(VueInternationalization);
 Vue.mixin({ methods: { route: window.route } });
+Vue.mixin(DateMixin);
 
 // import { loadCldr, L10n } from '@syncfusion/ej2-base';
 import { DateTimePickerPlugin } from '@syncfusion/ej2-vue-calendars';

@@ -3,7 +3,14 @@
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
+use App\Models\Back\AccountingLedgerBook;
+use App\Models\Back\InvoiceItem;
 use App\Models\Back\Trainee;
+use App\Notifications\NewInvoiceIssued;
+use Brick\Math\RoundingMode;
+use Brick\Money\Context\CustomContext;
+use Brick\Money\Money;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -36,19 +43,49 @@ class TraineeInvoicesController extends Controller
             ->with(['company'])
             ->findOrFail($trainee_id);
 
-        DB::transaction(function () use ($request, $trainee) {
+        $validatedData = $this->validateStoreRequest($request, $trainee->id);
+
+        $sub_total = Money::of($validatedData['invoice_value'], 'SAR', new CustomContext(2), RoundingMode::HALF_UP);
+        $tax = $sub_total->multipliedBy(InvoiceItem::DEFAULT_TAX, RoundingMode::HALF_UP);
+        $grand_total = $sub_total->plus($tax);
+
+        DB::transaction(function () use ($trainee, $validatedData, $grand_total, $tax, $sub_total) {
             $invoice = $trainee->invoices()->create(
                 array_merge([
                     'company_id' => $trainee->company->id,
-                    'total_amount' => $trainee->company->monthly_subscription_per_trainee,
-                ], $this->validateStoreRequest($request, $trainee->id))
+                    'sub_total' => $sub_total->getAmount()->toFloat(),
+                    'tax' => $tax->getAmount()->toFloat(),
+                    'grand_total' => $grand_total->getAmount()->toFloat(),
+                ], $validatedData)
             );
 
+            $period = [
+                'start' => Carbon::parse($validatedData['from_date'])->format('Y-m-d'),
+                'end' => Carbon::parse($validatedData['to_date'])->format('Y-m-d'),
+            ];
+
             $invoice->items()->create([
-                'name' => 'Monthly Subscription Fees',
-                'amount' => $trainee->company->monthly_subscription_per_trainee,
-                'tax' => round($trainee->company->monthly_subscription_per_trainee * 0.15, 2)
+                'name_en' => __('words.training-costs-for-the-period-of', $period, 'en'),
+                'name_ar' => __('words.training-costs-for-the-period-of', $period, 'ar'),
+                'sub_total' => $sub_total->getAmount()->toFloat(),
+                'tax' => $tax->getAmount()->toFloat(),
+                'grand_total' => $grand_total->getAmount()->toFloat(),
             ]);
+
+            AccountingLedgerBook::create([
+                'team_id' => $invoice->team_id,
+                'company_id' => $invoice->company_id,
+                'trainee_id' => $invoice->trainee_id,
+                'invoice_id' => $invoice->id,
+                'date' => now(),
+                'description' => __('words.training-costs-for-the-period-of', $period, 'ar'),
+                'reference'  => __('words.training-costs-for-the-period-of', $period, 'ar'),
+                'account_name' => $invoice->trainee->name,
+                'debit' => $invoice->grand_total,
+                'balance' => AccountingLedgerBook::getBalanceForTrainee($invoice->trainee->id) + $invoice->grand_total,
+            ]);
+
+            Trainee::find($invoice->trainee->id)->notify(new NewInvoiceIssued());
         });
 
         return redirect()->route('back.trainees.show', $trainee_id);
@@ -57,20 +94,21 @@ class TraineeInvoicesController extends Controller
     private function validateStoreRequest(Request $request, string $trainee_id): array
     {
         return $request->validate([
-            'month' => [
+            'from_date' => [
                 'required',
-                'numeric',
-                'min:1',
-                'max:12',
-                Rule::unique('invoices', 'month')
-                    ->where('year', now()->year)
-                    ->where('trainee_id', $trainee_id),
+                'date',
+                'before:to_date'
             ],
-            'year' => [
+            'to_date' => [
                 'required',
-                'numeric',
-                'min:2021',
-                'max:' . (now()->addYear()->year),
+                'date',
+                'after:from_date'
+            ],
+            'invoice_value' => [
+                'required',
+                'integer',
+                "min:1",
+                "max:10000000",
             ],
         ]);
     }

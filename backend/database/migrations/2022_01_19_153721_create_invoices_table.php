@@ -33,11 +33,14 @@ class CreateInvoicesTable extends Migration
                 ->nullOnDelete();
 
             $table->string('number');
-            $table->unsignedTinyInteger('month');
-            $table->unsignedSmallInteger('year');
-            $table->unsignedInteger('total_amount');
+            $table->date('from_date');
+            $table->date('to_date');
+            $table->unsignedDecimal('sub_total');
+            $table->unsignedDecimal('tax');
+            $table->unsignedDecimal('grand_total');
             $table->tinyInteger('status')->default(Invoice::STATUS_UNPAID);
             $table->tinyInteger('payment_method')->nullable();
+            $table->string('payment_reference_id')->nullable();
             $table->timestamp('paid_at')->nullable();
             $table->timestamps();
         });

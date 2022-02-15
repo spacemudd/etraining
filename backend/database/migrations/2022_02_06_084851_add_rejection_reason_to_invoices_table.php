@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddToBillFromColToTraineesTable extends Migration
+class AddRejectionReasonToInvoicesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddToBillFromColToTraineesTable extends Migration
      */
     public function up()
     {
-        Schema::table('trainees', function (Blueprint $table) {
-            $table->date('to_bill_from')->nullable();
+        Schema::table('invoices', function (Blueprint $table) {
+            $table->string('rejection_reason_payment_receipt')->nullable()->after('status');
         });
     }
 
@@ -25,8 +25,8 @@ class AddToBillFromColToTraineesTable extends Migration
      */
     public function down()
     {
-        Schema::table('trainees', function (Blueprint $table) {
-            $table->dropColumn(['to_bill_from']);
+        Schema::table('invoices', function (Blueprint $table) {
+            $table->dropColumn(['rejection_reason_payment_receipt']);
         });
     }
 }

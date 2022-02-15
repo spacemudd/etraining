@@ -23,80 +23,70 @@
                     <template #form>
                         <div class="col-span-2 sm:col-span-2">
                             <jet-label
-                                for="month"
-                                :value="$t('words.month')"
+                                for="from"
+                                :value="$t('words.from-date')"
                             />
 
-                            <div class="relative">
-                                <select
-                                    class="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                    v-model="form.month"
-                                    id="month"
-                                >
-                                    <option value="1">{{ $t('words.january') }}</option>
-                                    <option value="2">{{ $t('words.february') }}</option>
-                                    <option value="3">{{ $t('words.march') }}</option>
-                                    <option value="4">{{ $t('words.april') }}</option>
-                                    <option value="5">{{ $t('words.may') }}</option>
-                                    <option value="6">{{ $t('words.june') }}</option>
-                                    <option value="7">{{ $t('words.july') }}</option>
-                                    <option value="8">{{ $t('words.august') }}</option>
-                                    <option value="9">{{ $t('words.september') }}</option>
-                                    <option value="10">{{ $t('words.october') }}</option>
-                                    <option value="11">{{ $t('words.november') }}</option>
-                                    <option value="12">{{ $t('words.december') }}</option>
-                                </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                    <svg
-                                        class="fill-current h-4 w-4"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 20 20"
-                                    >
-                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                    </svg>
-                                </div>
-                            </div>
+                            <jet-input
+                                id="from"
+                                type="date"
+                                @input="updateExpectedAmountPerInvoice"
+                                class="mt-1 block w-full"
+                                v-model="form.from_date"
+                                autocomplete="off"
+                            />
 
                             <jet-input-error
-                                :message="form.error('month')"
+                                :message="form.error('from_date')"
                                 class="mt-2"
                             />
                         </div>
+
                         <div class="col-span-2 sm:col-span-2">
                             <jet-label
                                 for="year"
-                                :value="$t('words.year')"
+                                :value="$t('words.to-date')"
                             />
 
                             <jet-input
-                                type="number"
-                                min="2021"
-                                :max="current_year + 1"
+                                id="to"
+                                type="date"
+                                @input="updateExpectedAmountPerInvoice"
                                 class="mt-1 block w-full"
-                                v-model="form.year"
+                                v-model="form.to_date"
                                 autocomplete="off"
-                                required="true"
-                                step="1"
                             />
 
                             <jet-input-error
-                                :message="form.error('year')"
+                                :message="form.error('to_date')"
                                 class="mt-2"
                             />
                         </div>
 
-                        <div class="col-span-2 sm:col-span-2">
+                        <div class="col-span-4">
                             <jet-label
-                                for="amount"
-                                :value="$t('words.expected-invoice-value-per-trainee')"
+                                for="invoice-value"
+                                :value="$t('words.value-per-invoice')+' ('+$t('words.without-vat')+')'"
                             />
 
                             <jet-input
+                                id="invoice-value"
+                                type="number"
                                 class="mt-1 block w-full"
-                                id="amount"
-                                :value="trainee.company.monthly_subscription_per_trainee"
-                                disabled
+                                v-model="form.invoice_value"
+                                autocomplete="off"
                             />
+
+                            <jet-input-error
+                                :message="form.error('invoice_value')"
+                                class="mt-2"
+                            />
+                        </div>
+
+                        <div class="col-span-4" v-if="expectedToPay">
+                            <p class="col-span-4 bg-black text-white p-2">
+                                {{ $t('words.expected-cost-per-invoice') }}: {{ expectedToPay }}
+                            </p>
                         </div>
                     </template>
 
@@ -163,16 +153,27 @@ export default {
     },
     data() {
         return {
+            expectedToPay: null,
             current_year: moment().utc().year(),
             form: this.$inertia.form({
-                month: moment().utc().month() + 1,
-                year: moment().utc().year(),
-            }, {
-                bag: 'createTraineeInvoice',
+                from_date: null,
+                to_date: null,
+                invoice_value: this.$props.monthly_subscription_per_trainee,
             })
         }
     },
     methods: {
+        updateExpectedAmountPerInvoice() {
+            if (this.form.from_date && this.form.to_date) {
+                axios.post('/back/finance/expected-amount-per-invoice', {
+                    from_date: this.form.from_date,
+                    to_date: this.form.to_date,
+                    company_id: this.trainee.company_id,
+                }).then(response => {
+                    this.expectedToPay = response.data.cost;
+                });
+            }
+        },
         createTraineeInvoice() {
             this.form.post(`/back/trainees/${this.trainee.id}/invoices/`, {
                 preserveScroll: true
@@ -182,6 +183,6 @@ export default {
                 this.form.processing = false;
             });
         },
-    }
+    },
 }
 </script>

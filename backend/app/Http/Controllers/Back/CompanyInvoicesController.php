@@ -3,8 +3,15 @@
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
+use App\Models\Back\AccountingLedgerBook;
 use App\Models\Back\Company;
+use App\Models\Back\InvoiceItem;
 use App\Models\Back\Trainee;
+use App\Notifications\NewInvoiceIssued;
+use Brick\Math\RoundingMode;
+use Brick\Money\Context\CustomContext;
+use Brick\Money\Money;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -36,20 +43,48 @@ class CompanyInvoicesController extends Controller
 
         $validatedData = $this->validateStoreRequest($request, $company->id);
 
-        DB::transaction(function () use ($request, $company, $validatedData) {
+        $sub_total = Money::of($validatedData['value_per_invoice'], 'SAR', new CustomContext(2), RoundingMode::HALF_UP);
+        $tax = $sub_total->multipliedBy(InvoiceItem::DEFAULT_TAX, RoundingMode::HALF_UP);
+        $grand_total = $sub_total->plus($tax);
+
+        DB::transaction(function () use ($request, $company, $validatedData, $sub_total, $tax, $grand_total) {
             foreach ($request->input('trainees') as $trainee_id) {
                 $invoice = $company->invoices()->create(
                     array_merge([
                         'trainee_id' => $trainee_id,
-                        'total_amount' => $company->monthly_subscription_per_trainee,
+                        'sub_total' => $sub_total->getAmount()->toFloat(),
+                        'tax' => $tax->getAmount()->toFloat(),
+                        'grand_total' => $grand_total->getAmount()->toFloat(),
                     ], $validatedData)
                 );
 
+                $period = [
+                    'start' => Carbon::parse($validatedData['from_date'])->format('Y-m-d'),
+                    'end' => Carbon::parse($validatedData['to_date'])->format('Y-m-d'),
+                ];
+
                 $invoice->items()->create([
-                    'name' => 'Monthly Subscription Fees',
-                    'amount' => $company->monthly_subscription_per_trainee,
-                    'tax' => round($company->monthly_subscription_per_trainee * 0.15, 2),
+                    'name_en' => __('words.training-costs-for-the-period-of', $period, 'en'),
+                    'name_ar' => __('words.training-costs-for-the-period-of', $period, 'ar'),
+                    'sub_total' => $sub_total->getAmount()->toFloat(),
+                    'tax' => $tax->getAmount()->toFloat(),
+                    'grand_total' => $grand_total->getAmount()->toFloat(),
                 ]);
+
+                AccountingLedgerBook::create([
+                    'team_id' => $invoice->team_id,
+                    'company_id' => $invoice->company_id,
+                    'trainee_id' => $invoice->trainee_id,
+                    'invoice_id' => $invoice->id,
+                    'date' => now(),
+                    'description' => __('words.training-costs-for-the-period-of', $period, 'ar'),
+                    'reference'  => __('words.training-costs-for-the-period-of', $period, 'ar'),
+                    'account_name' => $invoice->trainee->name,
+                    'debit' => $invoice->grand_total,
+                    'balance' => AccountingLedgerBook::getBalanceForTrainee($invoice->trainee->id) + $invoice->grand_total,
+                ]);
+
+                Trainee::find($trainee_id)->notify(new NewInvoiceIssued());
             }
         });
 
@@ -69,21 +104,21 @@ class CompanyInvoicesController extends Controller
                 Rule::exists('trainees', 'id')->where('company_id', $company_id),
                 'bail',
             ],
-            'month' => [
+            'from_date' => [
                 'required',
-                'numeric',
-                'min:1',
-                'max:12',
-                Rule::unique('invoices', 'month')
-                    ->where('year', now()->year)
-                    ->where('company_id', $company_id)
-                    ->whereIn('trainee_id', $request->input('trainees', [])),
+                'date',
+                'before:to_date'
             ],
-            'year' => [
+            'to_date' => [
                 'required',
-                'numeric',
-                'min:2021',
-                'max:' . (now()->addYear()->year),
+                'date',
+                'after:from_date'
+            ],
+            'value_per_invoice' => [
+                'required',
+                'integer',
+                "min:1",
+                "max:10000000",
             ],
         ]);
     }
@@ -95,19 +130,21 @@ class CompanyInvoicesController extends Controller
         $invoice_group = $company->invoices()
             ->select('*')
             ->selectRaw('COUNT(id) as trainee_count')
-            ->selectRaw('SUM(total_amount) as grand_total')
-            ->where('month', $request->input('month', now()->month))
-            ->where('year', $request->input('year', now()->year))
+            ->selectRaw('SUM(sub_total) as sub_total')
+            ->selectRaw('SUM(tax) as tax')
+            ->selectRaw('SUM(grand_total) as grand_total')
+            ->where('from_date', $request->input('from_date'))
+            ->where('to_date', $request->input('to_date'))
             ->where('created_by_id', $request->input('created_by_id', auth()->id()))
             ->whereDate('created_at', $request->input('created_at_date', now()->toDateString()))
             ->with(['created_by'])
-            ->groupByRaw('month, year, created_by_id, DATE(created_at)')
+            ->groupByRaw('from_date, to_date, created_by_id, DATE(created_at)')
             ->latest()
             ->firstOrFail();
 
         $invoices = $company->invoices()
-            ->where('month', $request->input('month', now()->month))
-            ->where('year', $request->input('year', now()->year))
+            ->where('from_date', $request->input('from_date'))
+            ->where('to_date', $request->input('to_date'))
             ->where('created_by_id', $request->input('created_by_id', auth()->id()))
             ->whereDate('created_at', $request->input('created_at_date', now()->toDateString()))
             ->get();

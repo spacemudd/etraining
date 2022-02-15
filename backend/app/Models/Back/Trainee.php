@@ -60,10 +60,13 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'deleted_remark',
         'trainee_group_id',
         'national_address',
+        'bill_from_date',
+        'linked_date',
     ];
 
     protected $dates = [
-        "to_bill_from",
+        'bill_from_date',
+        'linked_date',
     ];
 
     protected $appends = [
@@ -84,6 +87,9 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'deleted_at_timezone',
         'clean_phone',
         'company_name',
+        'bill_from_date_formatted',
+        'linked_date_formatted',
+        'has_outstanding_amount',
     ];
 
     protected static function boot(): void
@@ -380,6 +386,21 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         return $this->cleanUpThePhoneNumber($this->phone);
     }
 
+    public function getBillFromDateFormattedAttribute()
+    {
+        return optional($this->bill_from_date)->toDateString();
+    }
+
+    public function getLinkedDateFormattedAttribute()
+    {
+        return optional($this->linked_date)->toDateString();
+    }
+
+    public function getTotalAmountOwedAttribute(): float
+    {
+        return round($this->invoices()->notPaid()->sum('grand_total'), 2);
+    }
+
     public function arabicE2w($str)
     {
         $arabic_eastern = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
@@ -387,12 +408,12 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         return str_replace($arabic_eastern, $arabic_western, $str);
     }
 
-    public function absences_10to16()
+    public function absences_06to10()
     {
         return $this->hasMany(AttendanceReportRecordWarning::class)
             ->whereBetween('created_at', [
-                now()->setDate(2022, 1, 10)->startOfDay(),
-                now()->setDate(2022, 1, 16)->endOfDay(),
+                now()->setDate(2022, 2, 06)->startOfDay(),
+                now()->setDate(2022, 2, 10)->endOfDay(),
             ]);
     }
 
@@ -425,5 +446,10 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
                 now()->setDate(2021, 10, 3)->startOfDay(),
                 now()->setDate(2021, 10, 9)->endOfDay(),
             ]);
+    }
+
+    public function getHasOutstandingAmountAttribute()
+    {
+        return $this->invoices()->notPaid()->count();
     }
 }

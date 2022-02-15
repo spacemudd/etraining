@@ -107,6 +107,5 @@ class AttendanceSheetExport implements FromView, WithEvents, WithStyles, WithCol
              'absenteesCount' => $absenteesCount,
              'attendanceRate' => round($attendancesCount / ($attendancesCount+$absenteesCount) * 100, 1),
         ]);
-
     }
 }
