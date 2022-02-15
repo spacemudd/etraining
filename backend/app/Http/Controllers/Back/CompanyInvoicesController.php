@@ -116,7 +116,7 @@ class CompanyInvoicesController extends Controller
             ],
             'value_per_invoice' => [
                 'required',
-                'integer',
+                'numeric',
                 "min:1",
                 "max:10000000",
             ],
