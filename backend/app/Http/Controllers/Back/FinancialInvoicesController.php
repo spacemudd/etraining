@@ -93,7 +93,7 @@ class FinancialInvoicesController extends Controller
 
         $cost = Money::of($company->monthly_subscription_per_trainee, 'SAR', new CustomContext(5), RoundingMode::HALF_UP)
             ->dividedBy($from_date->daysInMonth, RoundingMode::HALF_UP)
-            ->multipliedBy($days_to_charge)
+            ->multipliedBy($days_to_charge, RoundingMode::HALF_UP)
             ->to(new CustomContext(2), RoundingMode::HALF_UP)
             ->getAmount()
             ->toFloat();
