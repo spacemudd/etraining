@@ -464,4 +464,8 @@ return [
     'training-fees' => 'Training fees',
     'please-login-to-your-account-pay-the-costs' => 'Please login to your account to pay the costs',
     'training-fees-have-been-issued-for-your-account-ptc' => 'Training fees have been issued for your account - PTC',
+    'mark-as-unpaid' => 'Mark as unpaid',
+    'chase' => 'Chase',
+    'finance-audit-required' => 'Finance audit required',
+    'done' => 'Completed',
 ];

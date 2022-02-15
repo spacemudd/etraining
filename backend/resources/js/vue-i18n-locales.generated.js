@@ -473,7 +473,19 @@ export default {
             "approve-payment-receipt-notice": "يرجى ارفاق ما يثبت التحويل",
             "receipt-approval": "اعتماد التحويل",
             "approved-by": "موثق من قبل",
-            "account-statements": "كشف حساب"
+            "account-statements": "كشف حساب",
+            "credit": "دائن",
+            "debit": "مدين",
+            "balance": "الحساب",
+            "id": "#",
+            "transaction-date": "تاريخ العملية",
+            "training-fees": "رسوم التدريب",
+            "please-login-to-your-account-pay-the-costs": "الرجاء الدخول على حسابك لعرض الرسوم التدريبية المستحقة",
+            "training-fees-have-been-issued-for-your-account-ptc": "تم إصدار رسوم التدريب لحسابك - مركز احترافية التدريب",
+            "mark-as-unpaid": "لم يتم الدفع",
+            "chase": "التحصيل",
+            "finance-audit-required": "مطلوب موافقة المالية",
+            "done": "تم"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -621,7 +633,9 @@ export default {
                 "bank_name_from": "البنك المحول منه",
                 "bank_name_to": "البنك المحول اليه",
                 "sender_name": "اسم المحول",
-                "amount": "المبلغ"
+                "amount": "المبلغ",
+                "trainee_id": "متدرب",
+                "company": "شركة"
             }
         },
         "passwords": {
@@ -1110,7 +1124,15 @@ export default {
             "approve-payment-receipt-notice": "Please attach what proves the transfer",
             "receipt-approval": "Receipt approval",
             "approved-by": "ِApproved by",
-            "account-statements": "Account statements"
+            "account-statements": "Account statements",
+            "transaction-date": "Transaction date",
+            "training-fees": "Training fees",
+            "please-login-to-your-account-pay-the-costs": "Please login to your account to pay the costs",
+            "training-fees-have-been-issued-for-your-account-ptc": "Training fees have been issued for your account - PTC",
+            "mark-as-unpaid": "Mark as unpaid",
+            "chase": "Chase",
+            "finance-audit-required": "Finance audit required",
+            "done": "Completed"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

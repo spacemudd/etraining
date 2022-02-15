@@ -21,8 +21,9 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
 
     const STATUS_UNPAID = 0;
     const STATUS_PAID = 1;
-    const STATUS_AUDIT_REQUIRED = 2;
+    const STATUS_AUDIT_REQUIRED = 2; // Done by the chasers.
     const STATUS_PAYMENT_RECEIPT_REJECTED = 3;
+    const STATUS_FINANCIAL_AUDIT_REQUIRED = 4; // Done by the Financial team.
 
     const PAYMENT_METHOD_BANK_RECEIPT = 0;
     const PAYMENT_METHOD_CREDIT_CARD = 1;
@@ -56,6 +57,7 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
         'created_at_date',
         'is_paid',
         'is_verified',
+        'chase_status',
     ];
 
     protected $dates = [
@@ -136,6 +138,26 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
                 return __("words.audit-required");
             case self::STATUS_PAYMENT_RECEIPT_REJECTED:
                 return __('words.reject-payment-receipt');
+            case self::STATUS_FINANCIAL_AUDIT_REQUIRED:
+                return __('words.finance-audit-required');
+            default:
+                return "Unknown";
+        }
+    }
+
+    public function getChaseStatusAttribute(): string
+    {
+        switch ($this->status) {
+            case self::STATUS_UNPAID:
+                return __("words.unpaid");
+            case self::STATUS_PAID:
+                return __('words.done');
+            case self::STATUS_AUDIT_REQUIRED:
+                return __("words.audit-required");
+            case self::STATUS_PAYMENT_RECEIPT_REJECTED:
+                return __('words.reject-payment-receipt');
+            case self::STATUS_FINANCIAL_AUDIT_REQUIRED:
+                return __('words.done');
             default:
                 return "Unknown";
         }

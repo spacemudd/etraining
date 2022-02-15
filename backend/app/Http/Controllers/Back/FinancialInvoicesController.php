@@ -172,4 +172,30 @@ class FinancialInvoicesController extends Controller
 
         return redirect()->route('back.finance.invoices.show', $id);
     }
+
+    public function markAsUnpaidFromChaser($id, Request $request)
+    {
+        $request->validate([
+            'chased_note' => 'required|string|max:255',
+        ]);
+
+        $invoice = Invoice::findOrFail($id);
+        $invoice->status = Invoice::STATUS_AUDIT_REQUIRED;
+        $invoice->chased_now = $request->reason;
+        $invoice->chased_by_id = auth()->user()->id;
+        $invoice->save();
+
+        return redirect()->route('back.finance.invoices.show', $invoice->id);
+    }
+
+    public function markAsPaidFromChaser($id)
+    {
+        $invoice = Invoice::findOrFail($id);
+        $invoice->status = Invoice::STATUS_FINANCIAL_AUDIT_REQUIRED;
+        $invoice->chased_at = now();
+        $invoice->chased_by_id = auth()->user()->id;
+        $invoice->save();
+
+        return redirect()->route('back.finance.invoices.show', $id);
+    }
 }
