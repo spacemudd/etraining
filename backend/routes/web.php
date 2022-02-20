@@ -47,11 +47,14 @@ Route::get('instructor-company-report', function() {
     foreach ($contracts as $contract) {
         if ($contract->instructors()->count()) {
             foreach ($contract->instructors as $instructor) {
+                $company = \App\Models\Back\Company::find($contract->company_id);
+                if (!$company) continue;
                 $data[] = [
                     'company_id' => $contract->company_id,
                     'company_name_en' => optional($contract->company)->name_en,
                     'company_name' => optional($contract->company)->name_ar,
                     'instructor_name' => optional($instructor)->name,
+                    'trainees_count' => Trainee::where('company_id', $contract->company_id)->count(),
                 ];
             }
         }
