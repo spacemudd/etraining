@@ -441,6 +441,7 @@ return [
     'bill-from-date' => 'تاريخ بدء الإستحقاق',
     'training-costs-for-the-period-of' => 'تكاليف التدريب للمدة الزمنية :start - :end',
     'without-vat' => 'من دون الضريبة',
+    'with-vat' => 'بالضريبة',
     'account-statement' => 'كشف حساب',
     'print-date' => 'تاريخ الطباعة',
     'expected-cost-per-invoice' => 'متوقع مبلغ كل فاتورة',

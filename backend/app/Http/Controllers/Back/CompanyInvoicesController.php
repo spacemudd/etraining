@@ -43,9 +43,15 @@ class CompanyInvoicesController extends Controller
 
         $validatedData = $this->validateStoreRequest($request, $company->id);
 
-        $sub_total = Money::of($validatedData['value_per_invoice'], 'SAR', new CustomContext(2), RoundingMode::HALF_UP);
-        $tax = $sub_total->multipliedBy(InvoiceItem::DEFAULT_TAX, RoundingMode::HALF_UP);
-        $grand_total = $sub_total->plus($tax);
+        // User input value without the VAT
+        // $sub_total = Money::of($validatedData['value_per_invoice'], 'SAR', new CustomContext(2), RoundingMode::HALF_UP);
+        // $tax = $sub_total->multipliedBy(InvoiceItem::DEFAULT_TAX, RoundingMode::HALF_UP);
+        // $grand_total = $sub_total->plus($tax);
+
+        // User input value with the VAT
+        $grand_total = Money::of($validatedData['value_per_invoice'], 'SAR', new CustomContext(2), RoundingMode::HALF_UP);
+        $sub_total = $grand_total->multipliedBy(1 / (1 + InvoiceItem::DEFAULT_TAX), RoundingMode::HALF_UP);
+        $tax = $grand_total->minus($sub_total);
 
         DB::transaction(function () use ($request, $company, $validatedData, $sub_total, $tax, $grand_total) {
             foreach ($request->input('trainees') as $trainee_id) {

@@ -66,7 +66,7 @@
                         <div class="col-span-4">
                             <jet-label
                                 for="value-per-invoice"
-                                :value="$t('words.value-per-invoice')+' ('+$t('words.without-vat')+')'"
+                                :value="$t('words.value-per-invoice')+' ('+$t('words.with-vat')+')'"
                             />
 
                             <jet-input

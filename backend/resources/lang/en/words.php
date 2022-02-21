@@ -432,6 +432,7 @@ return [
     'bill-from-date' => 'Bill From Date',
     'training-costs-for-the-period-of' => 'Training costs for the period of :start - :end',
     'without-vat' => 'Without VAT',
+    'with-vat' => 'With VAT',
     'account-statement' => 'Account statement',
     'print-date' => 'Print date',
     'expected-cost-per-invoice' => 'Expected cost per invoice',
