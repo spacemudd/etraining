@@ -1,0 +1,94 @@
+version: '3.9'
+
+services:
+
+  # Server Provider
+  et_nginx:
+    image: nginx:alpine
+    container_name: et_nginx
+    working_dir: /var/www/html
+    restart: unless-stopped
+    depends_on:
+      - et_php
+      - et_mysql
+    ports:
+      - "${LISTEN_IP}:${HTTP_PORT}:80"
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+      - ../backend/:/var/www/html:delegated
+    networks:
+      - network
+
+  # PHP service
+  et_php:
+    build:
+      context: .
+      dockerfile: php.dockerfile
+    container_name: et_php
+    working_dir: /var/www/html
+    restart: unless-stopped
+    volumes:
+      - ./laravel.ini:/usr/local/etc/php/conf.d/laravel.ini
+      - ../backend/:/var/www/html:delegated
+    networks:
+      - network
+
+  # NPM service
+  et_npm:
+    image: node:13.14.0-alpine
+    container_name: et_npm
+    working_dir: /var/www/html
+    volumes:
+      - ../backend:/var/www/html
+    entrypoint: ['npm', 'run', 'watch']
+    depends_on:
+      - et_nginx
+    networks:
+      - network
+
+  # MySQL Database
+  et_mysql:
+    image: mariadb:10.2
+    command: '--innodb-flush-method=fsync'
+    container_name: et_mysql
+    restart: unless-stopped
+    environment:
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+    volumes:
+      - ../etraining-db/:/var/lib/mysql/
+    networks:
+      - network
+
+  # PHPMyAdmin
+  et_pma:
+    image: phpmyadmin:5.1
+    container_name: et_pma
+    restart: unless-stopped
+    ports:
+      - "${LISTEN_IP}:${PHPMYADMIN_PORT}:80"
+    environment:
+      - PMA_HOST=et_mysql
+      - PMA_USER=${DB_USERNAME}
+      - PMA_PASSWORD=${DB_PASSWORD}
+      - PMA_ARBITRARY=1
+    depends_on:
+      - et_mysql
+    networks:
+      - network
+
+  # Redis
+  et_redis:
+    image: redis
+    expose:
+      - 6379
+    networks:
+      - network
+
+networks:
+  network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.host_binding_ipv4: "${LISTEN_IP}"

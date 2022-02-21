@@ -72,6 +72,7 @@
                             <jet-input
                                 id="value-per-invoice"
                                 type="number"
+                                step="0.01"
                                 class="mt-1 block w-full"
                                 v-model="form.value_per_invoice"
                                 autocomplete="off"
