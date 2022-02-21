@@ -7113,6 +7113,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 
@@ -9837,7 +9838,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-<<<<<<< HEAD
 //
 //
 //
@@ -9851,8 +9851,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-=======
->>>>>>> add-price-including-vat
 
 
  // import Icon from '@/Shared/Icon'
@@ -22992,11 +22990,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-<<<<<<< HEAD
 exports.push([module.i, "/*\nTODO: Convert to @apply\n*/\ntable[data-v-5b49283e] th {\n  /*font-weight: 500;*/\n  font-size: 0.75rem;\n  line-height: 1rem;\n  padding-top: 0.75rem;\n  padding-bottom: 0.75rem;\n  padding-left: 1.5rem;\n  padding-right: 1.5rem;\n  text-align: left;\n  --tw-text-opacity: 1;\n  /*color: rgba(107, 114, 128, var(--tw-text-opacity));*/\n  text-transform: uppercase;\n  letter-spacing: 0.05em;\n}\ntable[data-v-5b49283e] td {\n  font-size: 0.875rem;\n  line-height: 1.25rem;\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  padding-left: 1.5rem;\n  padding-right: 1.5rem;\n  --tw-text-opacity: 1;\n  /*color: rgba(107, 114, 128, var(--tw-text-opacity));*/\n  white-space: nowrap;\n}\ntable[data-v-5b49283e] tr:hover td {\n  --tw-bg-opacity: 1;\n  background-color: rgba(249, 250, 251, var(--tw-bg-opacity));\n}\n", ""]);
-=======
-exports.push([module.i, "/*\r\nTODO: Convert to @apply\r\n*/\ntable[data-v-5b49283e] th {\n  /*font-weight: 500;*/\n  font-size: 0.75rem;\n  line-height: 1rem;\n  padding-top: 0.75rem;\n  padding-bottom: 0.75rem;\n  padding-left: 1.5rem;\n  padding-right: 1.5rem;\n  text-align: left;\n  --tw-text-opacity: 1;\n  /*color: rgba(107, 114, 128, var(--tw-text-opacity));*/\n  text-transform: uppercase;\n  letter-spacing: 0.05em;\n}\ntable[data-v-5b49283e] td {\n  font-size: 0.875rem;\n  line-height: 1.25rem;\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  padding-left: 1.5rem;\n  padding-right: 1.5rem;\n  --tw-text-opacity: 1;\n  /*color: rgba(107, 114, 128, var(--tw-text-opacity));*/\n  white-space: nowrap;\n}\ntable[data-v-5b49283e] tr:hover td {\n  --tw-bg-opacity: 1;\n  background-color: rgba(249, 250, 251, var(--tw-bg-opacity));\n}\r\n", ""]);
->>>>>>> add-price-including-vat
 
 // exports
 
@@ -23015,11 +23009,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-<<<<<<< HEAD
 exports.push([module.i, ".toggle__dot {\n  top: -.25rem;\n  left: -.25rem;\n  transition: all 0.3s ease-in-out;\n}\n[dir=rtl] .toggle__dot {\n  left: unset;\n  right: -.25rem;\n}\ninput:checked ~ .toggle__dot {\n  transform: translateX(100%);\n  background-color: #48bb78;\n  border: none;\n}\n[dir=rtl] input:checked ~ .toggle__dot {\n  transform: translateX(-100%);\n}\ninput:checked ~ .toggle__line {\n  background-color: #95e9b9;\n}\n", ""]);
-=======
-exports.push([module.i, ".toggle__dot {\n  top: -.25rem;\n  left: -.25rem;\n  transition: all 0.3s ease-in-out;\n}\n[dir=rtl] .toggle__dot {\n  left: unset;\n  right: -.25rem;\n}\ninput:checked ~ .toggle__dot {\n  transform: translateX(100%);\n  background-color: #48bb78;\n  border: none;\n}\n[dir=rtl] input:checked ~ .toggle__dot {\n  transform: translateX(-100%);\n}\ninput:checked ~ .toggle__line {\n  background-color: #95e9b9;\n}\r\n", ""]);
->>>>>>> add-price-including-vat
 
 // exports
 
@@ -23038,11 +23028,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-<<<<<<< HEAD
 exports.push([module.i, ".whatsapp-bubble-head {\n  position: fixed;\n  bottom: 20px;\n  left: 20px;\n}\n", ""]);
-=======
-exports.push([module.i, ".whatsapp-bubble-head {\n  position: fixed;\n  bottom: 20px;\n  left: 20px;\n}\r\n", ""]);
->>>>>>> add-price-including-vat
 
 // exports
 
@@ -23061,11 +23047,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-<<<<<<< HEAD
 exports.push([module.i, ".whatsapp-bubble-head {\n  position: fixed;\n  bottom: 20px;\n  left: 20px;\n}\n", ""]);
-=======
-exports.push([module.i, ".whatsapp-bubble-head {\n  position: fixed;\n  bottom: 20px;\n  left: 20px;\n}\r\n", ""]);
->>>>>>> add-price-including-vat
 
 // exports
 
@@ -23084,11 +23066,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-<<<<<<< HEAD
 exports.push([module.i, ".whatsapp-bubble-head {\n  position: fixed;\n  bottom: 20px;\n  left: 20px;\n}\n", ""]);
-=======
-exports.push([module.i, ".whatsapp-bubble-head {\n  position: fixed;\n  bottom: 20px;\n  left: 20px;\n}\r\n", ""]);
->>>>>>> add-price-including-vat
 
 // exports
 
@@ -23183,11 +23161,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../../node_module
 
 
 // module
-<<<<<<< HEAD
 exports.push([module.i, ".v-dropdown-menu__container {\n  margin-top: 5px;\n  border-radius: 5px;\n  border-bottom: 1px solid red;\n}\n.dropdown-items {\n  border-radius: 5px;\n  padding: 10px;\n}\n.dropdown-items li {\n  margin: 10px 0;\n  border-bottom: 1px solid #e9e9e9;\n  padding-bottom: 10px;\n}\n", ""]);
-=======
-exports.push([module.i, ".v-dropdown-menu__container {\n  margin-top: 5px;\n  border-radius: 5px;\n  border-bottom: 1px solid red;\n}\n.dropdown-items {\n  border-radius: 5px;\n  padding: 10px;\n}\n.dropdown-items li {\n  margin: 10px 0;\n  border-bottom: 1px solid #e9e9e9;\n  padding-bottom: 10px;\n}\r\n", ""]);
->>>>>>> add-price-including-vat
 
 // exports
 
@@ -23206,11 +23180,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-<<<<<<< HEAD
 exports.push([module.i, ".v-dropdown-menu__container {\n  margin-top: 5px;\n  border-radius: 5px;\n  border-bottom: 1px solid red;\n}\n.dropdown-items {\n  border-radius: 5px;\n  padding: 10px;\n}\n.dropdown-items li {\n  margin: 10px 0;\n  border-bottom: 1px solid #e9e9e9;\n  padding-bottom: 10px;\n}\n", ""]);
-=======
-exports.push([module.i, ".v-dropdown-menu__container {\n  margin-top: 5px;\n  border-radius: 5px;\n  border-bottom: 1px solid red;\n}\n.dropdown-items {\n  border-radius: 5px;\n  padding: 10px;\n}\n.dropdown-items li {\n  margin: 10px 0;\n  border-bottom: 1px solid #e9e9e9;\n  padding-bottom: 10px;\n}\r\n", ""]);
->>>>>>> add-price-including-vat
 
 // exports
 
@@ -23229,11 +23199,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-<<<<<<< HEAD
 exports.push([module.i, ".v-dropdown-menu__container {\n  margin-top: 5px;\n  border-radius: 5px;\n  border-bottom: 1px solid red;\n}\n.dropdown-items {\n  border-radius: 5px;\n  padding: 10px;\n}\n.dropdown-items li {\n  margin: 10px 0;\n  border-bottom: 1px solid #e9e9e9;\n  padding-bottom: 10px;\n}\n", ""]);
-=======
-exports.push([module.i, ".v-dropdown-menu__container {\n  margin-top: 5px;\n  border-radius: 5px;\n  border-bottom: 1px solid red;\n}\n.dropdown-items {\n  border-radius: 5px;\n  padding: 10px;\n}\n.dropdown-items li {\n  margin: 10px 0;\n  border-bottom: 1px solid #e9e9e9;\n  padding-bottom: 10px;\n}\r\n", ""]);
->>>>>>> add-price-including-vat
 
 // exports
 
@@ -23252,11 +23218,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-<<<<<<< HEAD
 exports.push([module.i, ".min-container-upload {\n  min-height: 168px;\n}\n", ""]);
-=======
-exports.push([module.i, ".min-container-upload {\n  min-height: 168px;\n}\r\n", ""]);
->>>>>>> add-price-including-vat
 
 // exports
 
@@ -23332,11 +23294,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-<<<<<<< HEAD
 exports.push([module.i, ".min-container-upload {\n  min-height: 168px;\n}\n", ""]);
-=======
-exports.push([module.i, ".min-container-upload {\n  min-height: 168px;\n}\r\n", ""]);
->>>>>>> add-price-including-vat
 
 // exports
 
@@ -23393,11 +23351,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-<<<<<<< HEAD
 exports.push([module.i, ".min-container-upload {\n  min-height: 168px;\n}\n", ""]);
-=======
-exports.push([module.i, ".min-container-upload {\n  min-height: 168px;\n}\r\n", ""]);
->>>>>>> add-price-including-vat
 
 // exports
 
@@ -36698,7 +36652,7 @@ var render = function() {
                               value:
                                 _vm.$t("words.value-per-invoice") +
                                 " (" +
-                                _vm.$t("words.without-vat") +
+                                _vm.$t("words.with-vat") +
                                 ")"
                             }
                           }),
@@ -36708,6 +36662,7 @@ var render = function() {
                             attrs: {
                               id: "value-per-invoice",
                               type: "number",
+                              step: "0.01",
                               autocomplete: "off"
                             },
                             model: {
@@ -41234,15 +41189,12 @@ var render = function() {
                         _c(
                           "th",
                           { staticClass: "rtl:text-right font-weight-bold" },
-<<<<<<< HEAD
                           [_vm._v(_vm._s(_vm.$t("words.collected")))]
                         ),
                         _vm._v(" "),
                         _c(
                           "th",
                           { staticClass: "rtl:text-right font-weight-bold" },
-=======
->>>>>>> add-price-including-vat
                           [_vm._v(_vm._s(_vm.$t("words.confirmed")))]
                         ),
                         _vm._v(" "),
@@ -41304,13 +41256,8 @@ var render = function() {
                               {
                                 attrs: {
                                   href: _vm.route(
-<<<<<<< HEAD
                                     "back.companies.show",
                                     invoice.company_id
-=======
-                                    "back.finance.invoices.show",
-                                    invoice.id
->>>>>>> add-price-including-vat
                                   )
                                 }
                               },
@@ -41335,13 +41282,8 @@ var render = function() {
                               {
                                 attrs: {
                                   href: _vm.route(
-<<<<<<< HEAD
                                     "back.trainees.show",
                                     invoice.trainee_id
-=======
-                                    "back.finance.invoices.show",
-                                    invoice.id
->>>>>>> add-price-including-vat
                                   )
                                 }
                               },
@@ -41450,7 +41392,6 @@ var render = function() {
                                 }
                               },
                               [
-<<<<<<< HEAD
                                 invoice.chase_boolean
                                   ? _c(
                                       "span",
@@ -41501,8 +41442,6 @@ var render = function() {
                                 }
                               },
                               [
-=======
->>>>>>> add-price-including-vat
                                 invoice.is_verified
                                   ? _c(
                                       "span",
@@ -76754,6 +76693,7 @@ __webpack_require__.r(__webpack_exports__);
       "bill-from-date": "تاريخ بدء الإستحقاق",
       "training-costs-for-the-period-of": "تكاليف التدريب للمدة الزمنية {start} - {end}",
       "without-vat": "من دون الضريبة",
+      "with-vat": "بالضريبة",
       "account-statement": "كشف حساب",
       "print-date": "تاريخ الطباعة",
       "expected-cost-per-invoice": "متوقع مبلغ كل فاتورة",
@@ -76793,12 +76733,8 @@ __webpack_require__.r(__webpack_exports__);
       "mark-as-unpaid": "لم يتم الدفع",
       "chase": "التحصيل",
       "finance-audit-required": "مطلوب موافقة المالية",
-<<<<<<< HEAD
       "done": "تم",
       "collected": "محصل"
-=======
-      "done": "تم"
->>>>>>> add-price-including-vat
     },
     "validation": {
       "accepted": "يجب قبول {attribute}.",
@@ -77410,6 +77346,7 @@ __webpack_require__.r(__webpack_exports__);
       "bill-from-date": "Bill From Date",
       "training-costs-for-the-period-of": "Training costs for the period of {start} - {end}",
       "without-vat": "Without VAT",
+      "with-vat": "With VAT",
       "account-statement": "Account statement",
       "print-date": "Print date",
       "expected-cost-per-invoice": "Expected cost per invoice",
@@ -77445,12 +77382,8 @@ __webpack_require__.r(__webpack_exports__);
       "mark-as-unpaid": "Mark as unpaid",
       "chase": "Chase",
       "finance-audit-required": "Finance audit required",
-<<<<<<< HEAD
       "done": "Completed",
       "collected": "Collected"
-=======
-      "done": "Completed"
->>>>>>> add-price-including-vat
     },
     "validation": {
       "accepted": "The {attribute} must be accepted.",
@@ -78107,13 +78040,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-<<<<<<< HEAD
 __webpack_require__(/*! /home/spacemudd/projects/etraining/backend/resources/js/app.js */"./resources/js/app.js");
 module.exports = __webpack_require__(/*! /home/spacemudd/projects/etraining/backend/resources/css/app.css */"./resources/css/app.css");
-=======
-__webpack_require__(/*! /var/www/html/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /var/www/html/resources/css/app.css */"./resources/css/app.css");
->>>>>>> add-price-including-vat
 
 
 /***/ }),
