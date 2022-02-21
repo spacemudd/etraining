@@ -163,7 +163,7 @@ class FinancialInvoicesController extends Controller
             'invoice_id' => $invoice->id,
             'trainee_bank_payment_receipt_id' => $invoice->trainee_bank_payment_receipt->id,
             'date' => now(),
-            'description' => 'اعتماد ايصال دفع للفاتورة رقم '.$invoice->reference_number,
+            'description' => 'اعتماد ايصال دفع للفاتورة رقم '.$invoice->number_formatted,
             'reference'  => '',
             'account_name' => $invoice->trainee->name,
             'credit' => $invoice->grand_total,
