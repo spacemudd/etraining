@@ -468,4 +468,5 @@ return [
     'chase' => 'Chase',
     'finance-audit-required' => 'Finance audit required',
     'done' => 'Completed',
+    'collected' => 'Collected',
 ];

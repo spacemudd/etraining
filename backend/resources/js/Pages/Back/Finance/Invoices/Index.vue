@@ -26,6 +26,7 @@
                             <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('status')">{{ $t('words.status') }}</th>
                             <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('payment_method')">{{ $t('words.payment-method') }}</th>
                             <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('grand_total')">{{ $t('words.amount') }}</th>
+                            <th class="rtl:text-right font-weight-bold">{{ $t('words.collected') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.confirmed') }}</th>
                             <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('created_at')">{{ $t('words.date') }}</th>
                         </tr>
@@ -39,12 +40,12 @@
                                 </inertia-link>
                             </td>
                             <td class="rtl:text-right text-black">
-                                <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
+                                <inertia-link :href="route('back.companies.show', invoice.company_id)">
                                     {{ invoice.trainee.company.name_ar }}
                                 </inertia-link>
                             </td>
                             <td class="rtl:text-right text-black">
-                                <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
+                                <inertia-link :href="route('back.trainees.show', invoice.trainee_id)">
                                     {{ invoice.trainee.name }}
                                 </inertia-link>
                             </td>
@@ -61,6 +62,18 @@
                             <td class="rtl:text-right text-black">
                                 <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
                                     {{ invoice.grand_total }}
+                                </inertia-link>
+                            </td>
+                            <td class="rtl:text-right text-black">
+                                <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
+                                    <span v-if="invoice.chase_boolean"
+                                          class="bg-green-500 text-white rounded px-2">
+                                        {{ $t('words.yes') }}
+                                    </span>
+                                    <span v-else
+                                          class="bg-red-600 text-white rounded px-2">
+                                        {{ $t('words.no') }}
+                                    </span>
                                 </inertia-link>
                             </td>
                             <td class="rtl:text-right text-black">

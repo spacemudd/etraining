@@ -481,4 +481,5 @@ return [
     'chase' => 'التحصيل',
     'finance-audit-required' => 'مطلوب موافقة المالية',
     'done' => 'تم',
+    'collected' => 'محصل',
 ];

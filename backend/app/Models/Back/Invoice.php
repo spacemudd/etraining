@@ -58,6 +58,7 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
         'is_paid',
         'is_verified',
         'chase_status',
+        'chase_boolean',
     ];
 
     protected $dates = [
@@ -163,6 +164,14 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
         }
     }
 
+    public function getChaseBooleanAttribute()
+    {
+        return in_array($this->status, [
+            self::STATUS_PAID,
+            self::STATUS_FINANCIAL_AUDIT_REQUIRED,
+        ]);
+    }
+
     public function scopeIsPaid($query, bool $is_paid)
     {
         if ($is_paid) {
@@ -192,7 +201,7 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
     public function getIsVerifiedAttribute()
     {
         if ($this->payment_method === Invoice::PAYMENT_METHOD_CREDIT_CARD && $this->paid_at) return true;
-        if ($this->payment_method === Invoice::PAYMENT_METHOD_BANK_RECEIPT && $this->verified_by_id) return true;
+        if ($this->payment_method === Invoice::PAYMENT_METHOD_BANK_RECEIPT && $this->verified_by_id && $this->chased_by_id) return true;
 
         return false;
     }

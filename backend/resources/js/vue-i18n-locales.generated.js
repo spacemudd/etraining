@@ -485,7 +485,8 @@ export default {
             "mark-as-unpaid": "لم يتم الدفع",
             "chase": "التحصيل",
             "finance-audit-required": "مطلوب موافقة المالية",
-            "done": "تم"
+            "done": "تم",
+            "collected": "محصل"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1132,7 +1133,8 @@ export default {
             "mark-as-unpaid": "Mark as unpaid",
             "chase": "Chase",
             "finance-audit-required": "Finance audit required",
-            "done": "Completed"
+            "done": "Completed",
+            "collected": "Collected"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",
