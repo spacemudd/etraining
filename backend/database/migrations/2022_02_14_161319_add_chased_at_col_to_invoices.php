@@ -23,7 +23,7 @@ class AddChasedAtColToInvoices extends Migration
 
     /**
      * Reverse the migrations.
-     *
+     *Z
      * @return void
      */
     public function down()
@@ -31,6 +31,8 @@ class AddChasedAtColToInvoices extends Migration
         Schema::table('invoices', function (Blueprint $table) {
             $table->dropColumn(['chased_at']);
             $table->dropColumn(['chased_note']);
+            $table->dropForeign(['chased_by_id']);
+            $table->dropColumn(['chased_by_id']);
         });
     }
 }
