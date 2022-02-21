@@ -59,6 +59,7 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
         'is_verified',
         'chase_status',
         'chase_boolean',
+        'can_upload_receipt',
     ];
 
     protected $dates = [
@@ -204,5 +205,10 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
         if ($this->payment_method === Invoice::PAYMENT_METHOD_BANK_RECEIPT && $this->verified_by_id && $this->chased_by_id) return true;
 
         return false;
+    }
+
+    public function getCanUploadReceiptAttribute()
+    {
+        return $this->status === Invoice::STATUS_UNPAID || $this->status === Invoice::STATUS_PAYMENT_RECEIPT_REJECTED;
     }
 }

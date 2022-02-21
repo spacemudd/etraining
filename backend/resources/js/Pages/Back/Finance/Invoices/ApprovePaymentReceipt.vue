@@ -32,7 +32,6 @@
                                            @input="form.files = $event.target.files"
                                            type="file"
                                            id="formFileMultiple"
-                                           required
                                            multiple>
                                 </div>
                             </div>

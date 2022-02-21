@@ -21,6 +21,12 @@
                                 {{ $t('words.print') }}
                             </a>
 
+                            <inertia-link v-if="invoice.can_upload_receipt"
+                                          :href="route('back.finance.invoices.upload-receipt-form', invoice.id)"
+                                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">
+                                {{ $t('words.upload-receipt') }}
+                            </inertia-link>
+
                             <button @click="markAsUnpaid"
                                     type="button"
                                           v-if="invoice.status === 3 || invoice.status === 2"
@@ -122,6 +128,10 @@
                                     <li v-for="file in invoice.trainee_bank_payment_receipt.attachments">
                                         <a :href="file.download_url" target="_blank" class="hover:text-blue-600">
                                             {{ $t('words.receipt') }}: {{ file.file_name }}<br/>
+                                            {{ $t('words.amount') }}: {{ invoice.trainee_bank_payment_receipt.amount }}<br/>
+                                            {{ $t('words.sender-name') }}: {{ invoice.trainee_bank_payment_receipt.sender_name }}<br/>
+                                            {{ $t('words.sender-bank-name') }}: {{ invoice.trainee_bank_payment_receipt.bank_from }}<br/>
+                                            {{ $t('words.receiver-bank-name') }}: {{ invoice.trainee_bank_payment_receipt.bank_to }}<br/>
                                             <span class="text-sm text-gray-800" dir="ltr">{{ file.created_at_timezone }}</span>
                                         </a>
                                     </li>

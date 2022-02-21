@@ -483,4 +483,5 @@ return [
     'finance-audit-required' => 'مطلوب موافقة المالية',
     'done' => 'تم',
     'collected' => 'محصل',
+    'upload-receipt' => 'رفع ايصال',
 ];

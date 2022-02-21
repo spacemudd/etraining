@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Back\AccountingLedgerBook;
 use App\Models\Back\Company;
 use App\Models\Back\Invoice;
+use App\Models\TraineeBankPaymentReceipt;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context\CustomContext;
 use Brick\Money\Money;
@@ -162,7 +163,7 @@ class FinancialInvoicesController extends Controller
             'invoice_id' => $invoice->id,
             'trainee_bank_payment_receipt_id' => $invoice->trainee_bank_payment_receipt->id,
             'date' => now(),
-            'description' => 'اعتماد ايصال دفع',
+            'description' => 'اعتماد ايصال دفع للفاتورة رقم '.$invoice->reference_number,
             'reference'  => '',
             'account_name' => $invoice->trainee->name,
             'credit' => $invoice->grand_total,
@@ -196,6 +197,73 @@ class FinancialInvoicesController extends Controller
         $invoice->chased_at = now();
         $invoice->chased_by_id = auth()->user()->id;
         $invoice->save();
+
+        return redirect()->route('back.finance.invoices.show', $id);
+    }
+
+
+    public function uploadReceiptForm($id)
+    {
+        $invoice = Invoice::findOrFail($id);
+        $pending_amount = $invoice->trainee->total_amount_owed;
+        return Inertia::render('Back/Finance/Invoices/UploadReceipt', [
+            'pending_amount' =>  number_format($pending_amount, 2),
+            'pending_amount_raw' => $pending_amount,
+            'trainee' => $invoice->trainee,
+            'invoice' => $invoice,
+        ]);
+    }
+
+    public function uploadReceipt($id, Request $request)
+    {
+        $invoice = Invoice::findOrFail($id);
+
+        $request->validate([
+            'amount' => 'required|numeric|min:1',
+            'sender_name' => 'required|string|max:255|min:3',
+            'bank_name_to' => 'required|string|max:255|min:5',
+            'bank_name_from' => 'required|string|max:255|min:5',
+            'files.*' => 'file',
+        ]);
+
+        \DB::beginTransaction();
+        $receipt = new TraineeBankPaymentReceipt();
+        $receipt->trainee_id = $invoice->trainee_id;
+        $receipt->amount = $request->amount;
+        $receipt->sender_name = $request->sender_name;
+        $receipt->bank_from = $request->bank_name_from;
+        $receipt->bank_to = $request->bank_name_to;
+        $receipt->uploaded_by_id = auth()->user()->id;
+        $receipt->save();
+
+        if ($request->has('files')) {
+            foreach ($request->file('files', []) as $key => $file) {
+                $receipt->uploadToFolder($file, 'receipts');
+            }
+        }
+
+        $invoices = $invoice->trainee
+            ->invoices()
+            ->notPaid()
+            ->get();
+
+        $invoices->each(function ($invoice) use ($receipt) {
+            $invoice->update([
+                'payment_method' => Invoice::PAYMENT_METHOD_BANK_RECEIPT,
+                'trainee_bank_payment_receipt_id' => $receipt->id,
+                'paid_at' => now(),
+                'status' => Invoice::STATUS_AUDIT_REQUIRED,
+            ]);
+        });
+
+        $invoice->status = Invoice::STATUS_FINANCIAL_AUDIT_REQUIRED;
+        $invoice->rejection_reason_payment_receipt = null;
+        $invoice->verified_by_id = null;
+        $invoice->chased_at = now();
+        $invoice->chased_by_id = auth()->user()->id;
+        $invoice->save();
+
+        \DB::commit();
 
         return redirect()->route('back.finance.invoices.show', $id);
     }

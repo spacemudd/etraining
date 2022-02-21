@@ -470,4 +470,5 @@ return [
     'finance-audit-required' => 'Finance audit required',
     'done' => 'Completed',
     'collected' => 'Collected',
+    'upload-receipt' => 'Upload receipt',
 ];

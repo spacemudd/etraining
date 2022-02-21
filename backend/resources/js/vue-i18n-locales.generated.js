@@ -487,7 +487,8 @@ export default {
             "chase": "التحصيل",
             "finance-audit-required": "مطلوب موافقة المالية",
             "done": "تم",
-            "collected": "محصل"
+            "collected": "محصل",
+            "upload-receipt": "رفع ايصال"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1136,7 +1137,8 @@ export default {
             "chase": "Chase",
             "finance-audit-required": "Finance audit required",
             "done": "Completed",
-            "collected": "Collected"
+            "collected": "Collected",
+            "upload-receipt": "Upload receipt"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",
