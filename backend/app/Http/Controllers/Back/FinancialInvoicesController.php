@@ -242,20 +242,9 @@ class FinancialInvoicesController extends Controller
             }
         }
 
-        $invoices = $invoice->trainee
-            ->invoices()
-            ->notPaid()
-            ->get();
-
-        $invoices->each(function ($invoice) use ($receipt) {
-            $invoice->update([
-                'payment_method' => Invoice::PAYMENT_METHOD_BANK_RECEIPT,
-                'trainee_bank_payment_receipt_id' => $receipt->id,
-                'paid_at' => now(),
-                'status' => Invoice::STATUS_AUDIT_REQUIRED,
-            ]);
-        });
-
+        $invoice->payment_method =  Invoice::PAYMENT_METHOD_BANK_RECEIPT;
+        $invoice->trainee_bank_payment_receipt_id = $receipt->id;
+        $invoice->paid_at = now();
         $invoice->status = Invoice::STATUS_FINANCIAL_AUDIT_REQUIRED;
         $invoice->rejection_reason_payment_receipt = null;
         $invoice->verified_by_id = null;
