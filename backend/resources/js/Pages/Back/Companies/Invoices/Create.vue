@@ -30,7 +30,6 @@
                             <jet-input
                                 id="from"
                                 type="date"
-                                @input="updateExpectedAmountPerInvoice"
                                 class="mt-1 block w-full"
                                 v-model="form.from_date"
                                 autocomplete="off"

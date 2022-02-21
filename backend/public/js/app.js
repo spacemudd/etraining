@@ -7113,7 +7113,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 
 
@@ -36588,7 +36587,6 @@ var render = function() {
                               type: "date",
                               autocomplete: "off"
                             },
-                            on: { input: _vm.updateExpectedAmountPerInvoice },
                             model: {
                               value: _vm.form.from_date,
                               callback: function($$v) {
