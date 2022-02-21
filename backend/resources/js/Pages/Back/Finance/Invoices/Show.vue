@@ -115,8 +115,8 @@
                         <h1 class="mb-8 font-bold text-2xl">{{ $t('words.documents') }}</h1>
                         <div class="white-bg rounded shadow p-5">
                             <ul class="list-disc">
-                                <template v-for="receipt in invoice.trainee_bank_payment_receipts">
-                                    <li v-for="file in receipt.approvals">
+                                <template v-if="invoice.trainee_bank_payment_receipt">
+                                    <li v-for="file in invoice.trainee_bank_payment_receipt.approvals">
                                         <a :href="file.download_url" target="_blank" class="hover:text-blue-600" alt="invoice.">
                                             {{ $t('words.receipt-approval') }}: {{ file.file_name }}<br/>
                                             <span class="text-sm text-gray-800" dir="ltr">{{ file.created_at_timezone }}</span>
@@ -124,10 +124,9 @@
                                     </li>
                                 </template>
 
-                                <!--<template v-if="invoice.trainee_bank_payment_receipt">-->
-                                    <li v-for="receipt in invoice.trainee_bank_payment_receipts">
-                                        <a  v-for="file in receipt.attachments"
-                                            :href="file.download_url" target="_blank" class="hover:text-blue-600">
+                                <template v-if="invoice.trainee_bank_payment_receipt">
+                                    <li v-for="file in invoice.trainee_bank_payment_receipt.attachments">
+                                        <a :href="file.download_url" target="_blank" class="hover:text-blue-600">
                                             {{ $t('words.receipt') }}: {{ file.file_name }}<br/>
                                             {{ $t('words.amount') }}: {{ invoice.trainee_bank_payment_receipt.amount }}<br/>
                                             {{ $t('words.sender-name') }}: {{ invoice.trainee_bank_payment_receipt.sender_name }}<br/>
@@ -136,10 +135,10 @@
                                             <span class="text-sm text-gray-800" dir="ltr">{{ file.created_at_timezone }}</span>
                                         </a>
                                     </li>
-                                <!--</template>-->
-                                <!--<template v-else>-->
-                                <!--    <empty-slate />-->
-                                <!--</template>-->
+                                </template>
+                                <template v-else>
+                                    <empty-slate />
+                                </template>
                             </ul>
                         </div>
                     </div>
