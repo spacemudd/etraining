@@ -136,11 +136,11 @@
         </div>
     </div>
 
-    <div class="row" style="margin-top:30px;">
-        <div class="col-4"><p style="text-align: center;font-weight: bold;font-size: 20px;">المدير العام</p></div>
-        <div class="col-4"><p style="text-align: center;font-weight: bold;font-size: 20px;">مسؤول المبيعات</p></div>
-        <div class="col-4"><p style="text-align: center;font-weight: bold;font-size: 20px;">الادارة المالية</p></div>
-    </div>
+    {{--<div class="row" style="margin-top:30px;">--}}
+    {{--    <div class="col-4"><p style="text-align: center;font-weight: bold;font-size: 20px;">المدير العام</p></div>--}}
+    {{--    <div class="col-4"><p style="text-align: center;font-weight: bold;font-size: 20px;">مسؤول المبيعات</p></div>--}}
+    {{--    <div class="col-4"><p style="text-align: center;font-weight: bold;font-size: 20px;">الادارة المالية</p></div>--}}
+    {{--</div>--}}
 </div>
 </body>
 </html>

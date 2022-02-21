@@ -155,7 +155,8 @@ class CompanyInvoicesController extends Controller
             ->whereDate('created_at', $request->input('created_at_date', now()->toDateString()))
             ->get();
 
-        $pdf = PDF::loadView("pdf.invoices.company-report", [
+        $pdf = PDF::setOption('footer-html', resource_path('views/pdf/invoices/client-invoice-footer.html'))
+            ->setOption('margin-bottom', 30)->loadView("pdf.invoices.company-report", [
             'company' => $company,
             'invoice_group' => $invoice_group,
             'invoices' => $invoices,
