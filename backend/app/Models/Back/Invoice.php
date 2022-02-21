@@ -101,9 +101,9 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
         return $this->belongsTo(User::class);
     }
 
-    public function trainee_bank_payment_receipt()
+    public function trainee_bank_payment_receipts()
     {
-        return $this->hasOne(TraineeBankPaymentReceipt::class, 'id', 'trainee_bank_payment_receipt_id');
+        return $this->hasMany(TraineeBankPaymentReceipt::class, 'id', 'trainee_bank_payment_receipt_id');
     }
 
     public function items(): HasMany

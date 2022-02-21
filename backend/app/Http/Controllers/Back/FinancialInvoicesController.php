@@ -66,7 +66,7 @@ class FinancialInvoicesController extends Controller
                 'items',
                 'company',
                 'trainee',
-                'trainee_bank_payment_receipt',
+                'trainee_bank_payment_receipts',
                 'verified_by',
             ])
             ->findOrFail($invoice_id);
@@ -153,7 +153,7 @@ class FinancialInvoicesController extends Controller
         $invoice->save();
 
         foreach ($request->file('files', []) as $key => $file) {
-            $invoice->trainee_bank_payment_receipt->uploadToFolder($file, 'receipt-approvals');
+            $invoice->trainee_bank_payment_receipts->latest()->first()->uploadToFolder($file, 'receipt-approvals');
         }
 
         AccountingLedgerBook::create([
@@ -161,7 +161,7 @@ class FinancialInvoicesController extends Controller
             'company_id' => $invoice->company_id,
             'trainee_id' => $invoice->trainee_id,
             'invoice_id' => $invoice->id,
-            'trainee_bank_payment_receipt_id' => $invoice->trainee_bank_payment_receipt->id,
+            'trainee_bank_payment_receipt_id' => $invoice->rainee_bank_payment_receipts->latest()->first()->id,
             'date' => now(),
             'description' => 'اعتماد ايصال دفع للفاتورة رقم '.$invoice->reference_number,
             'reference'  => '',
