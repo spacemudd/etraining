@@ -10,7 +10,7 @@
 <div class="container">
     <div class="row">
         <div class="col-6" style="text-align:left;">
-            <img src="{{ public_path('/img/logo-lg.png')}}" alt="logo" width="200"/>
+            <img src="{{ public_path('/img/ptc_invoice_logo.png')}}" alt="logo" width="200"/>
         </div>
         <div class="col-6">
             <h1>{{ __('words.account-statement') }}</h1>
@@ -82,6 +82,11 @@
                     <td>{{ $invoice->id_paid ? __('words.paid') : __('words.not-paid') }}</td>
                 </tr>
             @endforeach
+                <tr></tr>
+            <td></td>
+            <td>{{ number_format($invoices->sum('sub_total'), 2) }}</td>
+            <td>{{ number_format($invoices->sum('tax'), 2) }}</td>
+            <td>{{ number_format($invoices->sum('grand_total'), 2) }}</td>
             </tbody>
         </table>
     </div>
