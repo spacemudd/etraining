@@ -85,6 +85,7 @@
                 <tr>
                     <td></td>
                     <td></td>
+                    <td></td>
                     <td>{{ number_format($invoices->sum('sub_total'), 2) }}</td>
                     <td>{{ number_format($invoices->sum('tax'), 2) }}</td>
                     <td>{{ number_format($invoices->sum('grand_total'), 2) }}</td>
