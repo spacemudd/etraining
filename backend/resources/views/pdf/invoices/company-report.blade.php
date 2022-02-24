@@ -61,6 +61,7 @@
             </colgroup>
             <thead>
             <tr>
+                <th>#</th>
                 <th>{{ __('words.name') }}</th>
                 <th>{{ __('words.invoice-no') }}</th>
                 <th>{{ __('words.subtotal') }}</th>
@@ -70,8 +71,9 @@
             </tr>
             </thead>
             <tbody>
-            @foreach ($invoices as $invoice)
+            @foreach ($invoices as $index => $invoice)
                 <tr style="page-break-inside: avoid;">
+                    <td>{{ ++$index }}</td>
                     <td>{{ optional($invoice->trainee)->name }}</td>
                     <td>{{ $invoice->number_formatted }}</td>
                     <td>{{ number_format($invoice->sub_total, 2) }}</td>
