@@ -72,9 +72,7 @@
             <tbody>
             @foreach ($invoices as $invoice)
                 <tr style="page-break-inside: avoid;">
-                    <td>
-                        {{ optional($invoice->trainee)->name }}
-                    </td>
+                    <td>{{ optional($invoice->trainee)->name }}</td>
                     <td>{{ $invoice->number_formatted }}</td>
                     <td>{{ number_format($invoice->sub_total, 2) }}</td>
                     <td>{{ number_format($invoice->tax, 2) }}</td>
@@ -82,11 +80,13 @@
                     <td>{{ $invoice->id_paid ? __('words.paid') : __('words.not-paid') }}</td>
                 </tr>
             @endforeach
-                <tr></tr>
-            <td></td>
-            <td>{{ number_format($invoices->sum('sub_total'), 2) }}</td>
-            <td>{{ number_format($invoices->sum('tax'), 2) }}</td>
-            <td>{{ number_format($invoices->sum('grand_total'), 2) }}</td>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>{{ number_format($invoices->sum('sub_total'), 2) }}</td>
+                    <td>{{ number_format($invoices->sum('tax'), 2) }}</td>
+                    <td>{{ number_format($invoices->sum('grand_total'), 2) }}</td>
+                </tr>
             </tbody>
         </table>
     </div>
