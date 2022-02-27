@@ -77,6 +77,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'resource_label',
         'resource_type',
         'deleted_at_timezone',
+        'created_at_timezone',
         'clean_phone',
         'company_name',
     ];
@@ -283,10 +284,25 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         return trans('words.trainee');
     }
 
+    /**
+     *
+     * @return string|void
+     */
     public function getDeletedAtTimezoneAttribute()
     {
         if ($this->deleted_at) {
             return Timezone::convertToLocal($this->deleted_at, 'Y-m-d h:i A');
+        }
+    }
+
+    /**
+     *
+     * @return string|void
+     */
+    public function getCreatedAtTimezoneAttribute()
+    {
+        if ($this->created_at) {
+            return Timezone::convertToLocal($this->created_at, 'Y-m-d h:i A');
         }
     }
 
