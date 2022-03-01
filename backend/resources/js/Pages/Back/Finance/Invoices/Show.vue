@@ -28,12 +28,14 @@
                             </inertia-link>
 
                             <button @click="markAsUnpaid"
+                                    v-can="'approve-payment-receipt'"
                                     type="button"
                                           v-if="invoice.status === 3 || invoice.status === 2"
                                           class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">
                                 [{{ $t('words.chase') }}] {{ $t('words.mark-as-unpaid') }}
                             </button>
                             <button @click="markAsPaid"
+                                    v-can="'approve-payment-receipt'"
                                     type="button"
                                     v-if="invoice.status === 3 || invoice.status === 2"
                                     class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-green-500 hover:bg-green-600 active:bg-green-700 foucs:bg-green-700">
@@ -42,6 +44,7 @@
 
                             <template v-if="invoice.status === 4">
                                 <button @click="rejectPaymentReceipt"
+                                        v-can="'approve-invoice-paid'"
                                         v-if="invoice.status === 4 || invoice.status === 3"
                                         class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700"
                                         type="button">
@@ -49,6 +52,7 @@
                                 </button>
 
                                 <inertia-link :href="route('back.finance.invoices.approve-payment-receipt', invoice.id)"
+                                              v-can="'approve-invoice-paid'"
                                             v-if="invoice.status === 3 || invoice.status === 4"
                                             class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-green-500 hover:bg-green-600 active:bg-green-700 foucs:bg-green-700">
                                     [{{ $t('words.finance') }}] {{ $t('words.approve-payment-receipt') }}
