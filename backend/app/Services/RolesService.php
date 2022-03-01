@@ -41,6 +41,8 @@ class RolesService
         'edit-survey-links',
         'edit-complaint-settings',
         'issue-monthly-invoices',
+        'approve-payment-receipt',
+        'approve-invoice-paid',
         // add the same name of the role to translation files.
     ];
 

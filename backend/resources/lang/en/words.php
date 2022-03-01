@@ -474,4 +474,6 @@ return [
     'upload-receipt' => 'Upload receipt',
     'chased-by' => 'Chased by',
     'chasers' => 'Chasers',
+    'approve-payment-receipt' => 'Approve payment receipt',
+    'approve-invoice-paid' => 'Approve invoice paid',
 ];

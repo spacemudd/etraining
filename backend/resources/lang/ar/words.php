@@ -487,4 +487,6 @@ return [
     'upload-receipt' => 'رفع ايصال',
     'chased-by' => 'تحصيل من قبل',
     'chasers' => 'المحصلين',
+    'approve-payment-receipt' => 'اعتماد صورة الإيصال',
+    'approve-invoice-paid' => 'اعتماد تم دفع الفاتورة',
 ];

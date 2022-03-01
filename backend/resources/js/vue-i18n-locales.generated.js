@@ -254,6 +254,7 @@ export default {
             "finance-role-info": "لديهم صلاحيات فقط لإتمام مهام المالية",
             "instructors-role-info": "لديهم صلاحيات فقط لإتمام مهام التدريب",
             "trainees-role-info": "لديهم صلاحيات فقط للإستطلاع على الدورات",
+            "chasers-role-info": "لديهم صلاحيات فقط لإتمام مهام التحصيل",
             "manage": "إدارة",
             "invite": "ارسل دعوة",
             "import": "إدخال",
@@ -470,7 +471,7 @@ export default {
             "reject-payment-receipt": "رفض الإصال",
             "rejection-reason": "سبب الرفض",
             "reject-payment-receipt-reason": "سبب رفض الإيصال",
-            "approve-payment-receipt": "اعتماد الإيصال",
+            "approve-payment-receipt": "اعتماد صورة الإيصال",
             "approve-payment-receipt-notice": "يرجى ارفاق ما يثبت التحويل",
             "receipt-approval": "اعتماد التحويل",
             "approved-by": "موثق من قبل",
@@ -489,7 +490,9 @@ export default {
             "done": "تم",
             "collected": "محصل",
             "upload-receipt": "رفع ايصال",
-            "chased-by": "تحصيل من قبل"
+            "chased-by": "تحصيل من قبل",
+            "chasers": "المحصلين",
+            "approve-invoice-paid": "اعتماد تم دفع الفاتورة"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -917,6 +920,7 @@ export default {
             "finance-role-info": "Having just the permissions related to finance",
             "instructors-role-info": "Having just the permissions related to providing courses",
             "trainees-role-info": "Having just the permissions to view their course material",
+            "chasers-role-info": "Having just the permissions related to chase",
             "manage": "Manage",
             "invite": "Invite",
             "import": "Import",
@@ -1140,7 +1144,9 @@ export default {
             "done": "Completed",
             "collected": "Collected",
             "upload-receipt": "Upload receipt",
-            "chased-by": "Chased by"
+            "chased-by": "Chased by",
+            "chasers": "Chasers",
+            "approve-invoice-paid": "Approve invoice paid"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",
