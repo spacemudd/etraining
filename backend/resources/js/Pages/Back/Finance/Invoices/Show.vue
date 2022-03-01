@@ -33,11 +33,12 @@
                                           class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">
                                 [{{ $t('words.chase') }}] {{ $t('words.mark-as-unpaid') }}
                             </button>
-                            <inertia-link :href="route('back.finance.invoices.approve-payment-receipt', invoice.id)"
-                                          v-if="invoice.status === 3 || invoice.status === 2"
-                                          class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-green-500 hover:bg-green-600 active:bg-green-700 foucs:bg-green-700">
+                            <button @click="markAsPaid"
+                                    type="button"
+                                    v-if="invoice.status === 3 || invoice.status === 2"
+                                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-green-500 hover:bg-green-600 active:bg-green-700 foucs:bg-green-700">
                                 [{{ $t('words.chase') }}] {{ $t('words.mark-as-paid') }}
-                            </inertia-link>
+                            </button>
 
                             <template v-if="invoice.status === 4">
                                 <button @click="rejectPaymentReceipt"
@@ -81,8 +82,14 @@
                                 <div>{{ invoice.grand_total }}</div>
                                 <div class="font-bold">{{ $t('words.paid') }}</div>
                                 <div>{{ invoice.is_paid ? $t('words.yes') : $t('words.no') }} <span v-if="invoice.is_paid">({{ invoice.payment_method_formatted }})</span></div>
+                                <hr class="my-2">
+                                <hr class="my-2">
                                 <div class="font-bold">{{ $t('words.chase') }}</div>
-                                <div class="font-bold">{{ invoice.chase_status }}</div>
+                                <div>{{ invoice.chase_status }}</div>
+                                <div class="font-bold">{{ $t('words.chased-by') }}</div>
+                                <div><span v-if="invoice.chased_by">{{ invoice.chased_by.name }}</span></div>
+                                <hr class="my-2">
+                                <hr class="my-2">
                                 <div class="font-bold">{{ $t('words.verified') }}</div>
                                 <div>
                                     <span v-if="invoice.is_verified"

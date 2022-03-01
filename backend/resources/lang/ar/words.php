@@ -484,4 +484,5 @@ return [
     'done' => 'تم',
     'collected' => 'محصل',
     'upload-receipt' => 'رفع ايصال',
+    'chased-by' => 'تحصيل من قبل',
 ];

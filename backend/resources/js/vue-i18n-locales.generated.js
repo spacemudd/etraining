@@ -482,13 +482,14 @@ export default {
             "transaction-date": "تاريخ العملية",
             "training-fees": "رسوم التدريب",
             "please-login-to-your-account-pay-the-costs": "الرجاء الدخول على حسابك لعرض الرسوم التدريبية المستحقة",
-            "training-fees-have-been-issued-for-your-account-ptc": "تم إصدار رسوم التدريب لحسابك - مركز احترافية التدريب",
+            "training-fees-have-been-issued-for-your-account-ptc": "تم إصدار رسوم التدريب لحسابك - مركز احترافية المدرب",
             "mark-as-unpaid": "لم يتم الدفع",
             "chase": "التحصيل",
             "finance-audit-required": "مطلوب موافقة المالية",
             "done": "تم",
             "collected": "محصل",
-            "upload-receipt": "رفع ايصال"
+            "upload-receipt": "رفع ايصال",
+            "chased-by": "تحصيل من قبل"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1138,7 +1139,8 @@ export default {
             "finance-audit-required": "Finance audit required",
             "done": "Completed",
             "collected": "Collected",
-            "upload-receipt": "Upload receipt"
+            "upload-receipt": "Upload receipt",
+            "chased-by": "Chased by"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

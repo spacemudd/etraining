@@ -68,6 +68,7 @@ class FinancialInvoicesController extends Controller
                 'trainee',
                 'trainee_bank_payment_receipt',
                 'verified_by',
+                'chased_by',
             ])
             ->findOrFail($invoice_id);
 

@@ -471,4 +471,5 @@ return [
     'done' => 'Completed',
     'collected' => 'Collected',
     'upload-receipt' => 'Upload receipt',
+    'chased-by' => 'Chased by',
 ];
