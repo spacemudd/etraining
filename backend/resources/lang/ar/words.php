@@ -248,6 +248,7 @@ return [
     'finance-role-info' => 'لديهم صلاحيات فقط لإتمام مهام المالية',
     'instructors-role-info' => 'لديهم صلاحيات فقط لإتمام مهام التدريب',
     'trainees-role-info' => 'لديهم صلاحيات فقط للإستطلاع على الدورات',
+    'chasers-role-info' => 'لديهم صلاحيات فقط لإتمام مهام التحصيل',
     'manage' => 'إدارة',
     'invite' => 'ارسل دعوة',
     'import' => 'إدخال',
@@ -485,4 +486,5 @@ return [
     'collected' => 'محصل',
     'upload-receipt' => 'رفع ايصال',
     'chased-by' => 'تحصيل من قبل',
+    'chasers' => 'المحصلين',
 ];

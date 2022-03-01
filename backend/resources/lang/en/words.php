@@ -248,6 +248,7 @@ return [
     'finance-role-info' => 'Having just the permissions related to finance',
     'instructors-role-info' => 'Having just the permissions related to providing courses',
     'trainees-role-info' => 'Having just the permissions to view their course material',
+    'chasers-role-info' => 'Having just the permissions related to chase',
     'manage' => 'Manage',
     'invite' => 'Invite',
     'import' => 'Import',
@@ -472,4 +473,5 @@ return [
     'collected' => 'Collected',
     'upload-receipt' => 'Upload receipt',
     'chased-by' => 'Chased by',
+    'chasers' => 'Chasers',
 ];
