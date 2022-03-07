@@ -264,12 +264,18 @@ export default {
     methods: {
         rejectPaymentReceipt() {
             let reason = prompt(this.$t('words.rejection-reason'));
+            if (reason === null) {
+                return;
+            }
             this.$inertia.post(route('back.finance.invoices.reject-payment-receipt', this.invoice.id), {
                 reason: reason,
             });
         },
         markAsUnpaid() {
             let reason = prompt(this.$t('words.rejection-reason'));
+            if (reason === null) {
+                return;
+            }
             this.$inertia.post(route('back.finance.invoices.mark-as-paid-from-chaser', this.invoice.id), {
                 chased_note: reason,
             });
