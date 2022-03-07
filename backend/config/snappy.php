@@ -32,13 +32,18 @@ return [
     |    The environment variables to set while running the wkhtmltopdf process.
     |
     */
+    ///usr/bin/wkhtmltopdf
+    //./usr/local/bin/wkhtmltopdf
 
     'pdf' => [
         'enabled' => true,
         // 'binary'  => env('WKHTML_PDF_BINARY', base_path('vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64')),
         'binary'  => env('WKHTML_PDF_BINARY', '/usr/local/bin/wkhtmltopdf'),
         'timeout' => false,
-        'options' => [],
+        'options' => [
+            'enable-local-file-access' => true,
+            'encoding'      => 'UTF-8'
+        ],
         'env'     => [],
     ],
 
