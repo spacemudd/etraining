@@ -59,6 +59,8 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progre
 
 # For wkhtmltopdf
 RUN apk add wkhtmltopdf
+RUN wget https://github.com/h4cc/wkhtmltopdf-amd64/blob/master/bin/wkhtmltopdf-amd64?raw=true -O /usr/local/bin/wkhtmltopdf \
+    && chmod +x /usr/local/bin/wkhtmltopdf
 
 
 USER nobody
