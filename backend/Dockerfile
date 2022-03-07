@@ -57,6 +57,10 @@ RUN apk add \
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
+# For wkhtmltopdf
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get install -yq build-essential xorg libssl-dev libxrender-dev wget gdebi
+
 USER nobody
 
 EXPOSE 8900
