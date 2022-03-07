@@ -492,7 +492,9 @@ export default {
             "upload-receipt": "رفع ايصال",
             "chased-by": "تحصيل من قبل",
             "chasers": "المحصلين",
-            "approve-invoice-paid": "اعتماد تم دفع الفاتورة"
+            "approve-invoice-paid": "اعتماد تم دفع الفاتورة",
+            "edit-payment-settings": "الدفع اونلاين",
+            "payment-settings": "إعدادت الدفع اونلاين"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1146,7 +1148,9 @@ export default {
             "upload-receipt": "Upload receipt",
             "chased-by": "Chased by",
             "chasers": "Chasers",
-            "approve-invoice-paid": "Approve invoice paid"
+            "approve-invoice-paid": "Approve invoice paid",
+            "edit-payment-settings": "Edit payment settings",
+            "payment-settings": "Payment settings"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

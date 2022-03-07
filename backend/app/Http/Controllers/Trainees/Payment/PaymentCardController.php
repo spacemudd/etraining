@@ -170,6 +170,7 @@ class PaymentCardController extends Controller
 
         return Inertia::render('Trainees/Payment/Index', [
             'pending_amount' => $pending_amount,
+            'online_payment' => $trainee->team->online_payment,
         ]);
     }
 

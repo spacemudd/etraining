@@ -195,6 +195,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('/settings/complaints', [\App\Http\Controllers\Back\ComplaintsSettingsController::class, 'index'])->name('settings.complaints.index');
         Route::put('/settings/complaints/update', [\App\Http\Controllers\Back\ComplaintsSettingsController::class, 'update'])->name('settings.complaints.update');
 
+        Route::put('/settings/payment/update', [\App\Http\Controllers\Back\PaymentController::class, 'update'])->name('settings.payment.update');
+        Route::get('/settings/payment', [\App\Http\Controllers\Back\PaymentController::class, 'index'])->name('settings.payment.index');
+
         Route::get('/settings/survey-links', [\App\Http\Controllers\Back\SurveyLinksController::class, 'index'])->name('settings.survey-links.index');
         Route::post('/settings/survey-links/store', [\App\Http\Controllers\Back\SurveyLinksController::class, 'store'])->name('settings.survey-links.store');
 

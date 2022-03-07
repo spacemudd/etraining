@@ -6,6 +6,7 @@ use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\MaritalStatus;
 use App\Models\SearchableLabels;
+use App\Models\Team;
 use App\Notifications\AssignedToCompanyTraineeNotification;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
@@ -155,6 +156,11 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
     }
 
     public function scopeResponsibleToTeach($q)

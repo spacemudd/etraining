@@ -21,7 +21,7 @@
             <div class="grid md:grid-cols-4 grid-cols-1 gap-6">
                 <div class="col-span-1 p-5 transition-all duration-500 ease-in-out hover:bg-gray-200">
                     <p class="text-2xl">{{ $t('words.choose-payment-method') }}:</p>
-                    <div class="payment-options mt-2">
+                    <div class="payment-options mt-2" v-if="online_payment">
                         <input type="radio" name="payment-method" value="cc" v-model="paymentMethod">
                         <label>{{ $t('words.credit-card-method') }}</label>
                     </div>
@@ -55,6 +55,7 @@ export default {
     },
     props: [
         'pending_amount',
+        'online_payment',
     ],
     data() {
         return {

@@ -476,4 +476,6 @@ return [
     'chasers' => 'Chasers',
     'approve-payment-receipt' => 'Approve payment receipt',
     'approve-invoice-paid' => 'Approve invoice paid',
+    'edit-payment-settings' => 'Edit payment settings',
+    'payment-settings' => 'Payment settings',
 ];

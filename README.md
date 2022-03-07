@@ -14,6 +14,10 @@ or
 
 `php vendor/phpunit/phpunit/phpunit`
 
+# Deploying
+
+Run `deploy-backend.sh`
+
 # License
 
 This project is released for the sole purpose of sharing how I'm implementing such a project.

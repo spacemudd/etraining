@@ -489,4 +489,6 @@ return [
     'chasers' => 'المحصلين',
     'approve-payment-receipt' => 'اعتماد صورة الإيصال',
     'approve-invoice-paid' => 'اعتماد تم دفع الفاتورة',
+    'edit-payment-settings' => 'الدفع اونلاين',
+    'payment-settings' => 'إعدادت الدفع اونلاين',
 ];
