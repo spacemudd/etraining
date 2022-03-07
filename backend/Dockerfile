@@ -58,7 +58,7 @@ RUN apk add \
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
 # For wkhtmltopdf
-RUN apk add xvfb libfontconfig wkhtmltopdf
+RUN apk add wkhtmltopdf
 
 
 USER nobody
