@@ -13,6 +13,7 @@ namespace App\Models;
 
 use App\Scope\TeamScope;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use JamesMills\LaravelTimezone\Facades\Timezone;
 use Str;
 
 class Media extends \Spatie\MediaLibrary\MediaCollections\Models\Media
@@ -22,6 +23,11 @@ class Media extends \Spatie\MediaLibrary\MediaCollections\Models\Media
     public $incrementing = false;
 
     protected $keyType = 'string';
+
+    protected $appends = [
+        'download_url',
+        'created_at_timezone',
+    ];
 
     protected static function boot(): void
     {
@@ -34,4 +40,17 @@ class Media extends \Spatie\MediaLibrary\MediaCollections\Models\Media
             }
         });
     }
+
+    public function getDownloadUrlAttribute()
+    {
+        return route('back.media.download', $this->id);
+    }
+
+    public function getCreatedAtTimezoneAttribute()
+    {
+        if (auth()->user()) {
+            return Timezone::convertToLocal($this->created_at, 'Y-m-d h:i A');
+        }
+    }
+
 }

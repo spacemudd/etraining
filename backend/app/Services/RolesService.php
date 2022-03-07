@@ -40,6 +40,9 @@ class RolesService
         'disable-website',
         'edit-survey-links',
         'edit-complaint-settings',
+        'issue-monthly-invoices',
+        'approve-payment-receipt',
+        'approve-invoice-paid',
         // add the same name of the role to translation files.
     ];
 
@@ -91,5 +94,6 @@ class RolesService
         $instructor = Role::firstOrCreate(['name' => $team->id.'_instructors', 'team_id' => $team->id]);
         $instructor->givePermissionTo($this->instructorPermissions);
         Role::firstOrCreate(['name' => $team->id.'_finance', 'team_id' => $team->id]);
+        Role::firstOrCreate(['name' => $team->id.'_chasers', 'team_id' => $team->id]);
     }
 }

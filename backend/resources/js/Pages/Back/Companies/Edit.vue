@@ -26,6 +26,7 @@
                             'company_rep_mobile',
                             'address',
                             'email',
+                            'monthly_subscription_per_trainee',
                             ]">
                             <div class="col-span-2 sm:col-span-2">
                                 <jet-label for="name" :value="$t('words.'+fieldName)" />
@@ -92,6 +93,7 @@
             this.form.company_rep_mobile = this.company.company_rep_mobile;
             this.form.email = this.company.email;
             this.form.address = this.company.address;
+            this.form.monthly_subscription_per_trainee = this.company.monthly_subscription_per_trainee;
         },
         data() {
             return {
@@ -104,6 +106,7 @@
                     company_rep_mobile: '',
                     address: '',
                     email: '',
+                    monthly_subscription_per_trainee: '',
                 }, {
                     bag: 'updateCompany',
                 })

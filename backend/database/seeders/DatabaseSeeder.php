@@ -18,5 +18,11 @@ class DatabaseSeeder extends Seeder
         $this->call(CitiesTableSeeder::class);
         $this->call(MaritalStatusesTableSeeder::class);
         $this->call(ApplicationRequirementsSeeder::class);
+
+        if(app()->environment(['local'])) {
+            $this->call([
+                UsersTableSeeder::class,
+            ]);
+        }
     }
 }

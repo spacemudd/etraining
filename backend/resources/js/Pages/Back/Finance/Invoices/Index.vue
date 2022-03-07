@@ -8,10 +8,101 @@
                     {title: 'invoices', link: route('back.finance.invoices.index')},
                 ]"
             ></breadcrumb-container>
-            <div class="bg-white rounded shadow overflow-x-auto">
-                <table class="w-full whitespace-no-wrap">
+
+            <div class="overflow-x-auto">
+                <Table
+                    class="mt-5 w-full whitespace-no-wrap"
+                    :filters="queryBuilderProps.filters"
+                    :search="queryBuilderProps.search"
+                    :columns="queryBuilderProps.columns"
+                    :on-update="setQueryBuilder"
+                    :meta="invoices"
+                >
+                    <template #head>
+                        <tr>
+                            <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('number')">{{ $t('words.invoice') }}</th>
+                            <th class="rtl:text-right font-weight-bold">{{ $t('words.company') }}</th>
+                            <th class="rtl:text-right font-weight-bold">{{ $t('words.account-name') }}</th>
+                            <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('status')">{{ $t('words.status') }}</th>
+                            <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('payment_method')">{{ $t('words.payment-method') }}</th>
+                            <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('grand_total')">{{ $t('words.amount') }}</th>
+                            <th class="rtl:text-right font-weight-bold">{{ $t('words.collected') }}</th>
+                            <th class="rtl:text-right font-weight-bold">{{ $t('words.confirmed') }}</th>
+                            <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('created_at')">{{ $t('words.date') }}</th>
+                        </tr>
+                    </template>
+
+                    <template #body>
+                        <tr v-for="invoice in invoices.data" :key="invoice.id">
+                            <td class="rtl:text-right text-black">
+                                <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
+                                    {{ invoice.number_formatted }}
+                                </inertia-link>
+                            </td>
+                            <td class="rtl:text-right text-black">
+                                <inertia-link :href="route('back.companies.show', invoice.company_id)">
+                                    {{ invoice.trainee.company.name_ar }}
+                                </inertia-link>
+                            </td>
+                            <td class="rtl:text-right text-black">
+                                <inertia-link :href="route('back.trainees.show', invoice.trainee_id)">
+                                    {{ invoice.trainee.name }}
+                                </inertia-link>
+                            </td>
+                            <td class="rtl:text-right text-black">
+                                <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
+                                    {{ invoice.status_formatted }}
+                                </inertia-link>
+                            </td>
+                            <td class="rtl:text-right text-black">
+                                <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
+                                    {{ invoice.payment_method_formatted }}
+                                </inertia-link>
+                            </td>
+                            <td class="rtl:text-right text-black">
+                                <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
+                                    {{ invoice.grand_total }}
+                                </inertia-link>
+                            </td>
+                            <td class="rtl:text-right text-black">
+                                <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
+                                    <span v-if="invoice.chase_boolean"
+                                          class="bg-green-500 text-white rounded px-2">
+                                        {{ $t('words.yes') }}
+                                    </span>
+                                    <span v-else
+                                          class="bg-red-600 text-white rounded px-2">
+                                        {{ $t('words.no') }}
+                                    </span>
+                                </inertia-link>
+                            </td>
+                            <td class="rtl:text-right text-black">
+                                <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
+                                    <span v-if="invoice.is_verified"
+                                          class="bg-green-500 text-white rounded px-2">
+                                        {{ $t('words.yes') }}
+                                    </span>
+                                    <span v-else
+                                          class="bg-red-600 text-white rounded px-2">
+                                        {{ $t('words.no') }}
+                                    </span>
+                                </inertia-link>
+                            </td>
+                            <td class="rtl:text-right text-black">
+                                <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
+                                    {{ invoice.created_at_date }}
+                                </inertia-link>
+                            </td>
+                        </tr>
+                    </template>
+                </Table>
+
+
+                <!--
+                <table class="w-full whitespace-no-wrap mt-10">
                     <tr class="text-left font-bold">
                         <th class="text-sm px-6 pt-6 pb-4">{{ $t('words.invoice') }}</th>
+                        <th class="text-sm px-6 pt-6 pb-4">{{ $t('words.company') }}</th>
                         <th class="text-sm px-6 pt-6 pb-4">{{ $t('words.account-name') }}</th>
                         <th class="text-sm px-6 pt-6 pb-4">{{ $t('words.status') }}</th>
                         <th class="text-sm px-6 pt-6 pb-4">{{ $t('words.payment-method') }}</th>
@@ -22,22 +113,27 @@
                     <tr v-for="invoice in invoices.data" :key="invoice.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
                         <td class="border-t">
                             <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('back.finance.invoices.show', invoice.id)">
-                                {{ invoice.reference_number }}
+                                {{ invoice.number_formatted }}
                             </inertia-link>
                         </td>
                         <td class="border-t">
                             <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('back.finance.invoices.show', invoice.id)">
-                                {{ invoice.account_name }}
+                                {{ invoice.trainee.company.name_ar }}
                             </inertia-link>
                         </td>
                         <td class="border-t">
                             <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('back.finance.invoices.show', invoice.id)">
-                                {{ invoice.status }}
+                                {{ invoice.trainee.name }}
                             </inertia-link>
                         </td>
                         <td class="border-t">
                             <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('back.finance.invoices.show', invoice.id)">
-                                {{ invoice.payment_method }}
+                                {{ invoice.status_formatted }}
+                            </inertia-link>
+                        </td>
+                        <td class="border-t">
+                            <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('back.finance.invoices.show', invoice.id)">
+                                {{ invoice.payment_method_formatted }}
                             </inertia-link>
                         </td>
                         <td class="border-t">
@@ -47,12 +143,19 @@
                         </td>
                         <td class="border-t">
                             <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('back.finance.invoices.show', invoice.id)">
-                                {{ invoice.confirmed }}
+                                <span v-if="invoice.is_verified"
+                                      class="bg-green-500 text-white rounded px-2">
+                                        {{ $t('words.yes') }}
+                                    </span>
+                                <span v-else
+                                      class="bg-red-600 text-white rounded px-2">
+                                        {{ $t('words.no') }}
+                                    </span>
                             </inertia-link>
                         </td>
                         <td class="border-t">
                             <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('back.finance.invoices.show', invoice.id)">
-                                {{ invoice.created_at }}
+                                {{ invoice.created_at_date }}
                             </inertia-link>
                         </td>
                         <td class="border-t w-px">
@@ -67,13 +170,20 @@
                         </td>
                     </tr>
                 </table>
+                -->
+
             </div>
-            <pagination :links="invoices.links" />
+
+            <!--<pagination :links="invoices.links" />-->
         </div>
     </app-layout>
 </template>
 
 <script>
+    import { InteractsWithQueryBuilder } from '@protonemedia/inertiajs-tables-laravel-query-builder';
+    import { Components } from "@protonemedia/inertiajs-tables-laravel-query-builder";
+    import Table from '@/Components/Tailwind2/Table';
+
     // import Icon from '@/Shared/Icon'
     // import Layout from '@/Shared/Layout'
     import mapValues from 'lodash/mapValues'
@@ -87,6 +197,7 @@
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
 
     export default {
+        mixins: [InteractsWithQueryBuilder],
         metaInfo: { title: 'Financial invoices' },
         // layout: Layout,
         components: {
@@ -97,6 +208,7 @@
             Pagination,
             // SearchFilter,
             EmptySlate,
+            Table,
         },
         props: {
             invoices: Object,
@@ -110,6 +222,11 @@
                 },
             }
         },
+        computed: {
+            hasSearchRows() {
+                return Object.keys(this.invoices.search || {}).length > 0;
+            },
+        },
         watch: {
             form: {
                 handler: throttle(function() {
@@ -118,6 +235,17 @@
                 }, 150),
                 deep: true,
             },
+        },
+        mounted() {
+            let vm = this;
+            Components.Pagination.setTranslations({
+                no_results_found: vm.$t('words.no-records-have-been-found'),
+                previous: vm.$t('pagination.previous'),
+                next: vm.$t('pagination.next'),
+                to: vm.$t('pagination.to'),
+                of: vm.$t('pagination.of'),
+                results: vm.$t('pagination.results'),
+            });
         },
         methods: {
             reset() {

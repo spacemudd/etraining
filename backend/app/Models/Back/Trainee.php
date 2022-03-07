@@ -7,6 +7,7 @@ use App\Models\EducationalLevel;
 use App\Models\MaritalStatus;
 use App\Models\SearchableLabels;
 use App\Notifications\AssignedToCompanyTraineeNotification;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use JamesMills\LaravelTimezone\Facades\Timezone;
@@ -59,6 +60,13 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'deleted_remark',
         'trainee_group_id',
         'national_address',
+        'bill_from_date',
+        'linked_date',
+    ];
+
+    protected $dates = [
+        'bill_from_date',
+        'linked_date',
     ];
 
     protected $appends = [
@@ -80,6 +88,9 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'created_at_timezone',
         'clean_phone',
         'company_name',
+        'bill_from_date_formatted',
+        'linked_date_formatted',
+        'has_outstanding_amount',
     ];
 
     protected static function boot(): void
@@ -211,6 +222,11 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     public function attendances()
     {
         return $this->hasMany(CourseBatchSessionAttendance::class);
+    }
+
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class);
     }
 
     public function getCompanyNameAttribute()
@@ -386,6 +402,21 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         return $this->cleanUpThePhoneNumber($this->phone);
     }
 
+    public function getBillFromDateFormattedAttribute()
+    {
+        return optional($this->bill_from_date)->toDateString();
+    }
+
+    public function getLinkedDateFormattedAttribute()
+    {
+        return optional($this->linked_date)->toDateString();
+    }
+
+    public function getTotalAmountOwedAttribute(): float
+    {
+        return round($this->invoices()->notPaid()->sum('grand_total'), 2);
+    }
+
     public function arabicE2w($str)
     {
         $arabic_eastern = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
@@ -393,12 +424,12 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         return str_replace($arabic_eastern, $arabic_western, $str);
     }
 
-    public function absences_05to09()
+    public function absences_06to10()
     {
         return $this->hasMany(AttendanceReportRecordWarning::class)
             ->whereBetween('created_at', [
-                now()->setDate(2021, 12, 5)->startOfDay(),
-                now()->setDate(2021, 12, 9)->endOfDay(),
+                now()->setDate(2022, 2, 06)->startOfDay(),
+                now()->setDate(2022, 2, 10)->endOfDay(),
             ]);
     }
 
@@ -423,13 +454,18 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
             ]);
     }
 
-    public function absences_3to9()
+    public function absences_27to28()
     {
         return $this->hasMany(AttendanceReportRecord::class)
             ->where('status', 0)
             ->whereBetween('session_starts_at', [
-                now()->setDate(2021, 10, 3)->startOfDay(),
-                now()->setDate(2021, 10, 9)->endOfDay(),
+                now()->setDate(2022, 2, 27)->startOfDay(),
+                now()->setDate(2022, 2, 28)->endOfDay(),
             ]);
+    }
+
+    public function getHasOutstandingAmountAttribute()
+    {
+        return $this->invoices()->notPaid()->count();
     }
 }

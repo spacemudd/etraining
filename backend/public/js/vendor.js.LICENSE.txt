@@ -8,45 +8,45 @@ object-assign
  * @license MIT */
 
 /*!
- * Sizzle CSS Selector Engine v2.3.5
+ * Sizzle CSS Selector Engine v2.3.6
  * https://sizzlejs.com/
  *
  * Copyright JS Foundation and other contributors
  * Released under the MIT license
  * https://js.foundation/
  *
- * Date: 2020-03-14
+ * Date: 2021-02-16
  */
 
 /*!
- * Vue.js v2.6.12
- * (c) 2014-2020 Evan You
+ * Vue.js v2.6.14
+ * (c) 2014-2021 Evan You
  * Released under the MIT License.
  */
 
 /*!
- * jQuery JavaScript Library v3.5.1
+ * jQuery JavaScript Library v3.6.0
  * https://jquery.com/
  *
  * Includes Sizzle.js
  * https://sizzlejs.com/
  *
- * Copyright JS Foundation and other contributors
+ * Copyright OpenJS Foundation and other contributors
  * Released under the MIT license
  * https://jquery.org/license
  *
- * Date: 2020-05-04T22:49Z
+ * Date: 2021-03-02T17:08Z
  */
 
 /*!
- * pulltorefreshjs v0.1.21
+ * pulltorefreshjs v0.1.22
  * (c) Rafael Soto
  * Released under the MIT License.
  */
 
 /*!
- * vue-i18n v8.22.2 
- * (c) 2020 kazuya kawaguchi
+ * vue-i18n v8.26.8 
+ * (c) 2021 kazuya kawaguchi
  * Released under the MIT License.
  */
 
@@ -57,18 +57,9 @@ object-assign
  */
 
 /*!
- * vuex v3.6.0
- * (c) 2020 Evan You
+ * vuex v3.6.2
+ * (c) 2021 Evan You
  * @license MIT
- */
-
-/*!
- Transformation Matrix v2.0
- (c) Epistemex 2014-2015
- www.epistemex.com
- By Ken Fyrstenberg
- Contributions by leeoniya.
- License: MIT, header required.
  */
 
 /*! 
@@ -90,13 +81,23 @@ object-assign
 
 /*! ./LogRocket */
 
+/*! ./arrayLikeToArray.js */
+
+/*! ./arrayWithoutHoles.js */
+
 /*! ./createEnhancer */
 
 /*! ./createMiddleware */
 
 /*! ./fetchIntercept */
 
+/*! ./iterableToArray.js */
+
 /*! ./makeLogRocket */
+
+/*! ./nonIterableSpread.js */
+
+/*! ./objectWithoutPropertiesLoose.js */
 
 /*! ./raven/raven */
 
@@ -106,11 +107,15 @@ object-assign
 
 /*! ./registerFetch */
 
+/*! ./registerNetworkInformation */
+
 /*! ./registerXHR */
 
 /*! ./setup */
 
 /*! ./stackTraceFromError */
+
+/*! ./unsupportedIterableToArray.js */
 
 /*! /root/project/packages/logrocket/src/module-npm.js */
 
@@ -124,11 +129,31 @@ object-assign
 
 /*! @apphub/logrocket-utils/src/TraceKit */
 
+/*! @apphub/logrocket-utils/src/constants/nps */
+
 /*! @apphub/logrocket-utils/src/enhanceFunc */
 
 /*! @apphub/logrocket-utils/src/mapValues */
 
+/*! @apphub/logrocket-utils/src/startsWith */
+
 /*! @apphub/now */
+
+/*! @babel/runtime/helpers/classCallCheck */
+
+/*! @babel/runtime/helpers/createClass */
+
+/*! @babel/runtime/helpers/defineProperty */
+
+/*! @babel/runtime/helpers/interopRequireDefault */
+
+/*! @babel/runtime/helpers/interopRequireWildcard */
+
+/*! @babel/runtime/helpers/objectWithoutProperties */
+
+/*! @babel/runtime/helpers/toConsumableArray */
+
+/*! @babel/runtime/helpers/typeof */
 
 /*! no static exports found */
 
@@ -161,6 +186,10 @@ object-assign
   \****************************************************/
 
 /*!*******************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/typeof.js ***!
+  \*******************************************************/
+
+/*!*******************************************************!*\
   !*** ./packages/@apphub:logrocket-redux/src/index.js ***!
   \*******************************************************/
 
@@ -181,7 +210,15 @@ object-assign
   \***********************************************************/
 
 /*!************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/createClass.js ***!
+  \************************************************************/
+
+/*!************************************************************!*\
   !*** ./packages/@apphub:logrocket-exceptions/src/index.js ***!
+  \************************************************************/
+
+/*!************************************************************!*\
+  !*** ./packages/@apphub:logrocket-utils/src/startsWith.js ***!
   \************************************************************/
 
 /*!*************************************************************!*\
@@ -193,16 +230,48 @@ object-assign
   \**************************************************************/
 
 /*!***************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/classCallCheck.js ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/defineProperty.js ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
   !*** ./packages/@apphub:logrocket-network/src/registerXHR.js ***!
   \***************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./packages/@apphub:logrocket-utils/src/constants/nps.js ***!
+  \***************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/iterableToArray.js ***!
+  \****************************************************************/
 
 /*!****************************************************************!*\
   !*** ./packages/@apphub:logrocket-redux/src/createEnhancer.js ***!
   \****************************************************************/
 
 /*!*****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/arrayLikeToArray.js ***!
+  \*****************************************************************/
+
+/*!*****************************************************************!*\
   !*** ./packages/@apphub:logrocket-network/src/registerFetch.js ***!
   \*****************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/arrayWithoutHoles.js ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/nonIterableSpread.js ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/toConsumableArray.js ***!
+  \******************************************************************/
 
 /*!******************************************************************!*\
   !*** ./packages/@apphub:logrocket-exceptions/src/raven/raven.js ***!
@@ -220,6 +289,18 @@ object-assign
   !*** ./packages/@apphub:logrocket-console/src/registerConsole.js ***!
   \*******************************************************************/
 
+/*!**********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/interopRequireDefault.js ***!
+  \**********************************************************************/
+
+/*!***********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/interopRequireWildcard.js ***!
+  \***********************************************************************/
+
+/*!************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/objectWithoutProperties.js ***!
+  \************************************************************************/
+
 /*!*************************************************************************!*\
   !*** ./packages/@apphub:logrocket-exceptions/src/registerExceptions.js ***!
   \*************************************************************************/
@@ -227,6 +308,18 @@ object-assign
 /*!**************************************************************************!*\
   !*** ./packages/@apphub:logrocket-exceptions/src/stackTraceFromError.js ***!
   \**************************************************************************/
+
+/*!***************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js ***!
+  \***************************************************************************/
+
+/*!*****************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/objectWithoutPropertiesLoose.js ***!
+  \*****************************************************************************/
+
+/*!******************************************************************************!*\
+  !*** ./packages/@apphub:logrocket-network/src/registerNetworkInformation.js ***!
+  \******************************************************************************/
 
 /**
  * @license
@@ -263,3 +356,7 @@ object-assign
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
+//! moment.js
+
+//! moment.js locale configuration

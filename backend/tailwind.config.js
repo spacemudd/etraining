@@ -6,6 +6,7 @@ module.exports = {
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
         './resources/js/**/*.vue',
+        './node_modules/@protonemedia/inertiajs-tables-laravel-query-builder/**/*.{js,vue}',
     ],
 
     theme: {
@@ -23,6 +24,8 @@ module.exports = {
         padding: ['responsive', 'direction'],
         right: ['responsive', 'direction'],
         textAlign: ['responsive', 'direction'],
+        backgroundColor: ['disabled'],
+        cursor: ['disabled'],
     },
 
     plugins: [

@@ -6,6 +6,7 @@ use App\Models\SearchableLabels;
 use App\Scope\TeamScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -33,6 +34,7 @@ class Company extends Model implements SearchableLabels, Auditable
         'company_rep_mobile',
         'email',
         'address',
+        'monthly_subscription_per_trainee',
     ];
 
     protected $appends = [
@@ -66,6 +68,11 @@ class Company extends Model implements SearchableLabels, Auditable
     public function trainees()
     {
         return $this->hasMany(Trainee::class);
+    }
+
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class);
     }
 
     /**

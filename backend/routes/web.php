@@ -2,6 +2,24 @@
 
 use App\Models\Back\Trainee;
 
+Route::get('phone-numbers/{company_id}', function() {
+
+    AttendanceReportRecordWarning::whereBetween('created_at', [now()->setDate(2022, 1, 3)->startOfDay(), now()->setDate(2022, 1, 9)->endOfDay()])->whereHas('trainee', function ($q) { $q->whereIn('company_id', ['a980c16d-b3c9-4064-aaf7-f0b6174197de', '07b45abe-da70-48b9-816e-b092e1868ae7', '4a69b7ae-25ba-43a4-a8b1-a2936647f026', 'b8f17f79-c0c4-401f-9924-d7afec100c44', '9891d1d3-103d-4af9-ab70-2028d438fd03', '022ab58a-8a4b-4a46-8c0b-350ac5ea17c5', 'd72becb3-6e03-4546-85fa-4dbd008fccb6', 'a0bc0fcb-20e3-45a3-a057-be5d47d26d19', 'e24ce28c-2cd7-496e-9eb5-202d75df5176', 'ac7393a9-d56d-49ae-9c43-a9031f244416', '6e61eded-aa67-419c-ada3-a6182214b361', 'b5d59d5a-b899-4919-bb74-43d0080b3800']); })->delete();
+    AttendanceReportRecord::whereBetween('created_at', [now()->setDate(2022, 1, 3)->startOfDay(), now()->setDate(2022, 1, 9)->endOfDay()])->whereHas('trainee', function ($q) { $q->whereIn('company_id', ['a980c16d-b3c9-4064-aaf7-f0b6174197de', '07b45abe-da70-48b9-816e-b092e1868ae7', '4a69b7ae-25ba-43a4-a8b1-a2936647f026', 'b8f17f79-c0c4-401f-9924-d7afec100c44', '9891d1d3-103d-4af9-ab70-2028d438fd03', '022ab58a-8a4b-4a46-8c0b-350ac5ea17c5', 'd72becb3-6e03-4546-85fa-4dbd008fccb6', 'a0bc0fcb-20e3-45a3-a057-be5d47d26d19', 'e24ce28c-2cd7-496e-9eb5-202d75df5176', 'ac7393a9-d56d-49ae-9c43-a9031f244416', '6e61eded-aa67-419c-ada3-a6182214b361', 'b5d59d5a-b899-4919-bb74-43d0080b3800']); })->update(['status' => 3]);
+
+    $t = Trainee::where('company_id')->pluck('phone');
+    $numbers = [];
+    foreach ($t as $phone) {
+        $parsed = app()->make(Trainee::class)->cleanUpThePhoneNumber($phone);
+        if ($parsed) {
+            $numbers[] = app()->make(Trainee::class)->cleanUpThePhoneNumber($phone);
+        } else {
+            $numbers[] = $phone;
+        }
+    }
+    return $numbers;
+});
+
 Route::get('s1s1', function() {
     $ids = [];
    $trainees = Trainee::get();
@@ -28,11 +46,14 @@ Route::get('instructor-company-report', function() {
     foreach ($contracts as $contract) {
         if ($contract->instructors()->count()) {
             foreach ($contract->instructors as $instructor) {
+                $company = \App\Models\Back\Company::find($contract->company_id);
+                if (!$company) continue;
                 $data[] = [
                     'company_id' => $contract->company_id,
                     'company_name_en' => optional($contract->company)->name_en,
                     'company_name' => optional($contract->company)->name_ar,
                     'instructor_name' => optional($instructor)->name,
+                    'trainees_count' => Trainee::where('company_id', $contract->company_id)->count(),
                 ];
             }
         }
@@ -71,10 +92,10 @@ Route::get('ttreport', function() {
         ->with('company')
         ->whereHas('company', function($q) {$q->where('deleted_at', null);})
         ->with([
-            'absences_05to09',
+            'absences_27to28',
         ])
         ->withCount([
-            'absences_05to09',
+            'absences_27to28',
         ])
         ->get();
 
@@ -88,7 +109,7 @@ Route::get('ttreport', function() {
             'phone' => $trainee->phone,
             'instructor' => optional($trainee->instructor)->name,
             'group' => optional($trainee->trainee_group)->name,
-            'absences_05to09' => $trainee->absences_05to09_count,
+            'absences_27to28' => $trainee->absences_27to28_count,
         ];
     }
 
@@ -195,12 +216,14 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::delete('/settings/trainees-applications/required-files/{id}', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'delete'])->name('settings.trainees-application.required-files.delete');
 
         Route::resource('companies', \App\Http\Controllers\Back\CompaniesController::class);
+        Route::resource('companies.invoices', \App\Http\Controllers\Back\CompanyInvoicesController::class)->only(['create', 'store']);
         Route::prefix('companies')->name('companies.')->group(function() {
             Route::get('{company_id}/contracts/{contract_id}/attachments', [\App\Http\Controllers\Back\CompaniesContractsController::class, 'attachments'])->name('contracts.attachments');
             Route::post('{company_id}/contracts/{contract}/attachments/upload', [\App\Http\Controllers\Back\CompaniesContractsController::class, 'storeAttachments'])->name('contracts.attachments.store');
             Route::delete('{company_id}/contracts/{contract}/attachments/delete', [\App\Http\Controllers\Back\CompaniesContractsController::class, 'deleteAttachments'])->name('contracts.attachments.delete');
             Route::get('{company_id}/trainees/excel', [\App\Http\Controllers\Back\CompaniesContractsController::class, 'excel'])->name('trainees.excel');
             Route::resource('{company_id}/contracts', \App\Http\Controllers\Back\CompaniesContractsController::class);
+            Route::get('{company_id}/invoices/pdf', [\App\Http\Controllers\Back\CompanyInvoicesController::class, 'pdf'])->name('invoices.pdf');
         });
 
         Route::post('company-contracts/attach-instructor', [\App\Http\Controllers\Back\CompaniesContractsController::class, 'attachInstructor'])->name('company-contracts.attach-instructor');
@@ -211,10 +234,19 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('finance', [\App\Http\Controllers\Back\FinanceController::class, 'index'])->name('finance');
 
         Route::prefix('finance')->name('finance.')->group(function() {
+            Route::get('account-statements/excel', [\App\Http\Controllers\Back\AccountStatementsController::class, 'excel'])->name('account-statements.excel');
+            Route::get('account-statements', [\App\Http\Controllers\Back\AccountStatementsController::class, 'index'])->name('account-statements');
             Route::resource('accounts', \App\Http\Controllers\Back\FinancialAccountsController::class);
+            Route::get('invoices/{id}/upload-receipt-form', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'uploadReceiptForm'])->name('invoices.upload-receipt-form');
+            Route::post('invoices/{id}/upload-receipt', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'uploadReceipt'])->name('invoices.upload-receipt');
+            Route::post('invoices/{id}/mark-as-unpaid-from-chaser', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'markAsUnpaidFromChaser'])->name('invoices.mark-as-unpaid-from-chaser');
+            Route::post('invoices/{id}/mark-as-paid-from-chaser', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'markAsPaidFromChaser'])->name('invoices.mark-as-paid-from-chaser');
+            Route::post('invoices/{id}/approve-payment-receipt/store', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'storePaymentReceiptProof'])->name('invoices.approve-payment-receipt.store');
+            Route::get('invoices/{id}/approve-payment-receipt', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'approvePaymentReceipt'])->name('invoices.approve-payment-receipt');
+            Route::post('invoices/{id}/reject-payment-receipt', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'rejectPaymentReceipt'])->name('invoices.reject-payment-receipt');
+            Route::get('invoices/{id}/pdf', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'pdf'])->name('invoices.pdf');
             Route::resource('invoices', \App\Http\Controllers\Back\FinancialInvoicesController::class);
-            Route::get('monthly-subscription/edit', [\App\Http\Controllers\Back\FinancialMonthlySubscriptionController::class, 'edit'])->name('monthly-subscription.edit');
-            Route::put('monthly-subscription', [\App\Http\Controllers\Back\FinancialMonthlySubscriptionController::class, 'update'])->name('monthly-subscription.update');
+            Route::post('expected-amount-per-invoice', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'expectedAmountPerInvoice']);
         });
 
         Route::get('trainees/import', [\App\Http\Controllers\Back\TraineesImportController::class, 'index'])->name('trainees.import');
@@ -233,6 +265,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('trainees/{trainee_id}/warnings', [\App\Http\Controllers\Back\TraineesController::class, 'warnings'])->name('trainees.warnings');
         Route::delete('trainees/{trainee_id}/warnings/all', [\App\Http\Controllers\Back\TraineesController::class, 'warningDeleteAll'])->name('trainees.warnings.delete.all');
         Route::delete('trainees/{trainee_id}/warnings/{id}', [\App\Http\Controllers\Back\TraineesController::class, 'warningDelete'])->name('trainees.warnings.delete');
+
+        // Invoice management of trainee
+        Route::get('trainees/{trainee_id}/invoices', [\App\Http\Controllers\Back\TraineesController::class, 'invoices'])->name('trainees.invoices');
 
         // Export For Trainees.
         Route::get('trainees/excel/{id}/download', [\App\Http\Controllers\Back\TraineesController::class, 'excelJobDownload'])->name('trainees.excel.job.download');
@@ -273,6 +308,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('trainees/blocked/show/{trainee_id}', [\App\Http\Controllers\Back\TraineesController::class, 'unblock'])->name('trainees.unblock');
         Route::get('trainees/archived', [\App\Http\Controllers\Back\TraineesController::class, 'indexArchived'])->name('trainees.index.archived');
         Route::resource('trainees', \App\Http\Controllers\Back\TraineesController::class);
+        Route::resource('trainees.invoices', \App\Http\Controllers\Back\TraineeInvoicesController::class)->only(['create', 'store']);
         Route::get('candidates', [\App\Http\Controllers\Back\CandidatesController::class, 'index'])->name('candidates.index');
 
         // Export For Candidates.
@@ -367,6 +403,17 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::resource('courses', \App\Http\Controllers\Trainees\CoursesController::class);
 
         Route::get('/courses/{course_id}/course-batches/{course_batch_id}/course-batch-sessions/{course_batch_session}', [\App\Http\Controllers\Trainees\CourseBatchSessionsController::class, 'show'])->name('course-batch-session.show');
+
+        Route::get('payment/options', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'showOptions'])->name('payment.options');
+
+        Route::post('payment/receipt/store', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'storeReceipt'])->name('payment.upload-receipt.store');
+        Route::get('payment/receipt', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'uploadReceipt'])->name('payment.upload-receipt');
+
+        Route::get('payment/card', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'showPaymentForm'])
+            ->name('payment.card');
+
+        Route::get('payment/card/charge-payment', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'chargePayment'])
+            ->name('payment.card.charge');
     });
 });
 
