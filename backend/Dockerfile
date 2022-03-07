@@ -67,6 +67,7 @@ RUN apk add --no-cache \
 RUN ln -s /usr/bin/wkhtmltopdf /usr/local/bin/wkhtmltopdf
 RUN chmod +x /usr/local/bin/wkhtmltopdf
 RUN chmod 1777 /usr/local/bin/wkhtmltopdf
+RUN apk --no-cache add msttcorefonts-installer fontconfig update-ms-fonts fc-cache -f
 
 #RUN wget https://github.com/h4cc/wkhtmltopdf-amd64/blob/master/bin/wkhtmltopdf-amd64?raw=true -O /usr/local/bin/wkhtmltopdf \
 #    && chmod +x /usr/local/bin/wkhtmltopdf
