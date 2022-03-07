@@ -1,11 +1,6 @@
 {
-<<<<<<< HEAD
-    "/js/app.js": "/js/app.js?id=6ae9ecf4033f6d4b316e",
-    "/css/app.css": "/css/app.css?id=608a7d0eebe992995e11",
-=======
-    "/js/app.js": "/js/app.js?id=c2f1a72850b0dbf2ad78",
+    "/js/app.js": "/js/app.js?id=2c044d5463fb03f5b9b2",
     "/css/app.css": "/css/app.css?id=78128c3bd63ac6a26bea",
->>>>>>> develop
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
     "/js/vendor.js": "/js/vendor.js?id=24335e9ea9e7491e4edb"
 }
