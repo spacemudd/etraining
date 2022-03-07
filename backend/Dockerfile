@@ -62,12 +62,22 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progre
 RUN apk add --no-cache \
         wkhtmltopdf \
         xvfb \
-        ttf-dejavu ttf-droid ttf-freefont ttf-liberation
+        ttf-dejavu ttf-droid ttf-freefont ttf-liberation \
+        msttcorefonts-installer ttf-dejavu ttf-droid ttf-ubuntu-font-family fontconfig update-ms-fonts \
+        libgcc \
+        libstdc++ \
+        musl \
+        qt5-qtbase \
+        qt5-qtbase-x11 \
+        qt5-qtsvg \
+        qt5-qtwebkit \
+        ttf-freefont \
+        ttf-ubuntu-font-family \
+        fc-cache -f
 
 RUN ln -s /usr/bin/wkhtmltopdf /usr/local/bin/wkhtmltopdf
 RUN chmod +x /usr/local/bin/wkhtmltopdf
 RUN chmod 1777 /usr/local/bin/wkhtmltopdf
-RUN apk --no-cache add msttcorefonts-installer ttf-freefont ttf-liberation fontconfig update-ms-fonts fc-cache -f
 
 #RUN wget https://github.com/h4cc/wkhtmltopdf-amd64/blob/master/bin/wkhtmltopdf-amd64?raw=true -O /usr/local/bin/wkhtmltopdf \
 #    && chmod +x /usr/local/bin/wkhtmltopdf
