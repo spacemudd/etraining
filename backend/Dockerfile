@@ -1,4 +1,4 @@
-FROM trafex/alpine-nginx-php7:latest
+FROM trafex/alpine-nginx-php7:1.10.0
 
 # Supervisord settings
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -53,15 +53,23 @@ RUN apk add \
     php7-simplexml \
     php7-xmlwriter \
     php7-zip \
-    php7-exif
+    php7-exif \
+    php7-xmlreader
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
 # For wkhtmltopdf
-RUN apk add wkhtmltopdf
-RUN wget https://github.com/h4cc/wkhtmltopdf-amd64/blob/master/bin/wkhtmltopdf-amd64?raw=true -O /usr/local/bin/wkhtmltopdf \
-    && chmod +x /usr/local/bin/wkhtmltopdf
+RUN apk add --no-cache \
+        wkhtmltopdf \
+        xvfb \
+        ttf-dejavu ttf-droid ttf-freefont ttf-liberation
 
+RUN ln -s /usr/bin/wkhtmltopdf /usr/local/bin/wkhtmltopdf
+RUN chmod +x /usr/local/bin/wkhtmltopdf
+RUN chmod 1777 /usr/local/bin/wkhtmltopdf
+
+#RUN wget https://github.com/h4cc/wkhtmltopdf-amd64/blob/master/bin/wkhtmltopdf-amd64?raw=true -O /usr/local/bin/wkhtmltopdf \
+#    && chmod +x /usr/local/bin/wkhtmltopdf
 
 USER nobody
 
