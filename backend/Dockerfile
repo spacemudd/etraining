@@ -59,7 +59,7 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progre
 
 # For wkhtmltopdf
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apk add -yq build-essential xorg libssl-dev libxrender-dev wget gdebi
+RUN apk add build-essential xorg libssl-dev libxrender-dev wget gdebi
 
 USER nobody
 
