@@ -58,8 +58,8 @@ RUN apk add \
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
 # For wkhtmltopdf
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apk add build-essential xorg libssl-dev libxrender-dev wget gdebi
+RUN apk add xvfb libfontconfig wkhtmltopdf
+
 
 USER nobody
 
