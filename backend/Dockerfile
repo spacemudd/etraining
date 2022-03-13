@@ -75,9 +75,12 @@ RUN apk add --no-cache \
         ttf-ubuntu-font-family \
         fc-cache -f
 
-RUN ln -s /usr/bin/wkhtmltopdf /usr/local/bin/wkhtmltopdf
-RUN chmod +x /usr/local/bin/wkhtmltopdf
-RUN chmod 1777 /usr/local/bin/wkhtmltopdf
+#download wkhtmltopdf
+COPY --from=madnight/alpine-wkhtmltopdf-builder:0.12.5-alpine3.10-606718795 /bin/wkhtmltopdf /usr/bin/wkhtmltopdf2
+
+RUN ln -s /usr/bin/wkhtmltopdf2 /usr/local/bin/wkhtmltopdf2
+RUN chmod +x /usr/local/bin/wkhtmltopdf2
+RUN chmod 1777 /usr/local/bin/wkhtmltopdf2
 
 #RUN wget https://github.com/h4cc/wkhtmltopdf-amd64/blob/master/bin/wkhtmltopdf-amd64?raw=true -O /usr/local/bin/wkhtmltopdf \
 #    && chmod +x /usr/local/bin/wkhtmltopdf
