@@ -164,10 +164,10 @@
             <thead>
             <tr>
                 <th style="background-color:red;">#</th>
-                <th>{{ __('words.description') }}</th>
-                <th>{{ __('words.subtotal') }}</th>
-                <th>{{ __('words.vat') }}</th>
-                <th>{{ __('words.grand-total') }}</th>
+                <th style="text-align: right">{{ __('words.description') }}</th>
+                <th style="text-align: right">{{ __('words.subtotal') }}</th>
+                <th style="text-align: right">{{ __('words.vat') }}</th>
+                <th style="text-align: right">{{ __('words.grand-total') }}</th>
             </tr>
             </thead>
             <tbody>
