@@ -72,7 +72,7 @@
             </thead>
             <tbody>
             @foreach ($invoices as $index => $invoice)
-                <tr style="page-break-inside: avoid;">
+                <tr style="page-break-inside: avoid;border:1px solid black;">
                     <td style="border:1px solid black">{{ ++$index }}</td>
                     <td style="border:1px solid black">{{ optional($invoice->trainee)->name }}</td>
                     <td style="border:1px solid black">{{ $invoice->number_formatted }}</td>
@@ -82,7 +82,7 @@
                     <td style="border:1px solid black">{{ $invoice->id_paid ? __('words.paid') : __('words.not-paid') }}</td>
                 </tr>
             @endforeach
-                <tr>
+                <tr style="border:1px solid black;">
                     <td style="border:none;"></td>
                     <td style="border:none;"></td>
                     <td style="border:none;"></td>
