@@ -9,40 +9,40 @@
 <body>
 <div class="container">
     <div class="row">
-        <div class="col-6" style="text-align:left;">
-            <img src="{{ public_path('/img/ptc_invoice_logo.png')}}" alt="logo" width="200"/>
-        </div>
         <div class="col-6">
             <h1>{{ __('words.account-statement') }}</h1>
+        </div>
+        <div class="col-6" style="text-align:left;">
+            <img src="{{ public_path('/img/ptc_invoice_logo.png')}}" alt="logo" width="200"/>
         </div>
     </div>
 
     <div class="row">
         <table class="table">
             <colgroup>
-                <col style="width:200px;">
                 <col style="width:300px;">
+                <col style="width:200px;">
             </colgroup>
             <tbody>
             <tr>
-                <td>{{ __('words.company') }}</td>
                 <td>{{ $company->resource_label }}</td>
+                <td>{{ __('words.company') }}</td>
             </tr>
             <tr>
-                <td>{{__('words.created-by')}}</td>
                 <td>{{ optional($invoice_group->created_by)->name }}</td>
+                <td>{{__('words.created-by')}}</td>
             </tr>
             <tr>
-                <td>{{ __('words.date-period') }}</td>
                 <td>
                     {{ $invoice_group->from_date->toDateString() }}
                     <br>
                     {{ $invoice_group->to_date->toDateString() }}
                 </td>
+                <td>{{ __('words.date-period') }}</td>
             </tr>
             <tr>
-                <td>{{__('words.grand-total')}}</td>
                 <td>{{ number_format($invoice_group->grand_total, 2) }}</td>
+                <td>{{__('words.grand-total')}}</td>
             </tr>
             </tbody>
         </table>
