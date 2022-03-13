@@ -18,36 +18,38 @@
     </div>
 
     <div class="row">
-        <table class="table" style="text-align: right;direction: rtl">
-            <colgroup>
-                <col style="width:300px;">
-                <col style="width:200px;">
-            </colgroup>
-            <tbody>
-            <tr>
-                <td>{{ $company->resource_label }}</td>
-                <td>{{ __('words.company') }}</td>
-            </tr>
-            <tr>
-                <td>{{ optional($invoice_group->created_by)->name }}</td>
-                <td>{{__('words.created-by')}}</td>
-            </tr>
-            <tr>
-                <td>
+        <div class="col-12" style="direction: rtl">
+            <table class="table" style="text-align: right;">
+                <colgroup>
+                    <col style="width:300px;">
+                    <col style="width:200px;">
+                </colgroup>
+                <tbody>
+                <tr>
+                    <td>{{ __('words.company') }}</td>
+                    <td>{{ $company->resource_label }}</td>
+                </tr>
+                <tr>
+                    <td>{{__('words.created-by')}}</td>
+                    <td>{{ optional($invoice_group->created_by)->name }}</td>
+                </tr>
+                <tr>
+                    <td>{{ __('words.date-period') }}</td>
+                    <td>
                     {{ $invoice_group->from_date->toDateString() }}
                     <br>
                     {{ $invoice_group->to_date->toDateString() }}
-                </td>
-                <td>{{ __('words.date-period') }}</td>
-            </tr>
-            <tr>
-                <td>{{ number_format($invoice_group->grand_total, 2) }}</td>
-                <td>{{__('words.grand-total')}}</td>
-            </tr>
-            </tbody>
-        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>{{__('words.grand-total')}}</td>
+                    <td>{{ number_format($invoice_group->grand_total, 2) }}</td>
+                </tr>
+                </tbody>
+            </table>
 
-        <p dir="ltr" class="right">{{ __('words.print-date') }}: {{ now()->toDateTimeString() }}</p>
+            <p dir="ltr" class="right">{{ __('words.print-date') }}: {{ now()->toDateTimeString() }}</p>
+        </div>
 
         <hr>
 
