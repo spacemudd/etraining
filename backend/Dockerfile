@@ -79,9 +79,6 @@ RUN ln -s /usr/bin/wkhtmltopdf /usr/local/bin/wkhtmltopdf
 RUN chmod +x /usr/local/bin/wkhtmltopdf
 RUN chmod 1777 /usr/local/bin/wkhtmltopdf
 
-RUN chmod +x /var/www/html/storage/wkhtmltopdf-amd64
-RUN chmod 1777 /var/www/html/storage/wkhtmltopdf-amd64
-
 #RUN wget https://github.com/h4cc/wkhtmltopdf-amd64/blob/master/bin/wkhtmltopdf-amd64?raw=true -O /usr/local/bin/wkhtmltopdf \
 #    && chmod +x /usr/local/bin/wkhtmltopdf
 
