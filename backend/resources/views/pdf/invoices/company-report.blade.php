@@ -26,24 +26,24 @@
                 </colgroup>
                 <tbody>
                 <tr>
-                    <td>{{ __('words.company') }}</td>
-                    <td>{{ $company->resource_label }}</td>
+                    <td style="text-align:right;">{{ __('words.company') }}</td>
+                    <td style="text-align:right;">{{ $company->resource_label }}</td>
                 </tr>
                 <tr>
-                    <td>{{__('words.created-by')}}</td>
-                    <td>{{ optional($invoice_group->created_by)->name }}</td>
+                    <td style="text-align:right;">{{__('words.created-by')}}</td>
+                    <td style="text-align:right;">{{ optional($invoice_group->created_by)->name }}</td>
                 </tr>
                 <tr>
-                    <td>{{ __('words.date-period') }}</td>
-                    <td>
+                    <td style="text-align:right;">{{ __('words.date-period') }}</td>
+                    <td style="text-align:right;">
                     {{ $invoice_group->from_date->toDateString() }}
                     <br>
                     {{ $invoice_group->to_date->toDateString() }}
                     </td>
                 </tr>
                 <tr>
-                    <td>{{__('words.grand-total')}}</td>
-                    <td>{{ number_format($invoice_group->grand_total, 2) }}</td>
+                    <td style="text-align:right;">{{__('words.grand-total')}}</td>
+                    <td style="text-align:right;">{{ number_format($invoice_group->grand_total, 2) }}</td>
                 </tr>
                 </tbody>
             </table>
