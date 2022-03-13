@@ -26,12 +26,12 @@
                 </colgroup>
                 <tbody>
                 <tr>
-                    <td style="text-align:right;background-color:gray;">{{__('words.created-by')}}</td>
-                    <td style="text-align:right;background-color:blue;">{{ optional($invoice_group->created_by)->name }}</td>
+                    <td style="text-align:right;">{{ __('words.company') }}</td>
+                    <td style="text-align:right;">{{ trim($company->resource_label) }}</td>
                 </tr>
                 <tr>
-                    <td style="text-align:right;background-color:gray;">{{ __('words.company') }}</td>
-                    <td style="text-align:right;background-color:blue;direction:rtl">{{ trim($company->resource_label) }}</td>
+                    <td style="text-align:right;">{{__('words.created-by')}}</td>
+                    <td style="text-align:right;">{{ optional($invoice_group->created_by)->name }}</td>
                 </tr>
                 <tr>
                     <td style="text-align:right;">{{ __('words.date-period') }}</td>
@@ -48,7 +48,7 @@
                 </tbody>
             </table>
 
-            <p dir="ltr" class="right">{{ __('words.print-date') }}: {{ now()->toDateTimeString() }}</p>
+            <p dir="ltr" class="right" style="text-align: right;">{{ __('words.print-date') }}: {{ now()->toDateTimeString() }}</p>
         </div>
 
         <hr>
