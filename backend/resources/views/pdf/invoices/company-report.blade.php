@@ -159,7 +159,7 @@
 
         <table style="width:100%;margin-top:5rem;">
             <colgroup>
-                <col style="width:10px;">
+                <col style="width:50px;">
                 <col style="width:400px;">
                 <col>
             </colgroup>
