@@ -156,11 +156,30 @@ class CompanyInvoicesController extends Controller
             ->get();
 
         $pdf = PDF::setOption('footer-html', resource_path('views/pdf/invoices/client-invoice-footer.html'))
-            ->setOption('margin-bottom', 30)->loadView("pdf.invoices.company-report", [
+            ->setOption('margin-bottom', 30)
+        ->setOption('page-size', 'A4')
+        ->setOption('orientation', 'portrait')
+        ->setOption('encoding','utf-8')
+        ->setOption('dpi', 300)
+        ->setOption('image-dpi', 300)
+        ->setOption('lowquality', false)
+        ->setOption('no-background', false)
+        ->setOption('enable-internal-links', true)
+        ->setOption('enable-external-links', true)
+        ->setOption('javascript-delay', 1000)
+        ->setOption('no-stop-slow-scripts', true)
+        ->setOption('no-background', false)
+        ->setOption('margin-left', 10)
+        ->setOption('margin-top', 10)
+        ->setOption('margin-bottom', 20)
+        ->setOption('disable-smart-shrinking', true)
+        ->setOption('viewport-size', '1024×768')
+        ->setOption('zoom', 0.78)->loadView("pdf.invoices.company-report", [
             'company' => $company,
             'invoice_group' => $invoice_group,
             'invoices' => $invoices,
         ]);
+
 
         return $pdf->inline();
     }
