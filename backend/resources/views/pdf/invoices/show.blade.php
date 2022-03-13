@@ -82,7 +82,7 @@
             <tbody>
             @foreach ($invoice->items as $index => $item)
                 <tr>
-                    <td style="background-color:red;>{{ $index+1 }}</td>
+                    <td style="background-color:red;">{{ $index+1 }}</td>
                     <th>{{ $item->name_ar }}</th>
                     <th>{{ number_format($item->sub_total, 2) }}</th>
                     <th>{{ number_format($item->tax, 2) }}</th>
