@@ -18,7 +18,7 @@
     </div>
 
     <div class="row">
-        <table class="table" style="text-align: right;">
+        <table class="table" style="text-align: right;direction: rtl">
             <colgroup>
                 <col style="width:300px;">
                 <col style="width:200px;">
