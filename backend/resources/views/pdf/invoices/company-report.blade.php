@@ -22,7 +22,6 @@
             <table class="table" style="text-align: right;">
                 <colgroup>
                     <col style="width:300px;">
-                    <col style="width:200px;">
                 </colgroup>
                 <tbody>
                 <tr>
