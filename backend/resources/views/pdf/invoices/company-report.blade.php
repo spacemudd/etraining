@@ -19,7 +19,7 @@
 
     <div class="row">
         <div class="col-12" style="direction: rtl">
-            <table class="table" style="text-align: right;">
+            <table class="table" style="text-align: right;width:100%;">
                 <colgroup>
                     <col style="width:30%;">
                     <col style="width:70%">
