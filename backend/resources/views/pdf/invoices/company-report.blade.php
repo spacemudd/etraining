@@ -174,10 +174,10 @@
             @foreach ($invoice->items as $index => $item)
                 <tr>
                     <td style="background-color:red;">{{ $index+1 }}</td>
-                    <th>{{ $item->name_ar }}</th>
-                    <th>{{ number_format($item->sub_total, 2) }}</th>
-                    <th>{{ number_format($item->tax, 2) }}</th>
-                    <th>{{ number_format($item->grand_total, 2) }}</th>
+                    <th style="text-align:rigt">{{ $item->name_ar }}</th>
+                    <th style="text-align:rigt">{{ number_format($item->sub_total, 2) }}</th>
+                    <th style="text-align:rigt">{{ number_format($item->tax, 2) }}</th>
+                    <th style="text-align:rigt">{{ number_format($item->grand_total, 2) }}</th>
                 </tr>
             @endforeach
             </tbody>
