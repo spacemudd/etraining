@@ -72,7 +72,7 @@
             </colgroup>
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th style="background-color:red;">#</th>
                     <th>{{ __('words.description') }}</th>
                     <th>{{ __('words.subtotal') }}</th>
                     <th>{{ __('words.vat') }}</th>
@@ -82,7 +82,7 @@
             <tbody>
             @foreach ($invoice->items as $index => $item)
                 <tr>
-                    <td>{{ $index+1 }}</td>
+                    <td style="background-color:red;>{{ $index+1 }}</td>
                     <th>{{ $item->name_ar }}</th>
                     <th>{{ number_format($item->sub_total, 2) }}</th>
                     <th>{{ number_format($item->tax, 2) }}</th>
