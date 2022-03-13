@@ -21,7 +21,8 @@
         <div class="col-12" style="direction: rtl">
             <table class="table" style="text-align: right;">
                 <colgroup>
-                    <col style="width:300px;">
+                    <col style="width:30%;">
+                    <col style="width:70%">
                 </colgroup>
                 <tbody>
                 <tr>
