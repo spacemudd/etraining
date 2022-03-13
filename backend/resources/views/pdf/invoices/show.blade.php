@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html dir="rtl">
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <link rel="stylesheet" href="{{ url('pdf.css') }}" media="screen">
@@ -18,7 +18,6 @@
     </div>
 
     <div class="row">
-        <div class="col-12">
         <table class="table" style="width:100%;margin-top:5rem;">
             <colgroup>
                 <col style="width:140px;">
@@ -66,13 +65,13 @@
 
         <table style="width:100%;margin-top:5rem;">
             <colgroup>
-                <col style="width:50px;">
+                <col style="width:10px;">
                 <col style="width:400px;">
                 <col>
             </colgroup>
             <thead>
                 <tr>
-                    <th style="background-color:red;">#</th>
+                    <th>#</th>
                     <th>{{ __('words.description') }}</th>
                     <th>{{ __('words.subtotal') }}</th>
                     <th>{{ __('words.vat') }}</th>
@@ -82,7 +81,7 @@
             <tbody>
             @foreach ($invoice->items as $index => $item)
                 <tr>
-                    <td style="background-color:red;">{{ $index+1 }}</td>
+                    <td>{{ $index+1 }}</td>
                     <th>{{ $item->name_ar }}</th>
                     <th>{{ number_format($item->sub_total, 2) }}</th>
                     <th>{{ number_format($item->tax, 2) }}</th>
@@ -91,13 +90,12 @@
             @endforeach
             </tbody>
         </table>
-        </div>
     </div>
 
     <div class="row">
         <div class="col-12" style="margin-top:5rem;">
             <hr>
-            <table class="table" style="width:100%;font-size: 11px;font-weight: normal;padding:1rem;">
+            <table class="table" style="width:100%;font-size: 11px;font-weight: normal">
                 <colgroup>
                     <col style="width:200px;">
                     <col>

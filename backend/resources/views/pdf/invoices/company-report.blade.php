@@ -163,7 +163,7 @@
             </colgroup>
             <thead>
             <tr>
-                <th style="background-color:red;">#</th>
+                <th>#</th>
                 <th style="text-align: center">{{ __('words.description') }}</th>
                 <th style="text-align: right">{{ __('words.subtotal') }}</th>
                 <th style="text-align: right">{{ __('words.vat') }}</th>
