@@ -73,22 +73,22 @@
             <tbody>
             @foreach ($invoices as $index => $invoice)
                 <tr style="page-break-inside: avoid;">
-                    <td>{{ ++$index }}</td>
-                    <td>{{ optional($invoice->trainee)->name }}</td>
-                    <td>{{ $invoice->number_formatted }}</td>
-                    <td>{{ number_format($invoice->sub_total, 2) }}</td>
-                    <td>{{ number_format($invoice->tax, 2) }}</td>
-                    <td>{{ number_format($invoice->grand_total, 2) }}</td>
-                    <td>{{ $invoice->id_paid ? __('words.paid') : __('words.not-paid') }}</td>
+                    <td style="border:1px solid black">{{ ++$index }}</td>
+                    <td style="border:1px solid black">{{ optional($invoice->trainee)->name }}</td>
+                    <td style="border:1px solid black">{{ $invoice->number_formatted }}</td>
+                    <td style="border:1px solid black">{{ number_format($invoice->sub_total, 2) }}</td>
+                    <td style="border:1px solid black">{{ number_format($invoice->tax, 2) }}</td>
+                    <td style="border:1px solid black">{{ number_format($invoice->grand_total, 2) }}</td>
+                    <td style="border:1px solid black">{{ $invoice->id_paid ? __('words.paid') : __('words.not-paid') }}</td>
                 </tr>
             @endforeach
                 <tr>
                     <td style="border:none;"></td>
                     <td style="border:none;"></td>
                     <td style="border:none;"></td>
-                    <td>{{ number_format($invoices->sum('sub_total'), 2) }}</td>
-                    <td>{{ number_format($invoices->sum('tax'), 2) }}</td>
-                    <td>{{ number_format($invoices->sum('grand_total'), 2) }}</td>
+                    <td style="border:1px solid black;">{{ number_format($invoices->sum('sub_total'), 2) }}</td>
+                    <td style="border:1px solid black;">{{ number_format($invoices->sum('tax'), 2) }}</td>
+                    <td style="border:1px solid black;">{{ number_format($invoices->sum('grand_total'), 2) }}</td>
                 </tr>
             </tbody>
         </table>
