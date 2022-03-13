@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html dir="rtl">
+<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    {{--<link rel="stylesheet" href="{{ url('pdf.css') }}" media="screen">--}}
+    <link rel="stylesheet" href="{{ url('pdf.css') }}" media="screen">
     <link rel="stylesheet" href="{{ public_path('pdf.css') }}" media="screen">
     <title>{{ $company->resource_label }}</title>
 </head>
