@@ -31,7 +31,7 @@
                 </tr>
                 <tr>
                     <td style="text-align:right;background-color:gray;">{{ __('words.company') }}</td>
-                    <td style="text-align:right;background-color:blue;">{{ trim($company->resource_label) }}</td>
+                    <td style="text-align:right;background-color:blue;direction:rtl">{{ trim($company->resource_label) }}</td>
                 </tr>
                 <tr>
                     <td style="text-align:right;">{{ __('words.date-period') }}</td>
