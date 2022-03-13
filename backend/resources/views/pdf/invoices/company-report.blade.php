@@ -164,7 +164,7 @@
             <thead>
             <tr>
                 <th style="background-color:red;">#</th>
-                <th style="text-align: right">{{ __('words.description') }}</th>
+                <th style="text-align: center">{{ __('words.description') }}</th>
                 <th style="text-align: right">{{ __('words.subtotal') }}</th>
                 <th style="text-align: right">{{ __('words.vat') }}</th>
                 <th style="text-align: right">{{ __('words.grand-total') }}</th>
@@ -174,7 +174,7 @@
             @foreach ($invoice->items as $index => $item)
                 <tr>
                     <td style="background-color:red;">{{ $index+1 }}</td>
-                    <th style="text-align:right">{{ $item->name_ar }}</th>
+                    <th style="text-align:center">{{ $item->name_ar }}</th>
                     <th style="text-align:right">{{ number_format($item->sub_total, 2) }}</th>
                     <th style="text-align:right">{{ number_format($item->tax, 2) }}</th>
                     <th style="text-align:right">{{ number_format($item->grand_total, 2) }}</th>
