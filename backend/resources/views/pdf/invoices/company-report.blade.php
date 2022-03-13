@@ -27,11 +27,11 @@
                 <tbody>
                 <tr>
                     <td style="text-align:right;background-color:gray;">{{ __('words.company') }}</td>
-                    <td style="text-align:right;background-color:blue;">{{ $company->resource_label }}</td>
+                    <td style="text-align:right;background-color:blue;">{{ trim($company->resource_label) }}</td>
                 </tr>
                 <tr>
                     <td style="text-align:right;background-color:gray;">{{__('words.created-by')}}</td>
-                    <td style="text-align:right;background-color:blue;">{{ nl2br(optional($invoice_group->created_by)->name) }}</td>
+                    <td style="text-align:right;background-color:blue;">{{ optional($invoice_group->created_by)->name }}</td>
                 </tr>
                 <tr>
                     <td style="text-align:right;">{{ __('words.date-period') }}</td>
