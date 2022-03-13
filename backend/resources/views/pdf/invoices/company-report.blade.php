@@ -26,8 +26,8 @@
                 </colgroup>
                 <tbody>
                 <tr>
-                    <td style="text-align:right;">{{ __('words.company') }}</td>
-                    <td style="text-align:right;">{{ $company->resource_label }}</td>
+                    <td style="text-align:right;background-color:gray;">{{ __('words.company') }}</td>
+                    <td style="text-align:right;background-color:blue;">{{ $company->resource_label }}</td>
                 </tr>
                 <tr>
                     <td style="text-align:right;background-color:gray;">{{__('words.created-by')}}</td>
