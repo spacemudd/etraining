@@ -38,7 +38,7 @@ class TtTraineeReport implements FromArray
                 'phone' => $trainee->phone,
                 'instructor' => optional($trainee->instructor)->name,
                 'group' => optional($trainee->trainee_group)->name,
-                'absences_06to10' => $trainee->absences_06to10_count,
+                'absences_06to10' => $trainee->absences_06to10_count ?: 0,
             ];
         }
 
