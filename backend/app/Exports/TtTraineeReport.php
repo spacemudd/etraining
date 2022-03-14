@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Models\Back\Trainee;
 use Maatwebsite\Excel\Concerns\FromCollection;
 
 class TtTraineeReport implements FromCollection
