@@ -3,14 +3,15 @@
 namespace App\Exports;
 
 use App\Models\Back\Trainee;
+use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\FromCollection;
 
-class TtTraineeReport implements FromCollection
+class TtTraineeReport implements FromArray
 {
     /**
     * @return \Illuminate\Support\Collection
     */
-    public function collection()
+    public function array()
     {
         $trainees = Trainee::where('company_id', '!=', null)
             ->where('suspended_at', null)
