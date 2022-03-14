@@ -30,6 +30,16 @@ class TtTraineeReport implements FromArray
 
         $traineeData = [];
 
+        $traineeData[] = [
+            'name',
+            'company',
+            'email',
+            'phone',
+            'instructor',
+            'group',
+            'absences_06_to_10',
+        ];
+
         foreach ($trainees as $trainee) {
             $traineeData[] = [
                 'name' => $trainee->name,
