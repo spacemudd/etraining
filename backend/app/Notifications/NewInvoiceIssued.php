@@ -8,7 +8,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use NotificationChannels\ClickSend\ClickSendChannel;
 
-class NewInvoiceIssued extends Notification
+class NewInvoiceIssued extends Notification implements ShouldQueue
 {
     use Queueable;
 

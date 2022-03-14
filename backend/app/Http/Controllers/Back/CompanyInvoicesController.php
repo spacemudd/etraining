@@ -90,7 +90,8 @@ class CompanyInvoicesController extends Controller
                     'balance' => AccountingLedgerBook::getBalanceForTrainee($invoice->trainee->id) + $invoice->grand_total,
                 ]);
 
-                Trainee::find($trainee_id)->notify(new NewInvoiceIssued());
+                // TODO: Enable notification for later.
+                //Trainee::find($trainee_id)->notify(new NewInvoiceIssued());
             }
         });
 

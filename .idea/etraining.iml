@@ -220,6 +220,11 @@
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/maatwebsite/excel" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/league/commonmark" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/components/font-awesome" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/storage/app" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/storage/db_index" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/storage/debugbar" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/storage/framework" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/_laravel_idea" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
