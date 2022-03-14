@@ -9,9 +9,9 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 class TtTraineeReport implements FromArray
 {
     /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function array()
+    * @return array
+     */
+    public function array(): array
     {
         $trainees = Trainee::where('company_id', '!=', null)
             ->where('suspended_at', null)
