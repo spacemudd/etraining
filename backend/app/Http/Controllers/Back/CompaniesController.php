@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Back;
 use App\Http\Controllers\Controller;
 use App\Models\Back\Company;
 use App\Models\Back\Instructor;
+use App\Models\Back\Trainee;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -111,6 +112,7 @@ class CompaniesController extends Controller
             'company' => $company,
             'invoices' => $invoices,
             'instructors' => Instructor::get(),
+            'trainees_trashed_count' => Trainee::where('company_id', $company->id)->onlyTrashed()->count(),
         ]);
     }
 

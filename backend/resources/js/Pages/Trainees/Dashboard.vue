@@ -30,7 +30,7 @@
             </div>
 
             <!-- Instructor's upcoming sessions. -->
-            <div class="container px-6 mx-auto grid pt-6">
+            <div class="container px-6 mx-auto grid pt-6" v-if="!user.trainee.deleted_at">
                 <div v-for="session in sessions.data"
                      :key="session.id">
                     <div class="bg-white my-5 p-5 flex gap-6">

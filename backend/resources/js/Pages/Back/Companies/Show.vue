@@ -94,6 +94,7 @@
                         <h3 class="text-lg font-medium text-gray-900">
                             {{ $t('words.trainees') }}
                             <span v-if="company.trainees_count">({{ company.trainees_count }})</span>
+                            <span v-if="trainees_trashed_count">({{ trainees_trashed_count }})</span>
                         </h3>
                     </div>
                 </div>
@@ -293,7 +294,7 @@ import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
 import EmptySlate from "@/Components/EmptySlate";
 
 export default {
-    props: ['sessions', 'company', 'instructors', 'invoices'],
+    props: ['sessions', 'company', 'instructors', 'invoices', 'trainees_trashed_count'],
 
     components: {
         AppLayout,
