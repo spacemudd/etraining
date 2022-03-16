@@ -36,7 +36,7 @@
     </head>
     <body class="font-sans antialiased">
         @if (env('APP_URL') === 'https://prod.ptc-ksa.com')
-            <div class="w-full bg-red-600 text-center p-5 text-white">
+            <div class="w-full bg-blue-600 text-center p-5 text-white">
                 النظام في البيئة الإختبارية
             </div>
         @endif
