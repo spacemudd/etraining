@@ -153,7 +153,7 @@ class User extends Authenticatable implements Auditable
 
     public function trainee()
     {
-        return $this->hasOne(Trainee::class);
+        return $this->hasOne(Trainee::class)->withTrashed();
     }
 
     public function team()
