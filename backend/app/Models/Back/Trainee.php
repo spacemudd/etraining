@@ -107,7 +107,9 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
 
         static::updating(function ($model) {
             $companyChanged = $model->company_id != $model->getOriginal('company_id');
-            if ($companyChanged && $model->company_id) {
+
+            $isFinanceUser = (Str::contains('finance', auth()->user()->roles()->first()->name) || Str::contains('chasers', auth()->user()->roles()->first()->name));
+            if ($companyChanged && $model->company_id && !$isFinanceUser) {
                 $model->notify(new AssignedToCompanyTraineeNotification());
             }
         });
