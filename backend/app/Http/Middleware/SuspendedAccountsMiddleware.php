@@ -17,17 +17,20 @@ class SuspendedAccountsMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($trainee = optional(auth()->user())->trainee) {
-            $suspended = TraineeBlockList::where('name', $trainee->name)
-                ->orWhere('phone', $trainee->phone)
-                // ->orWhere('phone_additional', $trainee->phone_additional)
-                ->orWhere('email', $trainee->email)
-                ->orWhere('identity_number', $trainee->identity_number)
-                ->exists();
+        // NOTE: This was disabled in delivering D-PTC-12.
+        // The email should be titled 'D-PTC-12'.
 
-            if ($suspended) {
-                abort('412', 'Account disabled');
-            }
+        if ($trainee = optional(auth()->user())->trainee) {
+            //$suspended = TraineeBlockList::where('name', $trainee->name)
+            //    ->orWhere('phone', $trainee->phone)
+            //    // ->orWhere('phone_additional', $trainee->phone_additional)
+            //    ->orWhere('email', $trainee->email)
+            //    ->orWhere('identity_number', $trainee->identity_number)
+            //    ->exists();
+
+            //if ($suspended) {
+            //    abort('412', 'Account disabled');
+            //}
         }
         return $next($request);
     }
