@@ -632,9 +632,9 @@ class TraineesController extends Controller
             'deleted_remark' => $request->deleted_remark,
         ]);
         $trainee->delete();
-        if ($trainee->user) {
-            $trainee->user->delete();
-        }
+        //if ($trainee->user) {
+        //    $trainee->user->delete();
+        //}
         DB::commit();
         return redirect()->route('back.trainees.index');
     }
@@ -690,9 +690,9 @@ class TraineesController extends Controller
             'phone_additional' => $trainee->phone_additional,
             'reason' => $request->reason,
         ]);
-        if ($trainee->user) {
-            $trainee->user->delete();
-        }
+        //if ($trainee->user) {
+        //    $trainee->user->delete();
+        //}
         $trainee->delete();
         DB::commit();
         return redirect()->route('back.trainees.block-list.index');
