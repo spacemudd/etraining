@@ -121,7 +121,13 @@
                         >
                             <td class="border-t">
                                 <div class="px-4 py-2 flex items-center focus:text-indigo-500">
-                                    <inertia-link :href="route('back.trainees.show', trainees.id)">
+                                    <inertia-link :href="trainees.show_url">
+                                        <span
+                                            v-if="trainees.deleted_at"
+                                            class="inline-block mt-2 p-1 px-2 bg-red-600 text-white rounded-lg"
+                                        >
+                                            {{ $t('words.blocked') }}
+                                        </span>
                                         <span
                                             v-if="trainees.is_pending_uploading_files"
                                             class="inline-block mt-2 p-1 px-2 bg-blue-300 rounded-lg"

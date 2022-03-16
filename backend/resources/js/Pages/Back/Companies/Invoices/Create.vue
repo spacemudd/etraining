@@ -118,6 +118,9 @@
                                             :value="trainee_id"
                                             v-model="form.trainees"
                                         >
+                                        <span v-if="trainees.deleted_at" class="inline-block mt-2 p-1 px-2 bg-red-600 text-white rounded-lg">
+                                            {{ $t('words.blocked') }}
+                                        </span>
                                         <span class="mx-2 text-sm text-gray-600">{{ trainee_name }}</span>
                                     </label>
                                 </div>

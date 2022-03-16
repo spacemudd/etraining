@@ -25,8 +25,14 @@ class CompanyInvoicesController extends Controller
     {
         $this->authorize('issue-monthly-invoices');
 
-        $company = Company::query()->findOrFail($company_id);
-        $trainees = $company->trainees()->pluck('name', 'id');
+        $company = Company::query()
+            ->with(['trainees' => function($q) {
+                $q->withTrashed();
+            }])
+            ->findOrFail($company_id);
+
+        $trainees = $company->trainees
+            ->pluck('name', 'id');
 
         return Inertia::render('Back/Companies/Invoices/Create', [
             'company' => $company,
@@ -70,8 +76,8 @@ class CompanyInvoicesController extends Controller
                 ];
 
                 $invoice->items()->create([
-                    'name_en' => __('words.training-costs-for-the-period-of', $period, 'en'),
-                    'name_ar' => __('words.training-costs-for-the-period-of', $period, 'ar'),
+                    'name_en' => $company->name_en . ' - ' .__('words.training-costs-for-the-period-of', $period, 'en'),
+                    'name_ar' => $company->name_ar . ' - ' .__('words.training-costs-for-the-period-of', $period, 'ar'),
                     'sub_total' => $sub_total->getAmount()->toFloat(),
                     'tax' => $tax->getAmount()->toFloat(),
                     'grand_total' => $grand_total->getAmount()->toFloat(),
@@ -83,7 +89,7 @@ class CompanyInvoicesController extends Controller
                     'trainee_id' => $invoice->trainee_id,
                     'invoice_id' => $invoice->id,
                     'date' => now(),
-                    'description' => __('words.training-costs-for-the-period-of', $period, 'ar'),
+                    'description' => $company->name_ar . ' - ' .__('words.training-costs-for-the-period-of', $period, 'ar'),
                     'reference'  => __('words.training-costs-for-the-period-of', $period, 'ar'),
                     'account_name' => $invoice->trainee->name,
                     'debit' => $invoice->grand_total,

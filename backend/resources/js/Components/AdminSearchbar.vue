@@ -54,7 +54,9 @@
                                   class="search-result-row p-1 px-5 rounded-lg block"
                                   :class="{'hover:bg-gray-100': searchResults.length}"
                     >
-                        <p class="text-black font-bold"><Skeleton>{{ record.resource_label }}</Skeleton></p>
+                        <p class="text-black font-bold">
+                            <span v-if="record.deleted_at" class="text-sm inline-block mt-2 p-1 px-2 bg-red-600 text-white rounded-lg">{{ $t('words.blocked') }}</span>
+                            <Skeleton>{{ record.resource_label }}</Skeleton></p>
                         <p class="text-gray-500"><Skeleton>{{ record.resource_type }}</Skeleton></p>
                     </inertia-link>
                 </div>

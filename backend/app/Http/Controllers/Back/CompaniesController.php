@@ -80,7 +80,9 @@ class CompaniesController extends Controller
     {
         $company = Company::query()
             ->with([
-                'trainees',
+                'trainees' => function($model) {
+                    $model->withTrashed();
+                },
                 'contracts' => function ($model) {
                     $model->with([
                         'instructors' => function ($q) {

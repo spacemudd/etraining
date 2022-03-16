@@ -88,7 +88,7 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
 
     public function trainee(): BelongsTo
     {
-        return $this->belongsTo(Trainee::class);
+        return $this->belongsTo(Trainee::class)->withTrashed();
     }
 
     public function created_by(): BelongsTo

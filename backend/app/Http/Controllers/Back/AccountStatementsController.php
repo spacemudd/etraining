@@ -16,8 +16,8 @@ class AccountStatementsController extends Controller
     public function index()
     {
         return Inertia::render('Back/Finance/AccountStatements', [
-            'companies' => Company::select('id', 'name_ar')->orderBy('name_ar')->toBase()->get(),
-            'trainees' => Trainee::select('id', 'name')->orderBy('name')->toBase()->get(),
+            'companies' => Company::select('id', 'name_ar')->withTrashed()->orderBy('name_ar')->toBase()->get(),
+            'trainees' => Trainee::select('id', 'name')->withTrashed()->orderBy('name')->toBase()->get(),
         ]);
     }
 
