@@ -31,7 +31,7 @@
                 <td style="padding:0 10px;">شركة مركز احترافية التدريب</td>
                 <td style="background-color:#dcdcdc;padding:0 10px;">العميل</td>
                 <td style="padding:0 10px;">
-                    {{ $invoice->trainee->name }} - ({{ $invoice->trainee->company->name_ar }})
+                    {{ $invoice->trainee->name }} - ({{ $invoice->company->name_ar }})
                 </td>
             </tr>
             <tr>

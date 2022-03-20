@@ -41,7 +41,7 @@
                             </td>
                             <td class="rtl:text-right text-black">
                                 <inertia-link :href="route('back.companies.show', invoice.company_id)">
-                                    {{ invoice.trainee.company.name_ar }}
+                                    {{ invoice.company.name_ar }}
                                 </inertia-link>
                             </td>
                             <td class="rtl:text-right text-black">
