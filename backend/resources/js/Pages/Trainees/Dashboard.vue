@@ -3,20 +3,20 @@
         <div class="container px-6 mx-auto grid">
 
             <!-- Payment notice -->
-            <div class="container mx-auto grid p-6" v-if="user.trainee.has_outstanding_amount">
-                <div class="bg-red-100 rounded-lg p-10 border-red-500 border-2">
-                    <p class="text-red-800 flex">
-                        <svg style="margin-left:10px;" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        {{ $t('words.due-balance-notice') }}
-                    </p>
-                    <inertia-link class="mt-5 inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
-                                  :href="route('trainees.payment.options')">
-                        {{ $t('words.pay-now') }}
-                    </inertia-link>
-                </div>
-            </div>
+            <!--<div class="container mx-auto grid p-6" v-if="user.trainee.has_outstanding_amount">-->
+            <!--    <div class="bg-red-100 rounded-lg p-10 border-red-500 border-2">-->
+            <!--        <p class="text-red-800 flex">-->
+            <!--            <svg style="margin-left:10px;" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">-->
+            <!--                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />-->
+            <!--            </svg>-->
+            <!--            {{ $t('words.due-balance-notice') }}-->
+            <!--        </p>-->
+            <!--        <inertia-link class="mt-5 inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"-->
+            <!--                      :href="route('trainees.payment.options')">-->
+            <!--            {{ $t('words.pay-now') }}-->
+            <!--        </inertia-link>-->
+            <!--    </div>-->
+            <!--</div>-->
 
             <div class="container mx-auto grid p-6">
                 <div class="bg-white rounded-lg p-10 flex gap-10">
