@@ -97,7 +97,7 @@ class CompanyInvoicesController extends Controller
                 ]);
 
                 // TODO: Enable notification for later.
-                Trainee::find($trainee_id)->notify(new NewInvoiceIssued());
+                Trainee::withTrashed()->find($trainee_id)->notify(new NewInvoiceIssued());
             }
         });
 
