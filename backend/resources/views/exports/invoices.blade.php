@@ -36,10 +36,10 @@
             <td style="border:1px solid black;">{{ $invoice->grand_total }}</td>
             <td style="border:1px solid black;">{{ $invoice->status_formatted }}</td>
             <td style="border:1px solid black;">{{ $invoice->from_date }}</td>
-            <td style="border:1px solid black;">{{ optional($invoice->created_at)->setTimezone('Asia/Riyadh')->toDateTimeString() }}</td>
-            <td style="border:1px solid black;">{{ optional($invoice->paid_at)->setTimezone('Asia/Riyadh')->toDateTimeString() }}</td>
-            <td style="border:1px solid black;">{{ optional($invoice->chased_at)->setTimezone('Asia/Riyadh')->toDateTimeString() }}</td>
-            <td style="border:1px solid black;">{{ optional($invoice->verified_at)->setTimezone('Asia/Riyadh')->toDateTimeString() }}</td>
+            <td style="border:1px solid black;">{{ optional(optional($invoice->created_at)->setTimezone('Asia/Riyadh'))->toDateTimeString() }}</td>
+            <td style="border:1px solid black;">{{ optional(optional($invoice->paid_at)->setTimezone('Asia/Riyadh'))->toDateTimeString() }}</td>
+            <td style="border:1px solid black;">{{ optional(optional($invoice->chased_at)->setTimezone('Asia/Riyadh'))->toDateTimeString() }}</td>
+            <td style="border:1px solid black;">{{ optional(optional($invoice->verified_at)->setTimezone('Asia/Riyadh'))->toDateTimeString() }}</td>
         </tr>
     @endforeach
     </tbody>
