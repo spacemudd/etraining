@@ -495,5 +495,6 @@ return [
     'created-at' => 'وقت الإنشاء',
     'paid-at' => 'وقت الدفع',
     'chased-at' => 'وقت التحصيل',
-    'approved-at' => 'وقت الإعتماد',
+    'verified-at' => 'وقت الإعتماد',
+    'invoice-date' => 'تاريخ الفاتورة',
 ];

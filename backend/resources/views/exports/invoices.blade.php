@@ -15,17 +15,18 @@
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.tax') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.grand-total') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.status') }}</strong></th>
+        <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.invoice-date') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.created-at') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.paid-at') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.chased-at') }}</strong></th>
-        <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.approved-at') }}</strong></th>
+        <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.verified-at') }}</strong></th>
     </tr>
     </thead>
 
     <tbody>
     @foreach ($invoices as $invoice)
         <tr>
-            <td style="width:50px;text-align:center;border:1px solid black;">{{ $invoice->number }}</td>
+            <td style="width:50px;text-align:center;border:1px solid black;">{{ $invoice->number_formatted }}</td>
             <td style="width:50px;text-align:center;border:1px solid black;">{{ $invoice->company->name_ar }}</td>
             <td style="border:1px solid black;">{{ $invoice->trainee->name }}</td>
             <td style="border:1px solid black;">{{ $invoice->trainee->email }}</td>
@@ -34,10 +35,11 @@
             <td style="border:1px solid black;">{{ $invoice->tax }}</td>
             <td style="border:1px solid black;">{{ $invoice->grand_total }}</td>
             <td style="border:1px solid black;">{{ $invoice->status_formatted }}</td>
-            <td style="border:1px solid black;">{{ $invoice->created_at }}</td>
-            <td style="border:1px solid black;">{{ $invoice->paid_at }}</td>
-            <td style="border:1px solid black;">{{ $invoice->chased_at }}</td>
-            <td style="border:1px solid black;">{{ $invoice->verified_at }}</td>
+            <td style="border:1px solid black;">{{ $invoice->from_date }}</td>
+            <td style="border:1px solid black;">{{ $invoice->created_at->setTimezone('Asia/Riyadh')->toDateTimeString() }}</td>
+            <td style="border:1px solid black;">{{ $invoice->paid_at->setTimezone('Asia/Riyadh')->toDateTimeString() }}</td>
+            <td style="border:1px solid black;">{{ $invoice->chased_at->setTimezone('Asia/Riyadh')->toDateTimeString() }}</td>
+            <td style="border:1px solid black;">{{ $invoice->verified_at->setTimezone('Asia/Riyadh')->toDateTimeString() }}</td>
         </tr>
     @endforeach
     </tbody>

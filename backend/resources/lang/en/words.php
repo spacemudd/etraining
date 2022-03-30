@@ -482,5 +482,6 @@ return [
     'created-at' => 'Created at',
     'paid-at' => 'Paid at',
     'chased-at' => 'Chased at',
-    'approved-at' => 'Approved at',
+    'verified-at' => 'Verified at',
+    'invoice-date' => 'Invoice date',
 ];
