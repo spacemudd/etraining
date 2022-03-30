@@ -79,7 +79,7 @@
                     <td style="border:1px solid black">{{ number_format($invoice->sub_total, 2) }}</td>
                     <td style="border:1px solid black">{{ number_format($invoice->tax, 2) }}</td>
                     <td style="border:1px solid black">{{ number_format($invoice->grand_total, 2) }}</td>
-                    <td style="border:1px solid black">{{ $invoice->id_paid ? __('words.paid') : __('words.not-paid') }}</td>
+                    <td style="border:1px solid black">{{ $invoice->is_paid ? __('words.paid') : __('words.not-paid') }}</td>
                 </tr>
             @endforeach
                 <tr style="border:1px solid black;">
