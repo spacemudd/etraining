@@ -246,6 +246,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('account-statements/excel', [\App\Http\Controllers\Back\AccountStatementsController::class, 'excel'])->name('account-statements.excel');
             Route::get('account-statements', [\App\Http\Controllers\Back\AccountStatementsController::class, 'index'])->name('account-statements');
             Route::resource('accounts', \App\Http\Controllers\Back\FinancialAccountsController::class);
+            Route::post('invoices/excel/generate', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'generateExcel'])->name('invoices.excel.generate');
+            Route::get('invoices/excel', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'excel'])->name('invoices.excel');
             Route::get('invoices/{id}/upload-receipt-form', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'uploadReceiptForm'])->name('invoices.upload-receipt-form');
             Route::post('invoices/{id}/upload-receipt', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'uploadReceipt'])->name('invoices.upload-receipt');
             Route::post('invoices/{id}/mark-as-unpaid-from-chaser', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'markAsUnpaidFromChaser'])->name('invoices.mark-as-unpaid-from-chaser');

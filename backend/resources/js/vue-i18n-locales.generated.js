@@ -494,7 +494,8 @@ export default {
             "chasers": "المحصلين",
             "approve-invoice-paid": "اعتماد تم دفع الفاتورة",
             "edit-payment-settings": "الدفع اونلاين",
-            "payment-settings": "إعدادت الدفع اونلاين"
+            "payment-settings": "إعدادت الدفع اونلاين",
+            "invoices-report": "تقرير الفواتير"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1150,7 +1151,8 @@ export default {
             "chasers": "Chasers",
             "approve-invoice-paid": "Approve invoice paid",
             "edit-payment-settings": "Edit payment settings",
-            "payment-settings": "Payment settings"
+            "payment-settings": "Payment settings",
+            "invoices-report": "Invoices report"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

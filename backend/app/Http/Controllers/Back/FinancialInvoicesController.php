@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\CourseAttendanceReportJob;
+use App\Jobs\InvoicesSheetReportJob;
 use App\Models\Back\AccountingLedgerBook;
 use App\Models\Back\Company;
 use App\Models\Back\Invoice;
+use App\Models\JobTracker;
 use App\Models\TraineeBankPaymentReceipt;
+use App\Reports\InvoicesReportFactory;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context\CustomContext;
 use Brick\Money\Money;
@@ -151,6 +155,7 @@ class FinancialInvoicesController extends Controller
         $invoice->status = Invoice::STATUS_PAID;
         $invoice->rejection_reason_payment_receipt = null;
         $invoice->verified_by_id = auth()->user()->id;
+        $invoice->verified_at = now();
         $invoice->save();
 
         foreach ($request->file('files', []) as $key => $file) {
@@ -256,5 +261,35 @@ class FinancialInvoicesController extends Controller
         \DB::commit();
 
         return redirect()->route('back.finance.invoices.show', $id);
+    }
+
+    public function excel()
+    {
+        $this->authorize('view-backoffice-reports');
+        return Inertia::render('Back/Finance/Invoices/Excel', [
+            'companies' => Company::orderBy('name_ar')->get(),
+        ]);
+    }
+
+    public function generateExcel(Request $request)
+    {
+        $request->validate([
+            'date_from' => 'required',
+            'date_to' => 'required',
+        ]);
+
+        $tracker = new JobTracker();
+        $tracker->user_id = auth()->user()->id;
+        $tracker->metadata = $request->except('_token');
+        $tracker->reportable_id = null;
+        $tracker->reportable_type = InvoicesReportFactory::class;
+        $tracker->queued_at = now();
+        $tracker->save();
+
+        $tracker = $tracker->refresh();
+
+        InvoicesSheetReportJob::dispatch($tracker);
+
+        return $tracker;
     }
 }

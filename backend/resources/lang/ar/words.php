@@ -491,4 +491,9 @@ return [
     'approve-invoice-paid' => 'اعتماد تم دفع الفاتورة',
     'edit-payment-settings' => 'الدفع اونلاين',
     'payment-settings' => 'إعدادت الدفع اونلاين',
+    'invoices-report' => 'تقرير الفواتير',
+    'created-at' => 'وقت الإنشاء',
+    'paid-at' => 'وقت الدفع',
+    'chased-at' => 'وقت التحصيل',
+    'approved-at' => 'وقت الإعتماد',
 ];

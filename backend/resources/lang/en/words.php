@@ -478,4 +478,9 @@ return [
     'approve-invoice-paid' => 'Approve invoice paid',
     'edit-payment-settings' => 'Edit payment settings',
     'payment-settings' => 'Payment settings',
+    'invoices-report' => 'Invoices report',
+    'created-at' => 'Created at',
+    'paid-at' => 'Paid at',
+    'chased-at' => 'Chased at',
+    'approved-at' => 'Approved at',
 ];
