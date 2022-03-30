@@ -67,6 +67,13 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
         'to_date',
     ];
 
+    public $timestamps = [
+        'created_at',
+        'paid_at',
+        'chased_at',
+        'verified_at',
+    ];
+
     protected static function boot(): void
     {
         parent::boot();
