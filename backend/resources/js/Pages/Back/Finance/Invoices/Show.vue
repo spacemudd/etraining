@@ -276,7 +276,7 @@ export default {
             if (reason === null) {
                 return;
             }
-            this.$inertia.post(route('back.finance.invoices.mark-as-paid-from-chaser', this.invoice.id), {
+            this.$inertia.post(route('back.finance.invoices.mark-as-unpaid-from-chaser', this.invoice.id), {
                 chased_note: reason,
             });
         },

@@ -191,6 +191,7 @@ class FinancialInvoicesController extends Controller
         $invoice->status = Invoice::STATUS_AUDIT_REQUIRED;
         $invoice->chased_now = $request->reason;
         $invoice->chased_by_id = auth()->user()->id;
+        $invoice->paid_at = null;
         $invoice->save();
 
         return redirect()->route('back.finance.invoices.show', $invoice->id);
