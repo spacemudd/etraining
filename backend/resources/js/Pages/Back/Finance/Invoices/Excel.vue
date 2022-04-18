@@ -92,6 +92,7 @@
     import IconNavigate from 'vue-ionicons/dist/ios-arrow-dropright'
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
     import BtnLoadingIndicator from "../../../../Components/BtnLoadingIndicator";
+    import 'selectize/dist/js/standalone/selectize.min';
 
     export default {
         props: [
@@ -115,12 +116,23 @@
             }
         },
         mounted() {
+            let vm = this;
+            $(document).ready(function () {
+                vm.companySelector = $('#company_id').selectize({
+                    sortField: 'text',
+                    maxOptions: 9999,
+                    onChange: function (value) {
+                        vm.form.company_id = value;
+                    }
+                })
+            });
         },
         data() {
             return {
                 report_status: 'new',
                 job_tracker: null,
                 form: {
+                    company_id: null,
                     processing: false,
                     date_from: new Date().toISOString().substring(0, 10),
                     date_to: new Date().toISOString().substring(0, 10),
