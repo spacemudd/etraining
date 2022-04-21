@@ -85,7 +85,7 @@ class TraineeInvoicesController extends Controller
                 'balance' => AccountingLedgerBook::getBalanceForTrainee($invoice->trainee->id) + $invoice->grand_total,
             ]);
 
-            Trainee::find($invoice->trainee->id)->notify(new NewInvoiceIssued());
+            // Trainee::find($invoice->trainee->id)->notify(new NewInvoiceIssued());
         });
 
         return redirect()->route('back.trainees.show', $trainee_id);
