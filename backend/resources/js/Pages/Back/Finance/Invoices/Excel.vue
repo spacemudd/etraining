@@ -33,7 +33,6 @@
                                 {{ company.name_ar }}
                             </option>
                         </select>
-                        <jet-input-error :message="form.error('company_id')" class="mt-2" />
                     </div>
 
                     <div class="col-span-12 sm:col-span-2 mt-5">
