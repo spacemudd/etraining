@@ -105,11 +105,11 @@
                 }
             }, 320),
             userFinishedWithResults() {
-                //let vm = this;
-                //setTimeout(function() {
-                    this.searchBoxVisible = false;
-                    this.searchResults = 3;
-                //}, 20);
+                let vm = this;
+                setTimeout(function() {
+                    vm.searchBoxVisible = false;
+                    vm.searchResults = 3;
+                }, 200);
             },
         },
     }
