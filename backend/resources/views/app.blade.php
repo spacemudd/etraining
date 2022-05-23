@@ -6,9 +6,11 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         @auth
-            <meta name="logrocket-enabled" content="{{ auth()->user()->logrocketEnabled() ? 1 : 0 }}">
-            <meta name="logrocket-id" content="{{ auth()->user()->logrocketId() }}">
-            <meta name="logrocket-id-extra" content='{!! auth()->user()->logrocketIdExtra() !!}'>
+            @if (auth()->user()->logrocketEnabled())
+                <meta name="logrocket-enabled" content="{{ auth()->user()->logrocketEnabled() }}">
+                <meta name="logrocket-id" content="{{ auth()->user()->logrocketId() }}">
+                <meta name="logrocket-id-extra" content='{!! auth()->user()->logrocketIdExtra() !!}'>
+            @endif
             <meta name="user-permissions" content='{!! json_encode(collect(optional(auth()->user()->roles()->first())->getAllPermissions())->pluck('name')->toArray()) !!}'>
         @endif
 
