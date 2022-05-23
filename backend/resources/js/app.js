@@ -99,8 +99,11 @@ const appName = lang === 'ar' ? 'منصة التدريب' : 'eTraining';
 //     }
 // });
 
+import Store from './Store/index';
+
 new Vue({
     i18n,
+    Store,
     wait: new VueWait({
         // Defaults values are following:
         useVuex: false,              // Uses Vuex to manage wait state
