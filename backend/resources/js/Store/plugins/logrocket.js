@@ -17,7 +17,7 @@ if (window.location.hostname.includes('.com') && logRocketEnabled) {
     LogRocket.init(process.env.MIX_LOGROCKET_KEY);
     let logRocketId = document.head.querySelector('meta[name="logrocket-id"]');
     let logRocketIdExtra = document.head.querySelector('meta[name="logrocket-id-extra"]');
-    if (logRocketId) {
+    if (logRocketId && logRocketIdExtra.content.includes('ptc-ksa.com')) {
         LogRocket.identify(logRocketId.content, JSON.parse(logRocketIdExtra.content));
     }
 }

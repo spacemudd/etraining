@@ -30,7 +30,7 @@
             enter-active-class="animate__animated animate__fadeIn"
             leave-active-class="animate__animated animate__fadeOut"
         >
-            <div v-show="searchBoxVisible"
+            <div v-if="searchBoxVisible"
                  ref="searchResultsRef"
                  id="searchResultsRef"
                  @focusout="userFinishedWithResults"
@@ -105,11 +105,8 @@
                 }
             }, 320),
             userFinishedWithResults() {
-                let vm = this;
-                setTimeout(function() {
-                    vm.searchBoxVisible = false;
-                    vm.searchResults = 3;
-                }, 200);
+                this.searchBoxVisible = false;
+                this.searchResults = 3;
             },
         },
     }
