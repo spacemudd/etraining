@@ -497,4 +497,6 @@ return [
     'chased-at' => 'وقت التحصيل',
     'verified-at' => 'وقت الإعتماد',
     'invoice-date' => 'تاريخ الفاتورة',
+    'report-created-by' => 'منشئ التقرير',
+    'selected-period' => 'الفترة المختارة',
 ];

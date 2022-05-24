@@ -2,7 +2,7 @@
 <html dir="rtl">
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <link rel="stylesheet" href="{{ url('pdf.css') }}" media="screen">
+{{--    <link rel="stylesheet" href="{{ url('pdf.css') }}" media="screen">--}}
     <link rel="stylesheet" href="{{ public_path('pdf.css') }}" media="screen">
     <title>{{ $company->resource_label }}</title>
 </head>
@@ -29,20 +29,22 @@
                 <td>{{ $company->resource_label }}</td>
             </tr>
             <tr>
-                <td>{{__('words.created-by')}}</td>
-                <td>{{ optional($invoice_group->created_by)->name }}</td>
+                <td>{{__('words.report-created-by')}}</td>
+                <td>{{ optional(auth()->user())->name }}</td>
+{{--                <td>{{ optional($invoice_group->created_by)->name }}</td>--}}
             </tr>
             <tr>
-                <td>{{ __('words.date-period') }}</td>
+                <td>{{ __('words.selected-period') }}</td>
                 <td>
-                    {{ $invoice_group->from_date->toDateString() }}
+                    {{ $from_date->toDateString() }}
                     <br>
-                    {{ $invoice_group->to_date->toDateString() }}
+                    {{ $to_date->toDateString() }}
                 </td>
             </tr>
             <tr>
                 <td>{{__('words.grand-total')}}</td>
-                <td>{{ number_format($invoice_group->grand_total, 2) }}</td>
+                <td>{{ number_format($grand_total, 2) }}</td>
+{{--                <td>{{ number_format($invoice_group->grand_total, 2) }}</td>--}}
             </tr>
             </tbody>
         </table>
@@ -67,19 +69,24 @@
                 <th>{{ __('words.subtotal') }}</th>
                 <th>{{ __('words.vat') }}</th>
                 <th>{{ __('words.grand-total') }}</th>
-                <th>{{ __('words.is-paid') }}</th>
+                <th>{{ __('words.status') }}</th>
             </tr>
             </thead>
             <tbody>
             @foreach ($invoices as $index => $invoice)
                 <tr style="page-break-inside: avoid;border:1px solid black;">
                     <td style="border:1px solid black">{{ ++$index }}</td>
-                    <td style="border:1px solid black">{{ optional($invoice->trainee)->name }}</td>
+                    <td style="border:1px solid black;">{{ optional($invoice->trainee)->name }}</td>
                     <td style="border:1px solid black">{{ $invoice->number_formatted }}</td>
                     <td style="border:1px solid black">{{ number_format($invoice->sub_total, 2) }}</td>
                     <td style="border:1px solid black">{{ number_format($invoice->tax, 2) }}</td>
                     <td style="border:1px solid black">{{ number_format($invoice->grand_total, 2) }}</td>
-                    <td style="border:1px solid black">{{ $invoice->is_paid ? __('words.paid') : __('words.not-paid') }}</td>
+                    <td style="border:1px solid black">
+                        {{ $invoice->status_formatted }}
+                        @if ($invoice->status === \App\Models\Back\Invoice::STATUS_PAYMENT_RECEIPT_REJECTED)
+                            ({{ $invoice->rejection_reason_payment_receipt }})
+                        @endif
+                    </td>
                 </tr>
             @endforeach
                 <tr style="border:1px solid black;">
@@ -200,7 +207,7 @@
                     <td style="text-align:left;direction:ltr;">Beneficiary name:</td>
                 </tr>
                 <tr>
-                    <td>رقم حساب المستقيد</td>
+                    <td>رقم حساب المستفيد</td>
                     <td style="text-align:center;">2972254319940</td>
                     <td style="text-align:left;direction:ltr;">Beneficiary account no.:</td>
                 </tr>

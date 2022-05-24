@@ -7243,6 +7243,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -7275,6 +7293,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      reportDateFrom: null,
+      reportDateTo: null,
       form: this.$inertia.form({
         name_ar: '',
         name_en: '',
@@ -37266,6 +37286,82 @@ var render = function() {
             ),
             _vm._v(" "),
             _c("div", [
+              _c("div", { staticClass: "flex" }, [
+                _c("div", { staticClass: "flex ml-2" }, [
+                  _c("h3", [_vm._v(_vm._s(_vm.$t("words.from-date")))]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.reportDateFrom,
+                        expression: "reportDateFrom"
+                      }
+                    ],
+                    staticClass: "bg-gray-200 mx-1 px-2 rounded-sm",
+                    attrs: { type: "date" },
+                    domProps: { value: _vm.reportDateFrom },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.reportDateFrom = $event.target.value
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "flex mx-2" }, [
+                  _c("h3", [_vm._v(_vm._s(_vm.$t("words.to-date")))]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.reportDateTo,
+                        expression: "reportDateTo"
+                      }
+                    ],
+                    staticClass: "bg-gray-200 mx-1 px-2 rounded-sm",
+                    attrs: { type: "date" },
+                    domProps: { value: _vm.reportDateTo },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.reportDateTo = $event.target.value
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  {
+                    staticClass: "mx-2",
+                    attrs: {
+                      href: _vm.route("back.companies.invoices.pdf", {
+                        company_id: _vm.company.id,
+                        from_date: _vm.reportDateFrom,
+                        to_date: _vm.reportDateTo
+                      }),
+                      target: "_blank"
+                    }
+                  },
+                  [
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(_vm.$t("words.print")) +
+                        "\n                    "
+                    )
+                  ]
+                )
+              ]),
+              _vm._v(" "),
               _c(
                 "table",
                 {
