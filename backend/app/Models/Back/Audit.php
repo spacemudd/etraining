@@ -20,6 +20,10 @@ class Audit extends \OwenIt\Auditing\Models\Audit
 
     protected $keyType = 'string';
 
+    protected $appends = [
+        'created_at_human',
+    ];
+
     protected static function boot(): void
     {
         parent::boot();
@@ -33,5 +37,10 @@ class Audit extends \OwenIt\Auditing\Models\Audit
         });
 
         static::addGlobalScope(new TeamScope());
+    }
+
+    public function getCreatedAtHumanAttribute()
+    {
+        return $this->created_at->toDateTimeString();
     }
 }

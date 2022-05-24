@@ -114,9 +114,9 @@
                                     <label class="flex items-center">
                                         <input
                                             type="checkbox"
+                                            :checked="form.trainees.includes(trainee_id)"
                                             class="form-checkbox"
-                                            :value="trainee_id"
-                                            v-model="form.trainees"
+                                            @click="toggleSelectedTrainee(trainee_id)"
                                         >
                                         <span v-if="trainees.deleted_at" class="inline-block mt-2 p-1 px-2 bg-red-600 text-white rounded-lg">
                                             {{ $t('words.blocked') }}
@@ -197,6 +197,7 @@ export default {
         return {
             expectedToPay: null,
             current_year: moment().utc().year(),
+            traineesCollection: [],
             form: this.$inertia.form({
                 from_date: null,
                 to_date: null,
@@ -205,7 +206,20 @@ export default {
             }),
         }
     },
+    mounted() {
+        this.traineesCollection = this.trainees;
+    },
     methods: {
+        toggleSelectedTrainee(trainee_id) {
+            if (this.form.trainees.includes(trainee_id)) {
+                let index = this.form.trainees.indexOf(trainee_id);
+                if (index !== -1) {
+                    this.form.trainees.splice(index, 1);
+                }
+            } else {
+                this.form.trainees.push(trainee_id);
+            }
+        },
         updateExpectedAmountPerInvoice() {
             if (this.form.from_date && this.form.to_date) {
                 axios.post('/back/finance/expected-amount-per-invoice', {
@@ -227,7 +241,14 @@ export default {
             });
         },
         selectAllTrainees() {
-            this.form.trainees = Object.keys(this.trainees);
+            if (this.form.trainees.length === _.size(this.traineesCollection)) {
+                this.form.trainees = [];
+            } else {
+                this.form.trainees = [];
+                Object.keys(this.traineesCollection).forEach((trainee, key) => {
+                    this.form.trainees.push(trainee);
+                })
+            }
         },
     }
 }

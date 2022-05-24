@@ -8,6 +8,7 @@ use App\Jobs\ExportArchivedTraineesToExcelJob;
 use App\Jobs\ExportTraineesToExcelJob;
 use App\Models\Back\AttendanceReportRecord;
 use App\Models\Back\AttendanceReportRecordWarning;
+use App\Models\Back\Audit;
 use App\Models\Back\Company;
 use App\Models\Back\ExportTraineesToExcelJobTracker;
 use App\Models\Back\Instructor;
@@ -126,8 +127,10 @@ class TraineesController extends Controller
                     'marital_status',
                     'trainee_group',
                     'user',
-                    'invoices',
                 ])
+                ->with(['invoices' => function($q) {
+                    $q->orderBy('number', 'desc');
+                }])
                 ->findOrFail($id),
             'trainee_groups' => TraineeGroup::get(),
             'cities' => City::orderBy('name_ar')->get(),
@@ -967,6 +970,15 @@ class TraineesController extends Controller
     public function invoices($trainee_id)
     {
         return Invoice::where('trainee_id', $trainee_id)
+            ->get();
+    }
+
+    public function audit($trainee_id)
+    {
+        return Audit::where('auditable_id', $trainee_id)
+            ->withoutGlobalScopes()
+            ->with('user')
+            ->orderBy('created_at', 'desc')
             ->get();
     }
 }

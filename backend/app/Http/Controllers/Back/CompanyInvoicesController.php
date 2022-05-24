@@ -141,33 +141,59 @@ class CompanyInvoicesController extends Controller
     {
         $company = Company::findOrFail($company_id);
 
-        //$invoice_group = $company->invoices()
-        //    ->select('*')
-        //    ->selectRaw('COUNT(id) as trainee_count')
-        //    ->selectRaw('SUM(sub_total) as sub_total')
-        //    ->selectRaw('SUM(tax) as tax')
-        //    ->selectRaw('SUM(grand_total) as grand_total')
-        //    ->where('from_date', $request->input('from_date'))
-        //    ->where('to_date', $request->input('to_date'))
-        //    ->with(['created_by'])
-        //    ->groupByRaw('from_date, to_date, created_by_id, DATE(created_at)')
-        //    ->latest();
-        //
-        //if ($request->created_by_id) {
-        //    $invoice_group->where('created_by_id', $request->input('created_by_id', auth()->id()))
-        //        ->whereDate('created_at', $request->input('created_at_date', now()->toDateString()));
-        //}
-        //
-        //$invoice_group = $invoice_group->firstOrFail();
-        //
-        //$invoices = $company->invoices()
-        //    ->where('from_date', $request->input('from_date'))
-        //    ->where('to_date', $request->input('to_date'));
-        //
-        //if ($request->created_by_id) {
-        //    $invoices->where('created_by_id', $request->input('created_by_id', auth()->id()))
-        //        ->whereDate('created_at', $request->input('created_at_date', now()->toDateString()));
-        //}
+        $invoice_group = $company->invoices()
+            ->select('*')
+            ->selectRaw('COUNT(id) as trainee_count')
+            ->selectRaw('SUM(sub_total) as sub_total')
+            ->selectRaw('SUM(tax) as tax')
+            ->selectRaw('SUM(grand_total) as grand_total')
+            ->where('from_date', $request->input('from_date'))
+            ->where('to_date', $request->input('to_date'))
+            ->where('created_by_id', $request->input('created_by_id', auth()->id()))
+            ->whereDate('created_at', $request->input('created_at_date', now()->toDateString()))
+            ->with(['created_by'])
+            ->groupByRaw('from_date, to_date, created_by_id, DATE(created_at)')
+            ->latest()
+            ->firstOrFail();
+
+        $invoices = $company->invoices()
+            ->where('from_date', $request->input('from_date'))
+            ->where('to_date', $request->input('to_date'))
+            ->where('created_by_id', $request->input('created_by_id', auth()->id()))
+            ->whereDate('created_at', $request->input('created_at_date', now()->toDateString()))
+            ->get();
+
+        $pdf = PDF::setOption('footer-html', resource_path('views/pdf/invoices/client-invoice-footer.html'))
+            ->setOption('margin-bottom', 30)
+            ->setOption('page-size', 'A4')
+            ->setOption('orientation', 'portrait')
+            ->setOption('encoding','utf-8')
+            ->setOption('dpi', 300)
+            ->setOption('image-dpi', 300)
+            ->setOption('lowquality', false)
+            ->setOption('no-background', false)
+            ->setOption('enable-internal-links', true)
+            ->setOption('enable-external-links', true)
+            ->setOption('javascript-delay', 1000)
+            ->setOption('no-stop-slow-scripts', true)
+            ->setOption('no-background', false)
+            ->setOption('margin-left', 10)
+            ->setOption('margin-top', 10)
+            ->setOption('margin-bottom', 20)
+            ->setOption('disable-smart-shrinking', true)
+            ->setOption('viewport-size', '1024×768')
+            ->setOption('zoom', 0.78)->loadView("pdf.invoices.company-report", [
+                'company' => $company,
+                'invoice_group' => $invoice_group,
+                'invoices' => $invoices,
+            ]);
+
+        return $pdf->inline();
+    }
+
+    public function bulkPdf(Request $request, string $company_id)
+    {
+        $company = Company::findOrFail($company_id);
 
         $invoices = Invoice::query();
 
@@ -197,7 +223,7 @@ class CompanyInvoicesController extends Controller
             ->setOption('margin-bottom', 20)
             ->setOption('disable-smart-shrinking', true)
             ->setOption('viewport-size', '1024×768')
-            ->setOption('zoom', 0.78)->loadView("pdf.invoices.company-report", [
+            ->setOption('zoom', 0.78)->loadView("pdf.invoices.bulk-company-report", [
                 'company' => $company,
                 'from_date' => $from_date,
                 'to_date' => $to_date,

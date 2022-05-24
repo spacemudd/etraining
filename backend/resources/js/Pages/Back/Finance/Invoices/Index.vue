@@ -9,6 +9,15 @@
                 ]"
             ></breadcrumb-container>
 
+            <div class="flex" v-if="canSelectAll">
+                <button class="btn btn-gray mt-5 disabled:bg-gray-100 disabled:cursor-not-allowed" :disabled="$wait.is('APPROVING_INVOICES')" @click="approveInvoices">({{ selected_invoices.length }}) {{ $t('words.financial-department-approval') }}</button>
+                <button class="mt-2 btn border-2 mt-5 mx-5 px-5"
+                        @click="toggleAll">
+                    {{ $t('words.select-all') }}
+                </button>
+            </div>
+
+
             <div class="overflow-x-auto">
                 <Table
                     class="mt-5 w-full whitespace-no-wrap"
@@ -35,6 +44,10 @@
                     <template #body>
                         <tr v-for="invoice in invoices.data" :key="invoice.id">
                             <td class="rtl:text-right text-black">
+                                <input type="checkbox"
+                                       v-if="canSelectAll"
+                                       :checked="selected_invoices.includes(invoice.id)"
+                                       @click="toggleSelectedInvoice(invoice)">
                                 <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
                                     {{ invoice.number_formatted }}
                                 </inertia-link>
@@ -195,6 +208,7 @@
     import IconNavigate from 'vue-ionicons/dist/ios-arrow-dropright'
     import EmptySlate from "@/Components/EmptySlate";
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
+    import {Inertia} from "@inertiajs/inertia";
 
     export default {
         mixins: [InteractsWithQueryBuilder],
@@ -216,6 +230,7 @@
         },
         data() {
             return {
+                selected_invoices: [],
                 form: {
                     // search: this.filters.search,
                     // trashed: this.filters.trashed,
@@ -223,6 +238,17 @@
             }
         },
         computed: {
+            canSelectAll() {
+                if (this.queryBuilderProps.filters) {
+                    if (this.queryBuilderProps.filters.status) {
+                        return this.queryBuilderProps.filters.status.value === '4';
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            },
             hasSearchRows() {
                 return Object.keys(this.invoices.search || {}).length > 0;
             },
@@ -248,6 +274,40 @@
             });
         },
         methods: {
+            approveInvoices() {
+                if (confirm(this.$t('words.are-you-sure'))) {
+                    if (this.selected_invoices.length) {
+                        this.$wait.start('APPROVING_INVOICES');
+                        axios.post(route('back.finance.invoices.bulk-approve-finance-department'), {
+                            invoices: this.selected_invoices,
+                        }).then(response => {
+                            this.$wait.end('APPROVING_INVOICES');
+                            this.selected_invoices = [];
+                            Inertia.reload();
+                        })
+                    }
+                }
+            },
+            toggleAll() {
+                if (this.selected_invoices.length === this.invoices.data.length) {
+                    this.selected_invoices = [];
+                } else {
+                    this.selected_invoices = [];
+                    this.invoices.data.forEach((invoice) => {
+                        this.selected_invoices.push(invoice.id);
+                    })
+                }
+            },
+            toggleSelectedInvoice(invoice) {
+                if (this.selected_invoices.includes(invoice.id)) {
+                    let index = this.selected_invoices.indexOf(invoice.id);
+                    if (index !== -1) {
+                        this.selected_invoices.splice(index, 1);
+                    }
+                } else {
+                    this.selected_invoices.push(invoice.id);
+                }
+            },
             reset() {
                 this.form = mapValues(this.form, () => null)
             },

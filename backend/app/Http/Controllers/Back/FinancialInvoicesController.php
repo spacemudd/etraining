@@ -16,6 +16,7 @@ use Brick\Money\Context\CustomContext;
 use Brick\Money\Money;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use PDF;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -292,5 +293,41 @@ class FinancialInvoicesController extends Controller
         InvoicesSheetReportJob::dispatch($tracker);
 
         return $tracker;
+    }
+
+    public function bulkApproveFinancialDepartment(Request $request)
+    {
+        \DB::beginTransaction();
+        Invoice::whereIn('id', $request->invoices)
+            ->where('status', Invoice::STATUS_FINANCIAL_AUDIT_REQUIRED)
+            ->chunk(100, function($invoices) {
+                foreach ($invoices as $invoice) {
+                    $invoice->status = Invoice::STATUS_PAID;
+                    $invoice->rejection_reason_payment_receipt = null;
+                    $invoice->verified_by_id = auth()->user()->id;
+                    $invoice->verified_at = now();
+                    $invoice->save();
+
+                    AccountingLedgerBook::create([
+                        'team_id' => $invoice->team_id,
+                        'company_id' => $invoice->company_id,
+                        'trainee_id' => $invoice->trainee_id,
+                        'invoice_id' => $invoice->id,
+                        'trainee_bank_payment_receipt_id' => $invoice->trainee_bank_payment_receipt->id,
+                        'date' => now(),
+                        'description' => 'اعتماد ايصال دفع للفاتورة رقم '.$invoice->number_formatted,
+                        'reference'  => '',
+                        'account_name' => $invoice->trainee->name,
+                        'credit' => $invoice->grand_total,
+                        'balance' => AccountingLedgerBook::getBalanceForTrainee($invoice->trainee->id) - $invoice->grand_total,
+                    ]);
+                }
+            });
+        \DB::commit();
+
+        return response()->json([
+            'success' => true,
+            'invoices' => $request->invoices,
+        ]);
     }
 }

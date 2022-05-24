@@ -499,4 +499,10 @@ return [
     'invoice-date' => 'تاريخ الفاتورة',
     'report-created-by' => 'منشئ التقرير',
     'selected-period' => 'الفترة المختارة',
+    'financial-department-approval' => 'اعتماد المالية',
+    'select-all' => 'اختيار الكل',
+    'audit' => 'تدقيق',
+    'user' => 'المستخدم',
+    'old-values' => 'القيم القديمة',
+    'new-values' => 'القيم الجديدة',
 ];

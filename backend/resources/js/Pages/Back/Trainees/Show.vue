@@ -789,6 +789,10 @@
                     </table>
                 </div>
             </div>
+
+            <jet-section-border></jet-section-border>
+
+            <trainee-audit-container :trainee_id="trainee.id"></trainee-audit-container>
         </div>
     </app-layout>
 </template>
@@ -813,6 +817,7 @@ import ChangeTraineePassword from '@/Components/ChangeTraineePassword';
 import AttendanceSheetManagementForTrainee from "@/Components/AttendanceSheetManagementForTrainee";
 import 'selectize/dist/js/standalone/selectize.min';
 import EmptySlate from "@/Components/EmptySlate";
+import TraineeAuditContainer from "@/Components/TraineeAuditContainer";
 
 export default {
     props: [
@@ -826,6 +831,7 @@ export default {
         'companies',
     ],
     components: {
+        TraineeAuditContainer,
         AppLayout,
         AttendanceSheetManagementForTrainee,
         Breadcrumb,

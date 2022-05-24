@@ -232,6 +232,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::delete('{company_id}/contracts/{contract}/attachments/delete', [\App\Http\Controllers\Back\CompaniesContractsController::class, 'deleteAttachments'])->name('contracts.attachments.delete');
             Route::get('{company_id}/trainees/excel', [\App\Http\Controllers\Back\CompaniesContractsController::class, 'excel'])->name('trainees.excel');
             Route::resource('{company_id}/contracts', \App\Http\Controllers\Back\CompaniesContractsController::class);
+            Route::get('{company_id}/invoices/bulk-pdf', [\App\Http\Controllers\Back\CompanyInvoicesController::class, 'bulkPdf'])->name('invoices.bulk-pdf');
             Route::get('{company_id}/invoices/pdf', [\App\Http\Controllers\Back\CompanyInvoicesController::class, 'pdf'])->name('invoices.pdf');
         });
 
@@ -246,6 +247,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('account-statements/excel', [\App\Http\Controllers\Back\AccountStatementsController::class, 'excel'])->name('account-statements.excel');
             Route::get('account-statements', [\App\Http\Controllers\Back\AccountStatementsController::class, 'index'])->name('account-statements');
             Route::resource('accounts', \App\Http\Controllers\Back\FinancialAccountsController::class);
+            Route::post('invoices/bulk-approve-financial-department', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'bulkApproveFinancialDepartment'])->name('invoices.bulk-approve-finance-department');
             Route::post('invoices/excel/generate', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'generateExcel'])->name('invoices.excel.generate');
             Route::get('invoices/excel', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'excel'])->name('invoices.excel');
             Route::get('invoices/{id}/upload-receipt-form', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'uploadReceiptForm'])->name('invoices.upload-receipt-form');
@@ -263,6 +265,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('trainees/import', [\App\Http\Controllers\Back\TraineesImportController::class, 'index'])->name('trainees.import');
         Route::post('trainees/import', [\App\Http\Controllers\Back\TraineesImportController::class, 'store'])->name('trainees.import.store');
 
+        Route::get('/trainees/{id}/audit', [\App\Http\Controllers\Back\TraineesController::class, 'audit'])->name('trainees.audit');
         Route::get('/trainees/{id}/attendance-sheet', [\App\Http\Controllers\Back\TraineesController::class, 'attendanceSheetPdf'])->name('trainees.admin.attendance-sheet.pdf');
         Route::get('/trainees/{id}/send-private-notification', [\App\Http\Controllers\Back\TraineesController::class, 'sendPrivateNotificationForm'])->name('trainees.private-notifications.create');
         Route::post('/trainees/{id}/send-private-notification/send', [\App\Http\Controllers\Back\TraineesController::class, 'sendPrivateNotification'])->name('trainees.private-notifications.send');
