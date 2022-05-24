@@ -115,7 +115,7 @@ class CompanyInvoicesController extends Controller
             'trainees.*' => [
                 'required',
                 'string',
-                Rule::exists('trainees', 'id')->where('company_id', $company_id),
+                //Rule::exists('trainees', 'id')->where('company_id', $company_id),
                 'bail',
             ],
             'from_date' => [

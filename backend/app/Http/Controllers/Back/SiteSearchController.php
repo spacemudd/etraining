@@ -46,9 +46,12 @@ class SiteSearchController extends Controller
             ->orWhere('email', 'LIKE', '%'.$request->search.'%')
             ->orWhere('phone', 'LIKE', '%'.$request->search.'%')
             ->orWhere('identity_number', 'LIKE', '%'.$request->search.'%')
+            ->with('company')
             ->withTrashed()
             ->take(30)
             ->get();
+
+        if ($request->trainees) return $trainees;
 
         $companies = Company::where('name_ar', 'LIKE', '%'.$request->search.'%')->take(30)->get();
 
