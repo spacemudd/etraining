@@ -45,6 +45,7 @@
                             <select-trainee-group class="mt-2"
                                                   @input="selectGroupName"
                                                   v-model="form.trainee_group_name"
+                                                  :loadTrainees="false"
                                                   :required="true"
                             />
                             <jet-input-error :message="form.error('trainee_group_name')" class="mt-2" />

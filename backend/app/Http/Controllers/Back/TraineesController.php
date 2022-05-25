@@ -533,7 +533,7 @@ class TraineesController extends Controller
             'trainee_group_name' => 'nullable|string|max:255',
             'email' => 'required|string|max:255|unique:trainees,email,' . $trainee_id,
             'name' => 'required|string|max:255',
-            'identity_number' => 'required|string|max:255',
+            'identity_number' => 'required|string|max:255|unique:trainees,identity_number,' . $trainee_id,
             'birthday' => 'nullable|date',
             'educational_level_id' => 'nullable|exists:educational_levels,id',
             'city_id' => 'nullable|exists:cities,id',
@@ -573,6 +573,12 @@ class TraineesController extends Controller
         }
 
         DB::commit();
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+            ]);
+        }
 
         return redirect()->route('back.trainees.show', $trainee_id);
     }
