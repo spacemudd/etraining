@@ -981,10 +981,12 @@ class TraineesController extends Controller
 
     public function audit($trainee_id)
     {
-        return Audit::where('auditable_id', $trainee_id)
+        $audits = Audit::where('auditable_id', $trainee_id)
             ->withoutGlobalScopes()
             ->with('user')
             ->orderBy('created_at', 'desc')
             ->get();
+
+        return response()->json($audits);
     }
 }
