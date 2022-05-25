@@ -225,7 +225,7 @@
                             <input class="bg-gray-200 mx-1 px-2 rounded-sm" type="date" v-model="reportDateTo">
                         </div>
                         <a class="mx-2"
-                           :href="route('back.companies.invoices.pdf', {
+                           :href="route('back.companies.invoices.bulk-pdf', {
                             company_id: company.id,
                             from_date: reportDateFrom,
                             to_date: reportDateTo})"
