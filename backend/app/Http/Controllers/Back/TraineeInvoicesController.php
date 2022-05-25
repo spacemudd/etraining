@@ -82,7 +82,7 @@ class TraineeInvoicesController extends Controller
                 'trainee_id' => $invoice->trainee_id,
                 'invoice_id' => $invoice->id,
                 'date' => now(),
-                'description' => __('words.training-costs-for-the-period-of', $period, 'ar'),
+                'description' => optional($trainee->company)->name_ar . ' - ' .__('words.training-costs-for-the-period-of', $period, 'ar'),
                 'reference'  => __('words.training-costs-for-the-period-of', $period, 'ar'),
                 'account_name' => $invoice->trainee->name,
                 'debit' => $invoice->grand_total,
