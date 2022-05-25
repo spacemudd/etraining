@@ -96,6 +96,10 @@
                             <span v-if="company.trainees_count">({{ company.trainees_count }})</span>
                             <span v-if="trainees_trashed_count">({{ trainees_trashed_count }})</span>
                         </h3>
+                        <inertia-link class="text-sm mt-2 text-blue-500 hover:text-blue-700"
+                                      :href="route('back.companies.trainees.activity-log', company.id)">
+                            {{ $t('words.activity-log') }}
+                        </inertia-link>
                     </div>
                 </div>
 

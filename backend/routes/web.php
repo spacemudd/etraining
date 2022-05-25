@@ -227,6 +227,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::resource('companies', \App\Http\Controllers\Back\CompaniesController::class);
         Route::resource('companies.invoices', \App\Http\Controllers\Back\CompanyInvoicesController::class)->only(['create', 'store']);
         Route::prefix('companies')->name('companies.')->group(function() {
+            Route::get('{company_id}/trainees/activity-log/excel', [\App\Http\Controllers\Back\CompanyTraineesActivityLogController::class, 'excel'])->name('trainees.activity-log.excel');
+            Route::get('{company_id}/trainees/activity-log', [\App\Http\Controllers\Back\CompanyTraineesActivityLogController::class, 'index'])->name('trainees.activity-log');
             Route::get('{company_id}/contracts/{contract_id}/attachments', [\App\Http\Controllers\Back\CompaniesContractsController::class, 'attachments'])->name('contracts.attachments');
             Route::post('{company_id}/contracts/{contract}/attachments/upload', [\App\Http\Controllers\Back\CompaniesContractsController::class, 'storeAttachments'])->name('contracts.attachments.store');
             Route::delete('{company_id}/contracts/{contract}/attachments/delete', [\App\Http\Controllers\Back\CompaniesContractsController::class, 'deleteAttachments'])->name('contracts.attachments.delete');

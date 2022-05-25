@@ -19,8 +19,11 @@ class CreateTraineeCompanyMovementsTable extends Migration
             $table->foreign('company_id')->references('id')->on('companies');
             $table->uuid('trainee_id');
             $table->foreign('trainee_id')->references('id')->on('trainees');
-            $table->timestamp('in_date');
-            $table->timestamp('out_date');
+            $table->string('trainee_name')->nullable();
+            $table->string('trainee_identity_number')->nullable();
+            $table->string('trainee_phone_number')->nullable();
+            $table->timestamp('in_date')->nullable();
+            $table->timestamp('out_date')->nullable();
             $table->timestamps();
         });
     }

@@ -490,4 +490,7 @@ return [
     'user' => 'User',
     'old-values' => 'Old values',
     'new-values' => 'New values',
+    'activity-log' => 'Activity log',
+    'joined-date' => 'Joined date',
+    'leave-date' => 'Leave date',
 ];

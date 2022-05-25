@@ -506,7 +506,10 @@ export default {
             "audit": "تدقيق",
             "user": "المستخدم",
             "old-values": "القيم القديمة",
-            "new-values": "القيم الجديدة"
+            "new-values": "القيم الجديدة",
+            "activity-log": "سجل الحركة",
+            "joined-date": "تاريخ الإنضمام",
+            "leave-date": "تاريخ الخروج"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1172,7 +1175,10 @@ export default {
             "audit": "Audit",
             "user": "User",
             "old-values": "Old values",
-            "new-values": "New values"
+            "new-values": "New values",
+            "activity-log": "Activity log",
+            "joined-date": "Joined date",
+            "leave-date": "Leave date"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

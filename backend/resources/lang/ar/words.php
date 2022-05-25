@@ -505,4 +505,8 @@ return [
     'user' => 'المستخدم',
     'old-values' => 'القيم القديمة',
     'new-values' => 'القيم الجديدة',
+    'activity-log' => 'سجل الحركة',
+    'joined-date' => 'تاريخ الإنضمام',
+    'leave-date' => 'تاريخ الخروج',
+    'current-company-as-of-today' => 'الشركة الحالية المسجلة',
 ];
