@@ -11,7 +11,7 @@
             <th class="border px-6 pt-6 pb-4">{{ $t('words.new-values') }}</th>
         </tr>
         </thead>
-        	<tbody>
+        	<tbody v-if="loaded">
         			<tr v-for="(audit, key) in audits" :key="audit.id"
                         class="border"
                         :class="{'bg-gray-200':(key%2)}">
@@ -71,6 +71,7 @@ export default {
     data() {
         return {
             audits: [],
+            loaded: false,
         }
     },
     mounted() {
@@ -81,6 +82,9 @@ export default {
             axios.get(route('back.trainees.audit', this.trainee_id))
             .then(response => {
                 this.audits = response.data;
+                this.loaded = true;
+            }).catch(error => {
+                this.loaded = true;
             })
         },
     }
