@@ -9,6 +9,8 @@
                 ]"
             ></breadcrumb-container>
 
+            <validation-errors :errors="validationErrors" v-if="validationErrors"></validation-errors>
+
             <div class="grid grid-cols-6 gap-6">
 
                 <div class="col-span-6 items-center justify-end bg-gray-50 text-right flex gap-6">
@@ -40,15 +42,21 @@
                     <button
                         v-if="!editButton.editOption"
                         @click="editTrainee"
-                        class=" items-center justify-end rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right"
+                        class="items-center justify-end rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right"
                     >
                         {{ editButton.text }}
                     </button>
                     <button
                         v-else
                         @click="editTrainee"
+                        :disabled="$wait.is('UPDATING_TRAINEE')"
+                        :class="{'bg-green-200 cursor-wait': $wait.is('UPDATING_TRAINEE')}"
                         class=" items-center justify-end rounded-md px-4 py-2 bg-green-300 hover:bg-green-400 text-right"
                     >
+                        <svg v-if="$wait.is('UPDATING_TRAINEE')" role="status" class="inline w-4 h-4 text-black animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
+                            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
+                        </svg>
                         {{ editButton.text }}
                     </button>
 
@@ -789,6 +797,10 @@
                     </table>
                 </div>
             </div>
+
+            <jet-section-border></jet-section-border>
+
+            <trainee-audit-container :trainee_id="trainee.id"></trainee-audit-container>
         </div>
     </app-layout>
 </template>
@@ -813,6 +825,9 @@ import ChangeTraineePassword from '@/Components/ChangeTraineePassword';
 import AttendanceSheetManagementForTrainee from "@/Components/AttendanceSheetManagementForTrainee";
 import 'selectize/dist/js/standalone/selectize.min';
 import EmptySlate from "@/Components/EmptySlate";
+import TraineeAuditContainer from "@/Components/TraineeAuditContainer";
+import {Inertia} from "@inertiajs/inertia";
+import ValidationErrors from "@/Components/ValidationErrors";
 
 export default {
     props: [
@@ -826,6 +841,8 @@ export default {
         'companies',
     ],
     components: {
+        ValidationErrors,
+        TraineeAuditContainer,
         AppLayout,
         AttendanceSheetManagementForTrainee,
         Breadcrumb,
@@ -853,6 +870,7 @@ export default {
             cancelButton: {
                 text: this.$t('words.cancel'),
             },
+            validationErrors: null,
             lang: (this.$t('words.edit') == "Edit") ? 'en' : 'ar',
             editButton: {
                 text: this.$t('words.edit'),
@@ -962,14 +980,29 @@ export default {
                     bill_from_date: this.trainee.bill_from_date_formatted,
                     linked_date: this.trainee.linked_date_formatted,
                 };
-                this.$inertia.put(route('back.trainees.update', this.trainee.id), newForm).then(response => {
-                    this.editButton.editOption = false;
-                    this.editButton.inputClass = 'mt-1 block w-full bg-gray-200';
-                    this.editButton.selectInputClass = 'mt-1 block w-full border border-gray-200 bg-gray-200 py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none';
-                    this.editButton.text = this.$t('words.edit');
+
+                this.$wait.start('UPDATING_TRAINEE');
+                this.validationErrors = null;
+                axios.put(route('back.trainees.update', this.trainee.id), newForm).then(response => {
+                    Inertia.reload().then(() => {
+                        this.editButton.editOption = false;
+                        this.editButton.inputClass = 'mt-1 block w-full bg-gray-200';
+                        this.editButton.selectInputClass = 'mt-1 block w-full border border-gray-200 bg-gray-200 py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none';
+                        this.editButton.text = this.$t('words.edit');
+                        this.$wait.end('UPDATING_TRAINEE');
+                    });
                 }).catch(error => {
-                    throw error;
+                    this.$wait.end('UPDATING_TRAINEE');
+                    if (error.response.status == 422) {
+                        this.validationErrors = error.response.data.errors;
+                    }
                 })
+                // this.$inertia.put(route('back.trainees.update', this.trainee.id), newForm).then(response => {
+                //     this.editButton.editOption = false;
+                //     this.editButton.inputClass = 'mt-1 block w-full bg-gray-200';
+                //     this.editButton.selectInputClass = 'mt-1 block w-full border border-gray-200 bg-gray-200 py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none';
+                //     this.editButton.text = this.$t('words.edit');
+                // });
             }
         },
         approveTrainee() {

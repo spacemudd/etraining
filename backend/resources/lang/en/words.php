@@ -484,4 +484,13 @@ return [
     'chased-at' => 'Chased at',
     'verified-at' => 'Verified at',
     'invoice-date' => 'Invoice date',
+    'financial-department-approval' => 'Finance Dept. Approval',
+    'select-all' => 'Select all',
+    'audit' => 'Audit',
+    'user' => 'User',
+    'old-values' => 'Old values',
+    'new-values' => 'New values',
+    'activity-log' => 'Activity log',
+    'joined-date' => 'Joined date',
+    'leave-date' => 'Leave date',
 ];

@@ -32,6 +32,8 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
 
     protected $keyType = 'string';
 
+    protected $perPage = 300;
+
     protected $fillable = [
         'company_id',
         'trainee_id',

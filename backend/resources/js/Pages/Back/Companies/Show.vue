@@ -96,6 +96,10 @@
                             <span v-if="company.trainees_count">({{ company.trainees_count }})</span>
                             <span v-if="trainees_trashed_count">({{ trainees_trashed_count }})</span>
                         </h3>
+                        <inertia-link class="text-sm mt-2 text-blue-500 hover:text-blue-700"
+                                      :href="route('back.companies.trainees.activity-log', company.id)">
+                            {{ $t('words.activity-log') }}
+                        </inertia-link>
                     </div>
                 </div>
 
@@ -211,6 +215,24 @@
                 </div>
 
                 <div>
+                    <div class="flex">
+                        <div class="flex ml-2">
+                            <h3>{{ $t('words.from-date') }}</h3>
+                            <input class="bg-gray-200 mx-1 px-2 rounded-sm" type="date" v-model="reportDateFrom">
+                        </div>
+                        <div class="flex mx-2">
+                            <h3>{{ $t('words.to-date') }}</h3>
+                            <input class="bg-gray-200 mx-1 px-2 rounded-sm" type="date" v-model="reportDateTo">
+                        </div>
+                        <a class="mx-2"
+                           :href="route('back.companies.invoices.pdf', {
+                            company_id: company.id,
+                            from_date: reportDateFrom,
+                            to_date: reportDateTo})"
+                           target="_blank">
+                            {{ $t('words.print') }}
+                        </a>
+                    </div>
                     <table class="w-full whitespace-no-wrap bg-white rounded-lg my-5 p-5 shadow text-sm">
                         <tr class="text-left font-bold">
                             <th class="p-4">{{ $t('words.date-created') }}</th>
@@ -313,6 +335,8 @@ export default {
     },
     data() {
         return {
+            reportDateFrom: null,
+            reportDateTo: null,
             form: this.$inertia.form({
                 name_ar: '',
                 name_en: '',

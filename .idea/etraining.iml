@@ -225,6 +225,7 @@
       <excludeFolder url="file://$MODULE_DIR$/backend/storage/debugbar" />
       <excludeFolder url="file://$MODULE_DIR$/backend/storage/framework" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/_laravel_idea" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/public" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
