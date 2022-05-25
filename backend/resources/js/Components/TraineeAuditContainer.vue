@@ -75,10 +75,13 @@ export default {
         }
     },
     mounted() {
-        this.getAudit();
+        let vm = this;
+        setTimeout(function() {
+            vm.getAuditRecords();
+        }, 200)
     },
     methods: {
-        getAudit() {
+        getAuditRecords() {
             axios.get(route('back.trainees.audit', this.trainee_id))
             .then(response => {
                 this.audits = response.data;
