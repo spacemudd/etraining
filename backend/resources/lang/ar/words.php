@@ -458,8 +458,8 @@ return [
     'bank-transfer' => 'تحويل بنكي',
     'payment-receipt-notice' => 'يرجى ارفاق الوصل مع ذكر البنك المحول اليه واسم المحول',
     'sender-name' => 'اسم المحول',
-    'sender-bank-name' => 'البنك المحول منه',
-    'receiver-bank-name' => 'البنك المحول أليه',
+    'sender-bank-name' => 'اسم البنك المحول منه',
+    'receiver-bank-name' => 'اسم البنك المحول أليه',
     'upload-receipts' => 'رفع الإصال',
     'receipt' => 'ايصال',
     'invoice-number' => 'رقم الفاتورة',
@@ -509,4 +509,6 @@ return [
     'joined-date' => 'تاريخ الإنضمام',
     'leave-date' => 'تاريخ الخروج',
     'current-company-as-of-today' => 'الشركة الحالية المسجلة',
+    'attach-receipt' => '(ارفق الإيصال)',
+    'example-bank-name' => '(مثال: الراجحي، الإنماء... الخ)',
 ];

@@ -11,9 +11,11 @@
                         </svg>
                         {{ $t('words.due-balance-notice') }}
                     </p>
-                    <inertia-link class="mt-5 inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
+                    <inertia-link class="text-center mt-5 inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
                                   :href="route('trainees.payment.options')">
                         {{ $t('words.pay-now') }}
+                        <br/>
+                        {{ $t('words.attach-receipt') }}
                     </inertia-link>
                 </div>
             </div>

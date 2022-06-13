@@ -493,4 +493,6 @@ return [
     'activity-log' => 'Activity log',
     'joined-date' => 'Joined date',
     'leave-date' => 'Leave date',
+    'attach-receipt' => '(Attach Receipt)',
+    'example-bank-name' => '(E.g. Rajhi, Inma... etc)',
 ];

@@ -463,8 +463,8 @@ export default {
             "bank-transfer": "تحويل بنكي",
             "payment-receipt-notice": "يرجى ارفاق الوصل مع ذكر البنك المحول اليه واسم المحول",
             "sender-name": "اسم المحول",
-            "sender-bank-name": "البنك المحول منه",
-            "receiver-bank-name": "البنك المحول أليه",
+            "sender-bank-name": "اسم البنك المحول منه",
+            "receiver-bank-name": "اسم البنك المحول أليه",
             "upload-receipts": "رفع الإصال",
             "receipt": "ايصال",
             "invoice-number": "رقم الفاتورة",
@@ -509,7 +509,10 @@ export default {
             "new-values": "القيم الجديدة",
             "activity-log": "سجل الحركة",
             "joined-date": "تاريخ الإنضمام",
-            "leave-date": "تاريخ الخروج"
+            "leave-date": "تاريخ الخروج",
+            "current-company-as-of-today": "الشركة الحالية المسجلة",
+            "attach-receipt": "(ارفق الإيصال)",
+            "example-bank-name": "(مثال: الراجحي، الإنماء... الخ)"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1178,7 +1181,9 @@ export default {
             "new-values": "New values",
             "activity-log": "Activity log",
             "joined-date": "Joined date",
-            "leave-date": "Leave date"
+            "leave-date": "Leave date",
+            "attach-receipt": "(Attach Receipt)",
+            "example-bank-name": "(E.g. Rajhi, Inma... etc)"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

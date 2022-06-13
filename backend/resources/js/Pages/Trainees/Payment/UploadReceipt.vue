@@ -46,7 +46,7 @@
                         </div>
 
                         <div class="mt-3">
-                            <jet-label for="amount" :value="$t('words.sender-name')"/>
+                            <jet-label for="sender_name" :value="$t('words.sender-name')"/>
                             <jet-input
                                 id="sender_name"
                                 type="text"
@@ -58,7 +58,7 @@
                         </div>
 
                         <div class="mt-3">
-                            <jet-label for="bank_name_from" :value="$t('words.sender-bank-name')"/>
+                            <jet-label for="bank_name_from" :value="$t('words.sender-bank-name')+' '+$t('words.example-bank-name')"/>
                             <jet-input
                                 id="bank_name_from"
                                 type="text"
@@ -71,7 +71,7 @@
                         </div>
 
                         <div class="mt-3">
-                            <jet-label for="bank_name_to" :value="$t('words.receiver-bank-name')"/>
+                            <jet-label for="bank_name_to" :value="$t('words.receiver-bank-name')+' '+$t('words.example-bank-name')"/>
                             <jet-input
                                 id="bank_name_to"
                                 type="text"
