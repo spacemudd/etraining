@@ -35,7 +35,7 @@ class CompanyInvoicesController extends Controller
         $trainees = $company->trainees
             ->pluck('name', 'id');
 
-        $deleted_trainees = $company->trainees->where('deleted_at', '!=', null)->pluck('id');
+        $deleted_trainees = $company->trainees->where('deleted_at', '!=', null)->pluck('name', 'id');
 
         return Inertia::render('Back/Companies/Invoices/Create', [
             'company' => $company,

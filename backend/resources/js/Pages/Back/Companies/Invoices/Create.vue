@@ -183,7 +183,7 @@
                                             class="form-checkbox"
                                             @click="toggleSelectedTrainee(trainee_id)"
                                         >
-                                        <span v-if="deleted_trainees.indexOf(trainee_id)"
+                                        <span v-if="deleted_trainees[trainee_id]"
                                               class="inline-block mx-2 text-sm px-2 bg-red-600 text-white">
                                             {{ $t('words.blocked') }}
                                         </span>
