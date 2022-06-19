@@ -183,7 +183,8 @@
                                             class="form-checkbox"
                                             @click="toggleSelectedTrainee(trainee_id)"
                                         >
-                                        <span v-if="trainees.deleted_at" class="inline-block mt-2 p-1 px-2 bg-red-600 text-white rounded-lg">
+                                        <span v-if="deleted_trainees.indexOf(trainee_id)"
+                                              class="inline-block mx-2 text-sm px-2 bg-red-600 text-white">
                                             {{ $t('words.blocked') }}
                                         </span>
                                         <span class="mx-2 text-sm text-gray-600">{{ trainee_name }}</span>
@@ -246,6 +247,7 @@ export default {
         'company',
         'trainees',
         'monthly_subscription_per_trainee',
+        'deleted_trainees',
     ],
 
     components: {
