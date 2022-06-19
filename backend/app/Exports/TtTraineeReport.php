@@ -21,10 +21,10 @@ class TtTraineeReport implements FromArray
             ->with('company')
             ->whereHas('company', function($q) {$q->where('deleted_at', null);})
             ->with([
-                'absences_03to07',
+                'absences_12to18',
             ])
             ->withCount([
-                'absences_03to07',
+                'absences_12to18',
             ])
             ->get();
 
@@ -37,7 +37,7 @@ class TtTraineeReport implements FromArray
             'phone',
             'instructor',
             'group',
-            'absences_03_to_07',
+            'absences_12_to_18',
         ];
 
         foreach ($trainees as $trainee) {
@@ -48,7 +48,7 @@ class TtTraineeReport implements FromArray
                 'phone' => $trainee->phone,
                 'instructor' => optional($trainee->instructor)->name,
                 'group' => optional($trainee->trainee_group)->name,
-                'absences_03to07' => $trainee->absences_03to07_count ?: 0,
+                'absences_12to18' => $trainee->absences_12to18_count ?: 0,
             ];
         }
 
