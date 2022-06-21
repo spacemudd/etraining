@@ -3,7 +3,7 @@
 use App\Models\Back\Trainee;
 
 Route::get('version', function() {
-    return '4.6';
+    return '4.7';
 });
 
 Route::get('phone-numbers/{company_id}', function() {
