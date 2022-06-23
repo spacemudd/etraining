@@ -512,7 +512,8 @@ export default {
             "leave-date": "تاريخ الخروج",
             "current-company-as-of-today": "الشركة الحالية المسجلة",
             "attach-receipt": "(ارفق الإيصال)",
-            "example-bank-name": "(مثال: الراجحي، الإنماء... الخ)"
+            "example-bank-name": "(مثال: الراجحي، الإنماء... الخ)",
+            "delete-invoice": "حذف الفواتير"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1183,7 +1184,8 @@ export default {
             "joined-date": "Joined date",
             "leave-date": "Leave date",
             "attach-receipt": "(Attach Receipt)",
-            "example-bank-name": "(E.g. Rajhi, Inma... etc)"
+            "example-bank-name": "(E.g. Rajhi, Inma... etc)",
+            "delete-invoice": "Delete invoices"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

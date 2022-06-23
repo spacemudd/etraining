@@ -44,6 +44,7 @@ class RolesService
         'approve-payment-receipt',
         'approve-invoice-paid',
         'edit-payment-settings',
+        'delete-invoice',
         // add the same name of the role to translation files.
     ];
 

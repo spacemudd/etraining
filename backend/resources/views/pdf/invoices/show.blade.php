@@ -108,7 +108,7 @@
                             <td style="text-align:left;direction:ltr;">Beneficiary name:</td>
             			</tr>
                         <tr>
-                            <td>رقم حساب المستقيد</td>
+                            <td>رقم حساب المستفيد</td>
                             <td style="text-align:center;">2972254319940</td>
                             <td style="text-align:left;direction:ltr;">Beneficiary account no.:</td>
                         </tr>
