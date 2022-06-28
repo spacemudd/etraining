@@ -495,4 +495,5 @@ return [
     'leave-date' => 'Leave date',
     'attach-receipt' => '(Attach Receipt)',
     'example-bank-name' => '(E.g. Rajhi, Inma... etc)',
+    'delete-invoice' => 'Delete invoices',
 ];

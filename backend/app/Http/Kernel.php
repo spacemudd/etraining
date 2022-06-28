@@ -8,6 +8,7 @@ use App\Http\Middleware\RedirectTraineesToDashboard;
 use App\Http\Middleware\RoleNavigator;
 use App\Http\Middleware\SuspendedAccountsMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Inertia\Middleware;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
 class Kernel extends HttpKernel
@@ -46,6 +47,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\SetLocale::class,
             IsDisabledWebsiteMiddleware::class,
             SuspendedAccountsMiddleware::class,
+            Middleware::class,
         ],
 
         'api' => [

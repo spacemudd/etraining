@@ -330,4 +330,15 @@ class FinancialInvoicesController extends Controller
             'invoices' => $request->invoices,
         ]);
     }
+
+    public function destroy($invoice_id)
+    {
+        $this->authorize('delete-invoice');
+        DB::beginTransaction();
+        $invoice = Invoice::findOrFail($invoice_id);
+        AccountingLedgerBook::where('invoice_id', $invoice->id)->delete();
+        $invoice->forceDelete();
+        DB::commit();
+        return redirect()->route('back.finance.invoices.index');
+    }
 }

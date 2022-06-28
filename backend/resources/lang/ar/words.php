@@ -511,4 +511,5 @@ return [
     'current-company-as-of-today' => 'الشركة الحالية المسجلة',
     'attach-receipt' => '(ارفق الإيصال)',
     'example-bank-name' => '(مثال: الراجحي، الإنماء... الخ)',
+    'delete-invoice' => 'حذف الفواتير',
 ];
