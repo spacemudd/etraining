@@ -34,9 +34,9 @@ class FinancialInvoicesController extends Controller
             ->with('company')
             ->defaultSort('created_at')
             ->allowedSorts(['created_at', 'number', 'status', 'payment_method', 'grand_total', 'is_verified', 'created_at'])
-            ->allowedFilters(['created_at', 'trainee.name', 'number', 'company.name_ar', 'status'])
-            ->allowedFields(['trainee.id', 'trainee.name', 'company.id', 'company.name_ar'])
-            ->allowedIncludes(['company', 'trainee'])
+            ->allowedFilters(['created_at', 'trainee.name', 'number', 'company.name_ar', 'status', 'trainee_bank_payment_receipt.sender_name'])
+            ->allowedFields(['trainee.id', 'trainee.name', 'company.id', 'company.name_ar', 'trainee_bank_payment_receipts.sender_name'])
+            ->allowedIncludes(['company', 'trainee', 'trainee_bank_payment_receipt'])
             ->paginate()
             ->withQueryString();
 
@@ -50,6 +50,7 @@ class FinancialInvoicesController extends Controller
                 'company.name_ar' => __('words.company'),
                 'trainee.name' => __('words.trainee'),
                 'created_at' => __('words.date'),
+                'trainee_bank_payment_receipt.sender_name' => __('words.sender-name'),
             ]);
 
             $table->addFilter('status', __('words.status'), [
