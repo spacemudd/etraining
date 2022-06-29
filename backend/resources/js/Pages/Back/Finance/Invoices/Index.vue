@@ -33,8 +33,9 @@
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.company') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.account-name') }}</th>
                             <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('status')">{{ $t('words.status') }}</th>
-                            <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('payment_method')">{{ $t('words.payment-method') }}</th>
-                            <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('grand_total')">{{ $t('words.amount') }}</th>
+                            <th class="rtl:text-right font-weight-bold">{{ $t('words.payment-method') }}</th>
+                            <th class="rtl:text-right font-weight-bold">{{ $t('words.amount') }}</th>
+                            <th class="rtl:text-right font-weight-bold">{{ $t('words.submitted-receipt') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.collected') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.confirmed') }}</th>
                             <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('created_at')">{{ $t('words.date') }}</th>
@@ -75,6 +76,14 @@
                             <td class="rtl:text-right text-black">
                                 <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
                                     {{ invoice.grand_total }}
+                                </inertia-link>
+                            </td>
+                            <td class="rtl:text-right text-black">
+                                <inertia-link v-if="invoice.trainee_bank_payment_receipt"
+                                              :href="route('back.finance.invoices.show', invoice.id)">
+                                    {{ invoice.trainee_bank_payment_receipt.sender_name }}
+                                    <br/>
+                                    {{ invoice.trainee_bank_payment_receipt.created_at }}
                                 </inertia-link>
                             </td>
                             <td class="rtl:text-right text-black">

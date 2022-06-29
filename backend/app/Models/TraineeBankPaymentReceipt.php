@@ -26,6 +26,14 @@ class TraineeBankPaymentReceipt extends Model implements Auditable, HasMedia
         'approvals',
     ];
 
+    public $dates = [
+        'created_at',
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d',
+    ];
+
     protected static function boot(): void
     {
         parent::boot();

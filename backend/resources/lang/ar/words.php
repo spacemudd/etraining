@@ -512,4 +512,6 @@ return [
     'attach-receipt' => '(ارفق الإيصال)',
     'example-bank-name' => '(مثال: الراجحي، الإنماء... الخ)',
     'delete-invoice' => 'حذف الفواتير',
+    'submitted-receipt' => 'الإيصال',
+    'receipt-date' => 'تاريخ الإيصال',
 ];

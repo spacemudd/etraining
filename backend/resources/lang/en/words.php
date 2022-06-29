@@ -496,4 +496,6 @@ return [
     'attach-receipt' => '(Attach Receipt)',
     'example-bank-name' => '(E.g. Rajhi, Inma... etc)',
     'delete-invoice' => 'Delete invoices',
+    'submitted-receipt' => 'Submitted Receipt',
+    'receipt-date' => 'Receipt date',
 ];
