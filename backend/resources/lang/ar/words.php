@@ -509,7 +509,7 @@ return [
     'joined-date' => 'تاريخ الإنضمام',
     'leave-date' => 'تاريخ الخروج',
     'current-company-as-of-today' => 'الشركة الحالية المسجلة',
-    'attach-receipt' => '(ارفق الإيصال)',
+    'attach-receipt' => 'ارفق الإيصال',
     'example-bank-name' => '(مثال: الراجحي، الإنماء... الخ)',
     'delete-invoice' => 'حذف الفواتير',
     'submitted-receipt' => 'الإيصال',
@@ -517,4 +517,5 @@ return [
     'history' => 'التاريخ',
     'day' => 'اليوم',
     'refresh' => 'تحديث',
+    'post-trainees' => 'ترحيل',
 ];

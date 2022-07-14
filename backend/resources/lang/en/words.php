@@ -493,7 +493,7 @@ return [
     'activity-log' => 'Activity log',
     'joined-date' => 'Joined date',
     'leave-date' => 'Leave date',
-    'attach-receipt' => '(Attach Receipt)',
+    'attach-receipt' => 'Attach Receipt',
     'example-bank-name' => '(E.g. Rajhi, Inma... etc)',
     'delete-invoice' => 'Delete invoices',
     'submitted-receipt' => 'Submitted Receipt',
@@ -501,4 +501,5 @@ return [
     'history' => 'History',
     'day' => 'Day',
     'refresh' => 'Refresh',
+    'post-trainees' => 'Post trainees',
 ];

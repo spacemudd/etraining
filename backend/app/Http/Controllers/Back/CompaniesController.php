@@ -7,6 +7,7 @@ use App\Models\Back\Company;
 use App\Models\Back\Instructor;
 use App\Models\Back\Trainee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class CompaniesController extends Controller
@@ -159,5 +160,14 @@ class CompaniesController extends Controller
     {
         Company::findOrFail($id)->delete();
         return redirect()->route('back.companies.index');
+    }
+
+    public function postTrainees($id)
+    {
+        DB::beginTransaction();
+        $company = Company::findOrFail($id);
+        $company->trainees()->onlyTrashed()->update(['company_id' => null]);
+        DB::commit();
+        return redirect()->route('back.companies.show', $id);
     }
 }

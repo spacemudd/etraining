@@ -149,7 +149,7 @@ export default {
         }
     },
     mounted() {
-        this.form.sender_name = this.trainee.name;
+        this.form.sender_name = '';
         this.form.amount = this.pending_amount_raw;
     },
     methods: {

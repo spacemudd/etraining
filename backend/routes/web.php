@@ -232,6 +232,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::resource('companies', \App\Http\Controllers\Back\CompaniesController::class);
         Route::resource('companies.invoices', \App\Http\Controllers\Back\CompanyInvoicesController::class)->only(['create', 'store']);
         Route::prefix('companies')->name('companies.')->group(function() {
+            Route::post('{company_id}/post-trainees', [\App\Http\Controllers\Back\CompaniesController::class, 'postTrainees'])->name('post-trainees');
             Route::get('{company_id}/trainees/company-trainee-link-audit', [\App\Http\Controllers\Back\CompanyTraineeLinkAuditsController::class, 'index'])->name('trainees.company-trainee-link-audit');
             Route::get('{company_id}/trainees/company-trainee-link-audit/excel', [\App\Http\Controllers\Back\CompanyTraineeLinkAuditsController::class, 'excel'])->name('trainees.company-trainee-link-audit.excel');
             Route::get('{company_id}/trainees/activity-log/excel', [\App\Http\Controllers\Back\CompanyTraineesActivityLogController::class, 'excel'])->name('trainees.activity-log.excel');

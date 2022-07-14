@@ -105,6 +105,7 @@
 
                 <div class="md:col-span-4 sm:col-span-1">
                     <div class="flex justify-end items-center gap-4">
+                        <post-trainees-button :company-id="company.id"></post-trainees-button>
                         <inertia-link class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
                            :href="route('back.companies.trainees.company-trainee-link-audit', {company_id: company.id})">
                             <span>{{ $t('words.history') }}</span>
@@ -316,11 +317,13 @@ import JetLabel from '@/Jetstream/Label';
 import CompanyContractsPagination from "@/Components/CompanyContractsPagination";
 import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
 import EmptySlate from "@/Components/EmptySlate";
+import PostTraineesButton from "@/Components/PostTraineesButton";
 
 export default {
     props: ['sessions', 'company', 'instructors', 'invoices', 'trainees_trashed_count'],
 
     components: {
+        PostTraineesButton,
         AppLayout,
         JetSectionBorder,
         Breadcrumb,
