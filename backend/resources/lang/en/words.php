@@ -498,4 +498,7 @@ return [
     'delete-invoice' => 'Delete invoices',
     'submitted-receipt' => 'Submitted Receipt',
     'receipt-date' => 'Receipt date',
+    'history' => 'History',
+    'day' => 'Day',
+    'refresh' => 'Refresh',
 ];

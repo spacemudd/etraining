@@ -514,4 +514,7 @@ return [
     'delete-invoice' => 'حذف الفواتير',
     'submitted-receipt' => 'الإيصال',
     'receipt-date' => 'تاريخ الإيصال',
+    'history' => 'التاريخ',
+    'day' => 'اليوم',
+    'refresh' => 'تحديث',
 ];
