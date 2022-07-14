@@ -28,15 +28,15 @@
                    target="_blank">
                     {{ $t('words.refresh') }}
                 </inertia-link>
-                <!--<a class="mx-2 border px-2 rounded"-->
-                <!--   :href="route('back.companies.trainees.activity-log.excel', {-->
-                <!--            company_id: company.id,-->
-                <!--            company: company.id,-->
-                <!--            from_date: reportDateFrom,-->
-                <!--            to_date: reportDateTo})"-->
-                <!--   target="_blank">-->
-                <!--    {{ $t('words.print') }}-->
-                <!--</a>-->
+                <a class="mx-2 border px-2 rounded"
+                   :href="route('back.companies.trainees.company-trainee-link-audit.excel', {
+                            company_id: company.id,
+                            company: company.id,
+                            from_date: reportDateFrom,
+                            to_date: reportDateTo})"
+                   target="_blank">
+                    {{ $t('words.print') }}
+                </a>
             </div>
 
             <div class="overflow-x-auto">

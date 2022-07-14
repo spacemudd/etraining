@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Back;
 
+use App\Exports\CompanyTraineeActivityLogExport;
+use App\Exports\CompanyTraineeLinkAuditsExport;
 use App\Http\Controllers\Controller;
 use App\Models\Back\Company;
 use App\Models\Back\CompanyTraineeLinkAudit;
@@ -9,6 +11,7 @@ use App\Models\Back\TraineeCompanyMovement;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class CompanyTraineeLinkAuditsController extends Controller
@@ -48,5 +51,26 @@ class CompanyTraineeLinkAuditsController extends Controller
                 'trainee.name' => __('words.trainee'),
             ]);
         });
+    }
+
+    public function excel(Request $request)
+    {
+        $request->validate([
+            'from_date' => [
+                'required',
+                'date',
+                'before:to_date'
+            ],
+            'to_date' => [
+                'required',
+                'date',
+                'after:from_date'
+            ],
+            'trainee_name' => 'nullable|string|max:255',
+            'company' => 'required|exists:companies,id',
+        ]);
+
+        $filename = now()->format('Y-m-d-h-i').'-company-trainees-link-audit.xlsx';
+        return Excel::download(new CompanyTraineeLinkAuditsExport($request, $request->company_id), $filename);
     }
 }

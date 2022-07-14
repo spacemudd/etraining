@@ -14,6 +14,11 @@ class CompanyTraineeLinkAudit extends Model
         'updated_at' => 'datetime',
     ];
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
     public function trainee()
     {
         return $this->belongsTo(Trainee::class)->withTrashed();
