@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Events\TraineeAttachedToCompany;
+use App\Listeners\AttachTraineeToTrainingGroupListener;
 use App\Listeners\RecordLastLoginTimestamp;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Registered;
@@ -22,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         Login::class => [
             RecordLastLoginTimestamp::class,
+        ],
+        TraineeAttachedToCompany::class => [
+            AttachTraineeToTrainingGroupListener::class,
         ],
     ];
 
