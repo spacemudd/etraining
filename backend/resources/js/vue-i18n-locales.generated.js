@@ -511,11 +511,15 @@ export default {
             "joined-date": "تاريخ الإنضمام",
             "leave-date": "تاريخ الخروج",
             "current-company-as-of-today": "الشركة الحالية المسجلة",
-            "attach-receipt": "(ارفق الإيصال)",
+            "attach-receipt": "ارفق الإيصال",
             "example-bank-name": "(مثال: الراجحي، الإنماء... الخ)",
             "delete-invoice": "حذف الفواتير",
             "submitted-receipt": "الإيصال",
-            "receipt-date": "تاريخ الإيصال"
+            "receipt-date": "تاريخ الإيصال",
+            "history": "التاريخ",
+            "day": "اليوم",
+            "refresh": "تحديث",
+            "post-trainees": "ترحيل"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1185,11 +1189,15 @@ export default {
             "activity-log": "Activity log",
             "joined-date": "Joined date",
             "leave-date": "Leave date",
-            "attach-receipt": "(Attach Receipt)",
+            "attach-receipt": "Attach Receipt",
             "example-bank-name": "(E.g. Rajhi, Inma... etc)",
             "delete-invoice": "Delete invoices",
             "submitted-receipt": "Submitted Receipt",
-            "receipt-date": "Receipt date"
+            "receipt-date": "Receipt date",
+            "history": "History",
+            "day": "Day",
+            "refresh": "Refresh",
+            "post-trainees": "Post trainees"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

@@ -6,7 +6,6 @@
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.trainee') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.identity_number') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.phone') }}</strong></th>
-        <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.leave-date') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong></strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.current-company-as-of-today') }}</strong></th>
     </tr>
@@ -18,24 +17,19 @@
                     {{ $record->company->name_ar }}
                 </td>
                 <td style="width:50px;text-align:center;border:1px solid black;">
-                    {{ $record->in_date_ksa }}
+                    {{ $record->created_at->format('Y-m-d') }}
                 </td>
                 <td style="width:50px;text-align:center;border:1px solid black;">
-                    {{ $record->trainee_name }}
+                    {{ $record->trainee->name }}
                 </td>
                 <td style="width:50px;text-align:center;border:1px solid black;">
-                    {{ $record->trainee_identity_number }}
+                    {{ $record->trainee->identity_number }}
                 </td>
                 <td style="width:50px;text-align:center;border:1px solid black;">
-                    {{ $record->trainee_phone_number }}
+                    {{ $record->trainee->phone_number }}
                 </td>
-                <td style="border:1px solid black;">
-                    {{ $record->out_date_ksa }}
-                </td>
-                <td style="border:1px solid black;">
-
-                </td>
-                <td style="border:1px solid black;">
+                <td></td>
+                <td style="width:50px;text-align:center;border:1px solid black;">
                     {{ $record->trainee->company->name_ar }}
                 </td>
             </tr>

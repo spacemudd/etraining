@@ -23,8 +23,6 @@ class CompanyTraineesActivityLogController extends Controller
             ->defaultSort('created_at')
             ->allowedSorts(['in_date', 'out_date'])
             ->allowedFilters(['created_at', 'trainee_name'])
-            //->allowedFields([''])
-            //->allowedIncludes(['company', 'trainee'])
             ->paginate()
             ->withQueryString();
 

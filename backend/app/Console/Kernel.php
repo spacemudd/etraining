@@ -10,6 +10,7 @@ use App\Console\Commands\SeedPermissionsCommand;
 use App\Console\Commands\SetupDevCommand;
 use App\Console\Commands\FixTraineeGroupsCommand;
 use App\Console\Commands\ZoomCommand;
+use App\Jobs\CompanyTraineeLinkAuditJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -44,6 +45,7 @@ class Kernel extends ConsoleKernel
             $schedule->command('backup:clean')->daily()->at('01:00')->onOneServer();
             $schedule->command('backup:run')->daily()->at('01:30')->onOneServer();
             $schedule->command('etrianing:coursereminder')->daily()->at('05:00');
+            $schedule->job(new CompanyTraineeLinkAuditJob())->daily()->at('23:45')->onOneServer();
         }
     }
 

@@ -6,6 +6,11 @@ Route::get('version', function() {
     return '4.7';
 });
 
+Route::get('job', function() {
+    dispatch_sync(new \App\Jobs\CompanyTraineeLinkAuditJob());
+    return 'ok';
+});
+
 Route::get('phone-numbers/{company_id}', function() {
 
     AttendanceReportRecordWarning::whereBetween('created_at', [now()->setDate(2022, 1, 3)->startOfDay(), now()->setDate(2022, 1, 9)->endOfDay()])->whereHas('trainee', function ($q) { $q->whereIn('company_id', ['a980c16d-b3c9-4064-aaf7-f0b6174197de', '07b45abe-da70-48b9-816e-b092e1868ae7', '4a69b7ae-25ba-43a4-a8b1-a2936647f026', 'b8f17f79-c0c4-401f-9924-d7afec100c44', '9891d1d3-103d-4af9-ab70-2028d438fd03', '022ab58a-8a4b-4a46-8c0b-350ac5ea17c5', 'd72becb3-6e03-4546-85fa-4dbd008fccb6', 'a0bc0fcb-20e3-45a3-a057-be5d47d26d19', 'e24ce28c-2cd7-496e-9eb5-202d75df5176', 'ac7393a9-d56d-49ae-9c43-a9031f244416', '6e61eded-aa67-419c-ada3-a6182214b361', 'b5d59d5a-b899-4919-bb74-43d0080b3800']); })->delete();
@@ -227,6 +232,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::resource('companies', \App\Http\Controllers\Back\CompaniesController::class);
         Route::resource('companies.invoices', \App\Http\Controllers\Back\CompanyInvoicesController::class)->only(['create', 'store']);
         Route::prefix('companies')->name('companies.')->group(function() {
+            Route::post('{company_id}/post-trainees', [\App\Http\Controllers\Back\CompaniesController::class, 'postTrainees'])->name('post-trainees');
+            Route::get('{company_id}/trainees/company-trainee-link-audit', [\App\Http\Controllers\Back\CompanyTraineeLinkAuditsController::class, 'index'])->name('trainees.company-trainee-link-audit');
+            Route::get('{company_id}/trainees/company-trainee-link-audit/excel', [\App\Http\Controllers\Back\CompanyTraineeLinkAuditsController::class, 'excel'])->name('trainees.company-trainee-link-audit.excel');
             Route::get('{company_id}/trainees/activity-log/excel', [\App\Http\Controllers\Back\CompanyTraineesActivityLogController::class, 'excel'])->name('trainees.activity-log.excel');
             Route::get('{company_id}/trainees/activity-log', [\App\Http\Controllers\Back\CompanyTraineesActivityLogController::class, 'index'])->name('trainees.activity-log');
             Route::get('{company_id}/contracts/{contract_id}/attachments', [\App\Http\Controllers\Back\CompaniesContractsController::class, 'attachments'])->name('contracts.attachments');
@@ -327,7 +335,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::resource('trainees.invoices', \App\Http\Controllers\Back\TraineeInvoicesController::class)->only(['create', 'store']);
         Route::get('candidates', [\App\Http\Controllers\Back\CandidatesController::class, 'index'])->name('candidates.index');
 
-        // Export For Candidates.
+        // Export trainees
         Route::get('candidates/excel/{id}/download', [\App\Http\Controllers\Back\TraineesController::class, 'excelJobDownload'])->name('candidates.excel.job.download');
         Route::get('candidates/excel/{id}', [\App\Http\Controllers\Back\TraineesController::class, 'excelJob'])->name('candidates.excel.job');
         Route::post('candidates/excel', [\App\Http\Controllers\Back\CandidatesController::class, 'excel'])->name('candidates.excel');
@@ -342,7 +350,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('instructors/blocked/show/{instructor_id}', [\App\Http\Controllers\Back\InstructorsController::class, 'showBlocked'])->name('instructors.show.blocked');
         Route::post('instructors/blocked/show/{instructor_id}', [\App\Http\Controllers\Back\InstructorsController::class, 'unblock'])->name('instructors.unblock');
         Route::resource('instructors', \App\Http\Controllers\Back\InstructorsController::class);
-
 
         Route::get('/courses/{course_id}/course-batches/{course_batch_id}/course-batch-sessions/{course_batch_session}/start', [\App\Http\Controllers\Back\CourseBatchSessionsController::class, 'show'])->name('course-batch-session.start');
         Route::resource('courses/{course_id}/course-batches/{course_batch_id}/course-batch-sessions', \App\Http\Controllers\Back\CourseBatchSessionsController::class);

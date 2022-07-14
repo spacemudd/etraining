@@ -56,253 +56,71 @@
                     <jet-application-mark/>
                 </a>
                 <ul class="mt-6">
-                    <li class="relative px-6 py-3">
-              <span
-                  class="absolute inset-y-0 left-0 w-1 bg-red-600 rounded-tr-lg rounded-br-lg"
-                  aria-hidden="true"
-              ></span>
-                        <a
-                            class="inline-flex items-center w-full text-sm font-semibold text-gray-800 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100"
-                            href="index.html"
-                        >
-                            <svg
-                                class="w-5 h-5"
-                                aria-hidden="true"
-                                fill="none"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                                ></path>
-                            </svg>
-                            <span class="ltr:ml-4 rtl:mr-4">Dashboard</span>
-                        </a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="relative px-6 py-3">
-                        <a
-                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                            href="forms.html"
-                        >
-                            <svg
-                                class="w-5 h-5"
-                                aria-hidden="true"
-                                fill="none"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                                ></path>
-                            </svg>
-                            <span class="ltr:ml-4 rtl:mr-4">Forms</span>
-                        </a>
-                    </li>
-                    <li class="relative px-6 py-3">
-                        <a
-                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                            href="cards.html"
-                        >
-                            <svg
-                                class="w-5 h-5"
-                                aria-hidden="true"
-                                fill="none"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                                ></path>
-                            </svg>
-                            <span class="ltr:ml-4 rtl:mr-4">Cards</span>
-                        </a>
-                    </li>
-                    <li class="relative px-6 py-3">
-                        <a
-                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                            href="charts.html"
-                        >
-                            <svg
-                                class="w-5 h-5"
-                                aria-hidden="true"
-                                fill="none"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"
-                                ></path>
-                                <path d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
-                            </svg>
-                            <span class="ltr:ml-4 rtl:mr-4">Charts</span>
-                        </a>
-                    </li>
-                    <li class="relative px-6 py-3">
-                        <a
-                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                            href="buttons.html"
-                        >
-                            <svg
-                                class="w-5 h-5"
-                                aria-hidden="true"
-                                fill="none"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"
-                                ></path>
-                            </svg>
-                            <span class="ltr:ml-4 rtl:mr-4">Buttons</span>
-                        </a>
-                    </li>
-                    <li class="relative px-6 py-3">
-                        <a
-                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                            href="modals.html"
-                        >
-                            <svg
-                                class="w-5 h-5"
-                                aria-hidden="true"
-                                fill="none"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                                ></path>
-                            </svg>
-                            <span class="ltr:ml-4 rtl:mr-4">Modals</span>
-                        </a>
-                    </li>
-                    <li class="relative px-6 py-3">
-                        <a
-                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                            href="tables.html"
-                        >
-                            <svg
-                                class="w-5 h-5"
-                                aria-hidden="true"
-                                fill="none"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
-                            </svg>
-                            <span class="ltr:ml-4 rtl:mr-4">Tables</span>
-                        </a>
-                    </li>
-                    <li class="relative px-6 py-3">
-                        <button
-                            class="inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                            @click="togglePagesMenu"
-                            aria-haspopup="true"
-                        >
-                <span class="inline-flex items-center">
-                  <svg
-                      class="w-5 h-5"
-                      aria-hidden="true"
-                      fill="none"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                  >
-                    <path
-                        d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"
-                    ></path>
-                  </svg>
-                  <span class="ltr:ml-4 rtl:mr-4">Pages</span>
-                </span>
-                            <svg
-                                class="w-4 h-4"
-                                aria-hidden="true"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                            >
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                    clip-rule="evenodd"
-                                ></path>
-                            </svg>
-                        </button>
-                        <template v-if="isPagesMenuOpen">
-                            <ul
-                                x-transition:enter="transition-all ease-in-out duration-300"
-                                x-transition:enter-start="opacity-25 max-h-0"
-                                x-transition:enter-end="opacity-100 max-h-xl"
-                                x-transition:leave="transition-all ease-in-out duration-300"
-                                x-transition:leave-start="opacity-100 max-h-xl"
-                                x-transition:leave-end="opacity-0 max-h-0"
-                                class="p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner bg-gray-50 dark:text-gray-400 dark:bg-gray-900"
-                                aria-label="submenu"
-                            >
-                                <li
-                                    class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                                >
-                                    <a class="w-full" href="pages/login.html">Login</a>
-                                </li>
-                                <li
-                                    class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                                >
-                                    <a class="w-full" href="pages/create-account.html">
-                                        Create account
-                                    </a>
-                                </li>
-                                <li
-                                    class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                                >
-                                    <a class="w-full" href="pages/forgot-password.html">
-                                        Forgot password
-                                    </a>
-                                </li>
-                                <li
-                                    class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                                >
-                                    <a class="w-full" href="pages/404.html">404</a>
-                                </li>
-                                <li
-                                    class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                                >
-                                    <a class="w-full" href="pages/blank.html">Blank</a>
-                                </li>
-                            </ul>
+                    <sidebar-link link-value="/dashboard" :active="$page.currentRouteName == 'dashboard'">
+                        <template #icon><DesktopIcon w="20px" h="20px" class="w-5 h-5" /></template>
+                        <template #title>
+                            <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.dashboard') }}</span>
                         </template>
-                    </li>
+                    </sidebar-link>
+
+                    <sidebar-link :link-value="route('trainees.courses.index')" :active="$page.currentRouteName == 'trainees.courses.index'">
+                        <template #icon>
+                            <ion-icon name="business-outline" class="w-5 h-5"></ion-icon>
+                        </template>
+                        <template #title>
+                            <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.courses') }}</span>
+                        </template>
+                    </sidebar-link>
+
+                    <sidebar-link :link-value="route('trainees.training-packages.index')" :active="$page.currentRouteName == 'trainees.training-packages.index'">
+                        <template #icon>
+                            <ion-icon name="albums-outline" class="w-5 h-5"></ion-icon>
+                        </template>
+                        <template #title>
+                            <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.training-packages') }}</span>
+                        </template>
+                    </sidebar-link>
+
+                    <sidebar-link :link-value="route('trainees.training-plan.index')" :active="$page.currentRouteName == 'trainees.training-plan.index'">
+                        <template #icon>
+                            <ion-icon name="school-outline" class="w-5 h-5"></ion-icon>
+                        </template>
+                        <template #title>
+                            <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.training-plan') }}</span>
+                        </template>
+                    </sidebar-link>
+
+                    <sidebar-link :link-value="route('trainees.attendance-sheet.index')"
+                                  :active="$page.currentRouteName == 'trainees.attendance-sheet.index'">
+                        <template #icon>
+                            <ion-icon name="calendar-outline" class="w-5 h-5"></ion-icon>
+                        </template>
+                        <template #title>
+                            <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.my-attendance') }}</span>
+                        </template>
+                    </sidebar-link>
+
+                    <sidebar-link :link-value="route('inbox.index')" :active="$page.currentRouteName == 'inbox.index'">
+                        <template #icon>
+                            <ion-icon name="mail-outline" class="w-5 h-5"></ion-icon>
+                        </template>
+                        <template #title>
+                            <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.messages') }} <span v-if="$page.props.user.inbox_messages_count" class="bg-red-500 rounded p-1 text-white">{{ $page.props.user.inbox_messages_count }}</span></span>
+                        </template>
+                    </sidebar-link>
+
+                    <li class="pr-8 mt-2 text-xs"><inertia-link class="hover:text-blue-600" :href="route('survey.index')">الاستبيانات</inertia-link>
+                    <li class="pr-8 mt-2 text-xs"><inertia-link class="hover:text-blue-600" :href="route('training-schedule.index')">الخطة التدريبية والجدول الزمني</inertia-link>
+                    <li class="pr-8 mt-2 text-xs"><inertia-link class="hover:text-blue-600" :href="route('training-plan.index')">خطة تدريب المدربين</inertia-link>
+                    <li class="pr-8 mt-2 text-xs"><inertia-link class="hover:text-blue-600" :href="route('user-guides.index')">الادلة الارشادية</inertia-link>
+                    <li class="pr-8 mt-2 text-xs"><inertia-link class="hover:text-blue-600" :href="route('obligations.index')">الالتزامات</inertia-link>
+                    <li class="pr-8 mt-2 text-xs"><inertia-link class="hover:text-blue-600" :href="route('management-roles.index')">دليل الكادر الاشرافي</inertia-link>
+                    <li class="pr-8 mt-2 text-xs"><inertia-link class="hover:text-blue-600" :href="route('company-roles.index')">وثيقة الادوار والمسؤوليات</inertia-link>
+                    <li class="pr-8 mt-2 text-xs"><inertia-link class="hover:text-blue-600" :href="route('suggestions.index')">للاقتراحات والاستفسارات</inertia-link>
+                    <li class="pr-8 mt-2 text-xs"><inertia-link class="hover:text-blue-600" :href="route('complaints.index')">الشكاوى والملاحظات</inertia-link>
+                    <li class="pr-8 mt-2 text-xs"><a class="hover:text-blue-600" href="/terms#attendance-policy">السياسة الاكاديمية والتدريبية</a>
+                    <li class="pr-8 text-xs"><a class="hover:text-blue-600" href="/terms">{{ $t('words.support-policy') }}</a></li>
                 </ul>
-                <div class="px-6 my-6">
-                    <button
-                        class="flex items-center justify-between px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red"
-                    >
-                        Create account
-                        <span class="ml-2" aria-hidden="true">+</span>
-                    </button>
-                </div>
             </div>
         </aside>
         <div class="flex flex-col flex-1 w-full mb-10">
@@ -460,6 +278,8 @@
     import SidebarLink from '../Components/SidebarLink';
     import SidebarContainer from "../Components/SidebarContainer";
     import SidebarContainerTrainee from "@/Components/SidebarContainerTrainee";
+    import DesktopIcon from 'vue-ionicons/dist/ios-desktop.vue'
+    import BusinessIcon from 'vue-ionicons/dist/ios-business';
 
     export default {
         components: {
@@ -473,6 +293,8 @@
             LanguageSelector,
             SidebarLink,
             SidebarContainer,
+            DesktopIcon,
+            BusinessIcon,
         },
 
         data() {
