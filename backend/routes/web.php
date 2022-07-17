@@ -126,6 +126,7 @@ Route::get('ttreport', function() {
     //    ];
     //}
 
+    ini_set('memory_limit', -1);
     return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\TtTraineeReport(), now()->format('Y-m-d-h-i').'-absences.xlsx');
 
     return $traineeData;
