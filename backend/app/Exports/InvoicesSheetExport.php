@@ -73,7 +73,7 @@ class InvoicesSheetExport implements FromView, WithEvents
         $invoices = Invoice::query()
             ->withoutGlobalScopes()
             ->with(['trainee', 'company'])
-            ->whereBetween('created_at', [$this->startDate, $this->endDate]);
+            ->whereBetween('from_date', [$this->startDate, $this->endDate]);
 
         if ($this->companyId) {
             $invoices->where('company_id', $this->companyId);
