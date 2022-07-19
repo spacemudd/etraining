@@ -30,8 +30,8 @@ class CompanyTraineeLinkAuditsController extends Controller
 
         $logs = QueryBuilder::for(CompanyTraineeLinkAudit::class)
             ->with('trainee')
-            ->where('company_id', $company_id)
-            ->groupBy('trainee_id');
+            ->where('company_id', $company_id);
+            //->groupBy('trainee_id');
             if ($request->from_date && $request->to_date) {
                 $logs = $logs->whereBetween('created_at', [$from_date, $to_date]);
             }
