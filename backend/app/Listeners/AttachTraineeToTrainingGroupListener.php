@@ -30,9 +30,8 @@ class AttachTraineeToTrainingGroupListener
         $trainee = Trainee::find($event->trainee_id);
         $company = Company::find($event->company_id);
         $contract = $company->contracts()->first();
-        $instructor = $contract->instructors()->first();
-
-        if ($instructor) {
+        if ($contract) {
+            $instructor = optional($contract->instructors())->first();
             $trainee->update(['instructor_id' => $instructor->id]);
         }
     }
