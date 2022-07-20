@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Models\Back\Company;
+use App\Models\Back\Trainee;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
@@ -31,6 +32,13 @@ class AttachTraineeToTrainingGroupListener
      */
     public function handle($event)
     {
-        $company = Company::
+        $trainee = Trainee::find($this->trainee_id);
+        $company = Company::find($this->company_id);
+        $contract = $company->contracts()->first();
+        $instructor = $contract->instructors()->first();
+
+        if ($instructor) {
+            $trainee->update(['instructor_id' => $instructor->id]);
+        }
     }
 }
