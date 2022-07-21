@@ -28,11 +28,16 @@ class AttachTraineeToTrainingGroupListener
     public function handle($event)
     {
         $trainee = Trainee::find($event->trainee_id);
+
         $company = Company::find($event->company_id);
-        $contract = $company->contracts()->first();
-        if ($contract) {
-            $instructor = optional($contract->instructors())->first();
-            $trainee->update(['instructor_id' => $instructor->id]);
+        if ($company) {
+            $contract = $company->contracts()->first();
+            if ($contract) {
+                $instructor = optional($contract->instructors())->first();
+                $trainee->update(['instructor_id' => $instructor->id]);
+            }
+        } else {
+            $trainee->update(['instructor_id' => null]);
         }
     }
 }
