@@ -34,7 +34,7 @@ class AttachTraineeToTrainingGroupListener
             $contract = $company->contracts()->first();
             if ($contract) {
                 $instructor = optional($contract->instructors())->first();
-                $trainee->update(['instructor_id' => $instructor->id]);
+                $trainee->update(['instructor_id' => optional($instructor)->id]);
             }
         } else {
             $trainee->update(['instructor_id' => null]);

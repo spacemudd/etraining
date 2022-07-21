@@ -117,13 +117,16 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
             if ($companyChanged) {
                 app()->make(TraineeCompanyMovementService::class)
                     ->recordMovement($model->id, $model->company_id, $model->getOriginal('company_id'));
-                TraineeAttachedToCompany::dispatch($model->id, $model->company_id);
             }
 
             //$isFinanceUser = (Str::contains('finance', optional(optional(auth()->user())->roles()->first())->name) || Str::contains('chasers', optional(optional(auth()->user())->roles()->first())->name));
             //if ($companyChanged && $model->company_id && !$isFinanceUser) {
             //    $model->notify(new AssignedToCompanyTraineeNotification());
             //}
+        });
+
+        static::updated(function ($model) {
+            TraineeAttachedToCompany::dispatch($model->id, $model->company_id);
         });
     }
 
