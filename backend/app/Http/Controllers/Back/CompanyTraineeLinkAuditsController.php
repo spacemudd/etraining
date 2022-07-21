@@ -11,6 +11,7 @@ use App\Models\Back\TraineeCompanyMovement;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use JamesMills\LaravelTimezone\Facades\Timezone;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -19,8 +20,8 @@ class CompanyTraineeLinkAuditsController extends Controller
     public function index($company_id, Request $request)
     {
         if ($request->from_date && $request->to_date) {
-            $from_date = Carbon::parse($request->from_date)->startOfDay();
-            $to_date = Carbon::parse($request->to_date)->endOfDay();
+            $from_date = Timezone::convertFromLocal($request->from_date)->startOfDay();
+            $to_date = Timezone::convertFromLocal($request->to_date)->endOfDay();
         } else {
             $from_date = now()->startOfMonth()->startOfDay();
             $to_date = now()->endOfMonth()->endOfDay();
@@ -30,8 +31,8 @@ class CompanyTraineeLinkAuditsController extends Controller
 
         $logs = QueryBuilder::for(CompanyTraineeLinkAudit::class)
             ->with('trainee')
-            ->where('company_id', $company_id);
-            //->groupBy('trainee_id');
+            ->where('company_id', $company_id)
+            ->groupBy('trainee_id');
             if ($request->from_date && $request->to_date) {
                 $logs = $logs->whereBetween('created_at', [$from_date, $to_date]);
             }
