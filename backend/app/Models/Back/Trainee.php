@@ -72,6 +72,10 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'linked_date',
     ];
 
+    protected $casts = [
+        'deleted_at' => 'datetime',
+    ];
+
     protected $appends = [
         'trainee_group_object',
         'identity_copy_url',
