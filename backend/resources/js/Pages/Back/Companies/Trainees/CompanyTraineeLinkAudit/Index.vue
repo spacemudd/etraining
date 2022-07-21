@@ -63,11 +63,11 @@
                                 </inertia-link>
                             </td>
                             <td class="rtl:text-right text-black">
-                                <inertia-link :href="route('back.trainees.show', activity.trainee_id)">
+                                <inertia-link :href="activity.trainee.deleted_at ? route('back.trainees.show.blocked', activity.trainee_id) : route('back.trainees.show', activity.trainee_id)">
                                     {{ activity.trainee.name }}
                                     <span v-if="activity.trainee.deleted_at"
                                           class="inline-block mt-2 p-1 px-2 bg-red-600 text-white rounded-lg">
-                                            {{ $t('words.blocked') }}
+                                            {{ $t('words.blocked') }} - {{ activity.trainee.deleted_at }} - {{ activity.trainee.deleted_remark }}
                                     </span>
                                 </inertia-link>
                             </td>
