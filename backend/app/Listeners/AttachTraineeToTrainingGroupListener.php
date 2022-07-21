@@ -27,9 +27,9 @@ class AttachTraineeToTrainingGroupListener
      */
     public function handle($event)
     {
-        $trainee = Trainee::find($event->trainee_id);
+        $trainee = Trainee::withTrashed()->find($event->trainee_id);
 
-        $company = Company::find($event->company_id);
+        $company = Company::withTrashed()->find($event->company_id);
         if ($company) {
             $contract = $company->contracts()->first();
             if ($contract) {
