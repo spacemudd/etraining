@@ -115,6 +115,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
             $companyChanged = $model->company_id != $model->getOriginal('company_id');
 
             if ($companyChanged) {
+                TraineeAttachedToCompany::dispatch($model->id, $model->company_id);
                 app()->make(TraineeCompanyMovementService::class)
                     ->recordMovement($model->id, $model->company_id, $model->getOriginal('company_id'));
             }
@@ -123,10 +124,6 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
             //if ($companyChanged && $model->company_id && !$isFinanceUser) {
             //    $model->notify(new AssignedToCompanyTraineeNotification());
             //}
-        });
-
-        static::updated(function ($model) {
-            TraineeAttachedToCompany::dispatch($model->id, $model->company_id);
         });
     }
 
@@ -447,13 +444,13 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         return str_replace($arabic_eastern, $arabic_western, $str);
     }
 
-    public function absences_01to30()
+    public function absences_17to21()
     {
         return $this->hasMany(AttendanceReportRecord::class)
             ->where('status', 0)
             ->whereBetween('session_starts_at', [
-                now()->setDate(2022, 6, 1)->startOfDay(),
-                now()->setDate(2022, 6, 30)->endOfDay(),
+                now()->setDate(2022, 7, 17)->startOfDay(),
+                now()->setDate(2022, 7, 21)->endOfDay(),
             ]);
 
         //return $this->hasMany(AttendanceReportRecordWarning::class)

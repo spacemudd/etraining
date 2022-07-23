@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\AdhocCommand;
+use App\Console\Commands\CompanyTraineeSnapshot;
 use App\Console\Commands\TraineeAlertUpcomingSessionCommand;
 use App\Console\Commands\DatabaseIndexTextCommand;
 use App\Console\Commands\InvitePeopleCommand;
@@ -10,7 +11,6 @@ use App\Console\Commands\SeedPermissionsCommand;
 use App\Console\Commands\SetupDevCommand;
 use App\Console\Commands\FixTraineeGroupsCommand;
 use App\Console\Commands\ZoomCommand;
-use App\Jobs\CompanyTraineeLinkAuditJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -30,6 +30,7 @@ class Kernel extends ConsoleKernel
         ZoomCommand::class,
         AdhocCommand::class,
         TraineeAlertUpcomingSessionCommand::class,
+        CompanyTraineeSnapshot::class,
     ];
 
     /**
@@ -44,8 +45,8 @@ class Kernel extends ConsoleKernel
         if(app()->environment('production')) {
             $schedule->command('backup:clean')->daily()->at('01:00')->onOneServer();
             $schedule->command('backup:run')->daily()->at('01:30')->onOneServer();
-            $schedule->command('etrianing:coursereminder')->daily()->at('05:00');
-            $schedule->job(new CompanyTraineeLinkAuditJob())->daily()->at('23:00')->onOneServer();
+            $schedule->command('etrianing:coursereminder')->daily()->at('05:00')->onOneServer();
+            $schedule->command('etraining:company-trainee-snapshot')->daily()->at('23:00')->onOneServer();
         }
     }
 

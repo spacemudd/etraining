@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Models\Back\Company;
-use App\Models\Back\CompanyTraineeLinkAudit;
 use App\Models\Back\Trainee;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -31,14 +30,16 @@ class CompanyTraineeLinkAuditJob implements ShouldQueue
      * Execute the job.
      *
      * @return void
+     * @throws \Throwable
      */
     public function handle()
     {
         $date = now()->toDateTimeString();
         DB::beginTransaction();
-        Company::chunk(20, function($companies) use ($date) {
+        Company::withoutGlobalScopes()->chunk(20, function($companies) use ($date) {
             foreach ($companies as $company) {
-                $trainees_ids = Trainee::select('id AS trainee_id', 'company_id')
+                $trainees_ids = Trainee::withoutGlobalScopes()
+                    ->select('id AS trainee_id', 'company_id')
                     ->where('company_id', $company->id)
                     ->toBase()
                     ->get()
@@ -52,8 +53,10 @@ class CompanyTraineeLinkAuditJob implements ShouldQueue
                     $id['updated_at'] = $date;
                 }
 
-                DB::table('company_trainee_link_audits')
-                    ->insert($trainees_ids);
+                if (count($trainees_ids)) {
+                    DB::table('company_trainee_link_audits')
+                        ->insert($trainees_ids);
+                }
             }
         });
         DB::commit();
