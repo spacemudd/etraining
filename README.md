@@ -10,7 +10,7 @@ eTraining platform.
 
 `phpunit`
 
-or
+or 1
 
 `php vendor/phpunit/phpunit/phpunit`
 

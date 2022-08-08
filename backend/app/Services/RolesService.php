@@ -45,6 +45,7 @@ class RolesService
         'approve-invoice-paid',
         'edit-payment-settings',
         'delete-invoice',
+        'can-delete-invoice-anytime',
         // add the same name of the role to translation files.
     ];
 
