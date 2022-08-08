@@ -8046,6 +8046,11 @@ __webpack_require__.r(__webpack_exports__);
   },
   props: ['is_pending_approval_prop', 'instructor_id', 'instructor_email'],
   methods: {
+    logoutUser: function logoutUser() {
+      axios.post('/logout').then(function (response) {
+        window.location = '/';
+      });
+    },
     uploadFile: function uploadFile(e, filename) {
       this.formData.append('instructor_email', this.instructor_email);
       this.formData.append('instructor_id', this.instructor_id);
@@ -28762,7 +28767,33 @@ var render = function render() {
     attrs: {
       type: "submit"
     }
-  }, [_vm._v("\n                        " + _vm._s(_vm.$t("words.submit")) + "\n                    ")])])])])])]);
+  }, [_vm._v("\n                        " + _vm._s(_vm.$t("words.submit")) + "\n                    ")])])])]), _vm._v(" "), _c("div", {
+    staticClass: "mt-4"
+  }, [[_c("button", {
+    staticClass: "inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150 mx-4 tracking-normal",
+    staticStyle: {
+      "background-color": "#c81010",
+      "margin-bottom": "30px"
+    },
+    on: {
+      click: _vm.logoutUser
+    }
+  }, [_c("svg", {
+    staticClass: "w-4 h-4 ltr:mr-3 rtl:ml-3",
+    attrs: {
+      "aria-hidden": "true",
+      fill: "none",
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round",
+      "stroke-width": "2",
+      viewBox: "0 0 24 24",
+      stroke: "currentColor"
+    }
+  }, [_c("path", {
+    attrs: {
+      d: "M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+    }
+  })]), _vm._v(" "), _c("span", [_vm._v(_vm._s(_vm.$t("words.logout")))])])]], 2)])]);
 };
 
 var staticRenderFns = [];

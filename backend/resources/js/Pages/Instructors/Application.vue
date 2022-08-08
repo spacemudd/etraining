@@ -93,7 +93,24 @@
                     </div>
                 </form>
             </div>
-
+            <div class="mt-4">
+                <template>
+                    <button style="background-color: #c81010; margin-bottom: 30px ;" @click="logoutUser" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150 mx-4 tracking-normal">
+                        <svg class="w-4 h-4 ltr:mr-3 rtl:ml-3"
+                             aria-hidden="true"
+                             fill="none"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             stroke-width="2"
+                             viewBox="0 0 24 24"
+                             stroke="currentColor">
+                            <path d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+                            ></path>
+                        </svg>
+                        <span>{{ $t('words.logout') }}</span>
+                    </button>
+                </template>
+            </div>
         </div>
     </app-layout>
 </template>
@@ -124,6 +141,11 @@
             'instructor_email'
         ],
         methods: {
+            logoutUser() {
+                axios.post('/logout').then(response => {
+                    window.location = '/';
+                })
+            },
             uploadFile(e, filename) {
                this.formData.append('instructor_email', this.instructor_email);
                this.formData.append('instructor_id', this.instructor_id);
