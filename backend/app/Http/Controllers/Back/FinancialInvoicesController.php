@@ -341,7 +341,7 @@ class FinancialInvoicesController extends Controller
         DB::beginTransaction();
         $invoice = Invoice::findOrFail($invoice_id);
         AccountingLedgerBook::where('invoice_id', $invoice->id)->delete();
-        $invoice->forceDelete();
+        $invoice->Delete();
         DB::commit();
         return redirect()->route('back.finance.invoices.index');
     }
