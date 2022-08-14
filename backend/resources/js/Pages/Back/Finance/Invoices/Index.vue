@@ -39,6 +39,7 @@
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.collected') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.confirmed') }}</th>
                             <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('created_at')">{{ $t('words.date') }}</th>
+                            <th class="rtl:text-right font-weight-bold">{{ $t('words.actions') }}</th>
                         </tr>
                     </template>
 
@@ -114,6 +115,15 @@
                                 <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
                                     {{ invoice.created_at_date }}
                                 </inertia-link>
+                            </td>
+                            <td class="rtl:text-right text-black">
+                                <button @click="deleteInvoice(invoice.id)"
+                                        v-can="'delete-invoice'"
+                                        type="button"
+                                        v-if="invoice.status <= 4"
+                                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">
+                                    {{ $t('words.delete') }}
+                                </button>
                             </td>
                         </tr>
                     </template>
@@ -283,6 +293,11 @@
             });
         },
         methods: {
+            deleteInvoice(invoiceId) {
+                if (confirm(this.$t('words.are-you-sure'))) {
+                    this.$inertia.delete(route('back.finance.invoices.destroy', {invoice: invoiceId}));
+                }
+            },
             approveInvoices() {
                 if (confirm(this.$t('words.are-you-sure'))) {
                     if (this.selected_invoices.length) {

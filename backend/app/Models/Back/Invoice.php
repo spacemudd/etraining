@@ -9,6 +9,7 @@ use Brick\Money\Context\CustomContext;
 use Brick\Money\Money;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
@@ -18,6 +19,7 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
 {
     use Auditable;
     use HasFactory;
+    use SoftDeletes;
 
     const STATUS_UNPAID = 0;
     const STATUS_PAID = 1;
@@ -67,6 +69,7 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
     protected $dates = [
         'from_date',
         'to_date',
+        'deleted_at',
     ];
 
     public $casts = [
