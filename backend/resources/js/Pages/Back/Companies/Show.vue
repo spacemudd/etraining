@@ -120,6 +120,7 @@
                     <table class="w-full whitespace-no-wrap bg-white rounded-lg my-5 p-5 shadow text-sm">
                         <tr class="text-left font-bold">
                             <th class="p-4">{{ $t('words.name') }}</th>
+                            <th class="p-4">{{ $t('words.group-name') }}</th>
                             <th class="p-4">{{ $t('words.phone') }}</th>
                         </tr>
                         <tr
@@ -157,6 +158,18 @@
                                         {{ trainees.name }}
                                     </inertia-link>
                                 </div>
+                            </td>
+                            <td class="border-t">
+                                <inertia-link
+                                    id="group-name"
+                                    class="px-4 py-2 flex items-center"
+                                    :href="route('back.trainees.show', trainees.id)"
+                                    tabindex="-1"
+                                >
+                                    <div v-if="trainees.trainee_group_id">
+                                        {{ trainees.trainee_group.name }}
+                                    </div>
+                                </inertia-link>
                             </td>
                             <td class="border-t">
                                 <inertia-link
