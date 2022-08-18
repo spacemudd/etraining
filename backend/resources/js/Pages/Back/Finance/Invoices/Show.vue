@@ -20,14 +20,6 @@
                                 {{ $t('words.print') }}
                             </a>
 
-                            <button @click="deleteInvoice"
-                                    v-can="'delete-invoice'"
-                                    type="button"
-                                    v-if="invoice.status <= 4"
-                                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">
-                                {{ $t('words.delete') }}
-                            </button>
-
                             <inertia-link v-if="invoice.can_upload_receipt"
                                           :href="route('back.finance.invoices.upload-receipt-form', invoice.id)"
                                     class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">

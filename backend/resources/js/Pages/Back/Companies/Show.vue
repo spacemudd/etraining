@@ -299,6 +299,16 @@
                                     ></ion-icon>
                                 </a>
                             </td>
+                            <td class="rtl:text-right text-black">
+<!--                                {{ invoice.id }}-->
+                                <button @click="deleteInvoice(invoice)"
+                                        v-can="'can-delete-invoice-anytime'"
+                                        type="button"
+                                        v-if="invoice.status <= 4"
+                                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">
+                                    {{ $t('words.delete') }}
+                                </button>
+                            </td>
                         </tr>
 
                         <tr v-if="invoices.length === 0">
@@ -371,6 +381,14 @@ export default {
         }
     },
     methods: {
+        deleteInvoice(invoiceCollection) {
+            if (confirm(this.$t('words.are-you-sure'))) {
+                this.$inertia.delete(route('back.finance.invoices.destroy', {
+                    invoice: invoiceCollection.id,
+                    to_date: invoiceCollection.to_date,
+                }));
+            }
+        },
         createCompany() {
             this.form.post('/back/companies', {
                 preserveScroll: true

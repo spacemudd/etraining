@@ -117,13 +117,23 @@ class FinancialInvoicesController extends Controller
 
     public function pdf($id)
     {
+
         $invoice = Invoice::findOrFail($id);
+
         $pdf = PDF::setOption('footer-html', resource_path('views/pdf/invoices/client-invoice-footer.html'))
             ->setOption('margin-bottom', 30)
         ->loadView('pdf.invoices.show', [
             'title' => 'Invoice',
             'invoice' => $invoice,
         ]);
+
+//        $pdf = PDF::setOption('footer-html', resource_path('views/pdf/invoices/client-invoice-footer.html'))
+//            ->setOption('margin-bottom', 30)
+//        ->loadView('pdf.invoices.show', [
+//            'title' => 'Invoice',
+//            'invoice' => $invoice,
+//        ]);
+
         return $pdf->inline();
     }
 
@@ -337,12 +347,32 @@ class FinancialInvoicesController extends Controller
 
     public function destroy($invoice_id)
     {
-        $this->authorize('delete-invoice');
-        DB::beginTransaction();
-        $invoice = Invoice::findOrFail($invoice_id);
-        AccountingLedgerBook::where('invoice_id', $invoice->id)->delete();
-        $invoice->Delete();
-        DB::commit();
-        return redirect()->route('back.finance.invoices.index');
+        $this->authorize('can-delete-invoice-anytime');
+
+        if (request()->has('to_date')) {
+            /// bulk delete
+            //dd('delete all');
+            DB::beginTransaction();
+            $invoice = Invoice::findOrFail($invoice_id);
+            $invoices = $invoice->invoices()
+                ->where('from_date', request()->input('from_date'))
+                ->where('to_date', request()->input('to_date'))
+                ->where('created_by_id', request()->input('created_by_id', auth()->id()))
+                ->whereDate('created_at', request()->input('created_at_date', now()->toDateString()));
+                if($invoices->payment_method != Invoice::PAYMENT_METHOD_BANK_RECEIPT || $invoices->payment_method !=  Invoice::PAYMENT_METHOD_CREDIT_CARD){
+                    AccountingLedgerBook::where('invoice_id', $invoice->id)->delete();
+                    $invoices->delete();
+                    DB::commit();
+                }
+        } else {
+            DB::beginTransaction();
+            $invoice = Invoice::findOrFail($invoice_id);
+            AccountingLedgerBook::where('invoice_id', $invoice->id)->delete();
+            $invoice->delete();
+            DB::commit();
+        }
+
+        return redirect()->back();
     }
 }
+
