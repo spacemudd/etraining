@@ -17,6 +17,8 @@ use Brick\Money\Money;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use PDF;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -349,30 +351,37 @@ class FinancialInvoicesController extends Controller
     {
         $this->authorize('can-delete-invoice-anytime');
 
+        DB::beginTransaction();
+
         if (request()->has('to_date')) {
-            /// bulk delete
-            //dd('delete all');
-            DB::beginTransaction();
-            $invoice = Invoice::findOrFail($invoice_id);
-            $invoices = $invoice->invoices()
-                ->where('from_date', request()->input('from_date'))
+
+            $invoices = Invoice::where('from_date', request()->input('from_date'))
                 ->where('to_date', request()->input('to_date'))
                 ->where('created_by_id', request()->input('created_by_id', auth()->id()))
-                ->whereDate('created_at', request()->input('created_at_date', now()->toDateString()));
-                if($invoices->payment_method != Invoice::PAYMENT_METHOD_BANK_RECEIPT || $invoices->payment_method !=  Invoice::PAYMENT_METHOD_CREDIT_CARD){
+                ->whereDate('created_at', request()->input('created_at_date', now()->toDateString()))
+                ->where('company_id', request()->company_id)
+                ->get();
+
+            foreach ($invoices as $invoice) {
+                if($invoice->payment_method != Invoice::PAYMENT_METHOD_BANK_RECEIPT || $invoice->payment_method !=  Invoice::PAYMENT_METHOD_CREDIT_CARD){
                     AccountingLedgerBook::where('invoice_id', $invoice->id)->delete();
-                    $invoices->delete();
-                    DB::commit();
+                    $invoice->delete();
                 }
+            }
         } else {
-            DB::beginTransaction();
             $invoice = Invoice::findOrFail($invoice_id);
             AccountingLedgerBook::where('invoice_id', $invoice->id)->delete();
             $invoice->delete();
-            DB::commit();
         }
 
-        return redirect()->back();
+        DB::commit();
+
+
+        if (Str::contains(redirect()->back()->getTargetUrl(), 'companies')) {
+            return redirect()->back();
+        }
+
+        return redirect(\route('back.finance.invoices.index'));
     }
 }
 

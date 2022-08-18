@@ -385,7 +385,12 @@ export default {
             if (confirm(this.$t('words.are-you-sure'))) {
                 this.$inertia.delete(route('back.finance.invoices.destroy', {
                     invoice: invoiceCollection.id,
+                    from_date: invoiceCollection.from_date,
                     to_date: invoiceCollection.to_date,
+                    created_at_date: invoiceCollection.created_at_date,
+                    created_by_id: invoiceCollection.created_by_id,
+                    company_id: invoiceCollection.company_id,
+
                 }));
             }
         },
