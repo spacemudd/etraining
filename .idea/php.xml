@@ -215,6 +215,7 @@
       <path value="$PROJECT_DIR$/backend/vendor/league/commonmark" />
       <path value="$PROJECT_DIR$/backend/vendor/components/font-awesome" />
       <path value="$PROJECT_DIR$/backend/vendor/_laravel_idea" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/polyfill-intl-icu" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4">

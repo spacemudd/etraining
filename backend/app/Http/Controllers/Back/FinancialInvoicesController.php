@@ -17,6 +17,8 @@ use Brick\Money\Money;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use PDF;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -117,13 +119,23 @@ class FinancialInvoicesController extends Controller
 
     public function pdf($id)
     {
+
         $invoice = Invoice::findOrFail($id);
+
         $pdf = PDF::setOption('footer-html', resource_path('views/pdf/invoices/client-invoice-footer.html'))
             ->setOption('margin-bottom', 30)
         ->loadView('pdf.invoices.show', [
             'title' => 'Invoice',
             'invoice' => $invoice,
         ]);
+
+//        $pdf = PDF::setOption('footer-html', resource_path('views/pdf/invoices/client-invoice-footer.html'))
+//            ->setOption('margin-bottom', 30)
+//        ->loadView('pdf.invoices.show', [
+//            'title' => 'Invoice',
+//            'invoice' => $invoice,
+//        ]);
+
         return $pdf->inline();
     }
 
@@ -337,12 +349,39 @@ class FinancialInvoicesController extends Controller
 
     public function destroy($invoice_id)
     {
-        $this->authorize('delete-invoice');
+        $this->authorize('can-delete-invoice-anytime');
+
         DB::beginTransaction();
-        $invoice = Invoice::findOrFail($invoice_id);
-        AccountingLedgerBook::where('invoice_id', $invoice->id)->delete();
-        $invoice->Delete();
+
+        if (request()->has('to_date')) {
+
+            $invoices = Invoice::where('from_date', request()->input('from_date'))
+                ->where('to_date', request()->input('to_date'))
+                ->where('created_by_id', request()->input('created_by_id', auth()->id()))
+                ->whereDate('created_at', request()->input('created_at_date', now()->toDateString()))
+                ->where('company_id', request()->company_id)
+                ->get();
+
+            foreach ($invoices as $invoice) {
+                if($invoice->payment_method != Invoice::PAYMENT_METHOD_BANK_RECEIPT || $invoice->payment_method !=  Invoice::PAYMENT_METHOD_CREDIT_CARD){
+                    AccountingLedgerBook::where('invoice_id', $invoice->id)->delete();
+                    $invoice->delete();
+                }
+            }
+        } else {
+            $invoice = Invoice::findOrFail($invoice_id);
+            AccountingLedgerBook::where('invoice_id', $invoice->id)->delete();
+            $invoice->delete();
+        }
+
         DB::commit();
-        return redirect()->route('back.finance.invoices.index');
+
+
+        if (Str::contains(redirect()->back()->getTargetUrl(), 'companies')) {
+            return redirect()->back();
+        }
+
+        return redirect(\route('back.finance.invoices.index'));
     }
 }
+

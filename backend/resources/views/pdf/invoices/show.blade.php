@@ -2,7 +2,7 @@
 <html dir="rtl">
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-{{--    <link rel="stylesheet" href="{{ url('pdf.css') }}" media="screen">--}}
+    {{--    <link rel="stylesheet" href="{{ url('pdf.css') }}" media="screen">--}}
     <link rel="stylesheet" href="{{ public_path('pdf.css') }}" media="screen">
     <title>{{ $title }}</title>
 </head>
@@ -70,13 +70,13 @@
                 <col>
             </colgroup>
             <thead>
-                <tr>
-                    <th>#</th>
-                    <th>{{ __('words.description') }}</th>
-                    <th>{{ __('words.subtotal') }}</th>
-                    <th>{{ __('words.vat') }}</th>
-                    <th>{{ __('words.grand-total') }}</th>
-                </tr>
+            <tr>
+                <th>#</th>
+                <th>{{ __('words.description') }}</th>
+                <th>{{ __('words.subtotal') }}</th>
+                <th>{{ __('words.vat') }}</th>
+                <th>{{ __('words.grand-total') }}</th>
+            </tr>
             </thead>
             <tbody>
             @foreach ($invoice->items as $index => $item)
@@ -101,37 +101,37 @@
                     <col>
                     <col style="width:200px;">
                 </colgroup>
-            	<tbody>
-            			<tr>
-            				<td>اسم المستفيد:</td>
-                            <td style="text-align:center;">مركز احترافية التدريب للخدمات التجارية</td>
-                            <td style="text-align:left;direction:ltr;">Beneficiary name:</td>
-            			</tr>
-                        <tr>
-                            <td>رقم حساب المستفيد</td>
-                            <td style="text-align:center;">2972254319940</td>
-                            <td style="text-align:left;direction:ltr;">Beneficiary account no.:</td>
-                        </tr>
-                        <tr>
-                            <td>رقم الايبان:</td>
-                            <td style="text-align:center;">SA4720000002972254319940</td>
-                            <td style="text-align:left;direction:ltr;">IBAN number:</td>
-                        </tr>
-                        <tr>
-                            <td>اسم البنك:</td>
-                            <td style="text-align:center;">
-                                 بنك الرياض - Riyadh Bank
-                            </td>
-                            <td style="text-align:left;direction:ltr;">Bank name:</td>
-                        </tr>
-                        <tr>
-                            <td>فرع البنك:</td>
-                            <td style="text-align:center;">
-                                الرياض - الملز - شارع الأحساء - AL IHSA Street - AL Malaz - Riyadh
-                            </td>
-                            <td style="text-align:left;direction:ltr;">Bank branch:</td>
-                        </tr>
-            	</tbody>
+                <tbody>
+                <tr>
+                    <td>اسم المستفيد:</td>
+                    <td style="text-align:center;">مركز احترافية التدريب للخدمات التجارية</td>
+                    <td style="text-align:left;direction:ltr;">Beneficiary name:</td>
+                </tr>
+                <tr>
+                    <td>رقم حساب المستفيد</td>
+                    <td style="text-align:center;">2972254319940</td>
+                    <td style="text-align:left;direction:ltr;">Beneficiary account no.:</td>
+                </tr>
+                <tr>
+                    <td>رقم الايبان:</td>
+                    <td style="text-align:center;">SA4720000002972254319940</td>
+                    <td style="text-align:left;direction:ltr;">IBAN number:</td>
+                </tr>
+                <tr>
+                    <td>اسم البنك:</td>
+                    <td style="text-align:center;">
+                        بنك الرياض - Riyadh Bank
+                    </td>
+                    <td style="text-align:left;direction:ltr;">Bank name:</td>
+                </tr>
+                <tr>
+                    <td>فرع البنك:</td>
+                    <td style="text-align:center;">
+                        الرياض - الملز - شارع الأحساء - AL IHSA Street - AL Malaz - Riyadh
+                    </td>
+                    <td style="text-align:left;direction:ltr;">Bank branch:</td>
+                </tr>
+                </tbody>
             </table>
         </div>
     </div>

@@ -74,7 +74,7 @@
             @foreach ($invoices as $index => $invoice)
                 <tr style="page-break-inside: avoid;border:1px solid black;">
                     <td style="border:1px solid black">{{ ++$index }}</td>
-                    <td style="border:1px solid black">{{ optional($invoice->trainee)->name }}</td>
+                    <td style="border:1px solid black">{{ optional($invoice->trainee)->name }} - {{ $invoice->id }}</td>
                     <td style="border:1px solid black">{{ $invoice->number_formatted }}</td>
                     <td style="border:1px solid black">{{ number_format($invoice->sub_total, 2) }}</td>
                     <td style="border:1px solid black">{{ number_format($invoice->tax, 2) }}</td>
