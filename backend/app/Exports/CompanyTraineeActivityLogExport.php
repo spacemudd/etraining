@@ -79,7 +79,8 @@ class CompanyTraineeActivityLogExport implements FromView, WithEvents, WithStyle
                     ->orWhereBetween('out_date', $dates);
             })
             ->with(['trainee' => function($q) {
-                $q->with('company');
+                $q->with('company')
+                ->withTrashed();
             }]);
 
         if ($this->company_id) {
