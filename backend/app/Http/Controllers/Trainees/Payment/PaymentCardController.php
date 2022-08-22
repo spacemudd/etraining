@@ -111,7 +111,8 @@ class PaymentCardController extends Controller
         });
 
         // Show success page
-        return redirect()->route('dashboard');
+        return redirect()
+            ->route('dashboard');
     }
 
     /**
