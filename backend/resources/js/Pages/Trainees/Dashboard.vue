@@ -23,8 +23,7 @@
                 </div>
             </div>
 
-            <!--
-            <div class="container mx-auto grid p-6" v-if="successPaid">
+            <div class="container mx-auto grid p-6" v-if="show_success_payment">
                 <div class="bg-white rounded-lg p-10 flex gap-10 border-1 border-emerald-500"
                      style="border-top: 20px solid rgb(32 161 2);background: #eff1ef;">
                     <div style="width: 100%;">
@@ -36,7 +35,6 @@
                     </div>
                 </div>
             </div>
-            -->
 
             <div class="container mx-auto grid p-6">
                 <div class="bg-white rounded-lg p-10 flex gap-10">
@@ -131,7 +129,7 @@
     import HeaderCard from "@/Components/HeaderCard";
 
     export default {
-        props: ['sessions', 'user', 'successPaid'],
+        props: ['sessions', 'user', 'show_success_payment'],
         components: {
             AppLayout,
             Welcome,

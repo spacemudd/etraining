@@ -110,6 +110,8 @@ class PaymentCardController extends Controller
             ]);
         });
 
+        session()->put('success_payment', true);
+
         // Show success page
         return redirect()
             ->route('dashboard');
