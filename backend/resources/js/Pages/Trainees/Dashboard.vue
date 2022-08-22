@@ -31,7 +31,7 @@
     font-size: 20px;
     color: #323232;
     letter-spacing: 1px;
-}">تم الدفع في النجاح!</p>
+}">تم الدفع بنجاح!</p>
                     </div>
                 </div>
             </div>
