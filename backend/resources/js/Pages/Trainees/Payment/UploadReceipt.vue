@@ -52,6 +52,7 @@
                                 type="text"
                                 class="mt-1 block w-full"
                                 v-model="form.sender_name"
+                                autofocus="autofocus"
                                 required
                                 autocomplete="off" />
                             <jet-input-error :message="form.error('sender_name')" class="mt-2" />
@@ -64,7 +65,6 @@
                                 type="text"
                                 class="mt-1 block w-full"
                                 v-model="form.bank_name_from"
-                                autofocus="autofocus"
                                 required
                                 autocomplete="off" />
                             <jet-input-error :message="form.error('bank_name_from')" class="mt-2" />

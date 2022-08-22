@@ -13,13 +13,26 @@
                     </p>
                     <inertia-link class="text-center mt-5 inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
                                   :href="route('trainees.payment.options')">
-                        {{ $t('words.attach-now') }}
+                        {{ $t('words.settle') }}
                     </inertia-link>
 
                     <inertia-link class="text-center mt-5 inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
                                   :href="route('trainees.payment.options')">
                         {{ $t('words.attach-receipt') }}
                     </inertia-link>
+                </div>
+            </div>
+
+            <div class="container mx-auto grid p-6">
+                <div class="bg-white rounded-lg p-10 flex gap-10 border-1 border-emerald-500"
+                     style="border-top: 20px solid rgb(32 161 2);background: #eff1ef;">
+                    <div style="width: 100%;">
+                        <p class="mt-2 text-gray-500" style="text-align: center;
+    font-size: 20px;
+    color: #323232;
+    letter-spacing: 1px;
+}">تم الدفع في النجاح!</p>
+                    </div>
                 </div>
             </div>
 

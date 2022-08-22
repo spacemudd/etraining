@@ -518,4 +518,6 @@ return [
     'day' => 'اليوم',
     'refresh' => 'تحديث',
     'post-trainees' => 'ترحيل',
+    'pay-now' => 'ادفع الآن',
+    'settle' => 'سداد',
 ];

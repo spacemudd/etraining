@@ -455,7 +455,7 @@ export default {
             "vat": "الضريبة",
             "select-all": "اختيار الكل",
             "due-balance-notice": "حسابك لديه مبلغ مستحق. يرجى دفع رسوم التدريب لمنع تعليق الحساب.",
-            "attach-now": "أرفق الان",
+            "pay-now": "ادفع الآن",
             "payment": "تسديد",
             "choose-payment-method": "اختيار طريقة الدفع",
             "credit-card-method": "عبر البطاقة",
@@ -519,7 +519,8 @@ export default {
             "history": "التاريخ",
             "day": "اليوم",
             "refresh": "تحديث",
-            "post-trainees": "ترحيل"
+            "post-trainees": "ترحيل",
+            "settle": "سداد"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1140,7 +1141,7 @@ export default {
             "vat": "VAT",
             "select-all": "Select all",
             "due-balance-notice": "Your account has a past due balance. Please submit a payment to prevent account suspension.",
-            "attach-now": "Attach now",
+            "pay-now": "Pay now",
             "payment": "Payment",
             "choose-payment-method": "Choose payment method",
             "credit-card-method": "Card",
@@ -1197,7 +1198,8 @@ export default {
             "history": "History",
             "day": "Day",
             "refresh": "Refresh",
-            "post-trainees": "Post trainees"
+            "post-trainees": "Post trainees",
+            "settle": "Settle"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

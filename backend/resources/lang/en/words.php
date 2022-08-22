@@ -502,4 +502,6 @@ return [
     'day' => 'Day',
     'refresh' => 'Refresh',
     'post-trainees' => 'Post trainees',
+    'pay-now' => 'Pay now',
+    'settle' => 'Settle',
 ];

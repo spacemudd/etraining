@@ -22,12 +22,16 @@
                 <div class="col-span-1 p-5 transition-all duration-500 ease-in-out hover:bg-gray-200">
                     <p class="text-2xl">{{ $t('words.choose-payment-method') }}:</p>
                     <div class="payment-options mt-2" v-if="online_payment">
-                        <input type="radio" name="payment-method" value="cc" v-model="paymentMethod">
-                        <label>{{ $t('words.credit-card-method') }}</label>
+                        <label>
+                            <input type="radio" name="payment-method" value="cc" v-model="paymentMethod">
+                            {{ $t('words.credit-card-method') }}
+                        </label>
                     </div>
                     <div class="payment-options">
-                        <input type="radio" name="payment-method" value="bank-transfer" v-model="paymentMethod">
-                        <label>{{ $t('words.bank-transfer-upload-receipt') }}</label>
+                        <label>
+                            <input type="radio" name="payment-method" value="bank-transfer" v-model="paymentMethod">
+                            {{ $t('words.bank-transfer-upload-receipt') }}
+                        </label>
                     </div>
 
                     <div class="mt-5">
@@ -37,7 +41,12 @@
 
                     <a class="mt-5 inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
                        :href="paymentMethod==='cc' ? route('trainees.payment.card') : route('trainees.payment.upload-receipt')">
-                        {{ $t('words.attach-now') }}
+                        <span v-if="paymentMethod === 'cc'">
+                            {{ $t('words.pay-now') }}
+                        </span>
+                        <span v-else>
+                            {{ $t('words.attach-receipt') }}
+                        </span>
                     </a>
                 </div>
             </div>
