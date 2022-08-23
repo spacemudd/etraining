@@ -595,7 +595,8 @@ class TraineesController extends Controller
     {
         return Inertia::render('Back/Trainees/ShowBlocked', [
             'trainee' => Trainee::with(['educational_level', 'city', 'marital_status', 'trainee_group', 'company'])
-                ->onlyTrashed()
+                ->with('invoices')
+                ->withTrashed()
                 ->findOrFail($id),
             'trainee_groups' => TraineeGroup::get(),
             'cities' => City::orderBy('name_ar')->get(),
@@ -640,6 +641,7 @@ class TraineesController extends Controller
         $trainee->update([
             'deleted_remark' => $request->deleted_remark,
         ]);
+        $trainee->withTrashed()->get();
         $trainee->delete();
         //if ($trainee->user) {
         //    $trainee->user->delete();
