@@ -26,11 +26,11 @@ class TraineeInvoicesController extends Controller
         $trainee = Trainee::query()
             ->whereHas('company')
             ->with(['company'])
-            ->findOrFail($trainee_id)
-            ->withTrashed();
+            ->withTrashed()
+            ->findOrFail($trainee_id);
 
         return Inertia::render('Back/Trainees/Invoices/Create', [
-            'trainee' => $trainee->withTrashed(),
+            'trainee' => $trainee,
             'monthly_subscription_per_trainee' => $trainee->company->monthly_subscription_per_trainee,
         ]);
     }
