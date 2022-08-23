@@ -641,7 +641,6 @@ class TraineesController extends Controller
         $trainee->update([
             'deleted_remark' => $request->deleted_remark,
         ]);
-        $trainee->withTrashed()->get();
         $trainee->delete();
         //if ($trainee->user) {
         //    $trainee->user->delete();
