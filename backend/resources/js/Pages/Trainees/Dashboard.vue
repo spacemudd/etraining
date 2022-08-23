@@ -2,6 +2,12 @@
     <app-layout>
         <div class="container px-6 mx-auto grid">
 
+            <div class="container mx-auto grid pt-6 text-center">
+                <div class="mx-auto">
+                    <iframe width="350" height="198" src="https://www.youtube.com/embed/ekccJvhqDUk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+
             <!-- Payment notice -->
             <div class="container mx-auto grid p-6" v-if="user.trainee.has_outstanding_amount">
                 <div class="bg-red-100 rounded-lg p-10 border-red-500 border-2">
