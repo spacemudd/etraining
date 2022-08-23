@@ -16,6 +16,7 @@ class AttendanceSheetController extends Controller
                 ->with(['course_batch_session' => function($q) {
                     $q->with('course');
                 }])
+                ->orderBy('session_starts_at', 'desc')
                 ->get(),
         ]);
     }
