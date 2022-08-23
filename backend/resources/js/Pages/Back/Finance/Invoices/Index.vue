@@ -30,6 +30,7 @@
                     <template #head>
                         <tr>
                             <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('number')">{{ $t('words.invoice') }}</th>
+                            <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('from_date')">{{ $t('words.date-period') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.company') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.account-name') }}</th>
                             <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('status')">{{ $t('words.status') }}</th>
@@ -52,6 +53,11 @@
                                        @click="toggleSelectedInvoice(invoice)">
                                 <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
                                     {{ invoice.number_formatted }}
+                                </inertia-link>
+                            </td>
+                            <td class="rtl:text-right text-black">
+                                <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
+                                    {{  invoice.from_date | formatDate  }}
                                 </inertia-link>
                             </td>
                             <td class="rtl:text-right text-black">

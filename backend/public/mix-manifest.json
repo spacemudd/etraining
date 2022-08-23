@@ -1,6 +1,11 @@
 {
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=8aba4c24208a5317f24f",
     "/css/app.css": "/css/app.css?id=b37c0f4f7a5f0da9a999",
+=======
+    "/js/app.js": "/js/app.js?id=5f37ed45340ca676f9d8",
+    "/css/app.css": "/css/app.css?id=2a8da11ece656972b9f5",
+>>>>>>> from-date
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
     "/js/vendor.js": "/js/vendor.js?id=2873aad1f091eb2b9c85"
 }

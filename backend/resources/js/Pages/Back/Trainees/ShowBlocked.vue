@@ -226,7 +226,55 @@
                     ></vue-dropzone>
                 </div>
             </div>
+
+            <jet-section-border></jet-section-border>
+
+            <div
+                class="grid grid-cols-1 md:grid-cols-2 gap-6 my-2"
+            >
+                <div class="md:col-span-4 lg:col-span-1 sm:col-span-3">
+                    <div class="px-4 sm:px-0">
+                        <h3 class="text-lg font-medium text-gray-900">
+                            {{ $t('words.invoices') }}
+                        </h3>
+
+                        <p class="mt-1 text-sm text-gray-600">
+                            {{ $t('words.invoices-help') }}
+                        </p>
+                    </div>
+                </div>
+                <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
+                    <table class="w-full whitespace-no-wrap bg-white rounded-lg my-5 p-5 shadow text-sm">
+                        <tr class="text-left font-bold text-center">
+                            <th class="px-6 pt-6 pb-4 text-left">{{ $t('words.invoice-no') }}</th>
+                            <th class="px-6 pt-6 pb-4">{{ $t('words.amount') }}</th>
+                            <th class="px-6 pt-6 pb-4">{{ $t('words.status') }}</th>
+                        </tr>
+                        <tr
+                            v-for="invoice in trainee.invoices"
+                            :key="invoice.id"
+                            class="border-t hover:bg-gray-100 focus-within:bg-gray-100 text-center"
+                        >
+                            <td class="px-4 py-4 text-left text-blue-500">
+                                <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
+                                    {{ invoice.number_formatted }}
+                                </inertia-link>
+                            </td>
+
+                            <td class="px-4 py-4">
+                                {{ invoice.grand_total }}
+                            </td>
+
+                            <td class="px-4 py-4">
+                                {{ invoice.status_formatted }}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </div>
+
+        <jet-section-border></jet-section-border>
     </app-layout>
 </template>
 
@@ -246,6 +294,8 @@
     import VueDropzone from 'vue2-dropzone'
     import 'vue2-dropzone/dist/vue2Dropzone.min.css'
     import SelectTraineeGroup from "@/Components/SelectTraineeGroup";
+    import EmptySlate from "@/Components/EmptySlate";
+    import ValidationErrors from "@/Components/ValidationErrors";
     import NProgress from 'nprogress'
 
     export default {
@@ -266,6 +316,9 @@
             BreadcrumbContainer,
             VueDropzone,
             SelectTraineeGroup,
+            ValidationErrors,
+            EmptySlate,
+
         },
         data() {
             return {
