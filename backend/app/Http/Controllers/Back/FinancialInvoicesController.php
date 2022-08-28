@@ -37,8 +37,8 @@ class FinancialInvoicesController extends Controller
             ->with('trainee_bank_payment_receipt')
             ->defaultSort('created_at')
             ->allowedSorts(['from_date','created_at', 'number', 'status', 'payment_method', 'grand_total', 'is_verified', 'created_at'])
-            ->allowedFilters(['from_date','created_at', 'trainee.name', 'number', 'company.name_ar', 'status', 'trainee_bank_payment_receipt.sender_name', 'trainee_bank_payment_receipt.created_at'])
-            ->allowedFields(['trainee.id', 'trainee.name', 'company.id', 'company.name_ar', 'trainee_bank_payment_receipt.sender_name', 'trainee_bank_payment_receipt.created_at'])
+            ->allowedFilters(['trainee_bank_payment_receipt.bank_to','trainee_bank_payment_receipt.bank_from','from_date','created_at', 'trainee.name', 'number', 'company.name_ar', 'status', 'trainee_bank_payment_receipt.sender_name', 'trainee_bank_payment_receipt.created_at'])
+            ->allowedFields(['trainee_bank_payment_receipt.bank_to','trainee_bank_payment_receipt.bank_from','trainee.id', 'trainee.name', 'company.id', 'company.name_ar', 'trainee_bank_payment_receipt.sender_name', 'trainee_bank_payment_receipt.created_at'])
             ->allowedIncludes(['company', 'trainee', 'trainee_bank_payment_receipt'])
             ->paginate()
             ->withQueryString();
@@ -57,6 +57,8 @@ class FinancialInvoicesController extends Controller
                 'trainee_bank_payment_receipt.created_at' => __('words.receipt-date'),
                 'trainee_bank_payment_receipt.sender_name' => __('words.sender-name'),
                 'from_date' => __('words.date-period'),
+                'trainee_bank_payment_receipt.bank_from' => __('words.sender-bank-name'),
+                'trainee_bank_payment_receipt.bank_to' => __('words.receiver-bank-name'),
             ]);
 
             $table->addFilter('status', __('words.status'), [

@@ -37,6 +37,7 @@
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.payment-method') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.amount') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.submitted-receipt') }}</th>
+                            <th class="rtl:text-right font-weight-bold">{{ $t('words.bank-name') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.collected') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.confirmed') }}</th>
                             <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('created_at')">{{ $t('words.date') }}</th>
@@ -91,6 +92,14 @@
                                     {{ invoice.trainee_bank_payment_receipt.sender_name }}
                                     <br/>
                                     {{ invoice.trainee_bank_payment_receipt.created_at }}
+                                </inertia-link>
+                            </td>
+                            <td class="rtl:text-right text-black">
+                                <inertia-link v-if="invoice.trainee_bank_payment_receipt"
+                                              :href="route('back.finance.invoices.show', invoice.id)">
+                                    {{ $t('words.from') }} {{ invoice.trainee_bank_payment_receipt.bank_from }}
+                                    <br/>
+                                    {{ $t('words.to') }} {{ invoice.trainee_bank_payment_receipt.bank_to }}
                                 </inertia-link>
                             </td>
                             <td class="rtl:text-right text-black">
