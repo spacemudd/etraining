@@ -37,8 +37,8 @@ class FinancialInvoicesController extends Controller
             ->with('trainee_bank_payment_receipt')
             ->defaultSort('created_at')
             ->allowedSorts(['from_date','created_at', 'number', 'status', 'payment_method', 'grand_total', 'is_verified', 'created_at'])
-            ->allowedFilters(['trainee_bank_payment_receipt.bank_to','trainee_bank_payment_receipt.bank_from','from_date','created_at', 'trainee.name', 'number', 'company.name_ar', 'status', 'trainee_bank_payment_receipt.sender_name', 'trainee_bank_payment_receipt.created_at'])
-            ->allowedFields(['trainee_bank_payment_receipt.bank_to','trainee_bank_payment_receipt.bank_from','trainee.id', 'trainee.name', 'company.id', 'company.name_ar', 'trainee_bank_payment_receipt.sender_name', 'trainee_bank_payment_receipt.created_at'])
+            ->allowedFilters(['payment_method','trainee_bank_payment_receipt.bank_to','trainee_bank_payment_receipt.bank_from','from_date','created_at', 'trainee.name', 'number', 'company.name_ar', 'status', 'trainee_bank_payment_receipt.sender_name', 'trainee_bank_payment_receipt.created_at'])
+            ->allowedFields(['payment_method','trainee_bank_payment_receipt.bank_to','trainee_bank_payment_receipt.bank_from','trainee.id', 'trainee.name', 'company.id', 'company.name_ar', 'trainee_bank_payment_receipt.sender_name', 'trainee_bank_payment_receipt.created_at'])
             ->allowedIncludes(['company', 'trainee', 'trainee_bank_payment_receipt'])
             ->paginate()
             ->withQueryString();
@@ -67,6 +67,11 @@ class FinancialInvoicesController extends Controller
                 Invoice::STATUS_AUDIT_REQUIRED => __('words.audit-required'),
                 Invoice::STATUS_FINANCIAL_AUDIT_REQUIRED =>  __('words.finance-audit-required'),
                 Invoice::STATUS_PAID =>  __('words.paid'),
+            ]);
+
+            $table->addFilter('payment_method', __('words.payment-method'), [
+                Invoice::PAYMENT_METHOD_BANK_RECEIPT => __('words.bank-transfer'),
+                Invoice::PAYMENT_METHOD_CREDIT_CARD => __('words.credit-card-method'),
             ]);
         });
     }
