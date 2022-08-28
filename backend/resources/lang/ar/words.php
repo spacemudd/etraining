@@ -459,6 +459,7 @@ return [
     'payment-receipt-notice' => 'يرجى ارفاق الوصل مع ذكر البنك المحول اليه واسم المحول',
     'sender-name' => 'اسم المحول',
     'sender-bank-name' => 'اسم البنك المحول منه',
+    'bank-name' => 'اسم البنك',
     'receiver-bank-name' => 'اسم البنك المحول أليه',
     'upload-receipts' => 'رفع الإصال',
     'receipt' => 'ايصال',
