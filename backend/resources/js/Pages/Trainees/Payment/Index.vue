@@ -68,7 +68,7 @@ export default {
     ],
     data() {
         return {
-            paymentMethod: 'bank-transfer',
+            paymentMethod: 'cc',
         }
     },
     mounted() {
