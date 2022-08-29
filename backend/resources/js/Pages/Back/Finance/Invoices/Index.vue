@@ -78,7 +78,13 @@
                             </td>
                             <td class="rtl:text-right text-black">
                                 <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
+                                    <span v-if="invoice.payment_method == 1"
+                                        class="bg-green-500 text-white rounded px-2">
                                     {{ invoice.payment_method_formatted }}
+                                    </span>
+                                    <span v-else>
+                                    {{ invoice.payment_method_formatted }}
+                                    </span>
                                 </inertia-link>
                             </td>
                             <td class="rtl:text-right text-black">
