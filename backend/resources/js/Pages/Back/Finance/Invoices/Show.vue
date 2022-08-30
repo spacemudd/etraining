@@ -77,6 +77,10 @@
                                 <div>{{ invoice.from_date | formatDate }}</div>
                                 <div class="font-bold">{{ $t('words.to-date') }}</div>
                                 <div>{{ invoice.to_date | formatDate }}</div>
+                                <hr class="my-2">
+                                <hr class="my-2">
+                                <div v-if="invoice.payment_method === 1" class="font-bold">{{ $t('words.payment-reference-id') }}</div>
+                                <div>{{ invoice.payment_reference_id }}</div>
                             </div>
                         </div>
                         <div class="w-full p-4">

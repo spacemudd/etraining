@@ -84,6 +84,7 @@ return [
     'client-accounts' => 'Client accounts',
     'invoice' => 'Invoice',
     'payment-method' => 'Payment method',
+    'payment-reference-id' => 'Reference id',
     'amount' => 'Amount',
     'confirmed' => 'Confirmed',
     'date' => 'Date',
