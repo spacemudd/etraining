@@ -83,6 +83,7 @@ return [
     'client-accounts' => 'حسابات العملاء',
     'invoice' => 'الفاتورة',
     'payment-method' => 'طريقة الدفع',
+    'payment-reference-id' => 'الرقم المرجعي',
     'amount' => 'المبلغ',
     'confirmed' => 'موثق',
     'date' => 'التاريخ',
