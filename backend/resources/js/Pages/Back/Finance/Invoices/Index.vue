@@ -73,17 +73,44 @@
                             </td>
                             <td class="rtl:text-right text-black">
                                 <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
-                                    {{ invoice.status_formatted }}
+                                    <div v-if="invoice.status === 0">
+                                        <span class="text-white bg-red-500 rounded-lg px-3 py-1 font-bold border-solid border-2 border-red-500">
+                                            {{ invoice.status_formatted }}
+                                        </span>
+                                    </div>
+                                    <div v-if="invoice.status === 1">
+                                        <span class="text-white bg-green-400 rounded-lg px-3 py-1 font-bold border-solid border-2 border-green-400">
+                                            {{ invoice.status_formatted }}
+                                        </span>
+                                    </div>
+                                    <div v-if="invoice.status === 2">
+                                        <span class="text-white bg-yellow-400 rounded-lg px-3 py-1 font-bold border-solid border-2 border-yellow-400">
+                                            {{ invoice.status_formatted }}
+                                        </span>
+                                    </div>
+                                    <div v-if="invoice.status === 3">
+                                        <span class="text-white bg-orange-500 rounded-lg px-3 py-1 font-bold border-solid border-2 border-orange-500">
+                                            {{ invoice.status_formatted }}
+                                        </span>
+                                    </div>
+                                    <div v-if="invoice.status === 4">
+                                        <span class="text-white bg-yellow-400 rounded-lg px-4 py-1 font-bold border-solid border-2 border-yellow-400">
+                                            {{ invoice.status_formatted }}
+                                        </span>
+                                    </div>
                                 </inertia-link>
                             </td>
                             <td class="rtl:text-right text-black">
                                 <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
-                                    <span v-if="invoice.payment_method == 1"
-                                        class="bg-green-500 text-white rounded px-2">
+                                    <span v-if="invoice.payment_method === 1"
+                                        class="img {display:block} inline-block inline-flex">
                                     {{ invoice.payment_method_formatted }}
+                                        <svg v-if="invoice.payment_method === 1" width="60" height="26">
+                                            <image xlink:href="https://www.svgrepo.com/show/202660/credit-cards-money.svg" src="https://www.svgrepo.com/show/202660/credit-cards-money.svg" width="60" height="26"/>
+                                        </svg>
                                     </span>
                                     <span v-else>
-                                    {{ invoice.payment_method_formatted }}
+                                        {{ invoice.payment_method_formatted }}
                                     </span>
                                 </inertia-link>
                             </td>
@@ -152,6 +179,39 @@
 
 
                 <!--
+                <div v-if="invoice.status === 0">
+                                        <span class="border-4 bg-red-600 px-2.5 mx-2 border-red-600 rounded-full"></span>
+                                        <span class="text-red-600 font-bold">
+                                            {{ invoice.status_formatted }}
+                                        </span>
+                                    </div>
+                                    <div v-if="invoice.status === 1">
+                                        <span class="border-4 bg-green-500 px-2.5 mx-2 border-green-500 rounded-full"></span>
+                                        <span class="text-green-500 font-bold">
+                                            {{ invoice.status_formatted }}
+                                        </span>
+                                    </div>
+                                    <div v-if="invoice.status === 2">
+                                        <span class="border-4 bg-yellow-400 px-2.5 mx-2 border-yellow-400 rounded-full"></span>
+                                        <span class="text-yellow-400 font-bold">
+                                            {{ invoice.status_formatted }}
+                                        </span>
+                                    </div>
+                                    <div v-if="invoice.status === 3">
+                                        <span class="border-4 bg-orange-400 px-2.5 mx-2 border-orange-400 rounded-full"></span>
+                                        <span class="text-orange-400 font-bold">
+                                            {{ invoice.status_formatted }}
+                                        </span>
+                                    </div>
+                                    <div v-if="invoice.status === 4">
+                                        <span class="border-4 bg-yellow-400 px-2.5 mx-2 border-yellow-400 rounded-full"></span>
+                                        <span class="text-yellow-400 font-bold">
+                                            {{ invoice.status_formatted }}
+                                        </span>
+                                    </div>
+
+
+
                 <table class="w-full whitespace-no-wrap mt-10">
                     <tr class="text-left font-bold">
                         <th class="text-sm px-6 pt-6 pb-4">{{ $t('words.invoice') }}</th>

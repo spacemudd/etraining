@@ -25,6 +25,20 @@
                         <label>
                             <input type="radio" name="payment-method" value="cc" v-model="paymentMethod">
                             {{ $t('words.credit-card-method') }}
+                            <span class="img {display:block} inline-flex">
+                                        <svg width="40" height="40" class="mx-0.5">
+                                            <image class=inline xlink:href="https://www.svgrepo.com/show/328112/visa.svg" src="https://www.svgrepo.com/show/328112/visa.svg" width="40" height="40"/>
+                                        </svg>
+                                        <svg width="20" height="40" class="mx-0.5">
+                                            <image class=inline xlink:href="https://www.svgrepo.com/show/163750/mastercard.svg" src="https://www.svgrepo.com/show/163750/mastercard.svg" width="20" height="40"/>
+                                        </svg>
+                                        <svg width="40" height="40" class="mx-0.5">
+                                            <image class=inline xlink:href="https://upload.wikimedia.org/wikipedia/commons/f/fb/Mada_Logo.svg" src="https://upload.wikimedia.org/wikipedia/commons/f/fb/Mada_Logo.svg" width="40" height="40"/>
+                                        </svg>
+                                        <svg width="40" height="40" class="mx-0.5">
+                                            <image class=inline xlink:href="https://www.svgrepo.com/show/303191/apple-pay-logo.svg" src="https://www.svgrepo.com/show/303191/apple-pay-logo.svg" width="40" height="40"/>
+                                        </svg>
+                                    </span>
                         </label>
                     </div>
                     <div class="payment-options">
