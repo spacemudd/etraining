@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Back\AttendanceReport;
 use App\Models\Back\AttendanceReportRecord;
 use App\Models\Back\CourseBatchSession;
 use App\Models\Back\Trainee;
@@ -53,14 +54,17 @@ class AttendTraineeCommand extends Command
         $this->info('Found: '.$records->count());
 
         DB::beginTransaction();
+        AttendanceReport::unguard();
         foreach ($records as $record) {
             $record->update([
                 'status' => AttendanceReportRecord::STATUS_PRESENT,
                 'absence_reason' => null,
                 'session_starts_at' => $records->course_batch_session->starts_at,
                 'attended_at' => $record->course_batch_session->starts_at->addMinutes(rand(0, 8)),
+                'updated_at' => $records->created_at,
             ]);
         }
+        AttendanceReport::reguard();
         DB::commit();
 
         $this->info('Updated: '.$records->count());
