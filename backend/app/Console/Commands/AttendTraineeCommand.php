@@ -63,7 +63,7 @@ class AttendTraineeCommand extends Command
                 'absence_reason' => null,
                 'session_starts_at' => Carbon::parse($record->course_batch_session->starts_at),
                 'attended_at' => $record->course_batch_session->starts_at->addMinutes(rand(0, 8)),
-                'updated_at' => $records->created_at,
+                'updated_at' => $record->created_at,
             ]);
         }
         AttendanceReport::reguard();
