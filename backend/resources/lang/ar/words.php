@@ -465,7 +465,7 @@ return [
     'upload-receipts' => 'رفع الإصال',
     'receipt' => 'ايصال',
     'invoice-number' => 'رقم الفاتورة',
-    'reject-payment-receipt' => 'رفض الإصال',
+    'reject-payment-receipt' => 'رفض الإيصال',
     'rejection-reason' => 'سبب الرفض',
     'reject-payment-receipt-reason' => 'سبب رفض الإيصال',
     'approve-payment-receipt' => 'اعتماد الإيصال',

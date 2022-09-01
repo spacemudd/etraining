@@ -12,8 +12,34 @@
             <div class="flex flex-col md:flex-row md:space-x-5">
                 <div class="w-full md:w-8/12">
                     <div class="flex justify-between">
-                        <h1 class="mb-8 font-bold text-2xl">{{ $t('words.invoice') }}</h1>
+                        <h1 class="mb-8 font-bold text-2xl img {display:block} inline-flex">{{ $t('words.invoice') }}
+                            <svg v-if="invoice.status === 1" width="30" height="30" class="mx-2 mt-1">
+                                <image class=inline xlink:href="https://www.svgrepo.com/show/402906/white-heavy-check-mark.svg" src="https://www.svgrepo.com/show/402906/white-heavy-check-mark.svg" width="30" height="30"/>
+                            </svg>
+                        </h1>
                         <div class="mb-6 flex justify-end items-center">
+                            <div>
+                                <div v-if="invoice.status === 0"
+                                     class="text-red-600 rounded-lg mx-8 px-4 py-1 font-bold border-solid border-2 border-red-600">
+                                    {{ $t('words.unpaid') }}
+                                </div>
+                                <div v-if="invoice.status === 1"
+                                     class="text-green-500 rounded-lg mx-8 px-4 py-1 font-bold border-solid border-2 border-green-500">
+                                    {{ $t('words.paid') }}
+                                </div>
+                                <div v-if="invoice.status === 2"
+                                     class="text-yellow-400 rounded-lg mx-8 px-4 py-1 font-bold border-solid border-2 border-yellow-400">
+                                    {{ $t('words.audit-required') }}
+                                </div>
+                                <div v-if="invoice.status === 3"
+                                     class="text-orange-500 rounded-lg mx-8 px-4 py-1 font-bold border-solid border-2 border-orange-500">
+                                    {{ $t('words.reject-payment-receipt') }}
+                                </div>
+                                <div v-if="invoice.status === 4"
+                                     class="text-yellow-400 rounded-lg mx-8 px-4 py-1 font-bold border-solid border-2 border-yellow-400">
+                                    {{ $t('words.finance-audit-required') }}
+                                </div>
+                            </div>
                             <a class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
                                target="_blank"
                                :href="route('back.finance.invoices.pdf', invoice.id)">
@@ -66,7 +92,7 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-col md:flex-row justify-start bg-gray-100 rounded">
+                    <div class="flex flex-col md:flex-row justify-start rounded bg-gray-50 rounded shadow-lg p-5">
                         <div class="w-full p-4">
                             <div class="grid grid-cols-2">
                                 <div class="font-bold">{{ $t('words.date') }}</div>
@@ -94,7 +120,27 @@
                                 <div class="font-bold">{{ $t('words.total-amount') }}</div>
                                 <div>{{ invoice.grand_total }}</div>
                                 <div class="font-bold">{{ $t('words.paid') }}</div>
-                                <div>{{ invoice.is_paid ? $t('words.yes') : $t('words.no') }} <span v-if="invoice.is_paid">({{ invoice.payment_method_formatted }})</span></div>
+                                <div>{{ invoice.is_paid ? $t('words.yes') : $t('words.no') }} <span v-if="invoice.is_paid">({{ invoice.payment_method_formatted }})
+                                    <span class="img {display:block} inline-flex">
+                                        <svg v-if="invoice.payment_method === 1" width="40" height="40" class="mx-0.5">
+                                            <image class=inline xlink:href="https://www.svgrepo.com/show/328112/visa.svg" src="https://www.svgrepo.com/show/328112/visa.svg" width="40" height="40"/>
+                                        </svg>
+                                        <svg v-if="invoice.payment_method === 1" width="20" height="40" class="mx-0.5">
+                                            <image class=inline xlink:href="https://www.svgrepo.com/show/163750/mastercard.svg" src="https://www.svgrepo.com/show/163750/mastercard.svg" width="20" height="40"/>
+                                        </svg>
+                                        <svg v-if="invoice.payment_method === 1" width="40" height="40" class="mx-0.5">
+                                            <image class=inline xlink:href="https://upload.wikimedia.org/wikipedia/commons/f/fb/Mada_Logo.svg" src="https://upload.wikimedia.org/wikipedia/commons/f/fb/Mada_Logo.svg" width="40" height="40"/>
+                                        </svg>
+                                        <svg v-if="invoice.payment_method === 1" width="40" height="40" class="mx-0.5">
+                                            <image class=inline xlink:href="https://www.svgrepo.com/show/303191/apple-pay-logo.svg" src="https://www.svgrepo.com/show/303191/apple-pay-logo.svg" width="40" height="40"/>
+                                        </svg>
+                                    </span>
+                                </span>
+                                </div>
+                                <div v-if="invoice.payment_method === 0" class="font-bold">{{ $t('words.sender-bank-name') }}</div>
+                                <div v-if="invoice.payment_method === 0">{{ invoice.trainee_bank_payment_receipt.bank_from }}</div>
+                                <div v-if="invoice.payment_method === 0" class="font-bold">{{ $t('words.receiver-bank-name') }}<br/></div>
+                                <div v-if="invoice.payment_method === 0">{{ invoice.trainee_bank_payment_receipt.bank_to }}</div>
                                 <hr class="my-2">
                                 <hr class="my-2">
                                 <div class="font-bold">{{ $t('words.chase') }}</div>
@@ -133,26 +179,28 @@
                 <div class="w-full md:w-4/12">
                     <div class="mx-5">
                         <h1 class="mb-8 font-bold text-2xl">{{ $t('words.documents') }}</h1>
-                        <div class="white-bg rounded shadow p-5">
-                            <ul class="list-disc">
+                        <div class="white-bg rounded bg-gray-50 rounded shadow-lg p-5">
+                            <ul class="ml-auto flex">
                                 <template v-if="invoice.trainee_bank_payment_receipt">
-                                    <li v-for="file in invoice.trainee_bank_payment_receipt.approvals">
-                                        <a :href="file.download_url" target="_blank" class="hover:text-blue-600" alt="invoice.">
-                                            {{ $t('words.receipt-approval') }}: {{ file.file_name }}<br/>
-                                            <span class="text-sm text-gray-800" dir="ltr">{{ file.created_at_timezone }}</span>
+                                    <li v-for="file in invoice.trainee_bank_payment_receipt.approvals" class="inline-block">
+                                        <a :href="file.download_url" target="_blank" class="font-bold hover:text-blue-600" alt="invoice.">
+                                            {{ $t('words.receipt-approval') }}:
+                                            <svg width="90" height="90" class="mx-0.5 mt-2">
+                                                <image class=inline xlink:href="https://i.ibb.co/587gbm6/new-document.png" src="https://i.ibb.co/587gbm6/new-document.png" width="90" height="90"/>
+                                            </svg><br/><br/>
+                                            <span class="text-sm text-gray-800 inline-flex mx-4" dir="ltr">{{ file.created_at_timezone }}</span>
                                         </a>
                                     </li>
                                 </template>
 
                                 <template v-if="invoice.trainee_bank_payment_receipt">
-                                    <li v-for="file in invoice.trainee_bank_payment_receipt.attachments">
-                                        <a :href="file.download_url" target="_blank" class="hover:text-blue-600">
-                                            {{ $t('words.receipt') }}: {{ file.file_name }}<br/>
-                                            {{ $t('words.amount') }}: {{ invoice.trainee_bank_payment_receipt.amount }}<br/>
-                                            {{ $t('words.sender-name') }}: {{ invoice.trainee_bank_payment_receipt.sender_name }}<br/>
-                                            {{ $t('words.sender-bank-name') }}: {{ invoice.trainee_bank_payment_receipt.bank_from }}<br/>
-                                            {{ $t('words.receiver-bank-name') }}: {{ invoice.trainee_bank_payment_receipt.bank_to }}<br/>
-                                            <span class="text-sm text-gray-800" dir="ltr">{{ file.created_at_timezone }}</span>
+                                    <li v-for="file in invoice.trainee_bank_payment_receipt.attachments" class="inline-block">
+                                        <a :href="file.download_url" target="_blank" class="font-bold hover:text-blue-600">
+                                            {{ $t('words.receipt') }}:
+                                            <svg width="90" height="90" class="mx-0.5 mt-2">
+                                                <image class=inline xlink:href="https://i.ibb.co/587gbm6/new-document.png" src="https://i.ibb.co/587gbm6/new-document.png" width="90" height="90"/>
+                                            </svg><br/>
+                                            <span class="text-sm text-gray-800 inline-flex mx-4 mt-6" dir="ltr">{{ file.created_at_timezone }}</span>
                                         </a>
                                     </li>
                                 </template>
@@ -170,7 +218,7 @@
                     <h1 class="mb-8 font-bold text-2xl">{{ $t('words.items') }}</h1>
 
                     <div>
-                        <table class="w-full whitespace-no-wrap bg-white rounded-lg my-5 p-5 shadow text-sm">
+                        <table class="w-full whitespace-no-wrap bg-white rounded-lg my-5 p-5 bg-gray-50 rounded shadow-lg text-sm">
                             <tr class="text-left font-bold">
                                 <th class="p-4">{{ $t('words.name') }}</th>
                                 <th class="p-4">{{ $t('words.subtotal') }}</th>
