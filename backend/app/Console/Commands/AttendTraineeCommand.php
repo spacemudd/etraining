@@ -47,7 +47,9 @@ class AttendTraineeCommand extends Command
         $date_from = Carbon::parse($this->ask('date_from', '2022-01-01'))->startOfDay();
         $date_to = Carbon::parse($this->ask('date_to', '2022-02-01'))->startOfDay();
 
-        $records = AttendanceReportRecord::where('trainee_id', $trainee_id)
+        $trainee = Trainee::withTrashed()->findOrFail($trainee_id);
+
+        $records = AttendanceReportRecord::where('trainee_id', $trainee->id)
             ->whereBetween('session_starts_at', [$date_from, $date_to])
             ->get();
 
