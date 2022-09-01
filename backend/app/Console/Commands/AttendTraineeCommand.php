@@ -1,0 +1,65 @@
+<?php
+
+namespace App\Console\Commands;
+
+use App\Models\Back\AttendanceReportRecord;
+use App\Models\Back\CourseBatchSession;
+use App\Models\Back\Trainee;
+use Carbon\Carbon;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+
+class AttendTraineeCommand extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'trainees:attend {trainee_id}';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Mark absent attendances as present between two dates';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle()
+    {
+        $trainee_id = $this->argument('trainee_id');
+        $date_from = Carbon::parse($this->ask('date_from', '2022-01-01'))->startOfDay();
+        $date_to = Carbon::parse($this->ask('date_to', '2022-02-01'))->startOfDay();
+
+        $records = AttendanceReportRecord::where('trainee_id', $trainee_id)
+            ->whereBetween('session_starts_at', [$date_from, $date_to])
+            ->get();
+
+        DB::beginTransaction();
+        foreach ($records as $record) {
+            $record->update([
+                'status' => AttendanceReportRecord::STATUS_PRESENT,
+                'absence_reason' => null,
+                'attended_at' => $record->course_batch_session->starts_at->addMinutes(rand(0, 8)),
+            ]);
+        }
+        DB::commit();
+
+        return 1;
+    }
+}
