@@ -50,15 +50,20 @@ class AttendTraineeCommand extends Command
             ->whereBetween('session_starts_at', [$date_from, $date_to])
             ->get();
 
+        $this->info('Found: '.$records->count());
+
         DB::beginTransaction();
         foreach ($records as $record) {
             $record->update([
                 'status' => AttendanceReportRecord::STATUS_PRESENT,
                 'absence_reason' => null,
+                'session_starts_at' => $records->course_batch_session->starts_at,
                 'attended_at' => $record->course_batch_session->starts_at->addMinutes(rand(0, 8)),
             ]);
         }
         DB::commit();
+
+        $this->info('Updated: '.$records->count());
 
         return 1;
     }
