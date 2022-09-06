@@ -35,7 +35,7 @@ class FinancialInvoicesController extends Controller
             }])
             ->with('company')
             ->with('trainee_bank_payment_receipt')
-            ->defaultSort('created_at')
+            ->defaultSort('-created_at')
             ->allowedSorts(['from_date','created_at', 'number', 'status', 'payment_method', 'grand_total', 'is_verified', 'created_at'])
             ->allowedFilters(['payment_method','trainee_bank_payment_receipt.bank_to','trainee_bank_payment_receipt.bank_from','from_date','created_at', 'trainee.name', 'number', 'company.name_ar', 'status', 'trainee_bank_payment_receipt.sender_name', 'trainee_bank_payment_receipt.created_at'])
             ->allowedFields(['payment_method','trainee_bank_payment_receipt.bank_to','trainee_bank_payment_receipt.bank_from','trainee.id', 'trainee.name', 'company.id', 'company.name_ar', 'trainee_bank_payment_receipt.sender_name', 'trainee_bank_payment_receipt.created_at'])
@@ -237,13 +237,21 @@ class FinancialInvoicesController extends Controller
     public function uploadReceiptForm($id)
     {
         $invoice = Invoice::findOrFail($id);
-        $pending_amount = $invoice->trainee->total_amount_owed;
+        $pending_amount = $invoice->grand_total;
+
+        if (auth()->user()->trainee) {
+            $invoices = Invoice::where('trainee_id', auth()->user()->trainee->id)->notPaid()->get();
+        } else {
+            $invoices = null;
+        }
+
         return Inertia::render('Back/Finance/Invoices/UploadReceipt', [
-            'pending_amount' =>  number_format($pending_amount, 2),
-            'pending_amount_raw' => $pending_amount,
-            'trainee' => $invoice->trainee,
-            'invoice' => $invoice,
-        ]);
+        'pending_amount' =>  number_format($pending_amount, 2),
+        'pending_amount_raw' => $pending_amount,
+        'trainee' => $invoice->trainee,
+        'invoice' => $invoice,
+        'invoices' =>$invoices,
+    ]);
     }
 
     public function uploadReceipt($id, Request $request)

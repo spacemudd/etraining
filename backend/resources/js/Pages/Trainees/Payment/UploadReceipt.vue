@@ -134,6 +134,7 @@ export default {
         'pending_amount',
         'pending_amount_raw',
         'trainee',
+        'invoice',
     ],
     data() {
         return {
@@ -155,7 +156,7 @@ export default {
     methods: {
         saveForm() {
             this.form.amount = this.pending_amount_raw;
-            this.form.post(route('trainees.payment.upload-receipt.store'));
+            this.form.post(route('trainees.payment.upload-receipt.store', {invoice_id: this.invoice ? this.invoice.id : ''}));
         },
     }
 }

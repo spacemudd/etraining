@@ -174,16 +174,25 @@ class PaymentCardController extends Controller
         return Inertia::render('Trainees/Payment/Index', [
             'pending_amount' => $pending_amount,
             'online_payment' => $trainee->team->online_payment,
+            'invoices' => $trainee->invoices()->notPaid()->get(),
         ]);
     }
 
     public function uploadReceipt()
     {
-        $pending_amount = auth()->user()->trainee->total_amount_owed;
+        if (request()->invoice_id) {
+            $invoice = Invoice::findOrFail(request()->invoice_id);
+          $pending_amount = $invoice->grand_total;
+        } else {
+            $invoice = null;
+            $pending_amount = auth()->user()->trainee->total_amount_owed;
+        }
+
         return Inertia::render('Trainees/Payment/UploadReceipt', [
             'pending_amount' =>  number_format($pending_amount, 2),
             'pending_amount_raw' => $pending_amount,
             'trainee' => auth()->user()->trainee,
+            'invoice' => $invoice,
         ]);
     }
 
@@ -195,6 +204,7 @@ class PaymentCardController extends Controller
             'bank_name_to' => 'required|string|max:255|min:5',
             'bank_name_from' => 'required|string|max:255|min:5',
             'files.*' => 'required|file',
+            'invoice_id' => 'nullable',
         ]);
 
         \DB::beginTransaction();
@@ -214,8 +224,13 @@ class PaymentCardController extends Controller
         $invoices = auth()->user()
             ->trainee
             ->invoices()
-            ->notPaid()
-            ->get();
+            ->notPaid();
+
+        if (request()->invoice_id) {
+            $invoices = $invoices->where('id', request()->invoice_id);
+        }
+
+        $invoices = $invoices->get();
 
         $invoices->each(function ($invoice) use ($receipt) {
             $invoice->update([

@@ -106,7 +106,7 @@
                                 <hr class="my-2">
                                 <hr class="my-2">
                                 <div v-if="invoice.payment_method === 1" class="font-bold">{{ $t('words.payment-reference-id') }}</div>
-                                <div>{{ invoice.payment_reference_id }}</div>
+                                <div class="truncate">{{ invoice.payment_reference_id }}</div>
                             </div>
                         </div>
                         <div class="w-full p-4">
@@ -185,10 +185,13 @@
                                     <li v-for="file in invoice.trainee_bank_payment_receipt.approvals" class="inline-block">
                                         <a :href="file.download_url" target="_blank" class="font-bold hover:text-blue-600" alt="invoice.">
                                             {{ $t('words.receipt-approval') }}:
-                                            <svg width="90" height="90" class="mx-0.5 mt-2">
-                                                <image class=inline xlink:href="https://i.ibb.co/587gbm6/new-document.png" src="https://i.ibb.co/587gbm6/new-document.png" width="90" height="90"/>
-                                            </svg><br/><br/>
-                                            <span class="text-sm text-gray-800 inline-flex mx-4" dir="ltr">{{ file.created_at_timezone }}</span>
+                                            <svg v-if="file.mime_type.includes('pdf')" width="90" height="90" class="mx-0.5 mt-2">
+                                                <image class=inline xlink:href="https://cdn-icons-png.flaticon.com/512/4726/4726010.png" src="https://cdn-icons-png.flaticon.com/512/4726/4726010.png" width="90" height="90"/>
+                                            </svg>
+                                            <svg v-else width="90" height="90" class="mx-0.5 mt-2">
+                                                <image xlink:href="https://cdn-icons-png.flaticon.com/512/4725/4725998.png" src="https://cdn-icons-png.flaticon.com/512/4725/4725998.png"  width="90" height="90"/>
+                                            </svg>
+                                            <span class="text-sm text-gray-800 inline-flex mx-4 mt-4" dir="ltr">{{ file.created_at_timezone }}</span>
                                         </a>
                                     </li>
                                 </template>
@@ -197,10 +200,13 @@
                                     <li v-for="file in invoice.trainee_bank_payment_receipt.attachments" class="inline-block">
                                         <a :href="file.download_url" target="_blank" class="font-bold hover:text-blue-600">
                                             {{ $t('words.receipt') }}:
-                                            <svg width="90" height="90" class="mx-0.5 mt-2">
-                                                <image class=inline xlink:href="https://i.ibb.co/587gbm6/new-document.png" src="https://i.ibb.co/587gbm6/new-document.png" width="90" height="90"/>
-                                            </svg><br/>
-                                            <span class="text-sm text-gray-800 inline-flex mx-4 mt-6" dir="ltr">{{ file.created_at_timezone }}</span>
+                                            <svg v-if="file.mime_type.includes('pdf')" width="90" height="90" class="mx-0.5 mt-2">
+                                                <image class=inline xlink:href="https://cdn-icons-png.flaticon.com/512/4726/4726010.png" src="https://cdn-icons-png.flaticon.com/512/4726/4726010.png" width="90" height="90"/>
+                                            </svg>
+                                            <svg v-else width="90" height="90" class="mx-0.5 mt-2">
+                                                <image xlink:href="https://cdn-icons-png.flaticon.com/512/4725/4725998.png" src="https://cdn-icons-png.flaticon.com/512/4725/4725998.png"  width="90" height="90"/>
+                                            </svg>
+                                            <span class="text-sm text-gray-800 inline-flex mx-4 mt-4" dir="ltr">{{ file.created_at_timezone }}</span>
                                         </a>
                                     </li>
                                 </template>
