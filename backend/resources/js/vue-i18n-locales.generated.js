@@ -1224,7 +1224,7 @@ export default {
             "refresh": "Refresh",
             "post-trainees": "Post trainees",
             "settle": "Settle",
-            "dues": "dues"
+            "dues": "Dues"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

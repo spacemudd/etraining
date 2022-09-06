@@ -506,5 +506,5 @@ return [
     'post-trainees' => 'Post trainees',
     'pay-now' => 'Pay now',
     'settle' => 'Settle',
-    'dues' => 'dues',
+    'dues' => 'Dues',
 ];
