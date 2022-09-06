@@ -19,26 +19,31 @@
             ></breadcrumb-container>
 
             <div class="grid md:grid-cols-4 grid-cols-1 gap-6">
+
                 <div class="col-span-1 p-5 transition-all duration-500 ease-in-out hover:bg-gray-200">
-                    <p class="text-2xl">{{ $t('words.choose-payment-method') }}:</p>
+                    <p class="text-xl font-bold mb-6">{{ $t('words.invoices') }}:</p>
+                    <select class=" my-4 bg-gray-100 border-2 border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" v-model="invoiceToPay">
+                        <option v-for="invoice in invoices" :value="invoice">{{ invoice.number }} - {{ invoice.grand_total }}</option>
+                    </select><br/>
+                    <p class="text-xl font-bold mb-6">{{ $t('words.choose-payment-method') }}:</p>
                     <div class="payment-options mt-2" v-if="online_payment">
                         <label>
                             <input type="radio" name="payment-method" value="cc" v-model="paymentMethod">
                             {{ $t('words.credit-card-method') }}
                             <span class="img {display:block} inline-flex">
-                                        <svg width="40" height="40" class="mx-0.5">
-                                            <image class=inline xlink:href="https://www.svgrepo.com/show/328112/visa.svg" src="https://www.svgrepo.com/show/328112/visa.svg" width="40" height="40"/>
-                                        </svg>
-                                        <svg width="20" height="40" class="mx-0.5">
-                                            <image class=inline xlink:href="https://www.svgrepo.com/show/163750/mastercard.svg" src="https://www.svgrepo.com/show/163750/mastercard.svg" width="20" height="40"/>
-                                        </svg>
-                                        <svg width="40" height="40" class="mx-0.5">
-                                            <image class=inline xlink:href="https://upload.wikimedia.org/wikipedia/commons/f/fb/Mada_Logo.svg" src="https://upload.wikimedia.org/wikipedia/commons/f/fb/Mada_Logo.svg" width="40" height="40"/>
-                                        </svg>
-                                        <svg width="40" height="40" class="mx-0.5">
-                                            <image class=inline xlink:href="https://www.svgrepo.com/show/303191/apple-pay-logo.svg" src="https://www.svgrepo.com/show/303191/apple-pay-logo.svg" width="40" height="40"/>
-                                        </svg>
-                                    </span>
+                                <svg width="40" height="40" class="mx-0.5">
+                                    <image class=inline xlink:href="https://www.svgrepo.com/show/328112/visa.svg" src="https://www.svgrepo.com/show/328112/visa.svg" width="40" height="40"/>
+                                </svg>
+                                <svg width="20" height="40" class="mx-0.5">
+                                    <image class=inline xlink:href="https://www.svgrepo.com/show/163750/mastercard.svg" src="https://www.svgrepo.com/show/163750/mastercard.svg" width="20" height="40"/>
+                                </svg>
+                                <svg width="40" height="40" class="mx-0.5">
+                                    <image class=inline xlink:href="https://upload.wikimedia.org/wikipedia/commons/f/fb/Mada_Logo.svg" src="https://upload.wikimedia.org/wikipedia/commons/f/fb/Mada_Logo.svg" width="40" height="40"/>
+                                </svg>
+                                <svg width="40" height="40" class="mx-0.5">
+                                    <image class=inline xlink:href="https://www.svgrepo.com/show/303191/apple-pay-logo.svg" src="https://www.svgrepo.com/show/303191/apple-pay-logo.svg" width="40" height="40"/>
+                                </svg>
+                            </span>
                         </label>
                     </div>
                     <div class="payment-options">
@@ -48,13 +53,13 @@
                         </label>
                     </div>
 
-                    <div class="mt-5">
-                        <p>{{ $t('words.amount') }}<p>
-                        <p class="text-2xl">{{ pending_amount }}</p>
+                    <div class="mt-8">
+                        <p class="text-xl font-bold">{{ $t('words.amount') }}<p>
+                        <p class="text-xl">{{ invoiceToPay ? invoiceToPay.grand_total : '' }}</p>
                     </div>
 
                     <a class="mt-5 inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
-                       :href="paymentMethod==='cc' ? route('trainees.payment.card') : route('trainees.payment.upload-receipt')">
+                       :href="paymentMethod==='cc' ? route('trainees.payment.card', {invoice_id: invoiceToPay ? invoiceToPay.id : '' }) : route('trainees.payment.upload-receipt',  {invoice_id: invoiceToPay ? invoiceToPay.id : '' })">
                         <span v-if="paymentMethod === 'cc'">
                             {{ $t('words.pay-now') }}
                         </span>
@@ -71,18 +76,25 @@
 <script>
 import AppLayoutTrainee from '@/Layouts/AppLayoutTrainee'
 import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
+import Label from "../../../Jetstream/Label";
+import Input from "../../../Jetstream/Input";
 export default {
     components: {
+        Input,
+        Label,
         AppLayoutTrainee,
         BreadcrumbContainer,
     },
     props: [
         'pending_amount',
         'online_payment',
+        'invoice',
+        'invoices',
     ],
     data() {
         return {
             paymentMethod: 'cc',
+            invoiceToPay: null,
         }
     },
     mounted() {
