@@ -522,4 +522,5 @@ return [
     'post-trainees' => 'ترحيل',
     'pay-now' => 'ادفع الآن',
     'settle' => 'سداد',
+    'dues' => 'مستحقات',
 ];

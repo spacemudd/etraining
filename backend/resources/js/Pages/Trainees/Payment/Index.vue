@@ -23,7 +23,7 @@
                 <div class="col-span-1 p-5 transition-all duration-500 ease-in-out hover:bg-gray-200">
                     <p class="text-xl font-bold mb-6">{{ $t('words.invoices') }}:</p>
                     <select class=" my-4 bg-gray-100 border-2 border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" v-model="invoiceToPay">
-                        <option v-for="invoice in invoices" :value="invoice">{{ invoice.number }} - {{ invoice.grand_total }}</option>
+                        <option v-for="invoice in invoices" :value="invoice">{{ $t('words.dues') }} {{ invoice.month_of }} - {{ invoice.grand_total }}</option>
                     </select><br/>
                     <p class="text-xl font-bold mb-6">{{ $t('words.choose-payment-method') }}:</p>
                     <div class="payment-options mt-2" v-if="online_payment">

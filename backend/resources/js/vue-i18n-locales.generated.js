@@ -7,6 +7,25 @@ export default {
         "Reset Password": "إعادة تعيين كلمة السر",
         "This password reset link will expire in {count} minutes.": "رابط إعادة كلمة السر سوف ينتهي صلاحيته خلال {count} دقائق.",
         "If you did not request a password reset, no further action is required.": "إذا لم تطلب إعادة ضبط كلمة السر ، يرجى تجاهل هذا البريد.",
+        "passwords": {
+            "reset": "تمت إعادة تعيين كلمة المرور!",
+            "sent": "تم إرسال تفاصيل استعادة كلمة المرور الخاصة بك إلى بريدك الإلكتروني!",
+            "throttled": "الرجاء الانتظار قبل إعادة المحاولة.",
+            "token": "رمز استعادة كلمة المرور الذي أدخلته غير صحيح.",
+            "user": "لم يتم العثور على أيّ حسابٍ بهذا العنوان الإلكتروني."
+        },
+        "auth": {
+            "failed": "بيانات الاعتماد هذه غير متطابقة مع البيانات المسجلة لدينا.",
+            "throttle": "عدد كبير جدا من محاولات الدخول. يرجى المحاولة مرة أخرى بعد {seconds} ثانية."
+        },
+        "pagination": {
+            "previous": "&laquo; السابق",
+            "next": "التالي &raquo;",
+            "to": "الى",
+            "of": "من اجمالي",
+            "results": "نتائج",
+            "filter": "بحث"
+        },
         "words": {
             "language": "ar",
             "email": "البريد الإكتروني",
@@ -90,7 +109,7 @@ export default {
             "client-accounts": "حسابات العملاء",
             "invoice": "الفاتورة المستحقة",
             "payment-method": "طريقة الدفع",
-            'payment-reference-id': 'الرقم المرجعي',
+            "payment-reference-id": "الرقم المرجعي",
             "amount": "المبلغ",
             "confirmed": "موثق",
             "date": "التاريخ",
@@ -400,10 +419,10 @@ export default {
             "trainee-groups": "مجموعات المتدربين",
             "monthly_subscription_per_trainee": "تكلفة الاشتراك الشهرية للمتدرب",
             "issue-monthly-invoices": "اصدار المستحقات الشهرية",
-            "issue-invoice": "اصدار المستحقات",
-            "issue-invoice-trainee": "اصدار المستحقات للمتدرب",
-            "issue-invoice-trainee-description": "هنا يمكن لك اصدار المستحقات للمتدرب",
-            "new-invoice": "المستحقات جديدة",
+            "issue-invoice": "اصدار مستحقات",
+            "issue-invoice-trainee": "اصدار مستحقات للمتدرب",
+            "issue-invoice-trainee-description": "هنا يمكن لك اصدار مستحقات للمتدرب",
+            "new-invoice": "مستحقات جديدة",
             "expected-invoice-value-per-trainee": "متوقع تكلفة الإشتراك لكل متدرب",
             "month": "شهر",
             "year": "سنة",
@@ -465,8 +484,8 @@ export default {
             "payment-receipt-notice": "يرجى ارفاق الوصل مع ذكر البنك المحول اليه واسم المحول",
             "sender-name": "اسم المحول",
             "sender-bank-name": "اسم البنك المحول منه",
-            "receiver-bank-name": "اسم البنك المحول أليه",
             "bank-name": "اسم البنك",
+            "receiver-bank-name": "اسم البنك المحول أليه",
             "upload-receipts": "رفع الإصال",
             "receipt": "ايصال",
             "invoice-number": "رقم الفاتورة المستحقة",
@@ -522,7 +541,8 @@ export default {
             "day": "اليوم",
             "refresh": "تحديث",
             "post-trainees": "ترحيل",
-            "settle": "سداد"
+            "settle": "سداد",
+            "dues": "مستحقات"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -674,25 +694,6 @@ export default {
                 "trainee_id": "متدرب",
                 "company": "شركة"
             }
-        },
-        "passwords": {
-            "reset": "تمت إعادة تعيين كلمة المرور!",
-            "sent": "تم إرسال تفاصيل استعادة كلمة المرور الخاصة بك إلى بريدك الإلكتروني!",
-            "throttled": "الرجاء الانتظار قبل إعادة المحاولة.",
-            "token": "رمز استعادة كلمة المرور الذي أدخلته غير صحيح.",
-            "user": "لم يتم العثور على أيّ حسابٍ بهذا العنوان الإلكتروني."
-        },
-        "auth": {
-            "failed": "بيانات الاعتماد هذه غير متطابقة مع البيانات المسجلة لدينا.",
-            "throttle": "عدد كبير جدا من محاولات الدخول. يرجى المحاولة مرة أخرى بعد {seconds} ثانية."
-        },
-        "pagination": {
-            "previous": "&laquo; السابق",
-            "next": "التالي &raquo;",
-            "to": "الى",
-            "of": "من اجمالي",
-            "results": "نتائج",
-            "filter": "بحث"
         }
     },
     "en": {
@@ -703,6 +704,25 @@ export default {
         "Reset Password": "Reset Password",
         "This password reset link will expire in {count} minutes.": "This password reset link will expire in {count} minutes.",
         "If you did not request a password reset, no further action is required.": "If you did not request a password reset, no further action is required.",
+        "passwords": {
+            "reset": "Your password has been reset!",
+            "sent": "We have emailed your password reset link!",
+            "throttled": "Please wait before retrying.",
+            "token": "This password reset token is invalid.",
+            "user": "We can't find a user with that email address."
+        },
+        "auth": {
+            "failed": "These credentials do not match our records.",
+            "throttle": "Too many login attempts. Please try again in {seconds} seconds."
+        },
+        "pagination": {
+            "previous": "&laquo; Previous",
+            "next": "Next &raquo;",
+            "to": "to",
+            "of": "of",
+            "results": "Results",
+            "filter": "Filter"
+        },
         "words": {
             "language": "en",
             "email": "Email",
@@ -1203,7 +1223,8 @@ export default {
             "day": "Day",
             "refresh": "Refresh",
             "post-trainees": "Post trainees",
-            "settle": "Settle"
+            "settle": "Settle",
+            "dues": "dues"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",
@@ -1316,25 +1337,6 @@ export default {
                 }
             },
             "attributes": []
-        },
-        "passwords": {
-            "reset": "Your password has been reset!",
-            "sent": "We have emailed your password reset link!",
-            "throttled": "Please wait before retrying.",
-            "token": "This password reset token is invalid.",
-            "user": "We can't find a user with that email address."
-        },
-        "auth": {
-            "failed": "These credentials do not match our records.",
-            "throttle": "Too many login attempts. Please try again in {seconds} seconds."
-        },
-        "pagination": {
-            "previous": "&laquo; Previous",
-            "next": "Next &raquo;",
-            "to": "to",
-            "of": "of",
-            "results": "Results",
-            "filter": "Filter"
         }
     }
 }

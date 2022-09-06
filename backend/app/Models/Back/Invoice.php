@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use OwenIt\Auditing\Auditable;
 
@@ -64,6 +65,7 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
         'chase_status',
         'chase_boolean',
         'can_upload_receipt',
+        'month_of',
     ];
 
     protected $dates = [
@@ -144,6 +146,11 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
     public function getIsPaidAttribute(): bool
     {
         return !empty($this->paid_at);
+    }
+
+    public function getMonthOfAttribute()
+    {
+        return $this->from_date->format('m-Y');
     }
 
     public function getStatusFormattedAttribute(): string
