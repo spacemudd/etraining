@@ -29,8 +29,14 @@ class PaymentCardController extends Controller
     {
         $trainee = auth()->user()->trainee;
 
-        $pending_invoices_count = $trainee->invoices()->notPaid()->count();
-        $pending_amount = optional($trainee)->total_amount_owed;
+        if (request()->invoice_id) {
+           $invoices =  $trainee->invoices()->where('id', request()->invoice_id)->notPaid();
+        } else {
+            $invoices = $trainee->invoices()->notPaid();
+        }
+
+        $pending_invoices_count = $invoices->count();
+        $pending_amount = $invoices->sum('grand_total');
 
         if ($pending_invoices_count === 0 || $pending_amount === 0) {
             // Handle logic
@@ -148,7 +154,7 @@ class PaymentCardController extends Controller
             }
 
             $payment->setRedirectUrl(url(route('trainees.payment.card.charge')));
-//            $payment->setPostUrl(url(route('trainees.payment.card.charge'))); // if you are using post request to handle payment updates
+            $payment->setPostUrl(url('/tap')); // if you are using post request to handle payment updates
 
             $payment->setMetaData([
                 'invoices' => json_encode($trainee->invoices()->notPaid()->pluck('id')->implode(',')),

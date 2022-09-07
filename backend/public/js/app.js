@@ -10767,7 +10767,22 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {//
   },
-  methods: {//
+  methods: {
+    submitForm: function submitForm() {
+      var link = '';
+
+      if (this.paymentMethod === 'cc') {
+        link = route('trainees.payment.card', {
+          invoice_id: this.invoiceToPay ? this.invoiceToPay.id : ''
+        });
+      } else {
+        link = route('trainees.payment.upload-receipt', {
+          invoice_id: this.invoiceToPay ? this.invoiceToPay.id : ''
+        });
+      }
+
+      window.location.replace(link);
+    }
   }
 });
 
@@ -34005,6 +34020,13 @@ var render = function render() {
     staticClass: "grid md:grid-cols-4 grid-cols-1 gap-6"
   }, [_c("div", {
     staticClass: "col-span-1 p-5 transition-all duration-500 ease-in-out hover:bg-gray-200"
+  }, [_c("form", {
+    on: {
+      submit: function submit($event) {
+        $event.preventDefault();
+        return _vm.submitForm.apply(null, arguments);
+      }
+    }
   }, [_c("p", {
     staticClass: "text-xl font-bold mb-6"
   }, [_vm._v(_vm._s(_vm.$t("words.invoices")) + ":")]), _vm._v(" "), _c("select", {
@@ -34015,6 +34037,9 @@ var render = function render() {
       expression: "invoiceToPay"
     }],
     staticClass: "my-4 bg-gray-100 border-2 border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500",
+    attrs: {
+      required: ""
+    },
     on: {
       change: function change($event) {
         var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
@@ -34028,11 +34053,14 @@ var render = function render() {
     }
   }, _vm._l(_vm.invoices, function (invoice) {
     return _c("option", {
+      attrs: {
+        selected: ""
+      },
       domProps: {
         value: invoice
       }
     }, [_vm._v(_vm._s(_vm.$t("words.dues")) + " " + _vm._s(invoice.month_of) + " - " + _vm._s(invoice.grand_total))]);
-  }), 0), _c("br"), _vm._v(" "), _c("p", {
+  }), 0), _vm._v(" "), _c("p", {
     staticClass: "text-xl font-bold mb-6"
   }, [_vm._v(_vm._s(_vm.$t("words.choose-payment-method")) + ":")]), _vm._v(" "), _vm.online_payment ? _c("div", {
     staticClass: "payment-options mt-2"
@@ -34056,7 +34084,7 @@ var render = function render() {
         _vm.paymentMethod = "cc";
       }
     }
-  }), _vm._v("\n                        " + _vm._s(_vm.$t("words.credit-card-method")) + "\n                        "), _c("span", {
+  }), _vm._v("\n                            " + _vm._s(_vm.$t("words.credit-card-method")) + "\n                            "), _c("span", {
     staticClass: "img {display:block} inline-flex"
   }, [_c("svg", {
     staticClass: "mx-0.5",
@@ -34136,22 +34164,15 @@ var render = function render() {
         _vm.paymentMethod = "bank-transfer";
       }
     }
-  }), _vm._v("\n                        " + _vm._s(_vm.$t("words.bank-transfer-upload-receipt")) + "\n                    ")])]), _vm._v(" "), _c("div", {
+  }), _vm._v("\n                            " + _vm._s(_vm.$t("words.bank-transfer-upload-receipt")) + "\n                        ")])]), _vm._v(" "), _c("div", {
     staticClass: "mt-8"
   }, [_c("p", {
     staticClass: "text-xl font-bold"
   }, [_vm._v(_vm._s(_vm.$t("words.amount")))]), _c("p"), _c("p", {
     staticClass: "text-xl"
-  }, [_vm._v(_vm._s(_vm.invoiceToPay ? _vm.invoiceToPay.grand_total : ""))])]), _vm._v(" "), _c("a", {
-    staticClass: "mt-5 inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-",
-    attrs: {
-      href: _vm.paymentMethod === "cc" ? _vm.route("trainees.payment.card", {
-        invoice_id: _vm.invoiceToPay ? _vm.invoiceToPay.id : ""
-      }) : _vm.route("trainees.payment.upload-receipt", {
-        invoice_id: _vm.invoiceToPay ? _vm.invoiceToPay.id : ""
-      })
-    }
-  }, [_vm.paymentMethod === "cc" ? _c("span", [_vm._v("\n                        " + _vm._s(_vm.$t("words.pay-now")) + "\n                    ")]) : _c("span", [_vm._v("\n                        " + _vm._s(_vm.$t("words.attach-receipt")) + "\n                    ")])])])])], 1)]);
+  }, [_vm._v(_vm._s(_vm.invoiceToPay ? _vm.invoiceToPay.grand_total : ""))])]), _vm._v(" "), _c("button", {
+    staticClass: "mt-5 inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
+  }, [_vm.paymentMethod === "cc" ? _c("span", [_vm._v("\n                        " + _vm._s(_vm.$t("words.pay-now")) + "\n                    ")]) : _c("span", [_vm._v("\n                        " + _vm._s(_vm.$t("words.attach-receipt")) + "\n                    ")])])])])])], 1)]);
 };
 
 var staticRenderFns = [];
@@ -35094,7 +35115,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "/*\nTODO: Convert to @apply\n*/\ntable[data-v-5b49283e] th {\n  /*font-weight: 500;*/\n  font-size: 0.75rem;\n  line-height: 1rem;\n  padding-top: 0.75rem;\n  padding-bottom: 0.75rem;\n  padding-left: 1.5rem;\n  padding-right: 1.5rem;\n  text-align: left;\n  --tw-text-opacity: 1;\n  /*color: rgba(107, 114, 128, var(--tw-text-opacity));*/\n  text-transform: uppercase;\n  letter-spacing: 0.05em;\n}\ntable[data-v-5b49283e] td {\n  font-size: 0.875rem;\n  line-height: 1.25rem;\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  padding-left: 1.5rem;\n  padding-right: 1.5rem;\n  --tw-text-opacity: 1;\n  /*color: rgba(107, 114, 128, var(--tw-text-opacity));*/\n  white-space: nowrap;\n}\ntable[data-v-5b49283e] tr:hover td {\n  --tw-bg-opacity: 1;\n  background-color: rgba(249, 250, 251, var(--tw-bg-opacity));\n}\n", ""]);
+exports.push([module.i, "/*\r\nTODO: Convert to @apply\r\n*/\ntable[data-v-5b49283e] th {\n  /*font-weight: 500;*/\n  font-size: 0.75rem;\n  line-height: 1rem;\n  padding-top: 0.75rem;\n  padding-bottom: 0.75rem;\n  padding-left: 1.5rem;\n  padding-right: 1.5rem;\n  text-align: left;\n  --tw-text-opacity: 1;\n  /*color: rgba(107, 114, 128, var(--tw-text-opacity));*/\n  text-transform: uppercase;\n  letter-spacing: 0.05em;\n}\ntable[data-v-5b49283e] td {\n  font-size: 0.875rem;\n  line-height: 1.25rem;\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  padding-left: 1.5rem;\n  padding-right: 1.5rem;\n  --tw-text-opacity: 1;\n  /*color: rgba(107, 114, 128, var(--tw-text-opacity));*/\n  white-space: nowrap;\n}\ntable[data-v-5b49283e] tr:hover td {\n  --tw-bg-opacity: 1;\n  background-color: rgba(249, 250, 251, var(--tw-bg-opacity));\n}\r\n", ""]);
 
 // exports
 
@@ -35113,7 +35134,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".toggle__dot {\n  top: -.25rem;\n  left: -.25rem;\n  transition: all 0.3s ease-in-out;\n}\n[dir=rtl] .toggle__dot {\n  left: unset;\n  right: -.25rem;\n}\ninput:checked ~ .toggle__dot {\n  transform: translateX(100%);\n  background-color: #48bb78;\n  border: none;\n}\n[dir=rtl] input:checked ~ .toggle__dot {\n  transform: translateX(-100%);\n}\ninput:checked ~ .toggle__line {\n  background-color: #95e9b9;\n}\n", ""]);
+exports.push([module.i, ".toggle__dot {\n  top: -.25rem;\n  left: -.25rem;\n  transition: all 0.3s ease-in-out;\n}\n[dir=rtl] .toggle__dot {\n  left: unset;\n  right: -.25rem;\n}\ninput:checked ~ .toggle__dot {\n  transform: translateX(100%);\n  background-color: #48bb78;\n  border: none;\n}\n[dir=rtl] input:checked ~ .toggle__dot {\n  transform: translateX(-100%);\n}\ninput:checked ~ .toggle__line {\n  background-color: #95e9b9;\n}\r\n", ""]);
 
 // exports
 
@@ -35132,7 +35153,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".whatsapp-bubble-head {\n  position: fixed;\n  bottom: 20px;\n  left: 20px;\n}\n", ""]);
+exports.push([module.i, ".whatsapp-bubble-head {\n  position: fixed;\n  bottom: 20px;\n  left: 20px;\n}\r\n", ""]);
 
 // exports
 
@@ -35151,7 +35172,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".whatsapp-bubble-head {\n  position: fixed;\n  bottom: 20px;\n  left: 20px;\n}\n", ""]);
+exports.push([module.i, ".whatsapp-bubble-head {\n  position: fixed;\n  bottom: 20px;\n  left: 20px;\n}\r\n", ""]);
 
 // exports
 
@@ -35170,7 +35191,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".whatsapp-bubble-head {\n  position: fixed;\n  bottom: 20px;\n  left: 20px;\n}\n", ""]);
+exports.push([module.i, ".whatsapp-bubble-head {\n  position: fixed;\n  bottom: 20px;\n  left: 20px;\n}\r\n", ""]);
 
 // exports
 
@@ -35265,7 +35286,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../../node_module
 
 
 // module
-exports.push([module.i, ".v-dropdown-menu__container {\n  margin-top: 5px;\n  border-radius: 5px;\n  border-bottom: 1px solid red;\n}\n.dropdown-items {\n  border-radius: 5px;\n  padding: 10px;\n}\n.dropdown-items li {\n  margin: 10px 0;\n  border-bottom: 1px solid #e9e9e9;\n  padding-bottom: 10px;\n}\n", ""]);
+exports.push([module.i, ".v-dropdown-menu__container {\n  margin-top: 5px;\n  border-radius: 5px;\n  border-bottom: 1px solid red;\n}\n.dropdown-items {\n  border-radius: 5px;\n  padding: 10px;\n}\n.dropdown-items li {\n  margin: 10px 0;\n  border-bottom: 1px solid #e9e9e9;\n  padding-bottom: 10px;\n}\r\n", ""]);
 
 // exports
 
@@ -35303,7 +35324,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, ".v-dropdown-menu__container {\n  margin-top: 5px;\n  border-radius: 5px;\n  border-bottom: 1px solid red;\n}\n.dropdown-items {\n  border-radius: 5px;\n  padding: 10px;\n}\n.dropdown-items li {\n  margin: 10px 0;\n  border-bottom: 1px solid #e9e9e9;\n  padding-bottom: 10px;\n}\n", ""]);
+exports.push([module.i, ".v-dropdown-menu__container {\n  margin-top: 5px;\n  border-radius: 5px;\n  border-bottom: 1px solid red;\n}\n.dropdown-items {\n  border-radius: 5px;\n  padding: 10px;\n}\n.dropdown-items li {\n  margin: 10px 0;\n  border-bottom: 1px solid #e9e9e9;\n  padding-bottom: 10px;\n}\r\n", ""]);
 
 // exports
 
@@ -35398,7 +35419,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, ".min-container-upload {\n  min-height: 168px;\n}\n", ""]);
+exports.push([module.i, ".min-container-upload {\n  min-height: 168px;\n}\r\n", ""]);
 
 // exports
 
@@ -35455,7 +35476,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, ".min-container-upload {\n  min-height: 168px;\n}\n", ""]);
+exports.push([module.i, ".min-container-upload {\n  min-height: 168px;\n}\r\n", ""]);
 
 // exports
 
@@ -49662,7 +49683,7 @@ __webpack_require__.r(__webpack_exports__);
 var logRocketEnabled = document.head.querySelector('meta[name="logrocket-enabled"]');
 
 if (window.location.hostname.includes('.com') && logRocketEnabled) {
-  logrocket__WEBPACK_IMPORTED_MODULE_0___default.a.init("");
+  logrocket__WEBPACK_IMPORTED_MODULE_0___default.a.init("clarastars/etraining");
   var logRocketId = document.head.querySelector('meta[name="logrocket-id"]');
   var logRocketIdExtra = document.head.querySelector('meta[name="logrocket-id-extra"]');
 
@@ -49979,9 +50000,9 @@ __webpack_require__.r(__webpack_exports__);
       "edit-company-contracts": "تعديل عقود الشركة",
       "delete-company-contracts": "حذف عقود الشركة",
       "view-financial-department": "عرض المالية",
-      "approve-invoices": "اعتماد المستحقات",
+      "approve-invoices": "اعتماد الفواتير",
       "view-clients": "عرض العملاء",
-      "view-invoices": "عرض المستحقات",
+      "view-invoices": "عرض الفواتير",
       "view-client-accounts": "عرض حسابات العملاء",
       "account-name": "اسم الحساب",
       "status": "الحالة",
@@ -49989,14 +50010,14 @@ __webpack_require__.r(__webpack_exports__);
       "created-at": "وقت الإنشاء",
       "view": "عرض",
       "client-accounts": "حسابات العملاء",
-      "invoice": "الفاتورة المستحقة",
+      "invoice": "الفاتورة",
       "payment-method": "طريقة الدفع",
-      "payment-reference-id": "الرقم المرجعي",
+      'payment-reference-id': 'الرقم المرجعي',
       "amount": "المبلغ",
       "confirmed": "موثق",
       "date": "التاريخ",
-      "invoices": "المستحقات",
-      "invoices-help": "يمكنك الإطلاع على كل المستحقات التي تم اصدارها هنا",
+      "invoices": "الفواتير",
+      "invoices-help": "يمكنك الإطلاع على كل الفواتير التي تم اصدارها هنا",
       "view-monthly-subscription-settings": "إعدادات تكاليف الإشتراك الشهري",
       "monthly-subscription": "تكلفة الشهرية",
       "trainee_monthly_subscription": "تكلفة اشتراك الشهري للمتدرب",
@@ -50300,11 +50321,11 @@ __webpack_require__.r(__webpack_exports__);
       "your-instructor-application-has-been-approved": "لقد تم قبولك في منصة التدريب كمدرب ويمكن الدخول عليها من: ",
       "trainee-groups": "مجموعات المتدربين",
       "monthly_subscription_per_trainee": "تكلفة الاشتراك الشهرية للمتدرب",
-      "issue-monthly-invoices": "اصدار المستحقات الشهرية",
-      "issue-invoice": "اصدار مستحقات",
-      "issue-invoice-trainee": "اصدار مستحقات للمتدرب",
-      "issue-invoice-trainee-description": "هنا يمكن لك اصدار مستحقات للمتدرب",
-      "new-invoice": "مستحقات جديدة",
+      "issue-monthly-invoices": "اصدار فواتير الشهرية",
+      "issue-invoice": "اصدار فاتورة",
+      "issue-invoice-trainee": "اصدار فاتورة للمتدرب",
+      "issue-invoice-trainee-description": "هنا يمكن لك اصدار فاتورة للمتدرب",
+      "new-invoice": "فاتورة جديدة",
       "expected-invoice-value-per-trainee": "متوقع تكلفة الإشتراك لكل متدرب",
       "month": "شهر",
       "year": "سنة",
@@ -50339,20 +50360,20 @@ __webpack_require__.r(__webpack_exports__);
       "tax": "الضريبة",
       "items": "الأصناف",
       "comments": "ملاحظات",
-      "invoice-no": "رقم الفاتورة المستحقة",
+      "invoice-no": "رقم الفاتورة",
       "created-by": "انشئ من قبل",
       "is-paid": "مدفوع",
       "from-date": "من تاريخ",
       "to-date": "الى تاريخ",
-      "value-per-invoice": "القيمة لكل فاتورة مستحقة",
-      "invoice-value": "قيمة الفاتورة المستحقة",
+      "value-per-invoice": "القيمة لكل فاتورة",
+      "invoice-value": "قيمة الفاتورة",
       "bill-from-date": "تاريخ بدء الإستحقاق",
       "training-costs-for-the-period-of": "تكاليف التدريب للمدة الزمنية {start} - {end}",
       "without-vat": "من دون الضريبة",
       "with-vat": "بالضريبة",
       "account-statement": "كشف حساب",
       "print-date": "تاريخ الطباعة",
-      "expected-cost-per-invoice": "متوقع مبلغ كل فاتورة مستحقة",
+      "expected-cost-per-invoice": "متوقع مبلغ كل فاتورة",
       "linked-date": "تاريخ الربط",
       "vat": "الضريبة",
       "select-all": "اختيار الكل",
@@ -50370,7 +50391,7 @@ __webpack_require__.r(__webpack_exports__);
       "receiver-bank-name": "اسم البنك المحول أليه",
       "upload-receipts": "رفع الإصال",
       "receipt": "ايصال",
-      "invoice-number": "رقم الفاتورة المستحقة",
+      "invoice-number": "رقم الفاتورة",
       "reject-payment-receipt": "رفض الإيصال",
       "rejection-reason": "سبب الرفض",
       "reject-payment-receipt-reason": "سبب رفض الإيصال",
@@ -50395,14 +50416,14 @@ __webpack_require__.r(__webpack_exports__);
       "upload-receipt": "رفع ايصال",
       "chased-by": "تحصيل من قبل",
       "chasers": "المحصلين",
-      "approve-invoice-paid": "اعتماد تم دفع المستحقات",
+      "approve-invoice-paid": "اعتماد تم دفع الفاتورة",
       "edit-payment-settings": "الدفع اونلاين",
       "payment-settings": "إعدادت الدفع اونلاين",
-      "invoices-report": "تقرير المستحقات",
+      "invoices-report": "تقرير الفواتير",
       "paid-at": "وقت الدفع",
       "chased-at": "وقت التحصيل",
       "verified-at": "وقت الإعتماد",
-      "invoice-date": "تاريخ الفاتورة المستحقة",
+      "invoice-date": "تاريخ الفاتورة",
       "report-created-by": "منشئ التقرير",
       "selected-period": "الفترة المختارة",
       "financial-department-approval": "اعتماد المالية",
@@ -50416,7 +50437,7 @@ __webpack_require__.r(__webpack_exports__);
       "current-company-as-of-today": "الشركة الحالية المسجلة",
       "attach-receipt": "ارفق الإيصال",
       "example-bank-name": "(مثال: الراجحي، الإنماء... الخ)",
-      "delete-invoice": "حذف المستحقات",
+      "delete-invoice": "حذف الفواتير",
       "submitted-receipt": "الإيصال",
       "receipt-date": "تاريخ الإيصال",
       "history": "التاريخ",
@@ -51744,8 +51765,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /Users/shafiqal-shaar/projects/etraining/backend/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /Users/shafiqal-shaar/projects/etraining/backend/resources/css/app.css */"./resources/css/app.css");
+__webpack_require__(/*! C:\projects\etraining\backend\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\projects\etraining\backend\resources\css\app.css */"./resources/css/app.css");
 
 
 /***/ }),

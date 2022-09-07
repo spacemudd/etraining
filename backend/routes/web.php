@@ -2,6 +2,10 @@
 
 use App\Models\Back\Trainee;
 
+Route::post('tap', function(\Illuminate\Http\Request $request) {
+    Log::info(json_encode($request->toArray()));
+});
+
 Route::get('version', function() {
     return '4.7';
 });
