@@ -10,22 +10,64 @@
 
             <!-- Payment notice -->
             <div class="container mx-auto grid p-6" v-if="user.trainee.has_outstanding_amount">
-                <div class="bg-red-100 rounded-lg p-10 border-red-500 border-2">
+                <div class="bg-blue-100 rounded-lg p-10 border-blue-500 border-2">
                     <p class="text-red-800 flex">
                         <svg style="margin-left:10px;" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         {{ $t('words.due-balance-notice') }}
                     </p>
-                    <inertia-link class="text-center mt-5 inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
-                                  :href="route('trainees.payment.options')">
-                        {{ $t('words.settle') }}
-                    </inertia-link>
-
-                    <inertia-link class="text-center mt-5 inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
-                                  :href="route('trainees.payment.options')">
-                        {{ $t('words.attach-receipt') }}
-                    </inertia-link>
+                    <div class="grid grid-cols-2 gap-6 mt-12">
+                        <div>
+                            <p class="text-black flex mr-0.5">
+                                <b>1)</b> &ensp; {{ $t('words.to-pay-by-credit') }}
+                            </p>
+                            <span class="img {display:block} inline-flex">
+                                <svg width="40" height="40" class="mx-0.5">
+                                    <image class=inline xlink:href="https://www.svgrepo.com/show/328112/visa.svg" src="https://www.svgrepo.com/show/328112/visa.svg" width="40" height="40"/>
+                                </svg>
+                                <svg width="20" height="40" class="mx-0.5">
+                                    <image class=inline xlink:href="https://www.svgrepo.com/show/163750/mastercard.svg" src="https://www.svgrepo.com/show/163750/mastercard.svg" width="20" height="40"/>
+                                </svg>
+                                <svg width="40" height="40" class="mx-0.5">
+                                    <image class=inline xlink:href="https://upload.wikimedia.org/wikipedia/commons/f/fb/Mada_Logo.svg" src="https://upload.wikimedia.org/wikipedia/commons/f/fb/Mada_Logo.svg" width="40" height="40"/>
+                                </svg>
+                                <svg width="40" height="40" class="mx-0.5">
+                                    <image class=inline xlink:href="https://www.svgrepo.com/show/303191/apple-pay-logo.svg" src="https://www.svgrepo.com/show/303191/apple-pay-logo.svg" width="40" height="40"/>
+                                </svg>
+                            </span><br>
+                        </div>
+                        <div>
+                            <p class="text-black flex mr-0.5">
+                                <b>2)</b> &ensp; {{ $t('words.to-pay-by-bank') }}
+                            </p>
+                            <span class="img {display:block} inline-flex">
+                                <svg width="60" height="60" class="mx-1">
+                                    <image class=inline xlink:href="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Al_Rajhi_Bank_Logo.svg/2560px-Al_Rajhi_Bank_Logo.svg.png" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Al_Rajhi_Bank_Logo.svg/2560px-Al_Rajhi_Bank_Logo.svg.png" width="60" height="60"/>
+                                </svg>
+                                <svg width="60" height="60" class="mx-1">
+                                    <image class=inline xlink:href="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Riyad_Bank_logo.svg/1200px-Riyad_Bank_logo.svg.png" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Riyad_Bank_logo.svg/1200px-Riyad_Bank_logo.svg.png" width="60" height="60"/>
+                                </svg>
+                                <svg width="60" height="60" class="mx-1">
+                                    <image class=inline xlink:href="https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Alinma_Bank_logo.svg/1200px-Alinma_Bank_logo.svg.png" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Alinma_Bank_logo.svg/1200px-Alinma_Bank_logo.svg.png" width="60" height="60"/>
+                                </svg>
+                            </span><br>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <inertia-link class="text-center mt-5 inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
+                                          :href="route('trainees.payment.tap')">
+                                {{ $t('words.settle') }}
+                            </inertia-link>
+                        </div>
+                        <div>
+                            <inertia-link class="text-center mt-5 inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
+                                          :href="route('trainees.payment.options')">
+                                {{ $t('words.attach-receipt') }}
+                            </inertia-link>
+                        </div>
+                    </div>
                 </div>
             </div>
 

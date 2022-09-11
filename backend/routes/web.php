@@ -2,6 +2,10 @@
 
 use App\Models\Back\Trainee;
 
+Route::post('tap', function(\Illuminate\Http\Request $request) {
+    Log::critical(json_encode($request->toArray()));
+});
+
 Route::get('version', function() {
     return '4.7';
 });
@@ -403,7 +407,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('/courses/{course_id}/course-batches/{course_batch_id}/course-batch-sessions/{course_batch_session}', [\App\Http\Controllers\Trainees\CourseBatchSessionsController::class, 'show'])->name('course-batch-session.show');
 
         Route::get('payment/options', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'showOptions'])->name('payment.options');
-
+        Route::get('payment/tap', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'showTap'])->name('payment.tap');
         Route::post('payment/receipt/store', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'storeReceipt'])->name('payment.upload-receipt.store');
         Route::get('payment/receipt', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'uploadReceipt'])->name('payment.upload-receipt');
 

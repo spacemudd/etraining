@@ -29,8 +29,14 @@ class PaymentCardController extends Controller
     {
         $trainee = auth()->user()->trainee;
 
-        $pending_invoices_count = $trainee->invoices()->notPaid()->count();
-        $pending_amount = optional($trainee)->total_amount_owed;
+        if (request()->invoice_id) {
+           $invoices =  $trainee->invoices()->where('id', request()->invoice_id)->notPaid();
+        } else {
+            $invoices = $trainee->invoices()->notPaid();
+        }
+
+        $pending_invoices_count = $invoices->count();
+        $pending_amount = $invoices->sum('grand_total');
 
         if ($pending_invoices_count === 0 || $pending_amount === 0) {
             // Handle logic
@@ -148,7 +154,7 @@ class PaymentCardController extends Controller
             }
 
             $payment->setRedirectUrl(url(route('trainees.payment.card.charge')));
-//            $payment->setPostUrl(url(route('trainees.payment.card.charge'))); // if you are using post request to handle payment updates
+            $payment->setPostUrl(url('/tap')); // if you are using post request to handle payment updates
 
             $payment->setMetaData([
                 'invoices' => json_encode($trainee->invoices()->notPaid()->pluck('id')->implode(',')),
@@ -172,6 +178,19 @@ class PaymentCardController extends Controller
         $pending_amount = number_format($trainee->total_amount_owed, 2);
 
         return Inertia::render('Trainees/Payment/Index', [
+            'pending_amount' => $pending_amount,
+            'online_payment' => $trainee->team->online_payment,
+            'invoices' => $trainee->invoices()->notPaid()->get(),
+        ]);
+    }
+    public function showTap()
+    {
+        $trainee = auth()->user()->trainee;
+
+        $pending_invoices_count = $trainee->invoices()->notPaid()->count();
+        $pending_amount = number_format($trainee->total_amount_owed, 2);
+
+        return Inertia::render('Trainees/Payment/IndexTap', [
             'pending_amount' => $pending_amount,
             'online_payment' => $trainee->team->online_payment,
             'invoices' => $trainee->invoices()->notPaid()->get(),
