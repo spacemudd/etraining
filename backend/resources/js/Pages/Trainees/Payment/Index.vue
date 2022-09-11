@@ -21,50 +21,34 @@
             <div class="grid md:grid-cols-4 grid-cols-1 gap-6">
                 <div class="col-span-1 p-5 transition-all duration-500 ease-in-out hover:bg-gray-200">
                     <form @submit.prevent="submitForm">
-                        <p class="text-xl font-bold mb-6">{{ $t('words.invoices') }}:</p>
+                            <label>
+                                <input checked="checked" type="radio" name="payment-method" value="bank-transfer" v-model="paymentMethod">
+                                {{ $t('words.bank-transfer-upload-receipt') }}
+                                <span class="img {display:block} inline-flex">
+                                    <svg width="60" height="60" class="mx-1">
+                                        <image class=inline xlink:href="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Al_Rajhi_Bank_Logo.svg/2560px-Al_Rajhi_Bank_Logo.svg.png" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Al_Rajhi_Bank_Logo.svg/2560px-Al_Rajhi_Bank_Logo.svg.png" width="60" height="60"/>
+                                    </svg>
+                                    <svg width="60" height="60" class="mx-1">
+                                        <image class=inline xlink:href="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Riyad_Bank_logo.svg/1200px-Riyad_Bank_logo.svg.png" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Riyad_Bank_logo.svg/1200px-Riyad_Bank_logo.svg.png" width="60" height="60"/>
+                                    </svg>
+                                    <svg width="60" height="60" class="mx-1">
+                                        <image class=inline xlink:href="https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Alinma_Bank_logo.svg/1200px-Alinma_Bank_logo.svg.png" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Alinma_Bank_logo.svg/1200px-Alinma_Bank_logo.svg.png" width="60" height="60"/>
+                                    </svg>
+                                </span>
+                            </label>
+                        <p class="text-xl font-bold mb-6" >{{ $t('words.choose-invoice') }}:</p>
                         <select class=" my-4 bg-gray-100 border-2 border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 v-model="invoiceToPay"
                                 required>
                             <option selected v-for="invoice in invoices" :value="invoice">{{ $t('words.dues') }} {{ invoice.month_of }} - {{ invoice.grand_total }}</option>
                         </select>
-                        <p class="text-xl font-bold mb-6">{{ $t('words.choose-payment-method') }}:</p>
-                        <div class="payment-options mt-2" v-if="online_payment">
-                            <label>
-                                <input type="radio" name="payment-method" value="cc" v-model="paymentMethod">
-                                {{ $t('words.credit-card-method') }}
-                                <span class="img {display:block} inline-flex">
-                                <svg width="40" height="40" class="mx-0.5">
-                                    <image class=inline xlink:href="https://www.svgrepo.com/show/328112/visa.svg" src="https://www.svgrepo.com/show/328112/visa.svg" width="40" height="40"/>
-                                </svg>
-                                <svg width="20" height="40" class="mx-0.5">
-                                    <image class=inline xlink:href="https://www.svgrepo.com/show/163750/mastercard.svg" src="https://www.svgrepo.com/show/163750/mastercard.svg" width="20" height="40"/>
-                                </svg>
-                                <svg width="40" height="40" class="mx-0.5">
-                                    <image class=inline xlink:href="https://upload.wikimedia.org/wikipedia/commons/f/fb/Mada_Logo.svg" src="https://upload.wikimedia.org/wikipedia/commons/f/fb/Mada_Logo.svg" width="40" height="40"/>
-                                </svg>
-                                <svg width="40" height="40" class="mx-0.5">
-                                    <image class=inline xlink:href="https://www.svgrepo.com/show/303191/apple-pay-logo.svg" src="https://www.svgrepo.com/show/303191/apple-pay-logo.svg" width="40" height="40"/>
-                                </svg>
-                            </span>
-                            </label>
-                        </div>
-                        <div class="payment-options">
-                            <label>
-                                <input type="radio" name="payment-method" value="bank-transfer" v-model="paymentMethod">
-                                {{ $t('words.bank-transfer-upload-receipt') }}
-                            </label>
-                        </div>
-
                         <div class="mt-8">
                             <p class="text-xl font-bold">{{ $t('words.amount') }}<p>
                             <p class="text-xl">{{ invoiceToPay ? invoiceToPay.grand_total : '' }}</p>
                         </div>
 
                         <button class="mt-5 inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-">
-                          <span v-if="paymentMethod === 'cc'">
-                            {{ $t('words.pay-now') }}
-                        </span>
-                            <span v-else>
+                          <span v-if="paymentMethod === 'bank-transfer'">
                             {{ $t('words.attach-receipt') }}
                         </span>
                         </button>
@@ -95,7 +79,7 @@ export default {
     ],
     data() {
         return {
-            paymentMethod: 'cc',
+            paymentMethod: 'bank-transfer',
             invoiceToPay: null,
         }
     },

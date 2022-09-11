@@ -183,6 +183,19 @@ class PaymentCardController extends Controller
             'invoices' => $trainee->invoices()->notPaid()->get(),
         ]);
     }
+    public function showTap()
+    {
+        $trainee = auth()->user()->trainee;
+
+        $pending_invoices_count = $trainee->invoices()->notPaid()->count();
+        $pending_amount = number_format($trainee->total_amount_owed, 2);
+
+        return Inertia::render('Trainees/Payment/IndexTap', [
+            'pending_amount' => $pending_amount,
+            'online_payment' => $trainee->team->online_payment,
+            'invoices' => $trainee->invoices()->notPaid()->get(),
+        ]);
+    }
 
     public function uploadReceipt()
     {

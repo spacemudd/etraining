@@ -542,7 +542,10 @@ export default {
             "refresh": "تحديث",
             "post-trainees": "ترحيل",
             "settle": "سداد",
-            "dues": "مستحقات"
+            "dues": "مستحقات",
+            "to-pay-by-credit": "للسداد عن طريق الدفع الالكتروني.",
+            "to-pay-by-bank": "في حال تم التحويل البنكي مسبقا الرجاء رفع الايصال.",
+            "choose-invoice": "اختر الفاتورة المراد دفعها"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1224,7 +1227,9 @@ export default {
             "refresh": "Refresh",
             "post-trainees": "Post trainees",
             "settle": "Settle",
-            "dues": "dues"
+            "dues": "dues",
+            "to-pay-by-credit": "To pay by credit card.",
+            "to-pay-by-bank": "If you already have paid by bank transfer please upload the receipt."
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",
