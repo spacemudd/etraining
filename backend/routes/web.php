@@ -19,6 +19,11 @@ Route::get('phpxx', function() {
     return phpinfo();
 });
 
+Route::get('card-report', function() {
+    ini_set('memory_limit', -1);
+    return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\PaidByCardReport(), now()->format('Y-m-d-h-i').'-paid-by-card.xlsx');
+});
+
 Route::get('phone-numbers/{company_id}', function() {
 
     AttendanceReportRecordWarning::whereBetween('created_at', [now()->setDate(2022, 1, 3)->startOfDay(), now()->setDate(2022, 1, 9)->endOfDay()])->whereHas('trainee', function ($q) { $q->whereIn('company_id', ['a980c16d-b3c9-4064-aaf7-f0b6174197de', '07b45abe-da70-48b9-816e-b092e1868ae7', '4a69b7ae-25ba-43a4-a8b1-a2936647f026', 'b8f17f79-c0c4-401f-9924-d7afec100c44', '9891d1d3-103d-4af9-ab70-2028d438fd03', '022ab58a-8a4b-4a46-8c0b-350ac5ea17c5', 'd72becb3-6e03-4546-85fa-4dbd008fccb6', 'a0bc0fcb-20e3-45a3-a057-be5d47d26d19', 'e24ce28c-2cd7-496e-9eb5-202d75df5176', 'ac7393a9-d56d-49ae-9c43-a9031f244416', '6e61eded-aa67-419c-ada3-a6182214b361', 'b5d59d5a-b899-4919-bb74-43d0080b3800']); })->delete();
