@@ -14,6 +14,7 @@ class PaidByCardReport implements FromArray
     public function array(): array
     {
         $invoices = Invoice::where('payment_method', 1)
+            ->orderBy('from_date')
             ->get();
 
         return $invoices->map(function($item, $key) {
