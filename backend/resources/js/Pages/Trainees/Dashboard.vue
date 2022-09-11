@@ -41,17 +41,6 @@
                             <p class="text-black flex mr-0.5">
                                 <b>2)</b> &ensp; {{ $t('words.to-pay-by-bank') }}
                             </p>
-                            <span class="img {display:block} inline-flex">
-                                <svg width="60" height="60" class="mx-1">
-                                    <image class=inline xlink:href="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Al_Rajhi_Bank_Logo.svg/2560px-Al_Rajhi_Bank_Logo.svg.png" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Al_Rajhi_Bank_Logo.svg/2560px-Al_Rajhi_Bank_Logo.svg.png" width="60" height="60"/>
-                                </svg>
-                                <svg width="60" height="60" class="mx-1">
-                                    <image class=inline xlink:href="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Riyad_Bank_logo.svg/1200px-Riyad_Bank_logo.svg.png" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Riyad_Bank_logo.svg/1200px-Riyad_Bank_logo.svg.png" width="60" height="60"/>
-                                </svg>
-                                <svg width="60" height="60" class="mx-1">
-                                    <image class=inline xlink:href="https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Alinma_Bank_logo.svg/1200px-Alinma_Bank_logo.svg.png" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Alinma_Bank_logo.svg/1200px-Alinma_Bank_logo.svg.png" width="60" height="60"/>
-                                </svg>
-                            </span><br>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-6">

@@ -509,5 +509,6 @@ return [
     'dues' => 'Dues',
     'to-pay-by-credit' => 'To pay by credit card.',
     'to-pay-by-bank' => 'If you already have paid by bank transfer please upload the receipt.',
-    'choose-invoice' => 'Choose the invoice to pay'
+    'choose-invoice' => 'Choose the invoice to pay',
+    'sr' => 'SR',
 ];

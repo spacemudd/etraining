@@ -545,7 +545,8 @@ export default {
             "dues": "مستحقات",
             "to-pay-by-credit": "للسداد عن طريق الدفع الالكتروني.",
             "to-pay-by-bank": "في حال تم التحويل البنكي مسبقا الرجاء رفع الايصال.",
-            "choose-invoice": "اختر الفاتورة المراد دفعها"
+            "choose-invoice": "اختر المستحقات المراد دفعها",
+            "sr": "س.ر.",
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1230,7 +1231,8 @@ export default {
             "dues": "dues",
             "to-pay-by-credit": "To pay by credit card.",
             "to-pay-by-bank": "If you already have paid by bank transfer please upload the receipt.",
-            "choose-invoice": "Choose the invoice to pay"
+            "choose-invoice": "Choose the invoice to pay",
+            "sr": "SR",
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

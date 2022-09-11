@@ -24,19 +24,8 @@
                             <label>
                                 <input checked="checked" type="radio" name="payment-method" value="bank-transfer" v-model="paymentMethod">
                                 {{ $t('words.bank-transfer-upload-receipt') }}
-                                <span class="img {display:block} inline-flex">
-                                    <svg width="60" height="60" class="mx-1">
-                                        <image class=inline xlink:href="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Al_Rajhi_Bank_Logo.svg/2560px-Al_Rajhi_Bank_Logo.svg.png" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Al_Rajhi_Bank_Logo.svg/2560px-Al_Rajhi_Bank_Logo.svg.png" width="60" height="60"/>
-                                    </svg>
-                                    <svg width="60" height="60" class="mx-1">
-                                        <image class=inline xlink:href="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Riyad_Bank_logo.svg/1200px-Riyad_Bank_logo.svg.png" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Riyad_Bank_logo.svg/1200px-Riyad_Bank_logo.svg.png" width="60" height="60"/>
-                                    </svg>
-                                    <svg width="60" height="60" class="mx-1">
-                                        <image class=inline xlink:href="https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Alinma_Bank_logo.svg/1200px-Alinma_Bank_logo.svg.png" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Alinma_Bank_logo.svg/1200px-Alinma_Bank_logo.svg.png" width="60" height="60"/>
-                                    </svg>
-                                </span>
                             </label>
-                        <p class="text-xl font-bold mb-6" >{{ $t('words.choose-invoice') }}:</p>
+                        <p class="text-xl font-bold mt-8 mb-6" >{{ $t('words.choose-invoice') }}:</p>
                         <select class=" my-4 bg-gray-100 border-2 border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 v-model="invoiceToPay"
                                 required>
@@ -44,7 +33,7 @@
                         </select>
                         <div class="mt-8">
                             <p class="text-xl font-bold">{{ $t('words.amount') }}<p>
-                            <p class="text-xl">{{ invoiceToPay ? invoiceToPay.grand_total : '' }}</p>
+                            <p class="text-xl">{{ invoiceToPay ? invoiceToPay.grand_total : '' }} {{ $t('words.sr')}}</p>
                         </div>
 
                         <button class="mt-5 inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-">
