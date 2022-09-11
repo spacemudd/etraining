@@ -24,16 +24,16 @@
             </h2>
 
             <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
-                <inertia-link :href="route('back.companies.create')" class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 text-center hover:bg-red-500 hover:text-white hover:font-semibold">
+                <inertia-link :href="route('back.companies.create')" class="shadow-lg flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 text-center hover:bg-red-500 hover:text-red-700 hover:font-semibold hover:shadow-xl">
                     {{ $t('words.add-new-company') }}
                 </inertia-link>
-                <inertia-link :href="route('back.instructors.create')" class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 text-center hover:bg-red-500 hover:text-white hover:font-semibold">
+                <inertia-link :href="route('back.instructors.create')" class="shadow-lg flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 text-center hover:bg-red-500 hover:text-red-700 hover:font-semibold hover:shadow-xl">
                     {{ $t('words.add-new-instructor') }}
                 </inertia-link>
-                <inertia-link :href="route('back.trainees.create')" class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 text-center hover:bg-red-500 hover:text-white hover:font-semibold">
+                <inertia-link :href="route('back.trainees.create')" class="shadow-lg flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 text-center hover:bg-red-500 hover:text-red-700 hover:font-semibold hover:shadow-xl">
                     {{ $t('words.add-new-trainee') }}
                 </inertia-link>
-                <inertia-link :href="route('back.courses.create')" class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 text-center hover:bg-red-500 hover:text-white hover:font-semibold">
+                <inertia-link :href="route('back.courses.create')" class="shadow-lg flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 text-center hover:bg-red-500 hover:text-red-700 hover:font-semibold hover:shadow-xl">
                     {{ $t('words.add-new-course') }}
                 </inertia-link>
             </div>
