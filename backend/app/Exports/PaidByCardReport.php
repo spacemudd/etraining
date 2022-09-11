@@ -25,7 +25,7 @@ class PaidByCardReport implements FromArray
                 'grand_total' => $item->grand_total,
                 'paid_at' => $item->paid_at,
             ];
-        });
+        })->toArray();
 
         return $invoices->toArray();
     }
