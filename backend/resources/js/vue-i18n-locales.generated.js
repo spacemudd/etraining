@@ -1229,7 +1229,8 @@ export default {
             "settle": "Settle",
             "dues": "dues",
             "to-pay-by-credit": "To pay by credit card.",
-            "to-pay-by-bank": "If you already have paid by bank transfer please upload the receipt."
+            "to-pay-by-bank": "If you already have paid by bank transfer please upload the receipt.",
+            "choose-invoice": "Choose the invoice to pay"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",
