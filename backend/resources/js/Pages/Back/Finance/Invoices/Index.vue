@@ -106,7 +106,7 @@
                                         class="img {display:block} inline-block inline-flex">
                                     {{ invoice.payment_method_formatted }}
                                         <svg v-if="invoice.payment_method === 1" width="60" height="26">
-                                            <image xlink:href="https://www.svgrepo.com/show/202660/credit-cards-money.svg" src="https://www.svgrepo.com/show/202660/credit-cards-money.svg" width="60" height="26"/>
+                                            <image xlink:href="https://www.svgrepo.com/show/210224/credit-card.svg" src="https://www.svgrepo.com/show/210224/credit-card.svg" width="60" height="26"/>
                                         </svg>
                                     </span>
                                     <span v-else>

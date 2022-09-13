@@ -3,7 +3,7 @@
         <sidebar-link link-value="/dashboard" :active="$page.currentRouteName == 'dashboard'">
             <template #icon><DesktopIcon w="20px" h="20px" class="w-5 h-5" /></template>
             <template #title>
-                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.dashboard') }}</span>
+                <span class="ltr:ml-4 rtl:mr-4 hover:text-red-600 hover:font-bold">{{ $t('words.dashboard') }}</span>
             </template>
         </sidebar-link>
 
@@ -12,7 +12,7 @@
                 <ion-icon name="business-outline" class="w-5 h-5"></ion-icon>
             </template>
             <template #title>
-                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.companies') }}</span>
+                <span class="ltr:ml-4 rtl:mr-4 hover:text-red-600 hover:font-bold">{{ $t('words.companies') }}</span>
             </template>
         </sidebar-link>
 
@@ -21,7 +21,7 @@
                 <img src="/img/teacher.svg" alt="" class="w-5 h-5">
             </template>
             <template #title>
-                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.instructors') }}</span>
+                <span class="ltr:ml-4 rtl:mr-4 hover:text-red-600 hover:font-bold">{{ $t('words.instructors') }}</span>
             </template>
         </sidebar-link>
 
@@ -30,7 +30,7 @@
                 <img src="/img/student.svg" alt="" class="w-5 h-5">
             </template>
             <template #title>
-                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.trainees') }}</span>
+                <span class="ltr:ml-4 rtl:mr-4 hover:text-red-600 hover:font-bold">{{ $t('words.trainees') }}</span>
             </template>
         </sidebar-link>
 
@@ -40,7 +40,7 @@
                 <img src="/img/student.svg" alt="" class="w-5 h-5">
             </template>
             <template #title>
-                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.candidates') }}</span>
+                <span class="ltr:ml-4 rtl:mr-4 hover:text-red-600 hover:font-bold">{{ $t('words.candidates') }}</span>
             </template>
         </sidebar-link>
 
@@ -49,7 +49,7 @@
                 <img src="/img/book.svg" alt="" class="w-5 h-5">
             </template>
             <template #title>
-                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.courses') }}</span>
+                <span class="ltr:ml-4 rtl:mr-4 hover:text-red-600 hover:font-bold">{{ $t('words.courses') }}</span>
             </template>
         </sidebar-link>
 
@@ -58,7 +58,7 @@
                 <img src="/img/bank.svg" alt="" class="w-5 h-5">
             </template>
             <template #title>
-                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.finance') }}</span>
+                <span class="ltr:ml-4 rtl:mr-4 hover:text-red-600 hover:font-bold">{{ $t('words.finance') }}</span>
             </template>
         </sidebar-link>
 
@@ -67,7 +67,7 @@
                 <img src="/img/reports.svg" alt="" class="w-5 h-5">
             </template>
             <template #title>
-                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.reports') }}</span>
+                <span class="ltr:ml-4 rtl:mr-4 hover:text-red-600 hover:font-bold">{{ $t('words.reports') }}</span>
             </template>
         </sidebar-link>
 
@@ -76,7 +76,7 @@
                 <ion-icon name="settings-outline" class="w-5 h-5"></ion-icon>
             </template>
             <template #title>
-                <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.settings') }}</span>
+                <span class="ltr:ml-4 rtl:mr-4 hover:text-red-600 hover:font-bold">{{ $t('words.settings') }}</span>
             </template>
         </sidebar-link>
 
