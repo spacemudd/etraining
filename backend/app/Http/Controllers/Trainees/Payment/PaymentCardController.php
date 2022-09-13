@@ -43,7 +43,7 @@ class PaymentCardController extends Controller
             abort(404);
         }
 
-        $payment_url = $this->getPaymentUrl($pending_amount);
+        $payment_url = $this->getPaymentUrl($pending_amount, $invoices);
 
         if (empty($payment_url)) {
             abort(404);
@@ -132,7 +132,7 @@ class PaymentCardController extends Controller
      * @throws GuzzleException
      * @throws Exception
      */
-    private function getPaymentUrl($amount)
+    private function getPaymentUrl($amount, $invoices)
     {
         $payment_url = null;
 
@@ -157,7 +157,7 @@ class PaymentCardController extends Controller
             $payment->setPostUrl(url('/tap')); // if you are using post request to handle payment updates
 
             $payment->setMetaData([
-                'invoices' => json_encode($trainee->invoices()->notPaid()->pluck('id')->implode(',')),
+                'invoices' => json_encode($invoices->pluck('id')->implode(',')),
             ]);
 
             $invoice = $payment->pay();
