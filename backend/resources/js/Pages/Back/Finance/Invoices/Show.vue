@@ -108,7 +108,7 @@
                                 <div v-if="invoice.payment_method === 1" class="font-bold">{{ $t('words.payment-reference-id') }}</div>
                                 <div v-if="invoice.payment_method === 1" class="truncate" >{{ invoice.payment_reference_id }}</div>
                                 <div v-if="invoice.payment_method === 1" class="font-bold">{{ $t('words.paid-at') }}</div>
-                                <div v-if="invoice.payment_method === 1" class="truncate">{{ invoice.paid_at | formatDate }}</div>
+                                <div v-if="invoice.payment_method === 1" class="truncate">{{ invoice.paid_at_time }}</div>
                             </div>
                         </div>
                         <div class="w-full p-4">

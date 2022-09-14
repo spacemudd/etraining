@@ -66,12 +66,14 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
         'chase_boolean',
         'can_upload_receipt',
         'month_of',
+        'paid_at_time',
     ];
 
     protected $dates = [
         'from_date',
         'to_date',
         'deleted_at',
+        'paid_at',
     ];
 
     public $casts = [
@@ -151,6 +153,11 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
     public function getMonthOfAttribute()
     {
         return $this->from_date->format('m-Y');
+    }
+
+    public function getPaidAtTimeAttribute()
+    {
+        return optional($this->paid_at)->format('Y-m-d H:i:s');
     }
 
     public function getStatusFormattedAttribute(): string
