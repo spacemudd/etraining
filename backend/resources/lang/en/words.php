@@ -513,4 +513,15 @@ return [
     'sr' => 'SR',
     'trainee-affairs' => 'Trainee Affairs',
     'select' => 'Select',
+    'contact_way' => 'Contact Way',
+    'complaints' => 'Complaints',
+    'reply' => 'Reply',
+    'note' => 'Notes',
+    'order-date' => 'Order Date',
+    'new_complaints' => 'New Complaints',
+    'in_progress_complaints' => 'In Progress Complaints',
+    'done_complaints' => 'Done Complaints',
+    'add-new-complaints' => 'Add New Complaints',
+
+
 ];

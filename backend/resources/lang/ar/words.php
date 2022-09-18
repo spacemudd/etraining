@@ -529,4 +529,13 @@ return [
     'sr' => 'س.ر.',
     'trainee-affairs' => 'شؤون المتدربين',
     'select' => 'اختيار',
+    'contact_way' => 'طريقة الاتصال',
+    'complaints' => 'الشكاوى',
+    'reply' => 'الرد',
+    'note' => 'ملاحظات',
+    'order-date' => 'تاريخ الطلب',
+    'new_complaints' => 'شكاوى جديدة',
+    'in_progress_complaints' => 'شكاوى تحت التنفيذ',
+    'done_complaints' => 'شكاوى تمت',
+    'add-new-complaints' => 'اضافة شكوى جديدة',
 ];

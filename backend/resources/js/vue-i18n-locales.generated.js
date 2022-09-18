@@ -699,7 +699,16 @@ export default {
             "choose-invoice": "اختر المستحقات المراد دفعها",
             "sr": "س.ر.",
             "trainee-affairs": "شؤون المتدربين",
-            "select": "اختيار"
+            "select": "اختيار",
+            "contact_way": "طريقة الاتصال",
+            "complaints": "الشكاوى",
+            "reply": "الرد",
+            "note": "ملاحظات",
+            "order-date": "تاريخ الطلب",
+            "new_complaints": "شكاوى جديدة",
+            "in_progress_complaints": "شكاوى تحت التنفيذ",
+            "done_complaints": "شكاوى تمت",
+            "add-new-complaints": "اضافة شكوى جديدة"
         }
     },
     "en": {
@@ -1348,7 +1357,16 @@ export default {
             "choose-invoice": "Choose the dues to pay",
             "sr": "SR",
             "trainee-affairs": "Trainee Affairs",
-            "select": "Select"
+            "select": "Select",
+            "contact_way": "Contact Way",
+            "complaints": "Complaints",
+            "reply": "Reply",
+            "note": "Notes",
+            "order-date": "Order Date",
+            "new_complaints": "New Complaints",
+            "in_progress_complaints": "In Progress Complaints",
+            "done_complaints": "Done Complaints",
+            "add-new-complaints": "Add New Complaints"
         }
     }
 }

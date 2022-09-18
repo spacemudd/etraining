@@ -15,7 +15,7 @@
                                       :approved-count="trainees_approved_count"
                                       :incomplete-count="trainees_incomplete_count"
                                       icon-path="/img/student.svg"></header-card-trainees>
-                <header-card :href="route('back.courses.index')" :title-value="$t('words.courses')" :count-value="courses_count" icon-path="/img/book.svg"></header-card>
+                <header-card :href="route('complaints.index')" :title-value="$t('words.complaints')" :count-value="courses_count" icon-path="/img/book.svg"></header-card>
             </div>
 
             <!-- Quick actions actions -->

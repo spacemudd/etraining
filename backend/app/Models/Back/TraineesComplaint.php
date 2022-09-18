@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Back;
 
-use App\Models\Back\Company;
-use App\Models\Back\Trainee;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -28,6 +27,9 @@ class TraineesComplaint extends Model
         'reply',
         'note',
         'results',
+    ];
+
+    protected $appends = [
     ];
 
     protected $dates = [
@@ -57,4 +59,5 @@ class TraineesComplaint extends Model
     {
         return $this->belongsTo(User::class, 'created_by_id');
     }
+
 }

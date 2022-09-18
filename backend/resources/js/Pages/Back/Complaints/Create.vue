@@ -71,11 +71,31 @@
 
 
                 <div class="mt-2">
-                    <input type="text" v-if="trainee" :value="trainee.name">
+                    <jet-input type="text" v-if="trainee" :value="trainee.name"/>
                 </div>
-
                 <div class="mt-2">
-                    <input class="border-2" type="text" v-model="form.complaints">
+                    <jet-label :value="$t('words.complaints')" />
+                    <jet-input class="border-2" type="text" v-model="form.complaints" id="complaints"/>
+                </div>
+                <div class="mt-2">
+                    <jet-label :value="$t('words.contact-way')" />
+                    <jet-input class="border-2" type="text" v-model="form.contact_way" id="contact_way"/>
+                </div>
+                <div class="mt-2">
+                    <jet-label :value="$t('words.actions')" />
+                    <jet-input class="border-2" type="text" v-model="form.actions" id="actions"/>
+                </div>
+                <div class="mt-2">
+                    <jet-label :value="$t('words.reply')" />
+                    <jet-input class="border-2" type="text" v-model="form.reply" id="reply"/>
+                </div>
+                <div class="mt-2">
+                    <jet-label :value="$t('words.note')" />
+                    <jet-input class="border-2" type="text" v-model="form.note" id="note"/>
+                </div>
+                <div class="mt-2">
+                    <jet-label :value="$t('words.results')" />
+                    <jet-input class="border-2" type="text" v-model="form.results" id="results"/>
                 </div>
 
                 <button>Save</button>
@@ -95,8 +115,8 @@ import IconNavigate from 'vue-ionicons/dist/ios-arrow-dropright'
 import EmptySlate from "@/Components/EmptySlate";
 import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
 import JetInput from '@/Jetstream/Input'
-import JetInputError from '@/Jetstream/InputError'
 import JetLabel from '@/Jetstream/Label';
+import JetInputError from '@/Jetstream/InputError'
 import { Skeleton } from 'vue-loading-skeleton';
 import 'selectize/dist/js/standalone/selectize.min';
 import _ from "lodash";
@@ -104,8 +124,10 @@ export default {
     props: [
 
     ],
-    components: {AppLayout,
-    JetInput,
+    components: {
+        AppLayout,
+        JetInput,
+        JetLabel,
         Skeleton},
     data() {
         return {
@@ -115,6 +137,12 @@ export default {
             form: this.$inertia.form({
                 trainee_id: null,
                 complaints: '',
+                contact_way: '',
+                actions: '',
+                reply: '',
+                note: '',
+                results: '',
+
             }),
         }
     },

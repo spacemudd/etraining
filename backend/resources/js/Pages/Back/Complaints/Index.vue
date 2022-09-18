@@ -1,5 +1,5 @@
 <template>
-    <app-layout-complaints>
+    <app-layout>
         <div class="container px-6 mx-auto grid">
             <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4 mt-6">
                 <header-card :href="route('complaints.NewComplaints.Show')" :title-value="$t('words.new_complaints')" :count-value="companies_count" icon-path="/img/building.svg"></header-card>
@@ -12,10 +12,10 @@
                 </inertia-link>
             </div>
         </div>
-    </app-layout-complaints>
+    </app-layout>
 </template>
 <script>
-import AppLayoutComplaints from "../../../Layouts/AppLayoutComplaints";
+import AppLayout from "../../../Layouts/AppLayout";
 import HeaderCard from "../../../Components/HeaderCard";
 
 export default {
@@ -26,7 +26,7 @@ export default {
         'done_companies_count',
         ],
     components: {
-        AppLayoutComplaints,
+        AppLayout,
         HeaderCard,
     }
 }

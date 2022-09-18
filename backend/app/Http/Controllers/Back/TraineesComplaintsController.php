@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
-use App\Models\Back\Invoice;
-use App\Models\Complaint;
-use App\Models\TraineesComplaint;
+use App\Models\Back\TraineesComplaint;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -33,6 +31,7 @@ class TraineesComplaintsController extends Controller
 //        $this->authorize('view_complaints');
 
         $complaints = QueryBuilder::for(TraineesComplaint::class)
+            ->with('company')
             ->defaultSort('-created_at')
             ->allowedSorts(['created_at', 'number'])
             ->paginate()
@@ -49,14 +48,34 @@ class TraineesComplaintsController extends Controller
     {
 //        $this->authorize('view_complaints');
 
-        return Inertia::render('Back/Complaints/InProgress/Show');
+        $complaints = QueryBuilder::for(TraineesComplaint::class)
+            ->defaultSort('-created_at')
+            ->allowedSorts(['created_at', 'number'])
+            ->paginate()
+            ->withQueryString();
+
+        return Inertia::render('Back/Complaints/InProgress/Show', [
+            'trainees_complaints' => $complaints,
+        ])->table(function ($table) {
+            $table->disableGlobalSearch();
+        });
     }
 
     public function DoneComplaintsShow()
     {
 //        $this->authorize('view_complaints');
 
-        return Inertia::render('Back/Complaints/DoneComplaints/Show');
+        $complaints = QueryBuilder::for(TraineesComplaint::class)
+            ->defaultSort('-created_at')
+            ->allowedSorts(['created_at', 'number'])
+            ->paginate()
+            ->withQueryString();
+
+        return Inertia::render('Back/Complaints/DoneComplaints/Show', [
+            'trainees_complaints' => $complaints,
+        ])->table(function ($table) {
+            $table->disableGlobalSearch();
+        });
     }
 
     public function excel()
