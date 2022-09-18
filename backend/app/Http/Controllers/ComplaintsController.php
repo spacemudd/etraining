@@ -25,6 +25,11 @@ class ComplaintsController extends Controller
         return Inertia::render('Complaints/Index');
     }
 
+    public function show()
+    {
+        return Inertia::render('Complaints/Dashboard');
+    }
+
     public function store(Request $request)
     {
         $request->validate([

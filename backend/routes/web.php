@@ -140,8 +140,13 @@ Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('/register/instructors/application', [\App\Http\Controllers\Auth\RegisterInstructorController::class, 'application'])->name('register.instructors.application');
     Route::get('/register/trainees/application', [\App\Http\Controllers\Auth\RegisterTraineeController::class, 'application'])->name('register.trainees.application');
 
-    Route::get('complaints', [\App\Http\Controllers\ComplaintsController::class, 'index'])->name('complaints.index');
-    Route::post('complaints', [\App\Http\Controllers\ComplaintsController::class, 'store'])->name('complaints.store');
+    Route::get('complaint', [\App\Http\Controllers\ComplaintsController::class, 'index'])->name('complaints.index');
+    Route::post('complaint', [\App\Http\Controllers\ComplaintsController::class, 'store'])->name('complaints.store');
+    Route::get('complaints', [\App\Http\Controllers\Back\TraineesComplaintsController::class, 'index'])->name('complaints.index');
+    Route::get('complaints/new-complaints', [\App\Http\Controllers\Back\TraineesComplaintsController::class, 'NewComplaintsShow'])->name('complaints.NewComplaints.Show');
+    Route::get('complaints/in_progress', [\App\Http\Controllers\Back\TraineesComplaintsController::class, 'InProgressShow'])->name('complaints.InProgress.Show');
+    Route::get('complaints/done_complaints', [\App\Http\Controllers\Back\TraineesComplaintsController::class, 'DoneComplaintsShow'])->name('complaints.DoneComplaints.Show');
+    Route::resource('complaints', \App\Http\Controllers\Back\TraineesComplaintsController::class);
 
     Route::get('suggestions', [\App\Http\Controllers\SuggestionsController::class, 'index'])->name('suggestions.index');
 

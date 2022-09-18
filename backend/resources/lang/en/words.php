@@ -511,4 +511,6 @@ return [
     'to-pay-by-bank' => 'If you already have paid by bank transfer please upload the receipt.',
     'choose-invoice' => 'Choose the dues to pay',
     'sr' => 'SR',
+    'trainee-affairs' => 'Trainee Affairs',
+    'select' => 'Select',
 ];
