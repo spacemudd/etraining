@@ -2,9 +2,17 @@
 
 namespace App\Http\Controllers\Back;
 
+use App\Events\TraineeAttachedToCompany;
 use App\Http\Controllers\Controller;
+use App\Models\Back\AccountingLedgerBook;
+use App\Models\Back\Trainee;
 use App\Models\Back\TraineesComplaint;
+use App\Scope\TeamScope;
+use App\Services\TraineeCompanyMovementService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -22,8 +30,11 @@ class TraineesComplaintsController extends Controller
 
     public function store(Request $request)
     {
-        $complaint = TraineesComplaint::create($request->except('_token'));
-        return $complaint;
+        //$validatedData = $this->validateStoreRequest($request, $trainee_complaints->id);
+
+        $complaints = TraineesComplaint::create($request->toArray());
+
+       return redirect()->route('complaints.NewComplaints.Show', $complaints->trainee_id);
     }
 
     public function NewComplaintsShow()
@@ -75,6 +86,33 @@ class TraineesComplaintsController extends Controller
             'trainees_complaints' => $complaints,
         ])->table(function ($table) {
             $table->disableGlobalSearch();
+        });
+    }
+
+    protected static function boot(): void
+    {
+        parent::boot();
+        static::addGlobalScope(new TeamScope());
+        static::creating(function ($model) {
+            $model->{$model->getKeyName()} = (string) Str::uuid();
+            if (auth()->user()) {
+                $model->team_id = $model->team_id = auth()->user()->currentTeam()->first()->id;
+            }
+        });
+
+        static::updating(function ($model) {
+            $companyChanged = $model->company_id != $model->getOriginal('company_id');
+
+            if ($companyChanged) {
+                TraineeAttachedToCompany::dispatch($model->id, $model->company_id);
+                app()->make(TraineeCompanyMovementService::class)
+                    ->recordMovement($model->id, $model->company_id, $model->getOriginal('company_id'));
+            }
+
+            //$isFinanceUser = (Str::contains('finance', optional(optional(auth()->user())->roles()->first())->name) || Str::contains('chasers', optional(optional(auth()->user())->roles()->first())->name));
+            //if ($companyChanged && $model->company_id && !$isFinanceUser) {
+            //    $model->notify(new AssignedToCompanyTraineeNotification());
+            //}
         });
     }
 

@@ -19,7 +19,7 @@
                 >
                     <template #head>
                         <tr>
-                            <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('number')">{{ $t('words.complaints') }}</th>
+                            <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('number')">{{ $t('words.complaints-number') }}</th>
                             <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('created_at')">{{ $t('words.name') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.identity_number') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.company') }}</th>
@@ -27,16 +27,16 @@
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.contact_way') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.complaints') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.order-date') }}</th>
-                            <th class="rtl:text-right font-weight-bold">{{ $t('words.actions') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.reply') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.note') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.results') }}</th>
+                            <th class="rtl:text-right font-weight-bold">{{ $t('words.actions') }}</th>
                         </tr>
                     </template>
 
                     <template #body>
                         <tr v-for="trainees_complaint in trainees_complaints.data" :key="trainees_complaint.id"
-                        v-if="trainees_complaint.complaints_status === 0">
+                            v-if="trainees_complaint.complaints_status === 0">
                             <td class="rtl:text-right text-black">
                                 {{ trainees_complaint.number }}
                             </td>
@@ -62,16 +62,21 @@
                                 {{ trainees_complaint.created_at }}
                             </td>
                             <td class="rtl:text-right text-black">
-                                {{ trainees_complaint.actions }}
-                            </td>
-                            <td class="rtl:text-right text-black">
                                 {{ trainees_complaint.reply }}
                             </td>
                             <td class="rtl:text-right text-black">
                                 {{ trainees_complaint.note }}
                             </td>
                             <td class="rtl:text-right text-black">
-                                {{ trainees_complaint.results }}
+                                {{ trainees_complaint.result }}
+                            </td>
+                            <td class="rtl:text-right text-black">
+                                <button @click="RollOut(trainees_complaint.id)"
+                                        type="button"
+                                        v-if="trainees_complaint.complaints_status === 0"
+                                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">
+                                    {{ $t('words.roll-out') }}
+                                </button>
                             </td>
                         </tr>
                     </template>
@@ -87,6 +92,7 @@ import { Components } from "@protonemedia/inertiajs-tables-laravel-query-builder
 import Table from '@/Components/Tailwind2/Table';
 
 import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
+import mapValues from "lodash/mapValues";
 
 export default {
     mixins: [InteractsWithQueryBuilder],
@@ -111,7 +117,11 @@ export default {
         });
     },
     methods: {
-
+        RollOut(trainees_complaint) {
+            if(this.trainees_complaints.includes(trainees_complaint.id)){
+                this.complaints_status = mapValues(this.complaints_status, () => 1)
+            }
+        }
 
     }
 }

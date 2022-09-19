@@ -71,7 +71,7 @@
 
 
                 <div class="mt-2">
-                    <jet-input type="text" v-if="trainee" :value="trainee.name"/>
+<!--                    <jet-input type="text" v-if="trainee" :value="trainee.name"/>-->
                 </div>
                 <div class="mt-2">
                     <jet-label :value="$t('words.complaints')" />
@@ -142,6 +142,7 @@ export default {
                 reply: '',
                 note: '',
                 results: '',
+                company_id: '',
 
             }),
         }
@@ -176,6 +177,7 @@ export default {
         },
         saveForm() {
             this.form.trainee_id = this.trainee.id;
+            this.form.company_id = this.trainee.company_id;
             this.form.post(route('complaints.store'));
         }
     }

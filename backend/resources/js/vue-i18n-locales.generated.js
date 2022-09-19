@@ -659,7 +659,7 @@ export default {
             "mark-as-unpaid": "لم يتم الدفع",
             "chase": "التحصيل",
             "finance-audit-required": "مطلوب موافقة المالية",
-            "done": "تم",
+            "done": "تمت",
             "collected": "محصل",
             "upload-receipt": "رفع ايصال",
             "chased-by": "تحصيل من قبل",
@@ -700,7 +700,7 @@ export default {
             "sr": "س.ر.",
             "trainee-affairs": "شؤون المتدربين",
             "select": "اختيار",
-            "contact_way": "طريقة الاتصال",
+            "contact-way": "طريقة الاتصال",
             "complaints": "الشكاوى",
             "reply": "الرد",
             "note": "ملاحظات",
@@ -708,7 +708,11 @@ export default {
             "new_complaints": "شكاوى جديدة",
             "in_progress_complaints": "شكاوى تحت التنفيذ",
             "done_complaints": "شكاوى تمت",
-            "add-new-complaints": "اضافة شكوى جديدة"
+            "add-new-complaints": "اضافة شكوى جديدة",
+            "complaints-number": "رقم الشكوى",
+            "roll-out": "بدء التنفيذ",
+            "return-complaints": "اعادة فتح الشكوى",
+            "view-complaints": "عرض الشكاوى"
         }
     },
     "en": {
@@ -1320,7 +1324,7 @@ export default {
             "mark-as-unpaid": "Mark as unpaid",
             "chase": "Chase",
             "finance-audit-required": "Finance audit required",
-            "done": "Completed",
+            "done": "Done",
             "collected": "Collected",
             "upload-receipt": "Upload receipt",
             "chased-by": "Chased by",
@@ -1358,7 +1362,7 @@ export default {
             "sr": "SR",
             "trainee-affairs": "Trainee Affairs",
             "select": "Select",
-            "contact_way": "Contact Way",
+            "contact-way": "Contact Way",
             "complaints": "Complaints",
             "reply": "Reply",
             "note": "Notes",
@@ -1366,7 +1370,11 @@ export default {
             "new_complaints": "New Complaints",
             "in_progress_complaints": "In Progress Complaints",
             "done_complaints": "Done Complaints",
-            "add-new-complaints": "Add New Complaints"
+            "add-new-complaints": "Add New Complaints",
+            "complaints-number": "Complaints Number",
+            "roll-out": "Roll Out",
+            "return-roll-out": "Return Roll Out",
+            "view-complaints": "View Complaints"
         }
     }
 }

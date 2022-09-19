@@ -19,7 +19,7 @@
                 >
                     <template #head>
                         <tr>
-                            <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('number')">{{ $t('words.complaints') }}</th>
+                            <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('number')">{{ $t('words.complaints-number') }}</th>
                             <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('created_at')">{{ $t('words.name') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.identity_number') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.company') }}</th>
@@ -27,10 +27,10 @@
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.contact_way') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.complaints') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.order-date') }}</th>
-                            <th class="rtl:text-right font-weight-bold">{{ $t('words.actions') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.reply') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.note') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.results') }}</th>
+                            <th class="rtl:text-right font-weight-bold">{{ $t('words.actions') }}</th>
                         </tr>
                     </template>
 
@@ -62,9 +62,6 @@
                                 {{ trainees_complaint.created_at }}
                             </td>
                             <td class="rtl:text-right text-black">
-                                {{ trainees_complaint.actions }}
-                            </td>
-                            <td class="rtl:text-right text-black">
                                 {{ trainees_complaint.reply }}
                             </td>
                             <td class="rtl:text-right text-black">
@@ -72,6 +69,14 @@
                             </td>
                             <td class="rtl:text-right text-black">
                                 {{ trainees_complaint.result }}
+                            </td>
+                            <td class="rtl:text-right text-black">
+                                <button @click="RollOut(trainees_complaint.id)"
+                                        type="button"
+                                        v-if="trainees_complaint.complaints_status === 2"
+                                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">
+                                    {{ $t('words.return-complaints') }}
+                                </button>
                             </td>
                         </tr>
                     </template>
@@ -111,8 +116,9 @@ export default {
         });
     },
     methods: {
-
-
+        RollOut(ComplaintsId) {
+            //let status equal 1
+        }
     }
 }
 

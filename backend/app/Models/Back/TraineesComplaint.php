@@ -3,13 +3,19 @@
 namespace App\Models\Back;
 
 use App\Models\User;
+use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
 class TraineesComplaint extends Model
 {
     use HasFactory;
+    use HasUuid;
+
+    public $incrementing = false;
+    protected $keyType = 'string';
 
     const COMPLAINTS_STATUS_NEW = 0;
     const COMPLAINTS_STATUS_IN_PROGRESS = 1;
@@ -39,6 +45,14 @@ class TraineesComplaint extends Model
     public $casts = [
         'created_at'  => 'datetime',
     ];
+
+    protected static function boot(): void
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            $model->{$model->getKeyName()} = (string) Str::uuid();
+        });
+    }
 
     public function company(): BelongsTo
     {

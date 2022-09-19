@@ -513,7 +513,7 @@ return [
     'sr' => 'SR',
     'trainee-affairs' => 'Trainee Affairs',
     'select' => 'Select',
-    'contact_way' => 'Contact Way',
+    'contact-way' => 'Contact Way',
     'complaints' => 'Complaints',
     'reply' => 'Reply',
     'note' => 'Notes',
@@ -522,6 +522,11 @@ return [
     'in_progress_complaints' => 'In Progress Complaints',
     'done_complaints' => 'Done Complaints',
     'add-new-complaints' => 'Add New Complaints',
+    'complaints-number' => 'Complaints Number',
+    'roll-out' => 'Roll Out',
+    'return-roll-out' => 'Return Roll Out',
+    'done' => 'Done',
+    'view-complaints' => 'View Complaints',
 
 
 ];

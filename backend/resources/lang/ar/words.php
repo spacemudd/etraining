@@ -529,7 +529,7 @@ return [
     'sr' => 'س.ر.',
     'trainee-affairs' => 'شؤون المتدربين',
     'select' => 'اختيار',
-    'contact_way' => 'طريقة الاتصال',
+    'contact-way' => 'طريقة الاتصال',
     'complaints' => 'الشكاوى',
     'reply' => 'الرد',
     'note' => 'ملاحظات',
@@ -538,4 +538,9 @@ return [
     'in_progress_complaints' => 'شكاوى تحت التنفيذ',
     'done_complaints' => 'شكاوى تمت',
     'add-new-complaints' => 'اضافة شكوى جديدة',
+    'complaints-number' => 'رقم الشكوى',
+    'roll-out' => 'بدء التنفيذ',
+    'return-complaints' => 'اعادة فتح الشكوى',
+    'done' => 'تمت',
+    'view-complaints' => 'عرض الشكاوى',
 ];
