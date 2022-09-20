@@ -24,6 +24,7 @@ class TraineesComplaint extends Model
     protected $fillable = [
         'company_id',
         'trainee_id',
+        'created_by_id',
         'number',
         'order_date',
         'complaints_status',
@@ -36,6 +37,7 @@ class TraineesComplaint extends Model
     ];
 
     protected $appends = [
+        'complaints_number_formatted'
     ];
 
     protected $dates = [
@@ -44,13 +46,19 @@ class TraineesComplaint extends Model
 
     public $casts = [
         'created_at'  => 'datetime',
+        'order_date' => 'datetime',
     ];
+    /**
+     * @var mixed
+     */
 
     protected static function boot(): void
     {
         parent::boot();
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string) Str::uuid();
+            $model->number = MaxNumber::generatePrefixForComplaints();
+
         });
     }
 
@@ -72,6 +80,14 @@ class TraineesComplaint extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'created_by_id');
+    }
+
+    public function getComplaintsNumberFormattedAttribute(): string
+    {
+        return $this->created_at->year
+            . str_pad($this->created_at->month, 2, "0", STR_PAD_LEFT)
+            . "-"
+            . $this->number;
     }
 
 }

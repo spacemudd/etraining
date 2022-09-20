@@ -75,4 +75,12 @@ class MaxNumber extends Model
             7
         );
     }
+    public static function generatePrefixForComplaints(): string
+    {
+        return self::generateForPrefix(
+            "trainees_complaint",
+            100,
+            7
+        );
+    }
 }

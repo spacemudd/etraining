@@ -71,7 +71,7 @@
 
 
                 <div class="mt-2">
-<!--                    <jet-input type="text" v-if="trainee" :value="trainee.name"/>-->
+                    <jet-input type="text" v-if="trainee" :value="trainee.name"/>
                 </div>
                 <div class="mt-2">
                     <jet-label :value="$t('words.complaints')" />
@@ -122,7 +122,8 @@ import 'selectize/dist/js/standalone/selectize.min';
 import _ from "lodash";
 export default {
     props: [
-
+        'company',
+        'trainees',
     ],
     components: {
         AppLayout,
@@ -135,17 +136,19 @@ export default {
             searchResults: [],
             searchBoxVisible: false,
             form: this.$inertia.form({
-                trainee_id: null,
+                trainee_id: [],
+                company_id: '',
                 complaints: '',
                 contact_way: '',
                 actions: '',
                 reply: '',
                 note: '',
                 results: '',
-                company_id: '',
-
             }),
         }
+    },
+    mounted() {
+        this.traineesCollection = this.trainees;
     },
     methods: {
         triggerSearching() {

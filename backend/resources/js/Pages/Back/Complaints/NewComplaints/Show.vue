@@ -5,6 +5,8 @@
             <breadcrumb-container
                 :crumbs="[
                         {title: 'dashboard', link: route('dashboard')},
+                        {title: 'complaints', link: route('complaints.index')},
+                        {title: 'new_complaints', link: route('complaints.NewComplaints.Show')},
                     ]"
             ></breadcrumb-container>
 
@@ -24,7 +26,7 @@
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.identity_number') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.company') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.phone') }}</th>
-                            <th class="rtl:text-right font-weight-bold">{{ $t('words.contact_way') }}</th>
+                            <th class="rtl:text-right font-weight-bold">{{ $t('words.contact-way') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.complaints') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.order-date') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.reply') }}</th>
@@ -38,19 +40,19 @@
                         <tr v-for="trainees_complaint in trainees_complaints.data" :key="trainees_complaint.id"
                             v-if="trainees_complaint.complaints_status === 0">
                             <td class="rtl:text-right text-black">
-                                {{ trainees_complaint.number }}
+                                {{ trainees_complaint.complaints_number_formatted }}
                             </td>
                             <td class="rtl:text-right text-black">
-                                {{ trainees_complaint.name }}
+                                {{ trainees_complaint.trainee.name }}
                             </td>
                             <td class="rtl:text-right text-black">
-                                {{ trainees_complaint.identity_number }}
+                                {{ trainees_complaint.trainee.identity_number }}
                             </td>
                             <td class="rtl:text-right text-black">
-                                {{ trainees_complaint.company }}
+                               <div v-if="trainees_complaint.company">{{ trainees_complaint.company.name_ar }}</div>
                             </td>
                             <td class="rtl:text-right text-black">
-                                {{ trainees_complaint.phone }}
+                                {{ trainees_complaint.trainee.phone }}
                             </td>
                             <td class="rtl:text-right text-black">
                                 {{ trainees_complaint.contact_way }}
@@ -59,7 +61,7 @@
                                 {{ trainees_complaint.complaints }}
                             </td>
                             <td class="rtl:text-right text-black">
-                                {{ trainees_complaint.created_at }}
+                                {{ trainees_complaint.created_at | formatDate }}
                             </td>
                             <td class="rtl:text-right text-black">
                                 {{ trainees_complaint.reply }}
@@ -93,17 +95,38 @@ import Table from '@/Components/Tailwind2/Table';
 
 import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
 import mapValues from "lodash/mapValues";
+import Pagination from '@/Shared/Pagination'
+import pickBy from 'lodash/pickBy'
+// import SearchFilter from '@/Shared/SearchFilter'
+import throttle from 'lodash/throttle'
+import IconNavigate from 'vue-ionicons/dist/ios-arrow-dropright'
+import EmptySlate from "@/Components/EmptySlate";
+import {Inertia} from "@inertiajs/inertia";
 
 export default {
     mixins: [InteractsWithQueryBuilder],
-    props: {
-        trainees_complaints: Object,
-        filters: Object,
-    },
+    metaInfo: { title: 'Complaints trainees_complaints' },
+
     components: {
         AppLayout,
         Table,
         BreadcrumbContainer,
+        Pagination,
+        EmptySlate,
+    },
+
+    props: {
+        trainees_complaints: Object,
+        filters: Object,
+    },
+    watch: {
+        form: {
+            handler: throttle(function() {
+                let query = pickBy(this.form)
+                this.$inertia.replace(this.route('complaints.NewComplaints.Show', Object.keys(query).length ? query : { remember: 'forget' }))
+            }, 150),
+            deep: true,
+        },
     },
     mounted() {
         let vm = this;
@@ -118,12 +141,12 @@ export default {
     },
     methods: {
         RollOut(trainees_complaint) {
-            if(this.trainees_complaints.includes(trainees_complaint.id)){
-                this.complaints_status = mapValues(this.complaints_status, () => 1)
-            }
+            this.$inertia.put(route('complaints.NewToInProgressStatus', trainees_complaint), {
+                id: trainees_complaint,
+                complaints_status: 1,
+            })
         }
 
     }
 }
-
 </script>

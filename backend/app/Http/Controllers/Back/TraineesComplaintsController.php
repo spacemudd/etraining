@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Back;
 use App\Events\TraineeAttachedToCompany;
 use App\Http\Controllers\Controller;
 use App\Models\Back\AccountingLedgerBook;
+use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
 use App\Models\Back\TraineesComplaint;
 use App\Scope\TeamScope;
@@ -39,12 +40,17 @@ class TraineesComplaintsController extends Controller
 
     public function NewComplaintsShow()
     {
-//        $this->authorize('view_complaints');
+        $this->authorize('view_complaints');
 
         $complaints = QueryBuilder::for(TraineesComplaint::class)
+            ->with(['trainee' => function($q) {
+                $q->with('company');
+            }])
             ->with('company')
             ->defaultSort('-created_at')
             ->allowedSorts(['created_at', 'number'])
+            ->allowedFields(['trainee.identity_number', 'trainee.phone', 'trainee.id', 'trainee.name', 'company.id', 'company.name_ar'])
+            ->allowedIncludes(['company', 'trainee'])
             ->paginate()
             ->withQueryString();
 
@@ -57,11 +63,17 @@ class TraineesComplaintsController extends Controller
 
     public function InProgressShow()
     {
-//        $this->authorize('view_complaints');
+        $this->authorize('view_complaints');
 
         $complaints = QueryBuilder::for(TraineesComplaint::class)
+            ->with(['trainee' => function($q) {
+                $q->with('company');
+            }])
+            ->with('company')
             ->defaultSort('-created_at')
             ->allowedSorts(['created_at', 'number'])
+            ->allowedFields(['trainee.identity_number', 'trainee.phone', 'trainee.id', 'trainee.name', 'company.id', 'company.name_ar'])
+            ->allowedIncludes(['company', 'trainee'])
             ->paginate()
             ->withQueryString();
 
@@ -74,11 +86,17 @@ class TraineesComplaintsController extends Controller
 
     public function DoneComplaintsShow()
     {
-//        $this->authorize('view_complaints');
+        $this->authorize('view_complaints');
 
         $complaints = QueryBuilder::for(TraineesComplaint::class)
+            ->with(['trainee' => function($q) {
+                $q->with('company');
+            }])
+            ->with('company')
             ->defaultSort('-created_at')
             ->allowedSorts(['created_at', 'number'])
+            ->allowedFields(['trainee.identity_number', 'trainee.phone', 'trainee.id', 'trainee.name', 'company.id', 'company.name_ar'])
+            ->allowedIncludes(['company', 'trainee'])
             ->paginate()
             ->withQueryString();
 
@@ -89,31 +107,37 @@ class TraineesComplaintsController extends Controller
         });
     }
 
-    protected static function boot(): void
+    public function NewToInProgressStatus($id)
     {
-        parent::boot();
-        static::addGlobalScope(new TeamScope());
-        static::creating(function ($model) {
-            $model->{$model->getKeyName()} = (string) Str::uuid();
-            if (auth()->user()) {
-                $model->team_id = $model->team_id = auth()->user()->currentTeam()->first()->id;
-            }
-        });
 
-        static::updating(function ($model) {
-            $companyChanged = $model->company_id != $model->getOriginal('company_id');
+        $complaints = TraineesComplaint::findOrFail($id);
+        $complaints->complaints_status = TraineesComplaint::COMPLAINTS_STATUS_IN_PROGRESS;
+        $complaints->created_by_id = auth()->user()->id;;
+        $complaints->save();
 
-            if ($companyChanged) {
-                TraineeAttachedToCompany::dispatch($model->id, $model->company_id);
-                app()->make(TraineeCompanyMovementService::class)
-                    ->recordMovement($model->id, $model->company_id, $model->getOriginal('company_id'));
-            }
+        return redirect()->route('complaints.NewComplaints.Show');
+    }
 
-            //$isFinanceUser = (Str::contains('finance', optional(optional(auth()->user())->roles()->first())->name) || Str::contains('chasers', optional(optional(auth()->user())->roles()->first())->name));
-            //if ($companyChanged && $model->company_id && !$isFinanceUser) {
-            //    $model->notify(new AssignedToCompanyTraineeNotification());
-            //}
-        });
+    public function InProgressToDoneStatus($id)
+    {
+
+        $complaints = TraineesComplaint::findOrFail($id);
+        $complaints->complaints_status = TraineesComplaint::COMPLAINTS_STATUS_DONE;
+        $complaints->created_by_id = auth()->user()->id;;
+        $complaints->save();
+
+        return redirect()->route('complaints.InProgress.Show');
+    }
+
+    public function DoneToInProgressStatus($id)
+    {
+
+        $complaints = TraineesComplaint::findOrFail($id);
+        $complaints->complaints_status = TraineesComplaint::COMPLAINTS_STATUS_NEW;
+        $complaints->created_by_id = auth()->user()->id;;
+        $complaints->save();
+
+        return redirect()->route('complaints.DoneComplaints.Show');
     }
 
     public function excel()
