@@ -77,7 +77,7 @@ RUN composer install --no-dev && \
     chmod -R ug+rwx storage bootstrap/cache
 
 RUN apt update
-RUN apt-get install -y -u python-pip
+RUN apt-get install -y -u python3-pip
 RUN pip install supervisor
 
 WORKDIR /etc/supervisor/conf.d
