@@ -21748,49 +21748,29 @@ var render = function render() {
     staticClass: "grid grid-cols-2"
   }, [_c("div", {
     staticClass: "font-bold ml-6"
-  }, [_vm._v(_vm._s(_vm.$t("words.complaints-number")))]), _vm._v(" "), _c("div", [_vm._v(_vm._s(_vm.$t("words.complaints-number")))]), _vm._v(" "), _c("div", {
-    staticClass: "font-bold"
-  }, [_vm._v(_vm._s(_vm.complaint.complaints_number_formatted))]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("words.complaints-number")))]), _vm._v(" "), _c("div", {}, [_vm._v(_vm._s(_vm.complaint.complaints_number_formatted))]), _vm._v(" "), _c("div", {
     staticClass: "font-bold ml-6"
-  }, [_vm._v(_vm._s(_vm.$t("words.name")))]), _vm._v(" "), _c("div", [_vm._v(_vm._s(_vm.$t("words.name")))]), _vm._v(" "), _c("div", {
-    staticClass: "font-bold"
-  }, [_vm._v(_vm._s(_vm.complaint.trainee.name))]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("words.name")))]), _vm._v(" "), _c("div", {}, [_vm._v(_vm._s(_vm.complaint.trainee.name))]), _vm._v(" "), _c("div", {
     staticClass: "font-bold ml-6"
-  }, [_vm._v(_vm._s(_vm.$t("words.identity-number")))]), _vm._v(" "), _c("div", [_vm._v(_vm._s(_vm.$t("words.identity-number")))]), _vm._v(" "), _c("div", {
-    staticClass: "font-bold"
-  }, [_vm._v(_vm._s(_vm.complaint.trainee.identity_number))]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("words.identity-number")))]), _vm._v(" "), _c("div", {}, [_vm._v(_vm._s(_vm.complaint.trainee.identity_number))]), _vm._v(" "), _c("div", {
     staticClass: "font-bold ml-6"
-  }, [_vm._v(_vm._s(_vm.$t("words.phone")))]), _vm._v(" "), _c("div", [_vm._v(_vm._s(_vm.$t("words.phone")))]), _vm._v(" "), _c("div", {
-    staticClass: "font-bold"
-  }, [_vm._v(_vm._s(_vm.complaint.trainee.phone))]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("words.phone")))]), _vm._v(" "), _c("div", {}, [_vm._v(_vm._s(_vm.complaint.trainee.phone))]), _vm._v(" "), _c("div", {
     staticClass: "font-bold ml-6"
-  }, [_vm._v(_vm._s(_vm.$t("words.company")))]), _vm._v(" "), _c("div", [_vm._v(_vm._s(_vm.$t("words.company")))]), _vm._v(" "), _c("div", {
-    staticClass: "font-bold"
-  }, [_vm._v(_vm._s(_vm.complaint.company.name_ar))])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("words.company")))]), _vm._v(" "), _c("div", {}, [_vm._v(_vm._s(_vm.complaint.company.name_ar))])])]), _vm._v(" "), _c("div", {
     staticClass: "w-full p-4 mx-5"
   }, [_c("div", {
     staticClass: "grid grid-cols-2"
   }, [_c("div", {
     staticClass: "font-bold mx-6"
-  }, [_vm._v(_vm._s(_vm.$t("words.contact-way")))]), _vm._v(" "), _c("div", [_vm._v(_vm._s(_vm.$t("words.contact-way")))]), _vm._v(" "), _c("div", {
-    staticClass: "font-bold"
-  }, [_vm._v(_vm._s(_vm.complaint.contact_way))]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("words.contact-way")))]), _vm._v(" "), _c("div", {}, [_vm._v(_vm._s(_vm.complaint.contact_way))]), _vm._v(" "), _c("div", {
     staticClass: "font-bold mx-6"
-  }, [_vm._v(_vm._s(_vm.$t("words.complaints")))]), _vm._v(" "), _c("div", [_vm._v(_vm._s(_vm.$t("words.complaints")))]), _vm._v(" "), _c("div", {
-    staticClass: "font-bold"
-  }, [_vm._v(_vm._s(_vm.complaint.complaints))]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("words.complaints")))]), _vm._v(" "), _c("div", {}, [_vm._v(_vm._s(_vm.complaint.complaints))]), _vm._v(" "), _c("div", {
     staticClass: "font-bold mx-6"
-  }, [_vm._v(_vm._s(_vm.$t("words.order-date")))]), _vm._v(" "), _c("div", [_vm._v(_vm._s(_vm.$t("words.order-date")))]), _vm._v(" "), _c("div", {
-    staticClass: "font-bold"
-  }, [_vm._v(_vm._s(_vm._f("formatDate")(_vm.complaint.created_at)))]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("words.order-date")))]), _vm._v(" "), _c("div", {}, [_vm._v(_vm._s(_vm._f("formatDate")(_vm.complaint.created_at)))]), _vm._v(" "), _c("div", {
     staticClass: "font-bold mx-6"
-  }, [_vm._v(_vm._s(_vm.$t("words.reply")))]), _vm._v(" "), _c("div", [_vm._v(_vm._s(_vm.$t("words.reply")))]), _vm._v(" "), _c("div", {
-    staticClass: "font-bold"
-  }, [_vm._v(_vm._s(_vm.complaint.reply))]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("words.reply")))]), _vm._v(" "), _c("div", {}, [_vm._v(_vm._s(_vm.complaint.reply))]), _vm._v(" "), _c("div", {
     staticClass: "font-bold mx-6"
-  }, [_vm._v(_vm._s(_vm.$t("words.results")))]), _vm._v(" "), _c("div", [_vm._v(_vm._s(_vm.$t("words.results")))]), _vm._v(" "), _c("div", {
-    staticClass: "font-bold"
-  }, [_vm._v(_vm._s(_vm.complaint.results))])])])])])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("words.results")))]), _vm._v(" "), _c("div", {}, [_vm._v(_vm._s(_vm.complaint.results))])])])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "flex flex-col md:flex-row md:space-x-5 place-content-center"
   }, [_c("div", {
     staticClass: "w-full md:w-8/12"

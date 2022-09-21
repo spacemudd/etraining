@@ -42,39 +42,29 @@
                             <div class="w-full p-4 mx-5">
                                 <div class="grid grid-cols-2">
                                     <div class="font-bold ml-6">{{ $t('words.complaints-number') }}</div>
-                                    <div>{{ $t('words.complaints-number') }}</div>
-                                    <div class="font-bold">{{ complaint.complaints_number_formatted }}</div>
+                                    <div class="">{{ complaint.complaints_number_formatted }}</div>
                                     <div class="font-bold ml-6">{{ $t('words.name') }}</div>
-                                    <div>{{ $t('words.name') }}</div>
-                                    <div class="font-bold">{{ complaint.trainee.name }}</div>
+                                    <div class="">{{ complaint.trainee.name }}</div>
                                     <div class="font-bold ml-6">{{ $t('words.identity-number') }}</div>
-                                    <div>{{ $t('words.identity-number') }}</div>
-                                    <div class="font-bold">{{ complaint.trainee.identity_number }}</div>
+                                    <div class="">{{ complaint.trainee.identity_number }}</div>
                                     <div class="font-bold ml-6">{{ $t('words.phone') }}</div>
-                                    <div>{{ $t('words.phone') }}</div>
-                                    <div class="font-bold">{{ complaint.trainee.phone }}</div>
+                                    <div class="">{{ complaint.trainee.phone }}</div>
                                     <div class="font-bold ml-6">{{ $t('words.company') }}</div>
-                                    <div>{{ $t('words.company') }}</div>
-                                    <div class="font-bold">{{ complaint.company.name_ar }}</div>
+                                    <div class="">{{ complaint.company.name_ar }}</div>
                                 </div>
                             </div>
                             <div class="w-full p-4 mx-5">
                                 <div class="grid grid-cols-2">
                                     <div class="font-bold mx-6">{{ $t('words.contact-way') }}</div>
-                                    <div>{{ $t('words.contact-way') }}</div>
-                                    <div class="font-bold">{{ complaint.contact_way }}</div>
+                                    <div class="">{{ complaint.contact_way }}</div>
                                     <div class="font-bold mx-6">{{ $t('words.complaints') }}</div>
-                                    <div>{{ $t('words.complaints') }}</div>
-                                    <div class="font-bold">{{ complaint.complaints }}</div>
+                                    <div class="">{{ complaint.complaints }}</div>
                                     <div class="font-bold mx-6">{{ $t('words.order-date') }}</div>
-                                    <div>{{ $t('words.order-date') }}</div>
-                                    <div class="font-bold">{{ complaint.created_at | formatDate }}</div>
+                                    <div class="">{{ complaint.created_at | formatDate }}</div>
                                     <div class="font-bold mx-6">{{ $t('words.reply') }}</div>
-                                    <div>{{ $t('words.reply') }}</div>
-                                    <div class="font-bold">{{ complaint.reply }}</div>
+                                    <div class="">{{ complaint.reply }}</div>
                                     <div class="font-bold mx-6">{{ $t('words.results') }}</div>
-                                    <div>{{ $t('words.results') }}</div>
-                                    <div class="font-bold">{{ complaint.results }}</div>
+                                    <div class="">{{ complaint.results }}</div>
                                 </div>
                             </div>
                         </div>
