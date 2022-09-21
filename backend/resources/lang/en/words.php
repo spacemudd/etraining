@@ -527,6 +527,6 @@ return [
     'return-roll-out' => 'Return Roll Out',
     'done' => 'Done',
     'view-complaints' => 'View Complaints',
-
+    'data' => 'Data'
 
 ];

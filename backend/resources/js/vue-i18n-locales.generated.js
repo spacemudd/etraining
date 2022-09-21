@@ -214,7 +214,7 @@ export default {
             "archive": "أرشفة",
             "updated-successfully": "تم التحديث بنجاج",
             "are-you-sure": "هل انت متأكد؟",
-            "company": "شركة",
+            "company": "الشركة",
             "nothing-is-here": "لا يوجد شيء هنا",
             "name": "الأسم",
             "Next": "التالي",
@@ -700,7 +700,7 @@ export default {
             "sr": "س.ر.",
             "trainee-affairs": "شؤون المتدربين",
             "select": "اختيار",
-            "contact-way": "طريقة الاتصال",
+            "contact-way": "طريقة التواصل",
             "complaints": "الشكاوى",
             "reply": "الرد",
             "note": "ملاحظات",
@@ -712,7 +712,8 @@ export default {
             "complaints-number": "رقم الشكوى",
             "roll-out": "بدء التنفيذ",
             "return-complaints": "اعادة فتح الشكوى",
-            "view-complaints": "عرض الشكاوى"
+            "view-complaints": "عرض الشكاوى",
+            "data": "البيانات"
         }
     },
     "en": {
@@ -1374,7 +1375,8 @@ export default {
             "complaints-number": "Complaints Number",
             "roll-out": "Roll Out",
             "return-roll-out": "Return Roll Out",
-            "view-complaints": "View Complaints"
+            "view-complaints": "View Complaints",
+            "data": "Data"
         }
     }
 }

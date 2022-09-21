@@ -9,7 +9,34 @@
                         {title: 'new_complaints', link: route('complaints.NewComplaints.Show')},
                     ]"
             ></breadcrumb-container>
+            <div class="grid grid-cols-3 gap-6">
+                <div>
 
+                </div>
+                <div class="grid grid-cols-3 gap-6">
+                    <div>
+                        <inertia-link class="font-bold text-center mt-5 inline-flex items-center px-4 py-2 bg-green-400 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
+                                      :href="route('complaints.NewComplaints.Show')">
+                            {{ $t('words.new_complaints') }}
+                        </inertia-link>
+                    </div>
+                    <div>
+                        <inertia-link class="font-bold text-center mt-5 inline-flex items-center px-2 py-2 bg-gray-700 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
+                                      :href="route('complaints.InProgress.Show')">
+                            {{ $t('words.in_progress_complaints') }}
+                        </inertia-link>
+                    </div>
+                    <div>
+                        <inertia-link class="font-bold text-center mt-5 inline-flex items-center px-4 py-2 bg-gray-700 hover:bg-green-700 active:bg-green-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
+                                      :href="route('complaints.DoneComplaints.Show')">
+                            {{ $t('words.done_complaints') }}
+                        </inertia-link>
+                    </div>
+                </div>
+                <div>
+
+                </div>
+            </div>
             <div class="overflow-x-auto">
                 <Table
                     class="mt-5 w-full whitespace-no-wrap"
@@ -22,10 +49,8 @@
                     <template #head>
                         <tr>
                             <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('number')">{{ $t('words.complaints-number') }}</th>
-                            <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('created_at')">{{ $t('words.name') }}</th>
-                            <th class="rtl:text-right font-weight-bold">{{ $t('words.identity_number') }}</th>
+                            <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('created_at')">{{ $t('words.data') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.company') }}</th>
-                            <th class="rtl:text-right font-weight-bold">{{ $t('words.phone') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.contact-way') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.complaints') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.order-date') }}</th>
@@ -43,16 +68,12 @@
                                 {{ trainees_complaint.complaints_number_formatted }}
                             </td>
                             <td class="rtl:text-right text-black">
-                                {{ trainees_complaint.trainee.name }}
-                            </td>
-                            <td class="rtl:text-right text-black">
-                                {{ trainees_complaint.trainee.identity_number }}
+                                <span class="font-bold">{{ $t('words.name') }}: </span>{{ trainees_complaint.trainee.name }}<br/>
+                                <span class="font-bold">{{ $t('words.identity_number') }}: </span>{{ trainees_complaint.trainee.identity_number }}<br/>
+                                <span class="font-bold">{{ $t('words.phone') }}: </span>{{ trainees_complaint.trainee.phone }}
                             </td>
                             <td class="rtl:text-right text-black">
                                <div v-if="trainees_complaint.company">{{ trainees_complaint.company.name_ar }}</div>
-                            </td>
-                            <td class="rtl:text-right text-black">
-                                {{ trainees_complaint.trainee.phone }}
                             </td>
                             <td class="rtl:text-right text-black">
                                 {{ trainees_complaint.contact_way }}
@@ -70,13 +91,13 @@
                                 {{ trainees_complaint.note }}
                             </td>
                             <td class="rtl:text-right text-black">
-                                {{ trainees_complaint.result }}
+                                {{ trainees_complaint.results }}
                             </td>
                             <td class="rtl:text-right text-black">
                                 <button @click="RollOut(trainees_complaint.id)"
                                         type="button"
                                         v-if="trainees_complaint.complaints_status === 0"
-                                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">
+                                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-gray-700 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">
                                     {{ $t('words.roll-out') }}
                                 </button>
                             </td>

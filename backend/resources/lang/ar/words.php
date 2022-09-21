@@ -37,7 +37,7 @@ return [
     'archive' => 'أرشفة',
     'updated-successfully' => 'تم التحديث بنجاج',
     'are-you-sure' => 'هل انت متأكد؟',
-    'company' => 'شركة',
+    'company' => 'الشركة',
     'nothing-is-here' => 'لا يوجد شيء هنا',
     'name' => 'الأسم',
     'Next' => 'التالي',
@@ -529,7 +529,7 @@ return [
     'sr' => 'س.ر.',
     'trainee-affairs' => 'شؤون المتدربين',
     'select' => 'اختيار',
-    'contact-way' => 'طريقة الاتصال',
+    'contact-way' => 'طريقة التواصل',
     'complaints' => 'الشكاوى',
     'reply' => 'الرد',
     'note' => 'ملاحظات',
@@ -543,4 +543,5 @@ return [
     'return-complaints' => 'اعادة فتح الشكوى',
     'done' => 'تمت',
     'view-complaints' => 'عرض الشكاوى',
+    'data' => 'البيانات',
 ];
