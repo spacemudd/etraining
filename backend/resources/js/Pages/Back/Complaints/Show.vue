@@ -14,7 +14,6 @@
                     <div class="mb-6 flex justify-end items-center">
                         <h1 class="mb-8 font-bold text-2xl img {display:block} inline-flex">{{ $t('words.complaint') }} </h1>
 
-
                     </div>
                     <div class="place-items-start ml-20" style="margin-left: 100px">
                         <button @click="RollOutNew(complaint.id)"
@@ -151,7 +150,7 @@ export default {
         EmptySlate,
     },
     methods: {
-        RollOut(trainees_complaint) {
+        RollOutNew(trainees_complaint) {
             this.$inertia.put(route('complaints.NewToInProgressStatus', trainees_complaint), {
                 id: trainees_complaint,
                 complaints_status: 1,

@@ -15,19 +15,19 @@
                 </div>
                 <div class="grid grid-cols-3 gap-6">
                     <div>
-                        <inertia-link class="font-bold text-center mt-5 inline-flex items-center px-4 py-2 bg-green-400 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
+                        <inertia-link class="font-bold text-center mt-5 inline-flex items-center px-4 py-2 bg-green-400 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-green-400 focus:shadow-outline-green transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
                                       :href="route('complaints.NewComplaints.Show')">
                             {{ $t('words.new_complaints') }}
                         </inertia-link>
                     </div>
                     <div>
-                        <inertia-link class="font-bold text-center mt-5 inline-flex items-center px-2 py-2 bg-gray-700 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
+                        <inertia-link class="font-bold text-center mt-5 inline-flex items-center px-2 py-2 bg-gray-300 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-black uppercase ltr:tracking-widest focus:outline-none focus:border-gray-300 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
                                       :href="route('complaints.InProgress.Show')">
                             {{ $t('words.in_progress_complaints') }}
                         </inertia-link>
                     </div>
                     <div>
-                        <inertia-link class="font-bold text-center mt-5 inline-flex items-center px-4 py-2 bg-gray-700 hover:bg-green-700 active:bg-green-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
+                        <inertia-link class="font-bold text-center mt-5 inline-flex items-center px-4 py-2 bg-gray-300 hover:bg-green-700 active:bg-green-900 border border-transparent rounded-md font-semibold text-xs text-black uppercase ltr:tracking-widest focus:outline-none focus:border-gray-300 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
                                       :href="route('complaints.DoneComplaints.Show')">
                             {{ $t('words.done_complaints') }}
                         </inertia-link>

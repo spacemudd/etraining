@@ -73,7 +73,7 @@
 
         <sidebar-link :link-value="route('complaints.index')" :active="$page.currentRouteName == 'complaints.index'">
             <template #icon>
-                <img src="/img/reports.svg" alt="" class="w-5 h-5">
+                <img src="http://cdn.onlinewebfonts.com/svg/img_390935.png" alt="" class="w-5 h-5">
             </template>
             <template #title>
                 <span class="ltr:ml-4 rtl:mr-4 hover:text-red-600 hover:font-bold">{{ $t('words.complaints') }}</span>
