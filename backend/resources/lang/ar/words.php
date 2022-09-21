@@ -544,4 +544,6 @@ return [
     'done' => 'تمت',
     'view-complaints' => 'عرض الشكاوى',
     'data' => 'البيانات',
+    'complaint' => 'الشكوى',
+    'identity-number' => 'الهوية الوطنية',
 ];

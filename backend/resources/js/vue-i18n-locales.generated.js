@@ -713,7 +713,9 @@ export default {
             "roll-out": "بدء التنفيذ",
             "return-complaints": "اعادة فتح الشكوى",
             "view-complaints": "عرض الشكاوى",
-            "data": "البيانات"
+            "data": "البيانات",
+            "complaint": "الشكوى",
+            "identity-number": "الهوية الوطنية"
         }
     },
     "en": {
@@ -1376,7 +1378,9 @@ export default {
             "roll-out": "Roll Out",
             "return-roll-out": "Return Roll Out",
             "view-complaints": "View Complaints",
-            "data": "Data"
+            "data": "Data",
+            "complaint": "Complaint",
+            "identity-number": "Identity Number"
         }
     }
 }

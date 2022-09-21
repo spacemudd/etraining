@@ -106,6 +106,20 @@ class TraineesComplaintsController extends Controller
             $table->disableGlobalSearch();
         });
     }
+    public function Show($id)
+    {
+        $this->authorize('view_complaints');
+
+        $complaint = TraineesComplaint::with([
+            'trainee',
+            'company',
+            'created_by',
+        ])->find($id);
+
+        return Inertia::render('Back/Complaints/Show', [
+            'complaint' => $complaint,
+        ]);
+    }
 
     public function NewToInProgressStatus($id)
     {

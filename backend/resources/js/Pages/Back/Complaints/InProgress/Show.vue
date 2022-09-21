@@ -62,33 +62,51 @@
                         <tr v-for="trainees_complaint in trainees_complaints.data" :key="trainees_complaint.id"
                             v-if="trainees_complaint.complaints_status === 1">
                             <td class="rtl:text-right text-black">
-                                {{ trainees_complaint.complaints_number_formatted }}
+                                <inertia-link :href="route('complaints.Show', trainees_complaint.id)">
+                                    {{ trainees_complaint.complaints_number_formatted }}
+                                </inertia-link>
                             </td>
                             <td class="rtl:text-right text-black">
-                                <span class="font-bold">{{ $t('words.name') }}: </span>{{ trainees_complaint.trainee.name }}<br/>
-                                <span class="font-bold">{{ $t('words.identity_number') }}: </span>{{ trainees_complaint.trainee.identity_number }}<br/>
-                                <span class="font-bold">{{ $t('words.phone') }}: </span>{{ trainees_complaint.trainee.phone }}
+                                <inertia-link :href="route('complaints.Show', trainees_complaint.id)">
+                                    <span class="font-bold">{{ $t('words.name') }}: </span>{{ trainees_complaint.trainee.name }}<br/>
+                                    <span class="font-bold">{{ $t('words.identity_number') }}: </span>{{ trainees_complaint.trainee.identity_number }}<br/>
+                                    <span class="font-bold">{{ $t('words.phone') }}: </span>{{ trainees_complaint.trainee.phone }}
+                                </inertia-link>
                             </td>
                             <td class="rtl:text-right text-black">
-                                <div v-if="trainees_complaint.company">{{ trainees_complaint.company.name_ar }}</div>
+                                <inertia-link :href="route('complaints.Show', trainees_complaint.id)">
+                                    <div v-if="trainees_complaint.company">{{ trainees_complaint.company.name_ar }}</div>
+                                </inertia-link>
                             </td>
                             <td class="rtl:text-right text-black">
-                                {{ trainees_complaint.contact_way }}
+                                <inertia-link :href="route('complaints.Show', trainees_complaint.id)">
+                                    {{ trainees_complaint.contact_way }}
+                                </inertia-link>
                             </td>
                             <td class="rtl:text-right text-black">
-                                {{ trainees_complaint.complaints }}
+                                <inertia-link :href="route('complaints.Show', trainees_complaint.id)">
+                                    {{ trainees_complaint.complaints }}
+                                </inertia-link>
                             </td>
                             <td class="rtl:text-right text-black">
-                                {{ trainees_complaint.created_at | formatDate }}
+                                <inertia-link :href="route('complaints.Show', trainees_complaint.id)">
+                                    {{ trainees_complaint.created_at | formatDate }}
+                                </inertia-link>
                             </td>
                             <td class="rtl:text-right text-black">
-                                {{ trainees_complaint.reply }}
+                                <inertia-link :href="route('complaints.Show', trainees_complaint.id)">
+                                    {{ trainees_complaint.reply }}
+                                </inertia-link>
                             </td>
                             <td class="rtl:text-right text-black">
-                                {{ trainees_complaint.note }}
+                                <inertia-link :href="route('complaints.Show', trainees_complaint.id)">
+                                    {{ trainees_complaint.note }}
+                                </inertia-link>
                             </td>
                             <td class="rtl:text-right text-black">
-                                {{ trainees_complaint.results }}
+                                <inertia-link :href="route('complaints.Show', trainees_complaint.id)">
+                                    {{ trainees_complaint.results }}
+                                </inertia-link>
                             </td>
                             <td class="rtl:text-right text-black">
                                 <button @click="RollOut(trainees_complaint.id)"
