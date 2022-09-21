@@ -538,7 +538,7 @@ return [
     'in_progress_complaints' => 'شكاوى تحت التنفيذ',
     'done_complaints' => 'شكاوى تمت',
     'add-new-complaints' => 'اضافة شكوى جديدة',
-    'complaints-number' => 'رقم الشكوى',
+    'complaint-number' => 'رقم الشكوى',
     'roll-out' => 'بدء التنفيذ',
     'return-complaints' => 'اعادة فتح الشكوى',
     'done' => 'تمت',

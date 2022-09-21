@@ -45,7 +45,7 @@
                 >
                     <template #head>
                         <tr>
-                            <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('number')">{{ $t('words.complaints-number') }}</th>
+                            <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('number')">{{ $t('words.complaint-number') }}</th>
                             <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('created_at')">{{ $t('words.data') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.company') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.contact-way') }}</th>

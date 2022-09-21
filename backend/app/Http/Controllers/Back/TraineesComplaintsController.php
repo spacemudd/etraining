@@ -49,8 +49,9 @@ class TraineesComplaintsController extends Controller
             ->with('company')
             ->defaultSort('-created_at')
             ->allowedSorts(['created_at', 'number'])
-            ->allowedFields(['trainee.identity_number', 'trainee.phone', 'trainee.id', 'trainee.name', 'company.id', 'company.name_ar'])
-            ->allowedIncludes(['company', 'trainee'])
+            ->allowedFilters(['trainee.identity_number', 'trainee.name', 'company.name_ar', 'created_at', 'number', 'complaints'])
+            ->allowedFields(['trainee.identity_number', 'trainee.phone', 'trainee.id', 'trainee.name', 'company.id', 'company.name_ar', 'complaints'])
+            ->allowedIncludes(['company', 'trainee', 'trainees_complaints'])
             ->paginate()
             ->withQueryString();
 
@@ -58,6 +59,15 @@ class TraineesComplaintsController extends Controller
             'trainees_complaints' => $complaints,
         ])->table(function ($table) {
             $table->disableGlobalSearch();
+
+            $table->addSearchRows([
+                'number' => __('words.complaint-number'),
+                'company.name_ar' => __('words.company'),
+                'created_at' => __('words.order-date'),
+                'trainee.identity_number' => __('words.identity-number'),
+                'trainee.name' => __('words.trainee'),
+                'complaints' => __('words.complaints'),
+            ]);
         });
     }
 
@@ -72,15 +82,26 @@ class TraineesComplaintsController extends Controller
             ->with('company')
             ->defaultSort('-created_at')
             ->allowedSorts(['created_at', 'number'])
-            ->allowedFields(['trainee.identity_number', 'trainee.phone', 'trainee.id', 'trainee.name', 'company.id', 'company.name_ar'])
-            ->allowedIncludes(['company', 'trainee'])
+            ->allowedFilters(['trainee.identity_number', 'trainee.name', 'company.name_ar', 'created_at', 'number', 'complaints'])
+            ->allowedFields(['trainee.identity_number', 'trainee.phone', 'trainee.id', 'trainee.name', 'company.id', 'company.name_ar', 'complaints'])
+            ->allowedIncludes(['company', 'trainee', 'trainees_complaints'])
             ->paginate()
             ->withQueryString();
+
 
         return Inertia::render('Back/Complaints/InProgress/Show', [
             'trainees_complaints' => $complaints,
         ])->table(function ($table) {
             $table->disableGlobalSearch();
+
+            $table->addSearchRows([
+                'number' => __('words.complaint-number'),
+                'company.name_ar' => __('words.company'),
+                'created_at' => __('words.order-date'),
+                'trainee.identity_number' => __('words.identity-number'),
+                'trainee.name' => __('words.trainee'),
+                'complaints' => __('words.complaints'),
+            ]);
         });
     }
 
@@ -95,15 +116,26 @@ class TraineesComplaintsController extends Controller
             ->with('company')
             ->defaultSort('-created_at')
             ->allowedSorts(['created_at', 'number'])
-            ->allowedFields(['trainee.identity_number', 'trainee.phone', 'trainee.id', 'trainee.name', 'company.id', 'company.name_ar'])
-            ->allowedIncludes(['company', 'trainee'])
+            ->allowedFilters(['trainee.identity_number', 'trainee.name', 'company.name_ar', 'created_at', 'number', 'complaints'])
+            ->allowedFields(['trainee.identity_number', 'trainee.phone', 'trainee.id', 'trainee.name', 'company.id', 'company.name_ar', 'complaints'])
+            ->allowedIncludes(['company', 'trainee', 'trainees_complaints'])
             ->paginate()
             ->withQueryString();
+
 
         return Inertia::render('Back/Complaints/DoneComplaints/Show', [
             'trainees_complaints' => $complaints,
         ])->table(function ($table) {
             $table->disableGlobalSearch();
+
+            $table->addSearchRows([
+                'number' => __('words.complaint-number'),
+                'company.name_ar' => __('words.company'),
+                'created_at' => __('words.order-date'),
+                'trainee.identity_number' => __('words.identity-number'),
+                'trainee.name' => __('words.trainee'),
+                'complaints' => __('words.complaints'),
+            ]);
         });
     }
     public function Show($id)

@@ -522,7 +522,7 @@ return [
     'in_progress_complaints' => 'In Progress Complaints',
     'done_complaints' => 'Done Complaints',
     'add-new-complaints' => 'Add New Complaints',
-    'complaints-number' => 'Complaints Number',
+    'complaint-number' => 'Complaint Number',
     'roll-out' => 'Roll Out',
     'return-roll-out' => 'Return Roll Out',
     'done' => 'Done',

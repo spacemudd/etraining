@@ -21,7 +21,7 @@
                         </inertia-link>
                     </div>
                     <div>
-                        <inertia-link class="font-bold text-center mt-5 inline-flex items-center px-2 py-2 bg-green-400 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-green-400 focus:shadow-outline-green transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
+                        <inertia-link class="font-bold text-center mt-5 inline-flex items-center px-2 py-2 bg-green-400 hover:bg-red-700 active:bg-red-900 rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-green-400 focus:shadow-outline-green transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
                                       :href="route('complaints.InProgress.Show')">
                             {{ $t('words.in_progress_complaints') }}
                         </inertia-link>
@@ -45,7 +45,7 @@
                 >
                     <template #head>
                         <tr>
-                            <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('number')">{{ $t('words.complaints-number') }}</th>
+                            <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('number')">{{ $t('words.complaint-number') }}</th>
                             <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('created_at')">{{ $t('words.data') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.company') }}</th>
                             <th class="rtl:text-right font-weight-bold">{{ $t('words.contact-way') }}</th>
