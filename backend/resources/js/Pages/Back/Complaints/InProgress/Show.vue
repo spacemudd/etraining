@@ -179,7 +179,7 @@ export default {
         RollOut(trainees_complaint) {
             this.$inertia.put(route('complaints.InProgressToDoneStatus', trainees_complaint), {
                 id: trainees_complaint,
-                complaints_status: 1,
+                complaints_status: 2,
             })
         }
 

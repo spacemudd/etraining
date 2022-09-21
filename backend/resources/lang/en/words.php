@@ -530,5 +530,6 @@ return [
     'data' => 'Data',
     'complaint' => 'Complaint',
     'identity-number' => 'Identity Number',
+    'add-note' => 'Add Note',
 
 ];

@@ -546,4 +546,5 @@ return [
     'data' => 'البيانات',
     'complaint' => 'الشكوى',
     'identity-number' => 'الهوية الوطنية',
+    'add-note' => 'اضافة ملاحظات',
 ];

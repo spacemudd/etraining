@@ -4,6 +4,7 @@
             :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
                     {title: 'complaints', link: route('complaints.index')},
+                    {title_raw: complaint.complaints_number_formatted},
                 ]"
         ></breadcrumb-container>
 
@@ -12,24 +13,28 @@
                 <div class="flex justify-between">
                     <div class="mb-6 flex justify-end items-center">
                         <h1 class="mb-8 font-bold text-2xl img {display:block} inline-flex">{{ $t('words.complaint') }} </h1>
-                        <!--                        <button @click="RollOutNew(trainees_complaint.id)"-->
-                        <!--                                type="button"-->
-                        <!--                                v-if="trainees_complaint.complaints_status === 0"-->
-                        <!--                                class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-gray-700 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">-->
-                        <!--                            {{ $t('words.roll-out') }}-->
-                        <!--                        </button>-->
-                        <!--                        <button @click="RollOutInProgress(trainees_complaint.id)"-->
-                        <!--                                type="button"-->
-                        <!--                                v-if="trainees_complaint.complaints_status === 0"-->
-                        <!--                                class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-gray-700 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">-->
-                        <!--                            {{ $t('words.roll-out') }}-->
-                        <!--                        </button>-->
-                        <!--                        <button @click="RollOutDone(trainees_complaint.id)"-->
-                        <!--                                type="button"-->
-                        <!--                                v-if="trainees_complaint.complaints_status === 0"-->
-                        <!--                                class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-gray-700 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">-->
-                        <!--                            {{ $t('words.roll-out') }}-->
-                        <!--                        </button>-->
+
+
+                    </div>
+                    <div class="place-items-start ml-20" style="margin-left: 100px">
+                        <button @click="RollOutNew(complaint.id)"
+                                type="button"
+                                v-if="complaint.complaints_status === 0"
+                                class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-gray-700 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">
+                            {{ $t('words.roll-out') }}
+                        </button>
+                        <button @click="RollOutInProgress(complaint.id)"
+                                type="button"
+                                v-if="complaint.complaints_status === 1"
+                                class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-gray-700 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">
+                            {{ $t('words.done') }}
+                        </button>
+                        <button @click="RollOutDone(complaint.id)"
+                                type="button"
+                                v-if="complaint.complaints_status === 2"
+                                class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-gray-700 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">
+                            {{ $t('words.return-complaints') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -78,23 +83,25 @@
                 <div class="flex justify-between">
                     <div class="mb-6 flex justify-end items-center">
                         <h1 class="mb-8 font-bold text-2xl img {display:block} inline-flex">{{ $t('words.comments') }} </h1>
-                        <!--                        <button @click="AddComment(trainees_complaint.id)"-->
-                        <!--                                type="button"-->
-                        <!--                                v-if="trainees_complaint.complaints_status === 0"-->
-                        <!--                                class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-gray-700 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">-->
-                        <!--                            {{ $t('words.roll-out') }}-->
-                        <!--                        </button>-->
+                    </div>
+                    <div class="place-items-start ml-20" style="margin-left: 100px">
+                        <button @click="AddComment(complaint.id)"
+                                type="button"
+                                class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-gray-700 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">
+                            {{ $t('words.add-note') }}
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
         <div class="flex flex-col md:flex-row md:space-x-5 place-content-center">
             <div class="w-full md:w-8/12 mx-20 ml-20">
-                <div class="mb-3 pt-0">
-                    <input type="text" placeholder="Placeholder" class="px-3 py-1 placeholder-slate-300 text-slate-600 relative bg-white bg-white rounded text-base border-0 shadow outline-none focus:outline-none focus:ring w-full"/>
+                <div class="mb-3 pt-0"  style="margin-left: 100px">
+                    <input type="text" placeholder="ملاحظات" class=" shadow-lg px-3 pb-20 pt-1 placeholder-gray-500 text-slate-600 relative bg-white rounded text-base border-0 outline-none focus:outline-none focus:ring w-full"/>
                 </div>
             </div>
         </div>
+
     </app-layout>
 </template>
 <script>

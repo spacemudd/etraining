@@ -147,7 +147,7 @@ class TraineesComplaintsController extends Controller
     {
 
         $complaints = TraineesComplaint::findOrFail($id);
-        $complaints->complaints_status = TraineesComplaint::COMPLAINTS_STATUS_NEW;
+        $complaints->complaints_status = TraineesComplaint::COMPLAINTS_STATUS_IN_PROGRESS;
         $complaints->created_by_id = auth()->user()->id;;
         $complaints->save();
 

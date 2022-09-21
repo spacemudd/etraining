@@ -715,7 +715,8 @@ export default {
             "view-complaints": "عرض الشكاوى",
             "data": "البيانات",
             "complaint": "الشكوى",
-            "identity-number": "الهوية الوطنية"
+            "identity-number": "الهوية الوطنية",
+            "add-note": "اضافة ملاحظات"
         }
     },
     "en": {
@@ -1380,7 +1381,8 @@ export default {
             "view-complaints": "View Complaints",
             "data": "Data",
             "complaint": "Complaint",
-            "identity-number": "Identity Number"
+            "identity-number": "Identity Number",
+            "add-note": "Add Note"
         }
     }
 }
