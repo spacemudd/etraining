@@ -4,10 +4,14 @@ namespace App\Http\Controllers\Back;
 
 use App\Events\TraineeAttachedToCompany;
 use App\Http\Controllers\Controller;
+use App\Jobs\InvoicesSheetReportJob;
 use App\Models\Back\AccountingLedgerBook;
+use App\Models\Back\Company;
 use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
 use App\Models\Back\TraineesComplaint;
+use App\Models\JobTracker;
+use App\Reports\InvoicesReportFactory;
 use App\Scope\TeamScope;
 use App\Services\TraineeCompanyMovementService;
 use Carbon\Carbon;
@@ -186,14 +190,34 @@ class TraineesComplaintsController extends Controller
         return redirect()->route('complaints.DoneComplaints.Show');
     }
 
-    public function excel()
+    public function excel(): \Inertia\Response
     {
-
+        $this->authorize('view_complaints');
+        return Inertia::render('Back/Complaints/Excel', [
+            'companies' => Company::orderBy('name_ar')->get(),
+        ]);
     }
 
-    public function generateExcel()
+    public function generateExcel(Request $request)
     {
+//        $request->validate([
+//            'date_from' => 'required',
+//            'date_to' => 'required',
+//        ]);
 
+        $tracker = new JobTracker();
+        $tracker->user_id = auth()->user()->id;
+        $tracker->metadata = $request->except('_token');
+        $tracker->reportable_id = null;
+        $tracker->reportable_type = InvoicesReportFactory::class;
+        $tracker->queued_at = now();
+        $tracker->save();
+
+        $tracker = $tracker->refresh();
+
+        InvoicesSheetReportJob::dispatch($tracker);
+
+        return $tracker;
     }
 
     public function destroy()

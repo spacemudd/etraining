@@ -144,6 +144,8 @@ Route::middleware(['auth:sanctum'])->group(function() {
     Route::post('complaint', [\App\Http\Controllers\ComplaintsController::class, 'store'])->name('complaints.store');
     Route::get('complaints', [\App\Http\Controllers\Back\TraineesComplaintsController::class, 'index'])->name('complaints.index');
     Route::get('complaints/Show/{id}', [\App\Http\Controllers\Back\TraineesComplaintsController::class, 'Show'])->name('complaints.Show');
+    Route::get('complaints/excel', [\App\Http\Controllers\Back\TraineesComplaintsController::class, 'excel'])->name('complaints.excel');
+    Route::get('complaints/Excel/Generate', [\App\Http\Controllers\Back\TraineesComplaintsController::class, 'generateExcel'])->name('complaints.excel.generate');
     Route::get('complaints/new-complaints', [\App\Http\Controllers\Back\TraineesComplaintsController::class, 'NewComplaintsShow'])->name('complaints.NewComplaints.Show');
     Route::put('complaints/new-complaints/{id}', [\App\Http\Controllers\Back\TraineesComplaintsController::class, 'NewToInProgressStatus'])->name('complaints.NewToInProgressStatus');
     Route::get('complaints/in_progress', [\App\Http\Controllers\Back\TraineesComplaintsController::class, 'InProgressShow'])->name('complaints.InProgress.Show');

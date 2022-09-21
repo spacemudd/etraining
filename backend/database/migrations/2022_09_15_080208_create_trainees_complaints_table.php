@@ -33,14 +33,15 @@ class CreateTraineesComplaintsTable extends Migration
                 ->nullOnDelete();
 
             $table->string('number');
-            $table->date('order_date');
             $table->tinyInteger('complaints_status')->default(TraineesComplaint::COMPLAINTS_STATUS_NEW);
             $table->string('contact_way');
             $table->string('complaints');
-            $table->string('reply');
-            $table->string('note');
-            $table->string('results');
+            $table->string('reply')->nullable();
+            $table->string('note')->nullable();
+            $table->string('results')->nullable();
             $table->timestamps();
+
+
         });
     }
 
