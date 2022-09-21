@@ -17,7 +17,11 @@
                     <inertia-link :href="route('complaints.create')" class="shadow-lg flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 text-center hover:bg-red-500 hover:text-red-600 hover:font-semibold hover:shadow-xl">
                         {{ $t('words.add-new-complaints') }}
                     </inertia-link>
+                    <inertia-link :href="route('complaints.excel')" class="shadow-lg flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 text-center hover:bg-red-500 hover:text-red-600 hover:font-semibold hover:shadow-xl">
+                        {{ $t('words.reports') }}
+                    </inertia-link>
                 </div>
+
             </div>
         </div>
     </app-layout>
