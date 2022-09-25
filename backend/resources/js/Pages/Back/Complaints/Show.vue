@@ -45,7 +45,7 @@
                         <div class="flex flex-col md:flex-row justify-start rounded bg-gray-50 rounded shadow-lg p-5">
                             <div class="w-full p-4 mx-5">
                                 <div class="grid grid-cols-2">
-                                    <div class="font-bold ml-6">{{ $t('words.complaints-number') }}</div>
+                                    <div class="font-bold ml-6">{{ $t('words.complaint-number') }}</div>
                                     <div class="">{{ complaint.complaints_number_formatted }}</div>
                                     <div class="font-bold ml-6">{{ $t('words.name') }}</div>
                                     <div class="">{{ complaint.trainee.name }}</div>
@@ -81,9 +81,9 @@
             <div class="w-full md:w-8/12">
                 <div class="flex justify-between">
                     <div class="mb-6 flex justify-end items-center">
-                        <h1 class="mb-8 font-bold text-2xl img {display:block} inline-flex">{{ $t('words.comments') }} </h1>
+                        <h1 class="mb-8 pl-20 font-bold text-2xl img {display:block} inline-flex">{{ $t('words.comments') }} </h1>
                     </div>
-                    <div class="place-items-start ml-20" style="margin-left: 100px">
+                    <div class="place-items-start" style="margin-left: 100px">
                         <button @click="AddComment(complaint.id)"
                                 type="button"
                                 class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-gray-700 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">
