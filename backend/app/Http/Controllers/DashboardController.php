@@ -31,6 +31,7 @@ class DashboardController extends Controller
             'trainees_incomplete_count' => \App\Models\Back\Trainee::incomplete()->count(),
             'instructors_count' => \App\Models\Back\Instructor::count(),
             'courses_count' => \App\Models\Back\Course::count(),
+            'complaints_count' => \App\Models\Back\TraineesComplaint::count(),
         ]);
     }
 }

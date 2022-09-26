@@ -15,7 +15,7 @@
                                       :approved-count="trainees_approved_count"
                                       :incomplete-count="trainees_incomplete_count"
                                       icon-path="/img/student.svg"></header-card-trainees>
-                <header-card :href="route('complaints.index')" :title-value="$t('words.complaints')" :count-value="courses_count" icon-path="http://cdn.onlinewebfonts.com/svg/img_390935.png"></header-card>
+                <header-card :href="route('complaints.index')" :title-value="$t('words.complaints')" :count-value="complaints_count" icon-path="http://cdn.onlinewebfonts.com/svg/img_390935.png"></header-card>
             </div>
 
             <!-- Quick actions actions -->
@@ -57,6 +57,7 @@
             'trainees_candidates_count',
             'trainees_approved_count',
             'trainees_incomplete_count',
+            'complaints_count',
         ],
         components: {
             AppLayout,

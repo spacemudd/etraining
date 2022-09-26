@@ -90,4 +90,9 @@ class TraineesComplaint extends Model
             . $this->number;
     }
 
+    public function getComplaintsAmountAttribute()
+    {
+        return $this->trainees_complaints()->notPaid()->count();
+    }
+
 }
