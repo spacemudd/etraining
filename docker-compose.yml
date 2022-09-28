@@ -76,3 +76,14 @@ services:
     expose:
       - 6379
 
+  npm:
+   command: "npm install"
+   build:
+     context: .
+     dockerfile: npm.dockerfile
+   working_dir: /var/www/backend
+   volumes:
+     - ./:/var/www
+   ports:
+     - "6001:6001"
+
