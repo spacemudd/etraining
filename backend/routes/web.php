@@ -140,12 +140,12 @@ Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('/register/instructors/application', [\App\Http\Controllers\Auth\RegisterInstructorController::class, 'application'])->name('register.instructors.application');
     Route::get('/register/trainees/application', [\App\Http\Controllers\Auth\RegisterTraineeController::class, 'application'])->name('register.trainees.application');
 
-    Route::get('complaint', [\App\Http\Controllers\ComplaintsController::class, 'index'])->name('complaints.index');
-    Route::post('complaint', [\App\Http\Controllers\ComplaintsController::class, 'store'])->name('complaints.store');
+    Route::get('trainees/complaints', [\App\Http\Controllers\ComplaintsController::class, 'index'])->name('trainees-complaints.index');
+    Route::post('trainees/complaints', [\App\Http\Controllers\ComplaintsController::class, 'store'])->name('trainees-complaints.store');
     Route::get('complaints', [\App\Http\Controllers\Back\TraineesComplaintsController::class, 'index'])->name('complaints.index');
     Route::get('complaints/Show/{id}', [\App\Http\Controllers\Back\TraineesComplaintsController::class, 'Show'])->name('complaints.Show');
     Route::get('complaints/excel', [\App\Http\Controllers\Back\TraineesComplaintsController::class, 'excel'])->name('complaints.excel');
-    Route::get('complaints/Excel/Generate', [\App\Http\Controllers\Back\TraineesComplaintsController::class, 'generateExcel'])->name('complaints.excel.generate');
+    Route::post('complaints/Excel/Generate', [\App\Http\Controllers\Back\TraineesComplaintsController::class, 'generateExcel'])->name('complaints.excel.generate');
     Route::get('complaints/new-complaints', [\App\Http\Controllers\Back\TraineesComplaintsController::class, 'NewComplaintsShow'])->name('complaints.NewComplaints.Show');
     Route::put('complaints/new-complaints/{id}', [\App\Http\Controllers\Back\TraineesComplaintsController::class, 'NewToInProgressStatus'])->name('complaints.NewToInProgressStatus');
     Route::get('complaints/in_progress', [\App\Http\Controllers\Back\TraineesComplaintsController::class, 'InProgressShow'])->name('complaints.InProgress.Show');

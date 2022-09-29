@@ -116,8 +116,8 @@ export default {
             form: {
                 company_id: null,
                 processing: false,
-                date_from: new Date().toISOString().substring(0, 10),
-                date_to: new Date().toISOString().substring(0, 10),
+                // date_from: new Date().toISOString().substring(0, 10),
+                // date_to: new Date().toISOString().substring(0, 10),
             },
         }
     },

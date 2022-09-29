@@ -13,16 +13,40 @@ namespace App\Http\Controllers;
 
 use App\Mail\ComplaintMail;
 use App\Models\Back\ComplaintsSettings;
+use App\Models\Back\TraineesComplaint;
 use App\Models\Complaint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class ComplaintsController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Complaints/Index');
+        $this->authorize('view_complaints');
+
+        $complaints = QueryBuilder::for(TraineesComplaint::class)
+            ->defaultSort('-created_at')
+            ->allowedSorts(['created_at'])
+            ->allowedFields(['course_name', 'course_instructor', 'message', 'created_at'])
+            ->allowedIncludes(['complaints'])
+            ->paginate()
+            ->withQueryString();
+
+
+        return Inertia::render('Complaints/Index', [
+            'complaints' => $complaints,
+        ])->table(function ($table) {
+            $table->disableGlobalSearch();
+
+            $table->addSearchRows([
+                'course_name' => __('words.course-name'),
+                'course_instructor ' => __('words.course-instructor'),
+                'message' => __('words.message'),
+                'created_at' => __('words.created_at'),
+            ]);
+        });
     }
 
     public function show()
@@ -46,9 +70,9 @@ class ComplaintsController extends Controller
             'created_by_id' => auth()->user()->id,
         ]);
 
-        Mail::to(ComplaintsSettings::first()->emails)
-            ->queue(new ComplaintMail($complaint));
+//        Mail::to(ComplaintsSettings::first()->emails)
+//            ->queue(new ComplaintMail($complaint));
 
-        return redirect()->route('dashboard');
+        return redirect()->route('trainees-complaints.index');
     }
 }

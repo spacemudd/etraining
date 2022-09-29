@@ -1,0 +1,39 @@
+.wrapper {
+    position: relative;
+    overflow: auto;
+    border: 1px solid black;
+    white-space: nowrap;
+}
+.sticky-col {
+    position: sticky;
+    background-color: white;
+}
+.div3 th {
+    color: #1f9d55;
+    background: #7c2d2b;
+    position: sticky;
+    top: 0;
+}
+.div3 th:nth-child(1),
+.div3 td:nth-child(1) {
+    position: sticky;
+    right: 0;
+    background: #7c2d2b;
+}
+
+.div3 th:nth-child(2),
+.div3 td:nth-child(2) {
+    position: sticky;
+    right: 90px;
+    background: #7c2d2b;
+}
+
+.div3 td:nth-child(1),
+.div3 td:nth-child(2) {
+    background: #1f9d55;
+}
+
+.div3 th:nth-child(1),
+.div3 th:nth-child(1) {
+    z-index: 2;
+}

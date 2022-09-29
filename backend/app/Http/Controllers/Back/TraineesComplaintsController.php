@@ -200,10 +200,9 @@ class TraineesComplaintsController extends Controller
 
     public function generateExcel(Request $request)
     {
-//        $request->validate([
-//            'date_from' => 'required',
-//            'date_to' => 'required',
-//        ]);
+        $request->validate([
+            'company_id' => 'required',
+        ]);
 
         $tracker = new JobTracker();
         $tracker->user_id = auth()->user()->id;
