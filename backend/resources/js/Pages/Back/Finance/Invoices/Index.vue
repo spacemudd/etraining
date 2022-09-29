@@ -18,7 +18,7 @@
             </div>
 
 
-            <div class="overflow-x-auto">
+            <div class="">
                 <Table
                     class="mt-5 w-full whitespace-no-wrap"
                     :filters="queryBuilderProps.filters"
@@ -28,26 +28,32 @@
                     :meta="invoices"
                 >
                     <template #head>
-                        <tr>
-                            <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('number')">{{ $t('words.invoice') }}</th>
-                            <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('from_date')">{{ $t('words.date-period') }}</th>
-                            <th class="rtl:text-right font-weight-bold">{{ $t('words.company') }}</th>
-                            <th class="rtl:text-right font-weight-bold">{{ $t('words.account-name') }}</th>
-                            <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('status')">{{ $t('words.status') }}</th>
-                            <th class="rtl:text-right font-weight-bold">{{ $t('words.payment-method') }}</th>
-                            <th class="rtl:text-right font-weight-bold">{{ $t('words.amount') }}</th>
-                            <th class="rtl:text-right font-weight-bold">{{ $t('words.submitted-receipt') }}</th>
-                            <th class="rtl:text-right font-weight-bold">{{ $t('words.bank-name') }}</th>
-                            <th class="rtl:text-right font-weight-bold">{{ $t('words.collected') }}</th>
-                            <th class="rtl:text-right font-weight-bold">{{ $t('words.confirmed') }}</th>
-                            <th class="rtl:text-right font-weight-bold" @click.prevent="sortBy('created_at')">{{ $t('words.date') }}</th>
-                            <th class="rtl:text-right font-weight-bold">{{ $t('words.actions') }}</th>
+                        <tr :style="{background: ['#f7f7f7'], position: ['sticky'], top: [0]}">
+                            <th :style="{background: ['#f7f7f7'], position: ['sticky'], right: [0]}">{{ $t('words.account-name') }}</th>
+                            <th :style="{background: ['#f7f7f7'], position: ['sticky'], right: ['90px']}" @click.prevent="sortBy('number')">{{ $t('words.invoice') }}</th>
+                            <th @click.prevent="sortBy('from_date')">{{ $t('words.date-period') }}</th>
+                            <th>{{ $t('words.company') }}</th>
+                            <th @click.prevent="sortBy('status')">{{ $t('words.status') }}</th>
+                            <th>{{ $t('words.payment-method') }}</th>
+                            <th>{{ $t('words.amount') }}</th>
+                            <th>{{ $t('words.submitted-receipt') }}</th>
+                            <th>{{ $t('words.bank-name') }}</th>
+                            <th>{{ $t('words.collected') }}</th>
+                            <th>{{ $t('words.confirmed') }}</th>
+                            <th @click.prevent="sortBy('created_at')">{{ $t('words.date') }}</th>
+                            <th>{{ $t('words.actions') }}</th>
                         </tr>
                     </template>
-
+                    <!--                    :style="{position: ['sticky'], right: [0], background: ['#efefef'], border: []}"-->
+                    <!--                    class="sticky top-0 bg-white"-->
                     <template #body>
                         <tr v-for="invoice in invoices.data" :key="invoice.id">
-                            <td class="rtl:text-right text-black">
+                            <td :style="{background: ['#f7f7f7'], position: ['sticky'], right: [0], top: ['35px']}">
+                                <inertia-link :href="route('back.trainees.show', invoice.trainee_id)">
+                                    {{ invoice.trainee.name }}
+                                </inertia-link>
+                            </td>
+                            <td :style="{background: ['#f7f7f7'], position: ['sticky'], right: ['90px'], top: ['35px']}">
                                 <input type="checkbox"
                                        v-if="canSelectAll"
                                        :checked="selected_invoices.includes(invoice.id)"
@@ -64,11 +70,6 @@
                             <td class="rtl:text-right text-black">
                                 <inertia-link :href="route('back.companies.show', invoice.company_id)">
                                     {{ invoice.company.name_ar }}
-                                </inertia-link>
-                            </td>
-                            <td class="rtl:text-right text-black">
-                                <inertia-link :href="route('back.trainees.show', invoice.trainee_id)">
-                                    {{ invoice.trainee.name }}
                                 </inertia-link>
                             </td>
                             <td class="rtl:text-right text-black">
@@ -103,7 +104,7 @@
                             <td class="rtl:text-right text-black">
                                 <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
                                     <span v-if="invoice.payment_method === 1"
-                                        class="img {display:block} inline-block inline-flex">
+                                          class="img {display:block} inline-block inline-flex">
                                     {{ invoice.payment_method_formatted }}
                                         <svg v-if="invoice.payment_method === 1" width="60" height="26">
                                             <image xlink:href="https://www.svgrepo.com/show/210224/credit-card.svg" src="https://www.svgrepo.com/show/210224/credit-card.svg" width="60" height="26"/>
@@ -293,129 +294,132 @@
 </template>
 
 <script>
-    import { InteractsWithQueryBuilder } from '@protonemedia/inertiajs-tables-laravel-query-builder';
-    import { Components } from "@protonemedia/inertiajs-tables-laravel-query-builder";
-    import Table from '@/Components/Tailwind2/Table';
 
-    // import Icon from '@/Shared/Icon'
-    // import Layout from '@/Shared/Layout'
-    import mapValues from 'lodash/mapValues'
-    import Pagination from '@/Shared/Pagination'
-    import pickBy from 'lodash/pickBy'
-    // import SearchFilter from '@/Shared/SearchFilter'
-    import throttle from 'lodash/throttle'
-    import AppLayout from '@/Layouts/AppLayout'
-    import IconNavigate from 'vue-ionicons/dist/ios-arrow-dropright'
-    import EmptySlate from "@/Components/EmptySlate";
-    import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
-    import {Inertia} from "@inertiajs/inertia";
+import { InteractsWithQueryBuilder } from '@protonemedia/inertiajs-tables-laravel-query-builder';
+import { Components } from "@protonemedia/inertiajs-tables-laravel-query-builder";
+import Table from '@/Components/Tailwind2/Table';
 
-    export default {
-        mixins: [InteractsWithQueryBuilder],
-        metaInfo: { title: 'Financial invoices' },
-        // layout: Layout,
-        components: {
-            BreadcrumbContainer,
-            IconNavigate,
-            AppLayout,
-            // Icon,
-            Pagination,
-            // SearchFilter,
-            EmptySlate,
-            Table,
-        },
-        props: {
-            invoices: Object,
-            filters: Object,
-        },
-        data() {
-            return {
-                selected_invoices: [],
-                form: {
-                    // search: this.filters.search,
-                    // trashed: this.filters.trashed,
-                },
-            }
-        },
-        computed: {
-            canSelectAll() {
-                if (this.queryBuilderProps.filters) {
-                    if (this.queryBuilderProps.filters.status) {
-                        return this.queryBuilderProps.filters.status.value === '4';
-                    } else {
-                        return false;
-                    }
+// import Icon from '@/Shared/Icon'
+// import Layout from '@/Shared/Layout'
+import mapValues from 'lodash/mapValues'
+import Pagination from '@/Shared/Pagination'
+import pickBy from 'lodash/pickBy'
+// import SearchFilter from '@/Shared/SearchFilter'
+import throttle from 'lodash/throttle'
+import AppLayout from '@/Layouts/AppLayout'
+import IconNavigate from 'vue-ionicons/dist/ios-arrow-dropright'
+import EmptySlate from "@/Components/EmptySlate";
+import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
+import {Inertia} from "@inertiajs/inertia";
+
+export default {
+    mixins: [InteractsWithQueryBuilder],
+    metaInfo: { title: 'Financial invoices' },
+    // layout: Layout,
+    components: {
+        BreadcrumbContainer,
+        IconNavigate,
+        AppLayout,
+        // Icon,
+        Pagination,
+        // SearchFilter,
+        EmptySlate,
+        Table,
+    },
+    props: {
+        invoices: Object,
+        filters: Object,
+    },
+    data() {
+        return {
+            selected_invoices: [],
+            form: {
+                // search: this.filters.search,
+                // trashed: this.filters.trashed,
+            },
+        }
+    },
+    computed: {
+        canSelectAll() {
+            if (this.queryBuilderProps.filters) {
+                if (this.queryBuilderProps.filters.status) {
+                    return this.queryBuilderProps.filters.status.value === '4';
                 } else {
                     return false;
                 }
-            },
-            hasSearchRows() {
-                return Object.keys(this.invoices.search || {}).length > 0;
-            },
+            } else {
+                return false;
+            }
         },
-        watch: {
-            form: {
-                handler: throttle(function() {
-                    let query = pickBy(this.form)
-                    this.$inertia.replace(this.route('back.finance.invoices.index', Object.keys(query).length ? query : { remember: 'forget' }))
-                }, 150),
-                deep: true,
-            },
+        hasSearchRows() {
+            return Object.keys(this.invoices.search || {}).length > 0;
         },
-        mounted() {
-            let vm = this;
-            Components.Pagination.setTranslations({
-                no_results_found: vm.$t('words.no-records-have-been-found'),
-                previous: vm.$t('pagination.previous'),
-                next: vm.$t('pagination.next'),
-                to: vm.$t('pagination.to'),
-                of: vm.$t('pagination.of'),
-                results: vm.$t('pagination.results'),
-            });
+    },
+    watch: {
+        form: {
+            handler: throttle(function() {
+                let query = pickBy(this.form)
+                this.$inertia.replace(this.route('back.finance.invoices.index', Object.keys(query).length ? query : { remember: 'forget' }))
+            }, 150),
+            deep: true,
         },
-        methods: {
-            deleteInvoice(invoiceId) {
-                if (confirm(this.$t('words.are-you-sure'))) {
-                    this.$inertia.delete(route('back.finance.invoices.destroy', {invoice: invoiceId}));
-                }
-            },
-            approveInvoices() {
-                if (confirm(this.$t('words.are-you-sure'))) {
-                    if (this.selected_invoices.length) {
-                        this.$wait.start('APPROVING_INVOICES');
-                        axios.post(route('back.finance.invoices.bulk-approve-finance-department'), {
-                            invoices: this.selected_invoices,
-                        }).then(response => {
-                            this.$wait.end('APPROVING_INVOICES');
-                            this.selected_invoices = [];
-                            Inertia.reload();
-                        })
-                    }
-                }
-            },
-            toggleAll() {
-                if (this.selected_invoices.length === this.invoices.data.length) {
-                    this.selected_invoices = [];
-                } else {
-                    this.selected_invoices = [];
-                    this.invoices.data.forEach((invoice) => {
-                        this.selected_invoices.push(invoice.id);
+    },
+    mounted() {
+        let vm = this;
+        Components.Pagination.setTranslations({
+            no_results_found: vm.$t('words.no-records-have-been-found'),
+            previous: vm.$t('pagination.previous'),
+            next: vm.$t('pagination.next'),
+            to: vm.$t('pagination.to'),
+            of: vm.$t('pagination.of'),
+            results: vm.$t('pagination.results'),
+        });
+    },
+    methods: {
+        deleteInvoice(invoiceId) {
+            if (confirm(this.$t('words.are-you-sure'))) {
+                this.$inertia.delete(route('back.finance.invoices.destroy', {invoice: invoiceId}));
+            }
+        },
+        approveInvoices() {
+            if (confirm(this.$t('words.are-you-sure'))) {
+                if (this.selected_invoices.length) {
+                    this.$wait.start('APPROVING_INVOICES');
+                    axios.post(route('back.finance.invoices.bulk-approve-finance-department'), {
+                        invoices: this.selected_invoices,
+                    }).then(response => {
+                        this.$wait.end('APPROVING_INVOICES');
+                        this.selected_invoices = [];
+                        Inertia.reload();
                     })
                 }
-            },
-            toggleSelectedInvoice(invoice) {
-                if (this.selected_invoices.includes(invoice.id)) {
-                    let index = this.selected_invoices.indexOf(invoice.id);
-                    if (index !== -1) {
-                        this.selected_invoices.splice(index, 1);
-                    }
-                } else {
-                    this.selected_invoices.push(invoice.id);
-                }
-            },
-            reset() {
-                this.form = mapValues(this.form, () => null)
-            },
+            }
         },
-    }
+        toggleAll() {
+            if (this.selected_invoices.length === this.invoices.data.length) {
+                this.selected_invoices = [];
+            } else {
+                this.selected_invoices = [];
+                this.invoices.data.forEach((invoice) => {
+                    this.selected_invoices.push(invoice.id);
+                })
+            }
+        },
+        toggleSelectedInvoice(invoice) {
+            if (this.selected_invoices.includes(invoice.id)) {
+                let index = this.selected_invoices.indexOf(invoice.id);
+                if (index !== -1) {
+                    this.selected_invoices.splice(index, 1);
+                }
+            } else {
+                this.selected_invoices.push(invoice.id);
+            }
+        },
+        reset() {
+            this.form = mapValues(this.form, () => null)
+        },
+    },
+}
+
+
 </script>
