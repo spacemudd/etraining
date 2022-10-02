@@ -139,10 +139,14 @@
                                     </span>
                                 </span>
                                 </div>
-                                <div v-if="invoice.payment_method === 0" class="font-bold">{{ $t('words.sender-bank-name') }}</div>
-                                <div v-if="invoice.payment_method === 0">{{ invoice.trainee_bank_payment_receipt.bank_from }}</div>
-                                <div v-if="invoice.payment_method === 0" class="font-bold">{{ $t('words.receiver-bank-name') }}<br/></div>
-                                <div v-if="invoice.payment_method === 0">{{ invoice.trainee_bank_payment_receipt.bank_to }}</div>
+                                <div v-if="invoice.trainee_bank_payment_receipt">
+                                    <div v-if="invoice.payment_method === 0" class="font-bold">{{ $t('words.sender-bank-name') }}</div>
+                                    <div v-if="invoice.payment_method === 0" class="font-bold">{{ $t('words.receiver-bank-name') }}<br/></div>
+                                </div>
+                                <div v-if="invoice.trainee_bank_payment_receipt">
+                                    <div v-if="invoice.payment_method === 0">{{ invoice.trainee_bank_payment_receipt.bank_from }}</div>
+                                    <div v-if="invoice.payment_method === 0">{{ invoice.trainee_bank_payment_receipt.bank_to }}</div>
+                                </div>
                                 <hr class="my-2">
                                 <hr class="my-2">
                                 <div class="font-bold">{{ $t('words.chase') }}</div>
