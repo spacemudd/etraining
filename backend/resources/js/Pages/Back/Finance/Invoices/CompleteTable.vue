@@ -5,16 +5,16 @@
                 :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
                     {title: 'finance', link: route('back.finance')},
-                    {title: 'invoices', link: route('back.finance.invoices.index')},
+                    {title: 'invoices', link: route('back.finance.invoices.complete')},
                 ]"
             ></breadcrumb-container>
             <div class="flex flex-col md:flex-row md:space-x-5 place-content-center">
                 <div class="place-items-start ml-20" style="margin-left: 100px">
-                    <inertia-link class="font-bold text-center mx-3 mt-5 inline-flex items-center px-4 py-2 bg-gray-300 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-black uppercase ltr:tracking-widest focus:outline-none focus:border-gray-300 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
+                    <inertia-link class="font-bold text-center mx-3 mt-5 inline-flex items-center px-4 py-2 bg-green-400 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-green-400 focus:shadow-outline-green transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
                                   :href="route('back.finance.invoices.complete')">
                         {{ $t('words.complete-table') }}
                     </inertia-link>
-                    <inertia-link class="font-bold text-center mx-3 mt-5 inline-flex items-center px-4 py-2 bg-green-400 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-green-400 focus:shadow-outline-green transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
+                    <inertia-link class="font-bold text-center mx-3 mt-5 inline-flex items-center px-4 py-2 bg-gray-300 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-black uppercase ltr:tracking-widest focus:outline-none focus:border-gray-300 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
                                   :href="route('back.finance.invoices.index')">
                         {{ $t('words.simple-table') }}
                     </inertia-link>
@@ -46,6 +46,9 @@
                             <th>{{ $t('words.company') }}</th>
                             <th @click.prevent="sortBy('status')">{{ $t('words.status') }}</th>
                             <th>{{ $t('words.payment-method') }}</th>
+                            <th>{{ $t('words.amount') }}</th>
+                            <th>{{ $t('words.submitted-receipt') }}</th>
+                            <th>{{ $t('words.bank-name') }}</th>
                             <th>{{ $t('words.collected') }}</th>
                             <th>{{ $t('words.confirmed') }}</th>
                             <th @click.prevent="sortBy('created_at')">{{ $t('words.date') }}</th>
@@ -121,6 +124,27 @@
                                     <span v-else>
                                         {{ invoice.payment_method_formatted }}
                                     </span>
+                                </inertia-link>
+                            </td>
+                            <td class="rtl:text-right text-black">
+                                <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
+                                    {{ invoice.grand_total }}
+                                </inertia-link>
+                            </td>
+                            <td class="rtl:text-right text-black">
+                                <inertia-link v-if="invoice.trainee_bank_payment_receipt"
+                                              :href="route('back.finance.invoices.show', invoice.id)">
+                                    {{ invoice.trainee_bank_payment_receipt.sender_name }}
+                                    <br/>
+                                    {{ invoice.trainee_bank_payment_receipt.created_at }}
+                                </inertia-link>
+                            </td>
+                            <td class="rtl:text-right text-black">
+                                <inertia-link v-if="invoice.trainee_bank_payment_receipt"
+                                              :href="route('back.finance.invoices.show', invoice.id)">
+                                    {{ $t('words.from') }} {{ invoice.trainee_bank_payment_receipt.bank_from }}
+                                    <br/>
+                                    {{ $t('words.to') }} {{ invoice.trainee_bank_payment_receipt.bank_to }}
                                 </inertia-link>
                             </td>
                             <td class="rtl:text-right text-black">
@@ -346,7 +370,7 @@ export default {
         form: {
             handler: throttle(function() {
                 let query = pickBy(this.form)
-                this.$inertia.replace(this.route('back.finance.invoices.index', Object.keys(query).length ? query : { remember: 'forget' }))
+                this.$inertia.replace(this.route('back.finance.invoices.complete', Object.keys(query).length ? query : { remember: 'forget' }))
             }, 150),
             deep: true,
         },

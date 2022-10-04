@@ -203,10 +203,11 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('/settings/roles/{id}/users/invite', [\App\Http\Controllers\Back\RolesController::class, 'invite'])->name('settings.roles.users.invite');
         Route::get('/settings/roles/{id}', [\App\Http\Controllers\Back\RolesController::class, 'show'])->name('settings.roles.show');
         Route::get('/settings/roles', [\App\Http\Controllers\Back\RolesController::class, 'index'])->name('settings.roles.index');
-
         Route::post('/settings/roles/attach-permission', [\App\Http\Controllers\Back\RolesPermissionsController::class, 'attachPermission'])->name('settings.roles.attach-permission');
         Route::post('/settings/roles/detach-permission', [\App\Http\Controllers\Back\RolesPermissionsController::class, 'detachPermission'])->name('settings.roles.detach-permission');
         Route::get('/settings/roles/{id}/permissions', [\App\Http\Controllers\Back\RolesPermissionsController::class, 'index'])->name('settings.roles.permissions.index');
+//        Route::get('/settings/roles/user/{id}', [\App\Http\Controllers\Back\RolesUserController::class, 'index'])->name('settings.roles.user.show');
+//        Route::resource('roles', \App\Http\Controllers\Back\RolesUserController::class);
 
         Route::get('/settings/trainees-applications', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'index'])->name('settings.trainees-application');
         Route::get('/settings/trainees-applications/required-files', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'requiredFiles'])->name('settings.trainees-application.required-files');
@@ -241,6 +242,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('account-statements/excel', [\App\Http\Controllers\Back\AccountStatementsController::class, 'excel'])->name('account-statements.excel');
             Route::get('account-statements', [\App\Http\Controllers\Back\AccountStatementsController::class, 'index'])->name('account-statements');
             Route::resource('accounts', \App\Http\Controllers\Back\FinancialAccountsController::class);
+            Route::get('invoices/complete', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'CompleteTable'])->name('invoices.complete');
             Route::post('invoices/bulk-approve-financial-department', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'bulkApproveFinancialDepartment'])->name('invoices.bulk-approve-finance-department');
             Route::post('invoices/excel/generate', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'generateExcel'])->name('invoices.excel.generate');
             Route::get('invoices/excel', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'excel'])->name('invoices.excel');
