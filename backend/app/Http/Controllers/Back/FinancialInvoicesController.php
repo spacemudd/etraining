@@ -76,6 +76,57 @@ class FinancialInvoicesController extends Controller
         });
     }
 
+    public function CompleteTable()
+    {
+//        $this->authorize('issue-monthly-invoices');
+
+        $invoices = QueryBuilder::for(Invoice::class)
+            ->with(['trainee' => function($q) {
+                $q->with('company');
+            }])
+            ->with('company')
+            ->with('trainee_bank_payment_receipt')
+            ->defaultSort('-created_at')
+            ->allowedSorts(['from_date','created_at', 'number', 'status', 'payment_method', 'grand_total', 'is_verified', 'created_at'])
+            ->allowedFilters(['payment_method','trainee_bank_payment_receipt.bank_to','trainee_bank_payment_receipt.bank_from','from_date','created_at', 'trainee.name', 'number', 'company.name_ar', 'status', 'trainee_bank_payment_receipt.sender_name', 'trainee_bank_payment_receipt.created_at'])
+            ->allowedFields(['payment_method','trainee_bank_payment_receipt.bank_to','trainee_bank_payment_receipt.bank_from','trainee.id', 'trainee.name', 'company.id', 'company.name_ar', 'trainee_bank_payment_receipt.sender_name', 'trainee_bank_payment_receipt.created_at'])
+            ->allowedIncludes(['company', 'trainee', 'trainee_bank_payment_receipt'])
+            ->paginate()
+            ->withQueryString();
+
+        return Inertia::render('Back/Finance/Invoices/CompleteTable', [
+            'invoices' => $invoices,
+        ])->table(function ($table) {
+            $table->disableGlobalSearch();
+
+            $table->addSearchRows([
+                'number' => __('words.invoice-number'),
+                'company.name_ar' => __('words.company'),
+                'trainee.name' => __('words.trainee'),
+                'created_at' => __('words.date'),
+                'created_at' => __('words.date'),
+                'trainee_bank_payment_receipt.created_at' => __('words.receipt-date'),
+                'trainee_bank_payment_receipt.sender_name' => __('words.sender-name'),
+                'from_date' => __('words.date-period'),
+                'trainee_bank_payment_receipt.bank_from' => __('words.sender-bank-name'),
+                'trainee_bank_payment_receipt.bank_to' => __('words.receiver-bank-name'),
+            ]);
+
+            $table->addFilter('status', __('words.status'), [
+                Invoice::STATUS_UNPAID => __('words.unpaid'),
+                Invoice::STATUS_PAYMENT_RECEIPT_REJECTED => __('words.reject-payment-receipt'),
+                Invoice::STATUS_AUDIT_REQUIRED => __('words.audit-required'),
+                Invoice::STATUS_FINANCIAL_AUDIT_REQUIRED =>  __('words.finance-audit-required'),
+                Invoice::STATUS_PAID =>  __('words.paid'),
+            ]);
+
+            $table->addFilter('payment_method', __('words.payment-method'), [
+                Invoice::PAYMENT_METHOD_BANK_RECEIPT => __('words.bank-transfer'),
+                Invoice::PAYMENT_METHOD_CREDIT_CARD => __('words.credit-card-method'),
+            ]);
+        });
+    }
+
     public function show(string $invoice_id)
     {
         $this->authorize('issue-monthly-invoices');
