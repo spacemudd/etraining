@@ -18,7 +18,7 @@
                 <inertia-link href="/dashboard" class="ltr:ml-6 rtl:mr-6 text-lg block w-100 text-center font-bold text-gray-800 dark:text-gray-200">
                     <jet-application-mark class="w-48" />
                 </inertia-link>
-                <sidebar-container/>
+                <sales-sidebar-container/>
                 <!--<div class="px-6 my-6">-->
                 <!--    <button-->
                 <!--        class="flex items-center justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red"-->
@@ -60,7 +60,7 @@
                 >
                     <jet-application-mark/>
                 </a>
-                <sidebar-container/>
+                <side-sidebar-container/>
             </div>
         </aside>
         <div class="flex flex-col flex-1 w-full mb-10">
@@ -192,8 +192,7 @@
     import JetResponsiveNavLink from './../Jetstream/ResponsiveNavLink'
     import LanguageSelector from "../Shared/LanguageSelector";
     import SidebarLink from '../Components/SidebarLink';
-    import SidebarContainer from "../Components/SidebarContainer";
-    import AdminSearchbar from '@/Components/AdminSearchbar';
+    import SalesSidebarContainer from "../Components/SalesSidebarContainer";
 
     export default {
         components: {
@@ -205,8 +204,7 @@
             JetResponsiveNavLink,
             LanguageSelector,
             SidebarLink,
-            SidebarContainer,
-            AdminSearchbar,
+            SalesSidebarContainer,
         },
 
         data() {
