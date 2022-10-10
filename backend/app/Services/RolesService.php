@@ -46,6 +46,7 @@ class RolesService
         'edit-payment-settings',
         'delete-invoice',
         'can-delete-invoice-anytime',
+        'submit-company-attendance-report',
         // add the same name of the role to translation files.
     ];
 

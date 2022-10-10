@@ -29,7 +29,7 @@
             selectedItem: {
                 type: Object,
                 required: false,
-                default: () => {},
+                default: null,
             },
             disabled : {
                 type: Boolean,

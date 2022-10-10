@@ -22,6 +22,10 @@ class CompaniesController extends Controller
     {
         $this->authorize('view-companies');
 
+        if (request()->expectsJson()) {
+            return Company::get();
+        }
+
         return Inertia::render('Back/Companies/Index', [
             'companies' => Company::paginate(20),
         ]);

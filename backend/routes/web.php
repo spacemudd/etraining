@@ -358,6 +358,14 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('contracts', [\App\Http\Controllers\Back\ReportsController::class, 'formContractsReport'])->name('reports.contracts.index');
             Route::post('contracts/generate', [\App\Http\Controllers\Back\ReportsController::class, 'generateContractsReport'])->name('reports.contracts.generate');
 
+            Route::post('company-attendance/{id}/attach', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'attach'])->name('reports.company-attendance.attach');
+            Route::post('company-attendance/{id}/detach', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'detach'])->name('reports.company-attendance.detach');
+            Route::delete('company-attendance/{id}', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'destroy'])->name('reports.company-attendance.destroy');
+            Route::post('company-attendance', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'store'])->name('reports.company-attendance.store');
+            Route::get('company-attendance/create', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'create'])->name('reports.company-attendance.create');
+            Route::get('company-attendance', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'index'])->name('reports.company-attendance.index');
+            Route::get('company-attendance/{id}', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'show'])->name('reports.company-attendance.show');
+
         });
     });
 

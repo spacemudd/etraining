@@ -699,7 +699,24 @@ export default {
             "choose-invoice": "اختر المستحقات المراد دفعها",
             "sr": "س.ر.",
             "complete-table": "جدول كامل",
-            "simple-table": "جدول مختصر"
+            "simple-table": "جدول مختصر",
+            "submit-company-attendance-report": "انشاء تقرير الحضور والإنصراف للشركات",
+            "attendance-sheet-for-companies-report": "تقرير الحضور للشركات",
+            "company-attendance": "تقرير الحضور للشركات",
+            "period": "المدة",
+            "last-updated": "اخر تحديث",
+            "new-report": "تقرير جديد",
+            "prepare-the-monthly-attendance-report-to-send-to-the-company-from-the-system": "من هنا يمكنك إعداد تقرير الحضور وإرساله الى الشركة بشكل رسمي من النظام.",
+            "time-period": "المدة الزمنية",
+            "review": "تحت المراجعة",
+            "report": "التقرير",
+            "comma-separated-emails": "الايميلات يتم فصلهم بعلامة الفاصلة (one@gmail.com, two@gmail.com)",
+            "cc-emails": "نسخة (CC) الى",
+            "preview": "عرض",
+            "to-update-the-table-after-adding-trainees-please-recreate-the-report": "لتحديث قائمة المتدربات بعد الإضافة الى الشركة، يرجى حذف وإعادة انشاء التقرير.",
+            "added": "مضاف",
+            "removed": "محذوف",
+            "selected": "المختار"
         }
     },
     "en": {
@@ -1348,7 +1365,23 @@ export default {
             "choose-invoice": "Choose the dues to pay",
             "sr": "SR",
             "complete-table": "Complete Table",
-            "simple-table": "Simple Table"
+            "simple-table": "Simple Table",
+            "submit-company-attendance-report": "Prepare company attendance report sheet",
+            "attendance-sheet-for-companies-report": "Attendance sheet for companies report",
+            "company-attendance": "Attendance for company",
+            "period": "Period",
+            "last-updated": "Last updated",
+            "new-report": "New report",
+            "prepare-the-monthly-attendance-report-to-send-to-the-company-from-the-system": "Here you can create the attendance report for the company and send it officially from the system.",
+            "time-period": "Time period",
+            "report": "Report",
+            "comma-separated-emails": "Comma-seperated emails, e.g. (one@gmail.com, two@gmail.com)",
+            "cc-emails": "Copy (CC) to",
+            "preview": "Preview",
+            "to-update-the-table-after-adding-trainees-please-recreate-the-report": "To update list of trainees after adding a trainee to the company, please delete and re-create the report.",
+            "added": "Added",
+            "removed": "Removed",
+            "selected": "Selected"
         }
     }
 }
