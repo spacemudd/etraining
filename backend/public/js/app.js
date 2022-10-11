@@ -6141,6 +6141,11 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    approveReport: function approveReport() {
+      if (confirm(this.$t('words.are-you-sure'))) {
+        this.$inertia.post(route('back.reports.company-attendance.approve', this.report.id));
+      }
+    },
     saveEmails: function saveEmails() {
       this.$inertia.put(route('back.reports.company-attendance.update', this.report.id), {
         to_emails: this.report.to_emails,
@@ -24240,7 +24245,13 @@ var render = function render() {
       key: "head",
       fn: function fn() {
         return [_c("tr", [_c("th", {
-          staticClass: "text-left"
+          staticClass: "text-left",
+          on: {
+            click: function click($event) {
+              $event.preventDefault();
+              return _vm.sortBy("number");
+            }
+          }
         }, [_vm._v(_vm._s(_vm.$t("words.report")))]), _vm._v(" "), _c("th", {
           staticClass: "text-left"
         }, [_vm._v(_vm._s(_vm.$t("words.company")))]), _vm._v(" "), _c("th", {
@@ -24262,8 +24273,8 @@ var render = function render() {
         return _vm._l(_vm.reports.data, function (report) {
           return _c("tr", {
             key: report.id
-          }, [_c("td", [_vm._v(_vm._s(report.number))]), _vm._v(" "), _c("td", [report.company ? [_vm._v(_vm._s(report.company.resource_label))] : _vm._e()], 2), _vm._v(" "), _c("td", [_vm._v(_vm._s(report.trainees_count))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(report.period))]), _vm._v(" "), report.approved_by ? _c("td", [_c("span", {
-            staticClass: "bg-green-400"
+          }, [_c("td", [_vm._v(_vm._s(report.number))]), _vm._v(" "), _c("td", [report.company ? [_vm._v(_vm._s(report.company.resource_label))] : _vm._e()], 2), _vm._v(" "), _c("td", [_vm._v(_vm._s(report.trainees_count))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(report.period))]), _vm._v(" "), report.approved_by_id ? _c("td", [_c("span", {
+            staticClass: "bg-green-300 text-black px-2 rounded"
           }, [_vm._v(_vm._s(_vm.$t("words.approved")))])]) : _c("td", [_c("span", {
             staticClass: "bg-yellow-300 p-1 rounded text-black"
           }, [_vm._v(_vm._s(_vm.$t("words.review")))])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(report.updated_at_human))]), _vm._v(" "), _c("td", [_c("inertia-link", {
@@ -24326,9 +24337,11 @@ var render = function render() {
     staticClass: "container px-6 mx-auto grid grid-cols-4"
   }, [_c("div", [_c("p", [_vm._v(_vm._s(_vm.$t("words.report")) + " #")]), _vm._v(" "), _c("h1", {
     staticClass: "text-2xl"
-  }, [_vm._v(_vm._s(_vm.report.number))]), _vm._v(" "), _vm.report.approved_by ? _c("h2", [_c("span", {
+  }, [_vm._v(_vm._s(_vm.report.number))]), _vm._v(" "), _vm.report.approved_at ? _c("h2", [_c("span", {
     staticClass: "text-2xl bg-green-300 text-black px-2 rounded"
-  }, [_vm._v(_vm._s(_vm.$t("words.approved")))])]) : _c("h2", [_c("span", {
+  }, [_vm._v(_vm._s(_vm.$t("words.approved")))]), _vm._v(" "), _c("br"), _vm._v(" "), _c("span", {
+    staticClass: "bg-gray-200 px-2 rounded text-sm"
+  }, [_vm._v(_vm._s(_vm.report.approved_at_human))])]) : _c("h2", [_c("span", {
     staticClass: "text-2xl bg-yellow-300 text-black px-2 rounded"
   }, [_vm._v(_vm._s(_vm.$t("words.review")))])])]), _vm._v(" "), _c("div", [_c("p", [_vm._v(_vm._s(_vm.$t("words.period")))]), _vm._v(" "), _c("h2", {
     staticClass: "text-2xl"
@@ -24338,20 +24351,23 @@ var render = function render() {
     staticClass: "text-2xl"
   }, [_vm._v(_vm._s(_vm.report.company.resource_label))]) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "flex justify-end"
-  }, [_c("div", [_c("button", {
+  }, [_c("div", [!_vm.report.approved_at ? _c("button", {
     staticClass: "inline-flex items-center px-4 py-2 bg-red-300 border border-transparent rounded-md font-semibold text-xs text-black uppercase tracking-normal transition ease-in-out duration-150",
     on: {
       click: _vm.deleteReport
     }
-  }, [_vm._v(_vm._s(_vm.$t("words.delete")))]), _vm._v(" "), _c("a", {
+  }, [_vm._v(_vm._s(_vm.$t("words.delete")))]) : _vm._e(), _vm._v(" "), _c("a", {
     staticClass: "btn-secondary",
     attrs: {
       href: _vm.route("back.reports.company-attendance.preview", _vm.report.id),
       target: "_blank"
     }
-  }, [_vm._v(_vm._s(_vm.$t("words.preview")))]), _vm._v(" "), _c("div", {
-    staticClass: "btn-primary"
-  }, [_vm._v(_vm._s(_vm.$t("words.approve")))])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("words.preview")))]), _vm._v(" "), !_vm.report.approved_at ? _c("button", {
+    staticClass: "btn-primary",
+    on: {
+      click: _vm.approveReport
+    }
+  }, [_vm._v(_vm._s(_vm.$t("words.approve")))]) : _vm._e()])])]), _vm._v(" "), _c("div", {
     staticClass: "mt-10 container px-6 mx-auto grid grid-cols-12 gap-4"
   }, [_c("div", {
     staticClass: "col-span-4"
@@ -24365,7 +24381,8 @@ var render = function render() {
     attrs: {
       dir: "ltr",
       id: "to_emails",
-      type: "text"
+      type: "text",
+      disabled: _vm.report.approved_at
     },
     on: {
       blur: _vm.saveEmails
@@ -24391,7 +24408,8 @@ var render = function render() {
     attrs: {
       dir: "ltr",
       id: "cc_emails",
-      type: "text"
+      type: "text",
+      disabled: _vm.report.approved_at
     },
     on: {
       blur: _vm.saveEmails

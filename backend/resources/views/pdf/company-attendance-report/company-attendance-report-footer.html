@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script>
+        function substitutePdfVariables() {
+
+            function getParameterByName(name) {
+                var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+                return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+            }
+
+            function substitute(name) {
+                var value = getParameterByName(name);
+                var elements = document.getElementsByClassName(name);
+
+                for (var i = 0; elements && i < elements.length; i++) {
+                    elements[i].textContent = value;
+                }
+            }
+
+            ['frompage', 'topage', 'page', 'webpage', 'section', 'subsection', 'subsubsection']
+                .forEach(function(param) {
+                    substitute(param);
+                });
+        }
+    </script>
+</head>
+<body onload="substitutePdfVariables()">
+<table class="table" style="width:100%;">
+    <colgroup>
+        <col style="width:33.33%">
+        <col style="width:33.33%">
+        <col style="width:33.33%">
+    </colgroup>
+	<tbody>
+			<tr>
+				<td>
+                    <b>Kingdom of Saudi Arabia</b><br/>
+                    P.O Box 295903 Riyadh 11375<br/>
+                    Phone: 966 11 454 0747<br/>
+                    C.R: 1010524675
+                </td>
+                <td style="text-align: center;">
+                    <p><span class="page"></span> / <span class="topage"></span></p>
+                    <br/>
+                    www.ptc-ksa.com
+                </td>
+                <td style="text-align: right;direction: rtl;">
+                    <b>المملكة العربية السعودية - الرياض</b><br/>
+                    ص.ب. 295903 الرياض 11375<br/>
+                    هاتف: 966 11 454 0747<br/>
+                    سجل تجاري: 1010524675
+                </td>
+			</tr>
+	</tbody>
+</table>
+</body>
+</html>

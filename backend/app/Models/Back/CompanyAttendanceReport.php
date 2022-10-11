@@ -24,11 +24,13 @@ class CompanyAttendanceReport extends Model
     protected $casts = [
         'date_from' => 'date:d-m-Y',
         'date_to' => 'date:d-m-Y',
+        'approved_at' => 'datetime',
     ];
 
     protected $appends = [
         'period',
         'updated_at_human',
+        'approved_at_human',
     ];
 
     protected static function boot(): void
@@ -63,5 +65,24 @@ class CompanyAttendanceReport extends Model
     public function getUpdatedAtHumanAttribute()
     {
         return $this->updated_at->setTimezone('Asia/Riyadh')->format('d-m-Y h:ia');
+    }
+
+    public function getApprovedAtHumanAttribute()
+    {
+        return optional(optional($this->approved_at)->setTimezone('Asia/Riyadh'))->format('d-m-Y h:ia');
+    }
+
+    public function activeTraineesCount()
+    {
+        return CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->id)
+                ->where('active', true)
+                ->count();
+    }
+
+    public function getActiveTrainees()
+    {
+        return CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->id)
+                ->where('active', true)
+                ->get();
     }
 }

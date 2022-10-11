@@ -25,7 +25,11 @@
             <div>
                 <p>{{ $t('words.report') }} #</p>
                 <h1 class="text-2xl">{{ report.number }}</h1>
-                <h2 v-if="report.approved_by"><span class="text-2xl bg-green-300 text-black px-2 rounded">{{ $t('words.approved') }}</span></h2>
+                <h2 v-if="report.approved_at">
+                    <span class="text-2xl bg-green-300 text-black px-2 rounded">{{ $t('words.approved') }}</span>
+                    <br/>
+                    <span class="bg-gray-200 px-2 rounded text-sm">{{ report.approved_at_human }}</span>
+                </h2>
                 <h2 v-else><span class="text-2xl bg-yellow-300 text-black px-2 rounded">{{ $t('words.review') }}</span></h2>
             </div>
             <div>
@@ -39,11 +43,11 @@
             </div>
             <div class="flex justify-end">
                 <div>
-                    <button @click="deleteReport" class="inline-flex items-center px-4 py-2 bg-red-300 border border-transparent rounded-md font-semibold text-xs text-black uppercase tracking-normal transition ease-in-out duration-150">{{ $t('words.delete') }}</button>
+                    <button v-if="!report.approved_at" @click="deleteReport" class="inline-flex items-center px-4 py-2 bg-red-300 border border-transparent rounded-md font-semibold text-xs text-black uppercase tracking-normal transition ease-in-out duration-150">{{ $t('words.delete') }}</button>
                     <a :href="route('back.reports.company-attendance.preview', report.id)"
                        target="_blank"
                        class="btn-secondary">{{ $t('words.preview') }}</a>
-                    <div class="btn-primary">{{ $t('words.approve') }}</div>
+                    <button v-if="!report.approved_at" @click="approveReport" class="btn-primary">{{ $t('words.approve') }}</button>
                 </div>
             </div>
         </div>
@@ -53,6 +57,7 @@
             <div class="col-span-4">
                 <jet-label for="to_emails" :value="$t('words.to')" />
                 <jet-input dir="ltr" id="to_emails" type="text" class="mt-1 block w-full"
+                           :disabled="report.approved_at"
                            @blur="saveEmails"
                            v-model="report.to_emails" />
                 <p class="mt-1 text-xs">{{ $t('words.comma-separated-emails') }}</p>
@@ -60,6 +65,7 @@
             <div class="col-span-4">
                 <jet-label for="cc_emails" :value="$t('words.cc-emails')" />
                 <jet-input dir="ltr" id="cc_emails" type="text" class="mt-1 block w-full"
+                           :disabled="report.approved_at"
                            @blur="saveEmails"
                            v-model="report.cc_emails" />
                 <p class="mt-1 text-xs">{{ $t('words.comma-separated-emails') }}</p>
@@ -174,6 +180,11 @@
             }
         },
         methods: {
+            approveReport() {
+                if (confirm(this.$t('words.are-you-sure'))) {
+                    this.$inertia.post(route('back.reports.company-attendance.approve', this.report.id));
+                }
+            },
             saveEmails() {
                 this.$inertia.put(route('back.reports.company-attendance.update', this.report.id), {
                     to_emails: this.report.to_emails,

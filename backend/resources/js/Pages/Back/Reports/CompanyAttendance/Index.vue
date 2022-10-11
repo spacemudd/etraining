@@ -38,7 +38,7 @@
                     :meta="reports">
                     <template #head>
                         <tr>
-                            <th class="text-left">{{ $t('words.report') }}</th>
+                            <th class="text-left" @click.prevent="sortBy('number')">{{ $t('words.report') }}</th>
                             <th class="text-left">{{ $t('words.company') }}</th>
                             <th class="text-left">{{ $t('words.trainees') }}</th>
                             <th class="text-left">{{ $t('words.period') }}</th>
@@ -53,7 +53,7 @@
                             <td><template v-if="report.company">{{ report.company.resource_label }}</template></td>
                             <td>{{ report.trainees_count }}</td>
                             <td>{{ report.period }}</td>
-                            <td v-if="report.approved_by"><span class="bg-green-400">{{ $t('words.approved') }}</span></td>
+                            <td v-if="report.approved_by_id"><span class="bg-green-300 text-black px-2 rounded">{{ $t('words.approved') }}</span></td>
                             <td v-else><span class="bg-yellow-300 p-1 rounded text-black">{{ $t('words.review') }}</span></td>
                             <td>{{ report.updated_at_human }}</td>
                             <td>

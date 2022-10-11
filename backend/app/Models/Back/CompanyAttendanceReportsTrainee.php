@@ -12,4 +12,9 @@ class CompanyAttendanceReportsTrainee extends Model
     protected $casts = [
         'active' => 'boolean',
     ];
+
+    public function trainee()
+    {
+        return $this->belongsTo(Trainee::class);
+    }
 }

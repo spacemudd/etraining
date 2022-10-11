@@ -27,6 +27,7 @@ class CreateCompanyAttendanceReportsTable extends Migration
             $table->foreign('created_by_id')->references('id')->on('users');
             $table->uuid('approved_by_id')->nullable();
             $table->foreign('approved_by_id')->references('id')->on('users');
+            $table->timestamp('approved_at')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

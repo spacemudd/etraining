@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
+use App\Mail\CompanyAttendanceReportMail;
 use App\Models\Back\Company;
 use App\Models\Back\CompanyAttendanceReport;
 use App\Models\Back\CompanyAttendanceReportsTrainee;
+use App\Services\CompanyAttendanceReportService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use PDF;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -23,6 +26,8 @@ class CompanyAttendanceReportController extends Controller
             ->with('company')
             ->withCount('trainees')
             ->defaultSort('-created_at')
+            ->allowedFilters(['company.name_ar', 'status', 'date_from'])
+            ->allowedSorts(['number'])
             ->paginate()
             ->withQueryString();
 
@@ -31,13 +36,15 @@ class CompanyAttendanceReportController extends Controller
         ])->table(function ($table) {
             $table->disableGlobalSearch();
 
-            //$table->addSearchRows([
-            //    'number' => __('words.invoice-number'),
-            //]);
+            $table->addSearchRows([
+                'company.name_ar' => __('words.company'),
+                'date_from' => __('words.date'),
+            ]);
 
-            //$table->addFilter('status', __('words.status'), [
-            //    Invoice::STATUS_UNPAID => __('words.unpaid'),
-            //]);
+            $table->addFilter('status', __('words.status'), [
+                CompanyAttendanceReport::STATUS_REVIEW => __('words.review'),
+                CompanyAttendanceReport::STATUS_APPROVED => __('words.approved'),
+            ]);
         });
     }
 
@@ -83,7 +90,10 @@ class CompanyAttendanceReportController extends Controller
 
     public function destroy($id)
     {
-        CompanyAttendanceReport::findOrFail($id)->delete();
+        $r = CompanyAttendanceReport::findOrFail($id);
+        abort_if($r->status === CompanyAttendanceReport::STATUS_APPROVED);
+
+        $r->delete();
         return redirect()->route('back.reports.company-attendance.index');
     }
 
@@ -124,33 +134,25 @@ class CompanyAttendanceReportController extends Controller
 
     public function preview($id)
     {
-        $report = CompanyAttendanceReport::findOrFail($id);
-
-        return view('pdf.company-attendance-report.show', compact('report'));
-
-        $pdf = PDF::setOption('margin-bottom', 30)
-            ->setOption('page-size', 'A4')
-            ->setOption('orientation', 'portrait')
-            ->setOption('encoding','utf-8')
-            ->setOption('dpi', 300)
-            ->setOption('image-dpi', 300)
-            ->setOption('lowquality', false)
-            ->setOption('no-background', false)
-            ->setOption('enable-internal-links', true)
-            ->setOption('enable-external-links', true)
-            ->setOption('javascript-delay', 1000)
-            ->setOption('no-stop-slow-scripts', true)
-            ->setOption('no-background', false)
-            ->setOption('margin-left', 10)
-            ->setOption('margin-top', 10)
-            ->setOption('margin-bottom', 20)
-            ->setOption('disable-smart-shrinking', true)
-            ->setOption('viewport-size', '1024×768')
-            ->setOption('zoom', 0.78)
-            ->loadView('pdf.company-attendance-report.show', [
-                'report' => $report,
-            ]);
+        $pdf = CompanyAttendanceReportService::makePdf($id);
 
         return $pdf->inline();
+    }
+
+    public function approve($id)
+    {
+        $report = CompanyAttendanceReport::findOrFail($id);
+        abort_if($report->status === CompanyAttendanceReport::STATUS_APPROVED);
+
+        $report->status = CompanyAttendanceReport::STATUS_APPROVED;
+        $report->approved_by_id = auth()->user()->id;
+        $report->approved_at = now();
+        $report->save();
+
+        Mail::to(explode(', ', $report->to_emails))
+            ->cc(explode(', ', $report->cc_emails))
+            ->queue(new CompanyAttendanceReportMail($report->id));
+
+        return redirect()->route('back.reports.company-attendance.show', $id);
     }
 }
