@@ -76,7 +76,7 @@ class FinancialInvoicesController extends Controller
         });
     }
 
-    public function CompleteTable()
+    public function ShortTable()
     {
 //        $this->authorize('issue-monthly-invoices');
 
