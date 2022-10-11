@@ -149,8 +149,8 @@ class CompanyAttendanceReportController extends Controller
         $report->approved_at = now();
         $report->save();
 
-        Mail::to(explode(', ', $report->to_emails))
-            ->cc(explode(', ', $report->cc_emails))
+        $mail = Mail::to(explode(', ', $report->to_emails) ?? null)
+            ->cc(explode(', ', $report->cc_emails) ?? null)
             ->queue(new CompanyAttendanceReportMail($report->id));
 
         return redirect()->route('back.reports.company-attendance.show', $id);
