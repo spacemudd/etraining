@@ -35,12 +35,14 @@
             </div>
             <div>
                 <p>{{ $t('words.company') }}</p>
-                <p class="text-2xl">{{ report.company.resource_label }}</p>
+                <p class="text-2xl" v-if="report.company">{{ report.company.resource_label }}</p>
             </div>
             <div class="flex justify-end">
                 <div>
                     <button @click="deleteReport" class="inline-flex items-center px-4 py-2 bg-red-300 border border-transparent rounded-md font-semibold text-xs text-black uppercase tracking-normal transition ease-in-out duration-150">{{ $t('words.delete') }}</button>
-                    <a href="#" target="_blank" class="btn-secondary">{{ $t('words.preview') }}</a>
+                    <a :href="route('back.reports.company-attendance.preview', report.id)"
+                       target="_blank"
+                       class="btn-secondary">{{ $t('words.preview') }}</a>
                     <div class="btn-primary">{{ $t('words.approve') }}</div>
                 </div>
             </div>
@@ -50,12 +52,16 @@
         <div class="mt-10 container px-6 mx-auto grid grid-cols-12 gap-4">
             <div class="col-span-4">
                 <jet-label for="to_emails" :value="$t('words.to')" />
-                <jet-input dir="ltr" id="to_emails" type="text" class="mt-1 block w-full" v-model="report.to_emails" />
+                <jet-input dir="ltr" id="to_emails" type="text" class="mt-1 block w-full"
+                           @blur="saveEmails"
+                           v-model="report.to_emails" />
                 <p class="mt-1 text-xs">{{ $t('words.comma-separated-emails') }}</p>
             </div>
             <div class="col-span-4">
                 <jet-label for="cc_emails" :value="$t('words.cc-emails')" />
-                <jet-input dir="ltr" id="cc_emails" type="text" class="mt-1 block w-full" v-model="report.cc_emails" />
+                <jet-input dir="ltr" id="cc_emails" type="text" class="mt-1 block w-full"
+                           @blur="saveEmails"
+                           v-model="report.cc_emails" />
                 <p class="mt-1 text-xs">{{ $t('words.comma-separated-emails') }}</p>
             </div>
         </div>
@@ -65,7 +71,7 @@
             <hr>
             <div class="flex justify-between">
                 <h2 class="mt-5 px-2 font-bold">{{ $t('words.trainees') }} ({{ report.trainees.length }})</h2>
-                <h2 class="mt-5 px-2 font-bold">{{ $t('words.selected') }} ({{ report.trainees.length }})</h2>
+                <h2 class="mt-5 px-2 font-bold">{{ $t('words.selected') }} ({{ selectedCount }})</h2>
             </div>
 
             <div class="overflow-x-auto relative">
@@ -141,6 +147,13 @@
         mounted() {
 
         },
+        computed: {
+            selectedCount() {
+                return this.report.trainees.filter((trainee) => {
+                    return Boolean(Number(trainee.pivot.active));
+                }).length;
+            }
+        },
       filters: {
         date (val) {
           return val ? val.toLocaleString('en-GB', {year: 'numeric', month: '2-digit', day: '2-digit'}) : ''
@@ -161,6 +174,12 @@
             }
         },
         methods: {
+            saveEmails() {
+                this.$inertia.put(route('back.reports.company-attendance.update', this.report.id), {
+                    to_emails: this.report.to_emails,
+                    cc_emails: this.report.cc_emails,
+                });
+            },
             deleteReport() {
                 if (confirm(this.$t('words.are-you-sure'))) {
                     this.$inertia.delete(route('back.reports.company-attendance.destroy', this.report.id));

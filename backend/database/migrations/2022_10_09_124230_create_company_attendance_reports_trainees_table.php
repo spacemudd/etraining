@@ -16,7 +16,7 @@ class CreateCompanyAttendanceReportsTraineesTable extends Migration
         Schema::create('company_attendance_reports_trainees', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('company_attendance_report_id');
-            $table->foreign('company_attendance_report_id')->references('id')->on('company_attendance_reports');
+            $table->foreign('company_attendance_report_id')->references('id')->on('company_attendance_reports')->cascadeOnDelete();
             $table->uuid('trainee_id');
             $table->foreign('trainee_id')->references('id')->on('trainees');
             $table->boolean('active')->default(true);

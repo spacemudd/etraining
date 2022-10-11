@@ -6105,6 +6105,13 @@ __webpack_require__.r(__webpack_exports__);
   },
   props: ['report'],
   mounted: function mounted() {},
+  computed: {
+    selectedCount: function selectedCount() {
+      return this.report.trainees.filter(function (trainee) {
+        return Boolean(Number(trainee.pivot.active));
+      }).length;
+    }
+  },
   filters: {
     date: function date(val) {
       return val ? val.toLocaleString('en-GB', {
@@ -6134,6 +6141,12 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    saveEmails: function saveEmails() {
+      this.$inertia.put(route('back.reports.company-attendance.update', this.report.id), {
+        to_emails: this.report.to_emails,
+        cc_emails: this.report.cc_emails
+      });
+    },
     deleteReport: function deleteReport() {
       if (confirm(this.$t('words.are-you-sure'))) {
         this.$inertia["delete"](route('back.reports.company-attendance.destroy', this.report.id));
@@ -15912,6 +15925,9 @@ var render = function render() {
       value: _vm.value
     },
     on: {
+      blur: function blur($event) {
+        return _vm.$emit("blur", $event.target.value);
+      },
       input: function input($event) {
         return _vm.$emit("input", $event.target.value);
       }
@@ -24225,6 +24241,8 @@ var render = function render() {
       fn: function fn() {
         return [_c("tr", [_c("th", {
           staticClass: "text-left"
+        }, [_vm._v(_vm._s(_vm.$t("words.report")))]), _vm._v(" "), _c("th", {
+          staticClass: "text-left"
         }, [_vm._v(_vm._s(_vm.$t("words.company")))]), _vm._v(" "), _c("th", {
           staticClass: "text-left"
         }, [_vm._v(_vm._s(_vm.$t("words.trainees")))]), _vm._v(" "), _c("th", {
@@ -24244,11 +24262,11 @@ var render = function render() {
         return _vm._l(_vm.reports.data, function (report) {
           return _c("tr", {
             key: report.id
-          }, [_c("td", [_vm._v(_vm._s(report.company.resource_label))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(report.trainees_count))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(report.period))]), _vm._v(" "), report.approved_by ? _c("td", [_c("span", {
+          }, [_c("td", [_vm._v(_vm._s(report.number))]), _vm._v(" "), _c("td", [report.company ? [_vm._v(_vm._s(report.company.resource_label))] : _vm._e()], 2), _vm._v(" "), _c("td", [_vm._v(_vm._s(report.trainees_count))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(report.period))]), _vm._v(" "), report.approved_by ? _c("td", [_c("span", {
             staticClass: "bg-green-400"
           }, [_vm._v(_vm._s(_vm.$t("words.approved")))])]) : _c("td", [_c("span", {
             staticClass: "bg-yellow-300 p-1 rounded text-black"
-          }, [_vm._v(_vm._s(_vm.$t("words.review")))])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(report.updated_at))]), _vm._v(" "), _c("td", [_c("inertia-link", {
+          }, [_vm._v(_vm._s(_vm.$t("words.review")))])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(report.updated_at_human))]), _vm._v(" "), _c("td", [_c("inertia-link", {
             staticClass: "px-4 flex items-center",
             attrs: {
               href: _vm.route("back.reports.company-attendance.show", report.id)
@@ -24316,9 +24334,9 @@ var render = function render() {
     staticClass: "text-2xl"
   }, [_vm._v(_vm._s(_vm.report.date_from))]), _vm._v(" "), _c("h2", {
     staticClass: "text-2xl"
-  }, [_vm._v(_vm._s(_vm.report.date_to))])]), _vm._v(" "), _c("div", [_c("p", [_vm._v(_vm._s(_vm.$t("words.company")))]), _vm._v(" "), _c("p", {
+  }, [_vm._v(_vm._s(_vm.report.date_to))])]), _vm._v(" "), _c("div", [_c("p", [_vm._v(_vm._s(_vm.$t("words.company")))]), _vm._v(" "), _vm.report.company ? _c("p", {
     staticClass: "text-2xl"
-  }, [_vm._v(_vm._s(_vm.report.company.resource_label))])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.report.company.resource_label))]) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "flex justify-end"
   }, [_c("div", [_c("button", {
     staticClass: "inline-flex items-center px-4 py-2 bg-red-300 border border-transparent rounded-md font-semibold text-xs text-black uppercase tracking-normal transition ease-in-out duration-150",
@@ -24328,7 +24346,7 @@ var render = function render() {
   }, [_vm._v(_vm._s(_vm.$t("words.delete")))]), _vm._v(" "), _c("a", {
     staticClass: "btn-secondary",
     attrs: {
-      href: "#",
+      href: _vm.route("back.reports.company-attendance.preview", _vm.report.id),
       target: "_blank"
     }
   }, [_vm._v(_vm._s(_vm.$t("words.preview")))]), _vm._v(" "), _c("div", {
@@ -24348,6 +24366,9 @@ var render = function render() {
       dir: "ltr",
       id: "to_emails",
       type: "text"
+    },
+    on: {
+      blur: _vm.saveEmails
     },
     model: {
       value: _vm.report.to_emails,
@@ -24372,6 +24393,9 @@ var render = function render() {
       id: "cc_emails",
       type: "text"
     },
+    on: {
+      blur: _vm.saveEmails
+    },
     model: {
       value: _vm.report.cc_emails,
       callback: function callback($$v) {
@@ -24389,7 +24413,7 @@ var render = function render() {
     staticClass: "mt-5 px-2 font-bold"
   }, [_vm._v(_vm._s(_vm.$t("words.trainees")) + " (" + _vm._s(_vm.report.trainees.length) + ")")]), _vm._v(" "), _c("h2", {
     staticClass: "mt-5 px-2 font-bold"
-  }, [_vm._v(_vm._s(_vm.$t("words.selected")) + " (" + _vm._s(_vm.report.trainees.length) + ")")])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.$t("words.selected")) + " (" + _vm._s(_vm.selectedCount) + ")")])]), _vm._v(" "), _c("div", {
     staticClass: "overflow-x-auto relative"
   }, [_c("table", {
     staticClass: "mt-2 w-full text-sm text-left text-gray-500 dark:text-gray-400"

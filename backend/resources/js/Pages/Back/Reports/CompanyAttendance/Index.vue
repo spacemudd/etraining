@@ -38,6 +38,7 @@
                     :meta="reports">
                     <template #head>
                         <tr>
+                            <th class="text-left">{{ $t('words.report') }}</th>
                             <th class="text-left">{{ $t('words.company') }}</th>
                             <th class="text-left">{{ $t('words.trainees') }}</th>
                             <th class="text-left">{{ $t('words.period') }}</th>
@@ -48,12 +49,13 @@
                     </template>
                     <template #body>
                         <tr v-for="report in reports.data" :key="report.id">
-                            <td>{{ report.company.resource_label }}</td>
+                            <td>{{ report.number }}</td>
+                            <td><template v-if="report.company">{{ report.company.resource_label }}</template></td>
                             <td>{{ report.trainees_count }}</td>
                             <td>{{ report.period }}</td>
                             <td v-if="report.approved_by"><span class="bg-green-400">{{ $t('words.approved') }}</span></td>
                             <td v-else><span class="bg-yellow-300 p-1 rounded text-black">{{ $t('words.review') }}</span></td>
-                            <td>{{ report.updated_at }}</td>
+                            <td>{{ report.updated_at_human }}</td>
                             <td>
                                 <inertia-link class="px-4 flex items-center" :href="route('back.reports.company-attendance.show', report.id)">
                                     <ion-icon name="arrow-forward-outline" class="block w-6 h-6 fill-gray-400"></ion-icon>

@@ -17,16 +17,18 @@ class CompanyAttendanceReport extends Model
         'date_from',
         'date_to',
         'status',
+        'to_emails',
+        'cc_emails',
     ];
 
     protected $casts = [
         'date_from' => 'date:d-m-Y',
         'date_to' => 'date:d-m-Y',
-        'updated_at' => 'datetime:d-m-Y h:ia'
     ];
 
     protected $appends = [
         'period',
+        'updated_at_human',
     ];
 
     protected static function boot(): void
@@ -56,5 +58,10 @@ class CompanyAttendanceReport extends Model
     public function getPeriodAttribute()
     {
         return $this->date_from->format('d-m-Y') .' - '.$this->date_to->format('d-m-Y');
+    }
+
+    public function getUpdatedAtHumanAttribute()
+    {
+        return $this->updated_at->setTimezone('Asia/Riyadh')->format('d-m-Y h:ia');
     }
 }
