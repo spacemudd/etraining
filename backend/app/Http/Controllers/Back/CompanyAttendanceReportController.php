@@ -91,7 +91,7 @@ class CompanyAttendanceReportController extends Controller
     public function destroy($id)
     {
         $r = CompanyAttendanceReport::findOrFail($id);
-        abort_if($r->status === CompanyAttendanceReport::STATUS_APPROVED);
+        abort_if($r->status === CompanyAttendanceReport::STATUS_APPROVED, 404);
 
         $r->delete();
         return redirect()->route('back.reports.company-attendance.index');
@@ -142,7 +142,7 @@ class CompanyAttendanceReportController extends Controller
     public function approve($id)
     {
         $report = CompanyAttendanceReport::findOrFail($id);
-        abort_if($report->status === CompanyAttendanceReport::STATUS_APPROVED);
+        abort_if($report->status === CompanyAttendanceReport::STATUS_APPROVED, 404);
 
         $report->status = CompanyAttendanceReport::STATUS_APPROVED;
         $report->approved_by_id = auth()->user()->id;
