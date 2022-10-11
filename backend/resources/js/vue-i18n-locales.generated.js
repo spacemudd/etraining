@@ -699,7 +699,8 @@ export default {
             "choose-invoice": "اختر المستحقات المراد دفعها",
             "sr": "س.ر.",
             "complete-table": "جدول كامل",
-            "simple-table": "جدول مختصر"
+            "simple-table": "جدول مختصر",
+            "edit-amount": "تعديل مبلغ الفاتورة"
         }
     },
     "en": {
@@ -1348,7 +1349,8 @@ export default {
             "choose-invoice": "Choose the dues to pay",
             "sr": "SR",
             "complete-table": "Complete Table",
-            "simple-table": "Simple Table"
+            "simple-table": "Simple Table",
+            "edit-amount": "ُEdit Amount"
         }
     }
 }

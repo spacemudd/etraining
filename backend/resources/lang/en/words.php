@@ -513,4 +513,5 @@ return [
     'sr' => 'SR',
     'complete-table' => 'Complete Table',
     'simple-table' => 'Simple Table',
+    'edit-amount' => 'ُEdit Amount',
 ];

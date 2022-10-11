@@ -529,4 +529,5 @@ return [
     'sr' => 'س.ر.',
     'complete-table' => 'جدول كامل',
     'simple-table' => 'جدول مختصر',
+    'edit-amount' => 'تعديل مبلغ الفاتورة',
 ];
