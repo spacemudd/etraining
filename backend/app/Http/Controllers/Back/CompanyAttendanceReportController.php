@@ -149,7 +149,7 @@ class CompanyAttendanceReportController extends Controller
         $report->approved_at = now();
         $report->save();
 
-        $mail = Mail::to($report->to_emails ? explode(', ', $report->to_emails) : null)
+        Mail::to($report->to_emails ? explode(', ', $report->to_emails) : null)
             ->cc($report->cc_emails ? explode(', ', $report->cc_emails) : null)
             ->queue(new CompanyAttendanceReportMail($report->id));
 
