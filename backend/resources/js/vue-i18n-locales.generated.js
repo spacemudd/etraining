@@ -716,8 +716,7 @@ export default {
             "to-update-the-table-after-adding-trainees-please-recreate-the-report": "لتحديث قائمة المتدربات بعد الإضافة الى الشركة، يرجى حذف وإعادة انشاء التقرير.",
             "added": "مضاف",
             "removed": "محذوف",
-            "selected": "المختار"
-            "simple-table": "جدول مختصر",
+            "selected": "المختار",
             "edit-amount": "تعديل مبلغ الفاتورة"
         }
     },
@@ -1383,8 +1382,7 @@ export default {
             "to-update-the-table-after-adding-trainees-please-recreate-the-report": "To update list of trainees after adding a trainee to the company, please delete and re-create the report.",
             "added": "Added",
             "removed": "Removed",
-            "selected": "Selected"
-            "simple-table": "Simple Table",
+            "selected": "Selected",
             "edit-amount": "ُEdit Amount"
         }
     }
