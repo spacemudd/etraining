@@ -414,6 +414,21 @@ class FinancialInvoicesController extends Controller
         ]);
     }
 
+    public function update($invoice_id, Request $request)
+    {
+        $request->validate([
+            'grand_total' => 'nullable|string|max:255',
+        ]);
+
+        $t = Invoice::withTrashed()->find($invoice_id);
+        $new = $t->replicate();
+        $new->grand_total = $request->grand_total;
+        $new->save();
+        $t->delete();
+
+        return $new;
+    }
+
     public function destroy($invoice_id)
     {
         $this->authorize('can-delete-invoice-anytime');
