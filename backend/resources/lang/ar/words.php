@@ -547,4 +547,5 @@ return [
     'added' => 'مضاف',
     'removed' => 'محذوف',
     'selected' => 'المختار',
+    'edit-amount' => 'تعديل مبلغ الفاتورة',
 ];

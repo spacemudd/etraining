@@ -717,6 +717,8 @@ export default {
             "added": "مضاف",
             "removed": "محذوف",
             "selected": "المختار"
+            "simple-table": "جدول مختصر",
+            "edit-amount": "تعديل مبلغ الفاتورة"
         }
     },
     "en": {
@@ -1382,6 +1384,8 @@ export default {
             "added": "Added",
             "removed": "Removed",
             "selected": "Selected"
+            "simple-table": "Simple Table",
+            "edit-amount": "ُEdit Amount"
         }
     }
 }

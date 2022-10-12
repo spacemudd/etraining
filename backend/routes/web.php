@@ -185,6 +185,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
     // For admins
     Route::prefix('back')->middleware('redirect-trainees-to-dashboard')->name('back.')->group(function() {
+
         Route::get('/settings', [\App\Http\Controllers\Back\SettingsController::class, 'index'])->name('settings');
 
         Route::get('/settings/complaints', [\App\Http\Controllers\Back\ComplaintsSettingsController::class, 'index'])->name('settings.complaints.index');
@@ -206,8 +207,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('/settings/roles/attach-permission', [\App\Http\Controllers\Back\RolesPermissionsController::class, 'attachPermission'])->name('settings.roles.attach-permission');
         Route::post('/settings/roles/detach-permission', [\App\Http\Controllers\Back\RolesPermissionsController::class, 'detachPermission'])->name('settings.roles.detach-permission');
         Route::get('/settings/roles/{id}/permissions', [\App\Http\Controllers\Back\RolesPermissionsController::class, 'index'])->name('settings.roles.permissions.index');
-//        Route::get('/settings/roles/user/{id}', [\App\Http\Controllers\Back\RolesUserController::class, 'index'])->name('settings.roles.user.show');
-//        Route::resource('roles', \App\Http\Controllers\Back\RolesUserController::class);
+
 
         Route::get('/settings/trainees-applications', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'index'])->name('settings.trainees-application');
         Route::get('/settings/trainees-applications/required-files', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'requiredFiles'])->name('settings.trainees-application.required-files');
@@ -216,6 +216,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
         Route::resource('companies', \App\Http\Controllers\Back\CompaniesController::class);
         Route::resource('companies.invoices', \App\Http\Controllers\Back\CompanyInvoicesController::class)->only(['create', 'store']);
+
+        Route::put('user/{id}', [\App\Http\Controllers\Back\UserCompanyController::class, 'index'])->name('user.index');
+        Route::resource('user', \App\Http\Controllers\Back\UserCompanyController::class);
         Route::prefix('companies')->name('companies.')->group(function() {
             Route::post('{company_id}/post-trainees', [\App\Http\Controllers\Back\CompaniesController::class, 'postTrainees'])->name('post-trainees');
             Route::get('{company_id}/trainees/company-trainee-link-audit', [\App\Http\Controllers\Back\CompanyTraineeLinkAuditsController::class, 'index'])->name('trainees.company-trainee-link-audit');
@@ -242,7 +245,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('account-statements/excel', [\App\Http\Controllers\Back\AccountStatementsController::class, 'excel'])->name('account-statements.excel');
             Route::get('account-statements', [\App\Http\Controllers\Back\AccountStatementsController::class, 'index'])->name('account-statements');
             Route::resource('accounts', \App\Http\Controllers\Back\FinancialAccountsController::class);
-            Route::get('invoices/complete', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'CompleteTable'])->name('invoices.complete');
+            Route::get('invoices/short', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'ShortTable'])->name('invoices.short');
             Route::post('invoices/bulk-approve-financial-department', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'bulkApproveFinancialDepartment'])->name('invoices.bulk-approve-finance-department');
             Route::post('invoices/excel/generate', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'generateExcel'])->name('invoices.excel.generate');
             Route::get('invoices/excel', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'excel'])->name('invoices.excel');
@@ -254,8 +257,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('invoices/{id}/approve-payment-receipt', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'approvePaymentReceipt'])->name('invoices.approve-payment-receipt');
             Route::post('invoices/{id}/reject-payment-receipt', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'rejectPaymentReceipt'])->name('invoices.reject-payment-receipt');
             Route::get('invoices/{id}/pdf', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'pdf'])->name('invoices.pdf');
+            Route::put('invoices/{id}/update', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'update'])->name('invoices.update');
             Route::resource('invoices', \App\Http\Controllers\Back\FinancialInvoicesController::class);
             Route::post('expected-amount-per-invoice', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'expectedAmountPerInvoice']);
+
         });
 
         Route::get('trainees/import', [\App\Http\Controllers\Back\TraineesImportController::class, 'index'])->name('trainees.import');

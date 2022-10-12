@@ -76,7 +76,7 @@ class FinancialInvoicesController extends Controller
         });
     }
 
-    public function CompleteTable()
+    public function ShortTable()
     {
 //        $this->authorize('issue-monthly-invoices');
 
@@ -94,7 +94,7 @@ class FinancialInvoicesController extends Controller
             ->paginate()
             ->withQueryString();
 
-        return Inertia::render('Back/Finance/Invoices/CompleteTable', [
+        return Inertia::render('Back/Finance/Invoices/ShortTable', [
             'invoices' => $invoices,
         ])->table(function ($table) {
             $table->disableGlobalSearch();

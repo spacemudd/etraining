@@ -529,4 +529,5 @@ return [
     'added' => 'Added',
     'removed' => 'Removed',
     'selected' => 'Selected',
+    'edit-amount' => 'ُEdit Amount',
 ];

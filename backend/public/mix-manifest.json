@@ -1,6 +1,11 @@
 {
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=d0ca0b145215740cc718",
     "/css/app.css": "/css/app.css?id=69ef84e36ee50549305b",
+=======
+    "/js/app.js": "/js/app.js?id=dbb0497116f164e54ace",
+    "/css/app.css": "/css/app.css?id=0328678d16b54717b8b3",
+>>>>>>> NewWork
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
     "/js/vendor.js": "/js/vendor.js?id=1e03a14185d87ffd6b4b"
 }
