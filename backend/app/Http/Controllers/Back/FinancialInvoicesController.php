@@ -420,11 +420,15 @@ class FinancialInvoicesController extends Controller
             'grand_total' => 'nullable|string|max:255',
         ]);
 
+        DB::beginTransaction();
+
         $t = Invoice::withTrashed()->find($invoice_id);
         $new = $t->replicate();
         $new->grand_total = $request->grand_total;
         $new->save();
         $t->delete();
+
+        DB::commit();
 
         return $new;
     }
