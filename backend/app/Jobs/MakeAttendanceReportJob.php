@@ -23,6 +23,8 @@ class MakeAttendanceReportJob implements ShouldQueue
      */
     public $report_id;
 
+    public $timeout = 3600;
+
     /**
      * Create a new job instance.
      *
