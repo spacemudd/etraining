@@ -10,7 +10,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Str;
 
-class CompanyAttendanceReportMail extends Mailable implements ShouldQueue
+class CompanyAttendanceReportMail extends Mailable
 {
     use Queueable, SerializesModels;
 
