@@ -63,7 +63,7 @@ RUN apk add --no-cache \
         wkhtmltopdf \
         xvfb \
         ttf-dejavu ttf-droid ttf-freefont ttf-liberation \
-        msttcorefonts-installer ttf-dejavu ttf-droid ttf-ubuntu-font-family fontconfig update-ms-fonts \
+        msttcorefonts-installer ttf-dejavu ttf-droid ttf-ubuntu-font-family fontconfig update-ms-fonts ttf-liberation \
         libgcc \
         libstdc++ \
         musl \

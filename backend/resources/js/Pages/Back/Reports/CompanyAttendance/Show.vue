@@ -101,7 +101,7 @@
                                 </label>
                             </th>
                             <td class="py-4 px-6">
-                                {{ trainee.identity_number }}
+                                {{ trainee.clean_identity_number }}
                             </td>
                         </tr>
                     </tbody>
