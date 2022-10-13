@@ -102,7 +102,7 @@ tfoot { display:table-footer-group }
                             <td>مسجل</td>
                             <td>فعال</td>
                             <td>{{ $record->trainee->name }}</td>
-                            <td>{{ $record->trainee->identity_number }}</td>
+                            <td>{{ $record->trainee->clean_identity_number }}</td>
                             <td style="text-align: center;">{{ count($days) }}</td>
                             <td>4,000.00</td>
                             @for($i=0;$i<count($days);$i++)

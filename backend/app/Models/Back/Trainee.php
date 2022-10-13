@@ -8,13 +8,11 @@ use App\Models\EducationalLevel;
 use App\Models\MaritalStatus;
 use App\Models\SearchableLabels;
 use App\Models\Team;
-use App\Notifications\AssignedToCompanyTraineeNotification;
 use App\Services\TraineeCompanyMovementService;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use JamesMills\LaravelTimezone\Facades\Timezone;
-use Laravel\Scout\Searchable;
 use App\Models\User;
 use App\Scope\TeamScope;
 use App\Traits\HasUuid;
@@ -32,7 +30,6 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     use HasUuid;
     use SoftDeletes;
     use InteractsWithMedia;
-    // use Searchable;
     use Notifiable;
     use \OwenIt\Auditing\Auditable;
 
@@ -98,6 +95,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'bill_from_date_formatted',
         'linked_date_formatted',
         'has_outstanding_amount',
+        'clean_identity_number',
     ];
 
     protected static function boot(): void
@@ -442,6 +440,11 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         $arabic_eastern = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
         $arabic_western = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
         return str_replace($arabic_eastern, $arabic_western, $str);
+    }
+
+    public function getCleanIdentityNumberAttribute()
+    {
+        return $this->arabicE2w($this->identity_number);
     }
 
     public function absences_custom()
