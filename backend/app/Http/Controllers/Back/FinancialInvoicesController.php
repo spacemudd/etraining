@@ -420,6 +420,8 @@ class FinancialInvoicesController extends Controller
     {
         $request->validate([
             'grand_total' => 'nullable|string|max:255',
+            'sub_total' => 'nullable|string|max:255',
+            'tax' => 'nullable|string|max:255',
         ]);
 
         DB::beginTransaction();
@@ -427,6 +429,8 @@ class FinancialInvoicesController extends Controller
         $t = Invoice::withTrashed()->find($invoice_id);
         $new = $t->replicate();
         $new->grand_total = $request->grand_total;
+        $new->sub_total = $request->grand_total-($request->grand_total/1.15*0.15);
+        $new->tax = (($request->grand_total-($request->grand_total/1.15*0.15))*0.15);
         $new->save();
         $t->delete();
 
