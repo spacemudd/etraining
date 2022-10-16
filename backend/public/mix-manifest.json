@@ -1,11 +1,16 @@
 {
 <<<<<<< main
+<<<<<<< main
     "/js/app.js": "/js/app.js?id=84a17036a24de2fb9db8",
     "/css/app.css": "/css/app.css?id=ad330b4623269e4f04b6",
 =======
     "/js/app.js": "/js/app.js?id=3513657cf6ac0549b144",
     "/css/app.css": "/css/app.css?id=69ef84e36ee50549305b",
 >>>>>>> Edit Amount of Invoices
+=======
+    "/js/app.js": "/js/app.js?id=5331fc13d3fb4f90ef93",
+    "/css/app.css": "/css/app.css?id=ad330b4623269e4f04b6",
+>>>>>>> Add Mail Notification
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
     "/js/vendor.js": "/js/vendor.js?id=1e03a14185d87ffd6b4b"
 }

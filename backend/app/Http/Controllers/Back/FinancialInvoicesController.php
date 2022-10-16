@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Back;
 use App\Http\Controllers\Controller;
 use App\Jobs\CourseAttendanceReportJob;
 use App\Jobs\InvoicesSheetReportJob;
+use App\Mail\EditInvoiceMail;
 use App\Models\Back\AccountingLedgerBook;
 use App\Models\Back\Company;
 use App\Models\Back\Invoice;
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Mail;
 use PDF;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -427,6 +429,10 @@ class FinancialInvoicesController extends Controller
         $new->grand_total = $request->grand_total;
         $new->save();
         $t->delete();
+
+        Mail::to(['abdelwhab@ptc-ksa.com'])
+            ->cc(['acc@ptc-ksa.com', 'shafiqalshaar@clarastars.com', 'hadeel@ptc-ksa.com'])
+            ->queue(new EditInvoiceMail($new));
 
         DB::commit();
 
