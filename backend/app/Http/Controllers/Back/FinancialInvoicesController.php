@@ -432,7 +432,7 @@ class FinancialInvoicesController extends Controller
 
         Mail::to(['abdelwhab@ptc-ksa.com'])
             ->cc(['acc@ptc-ksa.com', 'shafiqalshaar@clarastars.com', 'hadeel@ptc-ksa.com'])
-            ->queue(new EditInvoiceMail($new));
+            ->queue(new EditInvoiceMail($new, $t));
 
         DB::commit();
 

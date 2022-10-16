@@ -114,24 +114,24 @@
         </tr>
     </table>
     <br>
-{{--    <h5>الفاتورة السابقة:</h5>--}}
-{{--    <br>--}}
-{{--    <table id="customers">--}}
-{{--        <tr style="background-color: #ec5b5b;">--}}
-{{--        <th>رقم الفاتورة</th>--}}
-{{--            <th>اسم المتدربة</th>--}}
-{{--            <th>الشركة</th>--}}
-{{--            <th>المبلغ</th>--}}
-{{--            <th>التاريخ</th>--}}
-{{--        </tr>--}}
-{{--        <tr>--}}
-{{--            <td>{{ $invoice->number_formatted }}</td>--}}
-{{--            <td>{{ $invoice->trainee->name }}</td>--}}
-{{--            <td>{{ $invoice->company->name_ar }}</td>--}}
-{{--            <td>{{ $invoice->grand_total }}</td>--}}
-{{--            <td>{{ $invoice->created_at }}</td>--}}
-{{--        </tr>--}}
-{{--    </table>--}}
+    <h5>الفاتورة السابقة:</h5>
+    <br>
+    <table id="customers">
+        <tr style="background-color: #ec5b5b;">
+        <th>رقم الفاتورة</th>
+            <th>اسم المتدربة</th>
+            <th>الشركة</th>
+            <th>المبلغ</th>
+            <th>التاريخ</th>
+        </tr>
+        <tr>
+            <td>{{ $t->number_formatted }}</td>
+            <td>{{ $t->trainee->name }}</td>
+            <td>{{ $t->company->name_ar }}</td>
+            <td>{{ $t->grand_total }}</td>
+            <td>{{ $t->created_at }}</td>
+        </tr>
+    </table>
 </div>
 </body>
 </html>
