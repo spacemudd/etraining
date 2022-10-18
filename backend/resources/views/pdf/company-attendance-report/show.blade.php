@@ -53,49 +53,49 @@ tfoot { display:table-footer-group }
 
     <div class="row" style="margin-top: 10px;">
         <div class="col-12">
-<table class="table">
-            <thead>
-                <tr style="height:60px;">
-                    <th colspan="39" style="text-align: center;padding: 10px;font-size: 38px;">
-                        {{ $report->company->name_ar }}
-                    </th>
-                </tr>
-                <tr style="height:100px;background:#e0e0e0;">
-                    <th dir="ltr" class="vertical-text" style="white-space: nowrap">SI #</th>
-                    <th dir="ltr" class="vertical-text">Emp. #</th>
-                    <th class="vertical-text">Status</th>
-                    <th class="vertical-text">Employee<br/> name</th>
-                    <th class="vertical-text">ID</th>
-                    <th colspan="2"></th>
-                    @foreach ($days as $day)
-                    <th style="width:20px;{{ $day['vacation_day'] ? 'background:#e0e0e0;' : 'background: white;' }}">
-                        <div class="vertical-text" style="position:absolute;white-space:nowrap;height:35px;">{{ $day['name'] }}</div>
-                    </th>
-                    @endforeach
-                    <th rowspan="2" style="width:20px;">
-                        <div class="vertical-text" style="position:absolute;white-space:nowrap;height:55px;">عدد الغياب</div>
-                    </th>
-                </tr>
-                <tr style="height:120px;background:#e0e0e0;">
-                    <th class="vertical-text">م</th>
-                    <th class="vertical-text" style="white-space: nowrap">الرقم الوظيفي</th>
-                    <th class="vertical-text">الحالة</th>
-                    <th class="vertical-text" style="width:500px;">اسم الموظف</th>
-                    <th class="vertical-text">السجل المدني</th>
-                    <th class="vertical-text" style="white-space: nowrap">
-                        <span>عدد ايام الدوام حسب</span>
-                        <br/>
-                        <span>الالتحاق بالتأمينات</span>
-                    </th>
-                    <th class="vertical-text" style="white-space: nowrap">قيمة الراتب</th>
-                    @foreach ($days as $day)
-                    <th style="width:20px;{{ $day['vacation_day'] ? 'background:#e0e0e0;' : 'background: white;' }}">
-                        <div class="vertical-text" style="position:absolute;white-space:nowrap;height:35px;width:30px;">{{ $day['date'] }}</div>
-                    </th>
-                    @endforeach
-                </tr>
-            </thead>
-            	<tbody style="page-break-inside: avoid;">
+            <table class="table">
+                <thead>
+                    <tr style="height:60px;">
+                        <th colspan="39" style="text-align: center;padding: 10px;font-size: 38px;">
+                            {{ $report->company->name_ar }}
+                        </th>
+                    </tr>
+                    <tr style="height:100px;background:#e0e0e0;">
+                        <th dir="ltr" class="vertical-text" style="white-space: nowrap">SI #</th>
+                        <th dir="ltr" class="vertical-text">Emp. #</th>
+                        <th class="vertical-text">Status</th>
+                        <th class="vertical-text">Employee<br/> name</th>
+                        <th class="vertical-text">ID</th>
+                        <th colspan="2"></th>
+                        @foreach ($days as $day)
+                        <th style="width:20px;{{ $day['vacation_day'] ? 'background:#e0e0e0;' : 'background: white;' }}">
+                            <div class="vertical-text" style="position:absolute;white-space:nowrap;height:35px;">{{ $day['name'] }}</div>
+                        </th>
+                        @endforeach
+                        <th rowspan="2" style="width:20px;">
+                            <div class="vertical-text" style="position:absolute;white-space:nowrap;height:55px;">عدد الغياب</div>
+                        </th>
+                    </tr>
+                    <tr style="height:120px;background:#e0e0e0;">
+                        <th class="vertical-text">م</th>
+                        <th class="vertical-text" style="white-space: nowrap">الرقم الوظيفي</th>
+                        <th class="vertical-text">الحالة</th>
+                        <th class="vertical-text" style="width:500px;">اسم الموظف</th>
+                        <th class="vertical-text">السجل المدني</th>
+                        <th class="vertical-text" style="white-space: nowrap">
+                            <span>عدد ايام الدوام حسب</span>
+                            <br/>
+                            <span>الالتحاق بالتأمينات</span>
+                        </th>
+                        <th class="vertical-text" style="white-space: nowrap">قيمة الراتب</th>
+                        @foreach ($days as $day)
+                        <th style="width:20px;{{ $day['vacation_day'] ? 'background:#e0e0e0;' : 'background: white;' }}">
+                            <div class="vertical-text" style="position:absolute;white-space:nowrap;height:35px;width:30px;">{{ $day['date'] }}</div>
+                        </th>
+                        @endforeach
+                    </tr>
+                </thead>
+                <tbody style="page-break-inside: avoid;">
                     @foreach ($report->getActiveTrainees() as $index => $record)
                         <tr>
                             <td>{{ ++$index }}</td>
@@ -111,7 +111,7 @@ tfoot { display:table-footer-group }
                             <td>0</td>
                         </tr>
                     @endforeach
-                                <tr>
+                    <tr>
                         <td colspan="6" style="text-align: center;">الإجمالي العام</td>
                         <td>
                             {{ number_format($report->activeTraineesCount() * 4000, 2) }}
@@ -122,8 +122,11 @@ tfoot { display:table-footer-group }
                     <tr>
                         <td colspan="100%" style="background:#e0e0e0;text-align: center;">** يعتبر الكشف صحيح ما لم يردنا اي ملاحظات خلال الاسبوع من الارسال</td>
                     </tr>
-            	</tbody>
+                </tbody>
             </table>
+        </div>
+        <div class="col-12" style="text-align:center;">
+            <img style="margin:0 auto;border:none;" src="{{ public_path('/img/ptc-signature.png')}}" alt="logo" width="200"/>
         </div>
     </div>
 </div>
