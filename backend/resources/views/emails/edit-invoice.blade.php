@@ -104,6 +104,7 @@
             <th>الشركة</th>
             <th>المبلغ</th>
             <th>التاريخ</th>
+            <th>بواسطة</th>
         </tr>
         <tr>
             <td>{{ $invoice->number_formatted }}</td>
@@ -111,6 +112,7 @@
             <td>{{ $invoice->company->name_ar }}</td>
             <td>{{ $invoice->grand_total }}</td>
             <td>{{ $invoice->created_at }}</td>
+            <td>{{ $email }}</td>
         </tr>
     </table>
     <br>
@@ -123,6 +125,8 @@
             <th>الشركة</th>
             <th>المبلغ</th>
             <th>التاريخ</th>
+            <th>بواسطة</th>
+
         </tr>
         <tr>
             <td>{{ $t->number_formatted }}</td>
@@ -130,6 +134,7 @@
             <td>{{ $t->company->name_ar }}</td>
             <td>{{ $t->grand_total }}</td>
             <td>{{ $t->created_at }}</td>
+            <td>{{ $email }}</td>
         </tr>
     </table>
 </div>

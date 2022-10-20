@@ -14,16 +14,18 @@ class EditInvoiceMail extends Mailable
 
     public $invoice;
     public $t;
+    public $email;
 
     /**
      * Create a new message instance.
      *
      * @param \App\Models\Back\Invoice $invoice
      */
-    public function __construct(Invoice $invoice, Invoice $t)
+    public function __construct(Invoice $invoice, Invoice $t, $email)
     {
         $this->invoice = $invoice;
         $this->t = $t;
+        $this->email = $email;
     }
 
     /**
@@ -38,6 +40,7 @@ class EditInvoiceMail extends Mailable
             ->view('emails.edit-invoice', [
                 'invoice' => $this->invoice,
                 'old_inv' => $this->t,
+                'email' => $this->email,
             ]);
     }
 }

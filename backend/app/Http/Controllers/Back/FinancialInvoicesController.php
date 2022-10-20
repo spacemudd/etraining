@@ -9,6 +9,7 @@ use App\Mail\EditInvoiceMail;
 use App\Models\Back\AccountingLedgerBook;
 use App\Models\Back\Company;
 use App\Models\Back\Invoice;
+use App\Models\Back\InvoiceItem;
 use App\Models\JobTracker;
 use App\Models\TraineeBankPaymentReceipt;
 use App\Reports\InvoicesReportFactory;
@@ -416,13 +417,17 @@ class FinancialInvoicesController extends Controller
         ]);
     }
 
-    public function update($invoice_id, Request $request)
+    public function update(Request $request, string $invoice_id)
     {
         $request->validate([
             'grand_total' => 'nullable|string|max:255',
             'sub_total' => 'nullable|string|max:255',
             'tax' => 'nullable|string|max:255',
         ]);
+
+        $invoice = Invoice::findOrFail($invoice_id);
+
+        $company = Company::query()->findOrFail($invoice->company_id);
 
         DB::beginTransaction();
 
@@ -432,16 +437,45 @@ class FinancialInvoicesController extends Controller
         $new->sub_total = $request->grand_total-($request->grand_total/1.15*0.15);
         $new->tax = (($request->grand_total-($request->grand_total/1.15*0.15))*0.15);
         $new->save();
+
+            $period = [
+                'start' => Carbon::parse($invoice->from_date)->format('Y-m-d'),
+                'end' => Carbon::parse($invoice->to_date)->format('Y-m-d'),
+            ];
+
+            $new->items()->create([
+                'name_en' => $company->name_en . ' - ' .__('words.training-costs-for-the-period-of', $period, 'en'),
+                'name_ar' => $company->name_ar . ' - ' .__('words.training-costs-for-the-period-of', $period, 'ar'),
+                'sub_total' => $new->sub_total,
+                'tax' => $new->tax,
+                'grand_total' => $new->grand_total,
+            ]);
+
+            AccountingLedgerBook::create([
+                'team_id' => $new->team_id,
+                'company_id' => $new->company_id,
+                'trainee_id' => $new->trainee_id,
+                'invoice_id' => $new->id,
+                'date' => now(),
+                'description' => $company->name_ar . ' - ' .__('words.training-costs-for-the-period-of', $period, 'ar'),
+                'reference'  => __('words.training-costs-for-the-period-of', $period, 'ar'),
+                'account_name' => $new->trainee->name,
+                'debit' => $new->grand_total,
+                'balance' => AccountingLedgerBook::getBalanceForTrainee($new->trainee->id) + $new->grand_total,
+            ]);
+
         $t->delete();
+        // todo: copy invoice_items too
 
         Mail::to(['abdelwhab@ptc-ksa.com'])
-            ->cc(['acc@ptc-ksa.com', 'shafiqalshaar@clarastars.com', 'hadeel@ptc-ksa.com'])
-            ->queue(new EditInvoiceMail($new, $t));
+            ->cc(['acc@ptc-ksa.com', 'shafiqalshaar@clarastars.com', 'hadeel@ptc-ksa.com', 'shahad.m@ptc-ksa.com'])
+            ->queue(new EditInvoiceMail($new, $t, auth()->user()->email));
 
         DB::commit();
 
         return $new;
     }
+
 
     public function destroy($invoice_id)
     {
