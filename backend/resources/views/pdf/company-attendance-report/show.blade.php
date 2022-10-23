@@ -56,7 +56,7 @@ tfoot { display:table-footer-group }
             <table class="table">
                 <thead>
                     <tr style="height:60px;">
-                        <th colspan="38" style="text-align: center;padding: 10px;font-size: 38px;">
+                        <th colspan="37" style="text-align: center;padding: 10px;font-size: 38px;">
                             {{ $report->company->name_ar }}
                         </th>
                     </tr>
