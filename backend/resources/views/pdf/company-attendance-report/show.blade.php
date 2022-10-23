@@ -66,7 +66,7 @@ tfoot { display:table-footer-group }
                         <th class="vertical-text">Status</th>
                         <th class="vertical-text">Employee<br/> name</th>
                         <th class="vertical-text">ID</th>
-                        <th colspan="2"></th>
+                        <th colspan="1"></th>
                         @foreach ($days as $day)
                         <th style="width:20px;{{ $day['vacation_day'] ? 'background:#e0e0e0;' : 'background: white;' }}">
                             <div class="vertical-text" style="position:absolute;white-space:nowrap;height:35px;">{{ $day['name'] }}</div>
