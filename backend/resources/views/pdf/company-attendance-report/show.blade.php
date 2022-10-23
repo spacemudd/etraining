@@ -112,7 +112,7 @@ tfoot { display:table-footer-group }
                         </tr>
                     @endforeach
                     <tr>
-                        <td colspan="5" style="text-align: center;">الإجمالي العام</td>
+                        <td colspan="6" style="text-align: center;">الإجمالي العام</td>
 {{--                        <td>--}}
 {{--                            {{ number_format($report->activeTraineesCount() * 4000, 2) }}--}}
 {{--                        </td>--}}
