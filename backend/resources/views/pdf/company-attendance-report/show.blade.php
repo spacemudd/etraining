@@ -56,7 +56,7 @@ tfoot { display:table-footer-group }
             <table class="table">
                 <thead>
                     <tr style="height:60px;">
-                        <th colspan="39" style="text-align: center;padding: 10px;font-size: 38px;">
+                        <th colspan="38" style="text-align: center;padding: 10px;font-size: 38px;">
                             {{ $report->company->name_ar }}
                         </th>
                     </tr>
@@ -87,7 +87,7 @@ tfoot { display:table-footer-group }
                             <br/>
                             <span>الالتحاق بالتأمينات</span>
                         </th>
-                        <th class="vertical-text" style="white-space: nowrap">قيمة الراتب</th>
+{{--                        <th class="vertical-text" style="white-space: nowrap">قيمة الراتب</th>--}}
                         @foreach ($days as $day)
                         <th style="width:20px;{{ $day['vacation_day'] ? 'background:#e0e0e0;' : 'background: white;' }}">
                             <div class="vertical-text" style="position:absolute;white-space:nowrap;height:35px;width:30px;">{{ $day['date'] }}</div>
@@ -104,7 +104,7 @@ tfoot { display:table-footer-group }
                             <td>{{ $record->trainee->name }}</td>
                             <td>{{ $record->trainee->clean_identity_number }}</td>
                             <td style="text-align: center;">{{ count($days) }}</td>
-                            <td>4,000.00</td>
+{{--                            <td>4,000.00</td>--}}
                             @for($i=0;$i<count($days);$i++)
                                 <td style="{{ $days[$i]['vacation_day'] ? 'background:#e0e0e0;' : '' }}">0</td>
                             @endfor
@@ -113,9 +113,9 @@ tfoot { display:table-footer-group }
                     @endforeach
                     <tr>
                         <td colspan="6" style="text-align: center;">الإجمالي العام</td>
-                        <td>
-                            {{ number_format($report->activeTraineesCount() * 4000, 2) }}
-                        </td>
+{{--                        <td>--}}
+{{--                            {{ number_format($report->activeTraineesCount() * 4000, 2) }}--}}
+{{--                        </td>--}}
                         <td colspan="{{ count($days) }}"></td>
                         <td>0</td>
                     </tr>
