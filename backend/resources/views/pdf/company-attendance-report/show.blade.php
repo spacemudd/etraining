@@ -56,7 +56,7 @@ tfoot { display:table-footer-group }
             <table class="table">
                 <thead>
                     <tr style="height:60px;">
-                        <th colspan="39" style="text-align: center;padding: 10px;font-size: 38px;">
+                        <th colspan="38" style="text-align: center;padding: 10px;font-size: 38px;">
                             {{ $report->company->name_ar }}
                         </th>
                     </tr>
@@ -112,7 +112,7 @@ tfoot { display:table-footer-group }
                         </tr>
                     @endforeach
                     <tr>
-                        <td colspan="6" style="text-align: center;">الإجمالي العام</td>
+                        <td colspan="5" style="text-align: center;">الإجمالي العام</td>
 {{--                        <td>--}}
 {{--                            {{ number_format($report->activeTraineesCount() * 4000, 2) }}--}}
 {{--                        </td>--}}
