@@ -282,7 +282,7 @@
             openChoosingTrainees(instructor) {
                 this.selectingTraineesForm.instructor_id = instructor.id;
                 let traineeIds = [];
-                _.forEach(instructor.trainees, function(trainee) {
+                _.forEach(instructor.trainees_contract, function(trainee) {
                     traineeIds.push(trainee.id);
                 })
                 this.selectingTraineesForm.trainees = traineeIds;
