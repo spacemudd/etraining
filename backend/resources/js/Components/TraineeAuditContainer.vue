@@ -11,7 +11,7 @@
             <th class="border px-6 pt-6 pb-4">{{ $t('words.new-values') }}</th>
         </tr>
         </thead>
-        	<tbody v-if="loaded">
+        	<tbody v-if="loaded && audits.length">
         			<tr v-for="(audit, key) in audits" :key="audit.id"
                         class="border"
                         :class="{'bg-gray-200':(key%2)}">
