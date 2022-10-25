@@ -15237,48 +15237,48 @@ var render = function render() {
       staticStyle: {
         width: "100%"
       }
-    }, [_vm._m(1, true), _vm._v(" "), _vm._l(audit.old_values, function (old_value, attribute) {
+    }, [_vm._m(1, true), _vm._v(" "), audit.old_values.length ? _vm._l(audit.old_values, function (old_value, attribute) {
       return _c("tr", [attribute === "company_id" ? [_c("td", {
         staticClass: "border"
       }, [_vm._v(_vm._s(attribute))]), _vm._v(" "), _c("td", {
         staticClass: "border"
-      }, [_c("inertia-link", {
+      }, [old_value ? _c("inertia-link", {
         staticClass: "text-blue-500 hover:text-blue-800",
         attrs: {
           href: _vm.route("back.companies.show", {
             company: old_value
           })
         }
-      }, [_vm._v(_vm._s(old_value.substring(0, 8)))])], 1)] : [_c("td", {
+      }, [_vm._v(_vm._s(old_value.substring(0, 8)))]) : _vm._e()], 1)] : [_c("td", {
         staticClass: "border"
       }, [_vm._v(_vm._s(attribute))]), _vm._v(" "), _c("td", {
         staticClass: "border"
       }, [_vm._v(_vm._s(old_value))])]], 2);
-    })], 2)]), _vm._v(" "), _c("td", {
+    }) : _vm._e()], 2)]), _vm._v(" "), _c("td", {
       staticClass: "border"
     }, [_c("table", {
       staticClass: "table table-bordered table-hover",
       staticStyle: {
         width: "100%"
       }
-    }, [_vm._m(2, true), _vm._v(" "), _vm._l(audit.new_values, function (new_value, attribute) {
+    }, [_vm._m(2, true), _vm._v(" "), audit.old_values.length ? _vm._l(audit.new_values, function (new_value, attribute) {
       return _c("tr", [attribute === "company_id" ? [_c("td", {
         staticClass: "border"
       }, [_vm._v(_vm._s(attribute))]), _vm._v(" "), _c("td", {
         staticClass: "border"
-      }, [_c("inertia-link", {
+      }, [new_value ? _c("inertia-link", {
         staticClass: "text-blue-500 hover:text-blue-800",
         attrs: {
           href: _vm.route("back.companies.show", {
             company: new_value
           })
         }
-      }, [_vm._v(_vm._s(new_value.substring(0, 8)))])], 1)] : [_c("td", {
+      }, [_vm._v("\n                                                " + _vm._s(new_value.substring(0, 8)) + "\n                                            ")]) : _vm._e()], 1)] : [_c("td", {
         staticClass: "border"
       }, [_vm._v(_vm._s(attribute))]), _vm._v(" "), _c("td", {
         staticClass: "border"
       }, [_vm._v(_vm._s(new_value))])]], 2);
-    })], 2)])]);
+    }) : _vm._e()], 2)])]);
   }), 0) : _vm._e()])]);
 };
 

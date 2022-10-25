@@ -46,7 +46,7 @@
                                 <colgroup>
                                     <col style="width:50%">
                                 </colgroup>
-                                <template v-if="audit.new_values.length">
+                                <template v-if="audit.old_values.length">
                                     <tr v-for="(new_value, attribute) in audit.new_values">
                                         <template v-if="attribute === 'company_id'">
                                             <td class="border">{{ attribute }}</td>
@@ -60,8 +60,8 @@
                                             <td class="border">{{ attribute }}</td>
                                             <td class="border">{{ new_value }}</td>
                                         </template>
+                                    </tr>
                                 </template>
-                                </tr>
                             </table>
                         </td>
         			</tr>
