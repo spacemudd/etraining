@@ -36,7 +36,7 @@ class CompaniesContractsController extends Controller
                         return $q->with(['trainee_group', 'company'])->where('company_id', $company_id);
                     }])
                         ->withCount(['trainees' => function($q) use ($company_id) {
-                            return $q->with(['trainee_group', 'company'])where('company_id', $company_id);
+                            return $q->with(['trainee_group', 'company'])->where('company_id', $company_id);
                         }]);
                 }])
                 ->withCount('attachments')
