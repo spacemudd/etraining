@@ -50,7 +50,7 @@ class CompaniesContractsController extends Controller
                     $q->with(['trainees_contract' => function($q) {
                         $q->with(['trainee_group', 'company']);
                     }])
-                        ->withCount('trainees_contract');
+                        ->withCount('trainees_contract AS trainees_count');
                 }])
                 ->withCount('attachments')
                 ->latest()
