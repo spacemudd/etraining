@@ -36,7 +36,7 @@ class Audit extends \OwenIt\Auditing\Models\Audit
             }
         });
 
-        static::addGlobalScope(new TeamScope());
+        //static::addGlobalScope(new TeamScope());
     }
 
     public function getCreatedAtHumanAttribute()
