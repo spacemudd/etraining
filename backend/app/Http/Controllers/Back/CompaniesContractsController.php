@@ -54,7 +54,6 @@ class CompaniesContractsController extends Controller
                 }])
                 ->withCount('attachments')
                 ->latest()
-                ->toBase()
                 ->get());
         }
     }
