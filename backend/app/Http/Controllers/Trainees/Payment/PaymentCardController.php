@@ -143,7 +143,9 @@ class PaymentCardController extends Controller
 
             DB::beginTransaction();
             foreach ($invoice_ids as $invoice_id) {
-                $invoice = Invoice::notPaid()->find($invoice_id);
+                $invoice = Invoice::notPaid()->with(['trainee' => function($q) {
+                    $q->withTrashed();
+                }])->find($invoice_id);
 
                 $invoice->update([
                     'payment_method' => Invoice::PAYMENT_METHOD_CREDIT_CARD,
@@ -153,7 +155,7 @@ class PaymentCardController extends Controller
                 ]);
 
                 AccountingLedgerBook::create([
-                    'team_id' => $invoice->team_id,
+                    'team_id' => $invoice->company->team_id,
                     'company_id' => $invoice->company_id,
                     'trainee_id' => $invoice->trainee_id,
                     'invoice_id' => $invoice->id,
