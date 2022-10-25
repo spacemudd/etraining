@@ -28,14 +28,15 @@ class CompaniesContractsController extends Controller
     {
         $this->authorize('view-company-contracts');
 
+
         if (request()->wantsJson()) {
             CompanyContract::where('company_id', $company_id)
                 ->with(['instructors' => function($q) use ($company_id) {
                     $q->with(['trainees' => function($q) use ($company_id) {
-                        return $q->with('trainee_group')->with('company')->where('company_id', $company_id);
+                        return $q->with(['trainee_group', 'company'])->where('company_id', $company_id);
                     }])
                         ->withCount(['trainees' => function($q) use ($company_id) {
-                            return $q->with('trainee_group')->with('company')->where('company_id', $company_id);
+                            return $q->with(['trainee_group', 'company'])where('company_id', $company_id);
                         }]);
                 }])
                 ->withCount('attachments')
@@ -43,16 +44,18 @@ class CompaniesContractsController extends Controller
                 ->get();
         }
 
-        //if (request()->wantsJson()) {
-        //    return CompanyContract::where('company_id', $company_id)
-        //        ->with(['instructors' => function($q) {
-        //            $q->with('trainees')
-        //                ->withCount('trainees');
-        //        }])
-        //        ->withCount('attachments')
-        //        ->latest()
-        //        ->get();
-        //}
+        if (request()->wantsJson()) {
+            return CompanyContract::where('company_id', $company_id)
+                ->with(['instructors' => function($q) {
+                    $q->with(['trainees' => function($q) {
+                        $q->with(['trainee_group', 'company']);
+                    }])
+                        ->withCount('trainees');
+                }])
+                ->withCount('attachments')
+                ->latest()
+                ->get();
+        }
     }
 
     /**
