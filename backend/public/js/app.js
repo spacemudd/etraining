@@ -15218,7 +15218,7 @@ var render = function render() {
     staticClass: "border px-6 pt-6 pb-4"
   }, [_vm._v(_vm._s(_vm.$t("words.old-values")))]), _vm._v(" "), _c("th", {
     staticClass: "border px-6 pt-6 pb-4"
-  }, [_vm._v(_vm._s(_vm.$t("words.new-values")))])])]), _vm._v(" "), _vm.loaded ? _c("tbody", _vm._l(_vm.audits, function (audit, key) {
+  }, [_vm._v(_vm._s(_vm.$t("words.new-values")))])])]), _vm._v(" "), _vm.loaded && _vm.audits.length ? _c("tbody", _vm._l(_vm.audits, function (audit, key) {
     return _c("tr", {
       key: audit.id,
       staticClass: "border",
