@@ -89,6 +89,11 @@ class Instructor extends Model implements HasMedia, SearchableLabels, Auditable
         return $this->hasMany(Trainee::class);
     }
 
+    public function trainees_contract()
+    {
+        return $this->hasMany(Trainee::class);
+    }
+
     /**
      * The user that the instructor can login with.
      *
