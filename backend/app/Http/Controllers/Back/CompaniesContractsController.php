@@ -48,7 +48,7 @@ class CompaniesContractsController extends Controller
             return response()->json(CompanyContract::where('company_id', $company_id)
                 ->with(['instructors' => function($q) {
                     $q->with(['trainees' => function($q) {
-                        $q->with(['trainee_group', 'company']);
+                        $q->with(['trainee_group', 'company', 'media', 'invoices']);
                     }])
                         ->withCount('trainees');
                 }])
