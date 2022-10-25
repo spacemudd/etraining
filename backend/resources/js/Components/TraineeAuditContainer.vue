@@ -29,7 +29,7 @@
                                     <template v-if="attribute === 'company_id'">
                                         <td class="border">{{ attribute }}</td>
                                         <td class="border">
-                                            <inertia-link class="text-blue-500 hover:text-blue-800" :href="route('back.companies.show', {company: old_value})">{{ old_value.substring(0, 8) }}</inertia-link>
+                                            <inertia-link v-if="old_value" class="text-blue-500 hover:text-blue-800" :href="route('back.companies.show', {company: old_value})">{{ old_value.substring(0, 8) }}</inertia-link>
                                         </td>
                                     </template>
                                     <template v-else>
@@ -47,7 +47,11 @@
                                 <tr v-for="(new_value, attribute) in audit.new_values">
                                     <template v-if="attribute === 'company_id'">
                                         <td class="border">{{ attribute }}</td>
-                                        <td class="border"><inertia-link class="text-blue-500 hover:text-blue-800" :href="route('back.companies.show', {company: new_value})">{{ new_value.substring(0, 8) }}</inertia-link></td>
+                                        <td class="border">
+                                            <inertia-link v-if="new_value" class="text-blue-500 hover:text-blue-800" :href="route('back.companies.show', {company: new_value})">
+                                                {{ new_value.substring(0, 8) }}
+                                            </inertia-link>
+                                        </td>
                                     </template>
                                     <template v-else>
                                         <td class="border">{{ attribute }}</td>
