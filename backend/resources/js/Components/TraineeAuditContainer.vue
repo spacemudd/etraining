@@ -25,18 +25,20 @@
                                 <colgroup>
                                     <col style="width:50%">
                                 </colgroup>
-                                <tr v-for="(old_value, attribute) in audit.old_values">
-                                    <template v-if="attribute === 'company_id'">
-                                        <td class="border">{{ attribute }}</td>
-                                        <td class="border">
-                                            <inertia-link v-if="old_value" class="text-blue-500 hover:text-blue-800" :href="route('back.companies.show', {company: old_value})">{{ old_value.substring(0, 8) }}</inertia-link>
-                                        </td>
-                                    </template>
-                                    <template v-else>
-                                        <td class="border">{{ attribute }}</td>
-                                        <td class="border">{{ old_value }}</td>
-                                    </template>
-                                </tr>
+                                <template v-if="audit.old_values.length">
+                                    <tr v-for="(old_value, attribute) in audit.old_values">
+                                        <template v-if="attribute === 'company_id'">
+                                            <td class="border">{{ attribute }}</td>
+                                            <td class="border">
+                                                <inertia-link v-if="old_value" class="text-blue-500 hover:text-blue-800" :href="route('back.companies.show', {company: old_value})">{{ old_value.substring(0, 8) }}</inertia-link>
+                                            </td>
+                                        </template>
+                                        <template v-else>
+                                            <td class="border">{{ attribute }}</td>
+                                            <td class="border">{{ old_value }}</td>
+                                        </template>
+                                    </tr>
+                                </template>
                             </table>
                         </td>
                         <td class="border">
@@ -44,19 +46,21 @@
                                 <colgroup>
                                     <col style="width:50%">
                                 </colgroup>
-                                <tr v-for="(new_value, attribute) in audit.new_values">
-                                    <template v-if="attribute === 'company_id'">
-                                        <td class="border">{{ attribute }}</td>
-                                        <td class="border">
-                                            <inertia-link v-if="new_value" class="text-blue-500 hover:text-blue-800" :href="route('back.companies.show', {company: new_value})">
-                                                {{ new_value.substring(0, 8) }}
-                                            </inertia-link>
-                                        </td>
-                                    </template>
-                                    <template v-else>
-                                        <td class="border">{{ attribute }}</td>
-                                        <td class="border">{{ new_value }}</td>
-                                    </template>
+                                <template v-if="audit.new_values.length">
+                                    <tr v-for="(new_value, attribute) in audit.new_values">
+                                        <template v-if="attribute === 'company_id'">
+                                            <td class="border">{{ attribute }}</td>
+                                            <td class="border">
+                                                <inertia-link v-if="new_value" class="text-blue-500 hover:text-blue-800" :href="route('back.companies.show', {company: new_value})">
+                                                    {{ new_value.substring(0, 8) }}
+                                                </inertia-link>
+                                            </td>
+                                        </template>
+                                        <template v-else>
+                                            <td class="border">{{ attribute }}</td>
+                                            <td class="border">{{ new_value }}</td>
+                                        </template>
+                                </template>
                                 </tr>
                             </table>
                         </td>
