@@ -27,7 +27,7 @@
                                 </colgroup>
                                 <tr v-for="(old_value, attribute) in audit.old_values">
                                     <template v-if="attribute === 'company_id'">
-                                        <td class="border">{{ attribute }}</td>
+                                        <td class="border">{{ attribute }} - الشركة</td>
                                         <td class="border">
                                             <inertia-link v-if="old_value" class="text-blue-500 hover:text-blue-800"
                                                           :href="route('back.companies.show', {company: old_value})">
@@ -49,7 +49,7 @@
                                 </colgroup>
                                 <tr v-for="(new_value, attribute) in audit.new_values">
                                     <template v-if="attribute === 'company_id'">
-                                        <td class="border">{{ attribute }}</td>
+                                        <td class="border">{{ attribute }} - الشركة</td>
                                         <td class="border">
                                             <inertia-link v-if="new_value" class="text-blue-500 hover:text-blue-800" :href="route('back.companies.show', {company: new_value})">
                                                 {{ new_value.substring(0, 8) }}
