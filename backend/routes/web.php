@@ -2,9 +2,7 @@
 
 use App\Models\Back\Trainee;
 
-Route::post('tap', function(\Illuminate\Http\Request $request) {
-    Log::critical(json_encode($request->toArray()));
-});
+Route::post('tap', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'storeTapReceipt']);
 
 Route::get('version', function() {
     return '4.7';

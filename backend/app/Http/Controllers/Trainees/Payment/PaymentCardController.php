@@ -11,9 +11,11 @@ use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Inertia\Inertia;
 use Tap\TapPayment\Facade\TapPayment;
+use Tap\TapPayment\TapService;
 
 class PaymentCardController extends Controller
 {
@@ -64,57 +66,6 @@ class PaymentCardController extends Controller
         if (!$request->has('tap_id')) {
             abort(404);
         }
-
-        try {
-            $tap_invoice = TapPayment::findCharge($request->input('tap_id'));
-        } catch (Exception $exception) {
-            // your handling of request failure
-            // dd($exception->getMessage());
-            abort(404);
-        }
-
-        $user = auth()->user();
-        $trainee = $user->trainee;
-
-        $invoices = explode(",", json_decode($tap_invoice->getMetaData()['invoices']));
-        $invoices = $trainee->invoices()->notPaid()->findMany($invoices);
-
-        if ($invoices->count() === 0) {
-            // Handle error logic, Invoices already paid or for some other reason not found
-            abort(500);
-        }
-
-        if (!$tap_invoice->isSuccess()) {
-            \Log::error(['msg' => 'A CC payment failed', 'trainee_id' => auth()->user()->trainee->id, collect($tap_invoice)]);
-            return redirect()->route('dashboard');
-            //if ($tap_invoice->status);
-            // dd($tap_invoice->status); // DECLINED,
-            // Handle error logic, Payment failed
-            abort(500);
-        }
-
-        // If we reach this point, it means payment is successful.
-        $invoices->each(function ($invoice) use ($tap_invoice) {
-            $invoice->update([
-                'payment_method' => Invoice::PAYMENT_METHOD_CREDIT_CARD,
-                'payment_reference_id' => $tap_invoice->getId(),
-                'paid_at' => now(),
-                'status' => Invoice::STATUS_PAID,
-            ]);
-
-            AccountingLedgerBook::create([
-                'team_id' => $invoice->team_id,
-                'company_id' => $invoice->company_id,
-                'trainee_id' => $invoice->trainee_id,
-                'invoice_id' => $invoice->id,
-                'date' => now(),
-                'description' => $tap_invoice->getId(),
-                'reference'  => 'دفع عبر الموقع',
-                'account_name' => $invoice->trainee->name,
-                'credit' => $invoice->grand_total,
-                'balance' => AccountingLedgerBook::getBalanceForTrainee($invoice->trainee->id) - $invoice->grand_total,
-            ]);
-        });
 
         session()->put('success_payment', true);
 
@@ -168,6 +119,54 @@ class PaymentCardController extends Controller
         }
 
         return $payment_url;
+    }
+
+    /**
+     * Receives Tap webhook and saves the receipt ID.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return void
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Throwable
+     */
+    public function storeTapReceipt(Request $request)
+    {
+        $status = $request->status;
+
+        if ($status === 'CAPTURED') {
+            // Confirm that Tap has the payment.
+            $tap_service = new TapService();
+            $tap_invoice = $tap_service->findCharge($request->id);
+            throw_if(! $tap_invoice, 'Invoice not found in payment gateway');
+
+            $invoice_ids = explode(',', json_decode($request->metadata['invoices']));
+
+            DB::beginTransaction();
+            foreach ($invoice_ids as $invoice_id) {
+                $invoice = Invoice::notPaid()->find($invoice_id);
+
+                $invoice->update([
+                    'payment_method' => Invoice::PAYMENT_METHOD_CREDIT_CARD,
+                    'payment_reference_id' => $tap_invoice->getId(),
+                    'paid_at' => now(),
+                    'status' => Invoice::STATUS_PAID,
+                ]);
+
+                AccountingLedgerBook::create([
+                    'team_id' => $invoice->team_id,
+                    'company_id' => $invoice->company_id,
+                    'trainee_id' => $invoice->trainee_id,
+                    'invoice_id' => $invoice->id,
+                    'date' => now(),
+                    'description' => $tap_invoice->getId(),
+                    'reference'  => 'دفع عبر الموقع',
+                    'account_name' => $invoice->trainee->name,
+                    'credit' => $invoice->grand_total,
+                    'balance' => AccountingLedgerBook::getBalanceForTrainee($invoice->trainee->id) - $invoice->grand_total,
+                ]);
+            }
+            DB::commit();
+        }
     }
 
     public function showOptions()
