@@ -45,7 +45,7 @@ class CompaniesContractsController extends Controller
         //}
 
         if (request()->wantsJson()) {
-            return CompanyContract::where('company_id', $company_id)
+            return response()->json(CompanyContract::where('company_id', $company_id)
                 ->with(['instructors' => function($q) {
                     $q->with(['trainees' => function($q) {
                         $q->with(['trainee_group', 'company']);
@@ -54,7 +54,7 @@ class CompaniesContractsController extends Controller
                 }])
                 ->withCount('attachments')
                 ->latest()
-                ->get();
+                ->toBase());
         }
     }
 
