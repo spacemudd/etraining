@@ -41,7 +41,7 @@ class CompaniesContractsController extends Controller
                 }])
                 ->withCount('attachments')
                 ->latest()
-                ->get();
+                ->toBase();
         }
 
         if (request()->wantsJson()) {
@@ -54,7 +54,7 @@ class CompaniesContractsController extends Controller
                 }])
                 ->withCount('attachments')
                 ->latest()
-                ->get();
+                ->toBase();
         }
     }
 
