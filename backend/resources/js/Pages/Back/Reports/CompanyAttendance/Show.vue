@@ -70,6 +70,9 @@
                            v-model="report.cc_emails" />
                 <p class="mt-1 text-xs">{{ $t('words.comma-separated-emails') }}</p>
             </div>
+            <div class="col-span-4">
+                <div id="emails-input"></div>
+            </div>
         </div>
 
         <!-- Trainees in the report -->
@@ -126,6 +129,8 @@
     import SelectCompany from "../../../../Components/SelectCompany";
     import DateRangePicker from 'vue2-daterange-picker'
     import 'vue2-daterange-picker/dist/vue2-daterange-picker.css'
+    import './emails-input';
+    import 'emails-input/src/scss/main.scss'
 
     export default {
         metaInfo() {
@@ -151,7 +156,10 @@
             'report',
         ],
         mounted() {
-
+            this.$nextTick(() => {
+                var inputContainerNode = document.querySelector('#emails-input');
+                var emailsInput = EmailsInput(inputContainerNode);
+            })
         },
         computed: {
             selectedCount() {

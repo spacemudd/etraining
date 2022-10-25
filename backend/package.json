@@ -38,6 +38,7 @@
         "@syncfusion/ej2-vue-calendars": "^18.4.31",
         "@zoomus/websdk": "^1.8.5",
         "cldr-data": "^36.0.0",
+        "emails-input": "^1.0.0",
         "font-awesome": "^4.7.0",
         "intl-tel-input": "^17.0.12",
         "jquery": "^3.5.1",
