@@ -11,7 +11,8 @@ RUN apt-get install -y \
     libjpeg62-turbo-dev \
     libzip-dev \
     zip \
-    libbz2-dev
+    libbz2-dev \
+    python3-pip
 
 RUN pecl channel-update pecl.php.net \
     && pecl install redis
@@ -24,6 +25,8 @@ RUN docker-php-ext-install zip bz2 pcntl \
     posix \
     exif \
     && docker-php-ext-enable redis
+
+RUN pip3 install supervisor
 
 # For wkhtmltopdf
 ENV DEBIAN_FRONTEND=noninteractive
@@ -56,20 +59,10 @@ WORKDIR /var/www
 
 USER $user
 
-#RUN cp .env.example .env && \
-#    composer install --no-dev && \
-#    php artisan key:generate && \
-#    chgrp -R www-data storage bootstrap/cache && \
-#    chmod -R ug+rwx storage bootstrap/cache
-
 RUN composer install --no-dev && \
     php artisan key:generate --force && \
     chgrp -R www-data storage bootstrap/cache && \
     chmod -R ug+rwx storage bootstrap/cache
-
-RUN apt update
-RUN apt-get install -y -u python3-pip
-RUN pip3 install supervisor
 
 WORKDIR /etc/supervisor/conf.d
 
