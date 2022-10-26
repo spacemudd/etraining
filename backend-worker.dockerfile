@@ -78,7 +78,7 @@ RUN composer install --no-dev && \
 
 RUN apt update
 RUN apt-get install -y -u python3-pip
-RUN pip install supervisor
+RUN pip3 install supervisor
 
 WORKDIR /etc/supervisor/conf.d
 
