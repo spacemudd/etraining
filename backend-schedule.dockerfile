@@ -11,8 +11,7 @@ RUN apt-get install -y \
     libjpeg62-turbo-dev \
     libzip-dev \
     zip \
-    libbz2-dev \
-    python3-pip
+    libbz2-dev
 
 RUN pecl channel-update pecl.php.net \
     && pecl install redis
@@ -26,6 +25,8 @@ RUN docker-php-ext-install zip bz2 pcntl \
     exif \
     && docker-php-ext-enable redis
 
+RUN apt-get update --allow-releaseinfo-change
+RUN apt-get install -y python3-pip
 RUN pip3 install supervisor
 
 # For wkhtmltopdf
