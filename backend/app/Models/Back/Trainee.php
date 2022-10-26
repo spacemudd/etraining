@@ -97,6 +97,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'has_outstanding_amount',
         'clean_identity_number',
         'whatsapp_link',
+        'clean_phone_additional',
     ];
 
     protected static function boot(): void
@@ -418,6 +419,11 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     public function getCleanPhoneAttribute()
     {
         return $this->cleanUpThePhoneNumber($this->phone);
+    }
+
+    public function getCleanPhoneAdditionalAttribute()
+    {
+        return $this->cleanUpThePhoneNumber($this->phone_additional);
     }
 
     public function getBillFromDateFormattedAttribute()

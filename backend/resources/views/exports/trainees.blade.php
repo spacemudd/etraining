@@ -52,10 +52,10 @@
                 {{ $trainee->email }}
             </td>
             <td style="text-align:center;border:1px solid black;">
-                ="{{ $trainee->phone }}"
+                ="{{ $trainee->clean_phone }}"
             </td>
             <td style="text-align:center;border:1px solid black;">
-                ="{{ $trainee->phone_additional }}"
+                ="{{ $trainee->clean_phone_additional }}"
             </td>
             <td style="text-align:center;border:1px solid black;">{{ optional($trainee->company)->name_ar }}</td>
             <td style="border:1px solid black;">{{ $trainee->identity_number }}</td>
