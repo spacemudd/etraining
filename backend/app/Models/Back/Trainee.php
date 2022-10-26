@@ -96,6 +96,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'linked_date_formatted',
         'has_outstanding_amount',
         'clean_identity_number',
+        'whatsapp_link',
     ];
 
     protected static function boot(): void
@@ -407,7 +408,6 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
             $convertPhone = Str::replaceFirst('5', '9665', $convertPhone);
         }
 
-
         if (Str::length($convertPhone) != 12) { // KSA number.
             return null;
         }
@@ -477,5 +477,10 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     public function getHasOutstandingAmountAttribute()
     {
         return $this->invoices()->notPaid()->count();
+    }
+
+    public function getWhatsappLinkAttribute()
+    {
+        return 'https://api.whatsapp.com/send?phone='.$this->routeNotificationForClickSend();
     }
 }

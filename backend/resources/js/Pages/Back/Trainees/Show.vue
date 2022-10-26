@@ -278,10 +278,12 @@
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
-                    <jet-label
-                        for="phone"
-                        :value="$t('words.phone')"
-                    />
+                    <label for="phone" class="block font-medium text-sm text-gray-700">
+                        <span>{{ $t('words.phone') }}</span>
+                        <a class="mt-10" :href="trainee.whatsapp_link" target="_blank">
+                            <ion-icon name="logo-whatsapp" class="w-4 h-4 text-green-600"></ion-icon>
+                        </a>
+                    </label>
                     <jet-input
                         id="phone"
                         type="text"
