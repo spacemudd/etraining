@@ -43,8 +43,8 @@ RUN apt-get install -yq xorg libssl-dev libxrender-dev wget gdebi
 RUN wget http://ftp.br.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.6_all.deb
 RUN apt-get -y install cabextract
 RUN dpkg -i ttf-mscorefonts-installer_3.6_all.deb
-RUN wget https://github.com/h4cc/wkhtmltopdf-amd64/blob/master/bin/wkhtmltopdf-amd64?raw=true -O /usr/local/bin/wkhtmltopdf \
-    && chmod +x /usr/local/bin/wkhtmltopdf
+RUN wget https://github.com/h4cc/wkhtmltopdf-amd64/blob/master/bin/wkhtmltopdf-amd64?raw=true -O /usr/local/bin/wkhtmltopdf2 \
+    && chmod +x /usr/local/bin/wkhtmltopdf2
 
 # 15 minutes execution time.
 RUN echo "memory_limit=2048M" > $PHP_INI_DIR/conf.d/memory-limit.ini
