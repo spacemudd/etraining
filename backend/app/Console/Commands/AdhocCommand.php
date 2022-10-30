@@ -46,7 +46,7 @@ class AdhocCommand extends Command
         $trainee = Trainee::withTrashed()->find('17b61580-709b-464b-b2b7-e5fea90516eb');
         $dates_marked_as_present = [
             Carbon::parse('2022-02-01'),
-            Carbon::parse('2022-03-01'),
+            Carbon::parse('2022-03-01')->endOfMonth(),
         ];
         $records = AttendanceReportRecord::where('trainee_id', $trainee->id)
             ->whereBetween('session_starts_at', $dates_marked_as_present)
@@ -54,7 +54,8 @@ class AdhocCommand extends Command
         foreach ($records as $record) {
             $record->status = 3;
             $record->attended_at = Carbon::parse($record->session_starts_at)->addMinutes(4);
-            $record->save(['timestamps' => false]);
+            $record->created_at = $record->updated_at = $record->attended_at;
+            $record->save();
         }
         DB::commit();
 
