@@ -53,7 +53,7 @@ class AdhocCommand extends Command
             ->get();
         foreach ($records as $record) {
             $record->status = 3;
-            $record->attended_at = Carbon::parse($record->session_starts_at)->addMinutes(4);
+            $record->attended_at = Carbon::parse($record->session_starts_at)->addMinutes(rand(2, 14));
             $record->created_at = $record->updated_at = $record->attended_at;
             $record->save();
         }
