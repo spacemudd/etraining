@@ -50,6 +50,7 @@ class CompanyAttendanceReportService
             ->setOption('footer-html', resource_path('views/pdf/company-attendance-report/company-attendance-report-footer.html'))
             ->loadView('pdf.company-attendance-report.show', [
                 'report' => $report,
+                'active_trainees' => $report->getActiveTrainees(),
                 'days' => $days,
             ]);
 
