@@ -39,23 +39,25 @@ class AdhocCommand extends Command
      * Execute the console command.
      *
      * @return int
+     * @throws \Throwable
      */
     public function handle()
     {
         DB::beginTransaction();
         $trainee = Trainee::withTrashed()->find('17b61580-709b-464b-b2b7-e5fea90516eb');
-        $dates_marked_as_present = [
-            Carbon::parse('2022-02-01'),
-            Carbon::parse('2022-03-01')->endOfMonth(),
-        ];
+        //$dates_marked_as_present = [
+        //    Carbon::parse('2022-02-01'),
+        //    Carbon::parse('2022-03-01')->endOfMonth(),
+        //];
         $records = AttendanceReportRecord::where('trainee_id', $trainee->id)
-            ->whereBetween('session_starts_at', $dates_marked_as_present)
+            //->whereBetween('session_starts_at', $dates_marked_as_present)
             ->get();
         foreach ($records as $record) {
-            $record->status = 3;
-            $record->attended_at = $record->course_batch_session->starts_at->addMinute(rand(1,10));
-            $record->created_at = $record->updated_at = $record->course_batch_session->starts_at;
-            $record->save();
+            $record->session_starts_at = $record->course_batch_session->starts_at;
+            //$record->status = 3;
+            //$record->attended_at = $record->course_batch_session->starts_at->addMinute(rand(1,10));
+            //$record->created_at = $record->updated_at = $record->course_batch_session->starts_at;
+            $record->save(['timestamps' => false]);
         }
         DB::commit();
 
