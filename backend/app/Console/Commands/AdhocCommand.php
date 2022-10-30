@@ -49,7 +49,7 @@ class AdhocCommand extends Command
             Carbon::parse('2022-03-01'),
         ];
         $records = AttendanceReportRecord::where('trainee_id', $trainee->id)
-            ->whereBetween($dates_marked_as_present)
+            ->whereBetween('session_starts_at', $dates_marked_as_present)
             ->get();
         foreach ($records as $record) {
             $record->status = 3;
