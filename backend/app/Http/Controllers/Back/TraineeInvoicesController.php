@@ -87,6 +87,7 @@ class TraineeInvoicesController extends Controller
                 'reference'  => __('words.training-costs-for-the-period-of', $period, 'ar'),
                 'account_name' => $invoice->trainee->name,
                 'debit' => $invoice->grand_total,
+                'credit' => 0,
                 'balance' => AccountingLedgerBook::getBalanceForTrainee($invoice->trainee->id) + $invoice->grand_total,
             ]);
 
