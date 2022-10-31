@@ -11,4 +11,6 @@ Route::middleware(['auth:sanctum'])->prefix('sales')->group(function() {
             'update' => 'sales.companies.update',
             'destroy' => 'sales.companies.destroy',
         ]);
+
+    Route::resource('companies.comms', \App\Http\Controllers\Back\CompanyCommController::class);
 });

@@ -11,7 +11,7 @@
 
             <div class="grid grid-cols-4 gap-6">
                 <div class="col-span-4 bg-gray-50">
-                    <div class="flex justify-between mt-5 w-full">
+                    <div class="flex justify-between w-full">
                         <div class="w-2/12">
                             <div class="bg-blue-600 text-center text-white p-2 rounded-sm">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mx-auto w-6 h-6">
@@ -50,6 +50,14 @@
                     </div>
                 </div>
             </div>
+
+
+            <div class="mt-10">
+                <inertia-link :href="route('companies.comms.create', company.id)"
+                              class="bg-blue-600 text-white text-xs p-2 rounded-lg">{{ $t('words.new-visit') }}</inertia-link>
+                <inertia-link class="bg-blue-600 text-white text-xs p-2 rounded-lg">{{ $t('words.new-meeting') }}</inertia-link>
+            </div>
+
         </div>
     </app-layout>
 </template>

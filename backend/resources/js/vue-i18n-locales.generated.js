@@ -724,8 +724,20 @@ export default {
             "comms": "التواصل",
             "price-offers": "عروض الاسعار",
             "recruitment": "الإستقطاب",
+<<<<<<< main
             "offers": "عروض"
 >>>>>>> Add top icons for sales page
+=======
+            "offers": "عروض",
+            "new-visit": "زيارة جديدة",
+            "new-meeting": "اجتماع جديد",
+            "new-comm": "تواصل جديد",
+            "result-of-comm": "نتيجة التواصل",
+            "not-interested": "غير مهتم",
+            "interested-set-meeting": "مهتم - تحديد موعد",
+            "interested-set-offer": "مهتم - تحديد عرض",
+            "comment": "ملاحظة"
+>>>>>>> Basic form
         }
     },
     "en": {
@@ -1398,8 +1410,20 @@ export default {
             "comms": "Comms",
             "price-offers": "Price offers",
             "recruitment": "Recruitment",
+<<<<<<< main
             "offers": "Offers"
 >>>>>>> Add top icons for sales page
+=======
+            "offers": "Offers",
+            "new-visit": "New visit",
+            "new-meeting": "New meeting",
+            "new-comm": "New comm",
+            "result-of-comm": "Result of comm.",
+            "not-interested": "Not interested",
+            "interested-set-meeting": "Interested - set meeting",
+            "interested-set-offer": "Interested - set offer",
+            "comment": "Comment"
+>>>>>>> Basic form
         }
     }
 }

@@ -553,4 +553,12 @@ return [
     'price-offers' => 'عروض الاسعار',
     'recruitment' => 'الإستقطاب',
     'offers' => 'عروض',
+    'new-visit' => 'زيارة جديدة',
+    'new-meeting' => 'اجتماع جديد',
+    'new-comm' => 'تواصل جديد',
+    'result-of-comm' => 'نتيجة التواصل',
+    'not-interested' => 'غير مهتم',
+    'interested-set-meeting' => 'مهتم - تحديد موعد',
+    'interested-set-offer' => 'مهتم - تحديد عرض',
+    'comment' => 'ملاحظة',
 ];

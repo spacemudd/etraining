@@ -535,4 +535,12 @@ return [
     'price-offers' => 'Price offers',
     'recruitment' => 'Recruitment',
     'offers' => 'Offers',
+    'new-visit' => 'New visit',
+    'new-meeting' => 'New meeting',
+    'new-comm' => 'New comm',
+    'result-of-comm' => 'Result of comm.',
+    'not-interested' => 'Not interested',
+    'interested-set-meeting' => 'Interested - set meeting',
+    'interested-set-offer' => 'Interested - set offer',
+    'comment' => 'Comment',
 ];
