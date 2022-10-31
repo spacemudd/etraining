@@ -647,7 +647,8 @@ class TraineesController extends Controller
         //if ($trainee->user) {
         //    $trainee->user->delete();
         //}
-        Mail::to(['sara@ptc-ksa.com'])
+        $users = User::permission('receive-notification-on-trainee-delete')->get();
+        Mail::to($users)
             ->queue(new DeletedTraineeMail($trainee, auth()->user()->email));
 
         DB::commit();

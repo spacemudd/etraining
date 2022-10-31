@@ -530,4 +530,5 @@ return [
     'removed' => 'Removed',
     'selected' => 'Selected',
     'edit-amount' => 'ُEdit Amount',
+    'receive-notification-on-trainee-delete' => 'Receive notification on trainee delete'
 ];

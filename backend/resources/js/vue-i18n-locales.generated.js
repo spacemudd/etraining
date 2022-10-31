@@ -717,7 +717,8 @@ export default {
             "added": "مضاف",
             "removed": "محذوف",
             "selected": "المختار",
-            "edit-amount": "تعديل مبلغ الفاتورة"
+            "edit-amount": "تعديل مبلغ الفاتورة",
+            "receive-notification-on-trainee-delete": "استلام اشعار عند حذف متدرب"
         }
     },
     "en": {
@@ -1383,7 +1384,8 @@ export default {
             "added": "Added",
             "removed": "Removed",
             "selected": "Selected",
-            "edit-amount": "ُEdit Amount"
+            "edit-amount": "ُEdit Amount",
+            "receive-notification-on-trainee-delete": "Receive notification on trainee delete"
         }
     }
 }
