@@ -143,7 +143,7 @@
                         <div class="col-span-2 sm:col-span-2">
                             <jet-label
                                 for="linked-date"
-                                :value="$t('words.linked-date')"
+                                :value="$t('words.Insurance-registration-date')"
                             />
 
                             <jet-input

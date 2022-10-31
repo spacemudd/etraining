@@ -438,7 +438,7 @@ return [
     'account-statement' => 'Account statement',
     'print-date' => 'Print date',
     'expected-cost-per-invoice' => 'Expected cost per invoice',
-    'linked-date' => 'Linked date',
+    'Insurance-registration-date' => 'Insurance registration date',
     'vat' => 'VAT',
     'select-all' => 'Select All',
     'due-balance-notice' => 'Your account has a past due balance. Please submit a payment to prevent account suspension.',

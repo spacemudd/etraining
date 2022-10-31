@@ -447,7 +447,7 @@ return [
     'account-statement' => 'كشف حساب',
     'print-date' => 'تاريخ الطباعة',
     'expected-cost-per-invoice' => 'متوقع مبلغ كل فاتورة',
-    'linked-date' => 'تاريخ الربط',
+    'Insurance-registration-date' => 'تاريخ التسجيل بالتأمينات',
     'vat' => 'الضريبة',
     'select-all' => 'اختيار الكل',
     'due-balance-notice' => 'حسابك لديه مبلغ مستحق. يرجى دفع رسوم التدريب لمنع تعليق الحساب.',
