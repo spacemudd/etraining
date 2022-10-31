@@ -10,21 +10,17 @@
             ></breadcrumb-container>
 
             <div class="grid grid-cols-6 gap-6">
-                <h1>
+                <h1>{{ $t('words.block-trainee') }}</h1>
+
+                <form @submit.prevent="saveForm">
+                    <div class="col-span-6 sm:col-span-2">
+                        <jet-textarea id="description" type="text" class="block w-full bg-white" v-model="deleted_remark" autocomplete="off" required/>
+                        <button type="submit" class="mt-5 items-center justify-start float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400">
                             {{ $t('words.block-trainee') }}
-                </h1>
-
-                <div class="col-span-6 sm:col-span-2">
-                    <jet-textarea id="description" type="text" class="block w-full bg-white" v-model="deleted_remark" autocomplete="off" requried/>
-                    <button @click="blockTrainee" class="mt-5 items-center justify-start float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400">
-                        {{ $t('words.block-trainee') }}
-                </button>
-                </div>
-
+                        </button>
+                    </div>
+                </form>
             </div>
-
-
-
         </div>
     </app-layout>
 </template>
@@ -62,7 +58,7 @@
             }
         },
         methods: {
-            blockTrainee() {
+            saveForm() {
                 if (confirm(this.$t('words.are-you-sure'))) {
                     this.$inertia.post(route('back.trainees.block.store', {trainee_id: this.trainee.id}), {
                         deleted_remark: this.deleted_remark,
