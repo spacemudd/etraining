@@ -549,4 +549,8 @@ return [
     'selected' => 'المختار',
     'edit-amount' => 'تعديل مبلغ الفاتورة',
     'receive-notification-on-trainee-delete' => 'استلام اشعار عند حذف متدرب',
+    'comms' => 'التواصل',
+    'price-offers' => 'عروض الاسعار',
+    'recruitment' => 'الإستقطاب',
+    'offers' => 'عروض',
 ];

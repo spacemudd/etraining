@@ -9,6 +9,13 @@ use Inertia\Inertia;
 
 class CompaniesController extends Controller
 {
+    public function index()
+    {
+        return Inertia::render('Sales/Companies/Index', [
+            'companies' => Company::paginate(30), // TODO: add gate.
+        ]);
+    }
+
     public function show($id)
     {
         return Inertia::render('Sales/Companies/Show', [

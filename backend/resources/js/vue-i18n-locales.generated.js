@@ -718,7 +718,14 @@ export default {
             "removed": "محذوف",
             "selected": "المختار",
             "edit-amount": "تعديل مبلغ الفاتورة",
+<<<<<<< main
             "receive-notification-on-trainee-delete": "استلام اشعار عند حذف متدرب"
+=======
+            "comms": "التواصل",
+            "price-offers": "عروض الاسعار",
+            "recruitment": "الإستقطاب",
+            "offers": "عروض"
+>>>>>>> Add top icons for sales page
         }
     },
     "en": {
@@ -1385,7 +1392,14 @@ export default {
             "removed": "Removed",
             "selected": "Selected",
             "edit-amount": "ُEdit Amount",
+<<<<<<< main
             "receive-notification-on-trainee-delete": "Receive notification on trainee delete"
+=======
+            "comms": "Comms",
+            "price-offers": "Price offers",
+            "recruitment": "Recruitment",
+            "offers": "Offers"
+>>>>>>> Add top icons for sales page
         }
     }
 }

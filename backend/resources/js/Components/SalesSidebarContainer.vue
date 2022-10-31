@@ -7,7 +7,7 @@
             </template>
         </sidebar-link>
 
-        <sidebar-link :link-value="route('back.companies.index')" :active="$page.currentRouteName == 'back.companies.index'">
+        <sidebar-link :link-value="route('sales.companies.index')" :active="$page.currentRouteName == 'back.companies.index'">
             <template #icon>
                 <img src="/img/book.svg" alt="" class="w-5 h-5">
             </template>

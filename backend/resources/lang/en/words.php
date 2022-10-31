@@ -531,4 +531,8 @@ return [
     'selected' => 'Selected',
     'edit-amount' => 'ُEdit Amount',
     'receive-notification-on-trainee-delete' => 'Receive notification on trainee delete'
+    'comms' => 'Comms',
+    'price-offers' => 'Price offers',
+    'recruitment' => 'Recruitment',
+    'offers' => 'Offers',
 ];
