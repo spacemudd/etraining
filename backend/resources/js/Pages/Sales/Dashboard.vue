@@ -2,8 +2,8 @@
     <app-sales-layout>
         <div class="container px-6 mx-auto grid">
             <!-- Cards -->
+            <!--
             <div class="grid gap-6 mb-8 md:grid-cols-3 xl:grid-cols-3 mt-6">
-                <!-- Card -->
                 <header-card :href="route('back.companies.index')"
                              title-value="متوسط الإتصالات الأسبوعية"
                              :count-value="281"
@@ -17,6 +17,7 @@
                              count-value="68%"
                              icon-path="/img/building.svg"></header-card>
             </div>
+            -->
 
             <!-- Quick actions actions -->
             <h2 class="my-6 font-semibold text-gray-700 dark:text-gray-200 border-b pb-1">
