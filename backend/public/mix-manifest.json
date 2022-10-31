@@ -1,5 +1,6 @@
 {
 <<<<<<< main
+<<<<<<< main
     "/js/app.js": "/js/app.js?id=84a17036a24de2fb9db8",
 =======
 <<<<<<< main
@@ -15,10 +16,10 @@
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
     "/js/vendor.js": "/js/vendor.js?id=d71fe25d5d62870126d3"
 =======
+=======
+>>>>>>> Add sidebar to mobile & limit search to companies
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
     "/js/manifest.js": "/js/manifest.js",
     "/js/vendor.js": "/js/vendor.js"
->>>>>>> Sales
->>>>>>> Sales
 }

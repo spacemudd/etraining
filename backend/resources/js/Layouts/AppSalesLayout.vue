@@ -60,7 +60,7 @@
                 >
                     <jet-application-mark/>
                 </a>
-                <side-sidebar-container/>
+                <sales-sidebar-container/>
             </div>
         </aside>
         <div class="flex flex-col flex-1 w-full mb-10">
@@ -89,7 +89,7 @@
                     </button>
                     <!-- Search input -->
                     <div class="flex justify-center flex-1 ltr:lg:mr-32 rtl:lg:ml-32">
-                        <admin-searchbar />
+                        <admin-searchbar :only-companies="true" />
                     </div>
                     <language-selector></language-selector>
                     <ul class="flex items-center flex-shrink-0 space-x-6">
@@ -193,6 +193,7 @@
     import LanguageSelector from "../Shared/LanguageSelector";
     import SidebarLink from '../Components/SidebarLink';
     import SalesSidebarContainer from "../Components/SalesSidebarContainer";
+    import AdminSearchbar from '../Components/AdminSearchbar';
 
     export default {
         components: {
@@ -205,6 +206,7 @@
             LanguageSelector,
             SidebarLink,
             SalesSidebarContainer,
+            AdminSearchbar,
         },
 
         data() {

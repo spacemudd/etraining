@@ -75,6 +75,12 @@
         components: {
             Skeleton,
         },
+        props: {
+            onlyCompanies: {
+                type: Boolean,
+                default: false,
+            }
+        },
         data() {
             return {
                 searchBoxVisible: false,
@@ -97,6 +103,7 @@
                     axios.get('/back/search', {
                         params: {
                             search: this.searchString,
+                            only_companies: this.onlyCompanies,
                         }
                     })
                         .then(response => {
