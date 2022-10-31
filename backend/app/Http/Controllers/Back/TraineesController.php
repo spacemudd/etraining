@@ -6,6 +6,7 @@ use App\Actions\Fortify\CreateNewTraineeUser;
 use App\Http\Controllers\Controller;
 use App\Jobs\ExportArchivedTraineesToExcelJob;
 use App\Jobs\ExportTraineesToExcelJob;
+use App\Mail\DeletedTraineeMail;
 use App\Models\Back\AttendanceReportRecord;
 use App\Models\Back\AttendanceReportRecordWarning;
 use App\Models\Back\Audit;
@@ -35,6 +36,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Mail;
 use PDF;
 
 class TraineesController extends Controller
@@ -645,6 +647,9 @@ class TraineesController extends Controller
         //if ($trainee->user) {
         //    $trainee->user->delete();
         //}
+        Mail::to(['sara@ptc-ksa.com'])
+            ->queue(new DeletedTraineeMail($trainee, auth()->user()->email));
+
         DB::commit();
         return redirect()->route('back.trainees.index');
     }
