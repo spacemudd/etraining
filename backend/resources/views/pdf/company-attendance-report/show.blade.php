@@ -153,7 +153,7 @@ tfoot { display:table-footer-group }
                             <td>0</td>
                         </tr>
                         <tr>
-                            <td colspan="100%" style="background:#e0e0e0;text-align: center;">** يعتبر الكشف صحيح ما لم يردنا اي ملاحظات خلال الاسبوع من الارسال ({{ optional($report->approved_at)->setTimezone('Asia/Riyadh')->toDateString() }})</td>
+                            <td colspan="100%" style="background:#e0e0e0;text-align: center;">** يعتبر الكشف صحيح ما لم يردنا اي ملاحظات خلال الاسبوع من الارسال</td>
                         </tr>
                     </tbody>
                 </table>
