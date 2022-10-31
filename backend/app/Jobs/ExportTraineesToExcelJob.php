@@ -17,6 +17,8 @@ class ExportTraineesToExcelJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $timeout = 3600;
+
     public $excelJob;
 
     /**
