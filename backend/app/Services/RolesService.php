@@ -47,6 +47,7 @@ class RolesService
         'delete-invoice',
         'can-delete-invoice-anytime',
         'submit-company-attendance-report',
+        'receive-notification-on-trainee-delete',
         // add the same name of the role to translation files.
     ];
 

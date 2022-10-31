@@ -548,4 +548,5 @@ return [
     'removed' => 'محذوف',
     'selected' => 'المختار',
     'edit-amount' => 'تعديل مبلغ الفاتورة',
+    'receive-notification-on-trainee-delete' => 'استلام اشعار عند حذف متدرب',
 ];
