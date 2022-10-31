@@ -264,8 +264,8 @@ class FinancialInvoicesController extends Controller
         ]);
 
         $invoice = Invoice::findOrFail($id);
-        $invoice->status = Invoice::STATUS_UNPAID;
-        $invoice->chased_note = $request->reason;
+        $invoice->status = Invoice::STATUS_PAYMENT_RECEIPT_REJECTED;
+        $invoice->chased_note = $request->chased_note;
         $invoice->chased_by_id = auth()->user()->id;
         $invoice->paid_at = null;
         $invoice->save();
