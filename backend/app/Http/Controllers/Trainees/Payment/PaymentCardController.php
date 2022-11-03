@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Trainees\Payment;
 
 use App\Http\Controllers\Controller;
 use App\Models\Back\AccountingLedgerBook;
+use App\Models\Back\Audit;
 use App\Models\Back\Invoice;
+use App\Models\Back\Trainee;
 use App\Models\TraineeBankPaymentReceipt;
 use Brick\PhoneNumber\PhoneNumber;
 use Exception;
@@ -169,6 +171,31 @@ class PaymentCardController extends Controller
             }
             DB::commit();
         }
+
+        $this->recordFailure($request);
+    }
+
+    public function recordFailure(Request $request)
+    {
+        $invoice_ids = explode(',', json_decode($request->metadata['invoices']));
+
+        DB::beginTransaction();
+        foreach ($invoice_ids as $invoice_id) {
+            $invoice = Invoice::notPaid()->with([
+                'trainee' => function ($q) {
+                    $q->withTrashed();
+                }
+            ])->find($invoice_id);
+
+            Audit::create([
+                'team_id' => $invoice->trainee->team_id,
+                'event' => 'payment_failure',
+                'auditable_id' => $invoice->trainee->id,
+                'auditable_type' => Trainee::class,
+                'new_values' => $request->toArray(),
+            ]);
+        }
+        DB::commit();
     }
 
     public function showOptions()
