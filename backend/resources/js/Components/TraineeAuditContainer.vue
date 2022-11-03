@@ -1,6 +1,6 @@
 <template>
     <div>
-        <table class="w-full whitespace-no-wrap">
+        <table class="w-full">
             <colgroup>
                 <col>
             </colgroup>
