@@ -275,6 +275,8 @@
         </div>
 
         <jet-section-border></jet-section-border>
+
+        <trainee-audit-container :trainee_id="trainee.id"></trainee-audit-container>
     </app-layout>
 </template>
 

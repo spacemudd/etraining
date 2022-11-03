@@ -992,7 +992,6 @@ class TraineesController extends Controller
             ->withoutGlobalScopes()
             ->with('user')
             ->orderBy('created_at', 'desc')
-            ->take(30)
             ->get();
 
         return response()->json($audits);
