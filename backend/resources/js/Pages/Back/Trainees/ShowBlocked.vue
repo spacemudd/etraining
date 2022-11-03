@@ -299,6 +299,7 @@
     import EmptySlate from "@/Components/EmptySlate";
     import ValidationErrors from "@/Components/ValidationErrors";
     import NProgress from 'nprogress'
+    import TraineeAuditContainer from "@/Components/TraineeAuditContainer";
 
     export default {
         props: ['sessions', 'trainee', 'cities', 'marital_statuses', 'educational_levels', 'trainee_groups', 'trainee_group_trainees'],
@@ -320,7 +321,7 @@
             SelectTraineeGroup,
             ValidationErrors,
             EmptySlate,
-
+            TraineeAuditContainer,
         },
         data() {
             return {
