@@ -192,7 +192,7 @@ return [
     'url-problem' => "إذا كانت تواجهك صعوبة في الضغط على \":actionText\", انسخ الرابط التالي \n" .
         'في صفحة المتصفح الخاص بك: ',
     'all-rights-reserved' => 'كل الحقوق محفوظة',
-    'welcome-to-ptc' => 'اهلا بك في مركز احترافية التدريب',
+    'welcome-to-ptc' => 'اهلا بك في مركز احترافية المدرب للتدريب',
     'your-application-has-been-approved' => 'لقد تم قبولك في منصة التدريب ويمكن الدخول عليها من: ',
     'incomplete-application' => 'ملف غير مكتمل',
     'pending-approval' => 'جاري الموافقة',
