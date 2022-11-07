@@ -41,10 +41,19 @@ class DashboardController extends Controller
             $show_success_payment = false;
         }
 
+        if (session()->has('failed_payment')) {
+            session()->forget('failed_payment');
+            $show_failed_payment = true;
+        } else {
+            $show_failed_payment = false;
+        }
+
+
         return Inertia::render('Trainees/Dashboard', [
             'user' => auth()->user(),
             'sessions' => $sessions,
             'show_success_payment' => $show_success_payment,
+            'show_failed_payment' => $show_failed_payment,
         ]);
     }
 }

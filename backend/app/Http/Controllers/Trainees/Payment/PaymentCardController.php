@@ -65,11 +65,22 @@ class PaymentCardController extends Controller
      */
     public function chargePayment(Request $request)
     {
-        if (!$request->has('tap_id')) {
-            abort(404);
-        }
+//        dd($request);
+//        if (!$request->has('tap_id')) {
+//            abort(404);
+//        }
 
-        session()->put('success_payment', true);
+        $tap_service = new TapService();
+        $tap_invoice = $tap_service->findCharge($request->tap_id);
+
+        dd($tap_invoice);
+
+        if ($request->has('tap_id')) {
+            session()->put('success_payment', true);
+        }
+        if (!$request->has('tap_id')) {
+            session()->put('failed_payment', true);
+        }
 
         // Show success page
         return redirect()
