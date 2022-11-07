@@ -73,12 +73,9 @@ class PaymentCardController extends Controller
         $tap_service = new TapService();
         $tap_invoice = $tap_service->findCharge($request->tap_id);
 
-        dd($tap_invoice);
-
-        if ($request->has('tap_id')) {
+        if ($tap_invoice->isSuccess()) {
             session()->put('success_payment', true);
-        }
-        if (!$request->has('tap_id')) {
+        } else {
             session()->put('failed_payment', true);
         }
 

@@ -8,6 +8,8 @@
                 </div>
             </div>
 
+
+
             <!-- Payment notice -->
             <div class="container mx-auto grid p-6" v-if="user.trainee.has_outstanding_amount">
                 <div class="bg-blue-100 rounded-lg p-10 border-blue-500 border-2">
@@ -73,7 +75,7 @@
                 </div>
             </div>
 
-            <div class="container mx-auto grid p-6" v-if="show_failed_payment && invoice.status === 0">
+            <div class="container mx-auto grid p-6" v-if="show_failed_payment">
                 <div class="bg-white rounded-lg p-10 flex gap-10 border-1 border-emerald-500"
                      style="border-top: 20px solid rgb(255,42,42);background: #eff1ef;">
                     <div style="width: 100%;">
@@ -82,6 +84,8 @@
     color: #323232;
     letter-spacing: 1px;
 }">فشلت عملية الدفع الأخيرة! حاول السداد مرة أخرى</p>
+                        <br>
+                        <p class="text-center">{{ new Date() }}</p>
                     </div>
                 </div>
             </div>
@@ -179,7 +183,7 @@
     import HeaderCard from "@/Components/HeaderCard";
 
     export default {
-        props: ['sessions', 'user', 'show_success_payment', 'show_failed_payment', 'invoice'],
+        props: ['sessions', 'user', 'show_success_payment', 'show_failed_payment'],
         components: {
             AppLayout,
             Welcome,
