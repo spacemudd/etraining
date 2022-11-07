@@ -73,6 +73,19 @@
                 </div>
             </div>
 
+            <div class="container mx-auto grid p-6" v-if="show_failed_payment && invoice.status === 0">
+                <div class="bg-white rounded-lg p-10 flex gap-10 border-1 border-emerald-500"
+                     style="border-top: 20px solid rgb(255,42,42);background: #eff1ef;">
+                    <div style="width: 100%;">
+                        <p class="mt-2 text-gray-500" style="text-align: center;
+    font-size: 20px;
+    color: #323232;
+    letter-spacing: 1px;
+}">فشلت عملية الدفع الأخيرة! حاول السداد مرة أخرى</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="container mx-auto grid p-6">
                 <div class="bg-white rounded-lg p-10 flex gap-10">
                     <img src="/img/student.svg" alt="student" class="h-20">
@@ -166,7 +179,7 @@
     import HeaderCard from "@/Components/HeaderCard";
 
     export default {
-        props: ['sessions', 'user', 'show_success_payment'],
+        props: ['sessions', 'user', 'show_success_payment', 'show_failed_payment', 'invoice'],
         components: {
             AppLayout,
             Welcome,
