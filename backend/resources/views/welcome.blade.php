@@ -38,18 +38,18 @@
                 </a>
             </div>
 
-            <div class="headline-separator py-5 text-center">
-                {{ __('words.or') }}
-            </div>
+{{--            <div class="headline-separator py-5 text-center">--}}
+{{--                {{ __('words.or') }}--}}
+{{--            </div>--}}
 
-            {{-- Instructor login --}}
-            <div>
-                <a href="{{ route('register.instructors') }}"
-                   class="flex bg-blue-500 hover:bg-blue-600 text-white py-5 px-10 rounded-lg text-2xl justify-center">
-                    <img src="{{ asset('/img/teacher.svg') }}" class="w-8 ml-5" style="filter:invert(1)">
-                    {{ __('words.im-an-instructor') }}
-                </a>
-            </div>
+{{--             Instructor login --}}
+{{--            <div>--}}
+{{--                <a href="{{ route('register.instructors') }}"--}}
+{{--                   class="flex bg-blue-500 hover:bg-blue-600 text-white py-5 px-10 rounded-lg text-2xl justify-center">--}}
+{{--                    <img src="{{ asset('/img/teacher.svg') }}" class="w-8 ml-5" style="filter:invert(1)">--}}
+{{--                    {{ __('words.im-an-instructor') }}--}}
+{{--                </a>--}}
+{{--            </div>--}}
         </form>
 
         <x-slot name="bottomCard">
