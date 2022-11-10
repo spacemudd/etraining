@@ -42,7 +42,27 @@ Route::get('phone-numbers/{company_id}', function() {
 
 Route::get('s1s1', function() {
     $ids = [];
-   $trainees = Trainee::get();
+    $trainees = Trainee::get();
+
+    $traineeData = [];
+
+    foreach ($trainees as $trainee) {
+        $traineeData[] = [
+            'name' => $trainee->name,
+            'company' => optional($trainee->company)->name_ar,
+            'email' => $trainee->email,
+            'phone' => $trainee->phone,
+            'instructor' => optional($trainee->instructor)->name,
+            'group' => optional($trainee->trainee_group)->name,
+        ];
+    }
+
+    return $traineeData;
+});
+
+Route::get('s1s2', function() {
+    $ids = [];
+    $trainees = Trainee::candidates()->where('city_id', 'd4fb0162-81ec-4b17-812a-06c7c4306cb5')->get();
 
     $traineeData = [];
 
