@@ -300,7 +300,7 @@
                 <!--                        </button>-->
                 <!--                    </div>-->
 
-                <div class="w-full md:w-4/12" v-if="invoice.status === 0">
+                <div class="w-full md:w-4/12" v-if="invoice.status === 0" v-can="'edit-invoice-amount'">
                     <div class="mx-5">
                         <div class="grid grid-cols-2 gap-6">
                             <div>

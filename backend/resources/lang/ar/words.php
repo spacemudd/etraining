@@ -551,4 +551,5 @@ return [
     'receive-notification-on-trainee-delete' => 'استلام اشعار عند حذف متدرب',
     'are-you-sure-to-delete' => 'سيتم حذف هذه الفاتورة وانشاء فاتورة جديدة بالمبلغ المدخل، هل أنت متأكد من تنفيذ العملية؟',
     'the-invoice-amount-has-been-modified' => 'تم التعديل على مبلغ الفاتورة:',
+    'edit-invoice-amount' => 'التعديل على مبلغ الفاتورة',
 ];

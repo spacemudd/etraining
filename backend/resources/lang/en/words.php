@@ -530,8 +530,9 @@ return [
     'removed' => 'Removed',
     'selected' => 'Selected',
     'edit-amount' => 'ُEdit Amount',
-    'receive-notification-on-trainee-delete' => 'Receive notification on trainee delete'
+    'receive-notification-on-trainee-delete' => 'Receive notification on trainee delete',
     'are-you-sure-to-delete' => 'This invoice will be deleted and a new invoice will be created with the amount entered. Are you sure you want to carry out the order?',
     'the-invoice-amount-has-been-modified' => 'The invoice amount has been modified:',
+    'edit-invoice-amount' => 'Edit invoice amount',
 
 ];

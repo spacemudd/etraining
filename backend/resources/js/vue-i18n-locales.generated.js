@@ -718,16 +718,10 @@ export default {
             "removed": "محذوف",
             "selected": "المختار",
             "edit-amount": "تعديل مبلغ الفاتورة",
-<<<<<<< main
-<<<<<<< main
-            "receive-notification-on-trainee-delete": "استلام اشعار عند حذف متدرب"
-=======
-            "are-you-sure-to-delete": "سيتم حذف هذه الفاتورة وانشاء فاتورة جديدة بالمبلغ المدخل، هل أنت متأكد من تنفيذ العملية؟"
->>>>>>> Edit Amount of Invoices
-=======
+            "receive-notification-on-trainee-delete": "استلام اشعار عند حذف متدرب",
             "are-you-sure-to-delete": "سيتم حذف هذه الفاتورة وانشاء فاتورة جديدة بالمبلغ المدخل، هل أنت متأكد من تنفيذ العملية؟",
-            "the-invoice-amount-has-been-modified": "تم التعديل على مبلغ الفاتورة:"
->>>>>>> Add Mail Notification
+            "the-invoice-amount-has-been-modified": "تم التعديل على مبلغ الفاتورة:",
+            "edit-invoice-amount": "التعديل على مبلغ الفاتورة"
         }
     },
     "en": {
@@ -1394,16 +1388,10 @@ export default {
             "removed": "Removed",
             "selected": "Selected",
             "edit-amount": "ُEdit Amount",
-<<<<<<< main
-<<<<<<< main
-            "receive-notification-on-trainee-delete": "Receive notification on trainee delete"
-=======
-            "are-you-sure-to-delete": "This invoice will be deleted and a new invoice will be created with the amount entered. Are you sure you want to carry out the order?"
->>>>>>> Edit Amount of Invoices
-=======
+            "receive-notification-on-trainee-delete": "Receive notification on trainee delete",
             "are-you-sure-to-delete": "This invoice will be deleted and a new invoice will be created with the amount entered. Are you sure you want to carry out the order?",
-            "the-invoice-amount-has-been-modified": "The invoice amount has been modified:"
->>>>>>> Add Mail Notification
+            "the-invoice-amount-has-been-modified": "The invoice amount has been modified:",
+            "edit-invoice-amount": "Edit invoice amount"
         }
     }
 }
