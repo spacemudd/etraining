@@ -561,4 +561,6 @@ return [
     'interested-set-meeting' => 'مهتم - تحديد موعد',
     'interested-set-offer' => 'مهتم - تحديد عرض',
     'comment' => 'ملاحظة',
+    'assign-people' => 'تعيين الاشخاص',
+    'contact-point' => 'جهة الاتصال',
 ];

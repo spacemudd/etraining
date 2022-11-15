@@ -14,7 +14,7 @@
             <form class="w-full max-w-lg">
                 <div class="flex flex-wrap -mx-3 mb-6">
                     <div class="w-full px-3">
-                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-password">
+                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
                             {{ $t('words.date') }}
                         </label>
                         <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
@@ -51,6 +51,20 @@
                                   class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                   placeholder=""></textarea>
                     </div>
+                </div>
+
+                <hr class="mb-5">
+
+                <div class="flex flex-wrap mx-3 mb-6">
+                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                        {{ $t('words.assign-people') }}
+                    </label>
+                </div>
+
+                <div class="flex flex-wrap mx-3 mb-6">
+                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                        {{ $t('words.contact-point') }}
+                    </label>
                 </div>
 
                 <button class="bg-blue-600 text-white rounded p-2 text-sm">{{ $t('words.save') }}</button>

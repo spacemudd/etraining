@@ -543,4 +543,6 @@ return [
     'interested-set-meeting' => 'Interested - set meeting',
     'interested-set-offer' => 'Interested - set offer',
     'comment' => 'Comment',
+    'assign-people' => 'Assign people',
+    'contact-point' => 'Contact point',
 ];
