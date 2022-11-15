@@ -134,7 +134,7 @@
                             </div>
                             <p v-if="session.course_batch.course.instructor" class="text-sm">
                                 {{ $t('words.provided-by') }}:
-                                <span >{{ session.course/_batch.course.instructor.name }}</span>
+                                <span >{{ session.course_batch.course.instructor.name }}</span>
                             </p>
                             <div class="mt-5 flex gap-3 flex-col md:flex-row">
                                 <!-- Course options -->

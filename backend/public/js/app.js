@@ -36521,7 +36521,7 @@ var render = function render() {
       }
     }, [_vm._v(_vm._s(_vm._f("toHours")(session.ends_at_timezone)))])], 1), _vm._v(" "), session.course_batch.course.instructor ? _c("p", {
       staticClass: "text-sm"
-    }, [_vm._v("\n                                " + _vm._s(_vm.$t("words.provided-by")) + ":\n                                "), _c("span", [_vm._v(_vm._s(session.course / _vm._batch.course.instructor.name))])]) : _vm._e(), _vm._v(" "), _c("div", {
+    }, [_vm._v("\n                                " + _vm._s(_vm.$t("words.provided-by")) + ":\n                                "), _c("span", [_vm._v(_vm._s(session.course_batch.course.instructor.name))])]) : _vm._e(), _vm._v(" "), _c("div", {
       staticClass: "mt-5 flex gap-3 flex-col md:flex-row"
     }, [_c("a", {
       staticClass: "btn btn-primary",
@@ -54522,7 +54522,7 @@ __webpack_require__.r(__webpack_exports__);
       "selected": "المختار",
       "edit-amount": "تعديل مبلغ الفاتورة",
       "receive-notification-on-trainee-delete": "استلام اشعار عند حذف متدرب",
-      "go-to-course": "التوجه الى الدورة",
+      "go-to-course": "التوجه الى البرنامج التدريبي",
       "timeline": "الجدول الزمني",
       "grades": "الدرجات",
       "resources": "الأدلة والدعم"
