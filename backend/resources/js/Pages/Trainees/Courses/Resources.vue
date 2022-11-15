@@ -10,11 +10,11 @@
             ></breadcrumb-container>
 
             <div class="flex justify-center gap-10">
-                <inertia-link class="border p-2 bg-red-500 text-white font-bold" :href="route('trainees.courses.show', course.id)">{{ $t('words.course-info') }}</inertia-link>
+                <inertia-link class="border p-2 bg-gray-200" :href="route('trainees.courses.show', course.id)">{{ $t('words.course-info') }}</inertia-link>
                 <inertia-link class="border p-2 bg-gray-200" :href="route('trainees.courses.timeline', course.id)">{{ $t('words.timeline') }}</inertia-link>
                 <inertia-link class="border p-2 bg-gray-200" :href="route('trainees.courses.grades', course.id)">{{ $t('words.grades') }}</inertia-link>
                 <inertia-link class="border p-2 bg-gray-200" :href="route('trainees.courses.messages', course.id)">{{ $t('words.messages') }}</inertia-link>
-                <inertia-link class="border p-2 bg-gray-200" :href="route('trainees.courses.resources', course.id)">{{ $t('words.resources') }}</inertia-link>
+                <inertia-link class="border p-2 bg-red-500 text-white font-bold" :href="route('trainees.courses.resources', course.id)">{{ $t('words.resources') }}</inertia-link>
             </div>
 
             <div class="grid grid-cols-6 gap-6">

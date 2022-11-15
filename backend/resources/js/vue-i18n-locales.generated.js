@@ -379,7 +379,7 @@ export default {
             "to-register": "لإنشاء حساب جديد",
             "to-login": "تسجيل الدخول",
             "description": "الوصف",
-            "course-info": "وصف عن الدورة",
+            "course-info": "حول البرنامج",
             "approve-course": "اعتمد الدورة",
             "groups": "مجموعات",
             "trainees-count": "عدد المتدربين",
@@ -389,7 +389,7 @@ export default {
             "send-announcement-to-all-trainees": "إرسال اشعار الى كل المتدربين",
             "message": "الرسالة",
             "you-can-only-send-a-message-per-day": "يمكن لك الإرسال للمجموعة فقط مرة واحدة لكل برنامج",
-            "messages": "رسائل و تنبيهات",
+            "messages": "التواصل",
             "from": "من",
             "to": "الى",
             "view-trainees": "عرض المتدربين",
@@ -718,7 +718,11 @@ export default {
             "removed": "محذوف",
             "selected": "المختار",
             "edit-amount": "تعديل مبلغ الفاتورة",
-            "receive-notification-on-trainee-delete": "استلام اشعار عند حذف متدرب"
+            "receive-notification-on-trainee-delete": "استلام اشعار عند حذف متدرب",
+            "go-to-course": "التوجه الى الدورة",
+            "timeline": "الجدول الزمني",
+            "grades": "الدرجات",
+            "resources": "الأدلة والدعم"
         }
     },
     "en": {
@@ -1062,7 +1066,7 @@ export default {
             "to-register": "To register",
             "to-login": "To login",
             "description": "Description",
-            "course-info": "Description on course",
+            "course-info": "Course info",
             "approve-course": "Approve course",
             "groups": "Groups",
             "trainees-count": "Trainees count",
@@ -1385,7 +1389,11 @@ export default {
             "removed": "Removed",
             "selected": "Selected",
             "edit-amount": "ُEdit Amount",
-            "receive-notification-on-trainee-delete": "Receive notification on trainee delete"
+            "receive-notification-on-trainee-delete": "Receive notification on trainee delete",
+            "go-to-course": "Go to course",
+            "timeline": "Timeline",
+            "grades": "Grades",
+            "resources": "Resources"
         }
     }
 }

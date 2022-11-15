@@ -68,4 +68,36 @@ class CoursesController extends Controller
 
         return $pdf->download();
     }
+
+    public function timeline($course_id)
+    {
+        $course = Course::attending()->with('instructor')->findOrFail($course_id);
+        return Inertia::render('Trainees/Courses/Timeline', [
+            'course' => $course,
+        ]);
+    }
+
+    public function grades($course_id)
+    {
+        $course = Course::attending()->with('instructor')->findOrFail($course_id);
+        return Inertia::render('Trainees/Courses/Grades', [
+            'course' => $course,
+        ]);
+    }
+
+    public function messages($course_id)
+    {
+        $course = Course::attending()->with('instructor')->findOrFail($course_id);
+        return Inertia::render('Trainees/Courses/Messages', [
+            'course' => $course,
+        ]);
+    }
+
+    public function resources($course_id)
+    {
+        $course = Course::attending()->with('instructor')->findOrFail($course_id);
+        return Inertia::render('Trainees/Courses/Resources', [
+            'course' => $course,
+        ]);
+    }
 }

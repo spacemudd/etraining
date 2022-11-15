@@ -134,10 +134,16 @@
                             </div>
                             <p v-if="session.course_batch.course.instructor" class="text-sm">
                                 {{ $t('words.provided-by') }}:
-                                <span >{{ session.course_batch.course.instructor.name }}</span>
+                                <span >{{ session.course/_batch.course.instructor.name }}</span>
                             </p>
                             <div class="mt-5 flex gap-3 flex-col md:flex-row">
                                 <!-- Course options -->
+
+                                <a class="btn btn-primary" :href="route('trainees.courses.show', session.course_batch.course.id)">
+                                    {{ $t('words.go-to-course') }}
+                                </a>
+
+
                                 <a target="_blank"
                                    :href="session.course_batch.course.training_package_url"
                                    class="text-xs bg-yellow-200 py-3 px-6 rounded-lg font-bold hover:bg-yellow-300">

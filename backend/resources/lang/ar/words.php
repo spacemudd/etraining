@@ -549,4 +549,10 @@ return [
     'selected' => 'المختار',
     'edit-amount' => 'تعديل مبلغ الفاتورة',
     'receive-notification-on-trainee-delete' => 'استلام اشعار عند حذف متدرب',
+    'go-to-course' => 'التوجه الى الدورة',
+    'course-info' => 'حول البرنامج',
+    'timeline' => 'الجدول الزمني',
+    'grades' => 'الدرجات',
+    'messages' => 'التواصل',
+    'resources' => 'الأدلة والدعم',
 ];
