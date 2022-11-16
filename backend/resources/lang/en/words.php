@@ -537,4 +537,5 @@ return [
     'grades' => 'Grades',
     'messages' => 'Messages',
     'resources' => 'Resources',
+    'instructor-phone' => 'Instructor phone',
 ];

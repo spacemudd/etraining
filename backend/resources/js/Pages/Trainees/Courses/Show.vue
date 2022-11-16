@@ -12,9 +12,9 @@
             <div class="flex justify-center gap-10">
                 <inertia-link class="border p-2 bg-red-500 text-white font-bold" :href="route('trainees.courses.show', course.id)">{{ $t('words.course-info') }}</inertia-link>
                 <inertia-link class="border p-2 bg-gray-200" :href="route('trainees.courses.timeline', course.id)">{{ $t('words.timeline') }}</inertia-link>
-                <inertia-link class="border p-2 bg-gray-200" :href="route('trainees.courses.grades', course.id)">{{ $t('words.grades') }}</inertia-link>
                 <inertia-link class="border p-2 bg-gray-200" :href="route('trainees.courses.messages', course.id)">{{ $t('words.messages') }}</inertia-link>
                 <inertia-link class="border p-2 bg-gray-200" :href="route('trainees.courses.resources', course.id)">{{ $t('words.resources') }}</inertia-link>
+                <inertia-link class="border p-2 bg-gray-200" :href="route('trainees.courses.grades', course.id)">{{ $t('words.grades') }}</inertia-link>
             </div>
 
             <div class="grid grid-cols-6 gap-6">
@@ -46,10 +46,23 @@
                     <jet-input id="hours_duration" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.hours_duration" autocomplete="off" disabled />
                 </div>
 
+                <div class="col-span-6 sm:col-span-2" v-if="course.instructor_id">
+                    <jet-label for="hours_duration" :value="$t('words.instructor')" />
+                    <jet-input id="instructor_id" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.instructor.name" autocomplete="off" disabled />
+                </div>
+
+                <div class="col-span-6 sm:col-span-2" v-if="course.instructor_id">
+                    <jet-label for="hours_duration" :value="$t('words.instructor')" />
+                    <jet-input id="instructor_id" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.instructor.phone" autocomplete="off" disabled />
+                </div>
+
                 <div class="col-span-6 sm:col-span-2">
                     <jet-label for="description" :value="$t('words.description')" />
                     <jet-textarea id="description" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.description" autocomplete="off" disabled />
                 </div>
+
+
+
             </div>
 
             <jet-section-border></jet-section-border>
@@ -99,7 +112,7 @@ import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 import CourseBatchesPagination from "@/Components/CourseBatchesPagination";
 
 export default {
-    props: ['sessions', 'course'],
+    props: ['sessions', 'course', 'instructors'],
 
     components: {
         AppLayout,

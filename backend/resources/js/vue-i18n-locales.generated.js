@@ -721,8 +721,9 @@ export default {
             "receive-notification-on-trainee-delete": "استلام اشعار عند حذف متدرب",
             "go-to-course": "التوجه الى البرنامج التدريبي",
             "timeline": "الجدول الزمني",
-            "grades": "الدرجات",
-            "resources": "الأدلة والدعم"
+            "grades": "التقييم الذاتي",
+            "resources": "الأدلة والدعم",
+            "instructor-phone": "رقم المدرب"
         }
     },
     "en": {
@@ -1393,7 +1394,8 @@ export default {
             "go-to-course": "Go to course",
             "timeline": "Timeline",
             "grades": "Grades",
-            "resources": "Resources"
+            "resources": "Resources",
+            "instructor-phone": "Instructor phone"
         }
     }
 }
