@@ -18,14 +18,43 @@
             </div>
             <jet-section-border></jet-section-border>
 
-            <div class="flex justify-center gap-10">
-
+            <div class="grid grid-cols-3 gap-6 mt-4 pr-12">
+                <div class="inline-flex">
+                    <svg width="40" height="40" class="mx-0.5">
+                        <image class=inline xlink:href="https://img.icons8.com/material-outlined/512/whatsapp.png" src="https://img.icons8.com/material-outlined/512/whatsapp.png" width="25" height="25"/>
+                    </svg>
+                    <h6 class="pr-2 text-xl font-bold">للتواصل واتساب</h6>
+                </div>
+                <div class="inline-flex">
+                    <svg width="40" height="40" class="mx-0.5">
+                        <image class=inline xlink:href="https://img.icons8.com/fluency-systems-regular/512/filled-message.png" src="https://img.icons8.com/fluency-systems-regular/512/filled-message.png" width="25" height="25"/>
+                    </svg>
+                    <h6 class="pr-2 text-xl font-bold">البريد الالكتروني</h6>
+                </div>
+                <div class="inline-flex">
+                    <svg width="40" height="40" class="mx-0.5">
+                        <image class=inline xlink:href="https://img.icons8.com/material/512/end-call-male.png" src="https://img.icons8.com/material/512/end-call-male.png" width="25" height="25"/>
+                    </svg>
+                    <h6 class="pr-2 text-xl font-bold">رقم المدرب</h6>
+                </div>
+            </div>
+            <div class="grid grid-cols-3 gap-6 pr-12">
+                <div class="inline-flex">
+                    <h6 class="pr-12 text-l">966553139979</h6>
+                </div>
+                <div class="inline-flex">
+                    <h6 class="pr-12 text-l">info@ptc-ksa.com</h6>
+                </div>
+                <div class="inline-flex" v-if="course.instructor_id">
+                    <h6 class="pr-12 text-l">{{ course.instructor.phone }}</h6>
+                </div>
             </div>
 
             <jet-section-border></jet-section-border>
             <div class="" v-if="course.id === 'abedda89-eb23-42ec-9a03-a19097523eb5'">
                 <iframe src="/file/1/pdf/timeline.pdf" width="100%" height="800"></iframe>
             </div>
+
         </div>
     </app-layout>
 </template>
@@ -69,6 +98,12 @@ export default {
         CourseBatchesPagination,
     },
     data() {
+        var app = new Vue({
+            el: '#app',
+            data: {
+                isHidden: false
+            }
+        })
         return {
             dropzoneOptionsTrainingPackage: {
                 destroyDropzone: false,
@@ -77,6 +112,7 @@ export default {
                 thumbnailWidth: 150,
                 maxFilesize: 20,
             },
+
         }
     },
     methods: {

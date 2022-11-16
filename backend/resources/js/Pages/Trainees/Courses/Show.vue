@@ -52,7 +52,7 @@
                 </div>
 
                 <div class="col-span-6 sm:col-span-2" v-if="course.instructor_id">
-                    <jet-label for="hours_duration" :value="$t('words.instructor')" />
+                    <jet-label for="hours_duration" :value="$t('words.instructor-phone')" />
                     <jet-input id="instructor_id" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.instructor.phone" autocomplete="off" disabled />
                 </div>
 
