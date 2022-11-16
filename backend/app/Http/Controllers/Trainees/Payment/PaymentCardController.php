@@ -115,7 +115,7 @@ class PaymentCardController extends Controller
             }
 
             $payment->setRedirectUrl(url(route('trainees.payment.card.charge')));
-            $payment->setPostUrl(url('/tap')); // if you are using post request to handle payment updates
+            $payment->setPostUrl('https://prod.ptc-ksa.com/tap'); // TODO: create tap.ptc-ksa.com dedicated instance.
 
             $payment->setMetaData([
                 'invoices' => json_encode($invoices->pluck('id')->implode(',')),
