@@ -178,9 +178,9 @@ class PaymentCardController extends Controller
                 ]);
             }
             DB::commit();
+        } else {
+            $this->recordFailure($request);
         }
-
-        $this->recordFailure($request);
     }
 
     public function recordFailure(Request $request)
@@ -189,7 +189,7 @@ class PaymentCardController extends Controller
 
         DB::beginTransaction();
         foreach ($invoice_ids as $invoice_id) {
-            $invoice = Invoice::notPaid()->with([
+            $invoice = Invoice::with([
                 'trainee' => function ($q) {
                     $q->withTrashed();
                 }
