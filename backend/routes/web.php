@@ -41,7 +41,7 @@ Route::get('phone-numbers/{company_id}', function() {
 });
 
 Route::get('s1s1', function() {
-    $trainees = Trainee::where('company_id', NULL)->where('suspended_at', NULL)->get();
+    $trainees = Trainee::candidates()->get();
 
     $traineeData = [];
 
