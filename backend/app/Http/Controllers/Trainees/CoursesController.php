@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Back\AttendanceReportRecord;
 use App\Models\Back\AttendanceReportRecordWarning;
 use App\Models\Back\Course;
+use App\Models\Question;
+use App\Models\Quiz;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use PDF;
@@ -77,12 +79,12 @@ class CoursesController extends Controller
         ]);
     }
 
-    public function grades($course_id)
+    public function grades($question_id)
     {
-        $course = Course::attending()->with('instructor')->findOrFail($course_id);
+        $question = Question::attending()->with('course')->findOrFail($question_id);
         return Inertia::render('Trainees/Courses/Grades', [
-            'course' => $course,
-        ]);
+        'question' => $question,
+    ]);
     }
 
     public function messages($course_id)
