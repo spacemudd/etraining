@@ -443,7 +443,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('/courses/{course_id}/certificate', [\App\Http\Controllers\Trainees\CoursesController::class, 'generateCertificate'])->name('courses.generate-certificate');
         Route::get('/courses/{course_id}/training-package', [\App\Http\Controllers\Teaching\CoursesController::class, 'trainingPackage'])->name('courses.training-package');
         Route::get('/courses/{course_id}/timeline', [\App\Http\Controllers\Trainees\CoursesController::class, 'timeline'])->name('courses.timeline');
-        Route::get('/courses/{quiz_id}/grades', [\App\Http\Controllers\Trainees\CoursesController::class, 'grades'])->name('courses.grades');
+        Route::get('/courses/{course_id}/grades', [\App\Http\Controllers\Trainees\CoursesController::class, 'grades'])->name('courses.grades');
         Route::get('/courses/{course_id}/messages', [\App\Http\Controllers\Trainees\CoursesController::class, 'messages'])->name('courses.messages');
         Route::get('/courses/{course_id}/resources', [\App\Http\Controllers\Trainees\CoursesController::class, 'resources'])->name('courses.resources');
         Route::resource('courses', \App\Http\Controllers\Trainees\CoursesController::class);

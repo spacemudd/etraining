@@ -25,31 +25,6 @@
                     <jet-label for="name_ar" :value="$t('words.course-name-ar')" />
                     <jet-input id="name_ar" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.name_ar" autocomplete="off" disabled />
                 </div>
-
-                <div class="col-span-6 sm:col-span-2">
-                    <jet-label for="name_en" :value="$t('words.course-name-en')" />
-                    <jet-input id="name_en" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.name_en" autocomplete="off" disabled />
-                </div>
-
-                <div class="col-span-6 sm:col-span-2">
-                    <jet-label for="course-approval-code" :value="$t('words.course-approval-code')" />
-                    <jet-input id="course-approval-code" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.approval_code" autocomplete="off" disabled />
-                </div>
-
-                <div class="col-span-6 sm:col-span-2">
-                    <jet-label for="days_duration" :value="$t('words.course-duration-days')" />
-                    <jet-input id="days_duration" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.days_duration" autocomplete="off" disabled />
-                </div>
-
-                <div class="col-span-6 sm:col-span-2">
-                    <jet-label for="hours_duration" :value="$t('words.course-duration-hours')" />
-                    <jet-input id="hours_duration" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.hours_duration" autocomplete="off" disabled />
-                </div>
-
-                <div class="col-span-6 sm:col-span-2">
-                    <jet-label for="description" :value="$t('words.description')" />
-                    <jet-textarea id="description" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.description" autocomplete="off" disabled />
-                </div>
             </div>
 
             <jet-section-border></jet-section-border>
@@ -64,14 +39,6 @@
                         <p class="mt-1 text-sm text-gray-600">
                             {{ $t('words.documents-help') }}
                         </p>
-                    </div>
-                </div>
-
-                <div class="md:col-span-6 lg:col-span-1 sm:col-span-3">
-                    <jet-label :value="$t('words.training-package')" class="mb-2" />
-
-                    <div class="bg-white border-2 rounder-lg flex flex-col justify-center items-center min-container-upload" v-if="course.training_package_url">
-                        <a class="bg-gray-700 text-white font-semibold p-2 text-center w-1/2 rounded my-1" target="_blank" :href="course.training_package_url">{{ $t('words.download') }}</a>
                     </div>
                 </div>
 
@@ -99,7 +66,7 @@ import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 import CourseBatchesPagination from "@/Components/CourseBatchesPagination";
 
 export default {
-    props: ['sessions', 'course'],
+    props: ['sessions', 'course', 'quiz'],
 
     components: {
         AppLayout,

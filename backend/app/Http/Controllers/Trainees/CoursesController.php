@@ -79,12 +79,12 @@ class CoursesController extends Controller
         ]);
     }
 
-    public function grades($question_id)
+    public function grades($course_id)
     {
-        $question = Question::attending()->with('course')->findOrFail($question_id);
+        $course = Course::attending()->with('instructor')->findOrFail($course_id);
         return Inertia::render('Trainees/Courses/Grades', [
-        'question' => $question,
-    ]);
+            'course' => $course,
+        ]);
     }
 
     public function messages($course_id)

@@ -40,12 +40,6 @@ class Question extends Model
         });
     }
 
-    public function scopeAttending($q)
-    {
-        $course_id = optional(auth()->user()->trainee)->course_id;
-        return $q->where('course_id', $course_id);
-    }
-
     public function quiz(): BelongsTo
     {
         return $this->belongsTo(Quiz::class)->withTrashed();

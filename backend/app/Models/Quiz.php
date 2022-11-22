@@ -24,12 +24,6 @@ class Quiz extends Model
         'created_by_id',
     ];
 
-    public function scopeAttending($q)
-    {
-        $course_id = optional(auth()->user()->trainee)->course_id;
-        return $q->where('course_id', $course_id);
-    }
-
     public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class)->withTrashed();
