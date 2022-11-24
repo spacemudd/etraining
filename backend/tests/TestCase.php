@@ -68,10 +68,10 @@ abstract class TestCase extends BaseTestCase
     public function makeMeAnAdmin()
     {
         return (new CreateNewUser())->create([
-            'name' => 'Shafiq al-Shaar',
-            'email' => 'hello@getShafiq.com',
-            'password' => 'hello123123',
-            'password_confirmation' => 'hello123123',
+            'name' => 'May',
+            'email' => 'admin-test@itmaal.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
         ]);
     }
 }

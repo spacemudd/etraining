@@ -718,7 +718,12 @@ export default {
             "removed": "محذوف",
             "selected": "المختار",
             "edit-amount": "تعديل مبلغ الفاتورة",
-            "receive-notification-on-trainee-delete": "استلام اشعار عند حذف متدرب"
+            "receive-notification-on-trainee-delete": "استلام اشعار عند حذف متدرب",
+            "action": "الإجراء",
+            "new-registration": "تسجيل جديد",
+            "temporary-stop": "ايقاف جزئي",
+            "suspend-account": "ايقاف",
+            "block": "حظر"
         }
     },
     "en": {
@@ -1385,7 +1390,12 @@ export default {
             "removed": "Removed",
             "selected": "Selected",
             "edit-amount": "ُEdit Amount",
-            "receive-notification-on-trainee-delete": "Receive notification on trainee delete"
+            "receive-notification-on-trainee-delete": "Receive notification on trainee delete",
+            "action": "Action",
+            "new-registration": "New registration",
+            "temporary-stop": "Temporary stop",
+            "suspend-account": "Suspend account",
+            "block": "Block"
         }
     }
 }

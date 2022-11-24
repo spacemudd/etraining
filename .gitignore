@@ -1,3 +1,4 @@
 .env
 .idea/*
 etraining-db
+.phpunit.result.cache

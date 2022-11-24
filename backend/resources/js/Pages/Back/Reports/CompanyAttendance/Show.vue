@@ -86,7 +86,7 @@
                         <tr>
                             <th scope="col" class="py-3 px-6">{{ $t('words.name') }}</th>
                             <th scope="col" class="py-3 px-6">{{ $t('words.identity_number') }}</th>
-                            <th scope="col" class="py-3 px-6"></th>
+                            <th scope="col" class="py-3 px-6">{{ $t('words.action') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -102,6 +102,9 @@
                             </th>
                             <td class="py-4 px-6">
                                 {{ trainee.clean_identity_number }}
+                            </td>
+                            <td class="py-4 px-6">
+                                <company-attendance-state :report="report" :trainee="trainee"></company-attendance-state>
                             </td>
                         </tr>
                     </tbody>
@@ -126,6 +129,7 @@
     import SelectCompany from "../../../../Components/SelectCompany";
     import DateRangePicker from 'vue2-daterange-picker'
     import 'vue2-daterange-picker/dist/vue2-daterange-picker.css'
+    import CompanyAttendanceState from "./company-attendance-state";
 
     export default {
         metaInfo() {
@@ -134,6 +138,7 @@
             }
         },
         components: {
+            CompanyAttendanceState,
             SelectCompany,
             IconNavigate,
             AppLayout,
