@@ -1,20 +1,6 @@
 {
-<<<<<<< main
-    "/js/app.js": "/js/app.js?id=be4fa6e28257ee059658",
-    "/css/app.css": "/css/app.css?id=1b439e1ff8279450a265",
+    "/js/app.js": "/js/app.js?id=32bbc20914437ad63126",
+    "/css/app.css": "/css/app.css?id=f0e887e498b8a757a63f",
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
     "/js/vendor.js": "/js/vendor.js?id=e9958555e3044b2d65f3"
-=======
-<<<<<<< main
-    "/js/app.js": "/js/app.js?id=84a17036a24de2fb9db8",
-    "/css/app.css": "/css/app.css?id=ad330b4623269e4f04b6",
-    "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
-    "/js/vendor.js": "/js/vendor.js?id=18437c157f4839a717e0"
-=======
-    "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css",
-    "/js/manifest.js": "/js/manifest.js",
-    "/js/vendor.js": "/js/vendor.js"
->>>>>>> Add UI buttons for action on trainees
->>>>>>> Add 3 statuses to company attendance record
 }
