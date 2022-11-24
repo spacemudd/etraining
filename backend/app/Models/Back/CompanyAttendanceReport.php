@@ -38,7 +38,7 @@ class CompanyAttendanceReport extends Model
         parent::boot();
         static::creating(function ($model) {
             $model->status = self::STATUS_REVIEW;
-            $model->number = 'ATR-'.MaxNumber::generateForPrefix('ATR'); // ATendance Report
+            $model->number = 'ATR-'.MaxNumber::generateForPrefix('ATR');
             if (auth()->user()) {
                 $model->created_by_id = auth()->user()->id;
             }
@@ -49,7 +49,7 @@ class CompanyAttendanceReport extends Model
     {
         return $this
             ->belongsToMany(Trainee::class,'company_attendance_reports_trainees')
-            ->withPivot('active');
+            ->withPivot('active', 'status', 'comment');
     }
 
     public function company()

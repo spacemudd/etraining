@@ -530,5 +530,11 @@ return [
     'removed' => 'Removed',
     'selected' => 'Selected',
     'edit-amount' => 'ُEdit Amount',
-    'receive-notification-on-trainee-delete' => 'Receive notification on trainee delete'
+    'receive-notification-on-trainee-delete' => 'Receive notification on trainee delete',
+    'action' => 'Action',
+    'new-registration' => 'New registration',
+    'temporary-stop' => 'Temporary stop',
+    'suspend-account' => 'Suspend account',
+    'block' => 'Block',
+    'notes' => 'Notes',
 ];

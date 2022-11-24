@@ -13,6 +13,12 @@ class CompanyAttendanceReportsTrainee extends Model
         'active' => 'boolean',
     ];
 
+    protected $fillable = [
+        'status',
+        'comment',
+        'active',
+    ];
+
     public function trainee()
     {
         return $this->belongsTo(Trainee::class);

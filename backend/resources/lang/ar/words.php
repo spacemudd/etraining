@@ -549,4 +549,10 @@ return [
     'selected' => 'المختار',
     'edit-amount' => 'تعديل مبلغ الفاتورة',
     'receive-notification-on-trainee-delete' => 'استلام اشعار عند حذف متدرب',
+    'action' => 'الإجراء',
+    'new-registration' => 'تسجيل جديد',
+    'temporary-stop' => 'ايقاف جزئي',
+    'suspend-account' => 'ايقاف',
+    'block' => 'حظر',
+    'notes' => 'ملاحظات',
 ];
