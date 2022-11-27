@@ -22,26 +22,16 @@ class Question extends Model
     protected $fillable = [
         'quiz_id',
         'answer_id',
-        'created_by_id',
         'description',
+        'created_by_id',
     ];
-
-    protected static function boot(): void
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $model->{$model->getKeyName()} = (string)Str::uuid();
-            $model->number = MaxNumber::generatePrefixForInvoice();
-
-            if (auth()->check()) {
-                $model->created_by_id = auth()->id();
-            }
-        });
-    }
 
     public function quiz(): BelongsTo
     {
         return $this->belongsTo(Quiz::class)->withTrashed();
+    }
+    public function answer(): BelongsTo
+    {
+        return $this->belongsTo(Answer::class)->withTrashed();
     }
 }
