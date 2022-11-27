@@ -17,16 +17,14 @@
                 <inertia-link class="border p-2 bg-red-500 text-white font-bold" :href="route('trainees.courses.grades', course.id)">{{ $t('words.grades') }}</inertia-link>
             </div>
 
-            <div class="grid grid-cols-6 gap-6">
-                <div class="col-span-6 flex items-center justify-end bg-gray-50 text-right">
-                </div>
+            <jet-section-border></jet-section-border>
 
-                <div class="col-span-6 sm:col-span-2">
-                    <jet-label for="name_ar" :value="$t('words.course-name-ar')" />
-                    <jet-input id="name_ar" type="text" class="mt-1 block w-full bg-gray-200" v-model="course.name_ar" autocomplete="off" disabled />
-                </div>
-            </div>
+            <form  v-for="quizzes in course.quizzes"
+                   :key="course.quizzes.id">
 
+                <p>{{ quizzes.course_id }}</p>
+
+            </form>
             <jet-section-border></jet-section-border>
 
             <div class="grid grid-cols-1 md:grid-cols-6 gap-6 my-2">
