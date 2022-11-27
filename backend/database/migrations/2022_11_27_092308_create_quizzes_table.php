@@ -18,6 +18,7 @@ class CreateQuizzesTable extends Migration
             $table->uuid('course_id');
             $table->foreign('course_id')->references('id')->on('courses');
             $table->string('name_ar');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

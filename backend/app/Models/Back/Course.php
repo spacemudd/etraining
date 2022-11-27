@@ -3,11 +3,14 @@
 namespace App\Models\Back;
 
 use App\Models\Back\CourseBatch;
+use App\Models\Question;
+use App\Models\Quiz;
 use App\Models\SearchableLabels;
 use App\Scope\TeamScope;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\MediaLibrary\HasMedia;
@@ -75,6 +78,16 @@ class Course extends Model implements HasMedia, SearchableLabels, Auditable
     public function batches()
     {
         return $this->hasMany(CourseBatch::class);
+    }
+
+    public function quizzes(): HasMany
+    {
+        return $this->hasMany(Quiz::class);
+    }
+
+    public function questions(): HasMany
+    {
+        return $this->hasMany(Question::class);
     }
 
     public function scopeResponsibleToTeach($q)

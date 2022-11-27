@@ -81,9 +81,22 @@ class CoursesController extends Controller
 
     public function grades($course_id)
     {
-        $course = Course::attending()->with('instructor')->findOrFail($course_id);
+        $course = Course::query()
+            ->with([
+                'instructor' => function($model){
+                    $model->withTrashed();
+                },
+                'quizzes' => function($model){
+                    $model->withTrashed();
+                },
+//                'questions' => function($model){}
+            ])
+            ->findOrFail($course_id);
+
         return Inertia::render('Trainees/Courses/Grades', [
             'course' => $course,
+            'quizzes' => Quiz::get(),
+            'questions' => Question::get(),
         ]);
     }
 

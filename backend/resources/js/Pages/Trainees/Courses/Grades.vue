@@ -66,7 +66,7 @@ import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 import CourseBatchesPagination from "@/Components/CourseBatchesPagination";
 
 export default {
-    props: ['sessions', 'course', 'quiz'],
+    props: ['sessions', 'course', 'quizzes', 'questions'],
 
     components: {
         AppLayout,
