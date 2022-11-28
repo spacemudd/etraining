@@ -44,8 +44,8 @@ class AttendTraineeCommand extends Command
     public function handle()
     {
         $trainee_id = $this->argument('trainee_id');
-        $date_from = Carbon::parse($this->ask('date_from', '2022-01-01'))->startOfDay();
-        $date_to = Carbon::parse($this->ask('date_to', '2022-02-01'))->startOfDay();
+        $date_from = Carbon::parse($this->ask('date_from', '2022-02-01'))->startOfDay();
+        $date_to = Carbon::parse($this->ask('date_to', '2022-02-28'))->startOfDay();
 
         $trainee = Trainee::withTrashed()->findOrFail($trainee_id);
 
