@@ -31,4 +31,9 @@ class Quiz extends Model
     {
         return $this->belongsTo(Course::class)->withTrashed();
     }
+
+    public function questions(): BelongsTo
+    {
+        return $this->belongsTo(Question::class)->withTrashed();
+    }
 }

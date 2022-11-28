@@ -21,26 +21,30 @@
 
             <form  v-for="quizzes in course.quizzes"
                    :key="course.quizzes.id">
-
-                <p>{{ quizzes.course_id }}</p>
-
-            </form>
-            <jet-section-border></jet-section-border>
-
-            <div class="grid grid-cols-1 md:grid-cols-6 gap-6 my-2">
-                <div class="md:col-span-5 lg:col-span-5 sm:col-span-3">
-                    <div class="px-4 sm:px-0">
-                        <h3 class="text-lg font-medium text-gray-900">
-                            {{ $t('words.documents') }}
-                        </h3>
-
-                        <p class="mt-1 text-sm text-gray-600">
-                            {{ $t('words.documents-help') }}
-                        </p>
+                <div class="grid md:grid-cols-4 grid-cols-1 gap-6">
+                    <div class="col-span-1 p-5 transition-all duration-500 ease-in-out hover:bg-gray-200">
+                        <p class="text-2xl">{{ $t('words.choose') }}:</p>
+<!--                        <div class="payment-options mt-2">-->
+<!--                            <input type="radio" name="quizzes">-->
+<!--                            <label>{{ quizzes.course_id }}</label>-->
+<!--                        </div>-->
+<!--                        <div class="payment-options">-->
+<!--                            <input type="radio" name="quizzes">-->
+<!--                            <label>{{ quizzes.name_ar }}</label>-->
+<!--                        </div>-->
+                        <div class="">
+                            <input type="radio">
+                            <label v-if="questions.id === 1">{{ quizzes.questions.id }}</label>
+                        </div>
                     </div>
                 </div>
-
+            </form>
+            <div class="">
+                <input type="radio">
+                <label v-if="questions.id === 1">{{ questions.id }}</label>
             </div>
+            <jet-section-border></jet-section-border>
+
         </div>
     </app-layout>
 </template>
@@ -107,3 +111,9 @@ export default {
     min-height: 168px;
 }
 </style>
+
+
+
+
+
+<!--$array = [1101281010, 1090693209,1088712607,1095806178,1085015913,1097113508,1083488401,1080941857,1086804851,1091141299,1127705968,1110190764,1112078181,1113163131,1127957320,1091371672,1101291035,1096900574,1087346407,1095769830,1085563060,1064499716,1108285832,1096904550,1095349039,1088431505,1013817919,1099202333,1105392870,1097095580,1090907377,1068924826,1087154322,1003419791,1075686947,1093745550,1107361881,1085544748,1075050243,1114774175,1094497169,1098223207,1104369390,1073213694,1106245432,1125774354,1113633372,1040941559,1127213575,1090079342,1068683166,1091764454,1031230772,1114885427,1058386895,1089624413,1128492467,1098744376,1086996699,1127705943,1081529602,1058042274,1065788919,1099648840,1099064022,1086796214,1072186719,1094473178,1116264415,1114294992,1090015767,1129518666,1100255072,1128944939,1067926848,1097317554,1101374211,1043000429,1075123339,1074792902,1080264268,1081247429,1109056984,1097662819,1126127685,1082362144,1035458130,1098882044,1062519994,1014383341,1087466833,1074014174,1024748061,1080453622,1107320457,1089725905,1111276174,1052968284,1105764201];-->

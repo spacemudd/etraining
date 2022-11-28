@@ -20,6 +20,7 @@ class CreateQuestionsTable extends Migration
             $table->unsignedBigInteger('answer_id');
             $table->foreign('answer_id')->references('id')->on('answers');
             $table->string('description');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

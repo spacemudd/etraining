@@ -87,9 +87,12 @@ class CoursesController extends Controller
                     $model->withTrashed();
                 },
                 'quizzes' => function($model){
-                    $model->withTrashed();
+                    $model->with([
+                        'questions' => function($model){
+                            $model->withTrashed();
+                        }
+                    ]);
                 },
-//                'questions' => function($model){}
             ])
             ->findOrFail($course_id);
 
