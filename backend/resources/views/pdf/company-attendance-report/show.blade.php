@@ -167,17 +167,36 @@ tfoot { display:table-footer-group }
                                     <td>فعال</td>
                                     <td>{{ $record->trainee->name }}</td>
                                     <td>{{ $record->trainee->clean_identity_number }}</td>
-                                    <td style="text-align: center;">{{ count($days) }}</td>
+                                    <td style="text-align: center;">
+                                        @if ($record->start_date)
+                                            {{ $record->start_date->diffInDays($record->end_date) + 1 }}
+                                        @else
+                                            {{ count($days) }}
+                                        @endif
+                                    </td>
                                     @for($i=0;$i<count($days);$i++)
                                         <td style="{{ $days[$i]['vacation_day'] ? 'background:#e0e0e0;' : '' }}">
-{{--                                            @if ($day[$i]['date_carbon']->isBetween($record->start_date, $record->end_date))--}}
-{{--                                            1--}}
-{{--                                            @else--}}
-{{--                                            0--}}
-{{--                                            @endif--}}
+                                            @if ($record->start_date)
+                                                @if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date))
+                                                    0
+                                                @else
+                                                    @if ($record->status === 'new_registration')
+                                                        {{-- Considered absent --}}
+                                                        1
+                                                    @endif
+                                                @endif
+                                            @else
+                                                0
+                                            @endif
                                         </td>
                                     @endfor
-                                    <td>0</td>
+                                    <td>
+                                        @if ($record->start_date)
+                                            {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
+                                        @else
+                                            0
+                                        @endif
+                                    </td>
                                 </tr>
                             @endif
                         @endforeach
