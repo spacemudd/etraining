@@ -723,7 +723,8 @@ export default {
             "new-registration": "تسجيل جديد",
             "temporary-stop": "ايقاف جزئي",
             "suspend-account": "ايقاف",
-            "block": "حظر"
+            "block": "حظر",
+            "add-manual-attendance": "تحديد ايام الحضور (يدوي)"
         }
     },
     "en": {
@@ -1395,7 +1396,8 @@ export default {
             "new-registration": "New registration",
             "temporary-stop": "Temporary stop",
             "suspend-account": "Suspend account",
-            "block": "Block"
+            "block": "Block",
+            "add-manual-attendance": "Add manual attendance"
         }
     }
 }

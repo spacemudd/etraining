@@ -555,4 +555,5 @@ return [
     'suspend-account' => 'ايقاف',
     'block' => 'حظر',
     'notes' => 'ملاحظات',
+    'add-manual-attendance' => 'تحديد ايام الحضور (يدوي)',
 ];

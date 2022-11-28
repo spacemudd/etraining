@@ -43,20 +43,20 @@
 
                 <div class="col-span-3 sm:col-span-2">
                     <jet-label for="company_id" :value="$t('words.time-period')" />
-                        <date-range-picker
-                            ref="picker"
-                            :locale-data="{ firstDay: 1, format: 'dd-mm-yyyy' }"
-                            :singleDatePicker="false"
-                            :timePicker="false"
-                            :showWeekNumbers="true"
-                            :showDropdowns="true"
-                            :autoApply="false"
-                            v-model="createAttendanceReportForm.period"
-                        >
+                    <date-range-picker
+                        ref="picker"
+                        :locale-data="{ firstDay: 1, format: 'dd-mm-yyyy' }"
+                        :singleDatePicker="false"
+                        :timePicker="false"
+                        :showWeekNumbers="true"
+                        :showDropdowns="true"
+                        :autoApply="false"
+                        v-model="createAttendanceReportForm.period"
+                    >
                         <template v-slot:input="picker" style="width:100%;">
                             {{ picker.startDate | date }} - {{ picker.endDate | date }}
                         </template>
-                    </date-range-picker>
+                   </date-range-picker>
                 </div>
             </template>
 

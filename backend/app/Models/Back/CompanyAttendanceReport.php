@@ -49,7 +49,7 @@ class CompanyAttendanceReport extends Model
     {
         return $this
             ->belongsToMany(Trainee::class,'company_attendance_reports_trainees')
-            ->withPivot('active', 'status', 'comment');
+            ->withPivot('active', 'status', 'comment', 'start_date', 'end_date');
     }
 
     public function company()

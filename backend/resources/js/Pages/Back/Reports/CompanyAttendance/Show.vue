@@ -101,7 +101,7 @@
                                 </label>
                             </th>
                             <td class="py-4 px-6">
-                                {{ trainee.clean_identity_number }}
+                                <a class="text-blue-500" :href="route('back.trainees.show', trainee.id)" target="_blank">{{ trainee.clean_identity_number }}</a>
                             </td>
                             <td class="py-4 px-6">
                                 <company-attendance-state :report="report" :trainee="trainee"></company-attendance-state>

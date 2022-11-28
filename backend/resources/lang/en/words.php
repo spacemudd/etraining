@@ -537,4 +537,5 @@ return [
     'suspend-account' => 'Suspend account',
     'block' => 'Block',
     'notes' => 'Notes',
+    'add-manual-attendance' => 'Add manual attendance',
 ];

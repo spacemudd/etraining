@@ -24,6 +24,7 @@ class CompanyAttendanceReportService
                 'vacation_day' => in_array($current_day->getTranslatedDayName(), ['الجمعة', 'السبت']),
                 'name' => $current_day->getTranslatedDayName(),
                 'date' => $current_day->format('Y-m-d'),
+                'date_carbon' => $current_day->copy(),
             ];
             $current_day = $current_day->addDay();
         }

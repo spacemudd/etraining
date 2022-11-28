@@ -11,12 +11,16 @@ class CompanyAttendanceReportsTrainee extends Model
 
     protected $casts = [
         'active' => 'boolean',
+        'start_date' => 'datetime',
+        'end_date' => 'datetime'
     ];
 
     protected $fillable = [
         'status',
         'comment',
         'active',
+        'start_date',
+        'end_date',
     ];
 
     public function trainee()

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Back\CompanyAttendanceReport;
 use App\Models\Back\CompanyAttendanceReportsTrainee;
 use App\Models\Back\Trainee;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class CompanyAttendanceReportTraineesController extends Controller
@@ -24,6 +25,8 @@ class CompanyAttendanceReportTraineesController extends Controller
             ->update([
                 'status' => request()->status,
                 'comment' => request()->comment,
+                'start_date' => request()->start_date ? Carbon::parse(request()->start_date)->startOfDay() : null,
+                'end_date' => request()->end_date ? Carbon::parse(request()->end_date)->endOfDay() : null,
             ]);
 
         return redirect()->back();
