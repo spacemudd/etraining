@@ -2,6 +2,10 @@
 
 use App\Models\Back\Trainee;
 
+Route::get('/certificate', funciton() {
+
+});
+
 Route::post('tap', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'storeTapReceipt']);
 
 Route::get('version', function() {
