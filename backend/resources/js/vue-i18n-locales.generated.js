@@ -724,7 +724,8 @@ export default {
             "temporary-stop": "ايقاف جزئي",
             "suspend-account": "ايقاف",
             "block": "حظر",
-            "add-manual-attendance": "تحديد ايام الحضور (يدوي)"
+            "add-manual-attendance": "تحديد ايام الحضور (يدوي)",
+            "certificates": "شهادات"
         }
     },
     "en": {

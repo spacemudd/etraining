@@ -2,10 +2,6 @@
 
 use App\Models\Back\Trainee;
 
-Route::get('/certificate', funciton() {
-
-});
-
 Route::post('tap', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'storeTapReceipt']);
 
 Route::get('version', function() {
@@ -309,6 +305,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('trainees/excel/{id}/download', [\App\Http\Controllers\Back\TraineesController::class, 'excelJobDownload'])->name('trainees.excel.job.download');
         Route::get('trainees/excel/{id}', [\App\Http\Controllers\Back\TraineesController::class, 'excelJob'])->name('trainees.excel.job');
         Route::post('trainees/excel', [\App\Http\Controllers\Back\TraineesController::class, 'excel'])->name('trainees.excel');
+
+        Route::get('certificates/import', [\App\Http\Controllers\Back\CertificatesController::class, 'import'])->name('certificates.import');
 
         // Trainees
         Route::get('trainees/block-list', [\App\Http\Controllers\Back\TraineesBlockListController::class, 'index'])->name('trainees.block-list.index');
