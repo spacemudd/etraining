@@ -29,6 +29,9 @@ class CompanyAttendanceReportService
             $current_day = $current_day->addDay();
         }
 
+        // To fix formatting issue on 2nd page when the table is split.
+        $view = $report->activeTraineesCount() > 8 ? 'pdf.company-attendance-report.show' : 'pdf.company-attendance-report.one-table';
+
         $pdf = PDF::setOption('margin-bottom', 30)
             ->setOption('page-size', 'A4')
             ->setOption('orientation', 'landscape')
@@ -49,7 +52,7 @@ class CompanyAttendanceReportService
             ->setOption('viewport-size', '1024×768')
             ->setOption('zoom', 0.78)
             ->setOption('footer-html', resource_path('views/pdf/company-attendance-report/company-attendance-report-footer.html'))
-            ->loadView('pdf.company-attendance-report.show', [
+            ->loadView($view, [
                 'report' => $report,
                 'active_trainees' => $report->getActiveTrainees(),
                 'days' => $days,
