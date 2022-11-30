@@ -128,7 +128,7 @@
                                             @else
                                                 @if ($record->status === 'new_registration')
                                                     {{-- Considered absent --}}
-                                                    1
+
                                                 @endif
                                             @endif
                                         @else
