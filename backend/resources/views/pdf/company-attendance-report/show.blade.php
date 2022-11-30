@@ -7,10 +7,10 @@
     <title>Company attendance report</title>
     <style>
         table { page-break-after:auto }
-        tr    { page-break-inside:avoid; page-break-after:auto }
-        td    { page-break-inside:avoid; page-break-after:auto }
-        thead { display: table-row-group; }
-        tfoot { display:table-footer-group }
+tr    { page-break-inside:avoid; page-break-after:auto }
+td    { page-break-inside:avoid; page-break-after:auto }
+thead { display: table-row-group; }
+tfoot { display:table-footer-group }
         .vertical-text {
             writing-mode: vertical-rl;
             -webkit-transform: rotate(90deg);
@@ -121,14 +121,14 @@
                                     @endif
                                 </td>
                                 @for($i=0;$i<count($days);$i++)
-                                    <td style="{{ $record->start_date ? ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date)&&$record->status==='new_registration') ? 'background-color:red;' : ''  : $days[$i]['vacation_day'] ? 'background:#e0e0e0;' : '' }}">
+                                    <td style="{{ $days[$i]['vacation_day'] ? 'background:#e0e0e0;' : '' }}">
                                         @if ($record->start_date)
                                             @if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date))
                                                 0
                                             @else
                                                 @if ($record->status === 'new_registration')
                                                     {{-- Considered absent --}}
-
+                                                    1
                                                 @endif
                                             @endif
                                         @else
@@ -175,7 +175,7 @@
                                         @endif
                                     </td>
                                     @for($i=0;$i<count($days);$i++)
-                                        <td style="{{ $record->start_date ? ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date)&&$record->status==='new_registration') ? 'background-color:red;' : ''  : $days[$i]['vacation_day'] ? 'background:#e0e0e0;' : '' }}">
+                                        <td style="{{ $days[$i]['vacation_day'] ? 'background:#e0e0e0;' : '' }}">
                                             @if ($record->start_date)
                                                 @if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date))
                                                     0
