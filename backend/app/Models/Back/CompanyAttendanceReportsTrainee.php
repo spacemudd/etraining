@@ -25,6 +25,6 @@ class CompanyAttendanceReportsTrainee extends Model
 
     public function trainee()
     {
-        return $this->belongsTo(Trainee::class);
+        return $this->belongsTo(Trainee::class)->withTrashed();
     }
 }
