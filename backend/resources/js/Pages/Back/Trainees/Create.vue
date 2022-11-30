@@ -215,6 +215,7 @@
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
     import debounce from 'lodash/debounce'
     import SelectTraineeGroup from "@/Components/SelectTraineeGroup";
+    import 'selectize/dist/js/standalone/selectize.min';
 
     export default {
         props: [
@@ -261,6 +262,23 @@
                     bag: 'createTrainee',
                 })
             }
+        },
+        mounted() {
+            let vm = this;
+            $(document).ready(function () {
+                vm.companySelector = $('#company_id').selectize({
+                    sortField: 'text',
+                    maxOptions: 9999,
+                    onChange: function (value) {
+                        vm.form.company_id = value;
+                    }
+                })
+            });
+        },
+        beforeDestroy() {
+            $(document).ready(function () {
+                $('#company_id').selectize()[0].selectize.destroy();
+            });
         },
         computed: {
            needsToKnowChildrenCount() {
