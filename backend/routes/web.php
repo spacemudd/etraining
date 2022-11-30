@@ -306,6 +306,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('trainees/excel/{id}', [\App\Http\Controllers\Back\TraineesController::class, 'excelJob'])->name('trainees.excel.job');
         Route::post('trainees/excel', [\App\Http\Controllers\Back\TraineesController::class, 'excel'])->name('trainees.excel');
 
+        Route::post('certificates/import/upload', [\App\Http\Controllers\Back\CertificatesController::class, 'upload'])->name('certificates.import.upload');
         Route::get('certificates/import', [\App\Http\Controllers\Back\CertificatesController::class, 'import'])->name('certificates.import');
 
         // Trainees

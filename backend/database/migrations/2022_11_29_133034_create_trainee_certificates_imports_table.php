@@ -15,7 +15,6 @@ class CreateTraineeCertificatesImportsTable extends Migration
     {
         Schema::create('trainee_certificates_imports', function (Blueprint $table) {
             $table->id();
-            $table->uuid('batch_id');
             $table->uuid('course_id');
             $table->foreign('course_id')->references('id')->on('courses');
             $table->string('status');

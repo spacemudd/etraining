@@ -3069,10 +3069,28 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      form: {}
+      excelFile: null,
+      formData: new FormData()
     };
   },
-  methods: {}
+  methods: {
+    importFileChanged: function importFileChanged(e, filename) {
+      this.excelFile = e.target.files[0];
+      this.formData.append('excel_file', this.excelFile);
+    },
+    submitForm: function submitForm() {
+      var _this = this;
+
+      this.$wait.start('SENDING_FILE');
+      axios.post(route('back.certificates.import.upload'), this.formData).then(function (response) {
+        _this.$inertia.get(route('back.certificates.import.show', response.data.id));
+      })["catch"](function (error) {
+        _this.$wait.end('SENDING_FILE');
+
+        throw error;
+      });
+    }
+  }
 });
 
 /***/ }),
@@ -18541,8 +18559,46 @@ var render = function render() {
   }, [_c("h1", {
     staticClass: "mb-8 font-bold text-3xl"
   }, [_vm._v(_vm._s(_vm.$t("words.certificates")))])]), _vm._v(" "), _c("div", {
-    staticClass: "bg-white rounded shadow overflow-x-auto"
-  })], 1)]);
+    staticClass: "w-1/3 mx-auto"
+  }, [_c("div", {
+    staticClass: "w-full border-2 p-5 bg-gray-100 text-center"
+  }, [_c("div", {
+    staticClass: "mx-auto w-full"
+  }, [_c("svg", {
+    staticClass: "w-6 h-6 mx-auto",
+    attrs: {
+      xmlns: "http://www.w3.org/2000/svg",
+      fill: "none",
+      viewBox: "0 0 24 24",
+      "stroke-width": "1.5",
+      stroke: "currentColor"
+    }
+  }, [_c("path", {
+    attrs: {
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round",
+      d: "M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
+    }
+  })])]), _vm._v(" "), _c("p", {
+    staticClass: "text-weight-bold mt-2"
+  }, [_vm._v("الرجاء رفع ملف الأكسل (CSV)")]), _vm._v(" "), _c("div", {
+    staticClass: "importFile mt-10"
+  }, [_c("input", {
+    ref: "import_file",
+    attrs: {
+      type: "file"
+    },
+    on: {
+      change: _vm.importFileChanged
+    }
+  })]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-secondary mt-5",
+    on: {
+      click: _vm.submitForm
+    }
+  }, [_vm._v("بدء الأصدار")])]), _vm._v(" "), _c("ul", {
+    staticClass: "list-disc p-5 text-sm"
+  }, [_c("li", [_vm._v("تتلقى المتدربة ملف الـPDF عبر الإيميل تلقائياً.")]), _vm._v(" "), _c("li", [_vm._v("يجب على الأكسل ان يكون بصيغة الـCSV.")]), _vm._v(" "), _c("li", [_vm._v("عنواين الأكسل يجب ان تكون (رقم الهوية، الأسم).")])])])], 1)]);
 };
 
 var staticRenderFns = [];
