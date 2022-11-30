@@ -200,11 +200,11 @@ tfoot { display:table-footer-group }
                                 </tr>
                             @endif
                         @endforeach
-                        <tr>
-                            <td colspan="6" style="text-align: center;">الإجمالي العام</td>
-                            <td colspan="{{ count($days) }}"></td>
-                            <td>0</td>
-                        </tr>
+{{--                        <tr>--}}
+{{--                            <td colspan="6" style="text-align: center;">الإجمالي العام</td>--}}
+{{--                            <td colspan="{{ count($days) }}"></td>--}}
+{{--                            <td>0</td>--}}
+{{--                        </tr>--}}
                         <tr>
                             <td colspan="100%" style="background:#e0e0e0;text-align: center;">** يعتبر الكشف صحيح ما لم يردنا اي ملاحظات خلال الاسبوع من الارسال</td>
                         </tr>
