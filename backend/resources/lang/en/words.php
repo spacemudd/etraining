@@ -538,4 +538,5 @@ return [
     'block' => 'Block',
     'notes' => 'Notes',
     'add-manual-attendance' => 'Add manual attendance',
+    'clone' => 'Clone',
 ];

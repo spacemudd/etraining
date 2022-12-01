@@ -556,4 +556,5 @@ return [
     'block' => 'حظر',
     'notes' => 'ملاحظات',
     'add-manual-attendance' => 'تحديد ايام الحضور (يدوي)',
+    'clone' => 'نسخ',
 ];

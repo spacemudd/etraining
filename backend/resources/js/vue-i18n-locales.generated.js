@@ -724,7 +724,8 @@ export default {
             "temporary-stop": "ايقاف جزئي",
             "suspend-account": "ايقاف",
             "block": "حظر",
-            "add-manual-attendance": "تحديد ايام الحضور (يدوي)"
+            "add-manual-attendance": "تحديد ايام الحضور (يدوي)",
+            "clone": "نسخ"
         }
     },
     "en": {
@@ -1397,7 +1398,8 @@ export default {
             "temporary-stop": "Temporary stop",
             "suspend-account": "Suspend account",
             "block": "Block",
-            "add-manual-attendance": "Add manual attendance"
+            "add-manual-attendance": "Add manual attendance",
+            "clone": "Clone"
         }
     }
 }

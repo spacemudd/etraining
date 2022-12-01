@@ -155,4 +155,26 @@ class CompanyAttendanceReportController extends Controller
 
         return redirect()->route('back.reports.company-attendance.show', $id);
     }
+
+    public function clone($id)
+    {
+        DB::beginTransaction();
+        $original = CompanyAttendanceReport::findOrFail($id);
+
+        $clone = $original->replicate(['approved_by_id', 'approved_at']);
+        $clone->status = CompanyAttendanceReport::STATUS_REVIEW;
+        $clone->save();
+        $clone = $clone->refresh();
+
+
+        $original_trainees = $original->trainees->flatMap(function($trainee) {
+            return [$trainee->id => ['active' => $trainee->pivot->active]];
+        });
+
+        $clone->trainees()->attach($original_trainees);
+
+        DB::commit();
+
+        return redirect()->route('back.reports.company-attendance.show', $clone->id);
+    }
 }

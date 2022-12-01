@@ -43,7 +43,15 @@
             </div>
             <div class="flex justify-end">
                 <div>
-                    <button v-if="!report.approved_at" @click="deleteReport" class="inline-flex items-center px-4 py-2 bg-red-300 border border-transparent rounded-md font-semibold text-xs text-black uppercase tracking-normal transition ease-in-out duration-150">{{ $t('words.delete') }}</button>
+                    <button v-if="!report.approved_at"
+                            @click="deleteReport"
+                            class="inline-flex items-center px-4 py-2 bg-red-300 border border-transparent rounded-md font-semibold text-xs text-black uppercase tracking-normal transition ease-in-out duration-150">
+                        {{ $t('words.delete') }}
+                    </button>
+                    <button @click="clone"
+                            class="btn btn-secondary">
+                        {{ $t('words.clone') }}
+                    </button>
                     <a :href="route('back.reports.company-attendance.preview', report.id)"
                        target="_blank"
                        class="btn-secondary">{{ $t('words.preview') }}</a>
@@ -185,6 +193,11 @@
             }
         },
         methods: {
+            clone() {
+                if (confirm(this.$t('words.are-you-sure'))) {
+                    this.$inertia.post(route('back.reports.company-attendance.clone', this.report.id));
+                }
+            },
             approveReport() {
                 if (confirm(this.$t('words.are-you-sure'))) {
                     this.$inertia.post(route('back.reports.company-attendance.approve', this.report.id));
