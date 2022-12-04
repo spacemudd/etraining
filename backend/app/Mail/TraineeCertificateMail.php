@@ -38,7 +38,9 @@ class TraineeCertificateMail extends Mailable
 
         return $this
             ->subject('شهادة تدريبية - '.$certificate->course->name_ar.' - '.$certificate->trainee->name)
-            ->markdown('emails.certificate');
+            ->markdown('emails.certificate', [
+                'certificate' => $certificate,
+            ]);
     }
 
     public function attachReportFile($certificate)
