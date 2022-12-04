@@ -28,6 +28,7 @@ class TraineeCertificate extends Model
 
     public function send_email()
     {
-        Mail::queue(new TraineeCertificateMail($this->id));
+        Mail::to($this->trainee->email)
+            ->queue(new TraineeCertificateMail($this->id));
     }
 }
