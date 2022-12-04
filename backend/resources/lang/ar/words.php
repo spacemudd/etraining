@@ -557,4 +557,10 @@ return [
     'notes' => 'ملاحظات',
     'add-manual-attendance' => 'تحديد ايام الحضور (يدوي)',
     'certificates' => 'شهادات',
+    'successful' => 'نجح',
+    'failed' => 'فشل',
+    'issue-certificates' => 'اصدر الشهادات',
+    'processing' => 'جاري المعالجة',
+    'sending-in-progress' => 'جاري الارسال',
+    'sent' => 'تم الارسال',
 ];

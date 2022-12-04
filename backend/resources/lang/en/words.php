@@ -538,4 +538,10 @@ return [
     'block' => 'Block',
     'notes' => 'Notes',
     'add-manual-attendance' => 'Add manual attendance',
+    'successful' => 'Successful',
+    'failed' => 'Failed',
+    'issue-certificates' => 'Issue certificates',
+    'processing' => 'Processing',
+    'sending-in-progress' => 'Sending in progress',
+    'sent' => 'Sent',
 ];

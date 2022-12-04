@@ -2,23 +2,26 @@
 
 namespace App\Services;
 
+use App\Models\Back\TraineeCertificate;
 use PDF;
 
 class CertificatesService
 {
-    public function __construct()
-    {
+    public $certificate;
 
+    public function __construct(TraineeCertificate $certificate)
+    {
+        $this->certificate = $certificate;
     }
 
-    static public function new()
+    static public function new($certificate_id)
     {
-        return new CertificatesService();
+        return new CertificatesService(TraineeCertificate::with(['trainee', 'course'])->findOrFail($certificate_id));
     }
 
     public function pdf()
     {
-        $pdf = PDF::setOption('margin-bottom', 30)
+        return PDF::setOption('margin-bottom', 30)
             ->setOption('page-size', 'A4')
             ->setOption('orientation', 'landscape')
             ->setOption('encoding','utf-8')
@@ -39,8 +42,7 @@ class CertificatesService
             ->setOption('viewport-size', '1024×768')
             ->setOption('zoom', 0.78)
             ->loadView('pdf.certificate.show', [
-
+                'certificate' => $this->certificate,
             ]);
-        return $pdf;
     }
 }

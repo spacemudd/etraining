@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
-use App\Imports\CertificatesImport;
+use App\Jobs\CertificateCsvImportJob;
+use App\Jobs\IssueCertificateJob;
 use App\Models\Back\Course;
+use App\Models\Back\CertificatesImport;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -26,17 +28,36 @@ class CertificatesController extends Controller
 
         $import = new CertificatesImport();
         $import->course_id = Course::first()->id;
-        $import->status = 1;
+        $import->status = CertificatesImport::STATUS_IMPORTING;
         $import->processed_count = 0;
         $import->total_count = 0;
         $import->started_at = null;
         $import->completed_at = null;
+        $import->filepath = $filepath;
+        $import->imported_by_id = auth()->user()->id;
+        $import->save();
 
+        dispatch(new CertificateCsvImportJob($import));
 
-        Excel::import(new CertificatesImport(), $filepath);
+        return response()->json($import);
+    }
 
-        return response()->json([
-            'id' => ,
+    public function job($id)
+    {
+        return Inertia::render('Back/Certificates/Job', [
+            'job' => CertificatesImport::withCount('rows')->find($id),
         ]);
+    }
+
+    public function issue($id)
+    {
+        $import = CertificatesImport::find($id);
+        if ($import->status != CertificatesImport::STATUS_IMPORTING) {
+            return response()->json(['error' => 'Cannot issue certificates for this import.'], 400);
+        }
+        $import->status = CertificatesImport::STATUS_SENDING;
+        $import->save();
+        dispatch(new IssueCertificateJob($import));
+        return redirect()->route('back.certificates.import.job', $import);
     }
 }

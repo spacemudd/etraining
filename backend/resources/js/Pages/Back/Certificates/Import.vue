@@ -65,7 +65,7 @@
                 this.$wait.start('SENDING_FILE');
                 axios.post(route('back.certificates.import.upload'), this.formData)
                     .then(response => {
-                        this.$inertia.get(route('back.certificates.import.show', response.data.id));
+                        this.$inertia.get(route('back.certificates.import.job', response.data.id));
                     }).catch(error => {
                         this.$wait.end('SENDING_FILE');
                         throw error;

@@ -53,9 +53,9 @@
     <div class="content">
         <img class="page-logo" src="{{ public_path('/img/logo-lg.png') }}">
         <h1>شهادة حضور دورة تطويرية</h1>
-        <p style="margin-top:2.5rem;">يشهد مركز احترافية المدرب للتدريب بأن المتدربة  "الاسم"</p>
-        <p style="margin-top:2.5rem;">وجنسيتها سعودية بموجب السجل المدني رقم "رقم الهوية"</p>
-        <p style="margin-top:2.5rem;">قـــد حضرت دورة (تنمية مهارات موظف الصف الأمامي) عدد ساعاتها التدريبية 32 ساعة</p>
+        <p style="margin-top:2.5rem;">يشهد مركز احترافية المدرب للتدريب بأن المتدربة  "{{ $certificate->trainee->name }}"</p>
+        <p style="margin-top:2.5rem;">وجنسيتها سعودية بموجب السجل المدني رقم "{{ $certificate->trainee->identity_number }}"</p>
+        <p style="margin-top:2.5rem;">قـــد حضرت دورة ({{ $certificate->course->name_ar }}) عدد ساعاتها التدريبية 32 ساعة</p>
         <p style="margin-top:2.5rem;">وعدد أيامها التدريبية (30) يوم والمنعقدة في الفترة من </p>
         <p style="margin-top:2.5rem;">(8 - 10 -1443هـ  إلى 6 -4 -1444هـ  )</p>
         <p style="margin-top:2.5rem;">والمعتمدة من المؤسسة العامة للتدريب التقني والمهني برقم </p>

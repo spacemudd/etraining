@@ -725,7 +725,13 @@ export default {
             "suspend-account": "ايقاف",
             "block": "حظر",
             "add-manual-attendance": "تحديد ايام الحضور (يدوي)",
-            "certificates": "شهادات"
+            "certificates": "شهادات",
+            "successful": "نجح",
+            "failed": "فشل",
+            "issue-certificates": "اصدر الشهادات",
+            "processing": "جاري المعالجة",
+            "sending-in-progress": "جاري الارسال",
+            "sent": "تم الارسال"
         }
     },
     "en": {
@@ -1398,7 +1404,13 @@ export default {
             "temporary-stop": "Temporary stop",
             "suspend-account": "Suspend account",
             "block": "Block",
-            "add-manual-attendance": "Add manual attendance"
+            "add-manual-attendance": "Add manual attendance",
+            "successful": "Successful",
+            "failed": "Failed",
+            "issue-certificates": "Issue certificates",
+            "processing": "Processing",
+            "sending-in-progress": "Sending in progress",
+            "sent": "Sent"
         }
     }
 }
