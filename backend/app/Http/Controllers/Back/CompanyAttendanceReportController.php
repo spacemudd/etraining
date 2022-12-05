@@ -77,6 +77,19 @@ class CompanyAttendanceReportController extends Controller
         return redirect()->route('back.reports.company-attendance.show', $report->id);
     }
 
+    /**
+     * @param $id
+     * @return \Inertia\Response
+     */
+    public function edit($id)
+    {
+        $report = CompanyAttendanceReport::with('company')->findOrFail($id);
+
+        return Inertia::render('Back/Reports/CompanyAttendance/Edit', [
+            'report' => $report,
+        ]);
+    }
+
     public function show($id)
     {
         $report = CompanyAttendanceReport::with('company')
@@ -124,10 +137,26 @@ class CompanyAttendanceReportController extends Controller
         $request->validate([
             'to_emails' => 'nullable|string',
             'cc_emails' => 'nullable|string',
+            'company_id' => 'nullable|exists:companies,id',
+            'period' => 'nullable',
         ]);
 
         $report = CompanyAttendanceReport::findOrFail($id);
-        $report->update($request->except('_token'));
+
+        if ($request->has('period')) {
+            $date_from = Carbon::parse($request->period['startDate'])->setTimezone('Asia/Riyadh')->startOfDay();
+            $date_to = Carbon::parse($request->period['endDate'])->setTimezone('Asia/Riyadh')->endOfDay();
+            $company = Company::findOrFail($request->company_id);
+            $report->update([
+                'company_id' => $company->id,
+                'date_from' => $date_from,
+                'date_to' => $date_to,
+                'to_emails' => $request->to_emails,
+                'cc_emails' => $request->cc_emails,
+            ]);
+        } else {
+            $report->update($request->except('_token'));
+        }
 
         return redirect()->route('back.reports.company-attendance.show', $id);
     }

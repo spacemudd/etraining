@@ -48,6 +48,10 @@
                             class="inline-flex items-center px-4 py-2 bg-red-300 border border-transparent rounded-md font-semibold text-xs text-black uppercase tracking-normal transition ease-in-out duration-150">
                         {{ $t('words.delete') }}
                     </button>
+                    <inertia-link :href="route('back.reports.company-attendance.edit', report.id)"
+                                  class="inline-flex items-center px-4 py-2 bg-blue-300 border border-transparent rounded-md font-semibold text-xs text-black uppercase tracking-normal transition ease-in-out duration-150">
+                        {{ $t('words.edit') }}
+                    </inertia-link>
                     <button @click="clone"
                             class="btn btn-secondary">
                         {{ $t('words.clone') }}

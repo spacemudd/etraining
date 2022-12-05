@@ -52,7 +52,7 @@ tfoot { display:table-footer-group }
     </div>
 
     <div class="row" style="margin-top: 10px;">
-        <table class="table">
+        <table class="table" style="width:100%;">
                 <colgroup>
                     <col style="width:35px">
                     <col style="width:70px">
