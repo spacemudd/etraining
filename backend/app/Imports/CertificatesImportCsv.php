@@ -29,7 +29,7 @@ class CertificatesImportCsv implements ToCollection
                 continue;
             }
 
-            if ($trainee = Trainee::withTrashed()->where('identity_number', $row[0])->first()) {
+            if ($trainee = Trainee::withTrashed()->where('identity_number', $row[0])->first() || $trainee = Trainee::withTrashed()->where('identity_number', $this->arabic_numbers($row[1]))->first()) {
                 $imported_row = new CertificatesImportsRow([
                     'trainee_id' => $trainee->id,
                     'course_id' => $this->import->course_id,
@@ -46,5 +46,13 @@ class CertificatesImportCsv implements ToCollection
         $this->import->completed_at = now();
         $this->import->failed_rows = $this->failed_rows;
         $this->import->save();
+    }
+
+    public function arabic_numbers($input)
+    {
+        $numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        $arabic_numbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+
+        return str_replace($numbers, $arabic_numbers, $input);
     }
 }
