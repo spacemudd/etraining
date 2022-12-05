@@ -68,7 +68,7 @@
             </div>
             <div class="col-4" style="text-align: right;">
                 <p class="small-text">
-                    <b>حررت بتاريخ:    6 / 4  /1444  هـ </b><br/>
+                    <b>حررت بتاريخ:    7 / 4  /1444  هـ </b><br/>
                     <b>الموافق:            31 /  10 /2022 م</b>
                 </p>
                 <p class="small-text">ملاحظة: أي كشط او تعديل على الشهادة تعتبر لاغية</p>
