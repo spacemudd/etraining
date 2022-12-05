@@ -29,8 +29,7 @@ class CertificatesImportCsv implements ToCollection
                 continue;
             }
 
-            //if ($trainee = Trainee::withTrashed()->where('identity_number', $row[0])->first()) {
-            if ($trainee = Trainee::withTrashed()->where('name', $row[1])->first()) {
+            if ($trainee = Trainee::withTrashed()->where('identity_number', $row[0])->first()) {
                 $imported_row = new CertificatesImportsRow([
                     'trainee_id' => $trainee->id,
                     'course_id' => $this->import->course_id,
