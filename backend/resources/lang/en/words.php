@@ -538,5 +538,14 @@ return [
     'block' => 'Block',
     'notes' => 'Notes',
     'add-manual-attendance' => 'Add manual attendance',
+<<<<<<< HEAD
     'clone' => 'Clone',
+=======
+    'successful' => 'Successful',
+    'failed' => 'Failed',
+    'issue-certificates' => 'Issue certificates',
+    'processing' => 'Processing',
+    'sending-in-progress' => 'Sending in progress',
+    'sent' => 'Sent',
+>>>>>>> certificates
 ];

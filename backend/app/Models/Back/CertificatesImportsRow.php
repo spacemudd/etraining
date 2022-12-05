@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Models\Back;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class CertificatesImportsRow extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'trainee_id',
+        'course_id',
+    ];
+
+    public function trainee()
+    {
+        return $this->belongsTo(Trainee::class);
+    }
+}

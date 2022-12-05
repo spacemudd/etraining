@@ -7,10 +7,10 @@
     <title>Company attendance report</title>
     <style>
         table { page-break-after:auto }
-tr    { page-break-inside:avoid; page-break-after:auto }
-td    { page-break-inside:avoid; page-break-after:auto }
-thead { display: table-row-group; }
-tfoot { display:table-footer-group }
+        tr    { page-break-inside:avoid; page-break-after:auto }
+        td    { page-break-inside:avoid; page-break-after:auto }
+        thead { display: table-row-group; }
+        tfoot { display:table-footer-group }
         .vertical-text {
             writing-mode: vertical-rl;
             -webkit-transform: rotate(90deg);
