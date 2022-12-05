@@ -38,6 +38,7 @@ class IssueCertificateJob implements ShouldQueue
         foreach ($this->import->rows as $row) {
             $certificate = $this->issue_certificate($row);
             $certificate->send_email();
+            usleep(400);
         }
         $this->import->status = CertificatesImport::STATUS_SENT;
         $this->import->save();

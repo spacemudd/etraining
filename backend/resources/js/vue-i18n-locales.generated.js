@@ -725,9 +725,7 @@ export default {
             "suspend-account": "ايقاف",
             "block": "حظر",
             "add-manual-attendance": "تحديد ايام الحضور (يدوي)",
-<<<<<<< HEAD
-            "clone": "نسخ"
-=======
+            "clone": "نسخ",
             "certificates": "شهادات",
             "successful": "نجح",
             "failed": "فشل",
@@ -735,7 +733,6 @@ export default {
             "processing": "جاري المعالجة",
             "sending-in-progress": "جاري الارسال",
             "sent": "تم الارسال"
->>>>>>> certificates
         }
     },
     "en": {
@@ -1409,16 +1406,13 @@ export default {
             "suspend-account": "Suspend account",
             "block": "Block",
             "add-manual-attendance": "Add manual attendance",
-<<<<<<< HEAD
-            "clone": "Clone"
-=======
+            "clone": "Clone",
             "successful": "Successful",
             "failed": "Failed",
             "issue-certificates": "Issue certificates",
             "processing": "Processing",
             "sending-in-progress": "Sending in progress",
             "sent": "Sent"
->>>>>>> certificates
         }
     }
 }

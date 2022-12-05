@@ -556,9 +556,7 @@ return [
     'block' => 'حظر',
     'notes' => 'ملاحظات',
     'add-manual-attendance' => 'تحديد ايام الحضور (يدوي)',
-<<<<<<< HEAD
     'clone' => 'نسخ',
-=======
     'certificates' => 'شهادات',
     'successful' => 'نجح',
     'failed' => 'فشل',
@@ -566,5 +564,4 @@ return [
     'processing' => 'جاري المعالجة',
     'sending-in-progress' => 'جاري الارسال',
     'sent' => 'تم الارسال',
->>>>>>> certificates
 ];
