@@ -29,7 +29,7 @@ class CertificatesImportCsv implements ToCollection
                 continue;
             }
 
-            if (($trainee = Trainee::withTrashed()->where('identity_number', $row[0])->first()) || ($trainee = Trainee::withTrashed()->where('identity_number', $this->arabic_numbers($row[1]))->first())) {
+            if (($trainee = Trainee::withTrashed()->where('identity_number', $row[0])->first()) || ($trainee = Trainee::withTrashed()->where('identity_number', $this->arabic_numbers($row[0]))->first())) {
                 $imported_row = new CertificatesImportsRow([
                     'trainee_id' => $trainee->id,
                     'course_id' => $this->import->course_id,
