@@ -39,7 +39,11 @@ class IssueCertificateJob implements ShouldQueue
     {
         foreach ($this->import->rows as $row) {
             $certificate = $this->issue_certificate($row);
-            $certificate->send_email();
+            if (!$this->alreadySentTo($row)) {
+                $certificate->send_email();
+                $row->sent_at = now();
+                $row->save();
+            }
             usleep(400);
         }
         $this->import->status = CertificatesImport::STATUS_SENT;
@@ -52,5 +56,12 @@ class IssueCertificateJob implements ShouldQueue
             'course_id' => $this->import->course_id,
             'trainee_id' => $row->trainee_id,
         ]);
+    }
+
+    public function alreadySentTo(CertificatesImportsRow $row)
+    {
+        return CertificatesImportsRow::where('trainee_id', $row->trainee_id)
+            ->where('sent_at', '!=', null)
+            ->exists();
     }
 }
