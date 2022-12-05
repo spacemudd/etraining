@@ -86,20 +86,26 @@ class CoursesController extends Controller
                 'instructor' => function($model){
                     $model->withTrashed();
                 },
-                'quizzes' => function($model){
-                    $model->with([
-                        'questions' => function($model){
-                            $model->withTrashed();
-                        }
-                    ]);
+                'questions' => function($model){
+                    $model->withTrashed();
                 },
+                'quizzes' => function($model){
+                    $model->withTrashed();
+                },
+//                'quizzes' => function($model){
+//                    $model->with([
+//                        'questions' => function($model){
+//                            $model->withTrashed();
+//                        }
+//                    ]);
+//                },
             ])
             ->findOrFail($course_id);
 
         return Inertia::render('Trainees/Courses/Grades', [
             'course' => $course,
-            'quizzes' => Quiz::get(),
             'questions' => Question::get(),
+            'quizzes' => Quiz::get(),
         ]);
     }
 
