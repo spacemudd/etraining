@@ -61,6 +61,7 @@ class IssueCertificateJob implements ShouldQueue
     public function alreadySentTo(CertificatesImportsRow $row)
     {
         return CertificatesImportsRow::where('trainee_id', $row->trainee_id)
+            ->where('course_id', $this->import->course_id)
             ->where('sent_at', '!=', null)
             ->exists();
     }
