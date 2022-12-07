@@ -39,6 +39,7 @@
                             'address',
                             'email',
                             'monthly_subscription_per_trainee',
+                            'shelf_number',
                             ]"
                 >
                     <div class="col-span-4 sm:col-span-1">
@@ -375,6 +376,7 @@ export default {
                 address: '',
                 email: '',
                 monthly_subscription_per_trainee: '',
+                shelf_number: '',
             }, {
                 bag: 'createCompany',
             })

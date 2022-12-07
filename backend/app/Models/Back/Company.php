@@ -23,7 +23,7 @@ class Company extends Model implements SearchableLabels, Auditable
 
     protected $keyType = 'string';
 
-    const SEARCHABLE_FIELDS = ['id', 'name_ar', 'name_en', 'email'];
+    const SEARCHABLE_FIELDS = ['id', 'name_ar', 'name_en', 'email', 'shelf_number'];
 
     protected $fillable = [
         'name_ar',
@@ -35,6 +35,7 @@ class Company extends Model implements SearchableLabels, Auditable
         'email',
         'address',
         'monthly_subscription_per_trainee',
+        'shelf_number',
     ];
 
     protected $appends = [

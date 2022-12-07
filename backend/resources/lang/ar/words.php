@@ -564,4 +564,5 @@ return [
     'processing' => 'جاري المعالجة',
     'sending-in-progress' => 'جاري الارسال',
     'sent' => 'تم الارسال',
+    'shelf_number' => 'رقم الرف',
 ];

@@ -545,4 +545,5 @@ return [
     'processing' => 'Processing',
     'sending-in-progress' => 'Sending in progress',
     'sent' => 'Sent',
+    'shelf_number' => 'Shelf number',
 ];

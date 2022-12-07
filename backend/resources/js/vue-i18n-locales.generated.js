@@ -732,7 +732,8 @@ export default {
             "issue-certificates": "اصدر الشهادات",
             "processing": "جاري المعالجة",
             "sending-in-progress": "جاري الارسال",
-            "sent": "تم الارسال"
+            "sent": "تم الارسال",
+            "shelf_number": "رقم الرف"
         }
     },
     "en": {
@@ -1412,7 +1413,8 @@ export default {
             "issue-certificates": "Issue certificates",
             "processing": "Processing",
             "sending-in-progress": "Sending in progress",
-            "sent": "Sent"
+            "sent": "Sent",
+            "shelf_number": "Shelf number"
         }
     }
 }
