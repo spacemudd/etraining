@@ -40,6 +40,6 @@ class Question extends Model
     }
     public function answers(): HasMany
     {
-        return $this->HasMany(Answer::class)->withTrashed();
+        return $this->hasMany(Answer::class);
     }
 }

@@ -34,6 +34,6 @@ class Quiz extends Model
     }
     public function questions(): HasMany
     {
-        return $this->HasMany(Question::class)->withTrashed();
+        return $this->hasMany(Question::class);
     }
 }

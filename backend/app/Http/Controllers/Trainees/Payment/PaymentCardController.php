@@ -100,6 +100,8 @@ class PaymentCardController extends Controller
         try {
             $trainee = optional(auth()->user())->trainee;
 
+//            $trainee = $invoices->first()->trainee->name;
+            
             $payment = TapPayment::createCharge();
             $payment->setCustomerName($trainee->name);
             $payment->setDescription("Pending dues");
