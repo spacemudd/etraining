@@ -19,8 +19,6 @@ class CreateQuestionsTable extends Migration
             $table->foreign('course_id')->references('id')->on('courses');
             $table->unsignedBigInteger('quiz_id');
             $table->foreign('quiz_id')->references('id')->on('quizzes');
-            $table->unsignedBigInteger('answer_id');
-            $table->foreign('answer_id')->references('id')->on('answers');
             $table->string('description');
             $table->softDeletes();
             $table->timestamps();

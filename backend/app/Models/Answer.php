@@ -17,7 +17,13 @@ class Answer extends Model
     protected $perPage = 50;
 
     protected $fillable = [
+        'question_id',
         'value',
-        'is_right',
+        'is_correct',
     ];
+
+    public function question(): BelongsTo
+    {
+        return $this->belongsTo(Question::class)->withTrashed();
+    }
 }

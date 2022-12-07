@@ -8,6 +8,7 @@ use App\Models\Back\MaxNumber;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
@@ -25,7 +26,6 @@ class Question extends Model
     protected $fillable = [
         'course_id',
         'quiz_id',
-        'answer_id',
         'description',
         'created_by_id',
     ];
@@ -34,12 +34,12 @@ class Question extends Model
     {
         return $this->belongsTo(Course::class)->withTrashed();
     }
-    public function quizzes(): BelongsTo
+    public function quiz(): BelongsTo
     {
         return $this->belongsTo(Quiz::class)->withTrashed();
     }
-    public function answer(): BelongsTo
+    public function answers(): HasMany
     {
-        return $this->belongsTo(Answer::class)->withTrashed();
+        return $this->HasMany(Answer::class)->withTrashed();
     }
 }
