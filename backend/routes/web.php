@@ -78,6 +78,24 @@ Route::get('s1s2', function() {
 
     return $traineeData;
 });
+Route::get('s1s3', function() {
+    $trainees = Trainee::whereNotNull('deleted_at')->get();
+
+    $traineeData = [];
+
+    foreach ($trainees as $trainee) {
+        $traineeData[] = [
+            'name' => $trainee->name,
+            'company' => optional($trainee->company)->name_ar,
+            'email' => $trainee->email,
+            'phone' => $trainee->phone,
+            'instructor' => optional($trainee->instructor)->name,
+            'group' => optional($trainee->trainee_group)->name,
+        ];
+    }
+
+    return $traineeData;
+});
 
 Route::get('instructor-company-report', function() {
     $contracts = \App\Models\Back\CompanyContract::get();
