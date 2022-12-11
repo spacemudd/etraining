@@ -79,7 +79,7 @@ Route::get('s1s2', function() {
     return $traineeData;
 });
 Route::get('s1s3', function() {
-    $trainees = Trainee::whereNotNull('deleted_at')->get();
+    $trainees = Trainee::onlyTrashed()->get();
 
     $traineeData = [];
 
