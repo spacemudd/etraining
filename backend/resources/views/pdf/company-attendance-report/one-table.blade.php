@@ -123,15 +123,15 @@ tfoot { display:table-footer-group }
                                     <td style="{{ $days[$i]['vacation_day'] ? 'background:#e0e0e0;' : '' }}">
                                         @if ($record->start_date)
                                             @if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date))
-                                                &#120;
+                                                &#10003;
                                             @else
-                                                @if ($record->status === 'new_registration')
+                                                 @if ($record->status === 'new_registration')
                                                     {{-- Considered absent --}}
-                                                    &#10003;
+                                                    &#120;
                                                 @endif
                                             @endif
                                         @else
-                                            &#120;
+                                            &#10003;
                                         @endif
                                     </td>
                                 @endfor
