@@ -31,8 +31,8 @@
                     <ul class="list-disc mt-5" style="margin-right: 3rem;">
                         <li class="mt-2">الهاتف: 92000347</li>
                         <li class="mt-2">الايميل: training@ptc-ksa.com</li>
-                        <li class="mt-2">واتس أب: 0555026885</li>
-                        <li class="mt-2">يتم تقديم المساعدة والدعم التعليمي من خلال هذه التواصل مع المدربين من خلال الواتس اب 0555026885.</li>
+                        <li class="mt-2">واتس أب: 966531057958</li>
+                        <li class="mt-2">يتم تقديم المساعدة والدعم التعليمي من خلال هذه التواصل مع المدربين من خلال الواتس اب 966531057958.</li>
                     </ul>
 
                     <h1 class="text-3xl mb-8 mt-8 font-bold" id="attendance-policy">{{ __('words.attendance-policy') }}</h1>
