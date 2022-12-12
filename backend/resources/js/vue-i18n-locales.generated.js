@@ -733,7 +733,8 @@ export default {
             "processing": "جاري المعالجة",
             "sending-in-progress": "جاري الارسال",
             "sent": "تم الارسال",
-            "shelf_number": "رقم الرف"
+            "shelf_number": "رقم الرف",
+            "contact-policy": "سياسة وآداب التواصل"
         }
     },
     "en": {
@@ -1414,7 +1415,8 @@ export default {
             "processing": "Processing",
             "sending-in-progress": "Sending in progress",
             "sent": "Sent",
-            "shelf_number": "Shelf number"
+            "shelf_number": "Shelf number",
+            "contact-policy": "Contact policy"
         }
     }
 }

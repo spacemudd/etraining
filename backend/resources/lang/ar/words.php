@@ -565,4 +565,5 @@ return [
     'sending-in-progress' => 'جاري الارسال',
     'sent' => 'تم الارسال',
     'shelf_number' => 'رقم الرف',
+    'contact-policy' => 'سياسة وآداب التواصل',
 ];

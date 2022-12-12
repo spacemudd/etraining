@@ -160,6 +160,7 @@ Route::post('setup-account', [\App\Http\Controllers\ProfileController::class, 'u
 
 Route::get('language/{language}', [\App\Http\Controllers\LanguageController::class, 'changeLanguage'])->name('language');
 
+Route::get('/communication-policy', [\App\Http\Controllers\ContactUsController::class, 'index'])->name('contact');
 Route::get('/requirements', [\App\Http\Controllers\RequirementsController::class, 'index'])->name('requirements');
 Route::get('/terms', [\App\Http\Controllers\TermsController::class, 'index'])->name('terms');
 

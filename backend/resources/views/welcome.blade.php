@@ -68,8 +68,12 @@
                     <li class="mt-2"><a href="https://app.ptc-ksa.com/terms#academic-integrity-policy">{{ __('words.academic-integrity-policy') }}</a></li>
                     <li class="mt-2"><a href="https://app.ptc-ksa.com/terms#privacy-policy">{{ __('words.privacy-policy') }}</a></li>
                     <li class="mt-2"><a href="https://app.ptc-ksa.com/terms#intellectual-property-rights">{{ __('words.intellectual-property-rights') }}</a></li>
+                    <li class="mt-2"><a href="https://app.ptc-ksa.com/communication-policy">{{ __('words.contact-policy') }}</a></li>
                 </ul>
+                <br>
+                <br>
             </div>
+
         </x-slot>
     </x-jet-authentication-card>
 </x-guest-layout>

@@ -546,4 +546,5 @@ return [
     'sending-in-progress' => 'Sending in progress',
     'sent' => 'Sent',
     'shelf_number' => 'Shelf number',
+    'contact-policy' => 'Contact policy',
 ];
