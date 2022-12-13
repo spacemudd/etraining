@@ -102,7 +102,7 @@ class PaymentCardController extends Controller
 
             $payment = TapPayment::createCharge();
             $payment->setCustomerName($trainee->name);
-            $payment->setDescription("Pending dues");
+            $payment->setDescription("Training Fees - رسوم التدريب");
             $payment->setAmount($amount);
             $payment->setCurrency("SAR");
             $payment->setSource("src_card");
@@ -153,6 +153,12 @@ class PaymentCardController extends Controller
 
             DB::beginTransaction();
             foreach ($invoice_ids as $invoice_id) {
+                Audit::create([
+                    'event' => 'tap',
+                    'auditable_id' => $invoice_id,
+                    'auditable_type' => Invoice::class,
+                    'new_values' => $request->toArray(),
+                ]);
                 $invoice = Invoice::notPaid()->with(['trainee' => function($q) {
                     $q->withTrashed();
                 }])->find($invoice_id);
