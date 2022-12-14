@@ -181,6 +181,12 @@
                         <p class="mt-1 text-sm text-gray-600">
                             {{ $t('words.documents-help') }}
                         </p>
+
+                        <div class="mt-3">
+                            <inertia-link class="text-blue-600 border-2 border-blue-600 text-xs p-1" :href="route('back.trainees.files.index', trainee.id)">
+                                {{ $t('words.other-files') }} ({{ trainee.general_files_count }})
+                            </inertia-link>
+                        </div>
                     </div>
                 </div>
 
