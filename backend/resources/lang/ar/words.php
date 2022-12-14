@@ -566,4 +566,8 @@ return [
     'sent' => 'تم الارسال',
     'shelf_number' => 'رقم الرف',
     'contact-policy' => 'سياسة وآداب التواصل',
+    'others' => 'اخرى',
+    'files' => 'الملفات',
+    'upload' => 'رفع',
+    'other-files' => 'ملفات اخرى',
 ];

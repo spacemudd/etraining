@@ -130,6 +130,7 @@ class TraineesController extends Controller
                     'trainee_group',
                     'user',
                 ])
+                ->withCount('general_files')
                 ->with(['invoices' => function($q) {
                     $q->orderBy('number', 'desc');
                 }])
@@ -597,6 +598,7 @@ class TraineesController extends Controller
     {
         return Inertia::render('Back/Trainees/ShowBlocked', [
             'trainee' => Trainee::with(['educational_level', 'city', 'marital_status', 'trainee_group', 'company'])
+                ->withCount('general_files')
                 ->with('invoices')
                 ->withTrashed()
                 ->findOrFail($id),

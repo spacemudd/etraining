@@ -249,6 +249,11 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         return $this->media()->where('collection_name', $folder);
     }
 
+    public function general_files()
+    {
+        return $this->media()->where('collection_name', 'general_files');
+    }
+
     public function attendances()
     {
         return $this->hasMany(CourseBatchSessionAttendance::class);

@@ -27,6 +27,7 @@ class Media extends \Spatie\MediaLibrary\MediaCollections\Models\Media
     protected $appends = [
         'download_url',
         'created_at_timezone',
+        'human_readable_size',
     ];
 
     protected static function boot(): void
@@ -52,5 +53,4 @@ class Media extends \Spatie\MediaLibrary\MediaCollections\Models\Media
             return Timezone::convertToLocal($this->created_at, 'Y-m-d h:i A');
         }
     }
-
 }

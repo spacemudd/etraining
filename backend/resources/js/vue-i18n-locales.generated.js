@@ -734,7 +734,11 @@ export default {
             "sending-in-progress": "جاري الارسال",
             "sent": "تم الارسال",
             "shelf_number": "رقم الرف",
-            "contact-policy": "سياسة وآداب التواصل"
+            "contact-policy": "سياسة وآداب التواصل",
+            "others": "اخرى",
+            "files": "الملفات",
+            "upload": "رفع",
+            "other-files": "ملفات اخرى"
         }
     },
     "en": {
@@ -1416,7 +1420,11 @@ export default {
             "sending-in-progress": "Sending in progress",
             "sent": "Sent",
             "shelf_number": "Shelf number",
-            "contact-policy": "Contact policy"
+            "contact-policy": "Contact policy",
+            "others": "Others",
+            "files": "Files",
+            "upload": "Upload",
+            "other-files": "Other files"
         }
     }
 }

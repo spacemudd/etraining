@@ -547,4 +547,8 @@ return [
     'sent' => 'Sent',
     'shelf_number' => 'Shelf number',
     'contact-policy' => 'Contact policy',
+    'others' => 'Others',
+    'files' => 'Files',
+    'upload' => 'Upload',
+    'other-files' => 'Other files',
 ];
