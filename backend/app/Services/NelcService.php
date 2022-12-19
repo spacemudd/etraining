@@ -73,12 +73,17 @@ class NelcService
         $verb->setDisplay('en-US');
 
         $activity = new Activity(['id' => 'https://ptc-ksa.com/1994']);
-        $activity->getDefinition()
-            ->setType('https://w3id.org/xapi/cmi5/activitytype/course')
-            ->setDescription([
+        $activity->setDefinition([
+            'name' => [
+                'en-US' => 'Java for Beginners',
+                'ar-SA' => 'لغة الجافا للمبتدئين',
+            ],
+            'description' => [
                 'en-US' => 'A detailed course on Java for beginners',
                 'ar-SA' => 'دورة تعليمية مفصلة عن لغة الجافا للمبتدئين',
-            ]);
+            ],
+            'type' => 'http://adlnet.gov/expapi/activities/course',
+        ]);
 
         $context = new Context();
         $context->setInstructor(
