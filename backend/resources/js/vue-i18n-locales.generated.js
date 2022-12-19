@@ -738,7 +738,8 @@ export default {
             "others": "اخرى",
             "files": "الملفات",
             "upload": "رفع",
-            "other-files": "ملفات اخرى"
+            "other-files": "ملفات اخرى",
+            "page-refresh": "تحديث الصفحة"
         }
     },
     "en": {
@@ -1424,7 +1425,8 @@ export default {
             "others": "Others",
             "files": "Files",
             "upload": "Upload",
-            "other-files": "Other files"
+            "other-files": "Other files",
+            "page-refresh": "Page refresh"
         }
     }
 }

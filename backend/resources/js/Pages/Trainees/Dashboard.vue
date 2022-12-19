@@ -1,7 +1,19 @@
 <template>
     <app-layout>
         <div class="container px-6 mx-auto grid">
-
+            <div class="grid grid-cols-3 gap-4 place-items-center h-26">
+                <div></div>
+                <div>
+                    <inertia-link class="font-bold text-center mt-5 inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
+                                  :href="route('dashboard')">
+                        {{ $t('words.page-refresh') }}
+                        <svg width="40" height="40" class="pt-1 mx-0.5">
+                            <image class="inline flex  mt-3" xlink:href="https://flaticons.net/icon.php?slug_category=application&slug_icon=command-refresh-01" src="https://flaticons.net/icon.php?slug_category=application&slug_icon=command-refresh-01" width="28" height="28"/>
+                        </svg>
+                    </inertia-link>
+                </div>
+                <div></div>
+            </div>
             <div class="container mx-auto grid pt-6 text-center">
                 <div class="mx-auto">
                     <iframe width="350" height="198" src="https://www.youtube.com/embed/ekccJvhqDUk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

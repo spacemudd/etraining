@@ -570,4 +570,5 @@ return [
     'files' => 'الملفات',
     'upload' => 'رفع',
     'other-files' => 'ملفات اخرى',
+    'page-refresh' => 'تحديث الصفحة',
 ];

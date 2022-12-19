@@ -551,4 +551,5 @@ return [
     'files' => 'Files',
     'upload' => 'Upload',
     'other-files' => 'Other files',
+    'page-refresh' => 'Page refresh',
 ];
