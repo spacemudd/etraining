@@ -114,11 +114,15 @@ class NelcService
 
         if ($response->success) {
             Log::info([
+                'id' => $response->httpResponse,
+                'success' => $response->success,
                 'msg' => 'Success! Statement saved with ID',
-                'response' => $response->content]
+                'response' => $response->content
+                ]
             );
         } else {
             Log::info([
+                'id' => $response->httpResponse,
                 'msg' => 'Failed!',
                 'response' => $response->content,
             ]);
