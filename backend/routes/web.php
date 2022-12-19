@@ -2,6 +2,15 @@
 
 use App\Models\Back\Trainee;
 
+Route::get('ip', function() {
+    $ip = file_get_contents('https://api.ipify.org');
+    return $ip;
+});
+Route::get('nelc', function() {
+    $t = Trainee::first();
+    return app()->make(\App\Services\NelcService::class)->initializeTrainee($t);
+});
+
 Route::post('tap', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'storeTapReceipt']);
 
 Route::get('version', function() {

@@ -56,10 +56,7 @@ class NelcService
 
     public function setupClient($options)
     {
-        return new RemoteLRS($options['endpoint'], '1.0.3', 'Basic', [
-            'username' => $options['username'],
-            'password' => $options['password'],
-        ]);
+        return new RemoteLRS($options['endpoint'], '1.0.3', $options['username'], $options['password']);
     }
 
     public function initializeTrainee(Trainee $trainee)
@@ -94,16 +91,15 @@ class NelcService
         );
         $context->setPlatform($this->platform);
         $context->setLanguage('ar-SA');
-        $context->setExtensions(
-            new Extensions([
-                'https://nelc.gov.sa/extensions/platform' => [
-                    'name' => [
-                        'en-US' => 'Professional Training Center',
-                        'ar-SA' => 'مركز احترافية التدريب',
-                    ],
+        $extension = new Extensions();
+        $extension->set('https://ptc-ksa.com/1994/extension/program', [
+                'name' => [
+                    'en-US' => 'Professional Training Center',
+                    'ar-SA' => 'مركز احترافية التدريب',
                 ]
-            ])
+            ]
         );
+        $context->setExtensions($extension);
 
         $response = $this->httpClient->saveStatement([
             'actor' => $actor,
