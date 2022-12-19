@@ -113,9 +113,15 @@ class NelcService
         ]);
 
         if ($response->success) {
-            Log::info('Success! Statement saved with ID: '.$response->content);
+            Log::info([
+                'msg' => 'Success! Statement saved with ID',
+                'response' => $response->content]
+            );
         } else {
-            Log::info('Failed to save statement: '.$response->content);
+            Log::info([
+                'msg' => 'Failed!',
+                'response' => $response->content,
+            ]);
         }
     }
 }
