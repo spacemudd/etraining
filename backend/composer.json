@@ -42,6 +42,7 @@
         "owen-it/laravel-auditing": "^11.0",
         "predis/predis": "^1.1",
         "protonemedia/inertiajs-tables-laravel-query-builder": "^1.4",
+        "rusticisoftware/tincan": "@stable",
         "sentry/sentry-laravel": "^2.3",
         "skagarwal/google-places-api": "^1.7",
         "spacemudd/laravel-tap-payments": "^2.0",

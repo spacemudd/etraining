@@ -30,4 +30,11 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'nelc' => [
+        'key' => env('NELC_KEY'),
+        'secret' => env('NELC_SECRET'),
+        'platform' => env('NELC_PLATFORM'),
+        'endpoint' => env('NELC_ENDPOINT', 'https://lrs.nelc.gov.sa/staging-lrs/xapi/statements'),
+    ],
+
 ];
