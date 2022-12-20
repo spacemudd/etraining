@@ -4,10 +4,12 @@ namespace App\Models\Back;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CompanyAttendanceReport extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     const STATUS_REVIEW = 1;
     const STATUS_APPROVED = 2;
