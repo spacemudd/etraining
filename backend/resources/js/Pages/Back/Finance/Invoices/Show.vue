@@ -92,92 +92,95 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-col md:flex-row justify-start rounded bg-gray-50 rounded shadow-lg p-5">
+                    <div class="flex flex-col justify-start rounded bg-gray-50 rounded shadow-lg p-5">
                         <div class="w-full p-4">
                             <div class="grid grid-cols-2">
-                                <div class="font-bold">{{ $t('words.date') }}</div>
-                                <div>{{ invoice.created_at | formatDate }}</div>
-                                <div class="font-bold">{{ $t('words.invoice-no') }}</div>
-                                <div>{{ invoice.number_formatted }}</div>
-                                <div class="font-bold">{{ $t('words.from-date') }}</div>
-                                <div>{{ invoice.from_date | formatDate }}</div>
-                                <div class="font-bold">{{ $t('words.to-date') }}</div>
-                                <div>{{ invoice.to_date | formatDate }}</div>
-                                <hr class="my-2">
-                                <hr class="my-2">
-                                <div v-if="invoice.payment_method === 1" class="font-bold">{{ $t('words.payment-reference-id') }}</div>
-                                <div v-if="invoice.payment_method === 1" class="truncate" >{{ invoice.payment_reference_id }}</div>
-                                <div v-if="invoice.payment_method === 1" class="font-bold">{{ $t('words.paid-at') }}</div>
-                                <div v-if="invoice.payment_method === 1" class="truncate">{{ invoice.paid_at_time }}</div>
-                            </div>
-                        </div>
-                        <div class="w-full p-4">
-                            <div class="grid grid-cols-2">
-                                <div class="font-bold">{{ $t('words.client-name') }}</div>
-                                <div>
+                                <div class="text-2xl font-bold my-1.5">{{ $t('words.total-amount') }}</div>
+                                <div class="text-2xl img {display:block} inline-flex font-bold my-2 mb-4">{{ invoice.grand_total }}
+                                    <svg width="25" height="25" class="mx-1 mt-2">
+                                        <image class="inline " xlink:href="https://upload.wikimedia.org/wikipedia/commons/2/2b/Rial_Sign.PNG" src="https://upload.wikimedia.org/wikipedia/commons/2/2b/Rial_Sign.PNG" width="25" height="25"/>
+                                    </svg></div>
+                                <div class="font-bold my-1">{{ $t('words.client-name') }}</div>
+                                <div class="my-0.5">
                                     <inertia-link class="text-blue-500 hover:text-blue-600" :href="invoice.trainee.show_url">{{ invoice.trainee ? invoice.trainee.name : '-' }}</inertia-link>
-                                    -
                                     <inertia-link class="text-blue-500 hover:text-blue-600" :href="invoice.company.show_url">({{ invoice.company ? invoice.company.name_ar : 'Unknown' }})</inertia-link>
                                 </div>
-                                <div class="font-bold">{{ $t('words.total-amount') }}</div>
-                                <div>{{ invoice.grand_total }}</div>
-                                <div class="font-bold">{{ $t('words.paid') }}</div>
-                                <div>{{ invoice.is_paid ? $t('words.yes') : $t('words.no') }} <span v-if="invoice.is_paid">({{ invoice.payment_method_formatted }})
-                                    <span class="img {display:block} inline-flex">
-                                        <svg v-if="invoice.payment_method === 1" width="40" height="40" class="mx-0.5">
-                                            <image class=inline xlink:href="https://www.svgrepo.com/show/328112/visa.svg" src="https://www.svgrepo.com/show/328112/visa.svg" width="40" height="40"/>
+                                <div class="font-bold my-1">{{ $t('words.paid') }}</div>
+                                <div class="my-0.5">{{ invoice.is_paid ? $t('words.yes') : $t('words.no') }} <span v-if="invoice.is_paid">({{ invoice.payment_method_formatted }})
+                                    <span class="img {display:block} inline-flex ml-8/12">
+                                        <svg v-if="invoice.payment_method === 1" width="55" height="55" class="mx-0.5">
+                                            <image class=inline xlink:href="https://www.svgrepo.com/show/328112/visa.svg" src="https://www.svgrepo.com/show/328112/visa.svg" width="55" height="55"/>
                                         </svg>
-                                        <svg v-if="invoice.payment_method === 1" width="20" height="40" class="mx-0.5">
-                                            <image class=inline xlink:href="https://www.svgrepo.com/show/163750/mastercard.svg" src="https://www.svgrepo.com/show/163750/mastercard.svg" width="20" height="40"/>
+                                        <svg v-if="invoice.payment_method === 1" width="35" height="55" class="mx-0.5">
+                                            <image class=inline xlink:href="https://www.svgrepo.com/show/163750/mastercard.svg" src="https://www.svgrepo.com/show/163750/mastercard.svg" width="35" height="55"/>
                                         </svg>
-                                        <svg v-if="invoice.payment_method === 1" width="40" height="40" class="mx-0.5">
-                                            <image class=inline xlink:href="https://upload.wikimedia.org/wikipedia/commons/f/fb/Mada_Logo.svg" src="https://upload.wikimedia.org/wikipedia/commons/f/fb/Mada_Logo.svg" width="40" height="40"/>
+                                        <svg v-if="invoice.payment_method === 1" width="55" height="55" class="mx-0.5">
+                                            <image class=inline xlink:href="https://upload.wikimedia.org/wikipedia/commons/f/fb/Mada_Logo.svg" src="https://upload.wikimedia.org/wikipedia/commons/f/fb/Mada_Logo.svg" width="55" height="55"/>
                                         </svg>
-                                        <svg v-if="invoice.payment_method === 1" width="40" height="40" class="mx-0.5">
-                                            <image class=inline xlink:href="https://www.svgrepo.com/show/303191/apple-pay-logo.svg" src="https://www.svgrepo.com/show/303191/apple-pay-logo.svg" width="40" height="40"/>
+                                        <svg v-if="invoice.payment_method === 1" width="55" height="55" class="mx-0.5">
+                                            <image class=inline xlink:href="https://www.svgrepo.com/show/303191/apple-pay-logo.svg" src="https://www.svgrepo.com/show/303191/apple-pay-logo.svg" width="55" height="55"/>
                                         </svg>
                                     </span>
                                 </span>
                                 </div>
+                            </div>
+                            <hr class="my-0.5">
+                            <div class="grid grid-cols-2">
+                                <div class="font-bold my-0.5">{{ $t('words.date') }}</div>
+                                <div class="my-0.5">{{ invoice.created_at | formatDate }}</div>
+                                <div class="font-bold my-0.5">{{ $t('words.invoice-no') }}</div>
+                                <div class="my-0.5">{{ invoice.number_formatted }}</div>
+                                <div class="font-bold my-0.5">{{ $t('words.from-date') }}</div>
+                                <div class="my-0.5">{{ invoice.from_date | formatDate }}</div>
+                                <div class="font-bold my-0.5">{{ $t('words.to-date') }}</div>
+                                <div class="my-0.5">{{ invoice.to_date | formatDate }}</div>
+                                <hr class="my-3">
+                                <hr class="my-3">
                                 <div v-if="invoice.trainee_bank_payment_receipt">
-                                    <div v-if="invoice.payment_method === 0" class="font-bold">{{ $t('words.sender-bank-name') }}</div>
-                                    <div v-if="invoice.payment_method === 0" class="font-bold">{{ $t('words.receiver-bank-name') }}<br/></div>
+                                    <div v-if="invoice.payment_method === 0" class="font-bold my-0.51">{{ $t('words.sender-bank-name') }}</div>
+                                    <div v-if="invoice.payment_method === 0" class="font-bold my-0.5">{{ $t('words.receiver-bank-name') }}<br/></div>
                                 </div>
                                 <div v-if="invoice.trainee_bank_payment_receipt">
                                     <div v-if="invoice.payment_method === 0">{{ invoice.trainee_bank_payment_receipt.bank_from }}</div>
                                     <div v-if="invoice.payment_method === 0">{{ invoice.trainee_bank_payment_receipt.bank_to }}</div>
                                 </div>
-                                <hr class="my-2">
-                                <hr class="my-2">
-                                <div class="font-bold">{{ $t('words.chase') }}</div>
-                                <div>{{ invoice.chase_status }}</div>
-                                <div class="font-bold">{{ $t('words.chased-by') }}</div>
-                                <div><span v-if="invoice.chased_by">{{ invoice.chased_by.name }}</span></div>
-                                <hr class="my-2">
-                                <hr class="my-2">
-                                <div class="font-bold">{{ $t('words.verified') }}</div>
-                                <div>
-                                    <span v-if="invoice.is_verified"
-                                          class="bg-green-500 text-white rounded px-2">
-                                        {{ $t('words.yes') }}
-                                    </span>
-                                    <span v-else
-                                          class="bg-red-600 text-white rounded px-2">
-                                        {{ $t('words.no') }}
-                                    </span>
-                                </div>
-                                <div v-if="invoice.verified_by" class="font-bold">{{ $t('words.approved-by') }}</div>
+                                <hr class="my-3" v-if="invoice.trainee_bank_payment_receipt">
+                                <hr class="my-3" v-if="invoice.trainee_bank_payment_receipt">
+                                <div class="font-bold my-0.5">{{ $t('words.chase') }}</div>
+                                <div class="my-0.5">{{ invoice.chase_status }}</div>
+                                <div class="font-bold my-0.5">{{ $t('words.chased-by') }}</div>
+                                <div class="my-0.5"><span v-if="invoice.chased_by">{{ invoice.chased_by.name }}</span></div>
+                                <div class="font-bold my-0.5" v-if="invoice.verified_by">{{ $t('words.approved-by') }}</div>
                                 <div v-if="invoice.verified_by">
                                     <span>{{ invoice.verified_by.name }}</span>
                                 </div>
                                 <div v-if="invoice.rejection_reason_payment_receipt" class="bg-red-200 border-2 border-red-500 text-black p-3 mt-2 border-l-0">
-                                    <div class="font-bold">{{ $t('words.reject-payment-receipt-reason') }}</div>
+                                    <div class="font-bold my-0.5">{{ $t('words.reject-payment-receipt-reason') }}</div>
                                 </div>
                                 <div v-if="invoice.rejection_reason_payment_receipt" class="bg-red-200 border-2 border-red-500 text-black py-3 mt-2 border-r-0">
                                     <div>
                                         <span>{{ invoice.rejection_reason_payment_receipt }}</span>
                                     </div>
                                 </div>
+                                <hr class="my-3">
+                                <hr class="my-3">
+                                <div class="font-bold my-0.5">{{ $t('words.verified') }}</div>
+                                <div class="my-0.5">
+                                    <span v-if="invoice.is_verified"
+                                          class="bg-green-500 text-white rounded px-2 my-1.5">
+                                        {{ $t('words.yes') }}
+                                    </span>
+                                    <span v-else
+                                          class="bg-red-600 text-white rounded px-2 my-1.5">
+                                        {{ $t('words.no') }}
+                                    </span>
+                                </div>
+                                <hr class="my-3" v-if="invoice.payment_method === 1">
+                                <hr class="my-3" v-if="invoice.payment_method === 1">
+                                <div v-if="invoice.payment_method === 1" class="font-bold my-0.5">{{ $t('words.payment-reference-id') }}</div>
+                                <div v-if="invoice.payment_method === 1" class="truncate my-0.5" >{{ invoice.payment_reference_id }}</div>
+                                <div v-if="invoice.payment_method === 1" class="font-bold my-0.5">{{ $t('words.paid-at') }}</div>
+                                <div v-if="invoice.payment_method === 1" class="truncate my-0.5">{{ invoice.paid_at_time }}</div>
                             </div>
                         </div>
                     </div>
