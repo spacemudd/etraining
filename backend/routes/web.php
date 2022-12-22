@@ -2,6 +2,11 @@
 
 use App\Models\Back\Trainee;
 
+Route::get('connect-with-me', function() {
+    return response()
+        ->redirect('https://api.whatsapp.com/send?phone=966541564233');
+});
+
 Route::post('tap', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'storeTapReceipt']);
 
 Route::get('version', function() {
