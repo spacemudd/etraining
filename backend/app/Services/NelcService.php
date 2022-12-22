@@ -56,14 +56,14 @@ class NelcService
 
     public function setupClient($options)
     {
-        return new RemoteLRS($options['endpoint'], '1.0.3', $options['username'], $options['password']);
+        return new RemoteLRS($options['endpoint'], '1.0.1', $options['username'], $options['password']);
     }
 
     public function initializeTrainee(Trainee $trainee)
     {
         $actor = new Agent([
-            'mbox' => 'mailto:'.$trainee->email,
-            'name' => $trainee->identity_number,
+            'mbox' => 'mailto:shafiqalshaar@gmail.com',
+            'name' => '2100000000000',
         ]);
 
         $verb = new Verb(['id' => 'http://adlnet.gov/expapi/verbs/registered']);

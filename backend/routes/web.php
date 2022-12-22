@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Back\Trainee;
+use GuzzleHttp\RequestOptions;;
 
 Route::get('ip', function() {
     $ip = file_get_contents('https://api.ipify.org');
@@ -9,6 +10,59 @@ Route::get('ip', function() {
 Route::get('nelc', function() {
     $t = Trainee::first();
     return app()->make(\App\Services\NelcService::class)->initializeTrainee($t);
+});
+
+Route::get('xapi', function() {
+    //return view('xapi');
+});
+
+Route::get('guzzle', function() {
+    $client = new GuzzleHttp\Client([
+        'headers'=> [
+            'Authorization' => ['Basic '.base64_encode('PTC_001:mTQ13F$@Tl27')],
+        ],
+    ]);
+
+    $response = $client->post('https://lrs.nelc.gov.sa/staging-lrs/xapi/statements', [
+        RequestOptions::JSON => [
+            'actor' => [
+                "mbox" => "mailto:1234567890@gmail.com",
+                "name" => "1234567890",
+                "objectType" => "Agent",
+            ],
+            "verb" => [
+                "id" => "http://adlnet.gov/expapi/verbs/initialized",
+                "display" => ["en-US" => "initialized"],
+            ],
+            "object" => [
+                    "id" => "https://ksu.edu.sa/ar/pnu.IT.0011/CR001",
+                    "definition" => [
+                        "name" => ["en-US" => "Java for Beginners"],
+                        "description" => ["en-US" => "A detailed course on Java for beginners"],
+                        "type" => "https://w3id.org/xapi/cmi5/activitytype/course"
+                    ],
+                    "objectType" => "Activity",
+                ],
+                "context" =>  [
+                    "instructor" =>  [
+                      "name" =>  " Ibrahim Khalid ",
+                      "mbox" =>  "mailto:ik@example.com"
+                    ],
+                    "platform" =>  "ALIF-001",
+                    "language" =>  "ar-SA",
+             "extensions" => [
+                     "https://nelc.gov.sa/extensions/platform" => [
+                          "name" =>  [
+                             "ar-SA" =>  "التقنيات المتقدمة للتدريب",
+                             "en-US" =>  "Leading Tech for Training"
+                                ]
+                            ]
+                    ]
+                ],
+            "timestamp" => "2022-01-31T07:18:32.829Z",
+        ]]);
+
+    return $response->getBody();
 });
 
 Route::post('tap', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'storeTapReceipt']);
