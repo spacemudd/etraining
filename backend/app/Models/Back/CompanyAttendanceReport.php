@@ -5,11 +5,13 @@ namespace App\Models\Back;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class CompanyAttendanceReport extends Model
+class CompanyAttendanceReport extends Model implements Auditable
 {
     use HasFactory;
     use SoftDeletes;
+    use \OwenIt\Auditing\Auditable;
 
     const STATUS_REVIEW = 1;
     const STATUS_APPROVED = 2;
