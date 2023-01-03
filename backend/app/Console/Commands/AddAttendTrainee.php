@@ -101,6 +101,7 @@ class AddAttendTrainee extends Command
 
         $this->info('Updated: '.$records->count());
 
-        return $x;
+        return true;
+        //return $x;
     }
 }
