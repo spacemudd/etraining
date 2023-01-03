@@ -82,11 +82,11 @@ class AddAttendTrainee extends Command
                 ->fill(['trainee_id' => '2bf114ab-1000-4768-a443-c152b5164ae3'])
                 ->save();
         }
-        $trainee = Trainee::withTrashed()->findOrFail($trainee_id);
-
-        $records = AttendanceReportRecord::where('trainee_id', $trainee->id);
-
-        $this->info('Found: '.$records->count());
+//        $trainee = Trainee::withTrashed()->findOrFail($trainee_id);
+//
+//        $records = AttendanceReportRecord::where('trainee_id', $trainee->id);
+//
+//        $this->info('Found: '.$records->count());
         DB::commit();
 
 //        DB::beginTransaction();
