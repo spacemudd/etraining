@@ -76,7 +76,7 @@ class CourseBatchSessionWarningsJob implements ShouldQueue
 
                 // TODO: Move this to another service class
                 if ($attendance->trainee->warnings()->count() >= 3) {
-                    User::hasPermissions('manage-missed-course-notices')
+                    User::permission('manage-missed-course-notices')
                         ->get()
                         ->each(function($user) use ($attendance) {
                             $user->notify(new ManageMissedClassNotification($attendance->trainee));
