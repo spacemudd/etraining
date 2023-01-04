@@ -58,6 +58,9 @@ class TraineeBankPaymentReceipt extends Model implements Auditable, HasMedia
     public function uploadToFolder($file, $folder)
     {
         return $this->addMedia($file)
+            ->sanitizingFileName(function ($fileName) {
+                return Str::slug($fileName);
+            })
             ->withAttributes([
                 'team_id' => $this->team_id,
             ])
