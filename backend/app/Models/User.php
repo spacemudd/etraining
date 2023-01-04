@@ -16,10 +16,12 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 use OwenIt\Auditing\Contracts\Auditable;
+use Spatie\Permission\Traits\HasPermissions;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements Auditable
 {
+    use hasPermissions;
     use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;
