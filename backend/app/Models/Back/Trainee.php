@@ -504,4 +504,9 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     {
         return 'https://api.whatsapp.com/send?phone='.$this->routeNotificationForClickSend();
     }
+
+    public function warnings()
+    {
+        return $this->hasMany(AttendanceReportRecordWarning::class);
+    }
 }
