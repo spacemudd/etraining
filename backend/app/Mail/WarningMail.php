@@ -8,11 +8,11 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class DeletedTraineeMail extends Mailable
+class WarningMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $trainee;
+    public $warning;
     public $email;
 
     /**
@@ -20,9 +20,9 @@ class DeletedTraineeMail extends Mailable
      *
      * @param \App\Models\Back\Invoice $invoice
      */
-    public function __construct(Trainee $trainee, $email)
+    public function __construct(Trainee $warning, $email)
     {
-        $this->trainee = $trainee;
+        $this->$warning = $warning;
         $this->email = $email;
     }
 
@@ -36,7 +36,7 @@ class DeletedTraineeMail extends Mailable
         return $this
             ->subject('حذف متدربة')
             ->view('emails.deleted-trainee', [
-                'trainee' => $this->trainee,
+                'trainee' => $this->warning,
                 'email' => $this->email,
             ]);
     }

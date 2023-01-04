@@ -6,7 +6,7 @@ use App\Actions\Fortify\CreateNewTraineeUser;
 use App\Http\Controllers\Controller;
 use App\Jobs\ExportArchivedTraineesToExcelJob;
 use App\Jobs\ExportTraineesToExcelJob;
-use App\Mail\DeletedTraineeMail;
+use App\Mail\WarningMail;
 use App\Models\Back\AttendanceReportRecord;
 use App\Models\Back\AttendanceReportRecordWarning;
 use App\Models\Back\Audit;
@@ -651,7 +651,7 @@ class TraineesController extends Controller
         //}
         $users = User::permission('receive-notification-on-trainee-delete')->get();
         Mail::to($users)
-            ->queue(new DeletedTraineeMail($trainee, auth()->user()->email));
+            ->queue(new WarningMail($trainee, auth()->user()->email));
 
         DB::commit();
         return redirect()->route('back.trainees.index');
@@ -894,6 +894,14 @@ class TraineesController extends Controller
 
     public function warnings($trainee_id)
     {
+        $warnings = AttendanceReportRecordWarning::where('trainee_id', $trainee_id)->get();
+        foreach ($warnings as $warning) {
+            $warning->attendance_report_record->status = AttendanceReportRecord::STATUS_ABSENT;
+            $warning->attendance_report_record->save();
+        }
+        Mail::to(['sara@ptc-ksa.com', 'trainee.affairs@ptc-ksa.com'])
+            ->queue(new WarningMail($warnings, auth()->user()->email));
+
         return AttendanceReportRecordWarning::where('trainee_id', $trainee_id)
             ->with([
                 'attendance_report_record' => function ($q) {
