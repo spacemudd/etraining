@@ -7,6 +7,7 @@ use App\Models\Back\Trainee;
 use App\Models\Media;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Str;
 
 class TraineesFilesController extends Controller
 {
@@ -25,6 +26,9 @@ class TraineesFilesController extends Controller
         $trainee = Trainee::withTrashed()->findOrFail($trainee_id);
 
         $trainee->addMediaFromRequest('attached_file')
+            ->sanitizingFileName(function ($fileName) {
+                return Str::slug($fileName);
+            })
             ->toMediaCollection('general_files');
 
         return redirect()->route('back.trainees.files.index', $trainee->id);
