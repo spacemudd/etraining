@@ -2,6 +2,8 @@
 
 namespace App\Mail;
 
+use App\Models\Back\AttendanceReportRecord;
+use App\Models\Back\AttendanceReportRecordWarning;
 use App\Models\Back\Trainee;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,7 +14,7 @@ class WarningMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $warning;
+    public $warnings;
     public $email;
 
     /**
@@ -20,9 +22,9 @@ class WarningMail extends Mailable
      *
      * @param \App\Models\Back\Invoice $invoice
      */
-    public function __construct(Trainee $warning, $email)
+    public function __construct(AttendanceReportRecordWarning $warnings, $email)
     {
-        $this->$warning = $warning;
+        $this->$warnings = $warnings;
         $this->email = $email;
     }
 
@@ -34,9 +36,9 @@ class WarningMail extends Mailable
     public function build()
     {
         return $this
-            ->subject('حذف متدربة')
-            ->view('emails.deleted-trainee', [
-                'trainee' => $this->warning,
+            ->subject('انذارات متدربة')
+            ->view('emails.warning', [
+                'warnings' => $this->warnings,
                 'email' => $this->email,
             ]);
     }

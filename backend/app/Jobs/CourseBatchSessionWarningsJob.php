@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Mail\WarningMail;
 use App\Models\Back\AttendanceReport;
 use App\Models\Back\AttendanceReportRecord;
 use App\Models\Back\AttendanceReportRecordWarning;
@@ -18,6 +19,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Mail;
 
 class CourseBatchSessionWarningsJob implements ShouldQueue
 {
@@ -71,7 +73,10 @@ class CourseBatchSessionWarningsJob implements ShouldQueue
                 $warning->attendance_report_record_id = $attendance->id;
                 $warning->trainee_id = $attendance->trainee_id;
                 $warning->save();
-
+                if ($attendance->trainee->warnings()->count() >= 3) {
+                    Mail::to(['sara@ptc-ksa.com', 'trainee.affairs@ptc-ksa.com'])
+                        ->queue(new WarningMail($attendance, auth()->user()->email));
+                }
                 try {
                     $attendance->trainee->notify(new TraineeMissedClassNotification($this->courseBatchSession));
 

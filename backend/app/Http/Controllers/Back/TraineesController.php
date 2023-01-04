@@ -899,11 +899,9 @@ class TraineesController extends Controller
         foreach ($warnings as $warning) {
             $warning->attendance_report_record->status = AttendanceReportRecord::STATUS_ABSENT;
             $warning->attendance_report_record->save();
-            if($warnings >= 3){
-                Mail::to(['sara@ptc-ksa.com', 'trainee.affairs@ptc-ksa.com'])
-                    ->queue(new WarningMail($warnings, auth()->user()->email));
-            }
+
         }
+        Log::info('test3wat');
         return AttendanceReportRecordWarning::where('trainee_id', $trainee_id)
             ->with([
                 'attendance_report_record' => function ($q) {

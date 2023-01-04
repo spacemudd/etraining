@@ -97,17 +97,6 @@
     <br>
     <h5>بيانات المتدربة:</h5>
     <br>
-    <table id="customers">
-        <tr style="background-color: #ec5b5b;">
-            <th>الإسم</th>
-            <th>الهوية</th>
-            <th>الشركة</th>
-            <th>سبب الإيقاف</th>
-            <th>تاريخ الحذف</th>
-            <th>بواسطة</th>
-        </tr>
-    </table>
-    <br>
 </div>
 </body>
 </html>
