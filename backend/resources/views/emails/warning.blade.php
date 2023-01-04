@@ -93,7 +93,7 @@
 </head>
 <body style="text-align:right;">
 <div>
-    <h3 style="font-weight: bold;"> نود اشعاركم بأنه تم حذف المتدربة {{ $trainee->name }}.</h3>
+    <h3 style="font-weight: bold;"> نود اشعاركم بأنه تم حذف المتدربة .</h3>
     <br>
     <h5>بيانات المتدربة:</h5>
     <br>
@@ -105,14 +105,6 @@
             <th>سبب الإيقاف</th>
             <th>تاريخ الحذف</th>
             <th>بواسطة</th>
-        </tr>
-        <tr>
-            <td>{{ $trainee->name }}</td>
-            <td>{{ $trainee->identity_number }}</td>
-            <td>{{ $trainee->company->name_ar }}</td>
-            <td>{{ $trainee->deleted_remark }}</td>
-            <td>{{ $trainee->deleted_at }}</td>
-            <td>{{ $email }}</td>
         </tr>
     </table>
     <br>
