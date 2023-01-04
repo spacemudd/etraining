@@ -9,6 +9,8 @@ use App\Models\Back\CourseBatchSession;
 use App\Models\Back\CourseBatchSessionAttendance;
 use App\Models\Back\MissedCourseNotice;
 use App\Models\InboxMessage;
+use App\Models\User;
+use App\Notifications\ManageMissedClassNotification;
 use App\Notifications\TraineeLateToClassNotification;
 use App\Notifications\TraineeMissedClassNotification;
 use Illuminate\Bus\Queueable;
@@ -71,6 +73,15 @@ class CourseBatchSessionWarningsJob implements ShouldQueue
                 $warning->attendance_report_record_id = $attendance->id;
                 $warning->trainee_id = $attendance->trainee_id;
                 $warning->save();
+
+                // TODO: Move this to another service class
+                if ($attendance->trainee->warnings()->count() >= 3) {
+                    User::hasPermissions('manage-missed-course-notices')
+                        ->get()
+                        ->each(function($user) use ($attendance) {
+                            $user->notify(new ManageMissedClassNotification($attendance->trainee));
+                        });
+                }
 
                 try {
                     $attendance->trainee->notify(new TraineeMissedClassNotification($this->courseBatchSession));
