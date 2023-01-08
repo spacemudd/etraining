@@ -19,20 +19,27 @@
 
             <jet-section-border></jet-section-border>
 
-            <p class="text-2xl">{{ quizzes.name_ar }}</p>
-            <form  v-for="question in questions"
-                   :key="questions.id">
+            <h3></h3>
+
+            <form>
                 <div class="grid md:grid-cols-4 grid-cols-1 gap-6">
                     <div class="col-span-1 p-5 transition-all duration-500 ease-in-out hover:bg-gray-200">
-                        <p class="text-2xl">{{ question.description }}</p>
-                        <div class="payment-options mt-2" v-for="answer in answers"
-                             :key="answers.id"
-                             v-if="answer.question_id === question.id">
-                            <input type="radio" name="answers">
-                            <label >{{ answer.value }}</label>
+                        <div  v-for="question in questions"
+                              :key="questions.id"
+                              v-if="question.course_id === course.id">
+                            <p class="text-2xl">{{ question.description }}</p>
+                            <div class="payment-options mt-2" v-for="answer in answers"
+                                 :key="answers.id"
+                                 v-if="answer.question_id === question.id">
+                                <input type="radio" name="answers">
+                                <label >{{ answer.value }}</label>
+                            </div>
+                            <br>
+                            <br>
                         </div>
                     </div>
                 </div>
+                <button type="submit" class="btn btn-primary">إرسال</button>
             </form>
 
             <jet-section-border></jet-section-border>

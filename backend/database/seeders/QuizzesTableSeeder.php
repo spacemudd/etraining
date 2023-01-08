@@ -27,6 +27,9 @@ class QuizzesTableSeeder extends Seeder
             [
                 'course_id' => 'b2402e58-599b-41aa-b2f1-52bcb3077c16', 'name_ar' => 'تطوير لارافيل اختبار '
             ],
+            [
+                'course_id' => 'abedda89-eb23-42ec-9a03-a19097523eb5', 'name_ar' => 'تقنية معلومات اختبار '
+            ],
         ];
 
         foreach ($quizzes as $quiz) {
