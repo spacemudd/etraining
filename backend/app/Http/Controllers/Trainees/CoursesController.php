@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Trainees;
 
 use App\Http\Controllers\Controller;
+use App\Models\Answer;
 use App\Models\Back\AttendanceReportRecord;
 use App\Models\Back\AttendanceReportRecordWarning;
 use App\Models\Back\Course;
@@ -89,16 +90,13 @@ class CoursesController extends Controller
                 'quizzes' => function($model){
                     $model->withTrashed();
                 },
-                'questions' => function($model){
-                    $model->withTrashed();
-                },
-//                'quizzes' => function($model){
-//                    $model->with([
-//                        'questions' => function($model){
-//                            $model->withTrashed();
-//                        }
-//                    ]);
-//                },
+                'questions' => function($model) {
+                    $model->with([
+                        'answers' => function ($model) {
+                            $model->withTrashed();
+                        }
+                    ]);
+                }
             ])
             ->findOrFail($course_id);
 
@@ -106,6 +104,7 @@ class CoursesController extends Controller
             'course' => $course,
             'quizzes' => Quiz::get(),
             'questions' => Question::get(),
+            'answers' => Answer::get(),
         ]);
     }
 

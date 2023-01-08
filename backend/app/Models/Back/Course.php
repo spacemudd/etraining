@@ -85,9 +85,14 @@ class Course extends Model implements HasMedia, SearchableLabels, Auditable
         return $this->hasMany(Quiz::class);
     }
 
-    public function questions(): HasMany
+    public function questions()
     {
-        return $this->hasMany(Question::class);
+        return $this->belongsToMany(Course::class, Quiz::class);
+    }
+
+    public function answers()
+    {
+        return $this->belongsToMany(Course::class, Question::class);
     }
 
     public function scopeResponsibleToTeach($q)

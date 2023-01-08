@@ -19,75 +19,22 @@
 
             <jet-section-border></jet-section-border>
 
-            <form  v-for="quizzes in course.quizzes"
-                   :key="course.quizzes.id">
+            <p class="text-2xl">{{ quizzes.name_ar }}</p>
+            <form  v-for="question in questions"
+                   :key="questions.id">
                 <div class="grid md:grid-cols-4 grid-cols-1 gap-6">
                     <div class="col-span-1 p-5 transition-all duration-500 ease-in-out hover:bg-gray-200">
-                        <p class="text-2xl">{{ $t('words.choose') }}:</p>
-<!--                        <div class="payment-options mt-2">-->
-<!--                            <input type="radio" name="quizzes">-->
-<!--                            <label>{{ quizzes.course_id }}</label>-->
-<!--                        </div>-->
-<!--                        <div class="payment-options">-->
-<!--                            <input type="radio" name="quizzes">-->
-<!--                            <label>{{ quizzes.name_ar }}</label>-->
-<!--                        </div>-->
-                        <div class="">
-                            <input type="radio">
-                            <label>{{ quizzes.name_ar }}</label>
+                        <p class="text-2xl">{{ question.description }}</p>
+                        <div class="payment-options mt-2" v-for="answer in answers"
+                             :key="answers.id"
+                             v-if="answer.question_id === question.id">
+                            <input type="radio" name="answers">
+                            <label >{{ answer.value }}</label>
                         </div>
                     </div>
                 </div>
             </form>
 
-            <form  v-for="quizzes in course.quizzes"
-                   :key="course.quizzes.id">
-                <div class="grid md:grid-cols-4 grid-cols-1 gap-6">
-                    <div class="col-span-1 p-5 transition-all duration-500 ease-in-out hover:bg-gray-200">
-                        <p class="text-2xl">{{ $t('words.choose') }}:</p>
-                        <!--                        <div class="payment-options mt-2">-->
-                        <!--                            <input type="radio" name="quizzes">-->
-                        <!--                            <label>{{ quizzes.course_id }}</label>-->
-                        <!--                        </div>-->
-                        <!--                        <div class="payment-options">-->
-                        <!--                            <input type="radio" name="quizzes">-->
-                        <!--                            <label>{{ quizzes.name_ar }}</label>-->
-                        <!--                        </div>-->
-                        <div class="">
-                            <input type="radio">
-                            <label>{{ questions.id }}</label>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            <form  v-for="questions in course.questions"
-                   :key="course.questions.id">
-                <div class="grid md:grid-cols-4 grid-cols-1 gap-6">
-                    <div class="col-span-1 p-5 transition-all duration-500 ease-in-out hover:bg-gray-200">
-                        <p class="text-2xl">{{ $t('words.choose') }}:</p>
-                        <!--                        <div class="payment-options mt-2">-->
-                        <!--                            <input type="radio" name="quizzes">-->
-                        <!--                            <label>{{ quizzes.course_id }}</label>-->
-                        <!--                        </div>-->
-                        <!--                        <div class="payment-options">-->
-                        <!--                            <input type="radio" name="quizzes">-->
-                        <!--                            <label>{{ quizzes.name_ar }}</label>-->
-                        <!--                        </div>-->
-                        <div class="">
-                            <input type="radio">
-                            <label>{{ questions.id }}</label>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            <div class="">
-                <input type="radio">
-                <label>{{ questions.id }}</label>
-            </div>
-            <div class="">
-                <input type="radio">
-                <label>{{ questions.id }}</label>
-            </div>
             <jet-section-border></jet-section-border>
         </div>
     </app-layout>
@@ -112,7 +59,7 @@ import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 import CourseBatchesPagination from "@/Components/CourseBatchesPagination";
 
 export default {
-    props: ['sessions', 'course', 'quizzes', 'questions'],
+    props: ['sessions', 'course', 'quizzes', 'questions', 'answers'],
 
     components: {
         AppLayout,

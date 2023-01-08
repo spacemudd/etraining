@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\Back\Course;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Answer extends Model
 {
@@ -21,6 +23,11 @@ class Answer extends Model
         'value',
         'is_correct',
     ];
+
+    public function course(): BelongsTo
+    {
+        return $this->belongsTo(Course::class)->withTrashed();
+    }
 
     public function question(): BelongsTo
     {
