@@ -335,6 +335,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('certificates/import', [\App\Http\Controllers\Back\CertificatesController::class, 'import'])->name('certificates.import');
 
         // Trainees
+        Route::put('trainees/{trainee_id}/fixed-training-costs', [\App\Http\Controllers\Back\TraineeFixedTrainingCostsController::class, 'update'])->name('trainees.fixed-training-costs.update');
+        Route::get('trainees/{trainee_id}/fixed-training-costs', [\App\Http\Controllers\Back\TraineeFixedTrainingCostsController::class, 'index'])->name('trainees.fixed-training-costs');
         Route::resource('trainees/{trainee_id}/files', \App\Http\Controllers\Back\TraineesFilesController::class, ['as' => 'trainees']);
         Route::get('trainees/block-list', [\App\Http\Controllers\Back\TraineesBlockListController::class, 'index'])->name('trainees.block-list.index');
         Route::get('trainees/block-list/create', [\App\Http\Controllers\Back\TraineesBlockListController::class, 'create'])->name('trainees.block-list.create');

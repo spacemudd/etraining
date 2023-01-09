@@ -553,4 +553,9 @@ return [
     'other-files' => 'Other files',
     'page-refresh' => 'Page refresh',
     'override-training-costs' => 'Override training costs',
+    'fixed-training-costs' => 'Fixed training costs',
+    'here-you-can-override-training-cost-for-the-trainee' => 'Here you can specify the training costs and alerts for the trainee',
+    'ignore-attendance-warnings-and-emails' => 'Ingore attendance warnings and emaiks',
+    'do-not-edit-without-permission-notice' => 'Do not edit without permission notice',
+    'caution-dont-take-action-against-this-account-without-admin-approval' => 'Caution: please dont dont take any action against this account without consulting with administration.',
 ];
