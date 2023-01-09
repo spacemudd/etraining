@@ -13,6 +13,16 @@
 
             <div class="grid grid-cols-6 gap-6">
 
+                <div class="col-span-6 items-center justify-end bg-gray-50 text-right flex gap-6"
+                     v-if="trainee.dont_edit_notice">
+                    <div class="bg-red-600 font-bold text-white p-2 rounded-sm flex gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zm0 13.036h.008v.008H12v-.008z" />
+                        </svg>
+                        {{ $t('words.caution-dont-take-action-against-this-account-without-admin-approval') }}
+                    </div>
+                </div>
+
                 <div class="col-span-6 items-center justify-end bg-gray-50 text-right flex gap-6">
 
                     <inertia-link
@@ -526,7 +536,7 @@
                     />
                 </div>
 
-                <div class="col-span-6 sm:col-span-6">
+                <div class="col-span-6 sm:col-span-1">
                     <jet-label
                         for="name"
                         :value="$t('words.status')"
@@ -553,6 +563,19 @@
                             {{ $t('words.approved') }}
                         </span>
                     </p>
+                </div>
+
+                <div class="col-span-6 sm:col-span-1" v-can="'override-training-costs'">
+                    <jet-label for="name" :value="$t('words.fixed-training-costs')"/>
+                    <inertia-link :href="route('back.trainees.fixed-training-costs', trainee.id)">
+                        <span v-if="trainee.override_training_costs !== null"
+                              class="text-sm inline-block mt-2 p-1 px-2 bg-gray-200 rounded-lg bg-red-600 text-white">
+                            {{ trainee.override_training_costs }} ر.س.
+                        </span>
+                        <span v-else class="text-sm inline-block mt-2 p-1 px-2 bg-gray-200 rounded-lg">
+                            {{ $t('words.not-set') }}
+                        </span>
+                    </inertia-link>
                 </div>
             </div>
 

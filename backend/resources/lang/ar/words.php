@@ -571,4 +571,13 @@ return [
     'upload' => 'رفع',
     'other-files' => 'ملفات اخرى',
     'page-refresh' => 'تحديث الصفحة',
+    'override-training-costs' => 'تثبيت رسوم التدريب على المتدربة',
+    'fixed-training-costs' => 'رسوم تدريب ثابتة',
+    'not-set' => 'غير مفعل',
+    'here-you-can-override-training-cost-for-the-trainee' => 'هنا يمكنك تحديد رسوم التدريب او تجاهل رسوم التدريب للشركة',
+    'disable' => 'لا',
+    'ignore-attendance-warnings-and-emails' => 'تجاهل اشعارات وايميلات الغياب',
+    'do-not-edit-without-permission-notice' => 'عرض اشعار عدم اتخاذ اجراء ضد الحساب',
+    'caution-dont-take-action-against-this-account-without-admin-approval' => 'تنبيه: الرجاء عدم اتخاذ اي اجراء ضد هذا الحساب من دون موافقة الإدارة.',
+    'trainees-with-overridden-training-costs' => 'متدربات المستثنين',
 ];

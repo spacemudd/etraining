@@ -52,6 +52,10 @@
                         {{ $t('words.archive') }}
                     </inertia-link>
 
+                    <inertia-link :href="route('back.trainees.fixed-training-costs.index')" class="rounded items-center mr-3 justify-start float-left px-3 py-2.5 bg-yellow-200 hover:bg-yellow-300 text-left">
+                        {{ $t('words.trainees-with-overridden-training-costs') }}
+                    </inertia-link>
+
                     <dropdown-menu :isOpen="actionsDropDownView" class="dropdown-container">
                         <button class="btn-gray mx-3" slot="trigger">{{ $t('words.actions') }}</button>
                         <ul class="dropdown-items" slot="body">
