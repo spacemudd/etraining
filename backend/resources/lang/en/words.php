@@ -552,4 +552,5 @@ return [
     'upload' => 'Upload',
     'other-files' => 'Other files',
     'page-refresh' => 'Page refresh',
+    'override-training-costs' => 'Override training costs',
 ];

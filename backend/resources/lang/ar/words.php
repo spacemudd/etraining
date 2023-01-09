@@ -571,4 +571,5 @@ return [
     'upload' => 'رفع',
     'other-files' => 'ملفات اخرى',
     'page-refresh' => 'تحديث الصفحة',
+    'override-training-costs' => 'تثبيت رسوم التدريب على المتدربة',
 ];
