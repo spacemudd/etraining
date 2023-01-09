@@ -998,4 +998,15 @@ class TraineesController extends Controller
 
         return response()->json($audits);
     }
+
+    public function indexFixedTrainingCosts()
+    {
+        return Inertia::render('Back/Trainees/IndexFixedTrainingCosts', [
+            'trainees' => Trainee::with('company')
+                ->with('trainee_group')
+                ->where('override_training_costs', '!=', null)
+                ->latest()
+                ->paginate(40),
+        ]);
+    }
 }

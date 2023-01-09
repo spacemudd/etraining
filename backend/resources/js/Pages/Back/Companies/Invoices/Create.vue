@@ -188,6 +188,9 @@
                                             {{ $t('words.blocked') }}
                                         </span>
                                         <span class="mx-2 text-sm text-gray-600">{{ trainee_name }}</span>
+                                        <span class="border-2 border-red-600 px-2 text-xs" v-if="company.trainees.find((obj) => obj.id === trainee_id).override_training_costs != null">
+                                            {{ $t('words.fixed-training-costs') }} - {{ company.trainees.find((obj) => obj.id === trainee_id).override_training_costs }} ر.س.
+                                        </span>
                                     </label>
                                 </div>
                             </div>
@@ -218,7 +221,7 @@
                             :class="{ 'opacity-25': form.processing }"
                             :disabled="form.processing"
                         >
-                            {{ $t('words.submit') }}
+                            {{ $t('words.save') }}
                         </jet-button>
                     </template>
                 </jet-form-section>

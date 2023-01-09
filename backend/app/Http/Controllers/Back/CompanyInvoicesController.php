@@ -54,26 +54,38 @@ class CompanyInvoicesController extends Controller
 
         $validatedData = $this->validateStoreRequest($request, $company->id);
 
-        // User input value without the VAT
-        // $sub_total = Money::of($validatedData['value_per_invoice'], 'SAR', new CustomContext(2), RoundingMode::HALF_UP);
-        // $tax = $sub_total->multipliedBy(InvoiceItem::DEFAULT_TAX, RoundingMode::HALF_UP);
-        // $grand_total = $sub_total->plus($tax);
-
-        // User input value with the VAT
-        $grand_total = Money::of($validatedData['value_per_invoice'], 'SAR', new CustomContext(2), RoundingMode::HALF_UP);
-        $sub_total = $grand_total->multipliedBy(1 / (1 + InvoiceItem::DEFAULT_TAX), RoundingMode::HALF_UP);
-        $tax = $grand_total->minus($sub_total);
-
-        DB::transaction(function () use ($request, $company, $validatedData, $sub_total, $tax, $grand_total) {
+        DB::transaction(function () use ($request, $company, $validatedData) {
             foreach ($request->input('trainees') as $trainee_id) {
-                $invoice = $company->invoices()->create(
-                    array_merge([
-                        'trainee_id' => $trainee_id,
-                        'sub_total' => $sub_total->getAmount()->toFloat(),
-                        'tax' => $tax->getAmount()->toFloat(),
-                        'grand_total' => $grand_total->getAmount()->toFloat(),
-                    ], $validatedData)
-                );
+                // Should we override?
+                $cost = Trainee::findOrFail($trainee_id)->override_training_costs;
+                if ($cost !== null) {
+                    $grand_total = Money::of($cost, 'SAR', new CustomContext(2), RoundingMode::HALF_UP);
+                    $sub_total = $grand_total->multipliedBy(1 / (1 + InvoiceItem::DEFAULT_TAX), RoundingMode::HALF_UP);
+                    $tax = $grand_total->minus($sub_total);
+                    if ($grand_total->isEqualTo(0)) {
+                        continue; // completely skip it.
+                    }
+                    $invoice = $company->invoices()->create(
+                        array_merge([
+                            'trainee_id' => $trainee_id,
+                            'sub_total' => $sub_total->getAmount()->toFloat(),
+                            'tax' => $tax->getAmount()->toFloat(),
+                            'grand_total' => $grand_total->getAmount()->toFloat(),
+                        ], $validatedData)
+                    );
+                } else {
+                    $grand_total = Money::of($validatedData['value_per_invoice'], 'SAR', new CustomContext(2), RoundingMode::HALF_UP);
+                    $sub_total = $grand_total->multipliedBy(1 / (1 + InvoiceItem::DEFAULT_TAX), RoundingMode::HALF_UP);
+                    $tax = $grand_total->minus($sub_total);
+                    $invoice = $company->invoices()->create(
+                        array_merge([
+                            'trainee_id' => $trainee_id,
+                            'sub_total' => $sub_total->getAmount()->toFloat(),
+                            'tax' => $tax->getAmount()->toFloat(),
+                            'grand_total' => $grand_total->getAmount()->toFloat(),
+                        ], $validatedData)
+                    );
+                }
 
                 $period = [
                     'start' => Carbon::parse($validatedData['from_date'])->format('Y-m-d'),

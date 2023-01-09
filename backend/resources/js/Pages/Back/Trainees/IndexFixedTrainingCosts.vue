@@ -23,6 +23,7 @@
                 :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
                     {title: 'trainees', link: route('back.trainees.index')},
+                    {title_raw: $t('words.trainees-with-overridden-training-costs')},
                 ]"
             ></breadcrumb-container>
             <div class="flex justify-between">
@@ -84,6 +85,7 @@
                         <th class="px-6 pt-6 pb-4">{{ $t('words.name') }}</th>
                         <th class="px-6 pt-6 pb-4">{{ $t('words.phone') }}</th>
                         <th class="px-6 pt-6 pb-4">{{ $t('words.company') }}</th>
+                        <th class="px-6 pt-6 pb-4">{{ $t('words.fixed-training-costs') }}</th>
                     </tr>
                     <tr v-for="trainees in trainees.data" :key="trainees.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
                         <td class="border-t">
@@ -122,6 +124,9 @@
                                v-if="trainees.trainee_group">
                                 {{ trainees.trainee_group.name }}
                             </p>
+                        </td>
+                        <td class="border-t">
+                            <p>{{ trainees.override_training_costs }}</p>
                         </td>
                         <td class="border-t w-px">
                             <inertia-link class="px-4 flex items-center" :href="route('back.trainees.show', trainees.id)" tabindex="-1">

@@ -579,4 +579,5 @@ return [
     'ignore-attendance-warnings-and-emails' => 'تجاهل اشعارات وايميلات الغياب',
     'do-not-edit-without-permission-notice' => 'عرض اشعار عدم اتخاذ اجراء ضد الحساب',
     'caution-dont-take-action-against-this-account-without-admin-approval' => 'تنبيه: الرجاء عدم اتخاذ اي اجراء ضد هذا الحساب من دون موافقة الإدارة.',
+    'trainees-with-overridden-training-costs' => 'متدربات المستثنين',
 ];

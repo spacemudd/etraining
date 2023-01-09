@@ -46,23 +46,37 @@ class TraineeInvoicesController extends Controller
 
         $validatedData = $this->validateStoreRequest($request, $trainee->id);
 
-        //$sub_total = Money::of($validatedData['invoice_value'], 'SAR', new CustomContext(2), RoundingMode::HALF_UP);
-        //$tax = $sub_total->multipliedBy(InvoiceItem::DEFAULT_TAX, RoundingMode::HALF_UP);
-        //$grand_total = $sub_total->plus($tax);
+        DB::transaction(function () use ($trainee, $validatedData) {
 
-        $grand_total = Money::of($validatedData['invoice_value'], 'SAR', new CustomContext(2), RoundingMode::HALF_UP);
-        $sub_total = $grand_total->multipliedBy(1 / (1 + InvoiceItem::DEFAULT_TAX), RoundingMode::HALF_UP);
-        $tax = $grand_total->minus($sub_total);
-
-        DB::transaction(function () use ($trainee, $validatedData, $grand_total, $tax, $sub_total) {
-            $invoice = $trainee->invoices()->create(
-                array_merge([
-                    'company_id' => $trainee->company->id,
-                    'sub_total' => $sub_total->getAmount()->toFloat(),
-                    'tax' => $tax->getAmount()->toFloat(),
-                    'grand_total' => $grand_total->getAmount()->toFloat(),
-                ], $validatedData)
-            );
+            $cost = $trainee->override_training_costs;
+            if ($cost !== null) {
+                $grand_total = Money::of($cost, 'SAR', new CustomContext(2), RoundingMode::HALF_UP);
+                $sub_total = $grand_total->multipliedBy(1 / (1 + InvoiceItem::DEFAULT_TAX), RoundingMode::HALF_UP);
+                $tax = $grand_total->minus($sub_total);
+                if ($grand_total->isEqualTo(0)) {
+                    return redirect()->route('back.trainees.show', $trainee); // todo: give an error back.
+                }
+                $invoice = $trainee->invoices()->create(
+                    array_merge([
+                        'company_id' => $trainee->company->id,
+                        'sub_total' => $sub_total->getAmount()->toFloat(),
+                        'tax' => $tax->getAmount()->toFloat(),
+                        'grand_total' => $grand_total->getAmount()->toFloat(),
+                    ], $validatedData)
+                );
+            } else {
+                $grand_total = Money::of($validatedData['invoice_value'], 'SAR', new CustomContext(2), RoundingMode::HALF_UP);
+                $sub_total = $grand_total->multipliedBy(1 / (1 + InvoiceItem::DEFAULT_TAX), RoundingMode::HALF_UP);
+                $tax = $grand_total->minus($sub_total);
+                $invoice = $trainee->invoices()->create(
+                    array_merge([
+                        'company_id' => $trainee->company->id,
+                        'sub_total' => $sub_total->getAmount()->toFloat(),
+                        'tax' => $tax->getAmount()->toFloat(),
+                        'grand_total' => $grand_total->getAmount()->toFloat(),
+                    ], $validatedData)
+                );
+            }
 
             $period = [
                 'start' => Carbon::parse($validatedData['from_date'])->format('Y-m-d'),

@@ -14,7 +14,7 @@ class AddFixedTrainingCostsToTraineesTable extends Migration
     public function up()
     {
         Schema::table('trainees', function (Blueprint $table) {
-            $table->double('override_training_costs', 5, 2)->nullable();
+            $table->double('override_training_costs', 10, 2)->nullable();
             $table->boolean('ignore_attendance')->default(false);
             $table->boolean('dont_edit_notice')->default(false);
         });
