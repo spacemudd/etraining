@@ -50,13 +50,15 @@ class AdhocCommand extends Command
             ->whereBetween('session_starts_at', ['2022-10-01', '2022-10-31'])
             ->get();
 
+        $this->info('Found: '.$records->count());
+
         foreach ($records as $record) {
             $newRecord = $record->replicate();
             $newRecord->trainee_id = 'b3618191-a8c0-4310-9379-a945397285d5';
             $newRecord->session_starts_at = $record->course_batch_session->starts_at;
             $newRecord->status = AttendanceReportRecord::STATUS_PRESENT;
             $newRecord->attended_at = $record->course_batch_session->starts_at->addMinute(random_int(1,10));
-            $record->save(['timestamps' => false]);
+            $newRecord->save(['timestamps' => false]);
         }
         DB::commit();
 
