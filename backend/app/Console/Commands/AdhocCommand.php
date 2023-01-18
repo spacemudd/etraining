@@ -44,19 +44,18 @@ class AdhocCommand extends Command
     public function handle()
     {
         DB::beginTransaction();
-        $trainee = Trainee::withTrashed()->find('17b61580-709b-464b-b2b7-e5fea90516eb');
-        //$dates_marked_as_present = [
-        //    Carbon::parse('2022-02-01'),
-        //    Carbon::parse('2022-03-01')->endOfMonth(),
-        //];
-        $records = AttendanceReportRecord::where('trainee_id', $trainee->id)
-            //->whereBetween('session_starts_at', $dates_marked_as_present)
+        $fromTrainee = Trainee::withTrashed()->find('2b3651cb-4563-4c54-8142-23b69c936770');
+
+        $records = AttendanceReportRecord::where('trainee_id', $fromTrainee->id)
+            ->whereBetween('session_starts_at', ['2022-10-01', '2022-10-31'])
             ->get();
+
         foreach ($records as $record) {
-            $record->session_starts_at = $record->course_batch_session->starts_at;
-            //$record->status = 3;
-            //$record->attended_at = $record->course_batch_session->starts_at->addMinute(rand(1,10));
-            //$record->created_at = $record->updated_at = $record->course_batch_session->starts_at;
+            $newRecord = $record->replicate();
+            $newRecord->trainee_id = 'b3618191-a8c0-4310-9379-a945397285d5';
+            $newRecord->session_starts_at = $record->course_batch_session->starts_at;
+            $newRecord->status = AttendanceReportRecord::STATUS_PRESENT;
+            $newRecord->attended_at = $record->course_batch_session->starts_at->addMinute(random_int(1,10));
             $record->save(['timestamps' => false]);
         }
         DB::commit();
