@@ -21,7 +21,10 @@
         </div>
 
         <div class="container px-8 mx-auto grid">
-            <div class="flex justify-end">
+            <div class="flex justify-end gap-2">
+                <inertia-link class="btn-secondary" :href="route('back.reports.company-attendance.send-report')">
+                    {{ $t('words.send-report') }}
+                </inertia-link>
                 <inertia-link class="btn-primary" :href="route('back.reports.company-attendance.create')">
                     {{ $t('words.new-report') }}
                 </inertia-link>

@@ -560,4 +560,6 @@ return [
     'caution-dont-take-action-against-this-account-without-admin-approval' => 'Caution: please dont dont take any action against this account without consulting with administration.',
     'trainees-with-overridden-training-costs' => 'Special trainees',
     'companies-report' => 'Companies report',
+    'send-report' => 'Send report',
+    'reports-count' => 'Reports count',
 ];

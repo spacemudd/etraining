@@ -598,7 +598,8 @@ export default {
             "do-not-edit-without-permission-notice": "عرض اشعار عدم اتخاذ اجراء ضد الحساب",
             "caution-dont-take-action-against-this-account-without-admin-approval": "تنبيه: الرجاء عدم اتخاذ اي اجراء ضد هذا الحساب من دون موافقة الإدارة.",
             "trainees-with-overridden-training-costs": "متدربات المستثنين",
-            "companies-report": "تقرير الشركات"
+            "companies-report": "تقرير الشركات",
+            "send-report": "تقرير الارسال"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1332,7 +1333,8 @@ export default {
             "do-not-edit-without-permission-notice": "Do not edit without permission notice",
             "caution-dont-take-action-against-this-account-without-admin-approval": "Caution: please dont dont take any action against this account without consulting with administration.",
             "trainees-with-overridden-training-costs": "Special trainees",
-            "companies-report": "Companies report"
+            "companies-report": "Companies report",
+            "send-report": "Send report"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",
