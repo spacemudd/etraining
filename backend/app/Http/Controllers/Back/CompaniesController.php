@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Back;
 
+use App\Exports\CompaniesExport;
 use App\Http\Controllers\Controller;
 use App\Models\Back\Company;
 use App\Models\Back\Instructor;
 use App\Models\Back\Trainee;
+use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -174,5 +176,10 @@ class CompaniesController extends Controller
         $company->trainees()->onlyTrashed()->update(['company_id' => null]);
         DB::commit();
         return redirect()->route('back.companies.show', $id);
+    }
+
+    public function export()
+    {
+        return Excel::download(new CompaniesExport, now()->format('Y-m-d').'-companies.xlsx');
     }
 }

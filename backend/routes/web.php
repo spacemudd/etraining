@@ -254,6 +254,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('/settings/trainees-applications/required-files', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'store'])->name('settings.trainees-application.required-files.store');
         Route::delete('/settings/trainees-applications/required-files/{id}', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'delete'])->name('settings.trainees-application.required-files.delete');
 
+        Route::get('companies/export', [\App\Http\Controllers\Back\CompaniesController::class, 'export'])->name('companies.export');
         Route::resource('companies', \App\Http\Controllers\Back\CompaniesController::class);
         Route::resource('companies.invoices', \App\Http\Controllers\Back\CompanyInvoicesController::class)->only(['create', 'store']);
 

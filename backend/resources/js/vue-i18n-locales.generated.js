@@ -597,7 +597,8 @@ export default {
             "ignore-attendance-warnings-and-emails": "تجاهل اشعارات وايميلات الغياب",
             "do-not-edit-without-permission-notice": "عرض اشعار عدم اتخاذ اجراء ضد الحساب",
             "caution-dont-take-action-against-this-account-without-admin-approval": "تنبيه: الرجاء عدم اتخاذ اي اجراء ضد هذا الحساب من دون موافقة الإدارة.",
-            "trainees-with-overridden-training-costs": "متدربات المستثنين"
+            "trainees-with-overridden-training-costs": "متدربات المستثنين",
+            "companies-report": "تقرير الشركات"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1330,7 +1331,8 @@ export default {
             "ignore-attendance-warnings-and-emails": "Ingore attendance warnings and emaiks",
             "do-not-edit-without-permission-notice": "Do not edit without permission notice",
             "caution-dont-take-action-against-this-account-without-admin-approval": "Caution: please dont dont take any action against this account without consulting with administration.",
-            "trainees-with-overridden-training-costs": "Special trainees"
+            "trainees-with-overridden-training-costs": "Special trainees",
+            "companies-report": "Companies report"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

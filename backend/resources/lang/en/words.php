@@ -559,4 +559,5 @@ return [
     'do-not-edit-without-permission-notice' => 'Do not edit without permission notice',
     'caution-dont-take-action-against-this-account-without-admin-approval' => 'Caution: please dont dont take any action against this account without consulting with administration.',
     'trainees-with-overridden-training-costs' => 'Special trainees',
+    'companies-report' => 'Companies report',
 ];

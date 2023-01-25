@@ -9,15 +9,10 @@
             ></breadcrumb-container>
             <div class="flex justify-between">
                 <h1 class="mb-8 font-bold text-3xl">{{ $t('words.companies') }}</h1>
-                <div class="mb-6 flex justify-between items-center">
-                    <!--<search-filter v-model="form.search" class="w-full max-w-md mr-4" @reset="reset">-->
-                    <!--    <label class="block text-gray-700">Trashed:</label>-->
-                    <!--    <select v-model="form.trashed" class="mt-1 w-full form-select">-->
-                    <!--        <option :value="null" />-->
-                    <!--        <option value="with">With Trashed</option>-->
-                    <!--        <option value="only">Only Trashed</option>-->
-                    <!--    </select>-->
-                    <!--</search-filter>-->
+                <div class="mb-6 flex justify-between items-center gap-2">
+                    <a class="btn-gray" :href="route('back.companies.export')">
+                        <span>{{ $t('words.export') }}</span>
+                    </a>
                     <inertia-link class="btn-gray" :href="route('back.companies.create')">
                         <span>{{ $t('words.new') }}</span>
                     </inertia-link>

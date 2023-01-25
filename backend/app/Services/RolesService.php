@@ -50,6 +50,7 @@ class RolesService
         'receive-notification-on-trainee-delete',
         'manage-missed-course-notices',
         'override-training-costs',
+        'companies-report',
         // add the same name of the role to translation files.
     ];
 
