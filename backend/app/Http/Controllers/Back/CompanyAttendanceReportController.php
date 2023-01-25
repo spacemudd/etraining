@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Back;
 
+use App\Exports\CompanyAttendanceReportSendStatusExcel;
 use App\Http\Controllers\Controller;
 use App\Mail\CompanyAttendanceReportMail;
 use App\Models\Back\Company;
@@ -9,6 +10,7 @@ use App\Models\Back\CompanyAttendanceReport;
 use App\Models\Back\CompanyAttendanceReportsTrainee;
 use App\Services\CompanyAttendanceReportService;
 use Carbon\Carbon;
+use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -207,5 +209,28 @@ class CompanyAttendanceReportController extends Controller
         DB::commit();
 
         return redirect()->route('back.reports.company-attendance.show', $clone->id);
+    }
+
+    public function sendReport()
+    {
+        return Inertia::render('Back/Reports/CompanyAttendance/SendReport');
+    }
+
+    public function sendReportDownload(Request $request)
+    {
+        $request->validate([
+            'date' => 'required',
+        ]);
+
+        $start = Carbon::parse($request->date, 'Asia/Riyadh')->startOfMonth()->startOfDay();
+        $end = Carbon::parse($request->date, 'Asia/Riyadh')->endOfMonth()->endOfDay();
+
+        $companies = Company::with(['company_attendance_reports' => function($q) use ($start, $end) {
+            $q->where('date_from', '>=', $start)
+                ->where('date_to', '<=', $end)
+                ->where('status', CompanyAttendanceReport::STATUS_APPROVED);
+        }])->get();
+
+        return Excel::download(new CompanyAttendanceReportSendStatusExcel($companies, $start, $end), now()->format('Y-m').'-company-attendance-report.xlsx');
     }
 }

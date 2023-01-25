@@ -15,7 +15,6 @@ use App\Models\Back\AttendanceReportRecord;
 use App\Models\Back\AttendanceReportRecordWarning;
 use App\Models\Back\Company;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithEvents;

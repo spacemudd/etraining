@@ -418,6 +418,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::post('company-attendance/{id}/clone', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'clone'])->name('reports.company-attendance.clone');
             Route::post('company-attendance/{id}/approve', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'approve'])->name('reports.company-attendance.approve');
             Route::get('company-attendance/{id}/preview', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'preview'])->name('reports.company-attendance.preview');
+            Route::post('company-attendance/send-report/download', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'sendReportDownload'])->name('reports.company-attendance.send-report.download');
+            Route::get('company-attendance/send-report', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'sendReport'])->name('reports.company-attendance.send-report');
             Route::put('company-attendance/{id}', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'update'])->name('reports.company-attendance.update');
             Route::post('company-attendance/{id}/attach', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'attach'])->name('reports.company-attendance.attach');
             Route::post('company-attendance/{id}/detach', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'detach'])->name('reports.company-attendance.detach');

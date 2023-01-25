@@ -581,4 +581,6 @@ return [
     'caution-dont-take-action-against-this-account-without-admin-approval' => 'تنبيه: الرجاء عدم اتخاذ اي اجراء ضد هذا الحساب من دون موافقة الإدارة.',
     'trainees-with-overridden-training-costs' => 'متدربات المستثنين',
     'companies-report' => 'تقرير الشركات',
+    'send-report' => 'تقرير الارسال',
+    'reports-count' => 'عدد التقارير',
 ];

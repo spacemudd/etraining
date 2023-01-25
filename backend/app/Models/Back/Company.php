@@ -117,4 +117,9 @@ class Company extends Model implements SearchableLabels, Auditable
     {
         return $this->only(self::SEARCHABLE_FIELDS);
     }
+
+    public function company_attendance_reports()
+    {
+        return $this->hasMany(CompanyAttendanceReport::class);
+    }
 }
