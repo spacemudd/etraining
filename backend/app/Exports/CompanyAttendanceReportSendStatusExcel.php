@@ -32,7 +32,7 @@ class CompanyAttendanceReportSendStatusExcel implements FromCollection, WithMapp
     {
         return [
             $company->name_ar,
-            $company->company_attendance_reports()->count() ?: '0',
+            $company->company_attendance_reports->count() ?: '0',
             $this->reports_with_counts($company),
         ];
     }
