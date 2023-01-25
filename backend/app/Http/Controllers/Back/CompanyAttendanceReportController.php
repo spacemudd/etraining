@@ -231,6 +231,6 @@ class CompanyAttendanceReportController extends Controller
                 ->where('status', CompanyAttendanceReport::STATUS_APPROVED);
         }])->get();
 
-        return Excel::download(new CompanyAttendanceReportSendStatusExcel($companies, $start, $end), now()->format('Y-m').'-company-attendance-report.xlsx');
+        return Excel::download(new CompanyAttendanceReportSendStatusExcel($companies, $start, $end), now()->format('Y-m-d').'-company-attendance-report.xlsx');
     }
 }
