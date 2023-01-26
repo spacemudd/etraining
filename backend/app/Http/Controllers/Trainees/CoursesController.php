@@ -10,6 +10,7 @@ use App\Models\Back\Course;
 use App\Models\Question;
 use App\Models\Quiz;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use PDF;
 
@@ -78,6 +79,30 @@ class CoursesController extends Controller
         return Inertia::render('Trainees/Courses/Timeline', [
             'course' => $course,
         ]);
+    }
+    public function store(Request $request)
+    {
+        $request->validate([
+            'course_id' => 'required|exists:courses,id',
+            'quiz_id' => 'required|exists:quizzes,id',
+            'question_id' => 'required|exists:questions,id',
+            'answer_id' => 'required|exists:answers,id',
+        ]);
+
+        $course = Course::findOrFail($request->course_id);
+        $quiz = Quiz::findOrFail($request->quiz_id);
+        $question = Question::findOrFail($request->question_id);
+        $answer = Answer::findOrFail($request->answer_id);
+
+        DB::beginTransaction();
+        $report = Course::create([
+            'course_id' => $course->id,
+            'quiz' => $quiz->id,
+            'question' => $question->id,
+            'answer' => $answer->id,
+        ]);
+        DB::commit();
+        return Inertia::render('Trainees/Courses/Grades', $report->id);
     }
 
     public function grades($course_id)

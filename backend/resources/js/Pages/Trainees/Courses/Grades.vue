@@ -21,26 +21,30 @@
 
             <h3></h3>
 
-            <form>
-                <div class="grid md:grid-cols-4 grid-cols-1 gap-6">
-                    <div class="col-span-1 p-5 transition-all duration-500 ease-in-out hover:bg-gray-200">
-                        <div  v-for="question in questions"
-                              :key="questions.id"
-                              v-if="question.course_id === course.id">
-                            <p class="text-2xl">{{ question.description }}</p>
-                            <div class="payment-options mt-2" v-for="answer in answers"
-                                 :key="answers.id"
-                                 v-if="answer.question_id === question.id">
-                                <input type="radio" name="answers">
-                                <label >{{ answer.value }}</label>
+            <div v-if="course.id === 'abedda89-eb23-42ec-9a03-a19097523eb5'">
+                <form>
+                    <div class="grid md:grid-cols-4 grid-cols-1 gap-6">
+                        <div class="col-span-1 p-5 transition-all duration-500 ease-in-out hover:bg-gray-200">
+                            <div  v-for="question in questions"
+                                  :key="questions.id"
+                                  v-if="question.course_id === course.id">
+                                <p class="text-2xl">{{ question.description }}</p>
+                                <div class="payment-options mt-2" v-for="answer in answers"
+                                     :key="answers.id"
+                                     v-if="answer.question_id === question.id">
+                                    <div>
+                                        <input type="radio" name="answers.id">
+                                        <label >{{ answer.value }}</label>
+                                    </div>
+                                </div>
+                                <br>
+                                <br>
                             </div>
-                            <br>
-                            <br>
                         </div>
                     </div>
-                </div>
-                <button type="submit" class="btn btn-primary">إرسال</button>
-            </form>
+                    <button type="submit" class="btn btn-primary">إرسال</button>
+                </form>
+            </div>
 
             <jet-section-border></jet-section-border>
         </div>
