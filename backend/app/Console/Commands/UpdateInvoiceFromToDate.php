@@ -73,7 +73,7 @@ class UpdateInvoiceFromToDate extends Command
         ])->get();
 
         $this->info('Found: '.$invoicesIds->count());
-        $FromToDate = ['from_date' => '2022-10-01', 'to_date' => '2022-10-31'];
+        $FromToDate = ['from_date' => '2022-09-01', 'to_date' => '2022-09-30'];
 
         DB::beginTransaction();
         foreach ($invoicesIds as $invoiceId) {
