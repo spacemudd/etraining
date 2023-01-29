@@ -94,13 +94,13 @@ class UpdateInvoiceFromToDate extends Command
         $this->info('Found: '.$invoicesIds->count());
         $FromToDate = ['from_date' => '2022-10-01', 'to_date' => '2022-10-31'];
 
-//        DB::beginTransaction();
-//        foreach ($invoicesIds as $invoiceId) {
-//            $invoiceId->update($FromToDate);
-//        }
-//        DB::commit();
-//
-//        $this->info('Updated: '.$invoicesIds->count());
+        DB::beginTransaction();
+        foreach ($invoicesIds as $invoiceId) {
+            $invoiceId->update($FromToDate);
+        }
+        DB::commit();
+
+        $this->info('Updated: '.$invoicesIds->count());
 
         return 1;
     }
