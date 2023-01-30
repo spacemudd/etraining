@@ -89,7 +89,7 @@
             <hr>
             <div class="flex justify-between">
                 <h2 class="mt-5 px-2 font-bold">{{ $t('words.trainees') }} ({{ report.trainees.length }})</h2>
-                <h2 class="mt-5 px-2 font-bold">{{ $t('words.selected') }} ({{ selectedCount }})</h2>
+                <h2 class="mt-5 px-2 font-bold">{{ $t('words.selected') }} ({{ selectedCount }}) <inertia-link :href="route('back.reports.company-attendance.toggle-select', report.id)">اختيار الكل</inertia-link></h2>
             </div>
 
             <div class="overflow-x-auto relative">

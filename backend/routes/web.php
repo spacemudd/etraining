@@ -413,6 +413,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('contracts', [\App\Http\Controllers\Back\ReportsController::class, 'formContractsReport'])->name('reports.contracts.index');
             Route::post('contracts/generate', [\App\Http\Controllers\Back\ReportsController::class, 'generateContractsReport'])->name('reports.contracts.generate');
 
+            Route::get('company-attendance/{report_id}/toggle-select', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'toggleSelect'])->name('reports.company-attendance.toggle-select');
             Route::post('company-attendance/{report_id}/trainees/{trainee_id}', [\App\Http\Controllers\Back\CompanyAttendanceReportTraineesController::class, 'update'])->name('reports.company-attendance.trainees.update');
             Route::get('company-attendance/{report_id}/edit', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'edit'])->name('reports.company-attendance.edit');
             Route::post('company-attendance/{id}/clone', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'clone'])->name('reports.company-attendance.clone');

@@ -233,4 +233,15 @@ class CompanyAttendanceReportController extends Controller
 
         return Excel::download(new CompanyAttendanceReportSendStatusExcel($companies, $start, $end), now()->format('Y-m-d').'-company-attendance-report.xlsx');
     }
+
+    public function toggleSelect($id)
+    {
+        $report = CompanyAttendanceReport::findOrFail($id);
+        if ($report->trainees()->where('active', true)->count()) {
+            $report->trainees()->update(['active' => false]);
+        } else {
+            $report->trainees()->update(['active' => true]);
+        }
+        return redirect()->route('back.reports.company-attendance.show', $id);
+    }
 }
