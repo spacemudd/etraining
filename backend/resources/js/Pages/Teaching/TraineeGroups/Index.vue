@@ -26,18 +26,17 @@
                     </div>
 
                     <div class="my-7 text-center">
-
-                        <inertia-link :href="route('teaching.trainee-group.trainees.index', group.id)"
-                                      class="bg-gray-200 font-semibold text-black hover:bg-gray-300 active:bg-gray-300 inline-flex items-center px-4 py-2 border border-transparent rounded-md text-xs focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150">
-                            {{ $t('words.view-trainees') }}
-                        </inertia-link>
+                        <!--<inertia-link :href="route('back.teaching.trainee-groups.trainees.index', group.id)"-->
+                        <!--              class="bg-gray-200 font-semibold text-black hover:bg-gray-300 active:bg-gray-300 inline-flex items-center px-4 py-2 border border-transparent rounded-md text-xs focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150">-->
+                        <!--    {{ $t('words.view-trainees') }}-->
+                        <!--</inertia-link>-->
                     </div>
 
                     <div class="my-7 text-center">
-                        <inertia-link :href="route('teaching.trainee-groups.announcements.create', group.id)"
-                                      class="bg-gray-800 font-semibold text-white hover:bg-gray-700 active:bg-gray-900 inline-flex items-center px-4 py-2 border border-transparent rounded-md text-xs focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150">
-                            {{ $t('words.send-announcement') }}
-                        </inertia-link>
+                        <!--<inertia-link :href="route('back.teaching.trainee-groups.announcements.create', group.id)"-->
+                        <!--              class="bg-gray-800 font-semibold text-white hover:bg-gray-700 active:bg-gray-900 inline-flex items-center px-4 py-2 border border-transparent rounded-md text-xs focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150">-->
+                        <!--    {{ $t('words.send-announcement') }}-->
+                        <!--</inertia-link>-->
                     </div>
                 </div>
                 </div>
