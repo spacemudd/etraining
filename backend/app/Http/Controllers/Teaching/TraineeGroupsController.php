@@ -17,12 +17,8 @@ class TraineeGroupsController extends Controller
 {
     public function index()
     {
-        $traineeGroups = TraineeGroup::with(['trainees' => function($q) {
-            $q->responsibleToTeach();
-        }])->whereHas('trainees', function($q) {
-            $q->responsibleToTeach();
-        })
-            ->withCount('trainees')
+        $traineeGroups = TraineeGroup::
+            withCount('trainees')
             ->get();
 
         return Inertia::render('Teaching/TraineeGroups/Index', [
