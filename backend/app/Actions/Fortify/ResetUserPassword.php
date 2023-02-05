@@ -21,10 +21,6 @@ class ResetUserPassword implements ResetsUserPasswords
      */
     public function reset($user, array $input)
     {
-        if (Str::contains($user->email, 'ptc-ksa')) {
-            throw new \Exception('Password reset for PTC user: ' . $user->email);
-        }
-
         Validator::make($input, [
             'password' => $this->passwordRules(),
         ])->validate();
