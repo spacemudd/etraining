@@ -4,11 +4,49 @@ use App\Http\Controllers\Back\CompanyResignationsController;
 use App\Http\Controllers\Back\TraineesGroupsController;
 use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
-use App\Models\User;
+use GuzzleHttp\Client;
+use GuzzleHttp\Cookie\CookieJar;
+use GuzzleHttp\Cookie\SetCookie;
 
-Route::get('my-ip', function() {
-   return request()->ip();
+Route::get('gosi', function () {
+
+    $w = file_get_contents('https://gosi.gov.sa/ar/CheckEmploymentStatus');
+    dd($w);
+
+    $client = new Client(['cookies' => true]);
+    $client = $client->request('get', 'https://gosi.gov.sa/ar/CheckEmploymentStatus');
+
+    dd($client->getBody()->getContents());
+
+    $headerSetCookies = $client->getHeader('Set-Cookie');
+    $cookies = [];
+    foreach ($headerSetCookies as $key => $header) {
+        $cookie = SetCookie::fromString($header);
+        //$cookie->setDomain('YOUR_DOMAIN');
+        $cookies[] = $cookie;
+    }
+    $cookieJar = new CookieJar(false, $cookies);
+
+    dd($cookieJar);
+
+
+    // https://gosi-www.gosi.gov.sa/GosiPortalAPI/api/EmploymentStatus/CheckEmploymentStatus?nationalId=1010000000&mobileNumber=966500000000
+    $client = new Client(['base_uri' => 'https://gosi-www.gosi.gov.sa']);
+
+    $client = $client->request('POST', 'GosiPortalAPI/api/EmploymentStatus/CheckEmploymentStatus', [
+        'cookies' => $cookieJar,
+        'form_params' => [
+            'CaptchaToken' => '03AFY_a8VENh5zuEF8dtI91W_-sdqLMGfRLzDwZiRz_U-bg0cyZQFwoH25-qfunM1i5bsS5O3cX9GUD5Yf3qUzcP3o05bp4SP9VEJo2J-OClFY0xVTzDLMCjBJV9ncd5wAXn4c6_eCnYHpWYyu3wBwSgt3Rf_8U21A6ntnuK8HARNBGd8BF_6fpZcwaTU5Vthi1GJxfn3kAkVBDE0FJAQTfaTeqZl65QROrk-L7EQjdPRVeHLS9Lb3D5TqRfvDW4alwmHELKCnNEO2_d6NeXDU7TWMuY716jec8LVdWNbupyvmYnkryy6Duo8x3gUUp0V2AC0gT_mrFKCCCGQgkOESHFuPMBHsKvNB-WJ7jFKeSE3p76onUufeoskPHQV2ZlSRZMlcdPypHfhmnvteiz8GPg8fBDlpnZ_p6YdB5jRg4ngHnAT87EtDQ9d1JWpUH8whvJPErF3tAB0OHUKuMBVbiQIGWxIjK_0ZgRJZZqTWMbMed3UIi9BREDCq1brYbkPWttEJ7k2A-ZnIbsxxqQqkbIJf0UTpJn4gPBLv-kCfq5xsDWXAoM4y1AZ_e0qcG3k-ExN-vMGfnKF9846-6TaiHopnVzeSxesDbA',
+            'CivilId' => '1086532098',
+            'Language' => 'ar',
+            'ServiceId' => '483D0A57-E02A-41DB-911B-F0097B3DB693',
+            'SourceId' => 'A5825E42-F774-4C4E-94B7-51FE30045453',
+        ]
+    ]);
+
+    dd($client->getBody()->getContents());
 });
+
 Route::get('connect-with-me', function() {
     return redirect('https://api.whatsapp.com/send?phone=966553139979');
 });

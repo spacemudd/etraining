@@ -1,0 +1,113 @@
+{
+    "name": "lmc/steward",
+    "description": "Steward - makes Selenium WebDriver + PHPUnit testing easy and robust",
+    "keywords": [
+        "selenium",
+        "webdriver",
+        "phpunit",
+        "testing"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ondřej Machulda",
+            "email": "ondrej.machulda@gmail.com"
+        },
+        {
+            "name": "LMC s.r.o.",
+            "homepage": "https://github.com/lmc-eu"
+        }
+    ],
+    "require": {
+        "php": "^7.3 || ^8.0",
+        "ext-SimpleXML": "*",
+        "ext-curl": "*",
+        "ext-dom": "*",
+        "ext-filter": "*",
+        "ext-json": "*",
+        "ext-libxml": "*",
+        "ext-zip": "*",
+        "beberlei/assert": "^3.0",
+        "clue/graph": "^0.9.2",
+        "doctrine/inflector": "^2.0.3",
+        "graphp/algorithms": "^0.8.2",
+        "hanneskod/classtools": "^1.2",
+        "ondram/ci-detector": "^4.0",
+        "php-webdriver/webdriver": "^1.10.0",
+        "phpdocumentor/reflection-docblock": "^5.2",
+        "phpunit/phpunit": "^8.5.15",
+        "symfony/console": "^5.2.6",
+        "symfony/event-dispatcher": "^5.2",
+        "symfony/event-dispatcher-contracts": "^2.2",
+        "symfony/filesystem": "^5.2",
+        "symfony/finder": "^5.2",
+        "symfony/options-resolver": "^5.2",
+        "symfony/polyfill-mbstring": "^1.12",
+        "symfony/process": "^5.2",
+        "symfony/stopwatch": "^5.2",
+        "symfony/yaml": "^5.2"
+    },
+    "require-dev": {
+        "ergebnis/composer-normalize": "^2.13",
+        "lmc/coding-standard": "^3.0.0",
+        "php-mock/php-mock-phpunit": "^2.6.0",
+        "php-parallel-lint/php-parallel-lint": "^1.2.0",
+        "phpstan/extension-installer": "^1.1",
+        "phpstan/phpstan": "^0.12.80",
+        "phpstan/phpstan-phpunit": "^0.12.17",
+        "symfony/var-dumper": "^5.2"
+    },
+    "suggest": {
+        "ext-posix": "For colored output",
+        "ext-xdebug": "For remote tests debugging"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "3.0.x-dev"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Lmc\\Steward\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Lmc\\Steward\\": "src-tests/"
+        },
+        "exclude-from-classmap": [
+            "/src-tests/Process/Fixtures/InvalidTests/*"
+        ]
+    },
+    "minimum-stability": "stable",
+    "bin": [
+        "bin/steward",
+        "bin/steward.php"
+    ],
+    "scripts": {
+        "all": [
+            "@lint",
+            "@analyze",
+            "@test"
+        ],
+        "analyze": [
+            "vendor/bin/ecs check src/ src-tests/ ecs.php --ansi",
+            "vendor/bin/phpstan analyze -c phpstan.neon --ansi"
+        ],
+        "fix": [
+            "@composer normalize",
+            "vendor/bin/ecs check src/ src-tests/ ecs.php --ansi --fix"
+        ],
+        "lint": [
+            "vendor/bin/parallel-lint -j 10 ./bin ./bin/phpunit-steward ./bin/steward ./src ./src-tests ecs.php",
+            "@composer validate",
+            "@composer normalize --dry-run"
+        ],
+        "test": [
+            "export COLUMNS=120 && ./vendor/bin/phpunit --configuration ./src-tests/phpunit.xml --colors=always"
+        ]
+    }
+}

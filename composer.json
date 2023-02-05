@@ -1,0 +1,5 @@
+{
+    "require": {
+        "lmc/steward": "^3.0"
+    }
+}

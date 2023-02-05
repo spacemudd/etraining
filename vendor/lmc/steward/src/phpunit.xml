@@ -1,0 +1,19 @@
+<phpunit
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/8.5/phpunit.xsd"
+    bootstrap="bootstrap.php"
+    beStrictAboutTestsThatDoNotTestAnything="false"
+>
+    <listeners>
+        <listener class="Lmc\Steward\Listener\TestStartLogListener"/>
+        <listener class="Lmc\Steward\Listener\SnapshotListener"/>
+        <listener class="Lmc\Steward\Listener\WebDriverListener"/>
+        <listener class="Lmc\Steward\Listener\TestStatusListener">
+            <arguments>
+                <array/>
+                <!-- A list of test publisher classes -->
+            </arguments>
+        </listener>
+        <listener class="Lmc\Steward\Listener\TestEndLogListener"/>
+    </listeners>
+</phpunit>
