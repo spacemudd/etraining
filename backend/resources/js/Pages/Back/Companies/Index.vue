@@ -10,9 +10,9 @@
             <div class="flex justify-between">
                 <h1 class="mb-8 font-bold text-3xl">{{ $t('words.companies') }}</h1>
                 <div class="mb-6 flex justify-between items-center gap-2">
-                    <!--<a class="btn-gray" :href="route('back.companies.export')" v-can="'companies-report'">-->
-                    <!--    <span>{{ $t('words.export') }}</span>-->
-                    <!--</a>-->
+                    <a class="btn-gray" :href="route('back.companies.export')" v-can="'companies-report'">
+                        <span>{{ $t('words.export') }}</span>
+                    </a>
                     <inertia-link class="btn-gray" :href="route('back.companies.create')">
                         <span>{{ $t('words.new') }}</span>
                     </inertia-link>

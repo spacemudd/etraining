@@ -13,7 +13,8 @@ class TraineesGroupsController extends Controller
     {
         $traineeGroups = TraineeGroup::withCount('trainees')
             ->with(['trainees' => function($q) {
-                $q->limit(1);
+                $q->where('company', '!=', null)
+                    ->limit(2);
             }])
             ->get();
 
