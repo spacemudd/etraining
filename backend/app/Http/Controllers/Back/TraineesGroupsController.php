@@ -12,10 +12,13 @@ class TraineesGroupsController extends Controller
     public function index()
     {
         $traineeGroups = TraineeGroup::withCount('trainees')
-            ->with(['trainees' => function($q) {
-                $q->take(10);
-            }])
             ->get();
+
+        foreach ($traineeGroups as $traineeGroup) {
+            $traineeGroup->load(['trainees' => function($q) {
+                $q->limit(1);
+            }]);
+        }
 
         return Inertia::render('Back/TraineeGroups/Index', [
             'traineeGroups' => $traineeGroups,
