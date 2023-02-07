@@ -13,7 +13,7 @@ class TraineesGroupsController extends Controller
     {
         $traineeGroups = TraineeGroup::withCount('trainees')
             ->with(['trainees' => function($q) {
-                $q->take(2);
+                $q->take(10);
             }])
             ->get();
 
