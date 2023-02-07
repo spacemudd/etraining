@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Chrome\ChromeProcess;
@@ -43,27 +44,34 @@ class GosiCheck extends Command
      */
     public function handle()
     {
+        $ids = [1086532098, 1127301214];
+
         $process = (new ChromeProcess)->toProcess();
         $process->start();
         $driver = $this->driver();
 
         $browser = new Browser($driver);
-        $text = $browser->visit('https://gosi.gov.sa/ar/CheckEmploymentStatus')
-            ->waitFor('#CivilId', 30)
-            ->typeSlowly('#CivilId', '1127301214')
-            ->click('form.ng-dirty > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > a:nth-child(1)')
-            ->waitForText('الإشتراك الخاضع لانظمة التأمينات:', 30)
-            ->text('form.ng-untouched > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(1)');
+        $browser = $browser->visit('https://gosi.gov.sa/ar/CheckEmploymentStatus');
 
-        // TODO: Add DB columns to track of GOSI status
-        if (Str::contains($text, 'أنت على رأس العمل حالياً كمشترك في نظام التأمينات الاجتماعية ولديك مدد اشتراك سابقة')) {
-            // TODO: Update status of GOSI registration
-            // TODO: Send an email to PTC employees (with permission: receive-gosi-notifications)
-            $this->info('GOSI: Registered');
-        } else {
-            // TODO: Update status of GOSI registration
-            // TODO: Send an email to PTC employees if GOSI registration expired
-            $this->info('GOSI: Not registered');
+        foreach ($ids as $id) {
+             $text = $browser->waitFor('#CivilId', 30)
+                ->typeSlowly('#CivilId', $id)
+                ->pause(450)
+                ->click('form.ng-dirty > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > a:nth-child(1)')
+                ->pause(450)
+                ->waitForText('الإشتراك الخاضع لانظمة التأمينات:', 30)
+                ->text('app-checkemploymentstatus');
+
+            // TODO: Add DB columns to track of GOSI status
+            if (Str::contains($text, 'أنت على رأس العمل حالياً كمشترك في نظام التأمينات الاجتماعية ولديك مدد اشتراك سابقة')) {
+                // TODO: Update status of GOSI registration
+                // TODO: Send an email to PTC employees (with permission: receive-gosi-notifications)
+                $this->info('GOSI: Registered');
+            } else {
+                // TODO: Update status of GOSI registration
+                // TODO: Send an email to PTC employees if GOSI registration expired
+                $this->info('GOSI: Not registered');
+            }
         }
 
         $browser->quit();
