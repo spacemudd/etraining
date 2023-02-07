@@ -562,4 +562,5 @@ return [
     'companies-report' => 'Companies report',
     'send-report' => 'Send report',
     'reports-count' => 'Reports count',
+    'manage-trainee-groups' => 'Manage trainee groups',
 ];

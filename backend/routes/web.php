@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Back\TraineesGroupsController;
+use App\Http\Controllers\Teaching\TraineeGroupsController;
 use App\Models\Back\Trainee;
 
 Route::get('connect-with-me', function() {
@@ -316,6 +318,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('trainees/{trainee_id}/set-password', [\App\Http\Controllers\Back\TraineesController::class, 'setPassword'])->name('trainees.set-password');
         Route::post('trainees/{trainee_id}/re-send-invitation', [\App\Http\Controllers\Back\TraineesController::class, 'resendInvitation'])->name('trainees.re-send-invitation');
         Route::put('/trainees/{id}/update-deleted-remark', [\App\Http\Controllers\Back\TraineesController::class, 'updatedDeletedRemark'])->name('trainees.update-deleted-remark');
+
+        Route::get('/trainees/groups', [TraineesGroupsController::class, 'index'])->name('trainees.groups.index');
 
         // Attendance management of trainee.
         Route::get('trainees/{trainee_id}/warnings', [\App\Http\Controllers\Back\TraineesController::class, 'warnings'])->name('trainees.warnings');

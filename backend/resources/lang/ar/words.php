@@ -583,4 +583,5 @@ return [
     'companies-report' => 'تقرير الشركات',
     'send-report' => 'تقرير الارسال',
     'reports-count' => 'عدد التقارير',
+    'manage-trainee-groups' => 'إدارة مجموعات المتدربات',
 ];

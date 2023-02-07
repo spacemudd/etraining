@@ -599,7 +599,9 @@ export default {
             "caution-dont-take-action-against-this-account-without-admin-approval": "تنبيه: الرجاء عدم اتخاذ اي اجراء ضد هذا الحساب من دون موافقة الإدارة.",
             "trainees-with-overridden-training-costs": "متدربات المستثنين",
             "companies-report": "تقرير الشركات",
-            "send-report": "تقرير الارسال"
+            "send-report": "تقرير الارسال",
+            "reports-count": "عدد التقارير",
+            "manage-trainee-groups": "إدارة مجموعات المتدربات"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1334,7 +1336,9 @@ export default {
             "caution-dont-take-action-against-this-account-without-admin-approval": "Caution: please dont dont take any action against this account without consulting with administration.",
             "trainees-with-overridden-training-costs": "Special trainees",
             "companies-report": "Companies report",
-            "send-report": "Send report"
+            "send-report": "Send report",
+            "reports-count": "Reports count",
+            "manage-trainee-groups": "Manage trainee groups"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

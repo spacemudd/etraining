@@ -36,6 +36,10 @@
                         <span>{{ $t('words.new-bulk') }}</span>
                     </inertia-link>
 
+                    <inertia-link v-can="'manage-trainee-groups'" :href="route('back.trainees.groups.index')" class="rounded items-center mr-3 justify-start float-left px-3 py-2.5 bg-yellow-200 hover:bg-yellow-300 text-left">
+                        {{ $t('words.manage-trainee-groups') }}
+                    </inertia-link>
+
                     <!--<inertia-link :href="route('back.trainees.block-list.index')" class="rounded items-center mr-3 justify-start float-left px-3 py-2.5 bg-yellow-200 hover:bg-yellow-300 text-left">-->
                     <!--    {{ $t('words.blocked-list') }}-->
                     <!--</inertia-link>-->
