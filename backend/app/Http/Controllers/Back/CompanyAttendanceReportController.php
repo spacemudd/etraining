@@ -95,6 +95,7 @@ class CompanyAttendanceReportController extends Controller
     public function show($id)
     {
         $report = CompanyAttendanceReport::with('company')
+            ->with('approved_by')
             ->with('trainees')
             ->findOrFail($id);
 

@@ -2,6 +2,7 @@
 
 namespace App\Models\Back;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -60,6 +61,11 @@ class CompanyAttendanceReport extends Model implements Auditable
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function approved_by()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function getPeriodAttribute()
