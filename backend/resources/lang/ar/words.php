@@ -243,7 +243,7 @@ return [
     'download-certificate' => "تحميل الشهادة",
     'you-are-approved' => 'لقد تم إعتمادك',
     'roles-settings' => 'الصلاحيات',
-    'admins' => 'مدراء المعهد',
+    'admins' => 'مديرون المعهد',
     'roles' => 'المناصب',
     'admins-role-info' => 'لديهم كافة الصلاحيات على النظام',
     'finance-role-info' => 'لديهم صلاحيات فقط لإتمام مهام المالية',
