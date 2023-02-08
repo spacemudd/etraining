@@ -12,6 +12,7 @@ class CertificatesImportsRow extends Model
     protected $fillable = [
         'trainee_id',
         'course_id',
+        'sent_at',
     ];
 
     public function trainee()
