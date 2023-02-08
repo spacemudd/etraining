@@ -28,7 +28,9 @@
                 <h2 v-if="report.approved_at">
                     <span class="text-2xl bg-green-300 text-black px-2 rounded">{{ $t('words.approved') }}</span>
                     <br/>
-                    <span class="bg-gray-200 px-2 rounded text-sm">{{ report.approved_by.email }} - {{ report.approved_at_human }}</span>
+                    <span class="bg-gray-200 px-2 rounded text-sm">{{ report.approved_at_human }}</span>
+                    <br/>
+                    <span class="bg-gray-200 px-2 rounded text-sm">{{ report.approved_by.email }}</span>
                 </h2>
                 <h2 v-else><span class="text-2xl bg-yellow-300 text-black px-2 rounded">{{ $t('words.review') }}</span></h2>
             </div>
