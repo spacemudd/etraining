@@ -57,6 +57,7 @@
                         {{ $t('words.clone') }}
                     </button>
                     <button @click="send"
+                            v-if="report.approved_at"
                             class="btn btn-secondary">
                         {{ $t('words.send') }}
                     </button>
