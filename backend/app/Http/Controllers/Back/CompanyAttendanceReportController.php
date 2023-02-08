@@ -235,8 +235,7 @@ class CompanyAttendanceReportController extends Controller
         $end = Carbon::parse($request->date, 'Asia/Riyadh')->endOfMonth()->endOfDay();
 
         $companies = Company::with(['company_attendance_reports' => function($q) use ($start, $end) {
-            $q->where('date_from', '>=', $start)
-                ->where('date_to', '<=', $end)
+            $q->whereBetween('date_to', [$start, $end])
                 ->where('status', CompanyAttendanceReport::STATUS_APPROVED);
         }])->get();
 
