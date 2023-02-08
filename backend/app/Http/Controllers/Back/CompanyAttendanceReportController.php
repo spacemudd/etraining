@@ -187,6 +187,15 @@ class CompanyAttendanceReportController extends Controller
         return redirect()->route('back.reports.company-attendance.show', $id);
     }
 
+    public function send($id)
+    {
+        $report = CompanyAttendanceReport::findOrFail($id);
+        Mail::to($report->to_emails ? explode(', ', $report->to_emails) : null)
+            ->cc($report->cc_emails ? explode(', ', $report->cc_emails) : null)
+            ->send(new CompanyAttendanceReportMail($report->id));
+        return redirect()->route('back.reports.company-attendance.show', $id);
+    }
+
     public function clone($id)
     {
         DB::beginTransaction();

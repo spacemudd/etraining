@@ -56,6 +56,10 @@
                             class="btn btn-secondary">
                         {{ $t('words.clone') }}
                     </button>
+                    <button @click="send"
+                            class="btn btn-secondary">
+                        {{ $t('words.send') }}
+                    </button>
                     <a :href="route('back.reports.company-attendance.preview', report.id)"
                        target="_blank"
                        class="btn-secondary">{{ $t('words.preview') }}</a>
@@ -197,6 +201,11 @@
             }
         },
         methods: {
+            send() {
+                if (confirm(this.$t('words.are-you-sure'))) {
+                    this.$inertia.post(route('back.reports.company-attendance.send', this.report.id));
+                }
+            },
             clone() {
                 if (confirm(this.$t('words.are-you-sure'))) {
                     this.$inertia.post(route('back.reports.company-attendance.clone', this.report.id));
