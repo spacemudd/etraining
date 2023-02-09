@@ -585,5 +585,5 @@ return [
     'send-report' => 'تقرير الارسال',
     'reports-count' => 'عدد التقارير',
     'manage-trainee-groups' => 'إدارة مجموعات المتدربات',
-    'services' => 'شؤوون المتدربات',
+    'services' => 'شؤون المتدربات',
 ];
