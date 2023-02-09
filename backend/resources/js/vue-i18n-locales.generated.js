@@ -426,6 +426,7 @@ export default {
             "instructors-role-info": "لديهم صلاحيات فقط لإتمام مهام التدريب",
             "trainees-role-info": "لديهم صلاحيات فقط للإستطلاع على الدورات",
             "chasers-role-info": "لديهم صلاحيات فقط لإتمام مهام التحصيل",
+            "services-role-info": "لديهم صلاحيات فقط لإتمام مهام شؤون المتدرات",
             "manage": "إدارة",
             "invite": "ارسل دعوة",
             "import": "إدخال",
@@ -752,7 +753,8 @@ export default {
             "companies-report": "تقرير الشركات",
             "send-report": "تقرير الارسال",
             "reports-count": "عدد التقارير",
-            "manage-trainee-groups": "إدارة مجموعات المتدربات"
+            "manage-trainee-groups": "إدارة مجموعات المتدربات",
+            "services": "شؤوون المتدربات"
         }
     },
     "en": {
@@ -1143,6 +1145,7 @@ export default {
             "instructors-role-info": "Having just the permissions related to providing courses",
             "trainees-role-info": "Having just the permissions to view their course material",
             "chasers-role-info": "Having just the permissions related to chase",
+            "services-role-info": "Having just the permissions related to chase",
             "manage": "Manage",
             "invite": "Invite",
             "import": "Import",
@@ -1450,7 +1453,8 @@ export default {
             "companies-report": "Companies report",
             "send-report": "Send report",
             "reports-count": "Reports count",
-            "manage-trainee-groups": "Manage trainee groups"
+            "manage-trainee-groups": "Manage trainee groups",
+            "services": "Services"
         }
     }
 }

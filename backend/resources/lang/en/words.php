@@ -250,6 +250,7 @@ return [
     'instructors-role-info' => 'Having just the permissions related to providing courses',
     'trainees-role-info' => 'Having just the permissions to view their course material',
     'chasers-role-info' => 'Having just the permissions related to chase',
+    'services-role-info' => 'Having just the permissions related to chase',
     'manage' => 'Manage',
     'invite' => 'Invite',
     'import' => 'Import',
@@ -563,4 +564,5 @@ return [
     'send-report' => 'Send report',
     'reports-count' => 'Reports count',
     'manage-trainee-groups' => 'Manage trainee groups',
+    'services' => 'Services',
 ];
