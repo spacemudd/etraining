@@ -8,6 +8,7 @@ use App\Models\Back\Audit;
 use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
 use App\Models\TraineeBankPaymentReceipt;
+use App\Services\CompaniesAssignedToRiyadhBank;
 use Brick\PhoneNumber\PhoneNumber;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
@@ -65,10 +66,10 @@ class PaymentCardController extends Controller
      */
     public function chargePayment(Request $request)
     {
-//        dd($request);
-//        if (!$request->has('tap_id')) {
-//            abort(404);
-//        }
+        $invoice_ids = explode(',', json_decode($request->metadata['invoices']));
+        $invoice = Invoice::withTrashed()->find($invoice_ids[0]);
+        app()->make(CompaniesAssignedToRiyadhBank::class)
+            ->setTapKey($invoice->company_id);
 
         $tap_service = new TapService();
         $tap_invoice = $tap_service->findCharge($request->tap_id);
@@ -95,10 +96,10 @@ class PaymentCardController extends Controller
      */
     private function getPaymentUrl($amount, $invoices)
     {
-        $payment_url = null;
-
         try {
             $trainee = optional(auth()->user())->trainee;
+            app()->make(CompaniesAssignedToRiyadhBank::class)
+                ->setTapKey($trainee->company_id);
 
             $payment = TapPayment::createCharge();
             $payment->setCustomerName($trainee->name);
@@ -142,6 +143,11 @@ class PaymentCardController extends Controller
     public function storeTapReceipt(Request $request)
     {
         $status = $request->status;
+
+        $invoice_ids = explode(',', json_decode($request->metadata['invoices']));
+        $invoice = Invoice::withTrashed()->find($invoice_ids[0]);
+        app()->make(CompaniesAssignedToRiyadhBank::class)
+            ->setTapKey($invoice->company_id);
 
         if ($status === 'CAPTURED') {
             // Confirm that Tap has the payment.
