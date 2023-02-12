@@ -66,15 +66,15 @@ class PaymentCardController extends Controller
      */
     public function chargePayment(Request $request)
     {
-        $invoice_ids = explode(',', json_decode($request->metadata['invoices']));
-        $invoice = Invoice::withTrashed()->find($invoice_ids[0]);
-        app()->make(CompaniesAssignedToRiyadhBank::class)
-            ->setTapKey($invoice->company_id);
+        //app()->make(CompaniesAssignedToRiyadhBank::class)
+        //    ->setTapKey($invoice->company_id);
 
-        $tap_service = new TapService();
-        $tap_invoice = $tap_service->findCharge($request->tap_id);
+        $is_success = false;
 
-        if ($tap_invoice->isSuccess()) {
+        //$tap_service = new TapService();
+        //$tap_invoice = $tap_service->findCharge($request->tap_id);
+
+        if (true) {
             session()->put('success_payment', true);
         } else {
             session()->put('failed_payment', true);

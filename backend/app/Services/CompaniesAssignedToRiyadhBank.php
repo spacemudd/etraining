@@ -95,4 +95,9 @@ class CompaniesAssignedToRiyadhBank
             config(['tap.key' => env('TAP_PAYMENT_API_KEY_SECONDARY')]);
         }
     }
+
+    public function setSecondaryTap()
+    {
+        config(['tap.key' => env('TAP_PAYMENT_API_KEY_SECONDARY')]);
+    }
 }
