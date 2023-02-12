@@ -68,12 +68,13 @@ class PaymentCardController extends Controller
     {
         sleep(2);
 
-        $tap_service = new TapService();
-        $tap_invoice = $tap_service->findCharge($request->tap_id);
-
-        if (!$tap_invoice->isSuccess()) {
+        try {
+            $tap_service = new TapService();
+            $tap_invoice = $tap_service->findCharge($request->tap_id);
+        } catch (\Exception $exception) {
             app()->make(CompaniesAssignedToRiyadhBank::class)
                 ->setSecondaryTap();
+            $tap_service = new TapService();
             $tap_invoice = $tap_service->findCharge($request->tap_id);
         }
 
