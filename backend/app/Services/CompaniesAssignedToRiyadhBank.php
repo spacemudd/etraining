@@ -92,12 +92,12 @@ class CompaniesAssignedToRiyadhBank
     public function setTapKey(string $company_id)
     {
         if (in_array($company_id, $this->list) || (Company::find($company_id)->created_at >= Carbon::parse('2023-02-09'))) {
-            config(['tap.key' => env('TAP_PAYMENT_API_KEY_SECONDARY')]);
+            config(['tap.auth.api_key' => env('TAP_PAYMENT_API_KEY_SECONDARY')]);
         }
     }
 
     public function setSecondaryTap()
     {
-        config(['tap.key' => env('TAP_PAYMENT_API_KEY_SECONDARY')]);
+        config(['tap.auth.api_key' => env('TAP_PAYMENT_API_KEY_SECONDARY')]);
     }
 }
