@@ -52,9 +52,9 @@
                             </span><br>
                         </div>
                         <div>
-                            <p class="text-black flex mr-0.5">
-                                <b>2)</b> &ensp; {{ $t('words.to-pay-by-bank') }}
-                            </p>
+                            <!--<p class="text-black flex mr-0.5">-->
+                            <!--    <b>2)</b> &ensp; {{ $t('words.to-pay-by-bank') }}-->
+                            <!--</p>-->
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-6">
