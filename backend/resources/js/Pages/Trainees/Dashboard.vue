@@ -64,12 +64,12 @@
                                 {{ $t('words.settle') }}
                             </inertia-link>
                         </div>
-                        <div>
-                            <inertia-link class="text-center mt-5 inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
-                                          :href="route('trainees.payment.options')">
-                                {{ $t('words.attach-receipt') }}
-                            </inertia-link>
-                        </div>
+                        <!--<div>-->
+                        <!--    <inertia-link class="text-center mt-5 inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"-->
+                        <!--                  :href="route('trainees.payment.options')">-->
+                        <!--        {{ $t('words.attach-receipt') }}-->
+                        <!--    </inertia-link>-->
+                        <!--</div>-->
                     </div>
                 </div>
             </div>
