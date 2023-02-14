@@ -106,6 +106,11 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     {
         parent::boot();
         static::addGlobalScope(new TeamScope());
+
+        if (Str::contains(optional(auth()->user())->email, 'ptc-ksa')) {
+            static::addGlobalScope(new RiyadhBankScope());
+        }
+
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string) Str::uuid();
             if (auth()->user()) {
