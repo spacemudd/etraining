@@ -108,7 +108,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         parent::boot();
         static::addGlobalScope(new TeamScope());
 
-        if (Str::contains(optional(auth()->user())->email, 'ptc-ksa')) {
+        if (Str::contains(optional(auth()->user())->email, 'ptc-ksa') && auth()->user()->email != 'sara@ptc-ksa.com') {
             static::addGlobalScope(new RiyadhBankScope());
         }
 
