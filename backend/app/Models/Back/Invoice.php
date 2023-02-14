@@ -88,7 +88,7 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
     {
         parent::boot();
 
-        if (Str::contains(auth()->user()->email, 'ptc-ksa')) {
+        if (Str::contains(optional(auth()->user()-)>email, 'ptc-ksa')) {
             static::addGlobalScope(new RiyadhBankScope());
         }
 

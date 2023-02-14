@@ -3,7 +3,9 @@
 namespace App\Models\Back;
 
 use App\Models\SearchableLabels;
+use App\Scope\RiyadhBankScope;
 use App\Scope\TeamScope;
+use App\Services\CompaniesAssignedToRiyadhBank;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,6 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
 use OwenIt\Auditing\Contracts\Auditable;
 use Str;
+use Illuminate\Database\Eloquent\Builder;
 
 class Company extends Model implements SearchableLabels, Auditable
 {
@@ -48,6 +51,13 @@ class Company extends Model implements SearchableLabels, Auditable
     {
         parent::boot();
         static::addGlobalScope(new TeamScope());
+
+        if (Str::contains(optional(auth()->user())->email, 'ptc-ksa')) {
+            static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
+                $builder->whereNotIn('company_id', app()->make(CompaniesAssignedToRiyadhBank::class)->list);
+            });
+        }
+
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string) Str::uuid();
             if (auth()->user()) {
