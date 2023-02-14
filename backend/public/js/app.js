@@ -18822,9 +18822,9 @@ var render = function render() {
     }, {
       key: "content",
       fn: function fn() {
-        return [_c("div", [_vm._v("\n                Please copy your new API token. For your security, it won't be shown again.\n            ")]), _vm._v(" "), _vm.$page.jetstream.flash.token ? _c("div", {
+        return [_c("div", [_vm._v("\n                Please copy your new API token. For your security, it won't be shown again.\n            ")]), _vm._v(" "), _vm.$page.props.jetstream.flash.token ? _c("div", {
           staticClass: "mt-4 bg-gray-100 px-4 py-2 rounded font-mono text-sm text-gray-500"
-        }, [_vm._v("\n                " + _vm._s(_vm.$page.jetstream.flash.token) + "\n            ")]) : _vm._e()];
+        }, [_vm._v("\n                " + _vm._s(_vm.$page.props.jetstream.flash.token) + "\n            ")]) : _vm._e()];
       },
       proxy: true
     }, {
@@ -33023,7 +33023,7 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("jet-section-border"), _vm._v(" "), _c("update-password-form", {
     staticClass: "mt-10 sm:mt-0"
-  }), _vm._v(" "), _vm.$page.jetstream.canManageTwoFactorAuthentication ? _c("div", [_c("jet-section-border"), _vm._v(" "), _c("two-factor-authentication-form", {
+  }), _vm._v(" "), _vm.$page.props.jetstream.canManageTwoFactorAuthentication ? _c("div", [_c("jet-section-border"), _vm._v(" "), _c("two-factor-authentication-form", {
     staticClass: "mt-10 sm:mt-0"
   })], 1) : _vm._e(), _vm._v(" "), _c("jet-section-border"), _vm._v(" "), _c("logout-other-browser-sessions-form", {
     staticClass: "mt-10 sm:mt-0",
@@ -33323,7 +33323,7 @@ var render = function render() {
     }, {
       key: "form",
       fn: function fn() {
-        return [_vm.$page.jetstream.managesProfilePhotos ? _c("div", {
+        return [_vm.$page.props.jetstream.managesProfilePhotos ? _c("div", {
           staticClass: "col-span-6 sm:col-span-4"
         }, [_c("input", {
           ref: "photo",
