@@ -16,6 +16,9 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         Inertia::share([
+            'user' => function () {
+                return optional(auth())->user();
+            },
             'locale' => function () {
                 return app()->getLocale();
             },
