@@ -124,7 +124,6 @@ class CompaniesAssignedToRiyadhBank
         '6f0c23f4-e2d4-48a1-b678-5758104c8632',
         '7d1ed112-7cf7-498d-a9e4-3f29f24dc9d8',
         'dd9e1815-6b9d-49b7-8111-3631e9920810',
-        'f075a712-6f0d-4ec0-ae12-94aa82172530',
         'd7f5134c-b15b-4364-8e34-e9d5b3855cb0',
         '0ca007ea-88e0-4d0a-9bf7-879447b879fa',
         'e7e06828-11d1-47d6-a010-19cb50e5caba',
