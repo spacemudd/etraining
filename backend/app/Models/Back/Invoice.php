@@ -4,6 +4,7 @@ namespace App\Models\Back;
 
 use App\Models\TraineeBankPaymentReceipt;
 use App\Models\User;
+use App\Scope\RiyadhBankScope;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context\CustomContext;
 use Brick\Money\Money;
@@ -86,6 +87,10 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
     protected static function boot(): void
     {
         parent::boot();
+
+        if (Str::contains('ptc-ksa', auth()->user()->email)) {
+            static::addGlobalScope(new RiyadhBankScope());
+        }
 
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string)Str::uuid();
