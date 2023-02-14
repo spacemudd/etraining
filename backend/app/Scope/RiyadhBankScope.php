@@ -24,6 +24,7 @@ class RiyadhBankScope implements Scope
      * @param \Illuminate\Database\Eloquent\Builder $builder
      * @param \Illuminate\Database\Eloquent\Model $model
      * @return void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function apply(Builder $builder, Model $model)
     {
