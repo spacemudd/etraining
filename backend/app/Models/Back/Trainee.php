@@ -8,6 +8,7 @@ use App\Models\EducationalLevel;
 use App\Models\MaritalStatus;
 use App\Models\SearchableLabels;
 use App\Models\Team;
+use App\Scope\RiyadhBankScope;
 use App\Services\TraineeCompanyMovementService;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
