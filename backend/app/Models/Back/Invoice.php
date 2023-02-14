@@ -88,12 +88,12 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
     {
         parent::boot();
 
-        if (Str::contains('ptc-ksa', auth()->user()->email)) {
+        if (Str::contains(auth()->user()->email, 'ptc-ksa')) {
             static::addGlobalScope(new RiyadhBankScope());
         }
 
         static::creating(function ($model) {
-            $model->{$model->getKeyName()} = (string)Str::uuid();
+            $model->{$model->getKeyName()} = (string) Str::uuid();
             $model->number = MaxNumber::generatePrefixForInvoice();
 
             if (auth()->check()) {
