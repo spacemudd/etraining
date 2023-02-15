@@ -21,7 +21,7 @@
             <div class="grid md:grid-cols-4 grid-cols-1 gap-6">
                 <div class="col-span-1 p-5 transition-all duration-500 ease-in-out hover:bg-gray-200">
                     <form @submit.prevent="submitForm">
-                        <div class="payment-options mt-2 mb-4" value="cc" v-if="online_payment">
+                        <div class="payment-options mt-2 mb-4" value="cc">
                             <p class="text-xl font-bold mb-1">{{ $t('words.credit-card-method') }}</p>
                             <span class="img {display:block} inline-flex">
                                 <svg width="40" height="40" class="mx-0.5">
@@ -40,24 +40,21 @@
                         </div>
                         <p class="text-xl font-bold mb-6">{{ $t('words.choose-invoice') }}:</p>
                         <select class=" my-4 bg-gray-100 border-2 border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                v-model="invoiceToPay"
-                                required>
-                            <option selected v-for="invoice in invoices" :value="invoice">{{ $t('words.dues') }} {{ invoice.month_of }} - {{ invoice.grand_total }}</option>
+                                disabled>
+                            <option selected :value="invoice">{{ $t('words.dues') }} {{ invoice.month_of }} - {{ invoice.grand_total }}</option>
                         </select>
                         <div class="mt-4">
-                            <p class="text-xl font-bold">{{ $t('words.amount') }}<p>
-                            <p class="text-xl">{{ invoiceToPay ? invoiceToPay.grand_total : '' }} {{ $t('words.sr')}}</p>
-                            <a class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
-                               target="_blank"
-                               :href="route('back.finance.invoices.pdf', invoice.id)">
-                                اعتراض على المبلغ
-                            </a>
+                            <p class="text-xl font-bold">{{ $t('words.amount') }}</p>
+                            <input type="text"
+                                   class="px-3 py-4 placeholder-slate-300 text-slate-600 relative bg-white bg-white rounded text-base border-0 shadow outline-none focus:outline-none focus:ring w-full"
+                                   min="1"
+                                   v-model="form.grand_total_override">
                         </div>
 
                         <button class="mt-5 inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-">
-                        <span v-if="paymentMethod === 'cc'">
-                            {{ $t('words.pay-now') }}
-                        </span>
+                            <span>
+                                {{ $t('words.pay-now') }}
+                            </span>
                         </button>
                     </form>
                 </div>
@@ -79,31 +76,23 @@ export default {
         BreadcrumbContainer,
     },
     props: [
-        'pending_amount',
-        'online_payment',
         'invoice',
-        'invoices',
     ],
     data() {
         return {
-            paymentMethod: 'cc',
-            invoiceToPay: null,
+            form: this.$inertia.form({
+                invoice_id: null,
+                grand_total_override: null,
+            }),
         }
     },
     mounted() {
-        //
+        this.form.invoice_id = this.invoice.id;
+        this.form.grand_total_override = this.invoice.grand_total;
     },
     methods: {
-        submitForm(){
-            let link = '';
-
-            if (this.paymentMethod === 'cc') {
-                link = route('trainees.payment.card', {invoice_id: this.invoiceToPay ? this.invoiceToPay.id : '' });
-            } else {
-                link = route('trainees.payment.upload-receipt',  {invoice_id: this.invoiceToPay ? this.invoiceToPay.id : '' })
-            }
-
-            window.location.replace(link);
+        submitForm() {
+            this.form.post(route('trainees.override-payment.card'));
         }
     }
 }

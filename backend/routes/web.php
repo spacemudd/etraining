@@ -556,6 +556,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
         Route::get('payment/card', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'showPaymentForm'])
             ->name('payment.card');
+        Route::post('override-payment/card', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'changeInvoiceAmountRedirectToPaymentGateway'])
+            ->name('override-payment.card');
 
         Route::get('payment/card/charge-payment', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'chargePayment'])
             ->name('payment.card.charge');

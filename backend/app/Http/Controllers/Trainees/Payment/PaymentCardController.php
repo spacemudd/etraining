@@ -6,9 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Back\AccountingLedgerBook;
 use App\Models\Back\Audit;
 use App\Models\Back\Invoice;
+use App\Models\Back\InvoiceItem;
 use App\Models\Back\Trainee;
 use App\Models\TraineeBankPaymentReceipt;
 use App\Services\CompaniesAssignedToRiyadhBank;
+use App\Services\InvoiceService;
+use Brick\Math\RoundingMode;
+use Brick\Money\Context\CustomContext;
+use Brick\Money\Money;
 use Brick\PhoneNumber\PhoneNumber;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
@@ -116,6 +121,8 @@ class PaymentCardController extends Controller
                 $phone = PhoneNumber::parse('+'.$trainee->clean_phone);
                 if ($phone->isPossibleNumber()) {
                     $payment->setCustomerPhone($phone->getCountryCode(), $phone->getNationalNumber());
+                } else {
+                    $payment->setCustomerPhone('966', '553139979');
                 }
             }
 
@@ -249,9 +256,17 @@ class PaymentCardController extends Controller
         ]);
     }
 
-    public function objectionOfAmount()
+    public function objectionOfAmount(Request $request)
     {
-        return Inertia::render('Trainees/Payment/ObjectionOfAmount');
+        $request->validate([
+            'invoice_id' => 'required|exists:invoices,id',
+        ]);
+
+        $invoice = Invoice::findOrFail($request->invoice_id);
+
+        return Inertia::render('Trainees/Payment/ObjectionOfAmount', [
+            'invoice' => $invoice,
+        ]);
     }
 
     public function uploadReceipt()
@@ -319,5 +334,26 @@ class PaymentCardController extends Controller
         \DB::commit();
 
         return redirect()->route('dashboard');
+    }
+
+    public function changeInvoiceAmountRedirectToPaymentGateway(Request $request)
+    {
+        $request->validate([
+            'grand_total_override' => 'required|min:1|numeric',
+            'invoice_id' => 'required|exists:invoices,id',
+        ]);
+
+        DB::beginTransaction();
+
+        $invoice = app()->make(InvoiceService::class)
+            ->changeInvoiceCost($request->invoice_id, $request->grand_total_override);
+;
+        // Get collection of invoices because getPaymentUrl() expects a collection
+        $invoices = Invoice::where('id', $invoice->id)->get();
+        $payment_url = $this->getPaymentUrl($request->grand_total_override, $invoices);
+
+        DB::commit();
+
+        return redirect()->to($payment_url);
     }
 }

@@ -44,17 +44,20 @@
                                 required>
                             <option selected v-for="invoice in invoices" :value="invoice">{{ $t('words.dues') }} {{ invoice.month_of }} - {{ invoice.grand_total }}</option>
                         </select>
-                        <div class="mt-4">
+
+                        <div class="mt-4" v-if="invoiceToPay">
                             <p class="text-xl font-bold">{{ $t('words.amount') }}<p>
                             <p class="text-xl">{{ invoiceToPay ? invoiceToPay.grand_total : '' }} {{ $t('words.sr')}}</p>
-                            <a class="text-blue-600"
-                               target="_blank"
-                               :href="route('trainees.payment.tap.objection', {invoice_id: this.invoiceToPay ? this.invoiceToPay.id : '' })">
+
+                            <inertia-link
+                                class="text-blue-600"
+                                target="_blank"
+                                :href="route('trainees.payment.tap.objection', {invoice_id: this.invoiceToPay ? this.invoiceToPay.id : '' })">
                                 دفع مبلغ آخر
-                            </a>
+                            </inertia-link>
                         </div>
 
-                        <button class="mt-5 inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-">
+                        <button class="mt-10 inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-">
                         <span v-if="paymentMethod === 'cc'">
                             {{ $t('words.pay-now') }}
                         </span>
