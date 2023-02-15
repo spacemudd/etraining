@@ -5,9 +5,11 @@ namespace App\Models\Back;
 use App\Models\TraineeBankPaymentReceipt;
 use App\Models\User;
 use App\Scope\RiyadhBankScope;
+use App\Services\CompaniesAssignedToRiyadhBank;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context\CustomContext;
 use Brick\Money\Money;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -88,8 +90,16 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
     {
         parent::boot();
 
-        if (Str::contains(optional(auth()->user())->email, 'ptc-ksa')) {
-            static::addGlobalScope(new RiyadhBankScope());
+        if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.com')) {
+            static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
+                $builder->whereNotIn('id', app()->make(CompaniesAssignedToRiyadhBank::class)->list);
+            });
+        }
+
+        if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.net')) {
+            static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
+                $builder->whereIn('id', app()->make(CompaniesAssignedToRiyadhBank::class)->list);
+            });
         }
 
         static::creating(function ($model) {
