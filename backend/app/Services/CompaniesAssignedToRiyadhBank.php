@@ -8,6 +8,8 @@ use Illuminate\Support\Carbon;
 class CompaniesAssignedToRiyadhBank
 {
     public $list = [
+        // '6fb69931-8fea-4b36-bef7-10a4a43ed489', Ranwa
+        // 'd5992fb6-08c0-456f-895c-395dd02dd1ba', Amari
         '8f07fb82-cddc-4dc6-a1ef-2a3db115da4c',
         'abb56ea1-f9c0-4d8f-80d6-eb146d5ebfda',
         '4f4d48fc-0a57-4f7a-9f68-d4eb5f06f153',
@@ -18,7 +20,6 @@ class CompaniesAssignedToRiyadhBank
         '0a0676b3-7387-4936-bff9-d23fc9cc4d20',
         'ee2f994c-0c21-4f49-903c-9ef642ef6c1c',
         '905cbb9e-0753-4db6-933e-4c04ecae1c2c',
-        '6fb69931-8fea-4b36-bef7-10a4a43ed489',
         '7b7483fc-c85f-4001-ad06-7ded60677cd6',
         '98ecbc18-5467-4b9d-bc21-bedfbae25c5d',
         '702bb589-11ee-42e3-9dd6-48b7d51f2a3b',
@@ -38,7 +39,6 @@ class CompaniesAssignedToRiyadhBank
         '795290c4-563c-490d-8473-3ae46a02a41c',
         '23e28423-c1ea-4d9f-8653-a902af96b88f',
         'ebe760f6-f9fe-42a5-a79d-4c4c6d3d044f',
-        'd5992fb6-08c0-456f-895c-395dd02dd1ba',
         '4cd64200-5555-4d91-8054-e10043ec880c',
         '04081416-9960-4df7-a60f-b5d150d520a4',
         '21907815-5ad0-489b-a461-a9396579fb8f',
@@ -127,6 +127,8 @@ class CompaniesAssignedToRiyadhBank
         'd7f5134c-b15b-4364-8e34-e9d5b3855cb0',
         '0ca007ea-88e0-4d0a-9bf7-879447b879fa',
         'e7e06828-11d1-47d6-a010-19cb50e5caba',
+
+
     ];
 
     /**
