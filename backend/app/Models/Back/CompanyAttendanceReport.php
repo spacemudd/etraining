@@ -3,10 +3,13 @@
 namespace App\Models\Back;
 
 use App\Models\User;
+use App\Services\CompaniesAssignedToRiyadhBank;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\Builder;
 
 class CompanyAttendanceReport extends Model implements Auditable
 {
