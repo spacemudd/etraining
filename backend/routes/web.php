@@ -103,6 +103,25 @@ Route::get('s1s3', function() {
     return $traineeData;
 });
 
+Route::get('all-trainees', function() {
+    $trainees = Trainee::all();
+
+    $traineeData = [];
+
+    foreach ($trainees as $trainee) {
+        $traineeData[] = [
+            'name' => $trainee->name,
+            'company' => optional($trainee->company)->name_ar,
+            'email' => $trainee->email,
+            'phone' => $trainee->phone,
+            'instructor' => optional($trainee->instructor)->name,
+            'group' => optional($trainee->trainee_group)->name,
+        ];
+    }
+
+    return $traineeData;
+});
+
 Route::get('instructor-company-report', function() {
     $contracts = \App\Models\Back\CompanyContract::get();
     $data = [];
