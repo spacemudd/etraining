@@ -50,7 +50,7 @@ class Company extends Model implements SearchableLabels, Auditable
     protected static function boot(): void
     {
         parent::boot();
-        static::addGlobalScope(new TeamScope());
+        //static::addGlobalScope(new TeamScope());
 
         //if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.com') && (auth()->user()->email != 'sara@ptc-ksa.com' || auth()->user()->email != 'mashael.a@ptc-ksa.com')) {
         //    static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
@@ -59,9 +59,9 @@ class Company extends Model implements SearchableLabels, Auditable
         //}
 
         //if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.net')) {
-            static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
-                $builder->whereIn('id', app()->make(CompaniesAssignedToRiyadhBank::class)->list);
-            });
+        static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
+            $builder->whereIn('id', app()->make(CompaniesAssignedToRiyadhBank::class)->list);
+        });
         //}
 
         static::creating(function ($model) {
