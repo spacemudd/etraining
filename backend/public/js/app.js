@@ -37796,14 +37796,14 @@ var render = function render() {
   }, [_vm._v(_vm._s(_vm.$t("words.amount")))]), _c("p"), _c("p", {
     staticClass: "text-xl"
   }, [_vm._v(_vm._s(_vm.invoiceToPay ? _vm.invoiceToPay.grand_total : "") + " " + _vm._s(_vm.$t("words.sr")))]), _vm._v(" "), _c("a", {
-    staticClass: "inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-",
+    staticClass: "text-blue-600",
     attrs: {
       target: "_blank",
-      href: _vm.route("payment.tap.objection", {
+      href: _vm.route("trainees.payment.tap.objection", {
         invoice_id: this.invoiceToPay ? this.invoiceToPay.id : ""
       })
     }
-  }, [_vm._v("\n                            اعتراض على المبلغ\n                        ")])]), _vm._v(" "), _c("button", {
+  }, [_vm._v("\n                            دفع مبلغ آخر\n                        ")])]), _vm._v(" "), _c("button", {
     staticClass: "mt-5 inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
   }, [_vm.paymentMethod === "cc" ? _c("span", [_vm._v("\n                        " + _vm._s(_vm.$t("words.pay-now")) + "\n                    ")]) : _vm._e()])])])])], 1)]);
 };

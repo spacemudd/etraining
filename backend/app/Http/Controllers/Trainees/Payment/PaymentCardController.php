@@ -251,7 +251,7 @@ class PaymentCardController extends Controller
 
     public function objectionOfAmount()
     {
-        return Inertia::render('Back/Trainees/ObjectionOfAmount');
+        return Inertia::render('Trainees/Payment/ObjectionOfAmount');
     }
 
     public function uploadReceipt()
