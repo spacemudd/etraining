@@ -110,7 +110,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         parent::boot();
 
         static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
-                $builder->whereIn('id', app()->make(CompaniesAssignedToRiyadhBank::class)->list);
+                $builder->whereIn('company_id', app()->make(CompaniesAssignedToRiyadhBank::class)->list);
             });
 
         static::creating(function ($model) {
