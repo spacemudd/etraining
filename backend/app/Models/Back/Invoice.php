@@ -90,17 +90,9 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
     {
         parent::boot();
 
-        if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.com')) {
-            static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
-                $builder->whereNotIn('id', app()->make(CompaniesAssignedToRiyadhBank::class)->list);
-            });
-        }
-
-        if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.net')) {
-            static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
+        static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
                 $builder->whereIn('id', app()->make(CompaniesAssignedToRiyadhBank::class)->list);
             });
-        }
 
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string) Str::uuid();
