@@ -124,6 +124,8 @@ class PaymentCardController extends Controller
                 } else {
                     $payment->setCustomerPhone('966', '553139979');
                 }
+            } else {
+                $payment->setCustomerPhone('966', '553139979');
             }
 
             $payment->setRedirectUrl(url(route('trainees.payment.card.charge')));
