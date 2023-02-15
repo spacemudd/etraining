@@ -80,10 +80,10 @@ export default {
     ],
     data() {
         return {
-            form: this.$inertia.form({
+            form: {
                 invoice_id: null,
                 grand_total_override: null,
-            }),
+            },
         }
     },
     mounted() {
@@ -92,7 +92,13 @@ export default {
     },
     methods: {
         submitForm() {
-            this.form.post(route('trainees.override-payment.card'));
+            axios.post(route('trainees.override-payment.card'), {
+                invoice_id: this.form.invoice_id,
+                grand_total_override: this.form.grand_total_override,
+            })
+                .then(response => {
+                    window.location.href = response.data;
+                });
         }
     }
 }

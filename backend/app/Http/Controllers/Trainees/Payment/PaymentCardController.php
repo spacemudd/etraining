@@ -356,6 +356,6 @@ class PaymentCardController extends Controller
 
         DB::commit();
 
-        return redirect()->to($payment_url);
+        return $payment_url;
     }
 }
