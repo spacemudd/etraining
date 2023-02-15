@@ -249,6 +249,11 @@ class PaymentCardController extends Controller
         ]);
     }
 
+    public function objectionOfAmount()
+    {
+        return Inertia::render('Back/Trainees/ObjectionOfAmount');
+    }
+
     public function uploadReceipt()
     {
         if (request()->invoice_id) {

@@ -550,6 +550,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
         Route::get('payment/options', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'showOptions'])->name('payment.options');
         Route::get('payment/tap', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'showTap'])->name('payment.tap');
+        Route::get('payment/tap/objection', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'objectionOfAmount'])->name('payment.tap.objection');
         Route::post('payment/receipt/store', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'storeReceipt'])->name('payment.upload-receipt.store');
         Route::get('payment/receipt', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'uploadReceipt'])->name('payment.upload-receipt');
 

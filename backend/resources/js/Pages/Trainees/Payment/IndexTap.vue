@@ -47,6 +47,11 @@
                         <div class="mt-4">
                             <p class="text-xl font-bold">{{ $t('words.amount') }}<p>
                             <p class="text-xl">{{ invoiceToPay ? invoiceToPay.grand_total : '' }} {{ $t('words.sr')}}</p>
+                            <a class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
+                               target="_blank"
+                               :href="route('payment.tap.objection', {invoice_id: this.invoiceToPay ? this.invoiceToPay.id : '' })">
+                                اعتراض على المبلغ
+                            </a>
                         </div>
 
                         <button class="mt-5 inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-">
