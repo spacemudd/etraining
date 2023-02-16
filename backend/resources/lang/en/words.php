@@ -565,4 +565,5 @@ return [
     'reports-count' => 'Reports count',
     'manage-trainee-groups' => 'Manage trainee groups',
     'services' => 'Services',
+    'services_manager' => 'Services Manager',
 ];

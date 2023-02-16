@@ -586,4 +586,5 @@ return [
     'reports-count' => 'عدد التقارير',
     'manage-trainee-groups' => 'إدارة مجموعات المتدربات',
     'services' => 'شؤون المتدربات',
+    'services_manager' => 'مديرون شؤون المتدربات',
 ];

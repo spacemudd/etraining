@@ -43,6 +43,7 @@ class Role extends \Spatie\Permission\Models\Role
         if (Str::contains($this->name, 'instructors')) return 4;
         if (Str::contains($this->name, 'trainees')) return 5;
         if (Str::contains($this->name, 'services')) return 6;
+        if (Str::contains($this->name, 'services_manager')) return 7;
     }
 
     public function getRoleDescriptionAttribute()
@@ -52,7 +53,8 @@ class Role extends \Spatie\Permission\Models\Role
         if (Str::contains($this->name, 'instructors')) return __('words.instructors-role-info');
         if (Str::contains($this->name, 'trainees')) return __('words.trainees-role-info');
         if (Str::contains($this->name, 'chasers')) return __('words.chasers-role-info');
-        if (Str::contains($this->name, 'services')) return __('words.chasers-role-info');
+        if (Str::contains($this->name, 'services')) return __('words.services-role-info');
+        if (Str::contains($this->name, 'services_manager')) return __('words.services-manager-role-info');
     }
 
     public function getCanManageUsersAttribute()
@@ -65,6 +67,7 @@ class Role extends \Spatie\Permission\Models\Role
         if (Str::contains($this->name, 'trainees')) return false;
 
         if (Str::contains($this->name, 'services')) return true;
+        if (Str::contains($this->name, 'services_manager')) return true;
     }
 
     /**

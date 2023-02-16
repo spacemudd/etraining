@@ -754,7 +754,8 @@ export default {
             "send-report": "تقرير الارسال",
             "reports-count": "عدد التقارير",
             "manage-trainee-groups": "إدارة مجموعات المتدربات",
-            "services": "شؤون المتدربات"
+            "services": "شؤون المتدربات",
+            "services_manager": "مديرون شؤون المتدربات"
         }
     },
     "en": {
@@ -1454,7 +1455,8 @@ export default {
             "send-report": "Send report",
             "reports-count": "Reports count",
             "manage-trainee-groups": "Manage trainee groups",
-            "services": "Services"
+            "services": "Services",
+            "services_manager": "Services Manager"
         }
     }
 }

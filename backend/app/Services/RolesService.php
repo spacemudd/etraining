@@ -105,5 +105,6 @@ class RolesService
         Role::firstOrCreate(['name' => $team->id.'_finance', 'team_id' => $team->id]);
         Role::firstOrCreate(['name' => $team->id.'_chasers', 'team_id' => $team->id]);
         Role::firstOrCreate(['name' => $team->id.'_services', 'team_id' => $team->id]);
+        Role::firstOrCreate(['name' => $team->id.'_services_manager', 'team_id' => $team->id]);
     }
 }
