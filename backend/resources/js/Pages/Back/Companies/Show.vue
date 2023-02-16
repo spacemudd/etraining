@@ -168,7 +168,7 @@
                                     tabindex="-1"
                                 >
                                     <div v-if="trainees.trainee_group_id">
-                                        {{ trainees.trainee_group.name }}
+                                        <span v-if="trainees.trainee_group">{{ trainees.trainee_group.name }}</span>
                                     </div>
                                 </inertia-link>
                             </td>
