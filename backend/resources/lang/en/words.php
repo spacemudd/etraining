@@ -251,6 +251,7 @@ return [
     'trainees-role-info' => 'Having just the permissions to view their course material',
     'chasers-role-info' => 'Having just the permissions related to chase',
     'services-role-info' => 'Having just the permissions related to chase',
+    'services-manager-role-info' => 'Having just the permissions related to chase',
     'manage' => 'Manage',
     'invite' => 'Invite',
     'import' => 'Import',
