@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Trainees\Payment;
 
 use App\Http\Controllers\Controller;
+use App\Mail\EditAmountMail;
 use App\Models\Back\AccountingLedgerBook;
 use App\Models\Back\Audit;
 use App\Models\Back\Invoice;
 use App\Models\Back\InvoiceItem;
 use App\Models\Back\Trainee;
 use App\Models\TraineeBankPaymentReceipt;
+use App\Models\User;
 use App\Services\CompaniesAssignedToRiyadhBank;
 use App\Services\InvoiceService;
 use Brick\Math\RoundingMode;
@@ -22,6 +24,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Inertia\Inertia;
+use Mail;
 use Tap\TapPayment\Facade\TapPayment;
 use Tap\TapPayment\TapService;
 
@@ -349,11 +352,13 @@ class PaymentCardController extends Controller
 
         $invoice = app()->make(InvoiceService::class)
             ->changeInvoiceCost($request->invoice_id, $request->grand_total_override);
-;
+
         // Get collection of invoices because getPaymentUrl() expects a collection
         $invoices = Invoice::where('id', $invoice->id)->get();
         $payment_url = $this->getPaymentUrl($request->grand_total_override, $invoices);
 
+        Mail::to(['samar.h@ptc-ksa.com'])
+            ->queue(new EditAmountMail($invoices, $invoice));
         DB::commit();
 
         return $payment_url;
