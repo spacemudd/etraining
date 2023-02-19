@@ -13,7 +13,6 @@ class EditAmountMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $invoices;
     public $invoice;
 
     /**
@@ -21,9 +20,9 @@ class EditAmountMail extends Mailable
      *
      * @param \App\Models\Back\Invoice $invoice
      */
-    public function __construct(Invoice $invoices)
+    public function __construct(Invoice $invoice)
     {
-        $this->invoices = $invoices;
+        $this->invoice = $invoice;
     }
 
     /**
@@ -36,7 +35,7 @@ class EditAmountMail extends Mailable
         return $this
             ->subject('تم تغيير مبلغ الفاتورة من قبل المتدربة')
             ->view('emails.edit-amount', [
-                'invoices' => $this->invoices,
+                'invoices' => $this->invoice,
             ]);
     }
 }

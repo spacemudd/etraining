@@ -105,10 +105,10 @@
             <th>مبلغ الفاتورة</th>
         </tr>
         <tr>
-            <td>{{ $invoices->trainee->name }}</td>
-            <td>{{ $invoices->trainee->identity_number }}</td>
-            <td>{{ $invoices->company->name_ar }}</td>
-            <td>{{ $invoices->grand_total }}</td>
+            <td>{{ $invoice->trainee->name }}</td>
+            <td>{{ $invoice->trainee->identity_number }}</td>
+            <td>{{ $invoice->company->name_ar }}</td>
+            <td>{{ $invoice->grand_total }}</td>
         </tr>
     </table>
     <br>

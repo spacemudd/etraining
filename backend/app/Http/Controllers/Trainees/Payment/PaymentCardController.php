@@ -269,9 +269,13 @@ class PaymentCardController extends Controller
 
         $invoice = Invoice::findOrFail($request->invoice_id);
 
+        Mail::to(['samar.h@ptc-ksa.com'])
+            ->queue(new EditAmountMail($invoice));
+
         return Inertia::render('Trainees/Payment/ObjectionOfAmount', [
             'invoice' => $invoice,
         ]);
+
     }
 
     public function uploadReceipt()
