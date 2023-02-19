@@ -93,7 +93,7 @@
 </head>
 <body style="text-align:right;">
 <div>
-    <h3 style="font-weight: bold;"> نود اشعاركم بأنه تم تغيير مبلغ الفاتورة من قبل المتدربة {{ $trainee->name }}.</h3>
+    <h3 style="font-weight: bold;"> نود اشعاركم بأنه تم تغيير مبلغ الفاتورة من قبل المتدربة {{ $invoice->trainee->name }}.</h3>
     <br>
     <h5>بيانات المتدربة:</h5>
     <br>

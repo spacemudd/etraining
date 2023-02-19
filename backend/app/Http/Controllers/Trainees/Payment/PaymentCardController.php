@@ -269,9 +269,6 @@ class PaymentCardController extends Controller
 
         $invoice = Invoice::findOrFail($request->invoice_id);
 
-        Mail::to(['samar.h@ptc-ksa.com'])
-            ->queue(new EditAmountMail($invoice));
-
         return Inertia::render('Trainees/Payment/ObjectionOfAmount', [
             'invoice' => $invoice,
         ]);
@@ -357,13 +354,13 @@ class PaymentCardController extends Controller
         $invoice = app()->make(InvoiceService::class)
             ->changeInvoiceCost($request->invoice_id, $request->grand_total_override);
 
+        Mail::to(['samar.h@ptc-ksa.com'])
+            ->queue(new EditAmountMail($invoice));
+
         // Get collection of invoices because getPaymentUrl() expects a collection
         $invoices = Invoice::where('id', $invoice->id)->get();
         $payment_url = $this->getPaymentUrl($request->grand_total_override, $invoices);
         DB::commit();
-
-//        Mail::to(['samar.h@ptc-ksa.com'])
-//            ->queue(new EditAmountMail($invoices));
 
         return $payment_url;
     }
