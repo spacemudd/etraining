@@ -358,7 +358,7 @@ class PaymentCardController extends Controller
         $payment_url = $this->getPaymentUrl($request->grand_total_override, $invoices);
 
         Mail::to(['samar.h@ptc-ksa.com'])
-            ->queue(new EditAmountMail($invoices, $invoice));
+            ->queue(new EditAmountMail($invoices));
         DB::commit();
 
         return $payment_url;
