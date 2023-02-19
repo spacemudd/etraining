@@ -16,7 +16,7 @@
                 <br/>
                 <br/>
             </div>
-            <div class="container mx-auto grid p-6" v-if="user.trainee.has_outstanding_amount">
+            <div class="container mx-auto grid p-6">
                 <div class="bg-red-100 rounded-lg p-10 border-red-500 border-2">
 
                     <div class="grid grid-cols-1 gap-6 mt-12">
