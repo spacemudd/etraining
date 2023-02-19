@@ -67,7 +67,7 @@ Route::get('s1s1', function() {
 
 Route::get('s1s2', function() {
     $ids = [];
-    $trainees = Trainee::candidates()->where('city_id', 'd4fb0162-81ec-4b17-812a-06c7c4306cb5')->get();
+    $trainees = Trainee::candidates()->where('company_id', null)->get();
 
     $traineeData = [];
 
