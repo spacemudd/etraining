@@ -3,6 +3,7 @@
 use App\Http\Controllers\Back\TraineesGroupsController;
 use App\Http\Controllers\Teaching\TraineeGroupsController;
 use App\Models\Back\Trainee;
+use App\Models\Back\TraineeBlockList;
 
 Route::get('connect-with-me', function() {
     return redirect('https://api.whatsapp.com/send?phone=966541564233');
@@ -67,7 +68,7 @@ Route::get('s1s1', function() {
 
 Route::get('s1s2', function() {
     $ids = [];
-    $trainees = Trainee::candidates()->where('company_id', null)->get();
+    $trainees = TraineeBlockList::all();
 
     $traineeData = [];
 
