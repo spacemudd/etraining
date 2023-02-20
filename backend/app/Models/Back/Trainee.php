@@ -118,7 +118,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
 
         if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.net')) {
             static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
-                $builder->whereIn('company_id', app()->make(CompaniesAssignedToRiyadhBank::class)->getCompaniesToShowForSecondCompanyBeep());
+                $builder->whereIn('company_id', app()->make(CompaniesAssignedToRiyadhBank::class)->getCompaniesToShowForSecondCompany());
             });
         }
 
