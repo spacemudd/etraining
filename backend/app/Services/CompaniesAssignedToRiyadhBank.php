@@ -152,7 +152,7 @@ class CompaniesAssignedToRiyadhBank
         config(['tap-payment.auth.api_key' => env('TAP_PAYMENT_API_KEY_SECONDARY')]);
     }
 
-    public function getCompaniesToShowForSecondCompany()
+    public function getCompanies()
     {
         return array_merge(
             $this->list,
@@ -160,7 +160,7 @@ class CompaniesAssignedToRiyadhBank
         );
     }
 
-    public function getCompaniesToShowForSecondCompanyBeep()
+    public function getCompaniesWithNullable()
     {
         return array_merge(
             $this->list,
