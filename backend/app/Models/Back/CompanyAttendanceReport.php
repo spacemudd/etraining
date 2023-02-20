@@ -52,7 +52,7 @@ class CompanyAttendanceReport extends Model implements Auditable
             }
         });
 
-        if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.com') && auth()->user()->email != 'sara@ptc-ksa.com' && auth()->user()->email != 'mashael.a@ptc-ksa.com') {
+        if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.com') && auth()->user()->email != 'sara@ptc-ksa.com' && auth()->user()->email != 'mashal.a+1@ptc-ksa.com') {
             static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
                 $builder->whereNotIn('company_id', app()->make(CompaniesAssignedToRiyadhBank::class)->list);
             });
