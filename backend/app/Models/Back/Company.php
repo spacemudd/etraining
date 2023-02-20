@@ -4,6 +4,7 @@ namespace App\Models\Back;
 
 use App\Models\SearchableLabels;
 use App\Services\CompaniesAssignedToRiyadhBank;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -58,13 +59,10 @@ class Company extends Model implements SearchableLabels, Auditable
 
         if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.net')) {
             static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
-
-
-                //$new_ids = Company::where('created_at', '>', '2023-02-09')
-                //    ->pluck('id');
-                //$ids = array_merge($new_ids, app()->make(CompaniesAssignedToRiyadhBank::class)->list);
-
-                $builder->whereIn('id', app()->make(CompaniesAssignedToRiyadhBank::class)->list);
+                $companies = Company::where('created_at', '>=', Carbon::parse('2023-02-09'))
+                    ->pluck('id');
+                $old_ids = app()->make(CompaniesAssignedToRiyadhBank::class)->list;
+                $builder->whereIn('id', array_merge($companies->toArray(), $old_ids));
             });
         }
 
