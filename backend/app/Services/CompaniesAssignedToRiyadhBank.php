@@ -138,6 +138,8 @@ class CompaniesAssignedToRiyadhBank
         '74643bc8-c3e5-43d5-93d6-1c3c5e5bf22a',
         'a0bc0fcb-20e3-45a3-a057-be5d47d26d19',
         'c105a37a-2906-486e-bf44-da898d9f4a4d',
+        'b0ff7b33-61f9-4fa5-a051-34872a07e9cb',
+        '736c931c-d344-4cfd-a7b5-77853dd633d4',
     ];
 
     public $removeFromPtcNet = [
