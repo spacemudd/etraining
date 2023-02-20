@@ -16,22 +16,22 @@
                 <br/>
                 <br/>
             </div>
-            <div class="container mx-auto grid p-6">
-                <div class="bg-red-100 rounded-lg p-10 border-red-500 border-2">
+<!--            <div class="container mx-auto grid p-6">-->
+<!--                <div class="bg-red-100 rounded-lg p-10 border-red-500 border-2">-->
 
-                    <div class="grid grid-cols-1 gap-6 mt-12">
-                        <div>
-                            <dev class="inline-flex items-center">
-                                <svg width="40" height="40" class="pt-1 mx-0.5">
-                                    <image class="inline flex  mt-3" xlink:href="https://cdn-icons-png.flaticon.com/512/3389/3389152.png" src="https://cdn-icons-png.flaticon.com/512/3389/3389152.png" width="35" height="35"/>
-                                </svg>
-                                <h1 class="text-2xl text-red-600 font-bold">   &nbsp; نعتذر منكم يوجد عطل في المنصة، نرجو منكم الإنتظار  &nbsp;</h1>
-                            </dev>
-                        </div>
+<!--                    <div class="grid grid-cols-1 gap-6 mt-12">-->
+<!--                        <div>-->
+<!--                            <dev class="inline-flex items-center">-->
+<!--                                <svg width="40" height="40" class="pt-1 mx-0.5">-->
+<!--                                    <image class="inline flex  mt-3" xlink:href="https://cdn-icons-png.flaticon.com/512/3389/3389152.png" src="https://cdn-icons-png.flaticon.com/512/3389/3389152.png" width="35" height="35"/>-->
+<!--                                </svg>-->
+<!--                                <h1 class="text-2xl text-red-600 font-bold">   &nbsp; نعتذر منكم يوجد عطل في المنصة، نرجو منكم الإنتظار  &nbsp;</h1>-->
+<!--                            </dev>-->
+<!--                        </div>-->
 
-                    </div>
-                </div>
-            </div>
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
             <div class="container mx-auto grid pt-6 text-center">
                 <div class="mx-auto">
                     <img width="250" height="350" src="https://i.ibb.co/QXNnGrh/Red-Modern-Job-Vacancy-Your-Story-1.png" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
