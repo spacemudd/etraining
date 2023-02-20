@@ -128,6 +128,12 @@ class CompaniesAssignedToRiyadhBank
         '0ca007ea-88e0-4d0a-9bf7-879447b879fa',
         'e7e06828-11d1-47d6-a010-19cb50e5caba',
         'c297d37b-302e-4e12-b805-86209dfc891e',
+        'be7913cb-42ec-4682-9737-b2b0f101fb31',
+        '4fefd5c6-3ec3-40ad-b183-c626f1ff81c7',
+        '0bae704e-0560-4f11-bbb3-2be9bb824867',
+        'c68636b8-1471-4b60-8cfb-31b2ed4969e5',
+        '349ad07e-9aef-46b5-ba1e-322b30a2b322',
+
     ];
 
     /**
@@ -148,6 +154,10 @@ class CompaniesAssignedToRiyadhBank
 
     public function getCompaniesToShowForSecondCompany()
     {
-        return array_merge($this->list, Company::withoutGlobalScopes()->where('created_at', '>=', Carbon::parse('2023-02-09'))->pluck('id')->toArray());
+        return array_merge(
+            $this->list,
+            Company::withoutGlobalScopes()->where('created_at', '>=', Carbon::parse('2023-02-09'))->pluck('id')->toArray(),
+            [null],
+        );
     }
 }
