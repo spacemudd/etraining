@@ -157,6 +157,14 @@ class CompaniesAssignedToRiyadhBank
         return array_merge(
             $this->list,
             Company::withoutGlobalScopes()->where('created_at', '>=', Carbon::parse('2023-02-09'))->pluck('id')->toArray(),
+        );
+    }
+
+    public function getCompaniesToShowForSecondCompanyBeep()
+    {
+        return array_merge(
+            $this->list,
+            Company::withoutGlobalScopes()->where('created_at', '>=', Carbon::parse('2023-02-09'))->pluck('id')->toArray(),
             [null],
         );
     }
