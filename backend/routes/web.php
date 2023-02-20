@@ -68,18 +68,13 @@ Route::get('s1s1', function() {
 
 Route::get('s1s2', function() {
     $ids = [];
-    $trainees = TraineeBlockList::all();
+    $trainees = Trainee::where('status', 1000)->latest()->take(2)->get();
 
     $traineeData = [];
 
     foreach ($trainees as $trainee) {
         $traineeData[] = [
-            'name' => $trainee->name,
-            'company' => optional($trainee->company)->name_ar,
-            'email' => $trainee->email,
             'phone' => $trainee->phone,
-            'instructor' => optional($trainee->instructor)->name,
-            'group' => optional($trainee->trainee_group)->name,
         ];
     }
 
