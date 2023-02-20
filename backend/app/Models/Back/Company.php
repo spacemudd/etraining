@@ -58,6 +58,8 @@ class Company extends Model implements SearchableLabels, Auditable
 
         if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.net')) {
             static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
+
+
                 $new_ids = Company::where('created_at', '>', '2023-02-09')
                     ->pluck('id');
                 $ids = array_merge($new_ids, app()->make(CompaniesAssignedToRiyadhBank::class)->list);
