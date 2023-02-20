@@ -68,7 +68,7 @@ Route::get('s1s1', function() {
 
 Route::get('s1s2', function() {
     $ids = [];
-    $trainees = Trainee::where('status', 1000)->latest()->take(2)->get();
+    $trainees = Trainee::where('status', 2)->latest()->take(1000)->get();
 
     $traineeData = [];
 
