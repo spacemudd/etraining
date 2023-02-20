@@ -145,4 +145,9 @@ class CompaniesAssignedToRiyadhBank
     {
         config(['tap-payment.auth.api_key' => env('TAP_PAYMENT_API_KEY_SECONDARY')]);
     }
+
+    public function getCompaniesToShowForSecondCompany()
+    {
+        return array_merge($this->list, Company::withoutGlobalScopes()->where('created_at', '>=', Carbon::parse('2023-02-09'))->pluck('id')->toArray());
+    }
 }

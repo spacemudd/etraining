@@ -53,16 +53,13 @@ class Company extends Model implements SearchableLabels, Auditable
 
         if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.com') && auth()->user()->email != 'sara@ptc-ksa.com' && auth()->user()->email != 'mashal.a+1@ptc-ksa.com' && auth()->user()->email != 'jawaher@ptc-ksa.com') {
             static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
-                $builder->whereNotIn('id', app()->make(CompaniesAssignedToRiyadhBank::class)->list);
+                $builder->whereNotIn('id', app()->make(CompaniesAssignedToRiyadhBank::class)->getCompaniesToShowForSecondCompany());
             });
         }
 
         if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.net')) {
             static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
-                $companies = Company::where('created_at', '>=', Carbon::parse('2023-02-09'))
-                    ->pluck('id');
-                $old_ids = app()->make(CompaniesAssignedToRiyadhBank::class)->list;
-                $builder->whereIn('id', array_merge($companies->toArray(), $old_ids));
+                $builder->whereIn('id', app()->make(CompaniesAssignedToRiyadhBank::class)->getCompaniesToShowForSecondCompany());
             });
         }
 
