@@ -6,6 +6,7 @@ use App\Models\SearchableLabels;
 use App\Scope\RiyadhBankScope;
 use App\Scope\TeamScope;
 use App\Services\CompaniesAssignedToRiyadhBank;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
