@@ -143,7 +143,8 @@ class CompaniesAssignedToRiyadhBank
         'ff3e9872-1b77-41f3-8d1d-5ab956e93480',
         'c6bcc65b-ca8f-4742-8358-9c3545a8baf8',
         'e84b9226-ae77-4ac4-88c7-34231edf25a5',
-        '5e9b2938-fdc0-44c5-a63d-7bd9af05438d'
+        '5e9b2938-fdc0-44c5-a63d-7bd9af05438d',
+        '74e14719-0d51-43bd-a5e6-bdbd5601ea5d',
     ];
 
     public $removeFromPtcNet = [
@@ -218,7 +219,6 @@ class CompaniesAssignedToRiyadhBank
         'f2b76708-0110-4e33-a2e1-19f23bd1b49e',
         'f4c1efdc-55c7-422e-b862-c5aa7c1d814a',
         'f58003c1-9e71-40bf-bea5-5d74a7fddb1c',
-        'ff3e9872-1b77-41f3-8d1d-5ab956e93480',
     ];
 
     /**
