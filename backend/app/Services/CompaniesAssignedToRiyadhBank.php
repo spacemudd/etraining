@@ -57,7 +57,6 @@ class CompaniesAssignedToRiyadhBank
         '1a5728e8-a9f3-4151-ae3d-1fba8154a5f1',
         '47a53149-14a5-4f3e-897a-3234f97d3c93',
         //'4049543c-6428-45fc-8345-adbdc1bfe976',
-        '74e14719-0d51-43bd-a5e6-bdbd5601ea5d',
         //'b7307f3e-f84f-41b9-926e-9b9caeffbabb',
         '6a5862a9-4e8b-4b0c-9e7d-8fa54ee57369',
         //'3b11d8b8-ad62-4450-8a73-bbd92dab5d74',
@@ -136,10 +135,15 @@ class CompaniesAssignedToRiyadhBank
         'b9ce6ed5-eeac-4f97-b210-3888d6897a58',
         '04986915-78a4-4643-a783-4cbe6b8e1b68',
         '74643bc8-c3e5-43d5-93d6-1c3c5e5bf22a',
-        'a0bc0fcb-20e3-45a3-a057-be5d47d26d19',
-        'c105a37a-2906-486e-bf44-da898d9f4a4d',
         'b0ff7b33-61f9-4fa5-a051-34872a07e9cb',
         '736c931c-d344-4cfd-a7b5-77853dd633d4',
+        'dae5c08c-aa57-4223-99f4-e16cc2877734',
+        '5c041503-1254-4350-bc4f-62e0c2f2a7b6',
+        '120ffb78-6d41-48bd-a135-6681b18d6c0b',
+        'ff3e9872-1b77-41f3-8d1d-5ab956e93480',
+        'c6bcc65b-ca8f-4742-8358-9c3545a8baf8',
+        'e84b9226-ae77-4ac4-88c7-34231edf25a5',
+        '5e9b2938-fdc0-44c5-a63d-7bd9af05438d'
     ];
 
     public $removeFromPtcNet = [
@@ -175,7 +179,6 @@ class CompaniesAssignedToRiyadhBank
         '6bfcfa9a-7fb5-44a7-acac-8ac395a5b637',
         '6f0c23f4-e2d4-48a1-b678-5758104c8632',
         '71982afb-52b5-4526-8606-1b621e78c390',
-        '74e14719-0d51-43bd-a5e6-bdbd5601ea5d',
         '7562503c-8a7e-498e-8e3c-7b0f674f55ed',
         '795290c4-563c-490d-8473-3ae46a02a41c',
         '84b98e5a-a6cf-4f41-afce-fcbc1120c999',
