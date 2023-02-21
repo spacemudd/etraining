@@ -205,7 +205,7 @@ class CompanyAttendanceReportController extends Controller
         $clone = $original->replicate(['approved_by_id', 'approved_at']);
         $clone->status = CompanyAttendanceReport::STATUS_REVIEW;
         $clone->date_from = $original->date_from->clone()->addMonth();
-        if ($clone->date_from->month === 2) {
+        if ($clone->date_from->month === 1) {
             $clone->date_to = $original->date_to->clone()->addMonth();
         } else {
             $clone->date_to = $original->date_from->endOfMonth()->endOfDay();
