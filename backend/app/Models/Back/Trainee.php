@@ -113,14 +113,16 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.com') && auth()->user()->email != 'sara@ptc-ksa.com' && auth()->user()->email != 'mashal.a+1@ptc-ksa.com' && auth()->user()->email != 'jawaher@ptc-ksa.com') {
             static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
 
-                $builder->whereNotIn('company_id', app()->make(CompaniesAssignedToRiyadhBank::class)->getCompanies());
+                $builder->whereNotIn('company_id', app()->make(CompaniesAssignedToRiyadhBank::class)->getCompanies())
+                    ->orWhereNull('company_id');
             });
         }
 
         if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.net')) {
             static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
                 $builder->whereIn('company_id', app()->make(CompaniesAssignedToRiyadhBank::class)->getCompanies())
-                ->whereNotIn('company_id', app()->make(CompaniesAssignedToRiyadhBank::class)->removeFromPtcNet);
+                    ->whereNotIn('company_id', app()->make(CompaniesAssignedToRiyadhBank::class)->removeFromPtcNet)
+                    ->orWhereNull('company_id');
             });
         }
 
