@@ -47,7 +47,11 @@ tfoot { display:table-footer-group }
             <h1 style="text-align: center;">تقرير الحضور للمتدربات</h1>
         </div>
         <div class="col-2" style="text-align:right;">
-            <img src="{{ public_path('/img/ptc_invoice_logo.png')}}" alt="logo" width="200"/>
+            @if ($report->falls_under_ptc_net)
+                <img src="{{ public_path('/img/logo.png')}}" alt="logo" width="200"/>
+            @else
+                <img src="{{ public_path('/img/ptc_invoice_logo.png')}}" alt="logo" width="200"/>
+            @endif
         </div>
     </div>
 
@@ -144,10 +148,22 @@ tfoot { display:table-footer-group }
                                 </td>
                             </tr>
                     @endforeach
+                <tr>
+                            @if ($report->falls_under_ptc_net)
+                            <td colspan="100%" style="background:#e0e0e0;text-align: center;">** هذا الكشف صحيح مالم تشعر شركة مركز احترافية التدريب من قبل العميل ببريد إلكتروني يفيد بخلاف ذلك خلال ٥ ايام عمل من تاريخه.
+في حال وجود اي استفسارات لا تترددو بالتواصل معنا على البريد الإلكتروني.</td>
+                            @else
+                                <td colspan="100%" style="background:#e0e0e0;text-align: center;">** يعتبر الكشف صحيح ما لم يردنا اي ملاحظات خلال الاسبوع من الارسال</td>
+                            @endif
+                        </tr>
                 </tbody>
         </table>
         <div class="row" style="text-align:center;">
-            <img style="margin:0 auto;border:none;" src="{{ public_path('/img/ptc-signature.png')}}" alt="logo" width="200"/>
+            @if ($report->falls_under_ptc_net)
+                <img style="margin:0 auto;border:none;" src="{{ public_path('/img/ptc_stamp_2023.png')}}" alt="logo" width="200"/>
+            @else
+                <img style="margin:0 auto;border:none;" src="{{ public_path('/img/ptc-signature.png')}}" alt="logo" width="200"/>
+            @endif
         </div>
         </div>
     </div>

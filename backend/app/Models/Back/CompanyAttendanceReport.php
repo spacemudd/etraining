@@ -111,4 +111,10 @@ class CompanyAttendanceReport extends Model implements Auditable
                 ->where('active', true)
                 ->get();
     }
+
+    public function getFallsUnderPtcNetAttribute()
+    {
+        return app()->make(CompaniesAssignedToRiyadhBank::class)
+            ->isCompanyUnderNet($this->company_id);
+    }
 }

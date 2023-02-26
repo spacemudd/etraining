@@ -276,4 +276,14 @@ class CompaniesAssignedToRiyadhBank
         );
     }
 
+    /**
+     * Check if company is under the new management (ptc-ksa.net).
+     *
+     * @param string $company_id
+     * @return bool
+     */
+    function isCompanyUnderNet(string $company_id)
+    {
+        return in_array($company_id, $this->getCompanies());
+    }
 }
