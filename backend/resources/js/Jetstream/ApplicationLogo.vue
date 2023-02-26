@@ -1,3 +1,3 @@
 <template>
-    <img src="/img/logo-lg.png" alt="Logo">
+    <img :src="window.location.href.includes('.com') ? '/img/logo-lg.png' : '/img/logo.png'" alt="Logo">
 </template>
