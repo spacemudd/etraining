@@ -24,6 +24,10 @@ class CompanyAttendanceReportMail extends Mailable implements ShouldQueue
     public function __construct($report_id)
     {
         $this->report_id = $report_id;
+
+        if (CompanyAttendanceReport::find($report_id)->company->is_ptc_net) {
+            app()->make(CompanyMigrationHelper::class)->setMailgunConfig();
+        }
     }
 
     /**
