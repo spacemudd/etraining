@@ -313,7 +313,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
         Route::get('companies/export', [\App\Http\Controllers\Back\CompaniesController::class, 'export'])->name('companies.export');
         Route::resource('companies', \App\Http\Controllers\Back\CompaniesController::class);
-        Route::get('companies/{id}/ptcnet', [CompaniesController::class, 'markAsPtcNet']);
+        Route::get('companies/{id}/ptcnet', [\App\Http\Controllers\Back\CompaniesController::class, 'markAsPtcNet']);
         Route::resource('companies.invoices', \App\Http\Controllers\Back\CompanyInvoicesController::class)->only(['create', 'store']);
 
         //Route::put('user/{id}', [\App\Http\Controllers\Back\UserCompanyController::class, 'index'])->name('user.index');
