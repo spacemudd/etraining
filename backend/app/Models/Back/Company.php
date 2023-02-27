@@ -58,7 +58,7 @@ class Company extends Model implements SearchableLabels, Auditable
             auth()->user()->email != 'jawaher@ptc-ksa.com') {
 
             static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
-                $builder->whereNull('is_ptc_net', null);
+                $builder->whereNull('is_ptc_net');
             });
         }
 
