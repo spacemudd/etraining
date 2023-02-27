@@ -14,7 +14,7 @@ class AddIsPtcNetColToCompanies extends Migration
     public function up()
     {
         Schema::table('companies', function (Blueprint $table) {
-            $table->timestamp('is_ptc_net')->nullable()->after('entity_id');
+            $table->timestamp('is_ptc_net')->nullable()->after('shelf_number');
         });
     }
 
