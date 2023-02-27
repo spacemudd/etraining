@@ -3,8 +3,6 @@
 namespace App\Models\Back;
 
 use App\Models\SearchableLabels;
-use App\Services\CompaniesAssignedToRiyadhBank;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;

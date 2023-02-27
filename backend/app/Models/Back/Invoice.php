@@ -4,18 +4,12 @@ namespace App\Models\Back;
 
 use App\Models\TraineeBankPaymentReceipt;
 use App\Models\User;
-use App\Scope\RiyadhBankScope;
-use App\Services\CompaniesAssignedToRiyadhBank;
-use Brick\Math\RoundingMode;
-use Brick\Money\Context\CustomContext;
-use Brick\Money\Money;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use OwenIt\Auditing\Auditable;
 
@@ -92,13 +86,17 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
 
         if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.com')) {
             static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
-                $builder->whereNotIn('company_id', app()->make(CompaniesAssignedToRiyadhBank::class)->list);
+                $builder->whereHas('company', function ($query) {
+                    $query->whereNull('is_ptc_net');
+                });
             });
         }
 
         if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.net')) {
             static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
-                $builder->whereIn('company_id', app()->make(CompaniesAssignedToRiyadhBank::class)->list);
+                $builder->whereHas('company', function ($query) {
+                    $query->whereNotNull('is_ptc_net');
+                });
             });
         }
 

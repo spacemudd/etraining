@@ -3,7 +3,6 @@
 namespace App\Models\Back;
 
 use App\Models\User;
-use App\Services\CompaniesAssignedToRiyadhBank;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -54,13 +53,17 @@ class CompanyAttendanceReport extends Model implements Auditable
 
         if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.com') && auth()->user()->email != 'sara@ptc-ksa.com' && auth()->user()->email != 'mashal.a+1@ptc-ksa.com') {
             static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
-                $builder->whereNotIn('company_id', app()->make(CompaniesAssignedToRiyadhBank::class)->list);
+                $builder->whereHas('company', function ($query) {
+                    $query->whereNull('is_ptc_net');
+                })->orWhereDoesntHave('company');
             });
         }
 
         if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.net')) {
             static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
-                $builder->whereIn('company_id', app()->make(CompaniesAssignedToRiyadhBank::class)->list);
+                $builder->whereHas('company', function ($query) {
+                    $query->whereNotNull('is_ptc_net');
+                });
             });
         }
     }
@@ -114,7 +117,6 @@ class CompanyAttendanceReport extends Model implements Auditable
 
     public function getFallsUnderPtcNetAttribute()
     {
-        return app()->make(CompaniesAssignedToRiyadhBank::class)
-            ->isCompanyUnderNet($this->company_id);
+        return $this->company->is_ptc_net;
     }
 }
