@@ -31,16 +31,18 @@ class CompanyMigrationHelper
             'mail.mailers.mailgun.secret' => env('MAILGUN_SECRET_PTC_NET'),
             'mail.mailers.mailgun.endpoint' => 'api.mailgun.net',
         ]);
+        (new Illuminate\Mail\MailServiceProvider(app()))->register();
     }
 
     public static function setMailgunConfigStatic()
     {
         config([
-            'mail.mailers.from.address' => 'noreply@mg.ptc-ksa.net',
-            'mail.mailers.from.name' => 'PTC-KSA.NET',
+            'mail.from.address' => 'noreply@mg.ptc-ksa.net',
+            'mail.from.name' => 'PTC-KSA.NET',
             'mail.mailers.mailgun.domain' => env('MAILGUN_DOMAIN_PTC_NET'),
             'mail.mailers.mailgun.secret' => env('MAILGUN_SECRET_PTC_NET'),
             'mail.mailers.mailgun.endpoint' => 'api.mailgun.net',
         ]);
+        (new Illuminate\Mail\MailServiceProvider(app()))->register();
     }
 }
