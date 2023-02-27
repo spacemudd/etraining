@@ -182,4 +182,16 @@ class CompaniesController extends Controller
     {
         return Excel::download(new CompaniesExport, now()->format('Y-m-d').'-companies.xlsx');
     }
+
+    public function markAsPtcNet($id)
+    {
+        $company = Company::findOrFail($id);
+        if ($company->is_ptc_net) {
+            $company->update(['is_ptc_net' => null]);
+        } else {
+            $company->update(['is_ptc_net' => now()]);
+        }
+
+        return redirect()->route('back.companies.show', $id);
+    }
 }

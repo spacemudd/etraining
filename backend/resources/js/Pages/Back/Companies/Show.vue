@@ -12,6 +12,12 @@
             <div class="grid grid-cols-4 gap-6">
                 <div class="col-span-4 flex items-center justify-end bg-gray-50 text-right">
                     <inertia-link
+                        v-if="$page.props.user.email === 'shafiqalshaar@clarastars.com'"
+                        :href="`/back/companies/${this.company.id}/ptcnet`"
+                        class="flex items-center justify-start rounded-md mx-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
+                        Mark as PTCNet
+                    </inertia-link>
+                    <inertia-link
                         :href="`/back/companies/${this.company.id}/edit`"
                         class="flex items-center justify-start rounded-md mx-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right"
                     >
