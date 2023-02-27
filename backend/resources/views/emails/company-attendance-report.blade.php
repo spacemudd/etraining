@@ -4,8 +4,8 @@
 
 مرفق لكم كشف الحضور والانصراف للمتدربين.
 
-تحياتنا لكم،
+@lang('words.with-regards')
+
 شركة مركز احترافية التدريب
 
-@lang('words.with-regards')
 @endcomponent
