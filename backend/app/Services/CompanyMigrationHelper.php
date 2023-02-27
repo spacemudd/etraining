@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Back\Company;
+use Illuminate\Mail\MailServiceProvider;
 
 class CompanyMigrationHelper
 {
@@ -31,7 +32,7 @@ class CompanyMigrationHelper
             'mail.mailers.mailgun.secret' => env('MAILGUN_SECRET_PTC_NET'),
             'mail.mailers.mailgun.endpoint' => 'api.mailgun.net',
         ]);
-        (new Illuminate\Mail\MailServiceProvider(app()))->register();
+        (new MailServiceProvider(app()))->register();
     }
 
     public static function setMailgunConfigStatic()
@@ -43,6 +44,6 @@ class CompanyMigrationHelper
             'mail.mailers.mailgun.secret' => env('MAILGUN_SECRET_PTC_NET'),
             'mail.mailers.mailgun.endpoint' => 'api.mailgun.net',
         ]);
-        (new Illuminate\Mail\MailServiceProvider(app()))->register();
+        (new MailServiceProvider(app()))->register();
     }
 }
