@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Back\CompaniesController;
 use App\Http\Controllers\Back\TraineesGroupsController;
 use App\Http\Controllers\Teaching\TraineeGroupsController;
 use App\Models\Back\Trainee;
@@ -127,7 +126,7 @@ Route::get('s1s32', function() {
 
     foreach ($trainees as $trainee) {
         $traineeData[] = [
-            'phone' => $trainee['phone'],
+            'phone' => $trainee->phone,
         ];
     }
 
@@ -307,7 +306,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::delete('/settings/trainees-applications/required-files/{id}', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'delete'])->name('settings.trainees-application.required-files.delete');
 
         Route::get('companies/export', [\App\Http\Controllers\Back\CompaniesController::class, 'export'])->name('companies.export');
-        Route::get('companies/{id}/ptcnet', [CompaniesController::class, 'markAsPtcNet']);
         Route::resource('companies', \App\Http\Controllers\Back\CompaniesController::class);
         Route::resource('companies.invoices', \App\Http\Controllers\Back\CompanyInvoicesController::class)->only(['create', 'store']);
 
