@@ -56,16 +56,15 @@ class Company extends Model implements SearchableLabels, Auditable
             auth()->user()->email != 'sara@ptc-ksa.com' &&
             auth()->user()->email != 'mashal.a+1@ptc-ksa.com' &&
             auth()->user()->email != 'jawaher@ptc-ksa.com') {
+
             static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
-                $builder->whereNotIn('id', app()->make(CompaniesAssignedToRiyadhBank::class)
-                    ->getCompanies());
+                $builder->whereNull('is_ptc_net', null);
             });
         }
 
         if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.net')) {
             static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
-                $builder->whereIn('id', app()->make(CompaniesAssignedToRiyadhBank::class)->getCompanies())
-                ->whereNotIn('id', app()->make(CompaniesAssignedToRiyadhBank::class)->removeFromPtcNet);
+                $builder->whereNotNull('is_ptc_net');
             });
         }
 
