@@ -426,8 +426,8 @@ class TraineesController extends Controller
             }
         }
 
-        Trainee::where('instructor_id', $request->instructor_id)->update(['instructor_id' => null]);
-        Trainee::whereIn('id', $trainee_ids)->update(['instructor_id' => $request->instructor_id]);
+        Trainee::withoutGlobalScopes()->where('instructor_id', $request->instructor_id)->update(['instructor_id' => null]);
+        Trainee::withoutGlobalScopes()->whereIn('id', $trainee_ids)->update(['instructor_id' => $request->instructor_id]);
 
         \DB::commit();
 
