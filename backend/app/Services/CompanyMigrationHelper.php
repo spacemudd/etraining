@@ -28,6 +28,6 @@ class CompanyMigrationHelper
         config(['mail.mailers.mailgun.secret' => env('MAILGUN_SECRET_PTC_NET')]);
         config(['mail.mailers.from.address' => 'noreply@ptc-ksa.net']);
         config(['mail.mailers.from.name' => 'PTC-KSA.NET']);
-        config(['mail.mailers.mailgun.endpoint' => 'api.mailgun.net']);
+        config(['mail.mailers.mailgun.endpoint' => 'api.mailgun.net/v3/mg.ptc-ksa.net']);
     }
 }
