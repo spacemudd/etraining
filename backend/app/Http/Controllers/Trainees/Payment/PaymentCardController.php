@@ -9,7 +9,7 @@ use App\Models\Back\Audit;
 use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
 use App\Models\TraineeBankPaymentReceipt;
-use App\Services\CompaniesAssignedToRiyadhBank;
+use App\Services\CompanyMigrationHelper;
 use App\Services\InvoiceService;
 use Brick\PhoneNumber\PhoneNumber;
 use Exception;
@@ -75,7 +75,7 @@ class PaymentCardController extends Controller
             $tap_service = new TapService();
             $tap_invoice = $tap_service->findCharge($request->tap_id);
         } catch (\Exception $exception) {
-            app()->make(CompaniesAssignedToRiyadhBank::class)
+            app()->make(CompanyMigrationHelper::class)
                 ->setSecondaryTap();
             $tap_service = new TapService();
             $tap_invoice = $tap_service->findCharge($request->tap_id);
@@ -105,7 +105,7 @@ class PaymentCardController extends Controller
     {
         try {
             $trainee = optional(auth()->user())->trainee;
-            app()->make(CompaniesAssignedToRiyadhBank::class)
+            app()->make(CompanyMigrationHelper::class)
                 ->setTapKey($trainee->company_id);
 
             $payment = TapPayment::createCharge();
@@ -157,7 +157,7 @@ class PaymentCardController extends Controller
 
         $invoice_ids = explode(',', json_decode($request->metadata['invoices']));
         $invoice = Invoice::withTrashed()->find($invoice_ids[0]);
-        app()->make(CompaniesAssignedToRiyadhBank::class)
+        app()->make(CompanyMigrationHelper::class)
             ->setTapKey($invoice->company_id);
 
         if ($status === 'CAPTURED') {

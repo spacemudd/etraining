@@ -9,6 +9,7 @@ use App\Models\Back\Company;
 use App\Models\Back\CompanyAttendanceReport;
 use App\Models\Back\CompanyAttendanceReportsTrainee;
 use App\Services\CompanyAttendanceReportService;
+use App\Services\CompanyMigrationHelper;
 use Carbon\Carbon;
 use Excel;
 use Illuminate\Http\Request;
@@ -181,6 +182,10 @@ class CompanyAttendanceReportController extends Controller
         $report->approved_at = now();
         $report->save();
 
+        if ($report->company->is_ptc_net) {
+            app()->make(CompanyMigrationHelper::class)->setMailgunConfig();
+        }
+
         Mail::to($report->to_emails ? explode(', ', $report->to_emails) : null)
             ->cc($report->cc_emails ? explode(', ', $report->cc_emails) : null)
             ->send(new CompanyAttendanceReportMail($report->id));
@@ -191,6 +196,11 @@ class CompanyAttendanceReportController extends Controller
     public function send($id)
     {
         $report = CompanyAttendanceReport::findOrFail($id);
+
+        if ($report->company->is_ptc_net) {
+            app()->make(CompanyMigrationHelper::class)->setMailgunConfig();
+        }
+
         Mail::to($report->to_emails ? explode(', ', $report->to_emails) : null)
             ->cc($report->cc_emails ? explode(', ', $report->cc_emails) : null)
             ->send(new CompanyAttendanceReportMail($report->id));

@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\Back\Company;
 
-class CompaniesAssignedToRiyadhBank
+class CompanyMigrationHelper
 {
     /**
      * @param string $company_id
@@ -20,5 +20,11 @@ class CompaniesAssignedToRiyadhBank
     public function setSecondaryTap()
     {
         config(['tap-payment.auth.api_key' => env('TAP_PAYMENT_API_KEY_SECONDARY')]);
+    }
+
+    public function setMailgunConfig()
+    {
+        config(['mail.mailers.mailgun.domain' => env('MAILGUN_DOMAIN_PTC_NET')]);
+        config(['mail.mailers.mailgun.secret' => env('MAILGUN_SECRET_PTC_NET')]);
     }
 }
