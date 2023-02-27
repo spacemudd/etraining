@@ -36,6 +36,7 @@ class Company extends Model implements SearchableLabels, Auditable
         'address',
         'monthly_subscription_per_trainee',
         'shelf_number',
+        'is_ptc_net',
     ];
 
     protected $appends = [
