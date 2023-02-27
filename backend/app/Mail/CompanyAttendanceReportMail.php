@@ -4,6 +4,7 @@ namespace App\Mail;
 
 use App\Models\Back\CompanyAttendanceReport;
 use App\Services\CompanyAttendanceReportService;
+use App\Services\CompanyMigrationHelper;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -26,7 +27,7 @@ class CompanyAttendanceReportMail extends Mailable implements ShouldQueue
         $this->report_id = $report_id;
 
         if (CompanyAttendanceReport::find($report_id)->company->is_ptc_net) {
-            app()->make(CompanyMigrationHelper::class)->setMailgunConfig();
+            CompanyMigrationHelper::setMailgunConfigStatic();
         }
     }
 
