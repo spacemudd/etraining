@@ -1,4 +1,4 @@
-@component($report->company->is_ptc_net ? 'mail::message_ptc_net' : 'mail::message')
+@component('mail::message_ptc_net')
 # @lang('words.hi-there')!
 
 تم اصدار تقرير الحضور للمتدربات ({{ optional($report->approved_at)->setTimezone('Asia/Riyadh')->toDateString() }})، ويرجى الإطلاع على المرفق
