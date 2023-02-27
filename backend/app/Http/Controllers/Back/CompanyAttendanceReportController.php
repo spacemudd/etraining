@@ -182,9 +182,9 @@ class CompanyAttendanceReportController extends Controller
         $report->approved_at = now();
         $report->save();
 
-        if ($report->company->is_ptc_net) {
-            app()->make(CompanyMigrationHelper::class)->setMailgunConfig();
-        }
+        //if ($report->company->is_ptc_net) {
+        //    app()->make(CompanyMigrationHelper::class)->setMailgunConfig();
+        //}
 
         Mail::to($report->to_emails ? explode(', ', $report->to_emails) : null)
             ->cc($report->cc_emails ? explode(', ', $report->cc_emails) : null)
@@ -197,9 +197,9 @@ class CompanyAttendanceReportController extends Controller
     {
         $report = CompanyAttendanceReport::findOrFail($id);
 
-        if ($report->company->is_ptc_net) {
-            app()->make(CompanyMigrationHelper::class)->setMailgunConfig();
-        }
+        //if ($report->company->is_ptc_net) {
+        //    app()->make(CompanyMigrationHelper::class)->setMailgunConfig();
+        //}
 
         Mail::to($report->to_emails ? explode(', ', $report->to_emails) : null)
             ->cc($report->cc_emails ? explode(', ', $report->cc_emails) : null)
