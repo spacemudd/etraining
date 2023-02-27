@@ -24,19 +24,23 @@ class CompanyMigrationHelper
 
     public function setMailgunConfig()
     {
-        config(['mail.mailers.from.address' => 'noreply@ptc-ksa.net']);
-        config(['mail.mailers.from.name' => 'PTC-KSA.NET']);
-        config(['mail.mailers.mailgun.domain' => env('MAILGUN_DOMAIN_PTC_NET')]);
-        config(['mail.mailers.mailgun.secret' => env('MAILGUN_SECRET_PTC_NET')]);
-        config(['mail.mailers.mailgun.endpoint' => 'api.mailgun.net']);
+        config([
+            'mail.mailers.from.address' => 'noreply@mg.ptc-ksa.net',
+            'mail.mailers.from.name' => 'PTC-KSA.NET',
+            'mail.mailers.mailgun.domain' => env('MAILGUN_DOMAIN_PTC_NET'),
+            'mail.mailers.mailgun.secret' => env('MAILGUN_SECRET_PTC_NET'),
+            'mail.mailers.mailgun.endpoint' => 'api.mailgun.net',
+        ]);
     }
 
     public static function setMailgunConfigStatic()
     {
-        config(['mail.mailers.from.address' => 'noreply@ptc-ksa.net']);
-        config(['mail.mailers.from.name' => 'PTC-KSA.NET']);
-        config(['mail.mailers.mailgun.domain' => env('MAILGUN_DOMAIN_PTC_NET')]);
-        config(['mail.mailers.mailgun.secret' => env('MAILGUN_SECRET_PTC_NET')]);
-        config(['mail.mailers.mailgun.endpoint' => 'api.mailgun.net']);
+        config([
+            'mail.mailers.from.address' => 'noreply@mg.ptc-ksa.net',
+            'mail.mailers.from.name' => 'PTC-KSA.NET',
+            'mail.mailers.mailgun.domain' => env('MAILGUN_DOMAIN_PTC_NET'),
+            'mail.mailers.mailgun.secret' => env('MAILGUN_SECRET_PTC_NET'),
+            'mail.mailers.mailgun.endpoint' => 'api.mailgun.net',
+        ]);
     }
 }
