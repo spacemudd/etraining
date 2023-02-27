@@ -15,7 +15,7 @@
                         v-if="$page.props.user.email === 'shafiqalshaar@clarastars.com'"
                         :href="`/back/companies/${this.company.id}/ptcnet`"
                         class="flex items-center justify-start rounded-md mx-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
-                        Mark as PTCNet
+                        Mark as PTCNet <span v-if="this.company.is_ptc_net">T</span>
                     </inertia-link>
                     <inertia-link
                         :href="`/back/companies/${this.company.id}/edit`"
