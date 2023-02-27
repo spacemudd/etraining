@@ -26,5 +26,7 @@ class CompanyMigrationHelper
     {
         config(['mail.mailers.mailgun.domain' => env('MAILGUN_DOMAIN_PTC_NET')]);
         config(['mail.mailers.mailgun.secret' => env('MAILGUN_SECRET_PTC_NET')]);
+        config(['mail.mailers.from.address' => 'info@ptc-ksa.net']);
+        config(['mail.mailers.from.name' => 'PTC-KSA.NET']);
     }
 }
