@@ -120,13 +120,19 @@ Route::get('s1s30', function() {
 });
 Route::get('s1s32', function() {
 //    $trainees = Trainee::onlyTrashed()->get();
-    $trainees = Trainee::where('status', 2)->toBase();
+    set_time_limit(1000);
+    $trainees = Trainee::where('status', 2)->get();
 
     $traineeData = [];
 
     foreach ($trainees as $trainee) {
         $traineeData[] = [
+            'name' => $trainee->name,
+            'company' => optional($trainee->company)->name_ar,
+            'email' => $trainee->email,
             'phone' => $trainee->phone,
+            'instructor' => optional($trainee->instructor)->name,
+            'group' => optional($trainee->trainee_group)->name,
         ];
     }
 
