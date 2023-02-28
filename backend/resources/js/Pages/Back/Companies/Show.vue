@@ -64,6 +64,8 @@
                 </template>
             </div>
 
+            <span v-if="this.company.is_ptc_net">--</span>
+
             <jet-section-border></jet-section-border>
 
             <div
