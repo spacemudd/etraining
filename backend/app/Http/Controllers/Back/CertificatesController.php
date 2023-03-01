@@ -27,7 +27,7 @@ class CertificatesController extends Controller
         $filepath = storage_path('app').'/'.$path;
 
         $import = new CertificatesImport();
-        $import->course_id = Course::find('6b83be85-0f0f-4758-9d5e-840f97c87519')->id ?? Course::first()->id;
+        $import->course_id = Course::find('35550219-8b7f-4b5d-bc3a-6248617fa298')->id ?? Course::first()->id;
         $import->status = CertificatesImport::STATUS_IMPORTING;
         $import->processed_count = 0;
         $import->total_count = 0;
