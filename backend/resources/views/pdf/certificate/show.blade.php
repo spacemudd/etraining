@@ -57,9 +57,9 @@
         <p style="margin-top:2.5rem;">وجنسيتها سعودية بموجب السجل المدني رقم "{{ $certificate->trainee->identity_number }}"</p>
         <p style="margin-top:2.5rem;">قـــد حضرت دورة ({{ $certificate->course->name_ar }}) عدد ساعاتها التدريبية 16 ساعة</p>
         <p style="margin-top:2.5rem;">وعدد أيامها التدريبية (8) يوم والمنعقدة في الفترة من </p>
-        <p style="margin-top:2.5rem;">(3 - 11 - 1442هـ  إلى 4 - 12 - 1442هـ  )</p>
+        <p style="margin-top:2.5rem;">(29 - 5 - 1443هـ  إلى 27 - 9 - 1443هـ  )</p>
         <p style="margin-top:2.5rem;">والمعتمدة من المؤسسة العامة للتدريب التقني والمهني برقم </p>
-        <p style="margin-top:2.5rem;">(192258735)</p>
+        <p style="margin-top:2.5rem;">(192214933)</p>
         <p style="margin-top:5rem;">والله الموفق،،،</p>
         <div class="row" style="margin-top: 2rem;">
             <div class="col-7">
@@ -68,8 +68,8 @@
             </div>
             <div class="col-4" style="text-align: right;">
                 <p class="small-text">
-                    <b>حررت بتاريخ:    4 / 12  /1442  هـ </b><br/>
-                    <b>الموافق:            14 /  7 /2021 م</b>
+                    <b>حررت بتاريخ:    27 / 9  /1443  هـ </b><br/>
+                    <b>الموافق:            28 /  4 /2022 م</b>
                 </p>
                 <p class="small-text">ملاحظة: أي كشط او تعديل على الشهادة تعتبر لاغية</p>
             </div>
