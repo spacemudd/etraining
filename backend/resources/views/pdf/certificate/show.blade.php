@@ -56,7 +56,7 @@
         <p style="margin-top:2.5rem;">يشهد مركز احترافية المدرب للتدريب بأن المتدربة  "{{ $certificate->trainee->name }}"</p>
         <p style="margin-top:2.5rem;">وجنسيتها سعودية بموجب السجل المدني رقم "{{ $certificate->trainee->identity_number }}"</p>
         <p style="margin-top:2.5rem;">قـــد حضرت دورة ({{ $certificate->course->name_ar }}) عدد ساعاتها التدريبية 16 ساعة</p>
-        <p style="margin-top:2.5rem;">وعدد أيامها التدريبية (4) يوم والمنعقدة في الفترة من </p>
+        <p style="margin-top:2.5rem;">وعدد أيامها التدريبية (8) يوم والمنعقدة في الفترة من </p>
         <p style="margin-top:2.5rem;">(3 - 11 - 1442هـ  إلى 4 - 12 - 1442هـ  )</p>
         <p style="margin-top:2.5rem;">والمعتمدة من المؤسسة العامة للتدريب التقني والمهني برقم </p>
         <p style="margin-top:2.5rem;">(192258735)</p>
