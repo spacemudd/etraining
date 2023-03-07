@@ -50,21 +50,18 @@ class Company extends Model implements SearchableLabels, Auditable
         parent::boot();
         //static::addGlobalScope(new TeamScope());
 
-        if (Str::contains(
-            optional(auth()->user())->email, 'ptc-ksa.com') &&
-            auth()->user()->email != 'sara@ptc-ksa.com' &&
-            auth()->user()->email != 'mashal.a+1@ptc-ksa.com' &&
-            auth()->user()->email != 'jawaher@ptc-ksa.com') {
+        if (!in_array(auth()->user()->email, ['sara@ptc-ksa.com', 'mashal.a+1@ptc-ksa.com', 'jawaher@ptc-ksa.com'])) {
+            if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.com')) {
+                static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
+                    $builder->whereNull('is_ptc_net');
+                });
+            }
 
-            static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
-                $builder->whereNull('is_ptc_net');
-            });
-        }
-
-        if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.net')) {
-            static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
-                $builder->whereNotNull('is_ptc_net');
-            });
+            if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.net')) {
+                static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
+                    $builder->whereNotNull('is_ptc_net');
+                });
+            }
         }
 
         static::creating(function ($model) {
