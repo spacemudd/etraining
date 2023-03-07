@@ -96,7 +96,7 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
             static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
                 $builder->whereHas('company', function ($query) {
                     $query->whereNotNull('is_ptc_net');
-                });
+                })->where('created_at', '>=', '2023-02-27');
             });
         }
 
