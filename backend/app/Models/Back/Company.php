@@ -28,6 +28,7 @@ class Company extends Model implements SearchableLabels, Auditable
     protected $fillable = [
         'name_ar',
         'name_en',
+        'code',
         'cr_number',
         'contact_number',
         'company_rep',
