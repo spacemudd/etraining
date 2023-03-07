@@ -115,6 +115,10 @@
                 <div class="md:col-span-4 sm:col-span-1">
                     <div class="flex justify-end items-center gap-4">
                         <post-trainees-button :company-id="company.id"></post-trainees-button>
+                        <inertia-link class="inline-flex items-center px-4 py-2 bg-orange-300 border border-transparent rounded-md font-semibold text-xs text-black uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
+                           :href="route('back.companies.trainees.notification', {company_id: company.id})">
+                            <span>{{ $t('words.send-sms-to-all') }}</span>
+                        </inertia-link>
                         <inertia-link class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
                            :href="route('back.companies.trainees.company-trainee-link-audit', {company_id: company.id})">
                             <span>{{ $t('words.history') }}</span>
