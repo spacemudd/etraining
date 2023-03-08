@@ -6,7 +6,7 @@ use App\Actions\Fortify\CreateNewTraineeUser;
 use App\Http\Controllers\Controller;
 use App\Jobs\ExportArchivedTraineesToExcelJob;
 use App\Jobs\ExportTraineesToExcelJob;
-use App\Mail\EditAmountMail;
+use App\Mail\DeletedTraineeMail;
 use App\Models\Back\AttendanceReportRecord;
 use App\Models\Back\AttendanceReportRecordWarning;
 use App\Models\Back\Audit;
@@ -651,7 +651,7 @@ class TraineesController extends Controller
         //}
         $users = User::permission('receive-notification-on-trainee-delete')->get();
         Mail::to($users)
-            ->queue(new EditAmountMail($trainee, auth()->user()->email));
+            ->queue(new DeletedTraineeMail($trainee, auth()->user()->email));
 
         DB::commit();
         return redirect()->route('back.trainees.index');
