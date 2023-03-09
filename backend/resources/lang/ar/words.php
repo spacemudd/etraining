@@ -589,4 +589,6 @@ return [
     'services' => 'شؤون المتدربات',
     'services_manager' => 'مديرون شؤون المتدربات',
     'view-permissions' => 'عرض الصلاحيات',
+    'verify_code' => 'أدخل رمز التحقق',
+    'send_again' => 'إعادة الارسال',
 ];
