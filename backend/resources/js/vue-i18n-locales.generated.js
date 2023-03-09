@@ -757,7 +757,7 @@ export default {
             "manage-trainee-groups": "إدارة مجموعات المتدربات",
             "services": "شؤون المتدربات",
             "services_manager": "مديرون شؤون المتدربات",
-            "block_trainees": "حذف المتدربات"
+            "view-permissions": "عرض الصلاحيات"
         }
     },
     "en": {
@@ -1460,7 +1460,7 @@ export default {
             "manage-trainee-groups": "Manage trainee groups",
             "services": "Services",
             "services_manager": "Services Manager",
-            "block_trainees": "Block Trainees"
+            "view-permissions": "View Permissions"
         }
     }
 }

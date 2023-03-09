@@ -567,4 +567,5 @@ return [
     'manage-trainee-groups' => 'Manage trainee groups',
     'services' => 'Services',
     'services_manager' => 'Services Manager',
+    'view-permissions' => 'View Permissions',
 ];

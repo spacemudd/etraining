@@ -588,4 +588,5 @@ return [
     'manage-trainee-groups' => 'إدارة مجموعات المتدربات',
     'services' => 'شؤون المتدربات',
     'services_manager' => 'مديرون شؤون المتدربات',
+    'view-permissions' => 'عرض الصلاحيات',
 ];

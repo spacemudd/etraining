@@ -31,6 +31,7 @@ class RolesService
         'approve-invoices',
         'approve-instructor-applicants',
         'edit-permissions',
+        'view-permissions',
         'download-attendance-sheet-for-course-batch',
         'view-company-trainees',
         'reset-trainees-account-password',
