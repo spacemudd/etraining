@@ -756,7 +756,8 @@ export default {
             "reports-count": "عدد التقارير",
             "manage-trainee-groups": "إدارة مجموعات المتدربات",
             "services": "شؤون المتدربات",
-            "services_manager": "مديرون شؤون المتدربات"
+            "services_manager": "مديرون شؤون المتدربات",
+            "block_trainees": "حذف المتدربات"
         }
     },
     "en": {
@@ -1458,7 +1459,8 @@ export default {
             "reports-count": "Reports count",
             "manage-trainee-groups": "Manage trainee groups",
             "services": "Services",
-            "services_manager": "Services Manager"
+            "services_manager": "Services Manager",
+            "block_trainees": "Block Trainees"
         }
     }
 }

@@ -52,6 +52,7 @@ class RolesService
         'override-training-costs',
         'companies-report',
         'manage-trainee-groups',
+        'block-trainee',
         // add the same name of the role to translation files.
     ];
 
