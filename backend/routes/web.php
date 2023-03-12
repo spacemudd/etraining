@@ -30,7 +30,7 @@ Route::get('verify', function() {
         }
     }';
 
-    $publicKey = 'EAAI2VvBE288BAGyyUNs9vOWOZCc2IG3wjnyIMcgZCILCpkljfCc8W3EzDvzzLKjhmz5HQraqzLjeFehyZCA9U1MspR24tQMcjPDSBqENlwvrzYiYGZB08gKdCWV0X7YYvBpC3ez0xQh7jKw4s1KlEs63tL09AQoNAZBj3goZClEtMuNZBxxvVRW';
+    $publicKey = env('WA_ACCESS_TOKEN');
 
     $client = new \GuzzleHttp\Client([
         'headers' => [
@@ -45,7 +45,11 @@ Route::get('verify', function() {
 
     // show verify page
 });
-Route::get('verify-code', [\App\Http\Controllers\VerificationsController::class, 'index'])->name('verify-code');
+Route::post('login/2fa-code', [\App\Http\Controllers\VerificationsController::class, 'sendCode'])->name('login.2fa-code');
+Route::get('login/verify-code', [\App\Http\Controllers\VerificationsController::class, 'show'])->name('login.verify');
+Route::post('login/verify-code', [\App\Http\Controllers\VerificationsController::class, 'verifyCode'])->name('login.verify-code');
+
+
 Route::post('tap', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'storeTapReceipt']);
 
 Route::get('version', function() {

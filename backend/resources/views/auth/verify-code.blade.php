@@ -12,12 +12,14 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('login') }}">
+        <form method="POST" action="{{ route('login.verify-code') }}">
             @csrf
+
+            <x-jet-input type="hidden" name="email" value="{{ $email }}" />
 
             <div>
                 <x-jet-label value="{{ __('words.verify_code') }}" />
-                <x-jet-input dir="ltr" class="block mt-1 w-full" type="email" name="text" required autofocus />
+                <x-jet-input dir="ltr" class="block mt-1 w-full" type="text" name="code" required autofocus />
             </div>
 
             <div class="flex items-center justify-end mt-4">
@@ -25,9 +27,9 @@
                 <x-jet-button class="ltr:ml-4 rtl:mr-4 tracking-normal">
                     {{ __('words.login') }}
                 </x-jet-button>
-                <x-jet-button class="ltr:ml-4 rtl:mr-4 tracking-normal">
-                    {{ __('words.send_again') }}
-                </x-jet-button>
+                {{--<x-jet-button class="ltr:ml-4 rtl:mr-4 tracking-normal">--}}
+                {{--    {{ __('words.send_again') }}--}}
+                {{--</x-jet-button>--}}
             </div>
         </form>
     </x-jet-authentication-card>
