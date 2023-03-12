@@ -18,4 +18,19 @@ class CompaniesNotificationController extends Controller
         $company = Company::findOrFail($company_id);
         return Inertia::render('Back/Companies/Notification/Index', compact('company'));
     }
+
+    /**
+     * @param $company_id
+     * @param \Illuminate\Http\Request $request
+     * @return void
+     */
+    public function store($company_id, Request $request)
+    {
+        $request->validate([
+            'body' => 'required|string|max:400',
+        ]);
+
+        return redirect()->route('back.companies.show', $company_id)
+            ->with('success', 'Notification sent successfully!');
+    }
 }

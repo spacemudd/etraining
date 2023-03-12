@@ -10,11 +10,16 @@
                 ]"
             ></breadcrumb-container>
 
-            <div class="grid grid-cols-6">
+            <div class="grid grid-cols-12">
                 <div class="col-span-6">
                     <p>{{ $t('words.sms-body') }}</p>
-                    <form action="">
-                        <jet-textarea id="notes" type="textarea" class="mt-1 block w-full" v-model="form.body" />
+                    <form @submit.prevent="sendForm">
+                        <jet-textarea id="notes" type="textarea" class="mt-1 block w-full" v-model="form.body" max="320" />
+                        <jet-button :class="{ 'opacity-25': $wait.is('SAVING_CONTRACT') }"
+                                    class="mt-5"
+                                    :disabled="$wait.is('SAVING_CONTRACT')">
+                            {{ $t('words.send') }}
+                        </jet-button>
                     </form>
                 </div>
             </div>
@@ -65,15 +70,19 @@ export default {
     },
     data() {
         return {
-            form: {
-                body: '',
-            }
+            form: this.$inertia.form({
+                    body: '',
+                }, {
+                    bag: 'sendNotification',
+                })
         }
     },
     mounted() {
     },
     methods: {
-
+        sendForm() {
+            this.form.post(route('back.companies.trainees.notification.send', {company_id: this.company.id}));
+        }
     }
 }
 </script>
