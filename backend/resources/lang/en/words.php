@@ -568,4 +568,8 @@ return [
     'services' => 'Services',
     'services_manager' => 'Services Manager',
     'view-permissions' => 'View Permissions',
+    'verify_code' => 'Verify Code',
+    'send_again' => 'Send Again',
+
+
 ];

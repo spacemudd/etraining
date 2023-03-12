@@ -12,17 +12,17 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('login') }}">
+        <form id="loginForm" method="POST" action="{{ route('login') }}">
             @csrf
 
             <div>
                 <x-jet-label value="{{ __('words.email') }}" />
-                <x-jet-input dir="ltr" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
+                <x-jet-input id="email" dir="ltr" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
             </div>
 
-            <div class="mt-4">
+            <div class="mt-4" id="hideFor2Fa">
                 <x-jet-label value="{{ __('words.password') }}" />
-                <x-jet-input dir="ltr" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
+                <x-jet-input id="password" dir="ltr" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
             </div>
 
             <div class="block mt-4">
@@ -44,5 +44,32 @@
                 </x-jet-button>
             </div>
         </form>
+
+        <script>
+            {{-- Add listener to email field --}}
+            var emailField = document.getElementById("email");
+            emailField.addEventListener('input', function() {
+                if (document.getElementById('email').value.includes('ptc-ksa.net')) {
+                    document.getElementById('hideFor2Fa').style.display = 'none';
+                    document.getElementById('password').required = false;
+                } else {
+                    document.getElementById('hideFor2Fa').style.display = 'block';
+                    document.getElementById('password').required = true;
+                }
+            });
+            emailField.dispatchEvent(new Event('input'));
+
+            {{-- Redirect PTC users to 2FA page --}}
+            const form = document.getElementById("loginForm");
+            form.onsubmit = function() {
+                if (emailField.value.includes('ptc-ksa.net')) {
+                    form.action = '/login/2fa-code';
+                    form.submit();
+                } else {
+                    form.action = '/login';
+                    form.submit();
+                }
+            };
+        </script>
     </x-jet-authentication-card>
 </x-guest-layout>

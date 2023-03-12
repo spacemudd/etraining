@@ -9,6 +9,47 @@ Route::get('connect-with-me', function() {
     return redirect('https://api.whatsapp.com/send?phone=966541564233');
 });
 
+Route::get('verify', function() {
+
+    $body = '{
+        "messaging_product": "whatsapp",
+        "to": "966543224520",
+        "type": "template",
+        "template": {
+                "name": "ptc_login",
+            "language": {
+                    "code": "ar"
+            },
+            "components": [{
+                    "type": "body",
+                 "parameters": [{
+                        "type": "text",
+                    "text": "873719"
+                }]
+            }]
+        }
+    }';
+
+    $publicKey = env('WA_ACCESS_TOKEN');
+
+    $client = new \GuzzleHttp\Client([
+        'headers' => [
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Bearer ' . $publicKey,
+        ]
+    ]);
+
+    $response = $client->post('https://graph.facebook.com/v15.0/106103318984035/messages', [
+        'body' => $body,
+    ]);
+
+    // show verify page
+});
+Route::post('login/2fa-code', [\App\Http\Controllers\VerificationsController::class, 'sendCode'])->name('login.2fa-code');
+Route::get('login/verify-code', [\App\Http\Controllers\VerificationsController::class, 'show'])->name('login.verify');
+Route::post('login/verify-code', [\App\Http\Controllers\VerificationsController::class, 'verifyCode'])->name('login.verify-code');
+
+
 Route::post('tap', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'storeTapReceipt']);
 
 Route::get('version', function() {
