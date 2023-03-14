@@ -42,7 +42,7 @@
             <!-- Payment notice -->
             <div class="container mx-auto grid p-6" v-if="user.trainee.has_outstanding_amount">
                 <div class="bg-blue-100 rounded-lg p-10 border-blue-500 border-2">
-                    <p class="text-gray-600 font-bold flex">
+                    <p class="text-gray-600 flex">
                         <svg style="margin-left:10px;" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
@@ -51,7 +51,7 @@
                     <div class="grid grid-cols-2 gap-6 mt-4">
                         <div>
 
-                            <p class="text-red-600 font-bold flex mr-0.5">
+                            <p class="text-red-600 flex mr-0.5">
                                 <svg style="margin-left:10px;" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
