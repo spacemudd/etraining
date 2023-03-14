@@ -50,7 +50,7 @@ class Company extends Model implements SearchableLabels, Auditable
         parent::boot();
         //static::addGlobalScope(new TeamScope());
 
-        if (!in_array(optional(auth()->user())->email, ['sara@ptc-ksa.com', 'mashal.a+1@ptc-ksa.com', 'jawaher@ptc-ksa.net'])) {
+        if (!in_array(optional(auth()->user())->email, ['sara@ptc-ksa.net', 'mashael.a@ptc-ksa.net', 'jawaher@ptc-ksa.net'])) {
             if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.com')) {
                 static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
                     $builder->whereNull('is_ptc_net');
