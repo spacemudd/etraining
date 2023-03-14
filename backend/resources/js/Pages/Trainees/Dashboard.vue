@@ -42,17 +42,36 @@
             <!-- Payment notice -->
             <div class="container mx-auto grid p-6" v-if="user.trainee.has_outstanding_amount">
                 <div class="bg-blue-100 rounded-lg p-10 border-blue-500 border-2">
-                    <p class="text-red-800 flex">
+                    <p class="text-gray-600 font-bold flex">
                         <svg style="margin-left:10px;" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         {{ $t('words.due-balance-notice') }}
                     </p>
-                    <div class="grid grid-cols-2 gap-6 mt-12">
+                    <div class="grid grid-cols-2 gap-6 mt-4">
                         <div>
-                            <p class="text-black flex mr-0.5">
-                                <b>1)</b> &ensp; {{ $t('words.to-pay-by-credit') }}
+
+                            <p class="text-red-600 font-bold flex mr-0.5">
+                                <svg style="margin-left:10px;" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                {{ $t('words.to-pay-by-credit') }}
                             </p>
+
+                        </div>
+                        <div>
+                            <!--<p class="text-black flex mr-0.5">-->
+                            <!--    <b>2)</b> &ensp; {{ $t('words.to-pay-by-bank') }}-->
+                            <!--</p>-->
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <inertia-link class="text-center  mt-12 inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
+                                          :href="route('trainees.payment.tap')">
+                                {{ $t('words.settle') }}
+                            </inertia-link>
+                            <br>
                             <span class="img {display:block} inline-flex">
                                 <svg width="40" height="40" class="mx-0.5">
                                     <image class=inline xlink:href="https://www.svgrepo.com/show/328112/visa.svg" src="https://www.svgrepo.com/show/328112/visa.svg" width="40" height="40"/>
@@ -67,19 +86,6 @@
                                     <image class=inline xlink:href="https://www.svgrepo.com/show/303191/apple-pay-logo.svg" src="https://www.svgrepo.com/show/303191/apple-pay-logo.svg" width="40" height="40"/>
                                 </svg>
                             </span><br>
-                        </div>
-                        <div>
-                            <!--<p class="text-black flex mr-0.5">-->
-                            <!--    <b>2)</b> &ensp; {{ $t('words.to-pay-by-bank') }}-->
-                            <!--</p>-->
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-6">
-                        <div>
-                            <inertia-link class="text-center mt-5 inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
-                                          :href="route('trainees.payment.tap')">
-                                {{ $t('words.settle') }}
-                            </inertia-link>
                         </div>
                         <!--<div>-->
                         <!--    <inertia-link class="text-center mt-5 inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"-->

@@ -696,7 +696,7 @@ export default {
             "post-trainees": "ترحيل",
             "settle": "سداد",
             "dues": "مستحقات",
-            "to-pay-by-credit": "للسداد عن طريق الدفع الالكتروني.",
+            "to-pay-by-credit": "تم إلغاء الحوالات البنيكة الرجاء السداد عن طريق الدفع الالكتروني.",
             "to-pay-by-bank": "في حال تم التحويل البنكي مسبقا الرجاء رفع الايصال.",
             "choose-invoice": "اختر المستحقات المراد دفعها",
             "sr": "ريال",
@@ -758,7 +758,7 @@ export default {
             "services": "شؤون المتدربات",
             "services_manager": "مديرون شؤون المتدربات",
             "view-permissions": "عرض الصلاحيات",
-            "verify_code": "رمز التحقق",
+            "verify_code": "أدخل رمز التحقق",
             "send_again": "إعادة الارسال"
         }
     },
