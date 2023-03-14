@@ -6,7 +6,7 @@ use App\Models\Back\Trainee;
 use App\Models\Back\TraineeBlockList;
 
 Route::get('connect-with-me', function() {
-    return redirect('https://api.whatsapp.com/send?phone=966541564233');
+    return redirect('https://api.whatsapp.com/send?phone=966553139979');
 });
 
 Route::get('verify', function() {

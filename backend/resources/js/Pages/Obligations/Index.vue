@@ -18,7 +18,7 @@
                     <p>0555026885</p>
                     <br/>
                     <p>أو من خلال الواتس آب</p>
-                    <a class="mt-10" href="https://api.whatsapp.com/send?phone=+966555094487">
+                    <a class="mt-10" href="https://api.whatsapp.com/send?phone=966553139979">
                         <ion-icon name="logo-whatsapp" class="w-10 h-10 text-green-600"></ion-icon>
                     </a>
                     <br/>
