@@ -5,7 +5,7 @@
             <!--    {{ $t('words.dashboard') }}-->
             <!--</h2>-->
             <!-- Cards -->
-            <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4 mt-6">
+            <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4 mt-6" v-can="'view-dashboard-counters'">
                 <!-- Card -->
                 <header-card :href="route('back.companies.index')" :title-value="$t('words.companies')" :count-value="companies_count" icon-path="/img/building.svg"></header-card>
                 <header-card :href="route('back.instructors.index')" :title-value="$t('words.instructors')" :count-value="instructors_count" icon-path="/img/teacher.svg"></header-card>

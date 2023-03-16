@@ -1,3 +1,3 @@
 <template>
-    <img src="/img/logo-lg.png" alt="Logo">
+    <img :src="window.location.href.includes('ptc-ksa.net') ? '/img/logo.png' : '/img/logo-lg.png'" alt="Logo">
 </template>

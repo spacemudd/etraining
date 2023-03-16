@@ -54,6 +54,7 @@ class RolesService
         'companies-report',
         'manage-trainee-groups',
         'block-trainee',
+        'view-dashboard-counters',
         // add the same name of the role to translation files.
     ];
 
