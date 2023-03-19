@@ -103,6 +103,7 @@ class CompaniesController extends Controller
             ->withCount([
                 'trainees',
             ])
+            ->with('region')
             ->findOrFail($id);
 
         $invoices = $company->invoices()

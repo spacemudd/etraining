@@ -93,6 +93,11 @@ class Company extends Model implements SearchableLabels, Auditable
         return $this->hasMany(Invoice::class);
     }
 
+    public function region()
+    {
+        return $this->belongsTo(Region::class);
+    }
+
     /**
      *
      * @return string

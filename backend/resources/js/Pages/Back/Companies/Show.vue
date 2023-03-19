@@ -66,6 +66,8 @@
 
             <span v-if="this.company.is_ptc_net">--</span>
 
+            <span class="text-xs" v-if="this.company.region">{{ this.company.region.name }}</span>
+
             <jet-section-border></jet-section-border>
 
             <div
