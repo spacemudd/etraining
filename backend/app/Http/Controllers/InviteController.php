@@ -21,7 +21,10 @@ class InviteController extends Controller
      */
     public function show($invite_id)
     {
-        $invite = Invite::findOrFail($invite_id);
+        $invite = Invite::find($invite_id);
+        if (!$invite) {
+            return redirect()->route('dashboard');
+        }
 
         return view('invite.show', compact('invite'));
     }
