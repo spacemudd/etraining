@@ -45,7 +45,7 @@ class DuplicateGroupCommand extends Command
     {
         DB::beginTransaction();
 
-        $records = TraineeGroup::where('name', 'شعبة 2')->get();
+        $records = TraineeGroup::where('name', 'تجريبية - نجوم الشاسعة')->get();
 
         foreach ($records as $record) {
             $newRecord = $record->replicate();
