@@ -2,8 +2,8 @@
 {{-- Header --}}
 @slot('header')
 @component('mail::header', ['url' => config('app.url')])
-<a href="{{ config('app.url') }}" style="display: inline-block;">
-    <img src="{{ asset('/img/logo-lg.png') }}" style="width:150px;" alt="PTC Logo">
+<a href="https://app.ptc-ksa.net" style="display: inline-block;">
+    <img src="{{ asset('/img/logo.png') }}" style="width:150px;" alt="PTC Logo">
 </a>
 @endcomponent
 @endslot
