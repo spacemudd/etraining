@@ -44,14 +44,18 @@ class InviteUsersToApp extends Command
     {
         $company = Company::find('6e835eae-4d70-4206-ae95-eb830f3e99ad');
         foreach ($company->trainees as $trainee) {
-            $user = (new CreateNewTraineeUser())->create([
-                'trainee_id' => $trainee->id,
-                'name' => $trainee->name,
-                'email' => $trainee->email,
-                'phone' => $trainee->phone,
-                'password' => 'password',
-                'password_confirmation' => 'password',
-            ]);
+            try {
+             $user = (new CreateNewTraineeUser())->create([
+                    'trainee_id' => $trainee->id,
+                    'name' => $trainee->name,
+                    'email' => $trainee->email,
+                    'phone' => $trainee->phone,
+                    'password' => 'password',
+                    'password_confirmation' => 'password',
+                ]);
+            } catch (\Exception $e) {
+                dd([$e->getMessage(), $trainee->toArray()]);
+            }
 
             Notification::send($user, new TraineeSetupAccountNotification());
 
