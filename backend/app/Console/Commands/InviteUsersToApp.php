@@ -44,6 +44,10 @@ class InviteUsersToApp extends Command
     {
         $company = Company::find('6e835eae-4d70-4206-ae95-eb830f3e99ad');
         foreach ($company->trainees as $trainee) {
+            if ($trainee->user) {
+                continue;
+            }
+
             try {
              $user = (new CreateNewTraineeUser())->create([
                     'trainee_id' => $trainee->id,
