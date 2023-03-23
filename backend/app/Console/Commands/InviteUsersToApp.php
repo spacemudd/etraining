@@ -64,6 +64,7 @@ class InviteUsersToApp extends Command
             Notification::send($user, new TraineeSetupAccountNotification());
 
             $message = new InboxMessage();
+            $message->team_id = $trainee->team_id;
             $message->body = 'لقد تم قبولك في منصة التدريب';
             $message->to_id = $user->id;
             $message->is_system_message = true;
