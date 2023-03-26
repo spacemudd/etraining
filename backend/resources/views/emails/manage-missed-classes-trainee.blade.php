@@ -93,7 +93,7 @@
 </head>
 <body style="text-align:right;">
 <div>
-    <h3 style="font-weight: bold;"> ⚠ غياب لأكثر من 3 مرات</h3>
+    <h3 style="font-weight: bold;">غياب لأكثر من 3 مرات</h3>
 
     <br>
     <h5>الاسم: {{ $trainee->name }}</h5>
