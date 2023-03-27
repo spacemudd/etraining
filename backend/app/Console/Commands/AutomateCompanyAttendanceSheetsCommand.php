@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Back\Company;
-use Carbon\Carbon;
+use App\Services\CompanyAttendanceReportService;
 use Illuminate\Console\Command;
 
 class AutomateCompanyAttendanceSheetsCommand extends Command
@@ -40,6 +40,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
     public function handle()
     {
         $companies = Company::whereNotNull('is_ptc_net')
+            ->take(2)
             ->get();
 
         foreach ($companies as $company) {
@@ -55,14 +56,18 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 continue;
             }
 
-            $lastReport = $company->company_attendance_reports():
+            $lastReport = $company->company_attendance_reports()
                 ->orderBy('date_from', 'desc')
                 ->first();
 
             if ($lastReport && $lastReport->to_emails) {
                 $clone = app()->make(CompanyAttendanceReportService::class)->clone($lastReport->id);
-                $clone->cc = 'sara@ptc-ksa.net, m_shehatah@ptc-ksa.net, ceo@ptc-ksa.net, mashal.a@ptc-ksa.net, mahmoud.m@ptc-ksa.net';
+                $clone->date_from = '2023-03-01';
+                $clone->date_to = '2023-03-31';
+                $clone->cc_emails = 'sara@ptc-ksa.net, m_shehatah@ptc-ksa.net, ceo@ptc-ksa.net, mashal.a@ptc-ksa.net, mahmoud.m@ptc-ksa.net';
                 $clone->save();
+
+                app()->make(CompanyAttendanceReportService::class)->approve($clone->id);
             } else {
                 $this->info('No last report, skipping');
             }

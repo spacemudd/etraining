@@ -49,7 +49,7 @@ class CompanyAttendanceReportService
         abort_if($report->status === CompanyAttendanceReport::STATUS_APPROVED, 404);
 
         $report->status = CompanyAttendanceReport::STATUS_APPROVED;
-        $report->approved_by_id = auth()->user()->id;
+        $report->approved_by_id = auth()->user()->id ?? '7289ed33-0250-40dd-af4c-9f3e2b09eecb';
         $report->approved_at = now();
         $report->save();
 

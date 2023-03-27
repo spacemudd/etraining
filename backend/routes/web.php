@@ -257,7 +257,7 @@ Route::get('/loginas/{user_id}', [\App\Http\Controllers\DebugController::class, 
 Route::get('invite/{invite_id}', [\App\Http\Controllers\InviteController::class, 'show'])->name('invite');
 Route::post('invite/{invite_id}/accept', [\App\Http\Controllers\InviteController::class, 'accept'])->name('invite.accept');
 
-Route::get('setup-account/{user_id}', [\App\Http\Controllers\ProfileController::class, 'setupAccount'])->name('setup-account')->middleware('signed');
+Route::get('setup-account/{user_id}', [\App\Http\Controllers\ProfileController::class, 'setupAccount'])->name('setup-account');
 Route::post('setup-account', [\App\Http\Controllers\ProfileController::class, 'updateAccount'])->name('setup-account.update')->middleware('auth');
 
 Route::get('language/{language}', [\App\Http\Controllers\LanguageController::class, 'changeLanguage'])->name('language');

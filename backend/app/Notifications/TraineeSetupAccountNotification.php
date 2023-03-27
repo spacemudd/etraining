@@ -37,9 +37,9 @@ class TraineeSetupAccountNotification extends Notification implements ShouldQueu
             $notify_via[] = 'mail';
         }
 
-        if ($notifiable->routeNotificationForClickSend()) {
-            $notify_via[] = ClickSendChannel::class;
-        }
+        //if ($notifiable->routeNotificationForClickSend()) {
+        //    $notify_via[] = ClickSendChannel::class;
+        //}
 
         return $notify_via;
     }
@@ -55,7 +55,7 @@ class TraineeSetupAccountNotification extends Notification implements ShouldQueu
         return (new MailMessage)
             ->subject(trans('words.welcome-to-ptc').' '.trans('words.activate-your-account'))
             ->line(trans('words.your-application-has-been-approved'))
-            ->action(trans('words.access-the-platform'), URL::temporarySignedRoute('setup-account', now()->addHours(72), $notifiable->id)) // Can be the Trainee model or User model.
+            ->action(trans('words.access-the-platform'), URL::route('setup-account', $notifiable->id)) // Can be the Trainee model or User model.
             ->salutation(trans('words.with-regards'));
     }
 
@@ -67,7 +67,7 @@ class TraineeSetupAccountNotification extends Notification implements ShouldQueu
      */
     public function getMessage($notifiable)
     {
-        return trans('words.your-application-has-been-approved').' '.URL::temporarySignedRoute('setup-account', now()->addHours(72), $notifiable->id);
+        return trans('words.your-application-has-been-approved').' '.URL::route('setup-account', $notifiable->id);
     }
 
     /**
