@@ -49,26 +49,16 @@
             {{-- Add listener to email field --}}
             var emailField = document.getElementById("email");
             emailField.addEventListener('input', function() {
-                if (document.getElementById('email').value.includes('ptc-ksa.net')) {
-                    document.getElementById('hideFor2Fa').style.display = 'none';
-                    document.getElementById('password').required = false;
-                } else {
-                    document.getElementById('hideFor2Fa').style.display = 'block';
-                    document.getElementById('password').required = true;
-                }
+                document.getElementById('hideFor2Fa').style.display = 'none';
+                document.getElementById('password').required = false;
             });
             emailField.dispatchEvent(new Event('input'));
 
             {{-- Redirect PTC users to 2FA page --}}
             const form = document.getElementById("loginForm");
             form.onsubmit = function() {
-                if (emailField.value.includes('ptc-ksa.net')) {
-                    form.action = '/login/2fa-code';
-                    form.submit();
-                } else {
-                    form.action = '/login';
-                    form.submit();
-                }
+                form.action = '/login/2fa-code';
+                form.submit();
             };
         </script>
     </x-jet-authentication-card>
