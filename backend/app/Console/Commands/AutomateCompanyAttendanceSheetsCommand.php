@@ -43,7 +43,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
             ->get();
 
         foreach ($companies as $company) {
-            $this->info('Processing company: '.$company->name_ar.' - '.$companies->id);
+            $this->info('Processing company: '.$company->name_ar.' - '.$company->id);
 
             // Has march report?
             $marchReport = $company->company_attendance_reports()
@@ -55,7 +55,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 continue;
             }
 
-            $lastReport = $company->company_attendance_reports()
+            $lastReport = $company->company_attendance_reports():
                 ->orderBy('date_from', 'desc')
                 ->first();
 
