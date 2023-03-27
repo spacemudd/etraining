@@ -20,9 +20,9 @@ class ProfileController extends Controller
      */
     public function setupAccount($user_id, Request $request)
     {
-        if (!$request->hasValidSignature()) {
-            abort(401);
-        }
+        //if (!$request->hasValidSignature()) {
+        //    abort(401);
+        //}
         $trainee = Trainee::find($user_id);
         if ($trainee) {
             $user = User::find($trainee->user_id);
