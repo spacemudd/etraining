@@ -83,29 +83,31 @@ class InvitePeopleCommand extends Command
         $bar = $this->output->createProgressBar($traineesCount);
         $bar->start();
 
-        Trainee::whereIn('id', $trainees->pluck('id'))->chunk(100, function($traineesCollection) use (&$bar) {
+        Trainee::whereIn('id', $trainees->pluck('id'))->chunk(10, function($traineesCollection) use (&$bar) {
             foreach ($traineesCollection as $trainee) {
-                if ($trainee->user_id) {
-                    continue;
-                }
+                //if ($trainee->user_id) {
+                //    continue;
+                //}
+                //
+                //$this->info('Creating for user: '.$trainee->email);
+                //try {
+                //    $user = (new CreateNewTraineeUser())->create([
+                //        'trainee_id' => $trainee->id,
+                //        'name' => $trainee->name,
+                //        'email' => $trainee->email,
+                //        'phone' => $trainee->phone,
+                //        'password' => 'password',
+                //        'password_confirmation' => 'password',
+                //    ]);
+                //} catch (\Exception $e) {
+                //    $this->info('Failed validation for user: '.$trainee->email);
+                //    Log::info('Failed validation for user: '.$trainee->email);
+                //    Log::info($e->getMessage());
+                //    continue;
+                //    throw $e;
+                //}
 
-                $this->info('Creating for user: '.$trainee->email);
-                try {
-                    $user = (new CreateNewTraineeUser())->create([
-                        'trainee_id' => $trainee->id,
-                        'name' => $trainee->name,
-                        'email' => $trainee->email,
-                        'phone' => $trainee->phone,
-                        'password' => 'password',
-                        'password_confirmation' => 'password',
-                    ]);
-                } catch (\Exception $e) {
-                    $this->info('Failed validation for user: '.$trainee->email);
-                    Log::info('Failed validation for user: '.$trainee->email);
-                    Log::info($e->getMessage());
-                    continue;
-                    throw $e;
-                }
+                $user = $trainee->user;
 
                 try {
                     Notification::send($user, new TraineeSetupAccountNotification());
@@ -119,7 +121,6 @@ class InvitePeopleCommand extends Command
 
             }
 
-            sleep(61);
             $bar->advance(count($traineesCollection));
         });
 
