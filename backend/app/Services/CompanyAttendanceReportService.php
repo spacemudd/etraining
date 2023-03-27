@@ -2,12 +2,64 @@
 
 namespace App\Services;
 
+use App\Mail\CompanyAttendanceReportMail;
 use App\Models\Back\CompanyAttendanceReport;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Mail;
 use PDF;
 
 class CompanyAttendanceReportService
 {
+    public function clone($id)
+    {
+        DB::beginTransaction();
+        $original = CompanyAttendanceReport::findOrFail($id);
+
+        $clone = $original->replicate(['approved_by_id', 'approved_at']);
+        $clone->status = CompanyAttendanceReport::STATUS_REVIEW;
+        $clone->date_from = $original->date_from->clone()->addMonth();
+        if ($clone->date_from->month === 2) {
+            $clone->date_to = $original->date_from
+                ->clone()
+                ->endOfMonth()
+                ->addDay()
+                ->endOfMonth();
+        } else {
+            $clone->date_to = $original->date_to->clone()->addMonth();
+        }
+        $clone->save();
+        $clone = $clone->refresh();
+
+
+        $original_trainees = $original->trainees->flatMap(function($trainee) {
+            return [$trainee->id => ['active' => $trainee->pivot->active]];
+        });
+
+        $clone->trainees()->attach($original_trainees);
+
+        DB::commit();
+
+        return $clone;
+    }
+
+    public function approve($id)
+    {
+        $report = CompanyAttendanceReport::findOrFail($id);
+        abort_if($report->status === CompanyAttendanceReport::STATUS_APPROVED, 404);
+
+        $report->status = CompanyAttendanceReport::STATUS_APPROVED;
+        $report->approved_by_id = auth()->user()->id;
+        $report->approved_at = now();
+        $report->save();
+
+        Mail::to($report->to_emails ? explode(', ', $report->to_emails) : null)
+            ->cc($report->cc_emails ? explode(', ', $report->cc_emails) : null)
+            ->send(new CompanyAttendanceReportMail($report->id));
+
+        return $report;
+    }
+
     static public function makePdf($id)
     {
         $report = CompanyAttendanceReport::findOrFail($id);
