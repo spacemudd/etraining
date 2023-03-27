@@ -48,18 +48,22 @@ class InvitePeopleCommand extends Command
         if ($trainee_id = $this->option('trainee')) {
             $trainee = Trainee::findOrFail($trainee_id);
             $this->info('Creating for user: '.$trainee->email);
-            try {
-                $user = (new CreateNewTraineeUser())->create([
-                    'trainee_id' => $trainee->id,
-                    'name' => $trainee->name,
-                    'email' => $trainee->email,
-                    'phone' => $trainee->phone,
-                    'password' => 'password',
-                    'password_confirmation' => 'password',
-                ]);
-            } catch (\Exception $e) {
-                Log::info('Failed validation for user: '.$trainee->email);
-                throw $e;
+            if (!$trainee->user_id) {
+                try {
+                    $user = (new CreateNewTraineeUser())->create([
+                        'trainee_id' => $trainee->id,
+                        'name' => $trainee->name,
+                        'email' => $trainee->email,
+                        'phone' => $trainee->phone,
+                        'password' => 'password',
+                        'password_confirmation' => 'password',
+                    ]);
+                } catch (\Exception $e) {
+                    Log::info('Failed validation for user: '.$trainee->email);
+                    throw $e;
+                }
+            } else {
+                $user = $trainee->user;
             }
 
             try {

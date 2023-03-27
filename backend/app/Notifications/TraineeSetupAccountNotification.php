@@ -55,7 +55,7 @@ class TraineeSetupAccountNotification extends Notification implements ShouldQueu
         return (new MailMessage)
             ->subject(trans('words.welcome-to-ptc').' '.trans('words.activate-your-account'))
             ->line(trans('words.your-application-has-been-approved'))
-            ->action(trans('words.access-the-platform'), URL::route('setup-account', $notifiable->id)) // Can be the Trainee model or User model.
+            ->action(trans('words.access-the-platform'), route('setup-account', $notifiable->id)) // Can be the Trainee model or User model.
             ->salutation(trans('words.with-regards'));
     }
 
@@ -67,7 +67,7 @@ class TraineeSetupAccountNotification extends Notification implements ShouldQueu
      */
     public function getMessage($notifiable)
     {
-        return trans('words.your-application-has-been-approved').' '.URL::route('setup-account', $notifiable->id);
+        return trans('words.your-application-has-been-approved').' '.route('setup-account', $notifiable->id);
     }
 
     /**
