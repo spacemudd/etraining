@@ -71,15 +71,15 @@ class InvitePeopleCommand extends Command
             return 1;
         }
 
-        // Moodi group.
-        $traineeGroup = TraineeGroup::where('id', '47396796-9ee4-41d0-a069-179ea1b83a56')->with('trainees')->first();
-        $trainees = $traineeGroup->trainees;
+
+        $company = Company::where('id', '6e835eae-4d70-4206-ae95-eb830f3e99ad')->with('trainees')->first();
+        $trainees = $company->trainees;
 
         $traineesCount = $trainees->count();
         $bar = $this->output->createProgressBar($traineesCount);
         $bar->start();
 
-        Trainee::whereIn('id', $trainees->pluck('id'))->chunk(280, function($traineesCollection) use (&$bar) {
+        Trainee::whereIn('id', $trainees->pluck('id'))->chunk(100, function($traineesCollection) use (&$bar) {
             foreach ($traineesCollection as $trainee) {
                 if ($trainee->user_id) {
                     continue;
