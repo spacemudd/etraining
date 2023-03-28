@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Notifications\MsegatChannel;
+use Illuminate\Notifications\Notification;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
 use URL;
@@ -45,5 +47,9 @@ class AppServiceProvider extends ServiceProvider
             });
             URL::forceScheme('https');
         }
+
+        Notification::extend('msegat', function ($app) {
+            return new MsegatChannel();
+        });
     }
 }

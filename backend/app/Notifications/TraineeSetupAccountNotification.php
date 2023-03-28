@@ -37,9 +37,9 @@ class TraineeSetupAccountNotification extends Notification implements ShouldQueu
             $notify_via[] = 'mail';
         }
 
-        //if ($notifiable->routeNotificationForClickSend()) {
-        //    $notify_via[] = ClickSendChannel::class;
-        //}
+        if ($notifiable->routeNotificationForMsegat()) {
+            $notify_via[] = MsegatChannel::class;
+        }
 
         return $notify_via;
     }

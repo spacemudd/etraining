@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0246ff751842cfe0b9d91b96464082a6",
+    "content-hash": "f8ccc6c7e7e84244abf774c1f777ba45",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -4872,6 +4872,54 @@
                 "source": "https://github.com/serbanghita/Mobile-Detect/tree/2.8.41"
             },
             "time": "2022-11-08T18:31:26+00:00"
+        },
+        {
+            "name": "moemengaballah/msegat",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Moemen-Gaballah/laravel-msegat.git",
+                "reference": "6fbab51d1b78b032218dba162001ffc60bc28508"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Moemen-Gaballah/laravel-msegat/zipball/6fbab51d1b78b032218dba162001ffc60bc28508",
+                "reference": "6fbab51d1b78b032218dba162001ffc60bc28508",
+                "shasum": ""
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "MoemenGaballah\\Msegat\\MsegatServiceProvider"
+                    ],
+                    "aliases": {
+                        "Msegat": "MoemenGaballah\\Msegat\\Msegat"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "MoemenGaballah\\Msegat\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "moemengaballa",
+                    "email": "moemengaballa@gmail.com"
+                }
+            ],
+            "description": "This is a Laravel package for msegat. Its goal is to remove the complexity",
+            "support": {
+                "issues": "https://github.com/Moemen-Gaballah/laravel-msegat/issues",
+                "source": "https://github.com/Moemen-Gaballah/laravel-msegat/tree/main"
+            },
+            "time": "2022-09-01T14:45:46+00:00"
         },
         {
             "name": "moneyphp/money",
@@ -14396,7 +14444,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "moemengaballah/msegat": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

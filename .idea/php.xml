@@ -394,6 +394,7 @@
       <path value="$PROJECT_DIR$/vendor/league/oauth2-client" />
       <path value="$PROJECT_DIR$/backend/vendor/dnoegel/php-xdg-base-dir" />
       <path value="$PROJECT_DIR$/backend/vendor/milon/barcode" />
+      <path value="$PROJECT_DIR$/backend/vendor/moemengaballah/msegat" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.3">

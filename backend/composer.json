@@ -39,6 +39,7 @@
         "maatwebsite/excel": "^3.1",
         "macsidigital/laravel-zoom": "^4.1",
         "milon/barcode": "^9.0",
+        "moemengaballah/msegat": "dev-main",
         "owen-it/laravel-auditing": "^11.0",
         "predis/predis": "^1.1",
         "protonemedia/inertiajs-tables-laravel-query-builder": "^1.4",

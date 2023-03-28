@@ -164,6 +164,11 @@ class User extends Authenticatable implements Auditable
         return $this->cleanUpThePhoneNumber($this->phone);
     }
 
+    public function routeNotificationForMsegat()
+    {
+        return $this->cleanUpThePhoneNumber($this->phone);
+    }
+
     public function canImpersonate()
     {
         return $this->hasPermissionTo('can-impersonate');
