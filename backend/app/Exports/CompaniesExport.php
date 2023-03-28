@@ -15,6 +15,7 @@ class CompaniesExport implements FromCollection, WithHeadings, WithMapping
             'الرقم',
             'تاريخ الإنشاء',
             'الشركة',
+            'الايميل',
             'السجل التجاري',
             'عدد المتدربين',
         ];
@@ -26,6 +27,7 @@ class CompaniesExport implements FromCollection, WithHeadings, WithMapping
             $company->id,
             $company->created_at->format('Y-m-d'),
             $company->name_ar,
+            $company->email,
             $company->cr_number,
             $company->trainees()->count(),
         ];
