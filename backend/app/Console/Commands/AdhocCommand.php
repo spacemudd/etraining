@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Back\AttendanceReportRecord;
+use App\Models\Back\Company;
 use App\Models\Back\Trainee;
 use App\Models\Back\TraineeGroup;
 use Carbon\Carbon;
@@ -43,24 +44,15 @@ class AdhocCommand extends Command
      */
     public function handle()
     {
-        DB::beginTransaction();
-        $fromTrainee = Trainee::withTrashed()->find('2b3651cb-4563-4c54-8142-23b69c936770');
+        // $msg = \Msegat::sendMessage('966565176235', 'Hello there test from Msegat');
 
-        $records = AttendanceReportRecord::where('trainee_id', $fromTrainee->id)
-            ->whereBetween('session_starts_at', ['2022-10-01', '2022-10-31'])
-            ->get();
-
-        $this->info('Found: '.$records->count());
-
-        foreach ($records as $record) {
-            $newRecord = $record->replicate();
-            $newRecord->trainee_id = 'b3618191-a8c0-4310-9379-a945397285d5';
-            $newRecord->session_starts_at = $record->course_batch_session->starts_at;
-            $newRecord->status = AttendanceReportRecord::STATUS_PRESENT;
-            $newRecord->attended_at = $record->course_batch_session->starts_at->addMinute(random_int(1,10));
-            $newRecord->save(['timestamps' => false]);
+        foreach (Company::get() as $company) {
+            if ($report = optional($company->company_attendance_reports()->first())->to_emails) {
+                $company->email = explode(', ', $report->to_emails)[0];
+                $company->save();
+            }
         }
-        DB::commit();
+
 
         return 1;
     }
