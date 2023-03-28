@@ -11,11 +11,11 @@ class MsegatChannel
      */
     public function send(object $notifiable, Notification $notification): void
     {
-        if (config('msegat.MSEGAT_USERNAME')) {
-            if (method_exists($notifiable, 'routeNotificationForMsegat')) {
+        //if (config('msegat.MSEGAT_USERNAME')) {
+        //    if (method_exists($notifiable, 'routeNotificationForMsegat')) {
                 $phone = $notifiable->routeNotificationForMsegat($notifiable);
                 \Msegat::sendMessage($phone, $notification->getMessage());
-            }
-        }
+            //}
+        //}
     }
 }
