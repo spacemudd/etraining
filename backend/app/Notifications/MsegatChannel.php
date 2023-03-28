@@ -14,7 +14,7 @@ class MsegatChannel
         //if (config('msegat.MSEGAT_USERNAME')) {
         //    if (method_exists($notifiable, 'routeNotificationForMsegat')) {
                 $phone = $notifiable->routeNotificationForMsegat($notifiable);
-                \Msegat::sendMessage($phone, $notification->getMessage());
+                \Msegat::sendMessage($phone, $notification->getMessage($notifiable));
             //}
         //}
     }
