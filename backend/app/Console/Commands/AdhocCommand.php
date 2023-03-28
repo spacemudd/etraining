@@ -47,7 +47,8 @@ class AdhocCommand extends Command
         // $msg = \Msegat::sendMessage('966565176235', 'Hello there test from Msegat');
 
         foreach (Company::get() as $company) {
-            if ($report = optional($company->company_attendance_reports()->first())->to_emails) {
+            $report = $company->company_attendance_reports()->first();
+            if (optional($report)->to_emails) {
                 $company->email = explode(', ', $report->to_emails)[0];
                 $company->save();
             }
