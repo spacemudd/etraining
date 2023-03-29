@@ -67,6 +67,10 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 $clone->save();
                 app()->make(CompanyAttendanceReportService::class)->approve($clone->id);
             } else {
+                if (!$company->email) {
+                    $this->info('No email for company. Skipping: '.$company->name);
+                    continue;
+                }
                 $this->info('No last report. Creating new report - '.$company->name_ar);
                 $report = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
                 $report->date_from = '2023-03-01';
