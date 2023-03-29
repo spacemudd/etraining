@@ -11,9 +11,9 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Str;
 
-class CompanyAttendanceReportMail extends Mailable
+class CompanyAttendanceReportMail extends Mailable implements ShouldQueue
 {
-    use SerializesModels;
+    use Queueable, SerializesModels;
 
     public $report_id;
 
