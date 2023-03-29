@@ -1,5 +1,5 @@
 upstream app {
-    server internal-prod-alb-internal-596022634.eu-central-1.elb.amazonaws.com;
+    server prod-alb-internal-1645638095.eu-central-1.elb.amazonaws.com;
     #server backend:9000;
 }
 
