@@ -40,7 +40,6 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
     public function handle()
     {
         $companies = Company::whereNotNull('is_ptc_net')
-            ->take(2)
             ->get();
 
         foreach ($companies as $company) {
@@ -52,7 +51,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 ->first();
 
             if ($marchReport) {
-                $this->info('March report already exists, skipping');
+                // $this->info('March report already exists, skipping');
                 continue;
             }
 
@@ -66,10 +65,15 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 $clone->date_to = '2023-03-31';
                 $clone->cc_emails = 'sara@ptc-ksa.net, m_shehatah@ptc-ksa.net, ceo@ptc-ksa.net, mashal.a@ptc-ksa.net, mahmoud.m@ptc-ksa.net';
                 $clone->save();
-
                 app()->make(CompanyAttendanceReportService::class)->approve($clone->id);
             } else {
-                $this->info('No last report, skipping');
+                $this->info('No last report. Creating new report - '.$company->name_ar);
+                $report = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
+                $report->date_from = '2023-03-01';
+                $report->date_to = '2023-03-31';
+                $report->cc_emails = 'sara@ptc-ksa.net, m_shehatah@ptc-ksa.net, ceo@ptc-ksa.net, mashal.a@ptc-ksa.net, mahmoud.m@ptc-ksa.net';
+                $report->save();
+                app()->make(CompanyAttendanceReportService::class)->approve($report->id);
             }
         }
 
