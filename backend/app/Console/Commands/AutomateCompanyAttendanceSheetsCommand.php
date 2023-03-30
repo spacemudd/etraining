@@ -43,6 +43,10 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
             ->get();
 
         foreach ($companies as $company) {
+            if ($company->trainees()->count() === 0) {
+                continue;
+            }
+
             $this->info('Processing company: '.$company->name_ar.' - '.$company->id);
 
             // Has march report?
@@ -63,19 +67,19 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 $clone = app()->make(CompanyAttendanceReportService::class)->clone($lastReport->id);
                 $clone->date_from = '2023-03-01';
                 $clone->date_to = '2023-03-31';
-                $clone->cc_emails = 'sara@ptc-ksa.net, m_shehatah@ptc-ksa.net, ceo@ptc-ksa.net, mashal.a@ptc-ksa.net, mahmoud.m@ptc-ksa.net';
+                $clone->cc_emails = 'sara@ptc-ksa.net, m_shehatah@ptc-ksa.net, ceo@ptc-ksa.net, mashal.a@ptc-ksa.net';
                 $clone->save();
                 app()->make(CompanyAttendanceReportService::class)->approve($clone->id);
             } else {
                 if (!$company->email) {
-                    $this->info('No email for company. Skipping: '.$company->name);
+                    $this->info('No email for company. Skipping: '.$company->name_ar);
                     continue;
                 }
                 $this->info('No last report. Creating new report - '.$company->name_ar);
                 $report = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
                 $report->date_from = '2023-03-01';
                 $report->date_to = '2023-03-31';
-                $report->cc_emails = 'sara@ptc-ksa.net, m_shehatah@ptc-ksa.net, ceo@ptc-ksa.net, mashal.a@ptc-ksa.net, mahmoud.m@ptc-ksa.net';
+                $report->cc_emails = 'sara@ptc-ksa.net, m_shehatah@ptc-ksa.net, ceo@ptc-ksa.net, mashal.a@ptc-ksa.net';
                 $report->save();
                 app()->make(CompanyAttendanceReportService::class)->approve($report->id);
             }
