@@ -29,10 +29,10 @@
                     <h1 class="text-3xl mb-8 font-bold" id="support-policy">{{ __('words.support-policy') }}</h1>
                     <p>يتم تقديم المساعدة والدعم الفني من خلال هذه البوابة عبر عدة قنوات، نذكر بيانات الاتصال بالفروع والادارات المختلفة:</p>
                     <ul class="list-disc mt-5" style="margin-right: 3rem;">
-                        <li class="mt-2">الهاتف: 92000347</li>
-                        <li class="mt-2">الايميل: training@ptc-ksa.net</li>
-                        <li class="mt-2">واتس أب: 966531057958</li>
-                        <li class="mt-2">يتم تقديم المساعدة والدعم التعليمي من خلال هذه التواصل مع المدربين من خلال الواتس اب 966531057958.</li>
+                        <li class="mt-2">الهاتف: 0114400323</li>
+                        <li class="mt-2">الايميل: trainee.affairs@ptc-ksa.net</li>
+                        <li class="mt-2">واتس أب: 966553139979</li>
+                        <li class="mt-2">يتم تقديم المساعدة والدعم التعليمي من خلال هذه التواصل مع المدربين من خلال الواتس اب 966553139979.</li>
                     </ul>
 
                     <h1 class="text-3xl mb-8 mt-8 font-bold" id="attendance-policy">{{ __('words.attendance-policy') }}</h1>

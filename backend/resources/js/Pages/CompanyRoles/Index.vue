@@ -13,11 +13,11 @@
             </tr>
             </thead>
             	<tbody>
-            			<tr class="border-t">
-            				<td class="px-6 py-4">سمر احمد ابو دش</td>
-                            <td class="px-6 py-4">التدريب+ تقديم برامج تدريبية + متابعة المتدربات في التدريب جدولة اختبارات واوراق عمل</td>
-                            <td class="px-6 py-4">samar@ptc-ksa.net</td>
-            			</tr>
+            			<!--<tr class="border-t">-->
+            			<!--	<td class="px-6 py-4">سمر احمد ابو دش</td>-->
+                        <!--    <td class="px-6 py-4">التدريب+ تقديم برامج تدريبية + متابعة المتدربات في التدريب جدولة اختبارات واوراق عمل</td>-->
+                        <!--    <td class="px-6 py-4">samar@ptc-ksa.net</td>-->
+            			<!--</tr>-->
                     <tr class="border-t">
                         <td class="px-6 py-4">موضي محمد البقمي</td>
                         <td class="px-6 py-4">التدريب+ تقديم برامج تدريبية + متابعة المتدربات في التدريب جدولة اختبارات واوراق عمل</td>
@@ -43,11 +43,11 @@
                     <td class="px-6 py-4">شوؤن المتدربات + متابعة واصدار الشهادات للمتدربات + متابعة الحضور والانصراف +اشراف عام</td>
                     <td class="px-6 py-4">jawaher@ptc-ksa.net</td>
                 </tr>
-                <tr class="border-t">
-                    <td class="px-6 py-4">منيره صالح الحمدي</td>
-                    <td class="px-6 py-4">القبول والتسجيل والتنسيق والتواصل مع المتدربات</td>
-                    <td class="px-6 py-4">monira@ptc-ksa.net</td>
-                </tr>
+                <!--<tr class="border-t">-->
+                <!--    <td class="px-6 py-4">منيره صالح الحمدي</td>-->
+                <!--    <td class="px-6 py-4">القبول والتسجيل والتنسيق والتواصل مع المتدربات</td>-->
+                <!--    <td class="px-6 py-4">monira@ptc-ksa.net</td>-->
+                <!--</tr>-->
                 </tbody>
             </table>
 
