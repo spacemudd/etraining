@@ -1,6 +1,6 @@
 FROM nginx
 
-ARG FQDN=app.ptc-ksa.com
+ARG FQDN=app.ptc-ksa.net
 ENV FQDN "$FQDN"
 
 COPY nginx.conf.tpl /etc/nginx/conf.d/default.conf.tpl

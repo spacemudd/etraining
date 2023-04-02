@@ -56,7 +56,7 @@ class TraineesBlockListController extends Controller
     {
         $trainee = TraineeBlockList::findOrFail($id);
 
-        optional(User::where('email', 'sara@ptc-ksa.com')
+        optional(User::where('email', 'sara@ptc-ksa.net')
             ->first())
             ->notify(new TraineeRestoredNotification($trainee->name, $trainee->phone, $trainee->email, auth()->user(), $trainee->deleted_remark));
 

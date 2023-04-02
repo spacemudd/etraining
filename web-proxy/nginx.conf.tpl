@@ -4,7 +4,7 @@ upstream app {
 
 server {
   listen 443 ssl http2;
-  server_name app.ptc-ksa.com www.app.ptc-ksa.com;
+  server_name app.ptc-ksa.net www.app.ptc-ksa.net;
   server_tokens off;
   proxy_http_version 1.1;
   fastcgi_hide_header X-Powered-By;

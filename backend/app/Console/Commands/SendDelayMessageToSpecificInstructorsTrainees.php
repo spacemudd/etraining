@@ -48,7 +48,7 @@ class SendDelayMessageToSpecificInstructorsTrainees extends Command
                     $this->info('Sending to '.$trainees->count());
                     $emails = $trainees->pluck('email');
                     $emails[] = 'shafiqalshaar@gmail.com';
-                    $emails[] = 'leena@ptc-ksa.com';
+                    $emails[] = 'leena@ptc-ksa.net';
                     Mail::bcc($emails)->locale('ar')
                         ->queue(new CourseDelayedMail());
                 });

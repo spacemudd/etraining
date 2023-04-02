@@ -91,7 +91,7 @@ class User extends Authenticatable implements Auditable
 
     public function logrocketEnabled()
     {
-        return Str::contains($this->email, 'ptc-ksa.com') || ($this->email === 'hello@getshafiq.com');
+        return Str::contains($this->email, 'ptc-ksa.net') || ($this->email === 'hello@getshafiq.com');
     }
 
     public function logrocketId()

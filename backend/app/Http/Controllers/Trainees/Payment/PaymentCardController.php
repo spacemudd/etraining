@@ -349,7 +349,7 @@ class PaymentCardController extends Controller
         $invoice = app()->make(InvoiceService::class)
             ->changeInvoiceCost($request->invoice_id, $request->grand_total_override);
 
-        Mail::to(['hadeel@ptc-ksa.net', 'hadeel.m@ptc-ksa.com', 'reem@ptc-ksa.net', 'shahad.m@ptc-ksa.net'])
+        Mail::to(['hadeel@ptc-ksa.net', 'hadeel.m@ptc-ksa.net', 'reem@ptc-ksa.net', 'shahad.m@ptc-ksa.net'])
             ->queue(new EditAmountMail($invoice));
 
         // Get collection of invoices because getPaymentUrl() expects a collection

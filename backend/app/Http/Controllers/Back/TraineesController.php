@@ -622,7 +622,7 @@ class TraineesController extends Controller
         }
 
         optional(
-            User::where('email', 'sara@ptc-ksa.com')
+            User::where('email', 'sara@ptc-ksa.net')
                 ->first()
         )
             ->notify(

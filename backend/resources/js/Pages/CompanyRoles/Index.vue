@@ -16,12 +16,12 @@
             			<tr class="border-t">
             				<td class="px-6 py-4">سمر احمد ابو دش</td>
                             <td class="px-6 py-4">التدريب+ تقديم برامج تدريبية + متابعة المتدربات في التدريب جدولة اختبارات واوراق عمل</td>
-                            <td class="px-6 py-4">samar@ptc-ksa.com</td>
+                            <td class="px-6 py-4">samar@ptc-ksa.net</td>
             			</tr>
                     <tr class="border-t">
                         <td class="px-6 py-4">موضي محمد البقمي</td>
                         <td class="px-6 py-4">التدريب+ تقديم برامج تدريبية + متابعة المتدربات في التدريب جدولة اختبارات واوراق عمل</td>
-                        <td class="px-6 py-4">moudi@ptc-ksa.com</td>
+                        <td class="px-6 py-4">moudi@ptc-ksa.net</td>
                     </tr>
             	</tbody>
             </table>
@@ -41,12 +41,12 @@
                 <tr class="border-t">
                     <td class="px-6 py-4">جواهر ذياب الحربي</td>
                     <td class="px-6 py-4">شوؤن المتدربات + متابعة واصدار الشهادات للمتدربات + متابعة الحضور والانصراف +اشراف عام</td>
-                    <td class="px-6 py-4">jawaher@ptc-ksa.com</td>
+                    <td class="px-6 py-4">jawaher@ptc-ksa.net</td>
                 </tr>
                 <tr class="border-t">
                     <td class="px-6 py-4">منيره صالح الحمدي</td>
                     <td class="px-6 py-4">القبول والتسجيل والتنسيق والتواصل مع المتدربات</td>
-                    <td class="px-6 py-4">monira@ptc-ksa.com</td>
+                    <td class="px-6 py-4">monira@ptc-ksa.net</td>
                 </tr>
                 </tbody>
             </table>
@@ -64,14 +64,9 @@
                 </thead>
                 <tbody>
                 <tr class="border-t">
-                    <td class="px-6 py-4">لينا الغبيوي</td>
-                    <td class="px-6 py-4">الدعم الفني والتقني للمنصة التدريبية + الرد على اسئلة المتدربات +  تقديم المساعدة</td>
-                    <td class="px-6 py-4">leena@ptc-ksa.com</td>
-                </tr>
-                <tr class="border-t">
                     <td class="px-6 py-4">سارة عياش</td>
                     <td class="px-6 py-4">عم الفني والتقني للمنصة التدريبية + الرد على اسئلة المتدربات +  تقديم المساعدة</td>
-                    <td class="px-6 py-4">sara@ptc-ksa.com</td>
+                    <td class="px-6 py-4">sara@ptc-ksa.net</td>
                 </tr>
                 </tbody>
             </table>
