@@ -761,6 +761,7 @@ export default {
             "verify_code": "أدخل رمز التحقق",
             "send_again": "إعادة الارسال",
             "view-dashboard-counters": "عرض اجمالي عدد المتدربات والشركات",
+<<<<<<< main
             "company-register-date": "تاريخ الربط مع الشركة",
             "salesperson_email": "ايميل المندوب",
             "restore": "استرجاع",
@@ -769,6 +770,9 @@ export default {
             "company-is-deleted": "الشركة محذوفة",
             "deleted": "محذوف",
             "the-maximum": "الحد الأقصى 5000 ريال"
+=======
+            "region": "المنطقة"
+>>>>>>> Add Region to Create Company
         }
     },
     "en": {
@@ -1475,6 +1479,7 @@ export default {
             "verify_code": "Verify Code",
             "send_again": "Send Again",
             "view-dashboard-counters": "View total count of companies / trainees",
+<<<<<<< main
             "company-register-date": "Company register date",
             "salesperson_email": "Salesperson email",
             "restore": "Restore",
@@ -1483,6 +1488,9 @@ export default {
             "company-is-deleted": "Company is deleted",
             "deleted": "Deleted",
             "the-maximum": "The maximum is 5000 SAR"
+=======
+            "region": "Region"
+>>>>>>> Add Region to Create Company
         }
     }
 }

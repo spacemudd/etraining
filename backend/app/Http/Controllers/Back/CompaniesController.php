@@ -69,6 +69,7 @@ class CompaniesController extends Controller
             'monthly_subscription_per_trainee' => 'nullable|numeric|min:0|max:100000',
             'shelf_number' => 'nullable|string|max:255',
             'salesperson_email' => 'nullable|email',
+            'region_id' => 'nullable|string|max:255',
         ]);
 
         $company = Company::create($validated);

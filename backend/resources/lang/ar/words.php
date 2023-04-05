@@ -600,4 +600,5 @@ return [
     'company-is-deleted' => 'الشركة محذوفة',
     'deleted' => 'محذوف',
     'the-maximum' => 'الحد الأقصى 5000 ريال',
+    'region' => 'المنطقة',
 ];
