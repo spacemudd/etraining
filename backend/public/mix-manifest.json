@@ -1,5 +1,6 @@
 {
 <<<<<<< main
+<<<<<<< main
     "/js/app.js": "/js/app.js?id=525771bd974b0d38513e",
 =======
     "/js/app.js": "/js/app.js?id=f2f7412bad52c6799283",
@@ -7,4 +8,10 @@
     "/css/app.css": "/css/app.css?id=fd8de5bf8dccc503a41e",
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
     "/js/vendor.js": "/js/vendor.js?id=18437c157f4839a717e0"
+=======
+    "/js/app.js": "/js/app.js",
+    "/css/app.css": "/css/app.css",
+    "/js/manifest.js": "/js/manifest.js",
+    "/js/vendor.js": "/js/vendor.js"
+>>>>>>> WIP
 }

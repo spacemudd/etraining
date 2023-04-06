@@ -81,14 +81,33 @@
                             class="mt-1 block w-full bg-gray-200"
                             :value="company[fieldName]"
                             disabled
+
                         />
                     </div>
                 </template>
+                <div class="col-span-4 sm:col-span-1">
+                    <jet-label for="region_id" :value="$t('words.region')" />
+                    <div class="relative mt-2">
+                        <select class="mt-1 block w-full bg-gray-100 appearance-none border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:border-gray-500"
+                                v-model="company.region_id"
+                                id="region_id"
+                                disabled
+                        >
+                            <option v-for="region in regions"
+                                    :key="region.id"
+                                    :value="region.id"
+                            >
+                                {{ region.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <jet-input-error :message="form.error('region_id')" class="mt-2" />
+                </div>
             </div>
 
-            <span v-if="this.company.is_ptc_net">--</span>
+<!--            <span v-if="this.company.is_ptc_net">&#45;&#45;</span>-->
 
-            <span class="text-xs" v-if="this.company.region">{{ this.company.region.name }}</span>
+<!--            <span class="text-xs" v-if="this.company.region">{{ this.company.region.name }}</span>-->
 
             <jet-section-border></jet-section-border>
 
@@ -376,7 +395,7 @@ import EmptySlate from "@/Components/EmptySlate";
 import PostTraineesButton from "@/Components/PostTraineesButton";
 
 export default {
-    props: ['sessions', 'company', 'instructors', 'invoices', 'trainees_trashed_count'],
+    props: ['sessions', 'company', 'instructors', 'invoices', 'trainees_trashed_count', 'regions'],
 
     components: {
         PostTraineesButton,
@@ -410,6 +429,7 @@ export default {
                 monthly_subscription_per_trainee: '',
                 shelf_number: '',
                 salesperson_email: '',
+                region_id: '',
             }, {
                 bag: 'createCompany',
             })

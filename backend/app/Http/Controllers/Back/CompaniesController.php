@@ -104,6 +104,7 @@ class CompaniesController extends Controller
                         },
                     ]);
                 },
+                'region',
             ])
             ->withCount([
                 'trainees',
@@ -132,6 +133,7 @@ class CompaniesController extends Controller
             'invoices' => $invoices,
             'instructors' => Instructor::get(),
             'trainees_trashed_count' => Trainee::where('company_id', $company->id)->onlyTrashed()->count(),
+            'regions' => Region::orderBy('name')->get(),
         ]);
     }
 
@@ -146,6 +148,7 @@ class CompaniesController extends Controller
     {
         return Inertia::render('Back/Companies/Edit', [
             'company' => Company::findOrFail($id),
+            'regions' => Region::orderBy('name')->get(),
         ]);
     }
 
@@ -159,9 +162,24 @@ class CompaniesController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'name_ar' => 'required|string|max:255',
+            'name_en' => 'nullable|string|max:255',
+            'cr_number' => 'nullable|max:255',
+            'contact_number' => 'nullable|string|max:255',
+            'company_rep' => 'nullable|string|max:255',
+            'company_rep_mobile' => 'nullable|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'address' => 'nullable|string|max:255',
+            'monthly_subscription_per_trainee' => 'nullable|numeric|min:0|max:100000',
+            'shelf_number' => 'nullable|string|max:255',
+            'region_id' => 'nullable|exists:regions,id',
+        ]);
+
         $company = Company::findOrFail($id);
+        $region = Region::orderBy('name')->get();
         $company->update($request->except('_token'));
-        return redirect()->route('back.companies.show', ['company' => $company])->with(
+        return redirect()->route('back.companies.show', ['company' => $company, 'region' => $region])->with(
             'success',
             __('words.updated-successfully')
         );
