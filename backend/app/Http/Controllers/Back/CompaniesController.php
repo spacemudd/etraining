@@ -6,6 +6,7 @@ use App\Exports\CompaniesExport;
 use App\Http\Controllers\Controller;
 use App\Models\Back\Company;
 use App\Models\Back\Instructor;
+use App\Models\Back\Region;
 use App\Models\Back\Trainee;
 use Excel;
 use Illuminate\Http\Request;
@@ -43,7 +44,9 @@ class CompaniesController extends Controller
     {
         $this->authorize('create-companies');
 
-        return Inertia::render('Back/Companies/Create');
+        return Inertia::render('Back/Companies/Create',[
+            'regions' => Region::orderBy('name')->get(),
+        ]);
     }
 
     /**
@@ -69,7 +72,7 @@ class CompaniesController extends Controller
             'monthly_subscription_per_trainee' => 'nullable|numeric|min:0|max:100000',
             'shelf_number' => 'nullable|string|max:255',
             'salesperson_email' => 'nullable|email',
-            'region_id' => 'nullable|string|max:255',
+            'region_id' => 'nullable|exists:regions,id',
         ]);
 
         $company = Company::create($validated);

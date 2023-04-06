@@ -18,4 +18,9 @@ class Region extends Model
     protected $fillable = [
         'name',
     ];
+
+    public function companies()
+    {
+        return $this->hasMany(Company::class);
+    }
 }
