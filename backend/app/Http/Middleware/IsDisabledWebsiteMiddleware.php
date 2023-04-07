@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 
 class IsDisabledWebsiteMiddleware
 {
@@ -22,6 +23,10 @@ class IsDisabledWebsiteMiddleware
                     return redirect()->route('disabled');
                 }
             }
+        }
+
+        if (!str_contains(URL::current(), 'tap')) {
+            return redirect()->route('closed');
         }
 
         return $next($request);

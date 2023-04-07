@@ -2,12 +2,17 @@
 
 use App\Http\Controllers\Back\TraineesGroupsController;
 use App\Http\Controllers\Teaching\TraineeGroupsController;
+use App\Http\Middleware\IsDisabledWebsiteMiddleware;
 use App\Models\Back\Trainee;
 use App\Models\Back\TraineeBlockList;
 
 Route::get('connect-with-me', function() {
     return redirect('https://api.whatsapp.com/send?phone=966553139979');
 });
+
+Route::withoutMiddleware(IsDisabledWebsiteMiddleware::class)->get('closed', function () {
+    return view('closed');
+})->name('closed');
 
 Route::get('verify', function() {
 
@@ -50,7 +55,7 @@ Route::get('login/verify-code', [\App\Http\Controllers\VerificationsController::
 Route::post('login/verify-code', [\App\Http\Controllers\VerificationsController::class, 'verifyCode'])->name('login.verify-code');
 
 
-Route::post('tap', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'storeTapReceipt']);
+Route::withoutMiddleware(IsDisabledWebsiteMiddleware::class)->post('tap', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'storeReceipt']);
 
 Route::get('version', function() {
     return '4.7';
