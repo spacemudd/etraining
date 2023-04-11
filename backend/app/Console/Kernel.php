@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\AdhocCommand;
 use App\Console\Commands\CompanyTraineeSnapshot;
+use App\Console\Commands\InvoiceToPaidCommand;
 use App\Console\Commands\TraineeAlertUpcomingSessionCommand;
 use App\Console\Commands\DatabaseIndexTextCommand;
 use App\Console\Commands\InvitePeopleCommand;
@@ -31,6 +32,7 @@ class Kernel extends ConsoleKernel
         AdhocCommand::class,
         TraineeAlertUpcomingSessionCommand::class,
         CompanyTraineeSnapshot::class,
+        InvoiceToPaidCommand::class,
     ];
 
     /**
