@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Back\Trainee;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class InvoiceToPaidCommand extends Command
@@ -62,6 +64,6 @@ class InvoiceToPaidCommand extends Command
         }
 
         //$data = ['status' => 1, 'payment_method' => 1, 'payment_reference_id' => 'chg_LV03G5420232233Ze8b1004061', 'paid_at' => '2023-04-10 10:35:00', 'trainee_bank_payment_receipt_id' => null]
-        return 0;
+        return 1;
     }
 }
