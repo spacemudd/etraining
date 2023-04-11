@@ -570,7 +570,7 @@ class InvoiceToPaidCommand extends Command
             $trainee = Trainee::where('name', $name)->first();
             if ($trainee) {
 
-                if ($trainee->invoices()->notPaid()->count() > 1) {
+                if ($trainee->invoices()->notPaid()->count() !== 1) {
                     $this->info('More than 1 invoice: '.$name);
                     continue;
                 }
