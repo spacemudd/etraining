@@ -55,7 +55,7 @@ Route::get('login/verify-code', [\App\Http\Controllers\VerificationsController::
 Route::post('login/verify-code', [\App\Http\Controllers\VerificationsController::class, 'verifyCode'])->name('login.verify-code');
 
 
-Route::withoutMiddleware(IsDisabledWebsiteMiddleware::class)->post('tap', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'storeReceipt']);
+Route::withoutMiddleware(IsDisabledWebsiteMiddleware::class)->post('tap', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'storeTapReceipt']);
 
 Route::get('version', function() {
     return '4.7';
