@@ -25,7 +25,7 @@ class IsDisabledWebsiteMiddleware
             }
         }
 
-        if (!str_contains(URL::current(), 'tap')) {
+        if (!str_contains(URL::current(), 'tap') && !str_contains(URL::current(), '.net')) {
             return redirect()->route('closed');
         }
 
