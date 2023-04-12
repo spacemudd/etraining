@@ -20,6 +20,8 @@ class SuspendedAccountsMiddleware
         // NOTE: This was disabled in delivering D-PTC-12.
         // The email should be titled 'D-PTC-12'.
 
+        // This is enabled after 12-04-2023 - Shafiq.
+
         if ($trainee = optional(auth()->user())->trainee) {
             if ($trainee->deleted_at) {
                 abort('412', 'Account disabled');
