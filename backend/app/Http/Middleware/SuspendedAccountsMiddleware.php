@@ -21,16 +21,20 @@ class SuspendedAccountsMiddleware
         // The email should be titled 'D-PTC-12'.
 
         if ($trainee = optional(auth()->user())->trainee) {
-            //$suspended = TraineeBlockList::where('name', $trainee->name)
-            //    ->orWhere('phone', $trainee->phone)
-            //    // ->orWhere('phone_additional', $trainee->phone_additional)
-            //    ->orWhere('email', $trainee->email)
-            //    ->orWhere('identity_number', $trainee->identity_number)
-            //    ->exists();
+            if ($trainee->deleted_at) {
+                abort('412', 'Account disabled');
+            }
 
-            //if ($suspended) {
-            //    abort('412', 'Account disabled');
-            //}
+            $suspended = TraineeBlockList::where('name', $trainee->name)
+                ->orWhere('phone', $trainee->phone)
+                // ->orWhere('phone_additional', $trainee->phone_additional)
+                ->orWhere('email', $trainee->email)
+                ->orWhere('identity_number', $trainee->identity_number)
+                ->exists();
+
+            if ($suspended) {
+                abort('412', 'Account disabled');
+            }
         }
         return $next($request);
     }
