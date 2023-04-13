@@ -128,7 +128,7 @@ Route::get('s1s2', function() {
 });
 Route::get('s1s3', function() {
 //    $trainees = Trainee::onlyTrashed()->get();
-    $trainees = Trainee::where('status', 1)->get();
+    $trainees = Trainee::where('company_id',null)->get();
 
     $traineeData = [];
 
