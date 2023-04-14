@@ -650,8 +650,8 @@ class TraineesController extends Controller
         //    $trainee->user->delete();
         //}
         $users = User::permission('receive-notification-on-trainee-delete')->get();
-        Mail::to($users)
-            ->queue(new DeletedTraineeMail($trainee, auth()->user()->email));
+        //Mail::to($users)
+        //    ->queue(new DeletedTraineeMail($trainee, auth()->user()->email));
 
         DB::commit();
         return redirect()->route('back.trainees.index');
