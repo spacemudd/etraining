@@ -137,7 +137,7 @@ Route::get('s1s3', function() {
             'name' => $trainee->name,
             'company' => optional($trainee->company)->name_ar,
             'email' => $trainee->email,
-            'phone' => $trainee->phone,
+            'phone' => $trainee->clean_phone,
             'instructor' => optional($trainee->instructor)->name,
             'group' => optional($trainee->trainee_group)->name,
         ];
