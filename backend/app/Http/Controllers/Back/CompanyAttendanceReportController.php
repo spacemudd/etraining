@@ -88,6 +88,11 @@ class CompanyAttendanceReportController extends Controller
     {
         $report = CompanyAttendanceReport::with('company')->findOrFail($id);
 
+        $report->status = 1;
+        $report->approved_at = null;
+        $report->approved_by_id = null;
+        $report->save();
+
         return Inertia::render('Back/Reports/CompanyAttendance/Edit', [
             'report' => $report,
         ]);
