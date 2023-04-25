@@ -53,7 +53,7 @@
     <div class="content">
         <img class="page-logo" src="{{ public_path('/img/logo-lg.png') }}">
         <h1 style="margin-top:8rem;">شهادة حضور دورة تطويرية</h1>
-        <p style="margin-top:2.5rem;">يشهد مركز احترافية المدرب للتدريب بأن المتدربة  "{{ $certificate->trainee->name }}"</p>
+        <p style="margin-top:2.5rem;">يشهد شركة مركز احترافية التدريب للتدريب بأن المتدربة  "{{ $certificate->trainee->name }}"</p>
         <p style="margin-top:2.5rem;">وجنسيتها سعودية بموجب السجل المدني رقم "{{ $certificate->trainee->identity_number }}"</p>
         <p style="margin-top:2.5rem;">قـــد حضرت دورة ({{ $certificate->course->name_ar }}) عدد ساعاتها التدريبية 24 ساعة</p>
         <p style="margin-top:2.5rem;">وعدد أيامها التدريبية (3) أيام والمنعقدة في الفترة من </p>

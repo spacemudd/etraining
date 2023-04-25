@@ -27,7 +27,7 @@
         <div class="container mx-auto p-4">
             <div class="mx-auto">
                 <h1 class="text-3xl mb-8 font-bold" id="contact">{{ __('words.contact-policy') }}</h1>
-                <p style="margin-right: 20px;">تقوم سياسة التواصل في مركز احترافية المدرب على ثالثة محاور أساسية هي:</p>
+                <p style="margin-right: 20px;">تقوم سياسة التواصل في شركة مركز احترافية التدريب على ثالثة محاور أساسية هي:</p>
                 <br>
                 <h3 class="text-2xl mb-8 font-bold text-red-600" id="contact">المحور الأول: التواصل الداخلي:</h3>
                 <p style="margin-right: 20px;">ويتضمن طرق ووسائل التواصل أقسام المركز المختلفة، والعاملين فيه تواصلاً عملياً يسهل إجراءات المركز الإدارية والتدريبية ويحقق انسجاماً قوياً بين أعضاء فريق العمل. </p>
