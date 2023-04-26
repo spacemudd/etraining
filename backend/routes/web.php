@@ -4,6 +4,7 @@ use App\Http\Controllers\Back\TraineesGroupsController;
 use App\Http\Controllers\Teaching\TraineeGroupsController;
 use App\Models\Back\Trainee;
 use App\Models\Back\TraineeBlockList;
+use App\Models\User;
 
 Route::get('connect-with-me', function() {
     return redirect('https://api.whatsapp.com/send?phone=966553139979');
@@ -86,6 +87,24 @@ Route::get('phone-numbers/{company_id}', function() {
         }
     }
     return $numbers;
+});
+
+Route::get('last-logged-at', function() {
+    set_time_limit(1000);
+    $users = User::all();
+
+    $usersData = [];
+
+    foreach ($users as $user) {
+        $usersData[] = [
+            'name' => $user->name,
+            'email' => $user->email,
+            'phone' => $user->phone,
+            'last_login_at' => $user->last_login_at,
+        ];
+    }
+
+    return $usersData;
 });
 
 Route::get('s1s1', function() {
