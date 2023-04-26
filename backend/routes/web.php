@@ -97,8 +97,8 @@ Route::get('last-logged-at', function() {
 
     foreach ($users as $user) {
         $usersData[] = [
-            'name' => $user->name,
             'email' => $user->email,
+            'name' => $user->name,
             'phone' => $user->phone,
             'last_login_at' => $user->last_login_at,
         ];
