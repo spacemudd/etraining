@@ -192,7 +192,7 @@ return [
     'url-problem' => "إذا كانت تواجهك صعوبة في الضغط على \":actionText\", انسخ الرابط التالي \n" .
         'في صفحة المتصفح الخاص بك: ',
     'all-rights-reserved' => 'كل الحقوق محفوظة',
-    'welcome-to-ptc' => 'اهلا بك في مركز احترافية المدرب للتدريب',
+    'welcome-to-ptc' => 'اهلا بك في شركة مركز احترافية التدريب للتدريب',
     'your-application-has-been-approved' => 'لقد تم قبولك في منصة التدريب ويمكن الدخول عليها من: ',
     'incomplete-application' => 'ملف غير مكتمل',
     'pending-approval' => 'جاري الموافقة',
@@ -482,7 +482,7 @@ return [
     'transaction-date' => 'تاريخ العملية',
     'training-fees' => 'رسوم التدريب',
     'please-login-to-your-account-pay-the-costs' => 'الرجاء الدخول على حسابك لعرض الرسوم التدريبية المستحقة',
-    'training-fees-have-been-issued-for-your-account-ptc' => 'تم إصدار رسوم التدريب لحسابك - مركز احترافية المدرب',
+    'training-fees-have-been-issued-for-your-account-ptc' => 'تم إصدار رسوم التدريب لحسابك - شركة مركز احترافية التدريب',
     'mark-as-unpaid' => 'لم يتم الدفع',
     'chase' => 'التحصيل',
     'finance-audit-required' => 'مطلوب موافقة المالية',

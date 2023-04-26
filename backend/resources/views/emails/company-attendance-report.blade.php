@@ -11,7 +11,7 @@
 @if ($report->company->is_ptc_net)
 شركة مركز احترافية التدريب
 @else
-شركة مركز احترافية المدرب
+شركة شركة مركز احترافية التدريب
 @endif
 
 @endcomponent
