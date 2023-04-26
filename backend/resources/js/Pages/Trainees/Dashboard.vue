@@ -32,11 +32,11 @@
 <!--                    </div>-->
 <!--                </div>-->
 <!--            </div>-->
-            <div class="container mx-auto grid pt-6 text-center">
-                <div class="mx-auto">
-                    <img width="250" height="350" src="https://i.ibb.co/QXNnGrh/Red-Modern-Job-Vacancy-Your-Story-1.png" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-                </div>
-            </div>
+<!--            <div class="container mx-auto grid pt-6 text-center">-->
+<!--                <div class="mx-auto">-->
+<!--                    <img width="250" height="350" src="https://i.ibb.co/QXNnGrh/Red-Modern-Job-Vacancy-Your-Story-1.png" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>-->
+<!--                </div>-->
+<!--            </div>-->
 
 
             <!-- Payment notice -->
