@@ -14,7 +14,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'company-attendance-sheets:start';
+    protected $signature = 'company-attendance-sheets:start {--company_id=}';
 
     /**
      * The console command description.
@@ -42,6 +42,12 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
     {
         $companies = Company::whereNotNull('is_ptc_net')
             ->get();
+
+        if ($this->option('company_id')) {
+            $companies = Company::whereNotNull('is_ptc_net')
+                ->where('id', $this->option('company_id'))
+                ->get();
+        }
 
         foreach ($companies as $company) {
             if ($company->trainees()->count() === 0) {
@@ -84,7 +90,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 $clone->date_to = '2023-04-30';
                 $clone->cc_emails = Str::replace('ptc-ksa.com', 'ptc-ksa.net', $clone->cc_emails);
                 $clone->save();
-                //app()->make(CompanyAttendanceReportService::class)->approve($clone->id);
+                app()->make(CompanyAttendanceReportService::class)->approve($clone->id);
             } else {
                 if (!$company->email) {
                     $this->info('No email for company. Skipping: '.$company->name_ar);
@@ -96,7 +102,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 $report->date_to = '2023-04-30';
                 $report->cc_emails = 'sara@ptc-ksa.net, m_shehatah@ptc-ksa.net, ceo@ptc-ksa.net, mashael.a@ptc-ksa.net';
                 $report->save();
-                //app()->make(CompanyAttendanceReportService::class)->approve($report->id);
+                app()->make(CompanyAttendanceReportService::class)->approve($report->id);
             }
         }
 
