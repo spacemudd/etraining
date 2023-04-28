@@ -54,7 +54,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 continue;
             }
 
-            $this->info('Processing company: '.$company->name_ar.' - '.$company->id);
+            // $this->info('Processing company: '.$company->name_ar.' - '.$company->id);
 
             // Has report for current month?
             $currentMonthReport = $company->company_attendance_reports()
@@ -78,12 +78,12 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 }
 
                 // Are the trainees matching the IDs of the all the trainees in the company?
-                foreach ($lastReport->trainees as $trainee) {
-                    if (! $company->trainees()->where('id', $trainee->id)->first()) {
-                        $this->info('Trainee not found in the company. Skipping: '.$company->name_ar);
-                        continue 2;
-                    }
-                }
+                //foreach ($lastReport->trainees as $trainee) {
+                //    if (! $company->trainees()->where('id', $trainee->id)->first()) {
+                //        $this->info('Trainee not found in the company. Skipping: '.$company->name_ar);
+                //        continue 2;
+                //    }
+                //}
 
                 $clone = app()->make(CompanyAttendanceReportService::class)->clone($lastReport->id);
                 $clone->date_from = '2023-04-01';
