@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Back\Company;
 use App\Services\CompanyAttendanceReportService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 
 class AutomateCompanyAttendanceSheetsCommand extends Command
 {
@@ -49,13 +50,13 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
             $this->info('Processing company: '.$company->name_ar.' - '.$company->id);
 
-            // Has march report?
-            $marchReport = $company->company_attendance_reports()
-                ->whereBetween('date_from', ['2023-03-01', '2023-03-31'])
+            // Has report for current month?
+            $currentMonthReport = $company->company_attendance_reports()
+                ->whereBetween('date_from', ['2023-04-01', '2023-04-30'])
                 ->first();
 
-            if ($marchReport) {
-                // $this->info('March report already exists, skipping');
+            if ($currentMonthReport) {
+                // $this->info('Current report already exists for the same period, skipping');
                 continue;
             }
 
@@ -64,10 +65,24 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 ->first();
 
             if ($lastReport && $lastReport->to_emails) {
+                // Is the number of trainees equal to the number of trainees in the company?
+                if ($lastReport->trainees()->count() !== $company->trainees()->count()) {
+                    $this->info('Number of trainees in the last report is not equal to the number of trainees in the company. Skipping: '.$company->name_ar);
+                    continue;
+                }
+
+                // Are the trainees matching the IDs of the all the trainees in the company?
+                foreach ($lastReport->trainees as $trainee) {
+                    if (! $company->trainees()->where('id', $trainee->id)->first()) {
+                        $this->info('Trainee not found in the company. Skipping: '.$company->name_ar);
+                        continue 2;
+                    }
+                }
+
                 $clone = app()->make(CompanyAttendanceReportService::class)->clone($lastReport->id);
-                $clone->date_from = '2023-03-01';
-                $clone->date_to = '2023-03-31';
-                $clone->cc_emails = 'sara@ptc-ksa.net, m_shehatah@ptc-ksa.net, ceo@ptc-ksa.net, mashal.a@ptc-ksa.net';
+                $clone->date_from = '2023-04-01';
+                $clone->date_to = '2023-04-30';
+                $clone->cc_emails = Str::replace('ptc-ksa.com', 'ptc-ksa.net', $clone->cc_emails);
                 $clone->save();
                 app()->make(CompanyAttendanceReportService::class)->approve($clone->id);
             } else {
@@ -77,9 +92,9 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 }
                 $this->info('No last report. Creating new report - '.$company->name_ar);
                 $report = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
-                $report->date_from = '2023-03-01';
-                $report->date_to = '2023-03-31';
-                $report->cc_emails = 'sara@ptc-ksa.net, m_shehatah@ptc-ksa.net, ceo@ptc-ksa.net, mashal.a@ptc-ksa.net';
+                $report->date_from = '2023-04-01';
+                $report->date_to = '2023-04-30';
+                $report->cc_emails = 'sara@ptc-ksa.net, m_shehatah@ptc-ksa.net, ceo@ptc-ksa.net, mashael.a@ptc-ksa.net';
                 $report->save();
                 app()->make(CompanyAttendanceReportService::class)->approve($report->id);
             }
