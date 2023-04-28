@@ -72,10 +72,10 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
             if ($lastReport && $lastReport->to_emails) {
                 // Is the number of trainees equal to the number of trainees in the company?
-                if ($lastReport->trainees()->count() !== $company->trainees()->count()) {
-                    $this->info('Number of trainees in the last report is not equal to the number of trainees in the company. Skipping: '.$company->name_ar);
-                    continue;
-                }
+                //if ($lastReport->trainees()->count() !== $company->trainees()->count()) {
+                //    $this->info('Number of trainees in the last report is not equal to the number of trainees in the company. Skipping: '.$company->name_ar);
+                //    continue;
+                //}
 
                 // Are the trainees matching the IDs of the all the trainees in the company?
                 //foreach ($lastReport->trainees as $trainee) {
@@ -91,6 +91,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 $clone->cc_emails = Str::replace('ptc-ksa.com', 'ptc-ksa.net', $clone->cc_emails);
                 $clone->save();
                 app()->make(CompanyAttendanceReportService::class)->approve($clone->id);
+                $this->info('Sent for with email: '.$company->name_ar);
             } else {
                 if (!$company->email) {
                     $this->info('No email for company. Skipping: '.$company->name_ar);
@@ -103,6 +104,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 $report->cc_emails = 'sara@ptc-ksa.net, m_shehatah@ptc-ksa.net, ceo@ptc-ksa.net, mashael.a@ptc-ksa.net';
                 $report->save();
                 app()->make(CompanyAttendanceReportService::class)->approve($report->id);
+                $this->info('Sent for: '.$company->name_ar);
             }
         }
 
