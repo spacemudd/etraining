@@ -7,7 +7,6 @@ server {
   listen 8085;
   listen [::]:8085;
   server_name _;
-  resolver 8.8.8.8 valid 30s;
 
   server_tokens off;
   fastcgi_hide_header X-Powered-By;
