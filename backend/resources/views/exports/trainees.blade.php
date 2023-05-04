@@ -29,6 +29,7 @@
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.phone') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.phone_additional') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.company') }}</strong></th>
+        <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.company-register-date') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.identity_number') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.status') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.city') }}</strong></th>
@@ -58,6 +59,9 @@
                 ="{{ $trainee->clean_phone_additional }}"
             </td>
             <td style="text-align:center;border:1px solid black;">{{ optional($trainee->company)->name_ar }}</td>
+            <td style="text-align:center;border:1px solid black;">
+                {{ optional($trainee->audits()->where('new_values', 'LIKE', '%company_id%')->first())->created_at_timezone }}
+            </td>
             <td style="border:1px solid black;">{{ $trainee->identity_number }}</td>
             <td style="border:1px solid black;">
                 @if ((int) $trainee->status === \App\Models\Back\Trainee::STATUS_PENDING_UPLOADING_FILES)

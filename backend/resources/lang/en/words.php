@@ -571,6 +571,6 @@ return [
     'verify_code' => 'Verify Code',
     'send_again' => 'Send Again',
     'view-dashboard-counters' =>'View total count of companies / trainees',
-
+    'company-register-date' => 'Company register date',
 
 ];
