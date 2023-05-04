@@ -13,6 +13,7 @@ namespace App\Models\Back;
 
 use Str;
 use App\Scope\TeamScope;
+use Timezone;
 
 class Audit extends \OwenIt\Auditing\Models\Audit
 {
@@ -42,5 +43,16 @@ class Audit extends \OwenIt\Auditing\Models\Audit
     public function getCreatedAtHumanAttribute()
     {
         return $this->created_at->toDateTimeString();
+    }
+
+    /**
+     *
+     * @return string|void
+     */
+    public function getCreatedAtTimezoneAttribute()
+    {
+        if ($this->created_at) {
+            return Timezone::convertToLocal($this->created_at, 'Y-m-d h:i A');
+        }
     }
 }
