@@ -60,7 +60,7 @@
             </td>
             <td style="text-align:center;border:1px solid black;">{{ optional($trainee->company)->name_ar }}</td>
             <td style="text-align:center;border:1px solid black;">
-                {{ optional($trainee->audits()->where('new_values', 'LIKE', '%company_id%')->first())->created_at_timezone }}
+                {{ optional($trainee->audits()->where('new_values', 'LIKE', '%company_id%')->latest()->first())->created_at_timezone }}
             </td>
             <td style="border:1px solid black;">{{ $trainee->identity_number }}</td>
             <td style="border:1px solid black;">
