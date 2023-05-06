@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\Back\TraineesGroupsController;
+<<<<<<< main
 use App\Http\Controllers\Teaching\TraineeGroupsController;
 use App\Models\Back\Invoice;
+=======
+>>>>>>> Change to Noon payment gateway
 use App\Models\Back\Trainee;
-use App\Models\Back\TraineeBlockList;
 use App\Models\User;
 
 Route::get('connect-with-me', function() {
@@ -52,7 +54,7 @@ Route::get('login/verify-code', [\App\Http\Controllers\VerificationsController::
 Route::post('login/verify-code', [\App\Http\Controllers\VerificationsController::class, 'verifyCode'])->name('login.verify-code');
 
 
-Route::post('tap', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'storeTapReceipt']);
+Route::post('noon', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'storeNoonReceipt']);
 
 Route::get('version', function() {
     return '4.7';
@@ -631,8 +633,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('/courses/{course_id}/course-batches/{course_batch_id}/course-batch-sessions/{course_batch_session}', [\App\Http\Controllers\Trainees\CourseBatchSessionsController::class, 'show'])->name('course-batch-session.show');
 
         Route::get('payment/options', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'showOptions'])->name('payment.options');
-        Route::get('payment/tap', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'showTap'])->name('payment.tap');
-        Route::get('payment/tap/objection', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'objectionOfAmount'])->name('payment.tap.objection');
+        Route::get('payment/choose-invoice', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'chooseInvoice'])->name('payment.choose-invoice');
+        Route::get('payment/objection', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'objectionOfAmount'])->name('payment.objection');
         Route::post('payment/receipt/store', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'storeReceipt'])->name('payment.upload-receipt.store');
         Route::get('payment/receipt', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'uploadReceipt'])->name('payment.upload-receipt');
 

@@ -9,85 +9,50 @@ use App\Models\Back\Audit;
 use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
 use App\Models\TraineeBankPaymentReceipt;
-use App\Services\CompanyMigrationHelper;
 use App\Services\InvoiceService;
-use Brick\PhoneNumber\PhoneNumber;
-use Exception;
-use GuzzleHttp\Exception\GuzzleException;
+use CodeBugLab\NoonPayment\NoonPayment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\View\View;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Mail;
-use Tap\TapPayment\Facade\TapPayment;
-use Tap\TapPayment\TapService;
 
 class PaymentCardController extends Controller
 {
     /**
-     * Show Payment Form
+     * Redirect user to payment form.
      *
      * @param Request $request
      *
      * @return RedirectResponse
-     * @throws GuzzleException
      */
-    public function showPaymentForm(Request $request): RedirectResponse
+    public function showPaymentForm(Request $request)
     {
-        $trainee = auth()->user()->trainee;
-
-        if (request()->invoice_id) {
-           $invoices =  $trainee->invoices()->where('id', request()->invoice_id)->notPaid();
-        } else {
-            $invoices = $trainee->invoices()->notPaid();
-        }
-
-        $pending_invoices_count = $invoices->count();
-        $pending_amount = $invoices->sum('grand_total');
-
-        if ($pending_invoices_count === 0 || $pending_amount === 0) {
-            // Handle logic
-            abort(404);
-        }
-
-        $payment_url = $this->getPaymentUrl($pending_amount, $invoices);
-
-        if (empty($payment_url)) {
-            abort(404);
-        }
-
-        return redirect($payment_url);
+        $invoice = Invoice::find($request->invoice_id);
+        return redirect($this->getPaymentUrl($invoice));
     }
 
     /**
-     * Show Payment Form
+     * Confirm the order had been paid successfully.
      *
      * @param Request $request
      *
-     * @return RedirectResponse|View
+     * @return RedirectResponse
      */
     public function chargePayment(Request $request)
     {
         sleep(2);
 
-        try {
-            $tap_service = new TapService();
-            $tap_invoice = $tap_service->findCharge($request->tap_id);
-        } catch (\Exception $exception) {
-            app()->make(CompanyMigrationHelper::class)
-                ->setSecondaryTap();
-            $tap_service = new TapService();
-            $tap_invoice = $tap_service->findCharge($request->tap_id);
-        }
+        $order = NoonPayment::getInstance()->getOrder($request->orderId);
 
-        if ($tap_invoice->isSuccess()) {
+        if ($this->isNoonPaymentSuccess($order)) {
             session()->put('success_payment', true);
         } else {
             session()->put('failed_payment', true);
         }
 
-        // Show success page
         return redirect()
             ->route('dashboard');
     }
@@ -95,137 +60,110 @@ class PaymentCardController extends Controller
     /**
      * To Get the Payment URL.
      *
-     * @param $amount
-     *
+     * @param \App\Models\Back\Invoice $invoice
      * @return mixed|null
-     * @throws GuzzleException
-     * @throws Exception
      */
-    private function getPaymentUrl($amount, $invoices)
+    private function getPaymentUrl(Invoice $invoice)
     {
-        try {
-            $trainee = optional(auth()->user())->trainee;
-            app()->make(CompanyMigrationHelper::class)
-                ->setTapKey($trainee->company_id);
+        $response = NoonPayment::getInstance()->initiate([
+            'order' => [
+                'reference' => $invoice->id,
+                'amount' => $invoice->grand_total,
+                'currency' => 'SAR',
+                'name' => 'Trainee fees payment',
+            ],
+            'billing' => [
+                'contact' => [
+                    'firstName' => Str::before($invoice->trainee->name, ' '),
+                    'lastName' => Str::afterLast($invoice->trainee->name, ' '),
+                    'phone' => $invoice->trainee->clean_phone,
+                    'email' => $invoice->trainee->email,
+                ],
+            ],
+            'configuration' => [
+                'locale' => 'ar',
+                'returnUrl' => url(route('trainees.payment.card.charge')),
+            ]
+        ]);
 
-            $payment = TapPayment::createCharge();
-            $payment->setCustomerName($trainee->name);
-            $payment->setDescription("Training Fees - رسوم التدريب");
-            $payment->setAmount($amount);
-            $payment->setCurrency("SAR");
-            $payment->setSource("src_card");
-
-            if (!empty($trainee->clean_phone)) {
-                $phone = PhoneNumber::parse('+'.$trainee->clean_phone);
-                if ($phone->isPossibleNumber()) {
-                    $payment->setCustomerPhone($phone->getCountryCode(), $phone->getNationalNumber());
-                } else {
-                    $payment->setCustomerPhone('966', '553139979');
-                }
-            } else {
-                $payment->setCustomerPhone('966', '553139979');
-            }
-
-            $payment->setRedirectUrl(url(route('trainees.payment.card.charge')));
-            $payment->setPostUrl('https://prod.ptc-ksa.com/tap'); // TODO: create tap.ptc-ksa.com dedicated instance.
-
-            $payment->setMetaData([
-                'invoices' => json_encode($invoices->pluck('id')->implode(',')),
-            ]);
-
-            $invoice = $payment->pay();
-            $payment_url = $invoice->getPaymetUrl();
-        } catch (Exception $exception) {
-            // Your handling of request failure
-            throw $exception;
+        if ($response->resultCode === 0) {
+            return $response->result->checkoutData->postUrl;
+        } else {
+            Log::error('Noon Payment Error', (array) $response);
+            abort(422);
         }
-
-        return $payment_url;
     }
 
     /**
-     * Receives Tap webhook and saves the receipt ID.
+     * Receives Noon webhook and saves the receipt ID.
      *
      * @param \Illuminate\Http\Request $request
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Throwable
      */
-    public function storeTapReceipt(Request $request)
+    public function storeNoonReceipt(Request $request)
     {
-        $status = $request->status;
+        $order = NoonPayment::getInstance()->getOrder($request->orderId);
+        // Confirm that Noon has the payment.
+        throw_if(!$order, 'Invoice not found in payment gateway');
 
-        $invoice_ids = explode(',', json_decode($request->metadata['invoices']));
-        $invoice = Invoice::withTrashed()->find($invoice_ids[0]);
-        app()->make(CompanyMigrationHelper::class)
-            ->setTapKey($invoice->company_id);
+        $invoice_id = $order->result->order->reference;
 
-        if ($status === 'CAPTURED') {
-            // Confirm that Tap has the payment.
-            $tap_service = new TapService();
-            $tap_invoice = $tap_service->findCharge($request->id);
-            throw_if(! $tap_invoice, 'Invoice not found in payment gateway');
-
-            $invoice_ids = explode(',', json_decode($request->metadata['invoices']));
-
+        if ($this->isNoonPaymentSuccess($order)) {
             DB::beginTransaction();
-            foreach ($invoice_ids as $invoice_id) {
-                Audit::create([
-                    'event' => 'tap',
-                    'auditable_id' => $invoice_id,
-                    'auditable_type' => Invoice::class,
-                    'new_values' => $request->toArray(),
-                ]);
-                $invoice = Invoice::notPaid()->with(['trainee' => function($q) {
-                    $q->withTrashed();
-                }])->find($invoice_id);
+            Audit::create([
+                'event' => 'noon',
+                'auditable_id' => $invoice_id,
+                'auditable_type' => Invoice::class,
+                'new_values' => $request->toArray(),
+            ]);
 
-                $invoice->update([
-                    'payment_method' => Invoice::PAYMENT_METHOD_CREDIT_CARD,
-                    'payment_reference_id' => $tap_invoice->getId(),
-                    'paid_at' => now(),
-                    'status' => Invoice::STATUS_PAID,
-                ]);
+            $invoice = Invoice::withoutGlobalScopes()->notPaid()->with(['trainee' => function($q) {
+                $q->withTrashed();
+            }])->find($invoice_id);
 
-                AccountingLedgerBook::create([
-                    'team_id' => $invoice->company->team_id,
-                    'company_id' => $invoice->company_id,
-                    'trainee_id' => $invoice->trainee_id,
-                    'invoice_id' => $invoice->id,
-                    'date' => now(),
-                    'description' => $tap_invoice->getId(),
-                    'reference'  => 'دفع عبر الموقع',
-                    'account_name' => $invoice->trainee->name,
-                    'credit' => $invoice->grand_total,
-                    'balance' => AccountingLedgerBook::getBalanceForTrainee($invoice->trainee->id) - $invoice->grand_total,
-                ]);
-            }
+            $invoice->update([
+                'payment_method' => Invoice::PAYMENT_METHOD_CREDIT_CARD,
+                'payment_reference_id' => $order->result->order->id,
+                'paid_at' => now(),
+                'status' => Invoice::STATUS_PAID,
+            ]);
+
+            AccountingLedgerBook::create([
+                'team_id' => $invoice->company->team_id,
+                'company_id' => $invoice->company_id,
+                'trainee_id' => $invoice->trainee_id,
+                'invoice_id' => $invoice->id,
+                'date' => now(),
+                'description' => $order->result->order->id,
+                'reference'  => 'دفع عبر الموقع',
+                'account_name' => $invoice->trainee->name,
+                'credit' => $invoice->grand_total,
+                'balance' => AccountingLedgerBook::getBalanceForTrainee($invoice->trainee->id) - $invoice->grand_total,
+            ]);
             DB::commit();
         } else {
-            $this->recordFailure($request);
+            $this->recordFailure($request, $order);
         }
     }
 
-    public function recordFailure(Request $request)
+    public function recordFailure(Request $request, $order)
     {
-        $invoice_ids = explode(',', json_decode($request->metadata['invoices']));
-
         DB::beginTransaction();
-        foreach ($invoice_ids as $invoice_id) {
-            $invoice = Invoice::with([
-                'trainee' => function ($q) {
-                    $q->withTrashed();
-                }
-            ])->find($invoice_id);
+        $invoice = Invoice::with([
+            'trainee' => function ($q) {
+                $q->withTrashed();
+            }
+        ])->find($order->result->order->reference);
 
-            Audit::create([
-                'team_id' => $invoice->trainee->team_id,
-                'event' => 'payment_failure',
-                'auditable_id' => $invoice->trainee->id,
-                'auditable_type' => Trainee::class,
-                'new_values' => $request->toArray(),
-            ]);
-        }
+        Audit::create([
+            'team_id' => $invoice->trainee->team_id,
+            'event' => 'payment_failure',
+            'auditable_id' => $invoice->trainee->id,
+            'auditable_type' => Trainee::class,
+            'new_values' => $request->toArray(),
+        ]);
         DB::commit();
     }
 
@@ -233,7 +171,6 @@ class PaymentCardController extends Controller
     {
         $trainee = auth()->user()->trainee;
 
-        $pending_invoices_count = $trainee->invoices()->notPaid()->count();
         $pending_amount = number_format($trainee->total_amount_owed, 2);
 
         return Inertia::render('Trainees/Payment/Index', [
@@ -242,11 +179,10 @@ class PaymentCardController extends Controller
             'invoices' => $trainee->invoices()->notPaid()->get(),
         ]);
     }
-    public function showTap()
+    public function chooseInvoice()
     {
         $trainee = auth()->user()->trainee;
 
-        $pending_invoices_count = $trainee->invoices()->notPaid()->count();
         $pending_amount = number_format($trainee->total_amount_owed, 2);
 
         return Inertia::render('Trainees/Payment/IndexTap', [
@@ -345,18 +281,22 @@ class PaymentCardController extends Controller
         ]);
 
         DB::beginTransaction();
-
         $invoice = app()->make(InvoiceService::class)
             ->changeInvoiceCost($request->invoice_id, $request->grand_total_override);
+        DB::commit();
 
+        // TODO: Make this a permission. Then assign the permission to the role group in the app.
         Mail::to(['hadeel@ptc-ksa.net', 'hadeel.m@ptc-ksa.net', 'reem@ptc-ksa.net', 'shahad.m@ptc-ksa.net'])
             ->queue(new EditAmountMail($invoice));
 
-        // Get collection of invoices because getPaymentUrl() expects a collection
-        $invoices = Invoice::where('id', $invoice->id)->get();
-        $payment_url = $this->getPaymentUrl($request->grand_total_override, $invoices);
-        DB::commit();
+        return $this->getPaymentUrl(Invoice::find($invoice->id));
+    }
 
-        return $payment_url;
+    private function isNoonPaymentSuccess($order)
+    {
+        return isset($order->result->transactions) &&
+            is_array($order->result->transactions) &&
+            $order->result->transactions[0]->type == "SALE" &&
+            $order->result->transactions[0]->status == "SUCCESS";
     }
 }
