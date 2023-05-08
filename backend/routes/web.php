@@ -112,6 +112,25 @@ Route::get('last-logged-at', function() {
     return $usersData;
 });
 
+Route::get('trainees-group-x', function() {
+    set_time_limit(1000);
+    $trainees = Trainee::where('trainee_group_id', '324f03cb-e574-4a2a-9bf5-d037e1944c1d')->get();
+
+    $traineeData = [];
+
+    foreach ($trainees as $trainee) {
+        $traineeData[] = [
+            'name' => $trainee->name,
+            'company' => optional($trainee->company)->name_ar,
+            'email' => $trainee->email,
+            'phone' => $trainee->phone,
+            'group' => optional($trainee->trainee_group)->name,
+        ];
+    }
+
+    return $traineeData;
+});
+
 Route::get('s1s1', function() {
     $trainees = Trainee::candidates()->where('created_at', '>', now()->setDay(11))->get();
 
