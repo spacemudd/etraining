@@ -98,9 +98,8 @@ Route::get('unpaid-invoices-x', function() {
     set_time_limit(1000);
     $data = [
         'status' => 0,
-        'from_date' => '2023-03-01',
     ];
-    $invoices = Invoice::where($data)->get();
+    $invoices = Invoice::where($data)->whereBetween('from_date', ['2023-03-01', '2023-03-31'])->get();
 
     $invoicesData = [];
 
