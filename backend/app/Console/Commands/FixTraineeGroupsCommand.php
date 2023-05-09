@@ -79,13 +79,32 @@ class FixTraineeGroupsCommand extends Command
 
 
         DB::beginTransaction();
-        $oldGroup = TraineeGroup::where('id', 'e7a256f6-1913-47df-a1c2-10c174bfbf5f')->first();
-        //dd(count($oldGroup->trainees()->pluck('trainees.id')));
-        //$oldGroup->trainees()->sync($tra)
+//        $oldGroup = TraineeGroup::where('id', 'e7a256f6-1913-47df-a1c2-10c174bfbf5f')->first();
+//        //dd(count($oldGroup->trainees()->pluck('trainees.id')));
+//        //$oldGroup->trainees()->sync($tra)
+//
+//        $allTraineeIds = Trainee::where('company_id', '7038b5b6-2f08-4471-9a55-80ff8006d898')->pluck('id');
+//
+//        $oldGroup->trainees()->attach($allTraineeIds);
 
-        //$allTraineeIds = Trainee::where('company_id', '7038b5b6-2f08-4471-9a55-80ff8006d898')->pluck('id');
-
-        $oldGroup->trainees()->attach($allTraineeIds);
+        $Trainees = Trainee::where('company_id', 'bf4340d7-8058-4cfa-93d4-fdb1bcc6465e')->get();
+        foreach ($Trainees as $Trainee) {
+            $Trainee->update([
+                'trainee_group_id' => '8108f6e9-6c82-4792-8cb7-7a9bb4c8a008',
+            ]);
+        }
+        $Trainees = Trainee::where('company_id', 'd6ff80d3-737b-48aa-9e09-7887beb1e2c0')->get();
+        foreach ($Trainees as $Trainee) {
+            $Trainee->update([
+                'trainee_group_id' => '03b831ae-7621-4910-9093-24a9ba11febf',
+            ]);
+        }
+        $Trainees = Trainee::where('company_id', '13e82fdc-e51a-430c-9c65-34040ef51306')->get();
+        foreach ($Trainees as $Trainee) {
+            $Trainee->update([
+                'trainee_group_id' => '8108f6e9-6c82-4792-8cb7-7a9bb4c8a008',
+            ]);
+        }
 
         DB::commit();
 

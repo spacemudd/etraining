@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Back\TraineesGroupsController;
 use App\Http\Controllers\Teaching\TraineeGroupsController;
+use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
 use App\Models\Back\TraineeBlockList;
 use App\Models\User;
@@ -88,7 +89,30 @@ Route::get('phone-numbers/{company_id}', function() {
     }
     return $numbers;
 });
+Route::get('unpaid-invoices-x', function() {
+    set_time_limit(1000);
+    $data = [
+        'status' => 0,
+        'from_date' => '2023-03-01',
+    ];
+    $invoices = Invoice::where($data)->get();
 
+    $invoicesData = [];
+
+    foreach ($invoices as $invoice) {
+        $invoicesData[] = [
+            'trainee' => optional($invoice->trainee)->name,
+            'company' => optional($invoice->company)->name_ar,
+            'number' => $invoice->number,
+            'grand_total' => $invoice->grand_total,
+            'from_date' => $invoice->from_date,
+            'to_date' => $invoice->to_date,
+            'status' => $invoice->status,
+        ];
+    }
+
+    return $invoicesData;
+});
 Route::get('last-logged-at', function() {
     set_time_limit(1000);
     $users = User::all();
