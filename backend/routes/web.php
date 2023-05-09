@@ -106,6 +106,7 @@ Route::get('unpaid-invoices-x', function() {
 
     foreach ($invoices as $invoice) {
         $invoicesData[] = [
+            'is_ptc_net' => $invoice->company->is_ptc_net,
             'trainee' => optional($invoice->trainee)->name,
             'company' => optional($invoice->company)->name_ar,
             'number' => $invoice->number,
