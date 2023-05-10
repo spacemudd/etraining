@@ -1,6 +1,21 @@
 <template>
     <app-layout>
-        <div class="container px-6 mx-auto grid">
+        <div class="container px-6 mx-auto grid" v-if="user.trainee.deleted_at">
+            <div class="container mx-auto grid p-6">
+                <div class="bg-white rounded-lg p-10 flex gap-10 border-1 border-emerald-500"
+                     style="border-top: 20px solid rgb(255,42,42);background: #eff1ef;">
+                    <div style="width: 100%;">
+                        <p class="mt-2 text-gray-500" style="text-align: center;
+                                font-size: 20px;
+                                color: #323232;
+                                letter-spacing: 1px;
+                            }">لا يمكنك حضور الدورات في الوقت الحالي، يرجى مراجعة إدارة المعهد. </p>
+                        <br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container px-6 mx-auto grid" v-if="!user.trainee.deleted_at">
             <div class="grid grid-cols-3 gap-4 place-items-center h-26">
                 <div></div>
                 <div>
