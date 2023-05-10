@@ -9,8 +9,21 @@
                                 font-size: 20px;
                                 color: #323232;
                                 letter-spacing: 1px;
-                            }">لا يمكنك حضور الدورات في الوقت الحالي، يرجى مراجعة إدارة المعهد. </p>
-                        <br>
+                            }">لا يمكنك حضور الدورات في الوقت الحالي، للتواصل معنا على الأرقام التالية.
+                            <br><br/>
+                            <span class="img {display:block} center-block inline-flex" style="text-align: center;">
+                                <svg width="40" height="40" class="mx-0.5 mt-1">
+                                    <image class="inline" xlink:href="https://i.ibb.co/CWK3g2s/whatsapp.png" src="https://i.ibb.co/CWK3g2s/whatsapp.png" width="15" height="15"/>
+                                </svg>
+                            <a class="center text-green-600 text-sm" style="text-align: center;" href="https://api.whatsapp.com/send?phone=966553139979"> &nbsp;  شؤون المتدربات </a>
+                            </span>
+                            <span class="img {display:block} center-block inline-flex" style="text-align: center;">
+                                <svg width="40" height="40" class="mx-0.5 mt-1">
+                                    <image class="inline" xlink:href="https://i.ibb.co/CWK3g2s/whatsapp.png" src="https://i.ibb.co/CWK3g2s/whatsapp.png" width="15" height="15"/>
+                                </svg>
+                            <a class="center text-green-600 text-sm" style="text-align: center;" href="https://api.whatsapp.com/send?phone=966553139979"> &nbsp;  إدارة المعهد </a>
+                            </span>
+                        </p>
                     </div>
                 </div>
             </div>
