@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\Back\TraineeBlockList;
 use Closure;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class SuspendedAccountsMiddleware
 {
@@ -24,7 +25,7 @@ class SuspendedAccountsMiddleware
 
         if ($trainee = optional(auth()->user())->trainee) {
             if ($trainee->deleted_at) {
-                abort('412', 'Account disabled');
+                return Inertia::render('Trainees/Dashboard');
             }
 
             $suspended = TraineeBlockList::where('name', $trainee->name)
