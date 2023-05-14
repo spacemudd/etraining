@@ -54,7 +54,7 @@ class CompanyTraineeExport implements FromView, WithEvents, WithStyles
      */
     public function view(): View
     {
-        $q = Trainee::query()->where('company_id', $this->company_id);
+        $q = Trainee::query()->where('company_id', $this->company_id)->withTrashed();
 
         $trainees = $q->with('company')->get()->toBase();
 
