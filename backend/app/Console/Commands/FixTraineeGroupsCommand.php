@@ -87,25 +87,36 @@ class FixTraineeGroupsCommand extends Command
 //
 //        $oldGroup->trainees()->attach($allTraineeIds);
 
-        $Trainees = Trainee::where('company_id', '272797d1-c84e-439c-9b18-d6196f1c7778')->get();
+        $Trainees = Trainee::where('company_id', 'cf9b2daf-07b1-4d1f-9935-5c3542099d76')->get();
         foreach ($Trainees as $Trainee) {
             $Trainee->update([
                 'trainee_group_id' => '17044fa6-b475-4818-8ef6-84b42a2f52c8',
             ]);
         }
-//        $Trainees = Trainee::where('company_id', 'd6ff80d3-737b-48aa-9e09-7887beb1e2c0')->get();
-//        foreach ($Trainees as $Trainee) {
-//            $Trainee->update([
-//                'trainee_group_id' => '03b831ae-7621-4910-9093-24a9ba11febf',
-//            ]);
-//        }
-//        $Trainees = Trainee::where('company_id', '13e82fdc-e51a-430c-9c65-34040ef51306')->get();
-//        foreach ($Trainees as $Trainee) {
-//            $Trainee->update([
-//                'trainee_group_id' => '8108f6e9-6c82-4792-8cb7-7a9bb4c8a008',
-//            ]);
-//        }
-
+        $Trainees = Trainee::where('company_id', '16a53950-7e59-4a1f-9194-2541fc43276d')->get();
+        foreach ($Trainees as $Trainee) {
+            $Trainee->update([
+                'trainee_group_id' => '17044fa6-b475-4818-8ef6-84b42a2f52c8',
+            ]);
+        }
+        $Trainees = Trainee::where('company_id', '707911c3-1e6f-4f62-a620-279d359797a7')->get();
+        foreach ($Trainees as $Trainee) {
+            $Trainee->update([
+                'trainee_group_id' => '17044fa6-b475-4818-8ef6-84b42a2f52c8',
+            ]);
+        }
+        $Trainees = Trainee::where('company_id', '5a1e0a66-4b41-4687-97df-0eec16a88bb5')->get();
+        foreach ($Trainees as $Trainee) {
+            $Trainee->update([
+                'trainee_group_id' => '17044fa6-b475-4818-8ef6-84b42a2f52c8',
+            ]);
+        }
+        $Trainees = Trainee::where('company_id', '1be7e3fb-924a-47bb-9331-939567d5e640')->get();
+        foreach ($Trainees as $Trainee) {
+            $Trainee->update([
+                'trainee_group_id' => '17044fa6-b475-4818-8ef6-84b42a2f52c8',
+            ]);
+        }
         DB::commit();
 
         $this->info('Done!');
