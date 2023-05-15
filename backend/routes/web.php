@@ -1,11 +1,6 @@
 <?php
 
 use App\Http\Controllers\Back\TraineesGroupsController;
-<<<<<<< main
-use App\Http\Controllers\Teaching\TraineeGroupsController;
-use App\Models\Back\Invoice;
-=======
->>>>>>> Change to Noon payment gateway
 use App\Models\Back\Trainee;
 use App\Models\User;
 
