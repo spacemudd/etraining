@@ -164,7 +164,7 @@ class FinancialInvoicesController extends Controller
 
         $days_to_charge = $from_date->diffInDays($to_date) + 1;
 
-        $cost = Money::of($company->monthly_subscription_per_trainee, 'SAR', new CustomContext(5), RoundingMode::HALF_UP)
+        $cost = Money::of($company->monthly_subscription_per_trainee ?? 0, 'SAR', new CustomContext(5), RoundingMode::HALF_UP)
             ->dividedBy($from_date->daysInMonth, RoundingMode::HALF_UP)
             ->multipliedBy($days_to_charge, RoundingMode::HALF_UP)
             ->to(new CustomContext(2), RoundingMode::HALF_UP)

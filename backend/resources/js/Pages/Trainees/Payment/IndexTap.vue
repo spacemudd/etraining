@@ -14,7 +14,7 @@
             <breadcrumb-container
                 :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
-                    {title: 'payment', link: route('trainees.payment.tap')},
+                    {title: 'payment', link: route('trainees.payment.choose-invoice')},
                 ]"
             ></breadcrumb-container>
 
@@ -52,7 +52,7 @@
                             <inertia-link
                                 class="text-blue-600"
                                 target="_blank"
-                                :href="route('trainees.payment.tap.objection', {invoice_id: this.invoiceToPay ? this.invoiceToPay.id : '' })">
+                                :href="route('trainees.payment.objection', {invoice_id: this.invoiceToPay ? this.invoiceToPay.id : '' })">
                                 دفع مبلغ آخر
                             </inertia-link>
                         </div>

@@ -230,6 +230,8 @@
       <excludeFolder url="file://$MODULE_DIR$/backend/public" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/symfony/polyfill-intl-icu" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/milon/barcode" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/codebuglab/noon-payment-laravel" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/jn-jairo/laravel-ngrok" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

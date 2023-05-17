@@ -14,7 +14,7 @@
             <breadcrumb-container
                 :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
-                    {title: 'payment', link: route('trainees.payment.tap')},
+                    {title: 'payment', link: route('trainees.payment.choose-invoice')},
                 ]"
             ></breadcrumb-container>
 
