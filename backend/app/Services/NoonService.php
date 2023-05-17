@@ -7,6 +7,10 @@ use CodeBugLab\NoonPayment\NoonPayment;
 use Illuminate\Support\Str;
 use RuntimeException;
 
+/**
+ * https://docs.noonpayments.com/start/introduction
+ *
+ */
 class NoonService implements PaymentServiceInterface
 {
     /**
@@ -50,7 +54,7 @@ class NoonService implements PaymentServiceInterface
             return $url->result->checkoutData->postUrl;
         }
 
-        throw new RuntimeException('Noon Payment Error');
+        throw new RuntimeException('Noon payment fatal error: '.$url->resultCode.' - '.$url->message);
     }
 
     /**
