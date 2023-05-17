@@ -70,7 +70,7 @@ class PaymentCardController extends Controller
                 'reference' => $invoice->id,
                 'amount' => $invoice->grand_total,
                 'currency' => 'SAR',
-                'name' => 'Trainee fees payment',
+                'name' => $invoice->trainee->name,
             ],
             'billing' => [
                 'contact' => [
