@@ -10,28 +10,36 @@ use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
 use App\Models\TraineeBankPaymentReceipt;
 use App\Services\InvoiceService;
+use App\Services\NoonService;
 use CodeBugLab\NoonPayment\NoonPayment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Mail;
 
 class PaymentCardController extends Controller
 {
+    private $paymentService;
+
+    public function __construct(NoonService $paymentService)
+    {
+        $this->paymentService = $paymentService;
+    }
+
     /**
      * Redirect user to payment form.
      *
      * @param Request $request
      *
      * @return RedirectResponse
+     * @throws \Exception
      */
     public function showPaymentForm(Request $request)
     {
         $invoice = Invoice::find($request->invoice_id);
-        return redirect($this->getPaymentUrl($invoice));
+        $url = $this->paymentService->createPaymentUrlForInvoice($invoice);
+        return redirect($url);
     }
 
     /**
@@ -45,9 +53,9 @@ class PaymentCardController extends Controller
     {
         sleep(2);
 
-        $order = NoonPayment::getInstance()->getOrder($request->orderId);
+        $success = $this->paymentService->isOrderSuccessful($request->orderId);
 
-        if ($this->isNoonPaymentSuccess($order)) {
+        if ($success) {
             session()->put('success_payment', true);
         } else {
             session()->put('failed_payment', true);
@@ -55,43 +63,6 @@ class PaymentCardController extends Controller
 
         return redirect()
             ->route('dashboard');
-    }
-
-    /**
-     * To Get the Payment URL.
-     *
-     * @param \App\Models\Back\Invoice $invoice
-     * @return mixed|null
-     */
-    private function getPaymentUrl(Invoice $invoice)
-    {
-        $response = NoonPayment::getInstance()->initiate([
-            'order' => [
-                'reference' => $invoice->id,
-                'amount' => $invoice->grand_total,
-                'currency' => 'SAR',
-                'name' => $invoice->trainee->name,
-            ],
-            'billing' => [
-                'contact' => [
-                    'firstName' => Str::before($invoice->trainee->name, ' '),
-                    'lastName' => Str::afterLast($invoice->trainee->name, ' '),
-                    'phone' => $invoice->trainee->clean_phone,
-                    'email' => $invoice->trainee->email,
-                ],
-            ],
-            'configuration' => [
-                'locale' => 'ar',
-                'returnUrl' => url(route('trainees.payment.card.charge')),
-            ]
-        ]);
-
-        if ($response->resultCode === 0) {
-            return $response->result->checkoutData->postUrl;
-        } else {
-            Log::error('Noon Payment Error', (array) $response);
-            abort(422);
-        }
     }
 
     /**
@@ -104,13 +75,14 @@ class PaymentCardController extends Controller
      */
     public function storeNoonReceipt(Request $request)
     {
-        $order = NoonPayment::getInstance()->getOrder($request->orderId);
+        $order = $this->paymentService->getOrder($request->orderId);
+
         // Confirm that Noon has the payment.
         throw_if(!$order, 'Invoice not found in payment gateway');
 
         $invoice_id = $order->result->order->reference;
 
-        if ($this->isNoonPaymentSuccess($order)) {
+        if ($this->paymentService->isPaymentSuccess($order)) {
             DB::beginTransaction();
             Audit::create([
                 'event' => 'noon',
@@ -273,6 +245,12 @@ class PaymentCardController extends Controller
         return redirect()->route('dashboard');
     }
 
+    /**
+     * @throws \Throwable
+     * @throws \Brick\Money\Exception\MoneyMismatchException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \Brick\Money\Exception\UnknownCurrencyException
+     */
     public function changeInvoiceAmountRedirectToPaymentGateway(Request $request)
     {
         $request->validate([
@@ -289,14 +267,6 @@ class PaymentCardController extends Controller
         Mail::to(['hadeel@ptc-ksa.net', 'hadeel.m@ptc-ksa.net', 'reem@ptc-ksa.net', 'shahad.m@ptc-ksa.net'])
             ->queue(new EditAmountMail($invoice));
 
-        return $this->getPaymentUrl(Invoice::find($invoice->id));
-    }
-
-    private function isNoonPaymentSuccess($order)
-    {
-        return isset($order->result->transactions) &&
-            is_array($order->result->transactions) &&
-            $order->result->transactions[0]->type == "SALE" &&
-            $order->result->transactions[0]->status == "SUCCESS";
+        return $this->paymentService->createPaymentUrlForInvoice($invoice); // redirect is done by frontend js.
     }
 }

@@ -1,11 +1,6 @@
 {
-<<<<<<< main
-    "/js/app.js": "/js/app.js?id=48e556edee448074d263",
-    "/css/app.css": "/css/app.css?id=fd8de5bf8dccc503a41e",
-=======
-    "/js/app.js": "/js/app.js?id=302a5c46beb990aa639b",
+    "/js/app.js": "/js/app.js?id=18d0c0c849666dad9279",
     "/css/app.css": "/css/app.css?id=f31a8f0da45f173c229b",
->>>>>>> Change to Noon payment gateway
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
     "/js/vendor.js": "/js/vendor.js?id=e9958555e3044b2d65f3"
 }

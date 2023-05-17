@@ -4,6 +4,9 @@ use App\Http\Controllers\Back\TraineesGroupsController;
 use App\Models\Back\Trainee;
 use App\Models\User;
 
+Route::get('my-ip', function() {
+   return request()->ip();
+});
 Route::get('connect-with-me', function() {
     return redirect('https://api.whatsapp.com/send?phone=966553139979');
 });
@@ -49,7 +52,7 @@ Route::get('login/verify-code', [\App\Http\Controllers\VerificationsController::
 Route::post('login/verify-code', [\App\Http\Controllers\VerificationsController::class, 'verifyCode'])->name('login.verify-code');
 
 
-Route::post('noon', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'storeNoonReceipt']);
+Route::post('noon', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'storeNoonReceipt'])->name('webhooks.noon');
 
 Route::get('version', function() {
     return '4.7';
