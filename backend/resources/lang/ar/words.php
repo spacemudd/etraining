@@ -593,4 +593,5 @@ return [
     'send_again' => 'إعادة الارسال',
     'view-dashboard-counters' =>'عرض اجمالي عدد المتدربات والشركات',
     'company-register-date' => 'تاريخ الربط مع الشركة',
+    'salesperson_email' => 'ايميل المندوب',
 ];

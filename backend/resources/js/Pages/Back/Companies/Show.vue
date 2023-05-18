@@ -46,6 +46,7 @@
                             'email',
                             'monthly_subscription_per_trainee',
                             'shelf_number',
+                            'salesperson_email',
                             ]"
                 >
                     <div class="col-span-4 sm:col-span-1">
@@ -387,6 +388,7 @@ export default {
                 email: '',
                 monthly_subscription_per_trainee: '',
                 shelf_number: '',
+                salesperson_email: '',
             }, {
                 bag: 'createCompany',
             })
@@ -402,7 +404,6 @@ export default {
                     created_at_date: invoiceCollection.created_at_date,
                     created_by_id: invoiceCollection.created_by_id,
                     company_id: invoiceCollection.company_id,
-
                 }));
             }
         },

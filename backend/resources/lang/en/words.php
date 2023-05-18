@@ -572,5 +572,5 @@ return [
     'send_again' => 'Send Again',
     'view-dashboard-counters' =>'View total count of companies / trainees',
     'company-register-date' => 'Company register date',
-
+    'salesperson_email' => 'Salesperson email',
 ];

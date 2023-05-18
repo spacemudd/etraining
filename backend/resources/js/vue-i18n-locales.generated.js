@@ -609,7 +609,9 @@ export default {
             "view-permissions": "عرض الصلاحيات",
             "verify_code": "أدخل رمز التحقق",
             "send_again": "إعادة الارسال",
-            "view-dashboard-counters": "عرض اجمالي عدد المتدربات والشركات"
+            "view-dashboard-counters": "عرض اجمالي عدد المتدربات والشركات",
+            "company-register-date": "تاريخ الربط مع الشركة",
+            "salesperson_email": "ايميل المندوب"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1354,7 +1356,9 @@ export default {
             "view-permissions": "View Permissions",
             "verify_code": "Verify Code",
             "send_again": "Send Again",
-            "view-dashboard-counters": "View total count of companies / trainees"
+            "view-dashboard-counters": "View total count of companies / trainees",
+            "company-register-date": "Company register date",
+            "salesperson_email": "Salesperson email"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",
