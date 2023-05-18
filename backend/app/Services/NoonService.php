@@ -29,14 +29,14 @@ class NoonService implements PaymentServiceInterface
                 'currency' => 'SAR',
                 'name' => Str::replace('  ', ' ', trim($invoice->trainee->name)),
                 'description' => 'Training fees for period - '.$invoice->from_date.' - '.$invoice->to_date,
-                'ipAddress' => request()->ip(),
+                // 'ipAddress' => request()->ip(),
             ],
             'billing' => [
                 'contact' => [
                     'firstName' => Str::before($invoice->trainee->name, ' '),
                     'lastName' => Str::afterLast($invoice->trainee->name, ' '),
                     'phone' => $invoice->trainee->clean_phone,
-                    'email' => $invoice->trainee->email,
+                    //'email' => $invoice->trainee->email,
                 ],
             ],
             'deviceFingerPrint' => [
