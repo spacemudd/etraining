@@ -12,7 +12,7 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        '/tap',
+        '/noon',
         '/api/trainees/uploadcv',
         '/login', //  For testing purposes.
     ];
