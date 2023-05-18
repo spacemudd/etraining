@@ -26,9 +26,7 @@ class TraineesFilesController extends Controller
         $trainee = Trainee::withTrashed()->findOrFail($trainee_id);
 
         $trainee->addMediaFromRequest('attached_file')
-            ->sanitizingFileName(function ($fileName) {
-                return Str::slug($fileName);
-            })
+            ->usingFileName(request()->file('attached_file')->hashName())
             ->toMediaCollection('general_files');
 
         return redirect()->route('back.trainees.files.index', $trainee->id);
