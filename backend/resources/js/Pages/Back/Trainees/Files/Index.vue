@@ -50,7 +50,9 @@
                 <form @submit.prevent="submitForm" enctype="multipart/form-data">
                     <div class="importFile mt-10">
                         <input type="file"
+                               name="attached_file"
                                ref="attached_file"
+                               required
                                @change="importFileChanged">
                     </div>
                     <div class="flex mt-8">
