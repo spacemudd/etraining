@@ -131,6 +131,7 @@ class Instructor extends Model implements HasMedia, SearchableLabels, Auditable
     public function uploadToFolder($file, $folder)
     {
         return $this->addMedia($file)
+            ->usingFileName($file->hashName())
             ->withAttributes([
                 'team_id' => $this->team_id,
             ])

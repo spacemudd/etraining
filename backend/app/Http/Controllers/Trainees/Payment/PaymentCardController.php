@@ -11,7 +11,6 @@ use App\Models\Back\Trainee;
 use App\Models\TraineeBankPaymentReceipt;
 use App\Services\InvoiceService;
 use App\Services\NoonService;
-use CodeBugLab\NoonPayment\NoonPayment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
