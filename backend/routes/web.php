@@ -651,3 +651,9 @@ Route::middleware(['auth:sanctum'])->group(function() {
     Route::post('/api/instructors/uploadcv', [\App\Http\Controllers\Back\InstructorsController::class, 'storeCvFromApplication'])->name('api.register.instructors.upload-cv');
     Route::post('/api/trainees/uploadcv', [\App\Http\Controllers\Back\TraineesController::class, 'storeCvFromApplication'])->name('api.register.trainees.upload-cv');
 });
+
+// Some routes for nowyer
+Route::get('sm3', function() { return redirect()->to('https://forms.gle/LgA7nq7zCPvFTBKg7'); });
+Route::get('sm4', function() { return redirect()->to('https://forms.gle/ibSpSVpZWaiS7njc8'); });
+Route::get('sm1', function() { return redirect()->to('https://forms.gle/c3B55fraLHGwT2ui6'); });
+Route::get('sm2', function() { return redirect()->to('https://forms.gle/2ytK4g7KjBrrfAkYA'); });
