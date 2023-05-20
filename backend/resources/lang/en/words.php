@@ -573,4 +573,9 @@ return [
     'view-dashboard-counters' =>'View total count of companies / trainees',
     'company-register-date' => 'Company register date',
     'salesperson_email' => 'Salesperson email',
+    'restore' => 'Restore',
+    'restore-deleted-companies' => 'Restore deleted companies',
+    'view-deleted-companies' => 'View deleted companies',
+    'company-is-deleted' => 'Company is deleted',
+    'deleted' => 'Deleted',
 ];

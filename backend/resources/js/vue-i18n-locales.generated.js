@@ -611,7 +611,12 @@ export default {
             "send_again": "إعادة الارسال",
             "view-dashboard-counters": "عرض اجمالي عدد المتدربات والشركات",
             "company-register-date": "تاريخ الربط مع الشركة",
-            "salesperson_email": "ايميل المندوب"
+            "salesperson_email": "ايميل المندوب",
+            "restore": "استرجاع",
+            "restore-deleted-companies": "استرجاع الشركات المحذوفة",
+            "view-deleted-companies": "عرض الشركات المحذوفة",
+            "company-is-deleted": "الشركة محذوفة",
+            "deleted": "محذوف"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1358,7 +1363,12 @@ export default {
             "send_again": "Send Again",
             "view-dashboard-counters": "View total count of companies / trainees",
             "company-register-date": "Company register date",
-            "salesperson_email": "Salesperson email"
+            "salesperson_email": "Salesperson email",
+            "restore": "Restore",
+            "restore-deleted-companies": "Restore deleted companies",
+            "view-deleted-companies": "View deleted companies",
+            "company-is-deleted": "Company is deleted",
+            "deleted": "Deleted"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

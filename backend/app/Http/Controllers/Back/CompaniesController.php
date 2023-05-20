@@ -104,8 +104,13 @@ class CompaniesController extends Controller
             ->withCount([
                 'trainees',
             ])
-            ->with('region')
-            ->findOrFail($id);
+            ->with('region');
+
+        if (auth()->user()->can('view-deleted-companies')) {
+            $company = $company->withTrashed();
+        }
+
+        $company = $company->findOrFail($id);
 
         $invoices = $company->invoices()
             ->select('*')
@@ -194,6 +199,26 @@ class CompaniesController extends Controller
             $company->update(['is_ptc_net' => now()]);
         }
 
+        return redirect()->route('back.companies.show', $id);
+    }
+
+    public function deleted()
+    {
+        $this->authorize('view-deleted-companies');
+
+        if (request()->expectsJson()) {
+            return Company::onlyTrashed()->get();
+        }
+
+        return Inertia::render('Back/Companies/Index', [
+            'companies' => Company::onlyTrashed()->paginate(20),
+        ]);
+    }
+
+    public function restore($id)
+    {
+        $this->authorize('restore-deleted-companies');
+        $company = Company::onlyTrashed()->findOrFail($id)->restore();
         return redirect()->route('back.companies.show', $id);
     }
 }

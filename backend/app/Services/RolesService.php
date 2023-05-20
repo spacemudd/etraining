@@ -55,6 +55,8 @@ class RolesService
         'manage-trainee-groups',
         'block-trainee',
         'view-dashboard-counters',
+        'view-deleted-companies',
+        'restore-deleted-companies',
         // add the same name of the role to translation files.
     ];
 
