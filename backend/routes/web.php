@@ -137,10 +137,45 @@ Route::get('last-logged-at', function() {
 
     return $usersData;
 });
-
-Route::get('trainees-group-x', function() {
+Route::get('trainees-group-2', function() {
     set_time_limit(1000);
-    $trainees = Trainee::where('trainee_group_id', '47396796-9ee4-41d0-a069-179ea1b83a56')->get();
+    $trainees = Trainee::where('trainee_group_id', 'e7a256f6-1913-47df-a1c2-10c174bfbf5f')->get();
+
+    $traineeData = [];
+
+    foreach ($trainees as $trainee) {
+        $traineeData[] = [
+            'name' => $trainee->name,
+            'company' => optional($trainee->company)->name_ar,
+            'email' => $trainee->email,
+            'phone' => $trainee->phone,
+            'group' => optional($trainee->trainee_group)->name,
+        ];
+    }
+
+    return $traineeData;
+});
+Route::get('trainees-group-4', function() {
+    set_time_limit(1000);
+    $trainees = Trainee::where('trainee_group_id', 'dc856095-4a0d-471d-9a9f-c8c4ca430e91')->get();
+
+    $traineeData = [];
+
+    foreach ($trainees as $trainee) {
+        $traineeData[] = [
+            'name' => $trainee->name,
+            'company' => optional($trainee->company)->name_ar,
+            'email' => $trainee->email,
+            'phone' => $trainee->phone,
+            'group' => optional($trainee->trainee_group)->name,
+        ];
+    }
+
+    return $traineeData;
+});
+Route::get('trainees-group-5', function() {
+    set_time_limit(1000);
+    $trainees = Trainee::where('trainee_group_id', '3a021404-4876-4a5d-b889-59889aa19256')->get();
 
     $traineeData = [];
 
