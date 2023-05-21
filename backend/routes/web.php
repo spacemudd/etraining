@@ -140,7 +140,7 @@ Route::get('last-logged-at', function() {
 
 Route::get('trainees-group-x', function() {
     set_time_limit(1000);
-    $trainees = Trainee::where('trainee_group_id', '324f03cb-e574-4a2a-9bf5-d037e1944c1d')->get();
+    $trainees = Trainee::where('trainee_group_id', '47396796-9ee4-41d0-a069-179ea1b83a56')->get();
 
     $traineeData = [];
 
