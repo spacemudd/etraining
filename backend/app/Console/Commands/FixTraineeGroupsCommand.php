@@ -87,25 +87,67 @@ class FixTraineeGroupsCommand extends Command
 //
 //        $oldGroup->trainees()->attach($allTraineeIds);
 
-        $Trainees = Trainee::where('company_id', 'd53aa083-77bf-4e63-90cf-bcdcc1fad94e')->get();
+        $Trainees = Trainee::where('company_id', '98ecbc18-5467-4b9d-bc21-bedfbae25c5d')->get();
         foreach ($Trainees as $Trainee) {
             $Trainee->update([
                 'trainee_group_id' => '42c87faa-a872-4cdc-9bad-44ec019c9047',
             ]);
         }
-        $Trainees = Trainee::where('company_id', 'd72becb3-6e03-4546-85fa-4dbd008fccb6')->get();
+        $Trainees = Trainee::where('company_id', '720dda90-1402-41bf-a613-1dd0abebcf33')->get();
         foreach ($Trainees as $Trainee) {
             $Trainee->update([
                 'trainee_group_id' => '42c87faa-a872-4cdc-9bad-44ec019c9047',
             ]);
         }
-        $Trainees = Trainee::where('company_id', '7038b5b6-2f08-4471-9a55-80ff8006d898')->get();
+        $Trainees = Trainee::where('company_id', '2b9e3055-cfe6-4e05-aae1-9916486516fc')->get();
         foreach ($Trainees as $Trainee) {
             $Trainee->update([
                 'trainee_group_id' => '42c87faa-a872-4cdc-9bad-44ec019c9047',
             ]);
         }
-        $Trainees = Trainee::where('company_id', '2cfc4019-aae7-40cc-ab2a-94efaba0d8af')->get();
+        $Trainees = Trainee::where('company_id', '588b44f5-a37e-4128-8a4e-dbc196a8a6ed')->get();
+        foreach ($Trainees as $Trainee) {
+            $Trainee->update([
+                'trainee_group_id' => '42c87faa-a872-4cdc-9bad-44ec019c9047',
+            ]);
+        }
+        $Trainees = Trainee::where('company_id', 'b1cdebbd-1cd8-44c5-b941-9863376e337d')->get();
+        foreach ($Trainees as $Trainee) {
+            $Trainee->update([
+                'trainee_group_id' => '42c87faa-a872-4cdc-9bad-44ec019c9047',
+            ]);
+        }
+        $Trainees = Trainee::where('company_id', '55cac7e0-de8a-481a-ba48-a09837545017')->get();
+        foreach ($Trainees as $Trainee) {
+            $Trainee->update([
+                'trainee_group_id' => '42c87faa-a872-4cdc-9bad-44ec019c9047',
+            ]);
+        }
+        $Trainees = Trainee::where('company_id', '417d1f00-1454-4269-8e34-b0446dd72e2c')->get();
+        foreach ($Trainees as $Trainee) {
+            $Trainee->update([
+                'trainee_group_id' => '42c87faa-a872-4cdc-9bad-44ec019c9047',
+            ]);
+        }
+        $Trainees = Trainee::where('company_id', 'acde7453-9b6d-4580-beab-1f54b57a12c5')->get();
+        foreach ($Trainees as $Trainee) {
+            $Trainee->update([
+                'trainee_group_id' => '42c87faa-a872-4cdc-9bad-44ec019c9047',
+            ]);
+        }
+        $Trainees = Trainee::where('company_id', 'c68b9af4-5758-467e-b1af-07006ceff2bb')->get();
+        foreach ($Trainees as $Trainee) {
+            $Trainee->update([
+                'trainee_group_id' => '42c87faa-a872-4cdc-9bad-44ec019c9047',
+            ]);
+        }
+        $Trainees = Trainee::where('company_id', 'bb99592e-532c-45f3-88c9-f7a00210d1ea')->get();
+        foreach ($Trainees as $Trainee) {
+            $Trainee->update([
+                'trainee_group_id' => '42c87faa-a872-4cdc-9bad-44ec019c9047',
+            ]);
+        }
+        $Trainees = Trainee::where('company_id', 'bb8b2f2b-deed-4419-8756-1f78256ae6cb')->get();
         foreach ($Trainees as $Trainee) {
             $Trainee->update([
                 'trainee_group_id' => '42c87faa-a872-4cdc-9bad-44ec019c9047',
