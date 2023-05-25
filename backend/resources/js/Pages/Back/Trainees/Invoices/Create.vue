@@ -175,13 +175,17 @@ export default {
             }
         },
         createTraineeInvoice() {
-            this.form.post(`/back/trainees/${this.trainee.id}/invoices/`, {
-                preserveScroll: true
-            }).catch(error => {
-                this.form.processing = false;
-            }).finally(() => {
-                this.form.processing = false;
-            });
+            if(this.form.invoice_value <= 5000 ){
+                this.form.post(`/back/trainees/${this.trainee.id}/invoices/`, {
+                    preserveScroll: true
+                }).catch(error => {
+                    this.form.processing = false;
+                }).finally(() => {
+                    this.form.processing = false;
+                });
+            }else if(confirm(this.$t('words.the-maximum'))){
+                return 0;
+            }
         },
     },
 }

@@ -578,4 +578,5 @@ return [
     'view-deleted-companies' => 'View deleted companies',
     'company-is-deleted' => 'Company is deleted',
     'deleted' => 'Deleted',
+    'the-maximum' => 'The maximum is 5000 SAR',
 ];

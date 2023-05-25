@@ -599,4 +599,5 @@ return [
     'view-deleted-companies' => 'عرض الشركات المحذوفة',
     'company-is-deleted' => 'الشركة محذوفة',
     'deleted' => 'محذوف',
+    'the-maximum' => 'الحد الأقصى 5000 ريال',
 ];
