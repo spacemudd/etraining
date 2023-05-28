@@ -5,7 +5,7 @@
                 <div class="col text-center h-20" v-if="is_trainee">
                     <a target="_blank"
                        rel="noopener noreferrer"
-                       href="/TraineeGuide.pdf"
+                       href="/GuideTrainee.pdf"
                        class="bg-red-500 px-2 py-1 rounded mx-auto text-white hover:bg-red-700">
                         دليل استخدام المنصة للمتدربين
                     </a>
