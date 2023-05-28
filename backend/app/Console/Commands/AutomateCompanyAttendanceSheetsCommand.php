@@ -89,7 +89,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                     $clone->cc_emails .= ', '.$company->salesperson_email;
                 }
                 $clone->save();
-                //app()->make(CompanyAttendanceReportService::class)->approve($clone->id);
+                app()->make(CompanyAttendanceReportService::class)->approve($clone->id);
             } else {
                 if (!$company->email) {
                     $this->info('No email for company. Skipping: '.$company->name_ar);
