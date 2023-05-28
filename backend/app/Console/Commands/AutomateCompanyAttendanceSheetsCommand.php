@@ -41,6 +41,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
     public function handle()
     {
         $companies = Company::whereNotNull('is_ptc_net')
+            ->whereIn('id', ['2ea73041-e686-4093-b830-260b488eb014', ''])
             ->get();
 
         foreach ($companies as $company) {
@@ -48,7 +49,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 continue;
             }
 
-            $this->info('Processing company: '.$company->name_ar.' - '.$company->id);
+            $this->info('Processing company: '.$company->name_ar);
 
             // Has report for current month?
             $currentMonthReport = $company->company_attendance_reports()
@@ -79,7 +80,8 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 //    }
                 //}
 
-                $clone = app()->make(CompanyAttendanceReportService::class)->clone($lastReport->id);
+                //$clone = app()->make(CompanyAttendanceReportService::class)->clone($lastReport->id);
+                $clone = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
                 $clone->date_from = '2023-05-01';
                 $clone->date_to = '2023-05-30';
                 $clone->cc_emails = Str::replace('ptc-ksa.com', 'ptc-ksa.net', $clone->cc_emails);
@@ -102,7 +104,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                     $report->cc_emails .= ', '.$company->salesperson_email;
                 }
                 $report->save();
-                //app()->make(CompanyAttendanceReportService::class)->approve($report->id);
+                app()->make(CompanyAttendanceReportService::class)->approve($report->id);
             }
         }
 
