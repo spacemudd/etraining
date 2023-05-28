@@ -41,7 +41,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
     public function handle()
     {
         $companies = Company::whereNotNull('is_ptc_net')
-            ->whereIn('id', ['2ea73041-e686-4093-b830-260b488eb014', ''])
+           // ->whereIn('id', ['2ea73041-e686-4093-b830-260b488eb014', ''])
             ->get();
 
         foreach ($companies as $company) {
