@@ -84,9 +84,9 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 $clone = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
                 $clone->date_from = '2023-05-01';
                 $clone->date_to = '2023-05-30';
-                $clone->cc_emails = Str::replace('ptc-ksa.com', 'ptc-ksa.net', $clone->cc_emails);
+                $clone->cc_emails = Str::replace('ptc-ksa.com', 'ptc-ksa.net', $lastReport->cc_emails);
                 if ($company->salesperson_email) {
-                    $clone->cc_emails = $clone->cc_emails.', '.$company->salesperson_email;
+                    $clone->cc_emails .= ', '.$company->salesperson_email;
                 }
                 $clone->save();
                 app()->make(CompanyAttendanceReportService::class)->approve($clone->id);
@@ -101,7 +101,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 $report->date_to = '2023-05-30';
                 $report->cc_emails = 'sara@ptc-ksa.net, m_shehatah@ptc-ksa.net, ceo@ptc-ksa.net, mashael.a@ptc-ksa.net';
                 if ($company->salesperson_email) {
-                    $report->cc_emails = $report->cc_emails.', '.$company->salesperson_email;
+                    $report->cc_emails .= ', '.$company->salesperson_email;
                 }
                 $report->save();
                 app()->make(CompanyAttendanceReportService::class)->approve($report->id);
