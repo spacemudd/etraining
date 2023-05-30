@@ -768,7 +768,13 @@ export default {
             "view-deleted-companies": "عرض الشركات المحذوفة",
             "company-is-deleted": "الشركة محذوفة",
             "deleted": "محذوف",
-            "the-maximum": "الحد الأقصى 5000 ريال"
+            "the-maximum": "الحد الأقصى 5000 ريال",
+            "applicant": "مقدم الطلب",
+            "personal_email": "البريد الإلكتروني الشخصي",
+            "job_title": "المسمى الوظيفي",
+            "manager_name": "المدير المباشر",
+            "manager_email": "البريد الإلكتروني الخاص بالمدير المباشر",
+            "new_email": "البريد الإلكتروني الجديد"
         }
     },
     "en": {
@@ -1482,7 +1488,13 @@ export default {
             "view-deleted-companies": "View deleted companies",
             "company-is-deleted": "Company is deleted",
             "deleted": "Deleted",
-            "the-maximum": "The maximum is 5000 SAR"
+            "the-maximum": "The maximum is 5000 SAR",
+            "applicant": "Applicant",
+            "personal_email": "Personal Email",
+            "job_title": "Job Title",
+            "manager_name": "Manager Name",
+            "manager_email": "Manager Email",
+            "new_email": "New Email"
         }
     }
 }

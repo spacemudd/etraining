@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateNewEmailTable extends Migration
+class CreateNewEmailsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateNewEmailTable extends Migration
      */
     public function up()
     {
-        Schema::create('new_email', function (Blueprint $table) {
+        Schema::create('new_emails', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
             $table->foreignUuid('created_by_id')
@@ -29,6 +29,7 @@ class CreateNewEmailTable extends Migration
             $table->string('manager_name');
             $table->string('manager_email');
             $table->string('new_email');
+            $table->string('rejected_reason');
             $table->timestamps();
         });
     }
@@ -40,6 +41,6 @@ class CreateNewEmailTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('new_email');
+        Schema::dropIfExists('new_emails');
     }
 }

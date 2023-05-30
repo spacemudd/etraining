@@ -27,6 +27,7 @@ class NewEmail extends Model
         'manager_name',
         'manager_email',
         'new_email',
+        'rejected_reason',
     ];
 
     protected $appends = [
@@ -36,22 +37,6 @@ class NewEmail extends Model
     protected static function boot(): void
     {
         parent::boot();
-
-        if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.com')) {
-            static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
-                $builder->whereHas('company', function ($query) {
-                    $query->whereNull('is_ptc_net');
-                });
-            });
-        }
-
-        if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.net')) {
-            static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
-                $builder->whereHas('company', function ($query) {
-                    $query->whereNotNull('is_ptc_net');
-                })->where('created_at', '>=', '2023-02-01');
-            });
-        }
 
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string) Str::uuid();

@@ -579,4 +579,10 @@ return [
     'company-is-deleted' => 'Company is deleted',
     'deleted' => 'Deleted',
     'the-maximum' => 'The maximum is 5000 SAR',
+    'applicant' => 'Applicant',
+    'personal_email' => 'Personal Email',
+    'job_title' => 'Job Title',
+    'manager_name' => 'Manager Name',
+    'manager_email' => 'Manager Email',
+    'new_email' => 'New Email',
 ];

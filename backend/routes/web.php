@@ -361,6 +361,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
     Route::get('/back/media/{media_id}', [\App\Http\Controllers\MediaController::class, 'download'])->name('back.media.download');
     Route::delete('/back/media/{media_id}', [\App\Http\Controllers\MediaController::class, 'delete'])->name('back.media.delete');
+    Route::get('new-email', [\App\Http\Controllers\NewEmailController::class, 'index'])->name('new_email.index');
+    Route::post('new-email', [\App\Http\Controllers\NewEmailController::class, 'store'])->name('new_email.store');
 
     // For admins
     Route::prefix('back')->middleware('redirect-trainees-to-dashboard')->name('back.')->group(function() {
