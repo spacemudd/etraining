@@ -75,4 +75,13 @@ class MaxNumber extends Model
             7
         );
     }
+
+    public static function generatePrefixForNewEmail(): string
+    {
+        return self::generateForPrefix(
+            "new_email",
+            10,
+            4
+        );
+    }
 }

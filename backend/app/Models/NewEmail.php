@@ -40,7 +40,7 @@ class NewEmail extends Model
 
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string) Str::uuid();
-            $model->number = MaxNumber::generatePrefixForInvoice();
+            $model->number = MaxNumber::generatePrefixForNewEmail();
 
             if (auth()->check()) {
                 $model->created_by_id = auth()->id();
