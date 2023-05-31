@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ComplaintMail;
-use App\Models\Back\ComplaintsSettings;
-use App\Models\Back\Trainee;
-use App\Models\Complaint;
+use App\Models\Back\Invoice;
 use App\Models\NewEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class NewEmailController extends Controller
 {
@@ -24,7 +22,7 @@ class NewEmailController extends Controller
         $request->validate([
             'applicant' => 'required|string|max:255',
             'personal_email' => 'required|string|max:255',
-            'phone' => 'required|Integer',
+            'phone' => 'required|string:max:500',
             'job_title' => 'required|string:max:500',
             'manager_name' => 'required|string:max:500',
             'manager_email' => 'required|string:max:500',
@@ -46,5 +44,13 @@ class NewEmailController extends Controller
 //            ->queue(new ComplaintMail($new_email));
 
         return redirect()->route('dashboard');
+    }
+
+    public function orders(){
+
+          return Inertia::render('NewEmail/Orders', [
+              'new_emails' => NewEmail::paginate(20),
+          ]);
+
     }
 }

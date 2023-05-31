@@ -25,12 +25,12 @@ class CreateNewEmailsTable extends Migration
             $table->tinyInteger('status');
             $table->string('applicant');
             $table->string('personal_email');
-            $table->integer('phone');
+            $table->string('phone');
             $table->string('job_title');
             $table->string('manager_name');
             $table->string('manager_email');
             $table->string('new_email');
-            $table->string('rejected_reason');
+            $table->string('rejected_reason')->nullable();
             $table->timestamps();
         });
     }
