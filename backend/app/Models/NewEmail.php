@@ -15,6 +15,11 @@ class NewEmail extends Model
     use Auditable;
     use HasFactory;
 
+    const STATUS_PENDING = 0;
+    const STATUS_APPROVED = 1;
+    const STATUS_REJECTED = 2;
+
+
     protected $keyType = 'string';
 
     protected $fillable = [
@@ -32,6 +37,7 @@ class NewEmail extends Model
 
     protected $appends = [
         'number_formatted',
+        'status_formatted',
     ];
 
     protected static function boot(): void
@@ -59,6 +65,20 @@ class NewEmail extends Model
             . str_pad($this->created_at->month, 2, "0", STR_PAD_LEFT)
             . "-"
             . $this->number;
+    }
+
+    public function getStatusFormattedAttribute(): string
+    {
+        switch ($this->status) {
+            case self::STATUS_PENDING:
+                return __("words.pending");
+            case self::STATUS_APPROVED:
+                return __("words.approved");
+            case self::STATUS_REJECTED:
+                return __("words.rejected");
+            default:
+                return "Unknown";
+        }
     }
 
 }

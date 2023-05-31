@@ -22,6 +22,7 @@ class CreateNewEmailsTable extends Migration
                 ->nullOnDelete();
 
             $table->string('number');
+            $table->tinyInteger('status');
             $table->string('applicant');
             $table->string('personal_email');
             $table->integer('phone');
