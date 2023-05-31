@@ -67,14 +67,12 @@ class NewEmailController extends Controller
 
     }
 
-    public function approveMail(Request $request) {
+    public function approveMail($id, Request $request)
+    {
         \DB::beginTransaction();
-        $mails = NewEmail::whereIn('id', $request->new_mails);
-
-                foreach ($mails as $mail) {
-                    $mail->status = NewEmail::STATUS_APPROVED;
-                    $mail->save();
-                }
+        $email = NewEmail::find($id);
+        $email->status = NewEmail::STATUS_APPROVED;
+        $email->save();
         \DB::commit();
         return redirect()->route('new_email.orders');
     }

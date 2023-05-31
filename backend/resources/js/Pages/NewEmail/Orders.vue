@@ -19,17 +19,33 @@
                 >
                     <template #head class="rtl:text-right text-black">
                         <tr  class="rtl:text-right text-black">
+                            <th class="rtl:text-right text-black">{{ $t('words.status') }}</th>
                             <th class="rtl:text-right text-black">{{ $t('words.order_number') }}</th>
                             <th class="rtl:text-right text-black">{{ $t('words.applicant') }}</th>
                             <th class="rtl:text-right text-black">{{ $t('words.manager_name') }}</th>
                             <th class="rtl:text-right text-black">{{ $t('words.new_email') }}</th>
-                            <th class="rtl:text-right text-black">{{ $t('words.status') }}</th>
                             <th class="rtl:text-right text-black">{{ $t('words.actions') }}</th>
                         </tr>
                     </template>
                     <template #body>
-                        <tr v-for="mail in new_emails.data" :key="mail.id">
-                            <td :style="{background: ['#f7f7f7'], position: ['sticky'], right: [0], top: ['35px']}">
+                        <tr v-for="mail in new_emails.data" :key="mail.id"><td class="rtl:text-right text-black">
+                            <div v-if="mail.status === 0">
+                                        <span class="text-black bg-yellow-200 rounded-lg px-3 py-1 font-bold border-solid border-2 border-yellow-200">
+                                            {{ mail.status_formatted }}
+                                        </span>
+                            </div>
+                            <div v-if="mail.status === 1">
+                                        <span class="text-black bg-green-200 rounded-lg px-3 py-1 font-bold border-solid border-2 border-green-200">
+                                            {{ mail.status_formatted }}
+                                        </span>
+                            </div>
+                            <div v-if="mail.status === 2">
+                                        <span class="text-black bg-red-200 rounded-lg px-3 py-1 font-bold border-solid border-2 border-red-200">
+                                            {{ mail.status_formatted }}
+                                        </span>
+                            </div>
+                        </td>
+                            <td :style="{background: ['#f7f7f7'], right: [0], top: ['35px']}">
                                 {{ mail.number }}
                             </td>
                             <td class="rtl:text-right text-black">
@@ -49,29 +65,14 @@
                             <td class="rtl:text-right text-black">
                                 {{ mail.new_email }}
                             </td>
-                            <td class="rtl:text-right text-black">
-                                <div v-if="mail.status === 0">
-                                        <span class="text-black bg-yellow-200 rounded-lg px-3 py-1 font-bold border-solid border-2 border-yellow-200">
-                                            {{ mail.status_formatted }}
-                                        </span>
-                                </div>
-                                <div v-if="mail.status === 1">
-                                        <span class="text-black bg-green-200 rounded-lg px-3 py-1 font-bold border-solid border-2 border-green-200">
-                                            {{ mail.status_formatted }}
-                                        </span>
-                                </div>
-                                <div v-if="mail.status === 2">
-                                        <span class="text-black bg-red-200 rounded-lg px-3 py-1 font-bold border-solid border-2 border-red-200">
-                                            {{ mail.status_formatted }}
-                                        </span>
-                                </div>
-                            </td>
+
                             <td class="rtl:text-right text-black">
                                 <button @click="approveMail(mail.id)"
                                         v-if="mail.status === 0"
                                         type="button"
                                         class="inline-flex items-center font-bold px-4 py-2 border border-transparent rounded-md font-semibold text-s text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-green-500 hover:bg-green-600 active:bg-red-700 foucs:bg-green-700">
                                     {{ $t('words.approve') }}
+                                    {{ mail.id }}
                                 </button>
                                 <button @click="rejectMail(mail.id)"
                                         v-if="mail.status === 0"
@@ -125,7 +126,7 @@ export default {
     methods: {
         approveMail(mailId) {
             if (confirm(this.$t('words.are-you-sure'))) {
-                this.$inertia.put(route('new_email.approve-mail', {new_emails: mailId}));
+                this.$inertia.post(route('new_email.approve-mail', {id: mailId}));
             }
         },
         rejectMail(mailId) {

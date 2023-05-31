@@ -363,8 +363,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::delete('/back/media/{media_id}', [\App\Http\Controllers\MediaController::class, 'delete'])->name('back.media.delete');
     Route::get('new-email', [\App\Http\Controllers\NewEmailController::class, 'index'])->name('new_email.index');
     Route::post('new-email', [\App\Http\Controllers\NewEmailController::class, 'store'])->name('new_email.store');
+    Route::post('new-email/orders/{id}', [\App\Http\Controllers\NewEmailController::class, 'approveMail'])->name('new_email.approve-mail');
     Route::get('new-email/orders', [\App\Http\Controllers\NewEmailController::class, 'orders'])->name('new_email.orders');
-    Route::put('new-email/orders/{id}', [\App\Http\Controllers\NewEmailController::class, 'approveMail'])->name('new_email.approve-mail');
 
     // For admins
     Route::prefix('back')->middleware('redirect-trainees-to-dashboard')->name('back.')->group(function() {
