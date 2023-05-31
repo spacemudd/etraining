@@ -70,9 +70,8 @@
                                 <button @click="approveMail(mail.id)"
                                         v-if="mail.status === 0"
                                         type="button"
-                                        class="inline-flex items-center font-bold px-4 py-2 border border-transparent rounded-md font-semibold text-s text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-green-500 hover:bg-green-600 active:bg-red-700 foucs:bg-green-700">
+                                        class="inline-flex items-center font-bold px-4 py-2 border border-transparent rounded-md font-semibold text-s text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-green-500 hover:bg-green-600 active:bg-green-700 foucs:bg-green-700">
                                     {{ $t('words.approve') }}
-                                    {{ mail.id }}
                                 </button>
                                 <button @click="rejectMail(mail.id)"
                                         v-if="mail.status === 0"
@@ -131,7 +130,7 @@ export default {
         },
         rejectMail(mailId) {
             if (confirm(this.$t('words.are-you-sure'))) {
-                this.$inertia.put(route('new_email.reject', {new_emails: mailId}));
+                this.$inertia.post(route('new_email.reject-mail', {id: mailId}));
             }
         }
     },

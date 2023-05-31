@@ -76,4 +76,13 @@ class NewEmailController extends Controller
         \DB::commit();
         return redirect()->route('new_email.orders');
     }
+    public function rejectMail($id, Request $request)
+    {
+        \DB::beginTransaction();
+        $email = NewEmail::find($id);
+        $email->status = NewEmail::STATUS_REJECTED;
+        $email->save();
+        \DB::commit();
+        return redirect()->route('new_email.orders');
+    }
 }
