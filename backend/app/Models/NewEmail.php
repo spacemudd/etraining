@@ -3,16 +3,13 @@
 namespace App\Models;
 
 use App\Models\Back\MaxNumber;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
-use OwenIt\Auditing\Auditable;
 
 class NewEmail extends Model
 {
-    use Auditable;
     use HasFactory;
 
     const STATUS_PENDING = 0;

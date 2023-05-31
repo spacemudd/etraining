@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Back\Invoice;
+use App\Models\Back\CompanyAttendanceReport;
 use App\Models\NewEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -43,14 +43,39 @@ class NewEmailController extends Controller
 //        Mail::to(ComplaintsSettings::first()->emails)
 //            ->queue(new ComplaintMail($new_email));
 
-        return redirect()->route('dashboard');
+        return redirect()->route('new_email.orders');
     }
 
     public function orders(){
 
-          return Inertia::render('NewEmail/Orders', [
-              'new_emails' => NewEmail::paginate(20),
-          ]);
+        $reports = QueryBuilder::for(NewEmail::class)
+            ->allowedSorts(['number'])
+            ->paginate()
+            ->withQueryString();
 
+        return Inertia::render('NewEmail/Orders', [
+            'new_emails' => $reports,
+        ])->table(function ($table) {
+            $table->disableGlobalSearch();
+
+            $table->addFilter('status', __('words.status'), [
+                NewEmail::STATUS_PENDING => __('words.pending'),
+                NewEmail::STATUS_APPROVED => __('words.approved'),
+                NewEmail::STATUS_REJECTED => __('words.rejected'),
+            ]);
+        });
+
+    }
+
+    public function approveMail(Request $request) {
+        \DB::beginTransaction();
+        $mails = NewEmail::whereIn('id', $request->new_mails);
+
+                foreach ($mails as $mail) {
+                    $mail->status = NewEmail::STATUS_APPROVED;
+                    $mail->save();
+                }
+        \DB::commit();
+        return redirect()->route('new_email.orders');
     }
 }

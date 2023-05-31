@@ -585,4 +585,11 @@ return [
     'manager_name' => 'Manager Name',
     'manager_email' => 'Manager Email',
     'new_email' => 'New Email',
+    'order_number' => 'Order Number',
+    'pending' => 'Pending',
+    'approve' => 'Approve',
+    'rejected' => 'Rejected',
+    'reject' => 'Reject',
+    'orders' => 'Orders',
+
 ];

@@ -540,7 +540,6 @@ return [
     'prepare-the-monthly-attendance-report-to-send-to-the-company-from-the-system' => 'من هنا يمكنك إعداد تقرير الحضور وإرساله الى الشركة بشكل رسمي من النظام.',
     'time-period' => 'المدة الزمنية',
     'review' => 'تحت المراجعة',
-    'approved' => 'معتمد',
     'report' => 'التقرير',
     'comma-separated-emails' => 'الايميلات يتم فصلهم بعلامة الفاصلة (one@gmail.com, two@gmail.com)',
     'cc-emails' => 'نسخة (CC) الى',
@@ -606,4 +605,11 @@ return [
     'manager_name' => 'المدير المباشر',
     'manager_email' => 'البريد الإلكتروني الخاص بالمدير المباشر',
     'new_email' => 'البريد الإلكتروني الجديد',
+    'order_number' => 'رقم الطلب',
+    'pending' => 'معلق',
+    'rejected' => 'مرفوض',
+    'reject' => 'رفض',
+    'orders' => 'الطلبات',
+
+
 ];

@@ -774,7 +774,12 @@ export default {
             "job_title": "المسمى الوظيفي",
             "manager_name": "المدير المباشر",
             "manager_email": "البريد الإلكتروني الخاص بالمدير المباشر",
-            "new_email": "البريد الإلكتروني الجديد"
+            "new_email": "البريد الإلكتروني الجديد",
+            "order_number": "رقم الطلب",
+            "pending": "معلق",
+            "rejected": "مرفوض",
+            "reject": "رفض",
+            "orders": "الطلبات"
         }
     },
     "en": {
@@ -1494,7 +1499,13 @@ export default {
             "job_title": "Job Title",
             "manager_name": "Manager Name",
             "manager_email": "Manager Email",
-            "new_email": "New Email"
+            "new_email": "New Email",
+            "order_number": "Order Number",
+            "pending": "Pending",
+            "approve": "Approve",
+            "rejected": "Rejected",
+            "reject": "Reject",
+            "orders": "Orders"
         }
     }
 }
