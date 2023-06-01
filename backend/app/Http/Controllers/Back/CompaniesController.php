@@ -169,7 +169,7 @@ class CompaniesController extends Controller
             'contact_number' => 'nullable|string|max:255',
             'company_rep' => 'nullable|string|max:255',
             'company_rep_mobile' => 'nullable|string|max:255',
-            'email' => 'nullable|email|max:255',
+            'email' => 'nullable|string|max:255',
             'address' => 'nullable|string|max:255',
             'monthly_subscription_per_trainee' => 'nullable|numeric|min:0|max:100000',
             'shelf_number' => 'nullable|string|max:255',
