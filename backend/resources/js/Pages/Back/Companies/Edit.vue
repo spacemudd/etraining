@@ -40,13 +40,11 @@
                             <jet-label for="region_id" :value="$t('words.region')" />
                             <div class="relative mt-2">
                                 <select class="mt-1 block w-full bg-gray-100 appearance-none border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:border-gray-500"
-                                        v-model="company.region_id"
-                                        id="region_id"
-                                >
+                                        v-model="form.region_id"
+                                        id="region_id">
                                     <option v-for="region in regions"
                                             :key="region.id"
-                                            :value="region.id"
-                                    >
+                                            :value="region.id">
                                         {{ region.name }}
                                     </option>
                                 </select>
