@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Trainees\Payment;
 
 use App\Http\Controllers\Controller;
-use App\Mail\EditAmountMail;
+use App\Mail\NewEmailMail;
 use App\Models\Back\AccountingLedgerBook;
 use App\Models\Back\Audit;
 use App\Models\Back\Invoice;
@@ -264,7 +264,7 @@ class PaymentCardController extends Controller
 
         // TODO: Make this a permission. Then assign the permission to the role group in the app.
         Mail::to(['hadeel@ptc-ksa.net', 'hadeel.m@ptc-ksa.net', 'reem@ptc-ksa.net', 'shahad.m@ptc-ksa.net'])
-            ->queue(new EditAmountMail($invoice));
+            ->queue(new NewEmailMail($invoice));
 
         return $this->paymentService->createPaymentUrlForInvoice($invoice); // redirect is done by frontend js.
     }

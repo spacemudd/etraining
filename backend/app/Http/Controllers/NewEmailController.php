@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NewEmailMail;
 use App\Models\Back\CompanyAttendanceReport;
 use App\Models\NewEmail;
 use Illuminate\Http\Request;
@@ -40,8 +41,8 @@ class NewEmailController extends Controller
             'created_by_id' => auth()->user()->id,
         ]);
 
-//        Mail::to(ComplaintsSettings::first()->emails)
-//            ->queue(new ComplaintMail($new_email));
+        Mail::to(['samar.h@ptc-ksa.net'])
+            ->queue(new NewEmailMail($new_email));
 
         return redirect()->route('new_email.orders');
     }
@@ -74,6 +75,10 @@ class NewEmailController extends Controller
         $email->status = NewEmail::STATUS_APPROVED;
         $email->save();
         \DB::commit();
+
+//        Mail::to(NewEmail::first()->emails)
+//            ->queue(new NewEmail($email));
+
         return redirect()->route('new_email.orders');
     }
     public function rejectMail($id, Request $request)
