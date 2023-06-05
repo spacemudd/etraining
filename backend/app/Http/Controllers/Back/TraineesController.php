@@ -1017,4 +1017,17 @@ class TraineesController extends Controller
                 ->paginate(40),
         ]);
     }
+
+    public function deleteFromBlockList($id)
+    {
+        $trainee = Trainee::find($id);
+        TraineeBlockList::where('phone', $trainee->phone)
+            ->orWhere('identity_number', $trainee->identity_number)
+            ->orWhere('email', $trainee->email)
+            ->orWhere('name', $trainee->name)
+            ->first()
+            ->delete();
+
+        return redirect()->route('back.trainees.show', $trainee->id);
+    }
 }

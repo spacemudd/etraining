@@ -618,7 +618,8 @@ export default {
             "company-is-deleted": "الشركة محذوفة",
             "deleted": "محذوف",
             "the-maximum": "الحد الأقصى 5000 ريال",
-            "region": "المنطقة"
+            "region": "المنطقة",
+            "trainee-in-block-directory": "المتدربة محظورة من خلال البيانات"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1372,7 +1373,8 @@ export default {
             "company-is-deleted": "Company is deleted",
             "deleted": "Deleted",
             "the-maximum": "The maximum is 5000 SAR",
-            "region": "Region"
+            "region": "Region",
+            "trainee-in-block-directory": "Trainee in block directory"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",
