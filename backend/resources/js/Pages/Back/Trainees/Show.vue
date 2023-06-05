@@ -33,32 +33,35 @@
                             {{ $t('words.trainee-in-block-directory') }}
                         </div>
                         <div class="font-bold text-white p-2 rounded-sm flex gap-2">
-                        <table class="table">
+                        <table class="table table-bordered table-hover text-xs">
                         	<tbody>
                         			<tr v-if="in_block_list.name">
-                        				<td>{{ $t('words.name') }}</td>
-                                        <td>{{ in_block_list.name }}</td>
+                        				<td class="border">{{ $t('words.name') }}</td>
+                                        <td class="border">{{ in_block_list.name }}</td>
                         			</tr>
                                     <tr v-if="in_block_list.phone">
-                        				<td>{{ $t('words.phone') }}</td>
-                                        <td>{{ in_block_list.phone }}</td>
+                        				<td class="border">{{ $t('words.phone') }}</td>
+                                        <td class="border">{{ in_block_list.phone }}</td>
                         			</tr>
                                     <tr v-if="in_block_list.email">
-                        				<td>{{ $t('words.email') }}</td>
-                                        <td>{{ in_block_list.email }}</td>
+                        				<td class="border">{{ $t('words.email') }}</td>
+                                        <td class="border">{{ in_block_list.email }}</td>
                         			</tr>
                                     <tr v-if="in_block_list.identity_number">
-                        				<td>{{ $t('words.identity_number') }}</td>
-                                        <td>{{ in_block_list.identity_number }}</td>
+                        				<td class="border">{{ $t('words.identity_number') }}</td>
+                                        <td class="border">{{ in_block_list.identity_number }}</td>
                         			</tr>
                                     <tr v-if="in_block_list.reason">
-                        				<td>{{ $t('words.reason') }}</td>
-                                        <td>{{ in_block_list.reason }}</td>
+                        				<td class="border">{{ $t('words.reason') }}</td>
+                                        <td class="border">{{ in_block_list.reason }}</td>
                         			</tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <button type="button" @click="deleteFromBlockList" class="px-2 py-1 bg-gray-400 text-black">{{ $t('words.delete') }}</button>
+                                        </td>
+                                    </tr>
                         	</tbody>
                         </table>
-                        <br/>
-                        <button type="button" @click="deleteFromBlockList" class="px-2 py-1 bg-gray-400 text-black">{{ $t('words.delete') }}</button>
                     </div>
                     </div>
                 </div>
