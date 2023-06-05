@@ -601,4 +601,5 @@ return [
     'deleted' => 'محذوف',
     'the-maximum' => 'الحد الأقصى 5000 ريال',
     'region' => 'المنطقة',
+    'trainee-in-block-directory' => 'المتدربة محظورة من خلال البيانات',
 ];
