@@ -119,9 +119,10 @@ class TraineesController extends Controller
      */
     public function show($id)
     {
-        $in_block_list = TraineeBlockList::where('phone', $this->phone)
-            ->orWhere('identity_number', $this->identity_number)
-            ->orWhere('email', $this->email)
+        $trainee = Trainee::find($id);
+        $in_block_list = TraineeBlockList::where('phone', $trainee->phone)
+            ->orWhere('identity_number', $trainee->identity_number)
+            ->orWhere('email', $trainee->email)
             ->first();
 
         return Inertia::render('Back/Trainees/Show', [
