@@ -1002,7 +1002,7 @@ export default {
     },
     methods: {
         deleteFromBlockList() {
-            this.$inertia.delete(route('back.trainees.delete-from-block-list', {trainee_id: this.trainee.id}));
+            this.$inertia.delete(route('back.trainees.delete-from-block-list', {id: this.trainee.id}));
         },
         selectGroupName(input) {
             this.trainee.trainee_group = input;
