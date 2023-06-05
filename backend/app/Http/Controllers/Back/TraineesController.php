@@ -123,6 +123,7 @@ class TraineesController extends Controller
         $in_block_list = TraineeBlockList::where('phone', $trainee->phone)
             ->orWhere('identity_number', $trainee->identity_number)
             ->orWhere('email', $trainee->email)
+            ->orWhere('name', $trainee->name)
             ->first();
 
         return Inertia::render('Back/Trainees/Show', [
