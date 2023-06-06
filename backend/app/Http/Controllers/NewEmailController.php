@@ -42,7 +42,7 @@ class NewEmailController extends Controller
         ]);
 
         Mail::to(['samar.h@ptc-ksa.net'])
-            ->queue(new NewEmailMail($new_email));
+            ->queue(new NewEmailMail(auth()->user()->name));
 
         return redirect()->route('new_email.orders');
     }

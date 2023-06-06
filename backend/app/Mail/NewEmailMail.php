@@ -14,16 +14,15 @@ class NewEmailMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $new_email;
-
+    public $name;
     /**
      * Create a new message instance.
      *
-     * @param \App\Models\NewEmail $new_email
+     * @return void
      */
-    public function __construct(NewEmail $new_email)
+    public function __construct( $name)
     {
-        $this->new_email = $new_email;
+        $this->name = $name;
     }
 
     /**
@@ -36,7 +35,7 @@ class NewEmailMail extends Mailable
         return $this
             ->subject('طلب انشاء بريد الكتروني جديد')
             ->view('emails.new-email', [
-                'new_emails' => $this->new_email,
+                'name' => $this->name,
             ]);
     }
 }

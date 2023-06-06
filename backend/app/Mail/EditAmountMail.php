@@ -18,9 +18,9 @@ class EditAmountMail extends Mailable
     /**
      * Create a new message instance.
      *
-     * @param \App\Models\Back\Invoice $invoice
+     * @return void
      */
-    public function __construct(Invoice $invoice)
+    public function __construct($invoice)
     {
         $this->invoice = $invoice;
     }
