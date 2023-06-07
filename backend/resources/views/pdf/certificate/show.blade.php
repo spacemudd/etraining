@@ -55,11 +55,11 @@
         <h1 style="margin-top:8rem;">شهادة حضور دورة تطويرية</h1>
         <p style="margin-top:2.5rem;">يشهد مركز احترافية المدرب للتدريب بأن المتدربة  "{{ $certificate->trainee->name }}"</p>
         <p style="margin-top:2.5rem;">وجنسيتها سعودية بموجب السجل المدني رقم "{{ $certificate->trainee->identity_number }}"</p>
-        <p style="margin-top:2.5rem;">قـــد حضرت دورة ({{ $certificate->course->name_ar }}) عدد ساعاتها التدريبية 16 ساعة</p>
-        <p style="margin-top:2.5rem;">وعدد أيامها التدريبية (4) أيام والمنعقدة في الفترة من </p>
-        <p style="margin-top:2.5rem;">(11 -6 - 1442هـ  إلى 12 - 7 - 1442هـ  )</p>
+        <p style="margin-top:2.5rem;">قـــد حضرت دورة ({{ $certificate->course->name_ar }}) عدد ساعاتها التدريبية 32 ساعة</p>
+        <p style="margin-top:2.5rem;">وعدد أيامها التدريبية (30) أيام والمنعقدة في الفترة من </p>
+        <p style="margin-top:2.5rem;">(7 -10 - 1443هـ  إلى 6 - 4 - 1444هـ  )</p>
         <p style="margin-top:2.5rem;">والمعتمدة من المؤسسة العامة للتدريب التقني والمهني برقم </p>
-        <p style="margin-top:2.5rem;">(19227234)</p>
+        <p style="margin-top:2.5rem;">(192246234)</p>
         <p style="margin-top:5rem;">والله الموفق،،،</p>
         <div class="row" style="margin-top: 2rem;">
             <div class="col-7">
@@ -68,8 +68,8 @@
             </div>
             <div class="col-4" style="text-align: right;">
                 <p class="small-text">
-                    <b>حررت بتاريخ:    12 / 7  /1442  هـ </b><br/>
-                    <b>الموافق:            24 /  2 /2021 م</b>
+                    <b>حررت بتاريخ:    6 / 4  /1444  هـ </b><br/>
+                    <b>الموافق:            31 /  10 /2022 م</b>
                 </p>
                 <p class="small-text">ملاحظة: أي كشط او تعديل على الشهادة تعتبر لاغية</p>
             </div>
