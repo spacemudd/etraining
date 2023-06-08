@@ -19,6 +19,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class CourseBatchSessionWarningsJob implements ShouldQueue
@@ -75,12 +76,19 @@ class CourseBatchSessionWarningsJob implements ShouldQueue
                 $warning->save();
 
                 // TODO: Move this to another service class
-                if ($attendance->trainee->warnings()->count() >= 3) {
-                    User::permission('manage-missed-course-notices')
-                        ->get()
-                        ->each(function($user) use ($attendance) {
-                            $user->notify(new ManageMissedClassNotification($attendance->trainee));
-                        });
+                $startDate = Carbon::createFromFormat('Y-m-d', '2023-06-01')->startOfDay();
+                $endDate = now();
+                if ($attendance->trainee->warnings()->whereBetween('created_at', [$startDate, $endDate])->count() >= 3) {
+                    User::where('email', 'trainee.affairs@ptc-ksa.net')
+                        ->first()
+                        ->notify(new ManageMissedClassNotification($attendance->trainee));
+
+//                    User::permission('manage-missed-course-notices')
+//                        ->whereBetween('created_at', [$startDate, $endDate])
+//                        ->get()
+//                        ->each(function($user) use ($attendance) {
+//                            $user->notify(new ManageMissedClassNotification($attendance->trainee));
+//                        });
                 }
 
                 try {
