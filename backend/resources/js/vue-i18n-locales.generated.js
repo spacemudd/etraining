@@ -775,11 +775,13 @@ export default {
             "manager_name": "المدير المباشر",
             "manager_email": "البريد الإلكتروني الخاص بالمدير المباشر",
             "new_email": "البريد الإلكتروني الجديد",
+            "create_new_email_order": "طلب إنشاء بريد إلكتروني",
             "order_number": "رقم الطلب",
             "pending": "مــعـلـق",
             "rejected": "مرفوض",
             "reject": "رفض",
-            "orders": "الطلبات"
+            "orders": "الطلبات",
+            "apply": "تقديم طلب"
         }
     },
     "en": {
@@ -1505,7 +1507,8 @@ export default {
             "approve": "Approve",
             "rejected": "Rejected",
             "reject": "Reject",
-            "orders": "Orders"
+            "orders": "Orders",
+            " apply": "Apply"
         }
     }
 }

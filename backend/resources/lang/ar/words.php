@@ -600,9 +600,11 @@ return [
     'manager_name' => 'المدير المباشر',
     'manager_email' => 'البريد الإلكتروني الخاص بالمدير المباشر',
     'new_email' => 'البريد الإلكتروني الجديد',
+    'create_new_email_order' => 'طلب إنشاء بريد إلكتروني',
     'order_number' => 'رقم الطلب',
     'pending' => 'مــعـلـق',
     'rejected' => 'مرفوض',
     'reject' => 'رفض',
     'orders' => 'الطلبات',
+    'apply' => 'تقديم طلب',
 ];

@@ -4,7 +4,8 @@
                 <breadcrumb-container
                     :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
-                    {title: 'new_email', link: route('new_email.index')},
+                    {title: 'orders', link: route('orders.index')},
+                    {title: 'create_new_email_order', link: route('new_email.index')},
                 ]"
                 ></breadcrumb-container>
                 <div class="grid grid-cols-2 gap-6 mt-5">

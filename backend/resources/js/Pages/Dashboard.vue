@@ -36,6 +36,9 @@
                 <inertia-link :href="route('back.courses.create')" class="shadow-lg flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 text-center hover:bg-red-500 hover:text-red-600 hover:font-semibold hover:shadow-xl">
                     {{ $t('words.add-new-course') }}
                 </inertia-link>
+                <inertia-link :href="route('orders.index')" class="shadow-lg flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 text-center hover:bg-red-500 hover:text-red-600 hover:font-semibold hover:shadow-xl">
+                    {{ $t('words.apply') }}
+                </inertia-link>
             </div>
         </div>
     </app-layout>

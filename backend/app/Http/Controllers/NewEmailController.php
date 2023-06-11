@@ -17,7 +17,7 @@ class NewEmailController extends Controller
     public function index()
     {
         {
-            return Inertia::render('NewEmail/Index');
+            return Inertia::render('Orders/NewEmail/Create');
         }
     }
     public function store(Request $request)
@@ -46,7 +46,7 @@ class NewEmailController extends Controller
         Mail::to(['ceo@ptc-ksa.net'])
             ->queue(new NewEmailMail(auth()->user()->name));
 
-        return redirect()->route('new_email.orders');
+        return redirect()->route('dashboard');
     }
 
     public function orders(){
@@ -56,7 +56,7 @@ class NewEmailController extends Controller
             ->paginate()
             ->withQueryString();
 
-        return Inertia::render('NewEmail/Orders', [
+        return Inertia::render('Orders/Orders', [
             'new_emails' => $reports,
         ])->table(function ($table) {
             $table->disableGlobalSearch();

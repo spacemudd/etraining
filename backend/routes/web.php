@@ -361,11 +361,12 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
     Route::get('/back/media/{media_id}', [\App\Http\Controllers\MediaController::class, 'download'])->name('back.media.download');
     Route::delete('/back/media/{media_id}', [\App\Http\Controllers\MediaController::class, 'delete'])->name('back.media.delete');
+    Route::get('orders', [\App\Http\Controllers\OrdersController::class, 'index'])->name('orders.index');
     Route::get('new-email', [\App\Http\Controllers\NewEmailController::class, 'index'])->name('new_email.index');
     Route::post('new-email', [\App\Http\Controllers\NewEmailController::class, 'store'])->name('new_email.store');
+    Route::get('new-email/orders', [\App\Http\Controllers\NewEmailController::class, 'orders'])->name('new_email.orders');
     Route::post('new-email/orders/approved/{id}', [\App\Http\Controllers\NewEmailController::class, 'approveMail'])->name('new_email.approve-mail');
     Route::post('new-email/orders/rejected/{id}', [\App\Http\Controllers\NewEmailController::class, 'rejectMail'])->name('new_email.reject-mail');
-    Route::get('new-email/orders', [\App\Http\Controllers\NewEmailController::class, 'orders'])->name('new_email.orders');
 
     // For admins
     Route::prefix('back')->middleware('redirect-trainees-to-dashboard')->name('back.')->group(function() {

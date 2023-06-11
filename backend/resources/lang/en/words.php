@@ -591,5 +591,6 @@ return [
     'rejected' => 'Rejected',
     'reject' => 'Reject',
     'orders' => 'Orders',
+    ' apply' => 'Apply',
 
 ];
