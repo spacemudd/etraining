@@ -1,35 +1,24 @@
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        .button-9 {
-            appearance: button;
-            backface-visibility: hidden;
-            background-color: #f54040;
-            border-radius: 6px;
-            border-width: 0;
-            box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset,rgba(50, 50, 93, .1) 0 2px 5px 0,rgba(0, 0, 0, .07) 0 1px 1px 0;
-            box-sizing: border-box;
-            color: #fff;
-            cursor: pointer;
-            font-family: -apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif;
+        h3 {
+            color: #363636;
+            font-family: "Tajawal Medium";
             font-size: 100%;
-            height: 44px;
             line-height: 1.15;
-            margin: 12px 0 0;
-            outline: none;
-            padding: 0 25px;
             position: relative;
             text-align: center;
-            text-transform: none;
-            transform: translateZ(0);
-            transition: all .2s,box-shadow .08s ease-in;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: manipulation;
+        }
+        h4 {
+            font-family: "Tajawal Medium";
         }
         body{
             background-color: #e7ecee;
+            font-family: "Tajawal Medium";
         }
         div{
             padding: 60px;
@@ -54,6 +43,7 @@
         }
 
         #customers td, #customers th {
+            font-family: "Tajawal Medium";
             border: 2px solid white;
             padding: 8px;
             margin-bottom: 100px;
@@ -70,8 +60,21 @@
             color: white;
         }
         @media only screen and (max-width: 600px) {
+            h3 {
+                color: #363636;
+                font-family: "Tajawal Medium";
+                font-size: x-small;
+                line-height: 1.15;
+                position: relative;
+                text-align: center;
+            }
+            h4 {
+                font-family: "Tajawal Medium";
+                font-size: x-small;
+            }
             body{
-                background-color: #f0f0f0;
+                background-color: #e7ecee;
+                font-family: "Tajawal Medium";
             }
             div{
                 padding: 20px;
@@ -91,11 +94,11 @@
             #customers {
                 border-collapse: collapse;
                 border-radius: 15px;
-                overflow: hidden;
-                width: 20%;
             }
 
             #customers td, #customers th {
+                font-family: "Tajawal Medium";
+                font-size: xx-small;
                 border: 2px solid white;
                 padding: 8px;
                 margin-bottom: 30px;
@@ -123,12 +126,22 @@
 </head>
 <body style="text-align:right;">
 <div>
-    <h3 style="font-weight: bold;"> قام الموظف {{ $name }} بتقديم طلب انشاء بريد الكتروني جديد </h3>
+    <img style="width: 80px;" src="https://i.ibb.co/zFRDxpn/icons8-accept-512-1.png" alt="Rejected" class="w-56">
+    <h3>  تمت الموافقة على الطلب رقم  <p style="color: rgba(147,147,147,0.56)" >{{ $email->number }}</p>   </h3>
+</div>
+<div>
+    <h4>   تفاصيل الطلب:  </h4>
     <br>
-    <h5>   للإطلاع على تفاصيل الطلب:  </h5>
-
-    <a class="a-9" href="https://app.ptc-ksa.net/new-email/orders" ><button class="button-9" onclick="window.location.href='https://app.ptc-ksa.net/new-email/orders'" role="button">الطلبات</button></a>
-    <br>
+    <table id="customers">
+        <tr style="background-color: #ec5b5b;">
+            <th>مقدم الطلب</th>
+            <th>البريد الالكتروني الجديد</th>
+        </tr>
+        <tr>
+            <td>{{ $email->applicant }}</td>
+            <td>{{ $email->new_email }}</td>
+        </tr>
+    </table>
 </div>
 </body>
 </html>

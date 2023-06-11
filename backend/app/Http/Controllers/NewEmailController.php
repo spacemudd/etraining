@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AcceptNewEmailMail;
+use App\Mail\RejectNewEmailMail;
 use App\Mail\NewEmailMail;
 use App\Models\Back\CompanyAttendanceReport;
 use App\Models\NewEmail;
@@ -41,7 +43,7 @@ class NewEmailController extends Controller
             'created_by_id' => auth()->user()->id,
         ]);
 
-        Mail::to(['samar.h@ptc-ksa.net'])
+        Mail::to(['ceo@ptc-ksa.net'])
             ->queue(new NewEmailMail(auth()->user()->name));
 
         return redirect()->route('new_email.orders');
@@ -76,8 +78,9 @@ class NewEmailController extends Controller
         $email->save();
         \DB::commit();
 
-//        Mail::to(NewEmail::first()->emails)
-//            ->queue(new NewEmail($email));
+        Mail::to(['samar.h@ptc-ksa.net', $email->personal_email])
+            ->cc(['ceo@ptc-ksa.net'])
+            ->queue(new AcceptNewEmailMail($email));
 
         return redirect()->route('new_email.orders');
     }
@@ -88,6 +91,11 @@ class NewEmailController extends Controller
         $email->status = NewEmail::STATUS_REJECTED;
         $email->save();
         \DB::commit();
+
+        Mail::to(['samar.h@ptc-ksa.net', $email->personal_email] )
+            ->cc(['ceo@ptc-ksa.net'])
+            ->queue(new RejectNewEmailMail($email));
+
         return redirect()->route('new_email.orders');
     }
 }
