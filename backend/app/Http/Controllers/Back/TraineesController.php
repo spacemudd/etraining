@@ -746,6 +746,13 @@ class TraineesController extends Controller
         $excelJob->team_id = auth()->user()->current_team_id;
         $excelJob->save();
 
+        Audit::create([
+            'event' => 'companies.export.excel',
+            'auditable_id' => auth()->user()->id,
+            'auditable_type' => User::class,
+            'new_values' => [],
+        ]);
+
         dispatch(new ExportTraineesToExcelJob($excelJob));
 
         return $excelJob;

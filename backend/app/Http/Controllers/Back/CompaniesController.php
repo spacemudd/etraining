@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Back;
 
 use App\Exports\CompaniesExport;
 use App\Http\Controllers\Controller;
+use App\Models\Back\Audit;
 use App\Models\Back\Company;
 use App\Models\Back\Instructor;
 use App\Models\Back\Region;
 use App\Models\Back\Trainee;
+use App\Models\User;
 use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -209,6 +211,12 @@ class CompaniesController extends Controller
 
     public function export()
     {
+        Audit::create([
+            'event' => 'companies.export.excel',
+            'auditable_id' => auth()->user()->id,
+            'auditable_type' => User::class,
+            'new_values' => [],
+        ]);
         return Excel::download(new CompaniesExport, now()->format('Y-m-d').'-companies.xlsx');
     }
 

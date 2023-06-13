@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\CourseBatchSessionWarningsJob;
+use App\Models\Back\Audit;
 use App\Models\Back\CourseBatchSession;
 use App\Models\Back\CourseBatchSessionAttendance;
 use App\Models\Back\Trainee;
 use App\Exports\AttendanceSheetExport;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -124,6 +126,12 @@ class CourseBatchSessionsAttendanceController extends Controller
 
     public function attendingExcel($course_batch_session_id)
     {
+        Audit::create([
+            'event' => 'courses.attendance.export.excel',
+            'auditable_id' => auth()->user()->id,
+            'auditable_type' => User::class,
+            'new_values' => [],
+        ]);
         return Excel::download(new AttendanceSheetExport($course_batch_session_id),'Attendance Sheet.xlsx');
     }
 

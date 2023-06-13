@@ -313,6 +313,12 @@ class CompaniesContractsController extends Controller
     public function excel($company_id)
     {
         $company = Company::findOrFail($company_id);
+        Audit::create([
+            'event' => 'companies.trainees.export.excel',
+            'auditable_id' => auth()->user()->id,
+            'auditable_type' => User::class,
+            'new_values' => [],
+        ]);
         return Excel::download(
             new CompanyTraineeExport($company_id),
             $company->name_ar.' - '.__('words.trainees').'.xlsx')
