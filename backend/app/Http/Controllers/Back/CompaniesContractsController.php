@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
+use App\Models\Back\Audit;
 use App\Models\Back\Company;
 use App\Models\Back\CompanyContract;
 use App\Models\Back\Instructor;
 use App\Models\Numbering;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
