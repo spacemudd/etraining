@@ -45,7 +45,7 @@ class AddDeletedByUserInfo extends Command
             ->whereNotNull('deleted_at')->count();
         $current = 0;
         $this->info("{$current} / {$count}");
-        Trainee::withoutGlobalScopes()->whereNull('deleted_by_id')->whereNotNull('deleted_at')->chunk(200, function ($trainees) use ($count, $current) {
+        Trainee::withoutGlobalScopes()->whereNull('deleted_by_id')->whereNotNull('deleted_at')->chunk(200, function ($trainees) use (&$count, &$current) {
            foreach ($trainees as $trainee) {
                $lastAudit = Audit::where('auditable_type', Trainee::class)
                    ->where('auditable_id', $trainee->id)
