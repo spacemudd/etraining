@@ -581,4 +581,18 @@ return [
     'the-maximum' => 'The maximum is 5000 SAR',
     'region' => 'Region',
     'trainee-in-block-directory' => 'Trainee in block directory',
+    'applicant' => 'Applicant',
+    'personal_email' => 'Personal Email',
+    'job_title' => 'Job Title',
+    'manager_name' => 'Manager Name',
+    'manager_email' => 'Manager Email',
+    'new_email' => 'New Email',
+    'order_number' => 'Order Number',
+    'pending' => 'Pending',
+    'approve' => 'Approve',
+    'rejected' => 'Rejected',
+    'reject' => 'Reject',
+    'orders' => 'Orders',
+    ' apply' => 'Apply',
+
 ];

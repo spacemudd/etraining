@@ -4,25 +4,25 @@ namespace App\Mail;
 
 use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
+use App\Models\NewEmail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class EditAmountMail extends Mailable
+class NewEmailMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $invoice;
-
+    public $name;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($invoice)
+    public function __construct( $name)
     {
-        $this->invoice = $invoice;
+        $this->name = $name;
     }
 
     /**
@@ -33,9 +33,9 @@ class EditAmountMail extends Mailable
     public function build()
     {
         return $this
-            ->subject('تم تغيير مبلغ الفاتورة من قبل المتدربة')
-            ->view('emails.edit-amount', [
-                'invoices' => $this->invoice,
+            ->subject('طلب انشاء بريد الكتروني جديد')
+            ->view('emails.new-email', [
+                'name' => $this->name,
             ]);
     }
 }

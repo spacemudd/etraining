@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Trainees\Payment;
 
 use App\Http\Controllers\Controller;
 use App\Mail\EditAmountMail;
+use App\Mail\RejectNewEmailMail;
 use App\Models\Back\AccountingLedgerBook;
 use App\Models\Back\Audit;
 use App\Models\Back\Invoice;

@@ -104,7 +104,7 @@ export default {
             "account-name": "اسم الحساب",
             "status": "الحالة",
             "outstanding-amount": "المبلغ المستحق",
-            "created-at": "وقت الإنشاء",
+            "created-at": "تاريخ الإنشاء",
             "view": "عرض",
             "client-accounts": "حسابات العملاء",
             "invoice": "الفاتورة",
@@ -224,7 +224,7 @@ export default {
             "nominated-instructor": "مرشح",
             "approve-instructor-applicants": "اعتماد المدربين المتقدمين",
             "approve-instructor": "اعتمد المدرب",
-            "approved": "معتمد",
+            "approved": "مـعـتـمد",
             "to-register": "لإنشاء حساب جديد",
             "to-login": "تسجيل الدخول",
             "description": "الوصف",
@@ -301,7 +301,6 @@ export default {
             "email-password-reset-link": "ارسل رابط إعادة كلمة السر",
             "reset-password": "إعادة تعيين كلمة السر",
             "excel": "إكسل",
-            "error-occurred": "حدث خطاً",
             "you-must-delete-the-course-batches-first": "يجب عليك حذف كل اوقات الدورات لكي تحذف الدفعة",
             "online": "اونلاين",
             "contract": "العقد",
@@ -361,6 +360,7 @@ export default {
             "report-work-on-progress": "جاري العمل على التقرير",
             "please-dont-close-the-window": "الرجاء عدم إغلاق الصفحة",
             "download-file": "تحميل الملف",
+            "error-occurred": "حدث خطاً",
             "disable-website": "إقفال الموقع",
             "here-you-can-disable-the-website-and-specify-a-message": "هنا يمكن لك إقاف الموقع و تحديد الرسالة الرئيسية",
             "yes": "نعم",
@@ -477,7 +477,7 @@ export default {
             "vat": "الضريبة",
             "select-all": "اختيار الكل",
             "due-balance-notice": "حسابك لديه مبلغ مستحق. يرجى دفع رسوم التدريب لمنع تعليق الحساب.",
-            "pay-now": "ادفع الآن",
+            "pay-now": "ادفع الان",
             "payment": "تسديد",
             "choose-payment-method": "اختيار طريقة الدفع",
             "credit-card-method": "عبر البطاقة",
@@ -620,6 +620,33 @@ export default {
             "the-maximum": "الحد الأقصى 5000 ريال",
             "region": "المنطقة",
             "trainee-in-block-directory": "المتدربة محظورة من خلال البيانات"
+            "the-maximum": "الحد الأقصى 5000 ريال",
+            "applicant": "مقدم الطلب",
+            "personal_email": "البريد الإلكتروني الشخصي",
+            "job_title": "المسمى الوظيفي",
+            "manager_name": "المدير المباشر",
+            "manager_email": "البريد الإلكتروني الخاص بالمدير المباشر",
+            "new_email": "البريد الإلكتروني الجديد",
+            "create_new_email_order": "طلب إنشاء بريد إلكتروني",
+            "order_number": "رقم الطلب",
+            "pending": "مــعـلـق",
+            "rejected": "مرفوض",
+            "reject": "رفض",
+            "orders": "الطلبات",
+            "apply": "تقديم طلب"
+        }
+    },
+    "en": {
+        "email": "Email",
+        "password": "Password",
+        "Reset Password Notification": "Reset Password Notification",
+        "You are receiving this email because we received a password reset request for your account.": "You are receiving this email because we received a password reset request for your account.",
+        "Reset Password": "Reset Password",
+        "This password reset link will expire in {count} minutes.": "This password reset link will expire in {count} minutes.",
+        "If you did not request a password reset, no further action is required.": "If you did not request a password reset, no further action is required.",
+        "auth": {
+            "failed": "These credentials do not match our records.",
+            "throttle": "Too many login attempts. Please try again in {seconds} seconds."
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1487,6 +1514,20 @@ export default {
                 }
             },
             "attributes": []
+            "the-maximum": "The maximum is 5000 SAR",
+            "applicant": "Applicant",
+            "personal_email": "Personal Email",
+            "job_title": "Job Title",
+            "manager_name": "Manager Name",
+            "manager_email": "Manager Email",
+            "new_email": "New Email",
+            "order_number": "Order Number",
+            "pending": "Pending",
+            "approve": "Approve",
+            "rejected": "Rejected",
+            "reject": "Reject",
+            "orders": "Orders",
+            " apply": "Apply"
         }
     }
 }
