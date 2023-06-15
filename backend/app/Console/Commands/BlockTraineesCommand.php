@@ -80,10 +80,10 @@ class BlockTraineesCommand extends Command
 
         DB::beginTransaction();
 
-        $Trainees = Trainee::where('company_id', '01b01605-75e0-4cdd-9074-213ecbead8d5')->get();
+        $Trainees = Trainee::where('company_id', '3dc9e0cc-9027-4706-8e73-04bb54fcf63a')->get();
         foreach ($Trainees as $Trainee) {
             $Trainee->update([
-                'deleted_remark' => 'استبعاد من الشركة'
+                'deleted_remark' => 'عدم التسجيل من الشركة'
             ]);
             $Trainee->suspended_at = now()->setSecond(0);
 
