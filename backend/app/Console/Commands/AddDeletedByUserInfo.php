@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Back\Audit;
 use App\Models\Back\Trainee;
+use App\Models\User;
 use Illuminate\Console\Command;
 
 class AddDeletedByUserInfo extends Command
@@ -51,8 +52,10 @@ class AddDeletedByUserInfo extends Command
                    ->first();
 
                if ($lastAudit) {
-                   $trainee->deleted_by_id = $lastAudit->user_id;
-                   $trainee->save(['timestamps' => false]);
+                   if (User::where('id', $lastAudit->user_id)->exists()) {
+                        $trainee->deleted_by_id = $lastAudit->user_id;
+                        $trainee->save(['timestamps' => false]);
+                   }
                }
 
                $current++;
