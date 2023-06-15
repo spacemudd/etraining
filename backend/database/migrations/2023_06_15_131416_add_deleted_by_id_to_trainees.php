@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddSuspendedByIdToTrainees extends Migration
+class AddDeletedByIdToTrainees extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,8 @@ class AddSuspendedByIdToTrainees extends Migration
     public function up()
     {
         Schema::table('trainees', function (Blueprint $table) {
-            $table->uuid('suspended_by_id')->nullable();
-            $table->foreign('suspended_by_id')->references('id')->on('users')->nullOnDelete();
+            $table->uuid('deleted_by_id')->nullable();
+            $table->foreign('deleted_by_id')->references('id')->on('users')->nullOnDelete();
         });
     }
 
@@ -27,8 +27,8 @@ class AddSuspendedByIdToTrainees extends Migration
     public function down()
     {
         Schema::table('trainees', function (Blueprint $table) {
-            $table->dropForeign(['suspended_by_id']);
-            $table->dropColumn(['suspended_by_id']);
+            $table->dropForeign(['deleted_by_id']);
+            $table->dropColumn(['deleted_by_id']);
         });
     }
 }

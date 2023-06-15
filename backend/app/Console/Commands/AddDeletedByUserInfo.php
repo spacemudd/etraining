@@ -6,7 +6,7 @@ use App\Models\Back\Audit;
 use App\Models\Back\Trainee;
 use Illuminate\Console\Command;
 
-class AddSuspendedByUserInfo extends Command
+class AddDeletedByUserInfo extends Command
 {
     /**
      * The name and signature of the console command.
@@ -51,7 +51,7 @@ class AddSuspendedByUserInfo extends Command
                    ->first();
 
                if ($lastAudit) {
-                   $trainee->suspended_by_id = $lastAudit->user_id;
+                   $trainee->deleted_by_id = $lastAudit->user_id;
                    $trainee->save(['timestamps' => false]);
                }
 

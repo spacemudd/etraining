@@ -622,7 +622,7 @@ class TraineesController extends Controller
     {
         $trainee = Trainee::onlyTrashed()->findOrFail($trainee_id);
         $trainee->suspended_at = null;
-        $trainee->suspended_by_id = auth()->user()->id;
+        $trainee->deleted_by_id = null;
         $trainee->save();
         $trainee->restore();
         $blockList = TraineeBlockList::where('trainee_id', $trainee->id)->first();
@@ -654,6 +654,7 @@ class TraineesController extends Controller
         $trainee->update([
             'deleted_remark' => $request->deleted_remark,
         ]);
+        $trainee->deleted_by_id = auth()->user()->id;
         $trainee->delete();
         //if ($trainee->user) {
         //    $trainee->user->delete();
@@ -707,6 +708,7 @@ class TraineesController extends Controller
         $trainee = Trainee::findOrFail($trainee_id);
         $trainee->deleted_remark = $request->reason;
         $trainee->suspended_at = now()->setSecond(0);
+        $trainee->deleted_by_id = auth()->user()->id;
         $trainee->save();
         $block = TraineeBlockList::create([
             'trainee_id' => $trainee->id,
