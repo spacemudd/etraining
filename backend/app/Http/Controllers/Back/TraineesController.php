@@ -622,6 +622,7 @@ class TraineesController extends Controller
     {
         $trainee = Trainee::onlyTrashed()->findOrFail($trainee_id);
         $trainee->suspended_at = null;
+        $trainee->suspended_by_id = auth()->user()->id;
         $trainee->save();
         $trainee->restore();
         $blockList = TraineeBlockList::where('trainee_id', $trainee->id)->first();
