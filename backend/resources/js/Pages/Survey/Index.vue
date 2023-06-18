@@ -2,7 +2,7 @@
     <app-layout>
         <div class="container px-6 mx-auto grid">
             <div class="flex content-center mt-20 text-center w-full">
-                <a target="_blank" rel="noopener noreferrer" :href="surveyLink" class="bg-red-500 px-2 py-1 rounded mx-auto text-white hover:bg-red-700">اضغط لبدأ الإستبيان</a>
+                <a target="_blank" rel="noopener noreferrer" href="https://forms.gle/ikw2m17MUcE5js8K7" class="bg-red-500 px-2 py-1 rounded mx-auto text-white hover:bg-red-700">اضغط لبدأ الإستبيان</a>
             </div>
 
             <div class="mt-20 bg-white shadow-lg rounded-lg p-5 text-center flex content-center">
