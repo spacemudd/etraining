@@ -594,5 +594,10 @@ return [
     'reject' => 'Reject',
     'orders' => 'Orders',
     ' apply' => 'Apply',
+    'it' => 'Information Technology',
+    'hr' => 'HR',
+    'collections' => 'Collections',
+    'soon' => 'Soon',
+
 
 ];

@@ -783,7 +783,11 @@ export default {
             "rejected": "مرفوض",
             "reject": "رفض",
             "orders": "الطلبات",
-            "apply": "تقديم طلب"
+            "apply": "تقديم طلب",
+            "it": "تقنية المعلومات",
+            "hr": "الموارد البشرية",
+            "collections": "التحصيل",
+            "soon": "قريبا"
         }
     },
     "en": {
@@ -1512,7 +1516,11 @@ export default {
             "rejected": "Rejected",
             "reject": "Reject",
             "orders": "Orders",
-            " apply": "Apply"
+            " apply": "Apply",
+            "it": "Information Technology",
+            "hr": "HR",
+            "collections": "Collections",
+            "soon": "Soon"
         }
     }
 }

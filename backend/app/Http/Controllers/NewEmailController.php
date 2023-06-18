@@ -17,7 +17,7 @@ class NewEmailController extends Controller
     public function index()
     {
         {
-            return Inertia::render('Orders/NewEmail/Create');
+            return Inertia::render('Orders/IT/NewEmail/Create');
         }
     }
     public function store(Request $request)

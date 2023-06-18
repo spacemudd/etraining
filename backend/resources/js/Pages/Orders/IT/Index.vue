@@ -9,25 +9,10 @@
             ></breadcrumb-container>
 
             <div class="grid md:grid-cols-4 grid-cols-1 gap-6">
-                <inertia-link :href="route('orders.it')"
-                              class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
-                    <center><img style="width: 78px;" src="https://i.ibb.co/b1bvfMb/1000-F-20889267z7-LAXfh69b-SQa7n-Qp-JY1ma-QBw-Ys90-Siw0u-1.png" alt="Rejected" class="w-56 mt-3"></center> <br>
-                    {{ $t('words.it') }}
-                </inertia-link>
-                <inertia-link :href="route('orders.hr')"
-                              class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
-                    <center><img style="width: 78px;" src="https://i.ibb.co/cCmySj8/istockphotjj-1164384748-612x612.png" alt="Rejected" class="w-56 mt-3"></center> <br>
-                    {{ $t('words.hr') }}
-                </inertia-link>
                 <inertia-link :href="route('new_email.index')"
                               class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
-                    <center><img style="width: 78px;" src="https://i.ibb.co/7Q7mwgH/1000-F-20889267z7-LAXfh69b-SQa7n-Qp-JY1ma-QBw-Ys90-Siw0u-1.png" alt="Rejected" class="w-56 mt-3"></center> <br>
-                    {{ $t('words.finance') }}
-                </inertia-link>
-                <inertia-link :href="route('new_email.index')"
-                              class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
-                    <center><img style="width: 78px;" src="https://i.ibb.co/PTqF4nk/1000-F-20889267z7-LAXfh69b-SQa7n-Qp-JY1ma-QBw-Ys90-Siw0u-1.png" alt="Rejected" class="w-56 mt-3"></center> <br>
-                    {{ $t('words.collections') }}
+                    <center><img style="width: 65px;" src="https://i.ibb.co/LgTNbGm/email.png" alt="Rejected" class="w-56 mt-3"></center> <br>
+                    {{ $t('words.create_new_email_order') }}
                 </inertia-link>
             </div>
         </div>
