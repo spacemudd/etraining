@@ -84,6 +84,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 $clone->date_from = '2023-06-01';
                 $clone->date_to = '2023-06-30';
                 $clone->cc_emails = Str::replace('ptc-ksa.com', 'ptc-ksa.net', $lastReport->cc_emails);
+                $clone->cc_emails = Str::replace('mashal.a@ptc-ksa.net', 'mashael.a@ptc-ksa.net', $clone->cc_emails);
                 if ($company->salesperson_email) {
                     $clone->cc_emails .= ', '.$company->salesperson_email;
                 }
