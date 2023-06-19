@@ -788,7 +788,8 @@ export default {
             "hr": "الموارد البشرية",
             "collection": "التحصيل",
             "soon": "قريباً",
-            "employees": "الموظفين"
+            "employees": "الموظفين",
+            "backend": "المطورون"
         }
     },
     "en": {
@@ -1522,7 +1523,8 @@ export default {
             "hr": "HR",
             "collections": "Collections",
             "soon": "Soon",
-            "employees": "Employees"
+            "employees": "Employees",
+            "backend": "Backend"
         }
     }
 }

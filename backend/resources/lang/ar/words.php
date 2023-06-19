@@ -614,4 +614,5 @@ return [
     'collection' => 'التحصيل',
     'soon' => 'قريباً',
     'employees' => 'الموظفين',
+    'backend' => 'المطورون',
 ];

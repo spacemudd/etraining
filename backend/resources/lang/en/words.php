@@ -599,6 +599,7 @@ return [
     'collections' => 'Collections',
     'soon' => 'Soon',
     'employees' => 'Employees',
+    'backend' => 'Backend',
 
 
 ];
