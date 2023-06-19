@@ -598,6 +598,7 @@ return [
     'hr' => 'HR',
     'collections' => 'Collections',
     'soon' => 'Soon',
+    'employees' => 'Employees',
 
 
 ];

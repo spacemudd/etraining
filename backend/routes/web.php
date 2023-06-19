@@ -368,8 +368,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::get('orders-list', [\App\Http\Controllers\OrdersController::class, 'orders'])->name('new_email.orders');
     Route::post('orders-list/new-email/approved/{id}', [\App\Http\Controllers\OrdersController::class, 'approveMail'])->name('new_email.approve-mail');
     Route::post('orders-list/new-email/rejected/{id}', [\App\Http\Controllers\OrdersController::class, 'rejectMail'])->name('new_email.reject-mail');
-    Route::get('orders/hr', [\App\Http\Controllers\OrdersController::class, 'hr'])->name('orders.hr');
-    Route::get('orders/it', [\App\Http\Controllers\OrdersController::class, 'it'])->name('orders.it');
+    Route::get('orders/hr', [\App\Http\Controllers\OrdersController::class, 'HR'])->name('orders.hr');
+    Route::get('orders/finance', [\App\Http\Controllers\OrdersController::class, 'finance'])->name('orders.finance');
+    Route::get('orders/collection', [\App\Http\Controllers\OrdersController::class, 'collection'])->name('orders.collection');
+    Route::get('orders/it', [\App\Http\Controllers\OrdersController::class, 'IT'])->name('orders.it');
     Route::get('orders/it/new-email', [\App\Http\Controllers\NewEmailController::class, 'index'])->name('new_email.index');
     Route::post('orders/it/new-email', [\App\Http\Controllers\NewEmailController::class, 'store'])->name('new_email.store');
 

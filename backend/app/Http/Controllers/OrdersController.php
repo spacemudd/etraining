@@ -17,14 +17,24 @@ class OrdersController extends Controller
             return Inertia::render('Orders/Index');
         }
     }
-    public function it () {
+    public function IT () {
         {
             return Inertia::render('Orders/IT/Index');
         }
     }
-    public function hr () {
+    public function HR () {
         {
             return Inertia::render('Orders/HR/Index');
+        }
+    }
+    public function finance () {
+        {
+            return Inertia::render('Orders/Finance/Index');
+        }
+    }
+    public function collection () {
+        {
+            return Inertia::render('Orders/Collection/Index');
         }
     }
     public function orders(){

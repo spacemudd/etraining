@@ -786,8 +786,9 @@ export default {
             "apply": "تقديم طلب",
             "it": "تقنية المعلومات",
             "hr": "الموارد البشرية",
-            "collections": "التحصيل",
-            "soon": "قريبا"
+            "collection": "التحصيل",
+            "soon": "قريباً",
+            "employees": "الموظفين"
         }
     },
     "en": {
@@ -1520,7 +1521,8 @@ export default {
             "it": "Information Technology",
             "hr": "HR",
             "collections": "Collections",
-            "soon": "Soon"
+            "soon": "Soon",
+            "employees": "Employees"
         }
     }
 }

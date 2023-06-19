@@ -19,15 +19,15 @@
                     <center><img style="width: 78px;" src="https://i.ibb.co/cCmySj8/istockphotjj-1164384748-612x612.png" alt="Rejected" class="w-56 mt-3"></center> <br>
                     {{ $t('words.hr') }}
                 </inertia-link>
-                <inertia-link :href="route('new_email.index')"
+                <inertia-link :href="route('orders.finance')"
                               class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
                     <center><img style="width: 78px;" src="https://i.ibb.co/7Q7mwgH/1000-F-20889267z7-LAXfh69b-SQa7n-Qp-JY1ma-QBw-Ys90-Siw0u-1.png" alt="Rejected" class="w-56 mt-3"></center> <br>
                     {{ $t('words.finance') }}
                 </inertia-link>
-                <inertia-link :href="route('new_email.index')"
+                <inertia-link :href="route('orders.collection')"
                               class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
                     <center><img style="width: 78px;" src="https://i.ibb.co/PTqF4nk/1000-F-20889267z7-LAXfh69b-SQa7n-Qp-JY1ma-QBw-Ys90-Siw0u-1.png" alt="Rejected" class="w-56 mt-3"></center> <br>
-                    {{ $t('words.collections') }}
+                    {{ $t('words.collection') }}
                 </inertia-link>
             </div>
         </div>

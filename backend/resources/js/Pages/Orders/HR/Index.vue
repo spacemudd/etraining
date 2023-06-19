@@ -5,9 +5,10 @@
                 :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
                     {title: 'orders', link: route('orders.index')},
+                    {title: 'hr', link: route('orders.hr')},
                 ]"
             ></breadcrumb-container>
-            <center><h1 style="font-size: 50px; color: #e96363; " >{{ $t('words.soon') }}</h1></center>
+            <center><h1 style="font-size: 50px; color: #e96363; font-family: 'Tajawal Medium'; font-weight: bold; " >{{ $t('words.soon') }}</h1></center>
         </div>
     </app-layout>
 </template>

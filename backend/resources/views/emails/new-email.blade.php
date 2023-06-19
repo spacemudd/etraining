@@ -127,7 +127,7 @@
     <br>
     <h5>   للإطلاع على تفاصيل الطلب:  </h5>
 
-    <a class="a-9" href="https://app.ptc-ksa.net/new-email/orders" ><button class="button-9" onclick="window.location.href='https://app.ptc-ksa.net/new-email/orders'" role="button">الطلبات</button></a>
+    <a class="a-9" href="https://app.ptc-ksa.net/new-email/orders" ><button class="button-9" onclick="window.location.href='https://app.ptc-ksa.net/orders-list'" role="button">الطلبات</button></a>
     <br>
 </div>
 </body>
