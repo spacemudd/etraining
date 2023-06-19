@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\AcceptNewEmailMail;
 use App\Mail\RejectNewEmailMail;
 use App\Models\NewEmail;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
@@ -60,13 +61,16 @@ class OrdersController extends Controller
 
     public function approveMail($id, Request $request)
     {
+        $this->authorize('accept-reject-new-email');
+
         \DB::beginTransaction();
         $email = NewEmail::find($id);
         $email->status = NewEmail::STATUS_APPROVED;
         $email->save();
         \DB::commit();
 
-        Mail::to(['samar.h@ptc-ksa.net', $email->personal_email])
+        $users = User::permission('accept-reject-new-email')->get();
+        Mail::to([$users, $email->personal_email])
             ->cc(['ceo@ptc-ksa.net'])
             ->queue(new AcceptNewEmailMail($email));
 
@@ -74,13 +78,16 @@ class OrdersController extends Controller
     }
     public function rejectMail($id, Request $request)
     {
+        $this->authorize('accept-reject-new-email');
+
         \DB::beginTransaction();
         $email = NewEmail::find($id);
         $email->status = NewEmail::STATUS_REJECTED;
         $email->save();
         \DB::commit();
 
-        Mail::to(['samar.h@ptc-ksa.net', $email->personal_email] )
+        $users = User::permission('accept-reject-new-email')->get();
+        Mail::to([$users, $email->personal_email])
             ->cc(['ceo@ptc-ksa.net'])
             ->queue(new RejectNewEmailMail($email));
 

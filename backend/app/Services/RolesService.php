@@ -58,6 +58,7 @@ class RolesService
         'view-deleted-companies',
         'restore-deleted-companies',
         'view-orders',
+        'accept-reject-new-email',
         // add the same name of the role to translation files.
     ];
 
