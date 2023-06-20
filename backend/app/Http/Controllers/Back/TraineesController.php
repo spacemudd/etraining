@@ -131,7 +131,7 @@ class TraineesController extends Controller
             'auditable_id' => auth()->user()->id,
             'auditable_type' => User::class,
             'new_values' => [
-                'company' => $trainee->company->name ?? null,
+                'company' => $trainee->company->name_ar ?? null,
                 'trainee' => $trainee->name,
             ],
         ]);
@@ -625,7 +625,7 @@ class TraineesController extends Controller
             'auditable_id' => auth()->user()->id,
             'auditable_type' => User::class,
             'new_values' => [
-                'company' => $trainee->company->name ?? null,
+                'company' => $trainee->company->name_ar ?? null,
                 'trainee' => $trainee->name,
             ],
         ]);
