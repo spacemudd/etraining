@@ -38,7 +38,9 @@ class OrdersController extends Controller
             return Inertia::render('Orders/Collection/Index');
         }
     }
+
     public function orders(){
+//        $this->authorize('view-orders');
 
         $reports = QueryBuilder::for(NewEmail::class)
             ->allowedSorts(['number'])
@@ -59,6 +61,7 @@ class OrdersController extends Controller
 
     }
 
+    // IT Functions
     public function approveMail($id, Request $request)
     {
         $this->authorize('accept-reject-new-email');

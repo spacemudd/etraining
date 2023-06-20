@@ -600,6 +600,9 @@ return [
     'soon' => 'Soon',
     'employees' => 'Employees',
     'backend' => 'Backend',
+    'view-orders' => 'View orders',
+    'accept-reject-new-email' => 'Accept Reject the new email',
+
 
 
 ];

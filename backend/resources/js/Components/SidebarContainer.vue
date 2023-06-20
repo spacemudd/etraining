@@ -71,6 +71,15 @@
             </template>
         </sidebar-link>
 
+        <sidebar-link v-can="'view-orders'" :link-value="route('orders-list')" :active="$page.currentRouteName == 'orders.index'">
+            <template #icon>
+                <img src="https://icons.veryicon.com/png/o/miscellaneous/linear-icon-14/place-order-1.png" alt="" class="w-5 h-5">
+            </template>
+            <template #title>
+                <span class="ltr:ml-4 rtl:mr-4 hover:text-red-600 hover:font-bold">{{ $t('words.orders') }}</span>
+            </template>
+        </sidebar-link>
+
         <sidebar-link :link-value="route('back.settings')">
             <template #icon>
                 <ion-icon name="settings-outline" class="w-5 h-5"></ion-icon>

@@ -365,7 +365,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
     // Orders
     Route::get('orders', [\App\Http\Controllers\OrdersController::class, 'index'])->name('orders.index');
-    Route::get('orders-list', [\App\Http\Controllers\OrdersController::class, 'orders'])->name('new_email.orders');
+    Route::get('orders-list', [\App\Http\Controllers\OrdersController::class, 'orders'])->name('orders-list');
     Route::post('orders-list/new-email/approved/{id}', [\App\Http\Controllers\OrdersController::class, 'approveMail'])->name('new_email.approve-mail');
     Route::post('orders-list/new-email/rejected/{id}', [\App\Http\Controllers\OrdersController::class, 'rejectMail'])->name('new_email.reject-mail');
     Route::get('orders/hr', [\App\Http\Controllers\OrdersController::class, 'HR'])->name('orders.hr');

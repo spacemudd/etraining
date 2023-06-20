@@ -789,7 +789,9 @@ export default {
             "collection": "التحصيل",
             "soon": "قريباً",
             "employees": "الموظفين",
-            "backend": "المطورون"
+            "backend": "المطورون",
+            "view-orders": "عرض الطلبات",
+            "accept-reject-new-email": "قبول ورفض البريد الالكتروني الجديد"
         }
     },
     "en": {
@@ -1524,7 +1526,9 @@ export default {
             "collections": "Collections",
             "soon": "Soon",
             "employees": "Employees",
-            "backend": "Backend"
+            "backend": "Backend",
+            "view-orders": "View orders",
+            "accept-reject-new-email": "Accept Reject the new email"
         }
     }
 }

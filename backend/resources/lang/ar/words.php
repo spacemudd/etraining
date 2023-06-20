@@ -615,4 +615,6 @@ return [
     'soon' => 'قريباً',
     'employees' => 'الموظفين',
     'backend' => 'المطورون',
+    'view-orders' => 'عرض الطلبات',
+    'accept-reject-new-email' => 'قبول ورفض البريد الالكتروني الجديد',
 ];
