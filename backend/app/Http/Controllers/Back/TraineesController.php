@@ -126,6 +126,16 @@ class TraineesController extends Controller
             ->orWhere('name', $trainee->name)
             ->first();
 
+        Audit::create([
+            'event' => 'trainees.show',
+            'auditable_id' => auth()->user()->id,
+            'auditable_type' => User::class,
+            'new_values' => [
+                'company' => $trainee->company->name ?? null,
+                'trainee' => $trainee->name,
+            ],
+        ]);
+
         return Inertia::render('Back/Trainees/Show', [
             'companies' => Company::get(),
             'in_block_list' => $in_block_list,
@@ -604,12 +614,24 @@ class TraineesController extends Controller
 
     public function showBlocked($id)
     {
-        return Inertia::render('Back/Trainees/ShowBlocked', [
-            'trainee' => Trainee::with(['educational_level', 'city', 'marital_status', 'trainee_group', 'company'])
+        $trainee = Trainee::with(['educational_level', 'city', 'marital_status', 'trainee_group', 'company'])
                 ->withCount('general_files')
                 ->with('invoices')
                 ->withTrashed()
-                ->findOrFail($id),
+                ->findOrFail($id);
+
+        Audit::create([
+            'event' => 'trainees.show',
+            'auditable_id' => auth()->user()->id,
+            'auditable_type' => User::class,
+            'new_values' => [
+                'company' => $trainee->company->name ?? null,
+                'trainee' => $trainee->name,
+            ],
+        ]);
+
+        return Inertia::render('Back/Trainees/ShowBlocked', [
+            'trainee' => $trainee,
             'trainee_groups' => TraineeGroup::get(),
             'cities' => City::orderBy('name_ar')->get(),
             'marital_statuses' => MaritalStatus::orderBy('order')->get(),
