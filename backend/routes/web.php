@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Back\TraineesGroupsController;
+use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
 use App\Models\User;
 
@@ -361,12 +362,19 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
     Route::get('/back/media/{media_id}', [\App\Http\Controllers\MediaController::class, 'download'])->name('back.media.download');
     Route::delete('/back/media/{media_id}', [\App\Http\Controllers\MediaController::class, 'delete'])->name('back.media.delete');
+
+    // Orders
     Route::get('orders', [\App\Http\Controllers\OrdersController::class, 'index'])->name('orders.index');
-    Route::get('new-email', [\App\Http\Controllers\NewEmailController::class, 'index'])->name('new_email.index');
-    Route::post('new-email', [\App\Http\Controllers\NewEmailController::class, 'store'])->name('new_email.store');
-    Route::get('new-email/orders', [\App\Http\Controllers\NewEmailController::class, 'orders'])->name('new_email.orders');
-    Route::post('new-email/orders/approved/{id}', [\App\Http\Controllers\NewEmailController::class, 'approveMail'])->name('new_email.approve-mail');
-    Route::post('new-email/orders/rejected/{id}', [\App\Http\Controllers\NewEmailController::class, 'rejectMail'])->name('new_email.reject-mail');
+    Route::get('orders-list', [\App\Http\Controllers\OrdersController::class, 'orders'])->name('orders-list');
+    Route::post('orders-list/new-email/approved/{id}', [\App\Http\Controllers\OrdersController::class, 'approveMail'])->name('new_email.approve-mail');
+    Route::post('orders-list/new-email/rejected/{id}', [\App\Http\Controllers\OrdersController::class, 'rejectMail'])->name('new_email.reject-mail');
+    Route::get('orders/hr', [\App\Http\Controllers\OrdersController::class, 'HR'])->name('orders.hr');
+    Route::get('orders/finance', [\App\Http\Controllers\OrdersController::class, 'finance'])->name('orders.finance');
+    Route::get('orders/collection', [\App\Http\Controllers\OrdersController::class, 'collection'])->name('orders.collection');
+    Route::get('orders/it', [\App\Http\Controllers\OrdersController::class, 'IT'])->name('orders.it');
+    Route::get('orders/it/new-email', [\App\Http\Controllers\NewEmailController::class, 'index'])->name('new_email.index');
+    Route::post('orders/it/new-email', [\App\Http\Controllers\NewEmailController::class, 'store'])->name('new_email.store');
+
 
     // For admins
     Route::prefix('back')->middleware('redirect-trainees-to-dashboard')->name('back.')->group(function() {

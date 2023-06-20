@@ -7,6 +7,7 @@ use App\Mail\RejectNewEmailMail;
 use App\Mail\NewEmailMail;
 use App\Models\Back\CompanyAttendanceReport;
 use App\Models\NewEmail;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
@@ -17,7 +18,7 @@ class NewEmailController extends Controller
     public function index()
     {
         {
-            return Inertia::render('Orders/NewEmail/Create');
+            return Inertia::render('Orders/IT/NewEmail/Create');
         }
     }
     public function store(Request $request)
@@ -43,7 +44,8 @@ class NewEmailController extends Controller
             'created_by_id' => auth()->user()->id,
         ]);
 
-        Mail::to(['ceo@ptc-ksa.net'])
+        $users = User::permission('view-orders')->get();
+        Mail::to($users)
             ->queue(new NewEmailMail(auth()->user()->name));
 
         return redirect()->route('dashboard');
@@ -72,6 +74,7 @@ class NewEmailController extends Controller
 
     public function approveMail($id, Request $request)
     {
+
         \DB::beginTransaction();
         $email = NewEmail::find($id);
         $email->status = NewEmail::STATUS_APPROVED;

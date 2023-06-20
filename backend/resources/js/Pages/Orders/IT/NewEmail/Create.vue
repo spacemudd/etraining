@@ -5,6 +5,7 @@
                     :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
                     {title: 'orders', link: route('orders.index')},
+                    {title: 'it', link: route('orders.it')},
                     {title: 'create_new_email_order', link: route('new_email.index')},
                 ]"
                 ></breadcrumb-container>

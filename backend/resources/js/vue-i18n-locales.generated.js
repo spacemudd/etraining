@@ -783,7 +783,15 @@ export default {
             "rejected": "مرفوض",
             "reject": "رفض",
             "orders": "الطلبات",
-            "apply": "تقديم طلب"
+            "apply": "تقديم طلب",
+            "it": "تقنية المعلومات",
+            "hr": "الموارد البشرية",
+            "collection": "التحصيل",
+            "soon": "قريباً",
+            "employees": "الموظفين",
+            "backend": "المطورون",
+            "view-orders": "عرض الطلبات",
+            "accept-reject-new-email": "قبول ورفض البريد الالكتروني الجديد"
         }
     },
     "en": {
@@ -1512,7 +1520,15 @@ export default {
             "rejected": "Rejected",
             "reject": "Reject",
             "orders": "Orders",
-            " apply": "Apply"
+            " apply": "Apply",
+            "it": "Information Technology",
+            "hr": "HR",
+            "collections": "Collections",
+            "soon": "Soon",
+            "employees": "Employees",
+            "backend": "Backend",
+            "view-orders": "View orders",
+            "accept-reject-new-email": "Accept Reject the new email"
         }
     }
 }
