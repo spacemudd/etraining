@@ -617,4 +617,5 @@ return [
     'backend' => 'المطورون',
     'view-orders' => 'عرض الطلبات',
     'accept-reject-new-email' => 'قبول ورفض البريد الالكتروني الجديد',
+    'resignations' => 'الاستقالات',
 ];
