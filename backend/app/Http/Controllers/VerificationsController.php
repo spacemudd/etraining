@@ -17,7 +17,7 @@ class VerificationsController extends Controller
 
 
         $user = User::where('email', $request->email)->firstOrFail();
-        $this->sendWhatsAppCode($user);
+        $this->sendSmsCode($user);
 
         return redirect()->route('login.verify', ['email' => $request->email]);
     }
@@ -58,6 +58,36 @@ class VerificationsController extends Controller
         ]);
 
         $response = $client->post('https://graph.facebook.com/v15.0/106103318984035/messages', [
+            'body' => $body,
+        ]);
+
+        return $verify;
+    }
+
+    public function sendSmsCode(User $user): Verification
+    {
+        Verification::where('user_id', $user->id)->delete();
+
+        $verify = Verification::create([
+            'user_id' => $user->id,
+            'code' => rand(2000, 9999),
+        ]);
+
+        $body = '{
+              "userName": "ptcksa",
+              "numbers": "'.$user->phone.'",
+              "userSender": "PTCKSA-AD",
+              "apiKey": "'.config('msegat.MSEGAT_API_KEY').'",
+              "msg":"رمز التحقق: '.$verify->code.'"
+            }';
+
+        $client = new \GuzzleHttp\Client([
+            'headers' => [
+                'Content-Type' => 'application/json',
+            ]
+        ]);
+
+        $response = $client->post('https://www.msegat.com/gw/sendsms.php', [
             'body' => $body,
         ]);
 
