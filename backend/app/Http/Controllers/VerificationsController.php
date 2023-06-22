@@ -17,7 +17,7 @@ class VerificationsController extends Controller
 
 
         $user = User::where('email', $request->email)->firstOrFail();
-        $this->sendSmsCode($user);
+        $this->sendWhatsAppCode($user);
 
         return redirect()->route('login.verify', ['email' => $request->email]);
     }
@@ -32,22 +32,38 @@ class VerificationsController extends Controller
         ]);
 
         $body = '{
-            "messaging_product": "whatsapp",
-            "to": "'.$user->phone.'",
-            "type": "template",
-            "template": {
-                    "name": "ptc_login",
-                "language": {
-                        "code": "ar"
-                },
-                "components": [{
-                        "type": "body",
-                     "parameters": [{
-                            "type": "text",
-                        "text": "'.$verify->code.'"
-                    }]
-                }]
-            }
+          "messaging_product": "whatsapp",
+          "recipient_type": "individual",
+          "to": "'.$user->phone.'",
+          "type": "template",
+          "template": {
+            "name": "laravel_otp",
+            "language": {
+                "code": "ar"
+            },
+            "components": [
+              {
+                "type": "body",
+                "parameters": [
+                  {
+                    "type": "text",
+                    "text": "'.$verify->code.'"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "sub_type": "url",
+                "index": "0",
+                "parameters": [
+                  {
+                    "type": "text",
+                    "text": "'.$verify->code.'"
+                  }
+                ]
+              }
+            ]
+          }
         }';
 
         $client = new \GuzzleHttp\Client([
