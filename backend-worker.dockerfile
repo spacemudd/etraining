@@ -72,7 +72,7 @@ RUN composer install --no-dev && \
     chgrp -R www-data storage bootstrap/cache && \
     chmod -R ug+rwx storage bootstrap/cache
 
-RUN apt update
+RUN apt-get update --allow-releaseinfo-change
 RUN apt-get install -y -u python3-pip
 RUN pip3 install supervisor
 
