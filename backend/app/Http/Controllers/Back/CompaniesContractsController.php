@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
+use App\Models\Back\Audit;
 use App\Models\Back\Company;
 use App\Models\Back\CompanyContract;
 use App\Models\Back\Instructor;
 use App\Models\Numbering;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -313,6 +315,12 @@ class CompaniesContractsController extends Controller
     public function excel($company_id)
     {
         $company = Company::findOrFail($company_id);
+        Audit::create([
+            'event' => 'companies.trainees.export.excel',
+            'auditable_id' => auth()->user()->id,
+            'auditable_type' => User::class,
+            'new_values' => [],
+        ]);
         return Excel::download(
             new CompanyTraineeExport($company_id),
             $company->name_ar.' - '.__('words.trainees').'.xlsx')

@@ -55,6 +55,10 @@ class RolesService
         'manage-trainee-groups',
         'block-trainee',
         'view-dashboard-counters',
+        'view-deleted-companies',
+        'restore-deleted-companies',
+        'view-orders',
+        'accept-reject-new-email',
         // add the same name of the role to translation files.
     ];
 
@@ -109,5 +113,7 @@ class RolesService
         Role::firstOrCreate(['name' => $team->id.'_chasers', 'team_id' => $team->id]);
         Role::firstOrCreate(['name' => $team->id.'_services', 'team_id' => $team->id]);
         Role::firstOrCreate(['name' => $team->id.'_services_manager', 'team_id' => $team->id]);
+        Role::firstOrCreate(['name' => $team->id.'_backend', 'team_id' => $team->id]);
+
     }
 }

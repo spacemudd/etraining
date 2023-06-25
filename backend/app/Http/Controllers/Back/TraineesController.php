@@ -119,8 +119,26 @@ class TraineesController extends Controller
      */
     public function show($id)
     {
+        $trainee = Trainee::find($id);
+        $in_block_list = TraineeBlockList::where('phone', $trainee->phone)
+            ->orWhere('identity_number', $trainee->identity_number)
+            ->orWhere('email', $trainee->email)
+            ->orWhere('name', $trainee->name)
+            ->first();
+
+        Audit::create([
+            'event' => 'trainees.show',
+            'auditable_id' => auth()->user()->id,
+            'auditable_type' => User::class,
+            'new_values' => [
+                'company' => $trainee->company->name_ar ?? null,
+                'trainee' => $trainee->name,
+            ],
+        ]);
+
         return Inertia::render('Back/Trainees/Show', [
             'companies' => Company::get(),
+            'in_block_list' => $in_block_list,
             'trainee' => Trainee::query()
                 ->with([
                     'company',
@@ -596,12 +614,24 @@ class TraineesController extends Controller
 
     public function showBlocked($id)
     {
-        return Inertia::render('Back/Trainees/ShowBlocked', [
-            'trainee' => Trainee::with(['educational_level', 'city', 'marital_status', 'trainee_group', 'company'])
+        $trainee = Trainee::with(['educational_level', 'city', 'marital_status', 'trainee_group', 'company'])
                 ->withCount('general_files')
                 ->with('invoices')
                 ->withTrashed()
-                ->findOrFail($id),
+                ->findOrFail($id);
+
+        Audit::create([
+            'event' => 'trainees.show',
+            'auditable_id' => auth()->user()->id,
+            'auditable_type' => User::class,
+            'new_values' => [
+                'company' => $trainee->company->name_ar ?? null,
+                'trainee' => $trainee->name,
+            ],
+        ]);
+
+        return Inertia::render('Back/Trainees/ShowBlocked', [
+            'trainee' => $trainee,
             'trainee_groups' => TraineeGroup::get(),
             'cities' => City::orderBy('name_ar')->get(),
             'marital_statuses' => MaritalStatus::orderBy('order')->get(),
@@ -614,6 +644,7 @@ class TraineesController extends Controller
     {
         $trainee = Trainee::onlyTrashed()->findOrFail($trainee_id);
         $trainee->suspended_at = null;
+        $trainee->deleted_by_id = null;
         $trainee->save();
         $trainee->restore();
         $blockList = TraineeBlockList::where('trainee_id', $trainee->id)->first();
@@ -645,6 +676,7 @@ class TraineesController extends Controller
         $trainee->update([
             'deleted_remark' => $request->deleted_remark,
         ]);
+        $trainee->deleted_by_id = auth()->user()->id;
         $trainee->delete();
         //if ($trainee->user) {
         //    $trainee->user->delete();
@@ -698,6 +730,7 @@ class TraineesController extends Controller
         $trainee = Trainee::findOrFail($trainee_id);
         $trainee->deleted_remark = $request->reason;
         $trainee->suspended_at = now()->setSecond(0);
+        $trainee->deleted_by_id = auth()->user()->id;
         $trainee->save();
         $block = TraineeBlockList::create([
             'trainee_id' => $trainee->id,
@@ -737,6 +770,13 @@ class TraineesController extends Controller
         $excelJob->user_id = auth()->user()->id;
         $excelJob->team_id = auth()->user()->current_team_id;
         $excelJob->save();
+
+        Audit::create([
+            'event' => 'companies.export.excel',
+            'auditable_id' => auth()->user()->id,
+            'auditable_type' => User::class,
+            'new_values' => [],
+        ]);
 
         dispatch(new ExportTraineesToExcelJob($excelJob));
 
@@ -1008,5 +1048,18 @@ class TraineesController extends Controller
                 ->latest()
                 ->paginate(40),
         ]);
+    }
+
+    public function deleteFromBlockList($id)
+    {
+        $trainee = Trainee::find($id);
+        TraineeBlockList::where('phone', $trainee->phone)
+            ->orWhere('identity_number', $trainee->identity_number)
+            ->orWhere('email', $trainee->email)
+            ->orWhere('name', $trainee->name)
+            ->first()
+            ->delete();
+
+        return redirect()->route('back.trainees.show', $trainee->id);
     }
 }

@@ -127,11 +127,11 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 continue;
             }
 
-            // $this->info('Processing company: '.$company->name_ar.' - '.$company->id);
+            $this->info('Processing company: '.$company->name_ar);
 
             // Has report for current month?
             $currentMonthReport = $company->company_attendance_reports()
-                ->whereBetween('date_from', ['2023-04-01', '2023-04-30'])
+                ->whereBetween('date_from', ['2023-06-01', '2023-06-31'])
                 ->first();
 
             if ($currentMonthReport) {
@@ -158,13 +158,17 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 //    }
                 //}
 
-                $clone = app()->make(CompanyAttendanceReportService::class)->clone($lastReport->id);
-                $clone->date_from = '2023-04-01';
-                $clone->date_to = '2023-04-30';
-                $clone->cc_emails = Str::replace('ptc-ksa.com', 'ptc-ksa.net', $clone->cc_emails);
+                //$clone = app()->make(CompanyAttendanceReportService::class)->clone($lastReport->id);
+                $clone = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
+                $clone->date_from = '2023-06-01';
+                $clone->date_to = '2023-06-30';
+                $clone->cc_emails = Str::replace('ptc-ksa.com', 'ptc-ksa.net', $lastReport->cc_emails);
+                $clone->cc_emails = Str::replace('mashal.a@ptc-ksa.net', 'mashael.a@ptc-ksa.net', $clone->cc_emails);
+                if ($company->salesperson_email) {
+                    $clone->cc_emails .= ', '.$company->salesperson_email;
+                }
                 $clone->save();
                 app()->make(CompanyAttendanceReportService::class)->approve($clone->id);
-                $this->info('Sent for with email: '.$company->name_ar);
             } else {
                 if (!$company->email) {
                     $this->info('No email for company. Skipping: '.$company->name_ar);
@@ -172,12 +176,14 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 }
                 $this->info('No last report. Creating new report - '.$company->name_ar);
                 $report = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
-                $report->date_from = '2023-04-01';
-                $report->date_to = '2023-04-30';
+                $report->date_from = '2023-06-01';
+                $report->date_to = '2023-06-30';
                 $report->cc_emails = 'sara@ptc-ksa.net, m_shehatah@ptc-ksa.net, ceo@ptc-ksa.net, mashael.a@ptc-ksa.net';
+                if ($company->salesperson_email) {
+                    $report->cc_emails .= ', '.$company->salesperson_email;
+                }
                 $report->save();
                 app()->make(CompanyAttendanceReportService::class)->approve($report->id);
-                $this->info('Sent for: '.$company->name_ar);
             }
         }
 

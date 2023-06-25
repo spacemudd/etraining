@@ -9,8 +9,21 @@
                 ]"
             ></breadcrumb-container>
 
+            <div class="grid grid-cols-6 gap-6 mb-10">
+                <div class="col-span-6 items-center justify-end bg-gray-50 text-right flex gap-6"
+                         v-if="company.deleted_at">
+                        <div class="bg-red-600 font-bold text-white p-2 rounded-sm flex gap-2 w-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zm0 13.036h.008v.008H12v-.008z" />
+                            </svg>
+                            {{ $t('words.company-is-deleted') }}
+                        </div>
+                    </div>
+            </div>
+
             <div class="grid grid-cols-4 gap-6">
-                <div class="col-span-4 flex items-center justify-end bg-gray-50 text-right">
+
+                <div class="col-span-4 flex items-center justify-end bg-gray-50 text-right gap-6">
                     <inertia-link
                         v-if="$page.props.user.email === 'shafiqalshaar@clarastars.com'"
                         :href="`/back/companies/${this.company.id}/ptcnet`"
@@ -18,14 +31,22 @@
                         Mark as PTCNet <span v-if="this.company.is_ptc_net">T</span>
                     </inertia-link>
                     <inertia-link
+                        :href="`/back/companies/${this.company.id}/restore`"
+                        v-can="'restore-deleted-companies'"
+                        class="flex items-center justify-start rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right"
+                    >
+                        {{ $t('words.restore') }}
+                    </inertia-link>
+                    <inertia-link
+                        v-if="!company.deleted_at"
                         :href="`/back/companies/${this.company.id}/edit`"
-                        class="flex items-center justify-start rounded-md mx-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right"
+                        class="flex items-center justify-start rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right"
                     >
                         {{ $t('words.edit') }}
                     </inertia-link>
                     <button
                         v-if="!company.deleted_at"
-                        class="flex items-center justify-start rounded-md px-4 py-2 bg-red-600 text-white hover:bg-red-700 text-right"
+                        class="flex items-center justify-start rounded-md py-2 px-2 bg-red-600 text-white hover:bg-red-700 text-right"
                         tabindex="-1"
                         type="button"
                         @click.prevent="deleteCompany()"
@@ -46,6 +67,7 @@
                             'email',
                             'monthly_subscription_per_trainee',
                             'shelf_number',
+                            'salesperson_email',
                             ]"
                 >
                     <div class="col-span-4 sm:col-span-1">
@@ -59,14 +81,33 @@
                             class="mt-1 block w-full bg-gray-200"
                             :value="company[fieldName]"
                             disabled
+
                         />
                     </div>
                 </template>
+                <div class="col-span-4 sm:col-span-1">
+                    <jet-label for="region_id" :value="$t('words.region')" />
+                    <div class="relative mt-2">
+                        <select class="mt-1 block w-full bg-gray-100 appearance-none border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:border-gray-500"
+                                v-model="company.region_id"
+                                id="region_id"
+                                disabled
+                        >
+                            <option v-for="region in regions"
+                                    :key="region.id"
+                                    :value="region.id"
+                            >
+                                {{ region.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <jet-input-error :message="form.error('region_id')" class="mt-2" />
+                </div>
             </div>
 
-            <span v-if="this.company.is_ptc_net">--</span>
+<!--            <span v-if="this.company.is_ptc_net">&#45;&#45;</span>-->
 
-            <span class="text-xs" v-if="this.company.region">{{ this.company.region.name }}</span>
+<!--            <span class="text-xs" v-if="this.company.region">{{ this.company.region.name }}</span>-->
 
             <jet-section-border></jet-section-border>
 
@@ -354,7 +395,7 @@ import EmptySlate from "@/Components/EmptySlate";
 import PostTraineesButton from "@/Components/PostTraineesButton";
 
 export default {
-    props: ['sessions', 'company', 'instructors', 'invoices', 'trainees_trashed_count'],
+    props: ['sessions', 'company', 'instructors', 'invoices', 'trainees_trashed_count', 'regions'],
 
     components: {
         PostTraineesButton,
@@ -387,6 +428,8 @@ export default {
                 email: '',
                 monthly_subscription_per_trainee: '',
                 shelf_number: '',
+                salesperson_email: '',
+                region_id: '',
             }, {
                 bag: 'createCompany',
             })
@@ -402,7 +445,6 @@ export default {
                     created_at_date: invoiceCollection.created_at_date,
                     created_by_id: invoiceCollection.created_by_id,
                     company_id: invoiceCollection.company_id,
-
                 }));
             }
         },

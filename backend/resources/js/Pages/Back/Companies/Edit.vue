@@ -28,6 +28,7 @@
                             'email',
                             'monthly_subscription_per_trainee',
                             'shelf_number',
+                            'salesperson_email',
                             ]">
                             <div class="col-span-2 sm:col-span-2">
                                 <jet-label for="name" :value="$t('words.'+fieldName)" />
@@ -35,6 +36,21 @@
                                 <jet-input-error :message="form.error(fieldName)" class="mt-2" />
                             </div>
                         </template>
+                        <div class="col-span-4 sm:col-span-1">
+                            <jet-label for="region_id" :value="$t('words.region')" />
+                            <div class="relative mt-2">
+                                <select class="mt-1 block w-full bg-gray-100 appearance-none border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:border-gray-500"
+                                        v-model="form.region_id"
+                                        id="region_id">
+                                    <option v-for="region in regions"
+                                            :key="region.id"
+                                            :value="region.id">
+                                        {{ region.name }}
+                                    </option>
+                                </select>
+                            </div>
+                            <jet-input-error :message="form.error('region_id')" class="mt-2" />
+                        </div>
                     </template>
 
                     <template #actions>
@@ -70,7 +86,7 @@
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
 
     export default {
-        props: ['sessions', 'company'],
+        props: ['sessions', 'company', 'regions'],
 
         components: {
             AppLayout,
@@ -96,6 +112,8 @@
             this.form.address = this.company.address;
             this.form.monthly_subscription_per_trainee = this.company.monthly_subscription_per_trainee;
             this.form.shelf_number = this.company.shelf_number;
+            this.form.region_id = this.company.region_id;
+            this.form.salesperson_email = this.company.salesperson_email;
         },
         data() {
             return {
@@ -110,6 +128,8 @@
                     email: '',
                     monthly_subscription_per_trainee: '',
                     shelf_number: '',
+                    salesperson_email: '',
+                    region_id: '',
                 }, {
                     bag: 'updateCompany',
                 })

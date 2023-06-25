@@ -13,7 +13,7 @@
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
             <div>
                 <a href="/">
-                    <img src="/img/logo-lg.png" alt="Logo" class="w-56">
+                    <img src="/img/logo.png" alt="Logo" class="w-56">
                 </a>
             </div>
 

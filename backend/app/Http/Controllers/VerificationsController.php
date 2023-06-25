@@ -32,22 +32,38 @@ class VerificationsController extends Controller
         ]);
 
         $body = '{
-            "messaging_product": "whatsapp",
-            "to": "'.$user->phone.'",
-            "type": "template",
-            "template": {
-                    "name": "ptc_login",
-                "language": {
-                        "code": "ar"
-                },
-                "components": [{
-                        "type": "body",
-                     "parameters": [{
-                            "type": "text",
-                        "text": "'.$verify->code.'"
-                    }]
-                }]
-            }
+          "messaging_product": "whatsapp",
+          "recipient_type": "individual",
+          "to": "'.$user->phone.'",
+          "type": "template",
+          "template": {
+            "name": "laravel_otp",
+            "language": {
+                "code": "ar"
+            },
+            "components": [
+              {
+                "type": "body",
+                "parameters": [
+                  {
+                    "type": "text",
+                    "text": "'.$verify->code.'"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "sub_type": "url",
+                "index": "0",
+                "parameters": [
+                  {
+                    "type": "text",
+                    "text": "'.$verify->code.'"
+                  }
+                ]
+              }
+            ]
+          }
         }';
 
         $client = new \GuzzleHttp\Client([
@@ -58,6 +74,36 @@ class VerificationsController extends Controller
         ]);
 
         $response = $client->post('https://graph.facebook.com/v15.0/106103318984035/messages', [
+            'body' => $body,
+        ]);
+
+        return $verify;
+    }
+
+    public function sendSmsCode(User $user): Verification
+    {
+        Verification::where('user_id', $user->id)->delete();
+
+        $verify = Verification::create([
+            'user_id' => $user->id,
+            'code' => rand(2000, 9999),
+        ]);
+
+        $body = '{
+              "userName": "ptcksa",
+              "numbers": "'.$user->phone.'",
+              "userSender": "PTCKSA-AD",
+              "apiKey": "'.config('msegat.MSEGAT_API_KEY').'",
+              "msg":"رمز التحقق: '.$verify->code.'"
+            }';
+
+        $client = new \GuzzleHttp\Client([
+            'headers' => [
+                'Content-Type' => 'application/json',
+            ]
+        ]);
+
+        $response = $client->post('https://www.msegat.com/gw/sendsms.php', [
             'body' => $body,
         ]);
 

@@ -3,11 +3,11 @@
         <div class="">
             <div class="" style="margin-top: 2rem;width:200px;margin-left:5rem;">
                 <div class="">
-                    <button @click="joinMeeting"
-                            :disabled="$wait.is('STARTING_TRAINEE_SESSION')"
-                            class="btn btn-primary">
-                        {{ $t('words.join-meeting-via-browser') }}
-                    </button>
+                    <!--<button @click="joinMeeting"-->
+                    <!--        :disabled="$wait.is('STARTING_TRAINEE_SESSION')"-->
+                    <!--        class="btn btn-primary">-->
+                    <!--    {{ $t('words.join-meeting-via-browser') }}-->
+                    <!--</button>-->
 
                     <br/>
                     <!--<button @click="joinMeeting"-->

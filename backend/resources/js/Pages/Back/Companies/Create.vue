@@ -30,6 +30,7 @@
                             'address',
                             'email',
                             'monthly_subscription_per_trainee',
+                            'salesperson_email',
                             ]">
                             <div class="col-span-2 sm:col-span-2">
                                 <jet-label for="name" :value="$t('words.'+fieldName)" />
@@ -37,6 +38,21 @@
                                 <jet-input-error :message="form.error(fieldName)" class="mt-2" />
                             </div>
                         </template>
+                        <div class="col-span-4 sm:col-span-4">
+                            <jet-label for="region_id" :value="$t('words.region')" />
+                            <div class="relative mt-2">
+                                <select class="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                        v-model="form.region_id"
+                                        id="region_id">
+                                    <option v-for="region in regions"
+                                            :key="region.id"
+                                            :value="region.id">
+                                        {{ region.name }}
+                                    </option>
+                                </select>
+                            </div>
+                            <jet-input-error :message="form.error('region_id')" class="mt-2" />
+                        </div>
                     </template>
 
                     <template #actions>
@@ -71,7 +87,7 @@
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
 
     export default {
-        props: ['sessions'],
+        props: ['sessions', 'regions'],
 
         components: {
             AppLayout,
@@ -97,6 +113,8 @@
                     address: '',
                     email: '',
                     monthly_subscription_per_trainee: '',
+                    salesperson_email: '',
+                    region_id: '',
                 }, {
                     bag: 'createCompany',
                 })

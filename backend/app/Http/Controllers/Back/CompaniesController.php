@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Back;
 
 use App\Exports\CompaniesExport;
 use App\Http\Controllers\Controller;
+use App\Models\Back\Audit;
 use App\Models\Back\Company;
 use App\Models\Back\Instructor;
+use App\Models\Back\Region;
 use App\Models\Back\Trainee;
+use App\Models\User;
 use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -43,7 +46,9 @@ class CompaniesController extends Controller
     {
         $this->authorize('create-companies');
 
-        return Inertia::render('Back/Companies/Create');
+        return Inertia::render('Back/Companies/Create',[
+            'regions' => Region::orderBy('name')->get(),
+        ]);
     }
 
     /**
@@ -68,6 +73,8 @@ class CompaniesController extends Controller
             'address' => 'nullable|string|max:255',
             'monthly_subscription_per_trainee' => 'nullable|numeric|min:0|max:100000',
             'shelf_number' => 'nullable|string|max:255',
+            'salesperson_email' => 'nullable|email',
+            'region_id' => 'nullable|exists:regions,id',
         ]);
 
         $company = Company::create($validated);
@@ -99,12 +106,18 @@ class CompaniesController extends Controller
                         },
                     ]);
                 },
+                'region',
             ])
             ->withCount([
                 'trainees',
             ])
-            ->with('region')
-            ->findOrFail($id);
+            ->with('region');
+
+        if (auth()->user()->can('view-deleted-companies')) {
+            $company = $company->withTrashed();
+        }
+
+        $company = $company->findOrFail($id);
 
         $invoices = $company->invoices()
             ->select('*')
@@ -122,6 +135,7 @@ class CompaniesController extends Controller
             'invoices' => $invoices,
             'instructors' => Instructor::get(),
             'trainees_trashed_count' => Trainee::where('company_id', $company->id)->onlyTrashed()->count(),
+            'regions' => Region::orderBy('name')->get(),
         ]);
     }
 
@@ -136,6 +150,7 @@ class CompaniesController extends Controller
     {
         return Inertia::render('Back/Companies/Edit', [
             'company' => Company::findOrFail($id),
+            'regions' => Region::orderBy('name')->get(),
         ]);
     }
 
@@ -149,9 +164,24 @@ class CompaniesController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'name_ar' => 'required|string|max:255',
+            'name_en' => 'nullable|string|max:255',
+            'cr_number' => 'nullable|max:255',
+            'contact_number' => 'nullable|string|max:255',
+            'company_rep' => 'nullable|string|max:255',
+            'company_rep_mobile' => 'nullable|string|max:255',
+            'email' => 'nullable|string|max:255',
+            'address' => 'nullable|string|max:255',
+            'monthly_subscription_per_trainee' => 'nullable|numeric|min:0|max:100000',
+            'shelf_number' => 'nullable|string|max:255',
+            'region_id' => 'nullable|exists:regions,id',
+        ]);
+
         $company = Company::findOrFail($id);
+        $region = Region::orderBy('name')->get();
         $company->update($request->except('_token'));
-        return redirect()->route('back.companies.show', ['company' => $company])->with(
+        return redirect()->route('back.companies.show', ['company' => $company, 'region' => $region])->with(
             'success',
             __('words.updated-successfully')
         );
@@ -181,6 +211,12 @@ class CompaniesController extends Controller
 
     public function export()
     {
+        Audit::create([
+            'event' => 'companies.export.excel',
+            'auditable_id' => auth()->user()->id,
+            'auditable_type' => User::class,
+            'new_values' => [],
+        ]);
         return Excel::download(new CompaniesExport, now()->format('Y-m-d').'-companies.xlsx');
     }
 
@@ -193,6 +229,26 @@ class CompaniesController extends Controller
             $company->update(['is_ptc_net' => now()]);
         }
 
+        return redirect()->route('back.companies.show', $id);
+    }
+
+    public function deleted()
+    {
+        $this->authorize('view-deleted-companies');
+
+        if (request()->expectsJson()) {
+            return Company::onlyTrashed()->get();
+        }
+
+        return Inertia::render('Back/Companies/Index', [
+            'companies' => Company::onlyTrashed()->paginate(20),
+        ]);
+    }
+
+    public function restore($id)
+    {
+        $this->authorize('restore-deleted-companies');
+        $company = Company::onlyTrashed()->findOrFail($id)->restore();
         return redirect()->route('back.companies.show', $id);
     }
 }

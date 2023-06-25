@@ -23,6 +23,49 @@
                     </div>
                 </div>
 
+                <div class="col-span-6 items-center justify-end bg-gray-50 text-right flex gap-6"
+                     v-if="in_block_list">
+                    <div class="bg-red-600 p-2">
+                        <div class="font-bold text-white p-2 rounded-sm flex gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zm0 13.036h.008v.008H12v-.008z" />
+                            </svg>
+                            {{ $t('words.trainee-in-block-directory') }}
+                        </div>
+                        <div class="font-bold text-white p-2 rounded-sm flex gap-2">
+                        <table class="table table-bordered table-hover text-xs w-full">
+                        	<tbody>
+                        			<tr v-if="in_block_list.name">
+                        				<td class="border px-1">{{ $t('words.name') }}</td>
+                                        <td class="border px-1">{{ in_block_list.name }}</td>
+                        			</tr>
+                                    <tr v-if="in_block_list.phone">
+                        				<td class="border px-1">{{ $t('words.phone') }}</td>
+                                        <td class="border px-1">{{ in_block_list.phone }}</td>
+                        			</tr>
+                                    <tr v-if="in_block_list.email">
+                        				<td class="border px-1">{{ $t('words.email') }}</td>
+                                        <td class="border px-1">{{ in_block_list.email }}</td>
+                        			</tr>
+                                    <tr v-if="in_block_list.identity_number">
+                        				<td class="border px-1">{{ $t('words.identity_number') }}</td>
+                                        <td class="border px-1">{{ in_block_list.identity_number }}</td>
+                        			</tr>
+                                    <tr v-if="in_block_list.reason">
+                        				<td class="border px-1">{{ $t('words.reason') }}</td>
+                                        <td class="border px-1">{{ in_block_list.reason }}</td>
+                        			</tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <button type="button" @click="deleteFromBlockList" class="mt-2 px-2 py-1 bg-white text-black rounded-sm">{{ $t('words.delete') }}</button>
+                                        </td>
+                                    </tr>
+                        	</tbody>
+                        </table>
+                    </div>
+                    </div>
+                </div>
+
                 <div class="col-span-6 items-center justify-end bg-gray-50 text-right flex gap-6">
 
                     <inertia-link
@@ -865,6 +908,7 @@ import ValidationErrors from "@/Components/ValidationErrors";
 export default {
     props: [
         'sessions',
+        'in_block_list',
         'trainee',
         'cities',
         'marital_statuses',
@@ -957,6 +1001,9 @@ export default {
         }
     },
     methods: {
+        deleteFromBlockList() {
+            this.$inertia.delete(route('back.trainees.delete-from-block-list', {id: this.trainee.id}));
+        },
         selectGroupName(input) {
             this.trainee.trainee_group = input;
         },

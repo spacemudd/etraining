@@ -37,6 +37,17 @@
                     {{ $t('words.add-new-course') }}
                 </inertia-link>
             </div>
+
+            <br>
+            <h2 class="my-6 font-semibold text-gray-700 dark:text-gray-200 border-b pb-1">
+                {{ $t('words.employees') }}
+            </h2>
+
+            <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
+                <inertia-link :href="route('orders.index')" class="shadow-lg flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 text-center hover:bg-red-500 hover:text-red-600 hover:font-semibold hover:shadow-xl">
+                    {{ $t('words.apply') }}
+                </inertia-link>
+            </div>
         </div>
     </app-layout>
 </template>

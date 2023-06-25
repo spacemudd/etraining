@@ -331,13 +331,18 @@ export default {
             }
         },
         createCompanyInvoice() {
-            this.form.post(`/back/companies/${this.company.id}/invoices/`, {
-                preserveScroll: true
-            }).catch(error => {
-                this.form.processing = false;
-            }).finally(() => {
-                this.form.processing = false;
-            });
+            if(this.form.value_per_invoice <= 5000 ){
+                this.form.post(`/back/companies/${this.company.id}/invoices/`, {
+                    preserveScroll: true
+                }).catch(error => {
+                    this.form.processing = false;
+                }).finally(() => {
+                    this.form.processing = false;
+                });
+            } else if(confirm(this.$t('words.the-maximum'))){
+                return 0;
+            }
+
         },
         addToTrainees(trainee_id, name) {
             this.traineesCollection[trainee_id] = name;

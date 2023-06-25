@@ -92,13 +92,17 @@ export default {
     },
     methods: {
         submitForm() {
-            axios.post(route('trainees.override-payment.card'), {
-                invoice_id: this.form.invoice_id,
-                grand_total_override: this.form.grand_total_override,
-            })
-                .then(response => {
-                    window.location.href = response.data;
-                });
+            if(this.form.grand_total_override <= 5000 ) {
+                axios.post(route('trainees.override-payment.card'), {
+                    invoice_id: this.form.invoice_id,
+                    grand_total_override: this.form.grand_total_override,
+                })
+                    .then(response => {
+                        window.location.href = response.data;
+                    });
+            }else if(confirm(this.$t('words.the-maximum'))){
+                return 0;
+            }
         }
     }
 }

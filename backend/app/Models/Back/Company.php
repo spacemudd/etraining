@@ -2,6 +2,7 @@
 
 namespace App\Models\Back;
 
+use App\Models\Back\Region;
 use App\Models\SearchableLabels;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -37,6 +38,8 @@ class Company extends Model implements SearchableLabels, Auditable
         'monthly_subscription_per_trainee',
         'shelf_number',
         'is_ptc_net',
+        'salesperson_email',
+        'region_id',
     ];
 
     protected $appends = [
