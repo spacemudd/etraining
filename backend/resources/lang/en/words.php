@@ -603,4 +603,6 @@ return [
     'view-orders' => 'View orders',
     'accept-reject-new-email' => 'Accept Reject the new email',
     'resignations' => 'Resignations',
+    'create-new-resignation-form' => 'Create new resignations form',
+    'create-new-resignation-form-help' => 'Here you can select the company you want to send resignation files to.',
 ];

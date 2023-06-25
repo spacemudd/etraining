@@ -641,7 +641,9 @@ export default {
             "backend": "المطورون",
             "view-orders": "عرض الطلبات",
             "accept-reject-new-email": "قبول ورفض البريد الالكتروني الجديد",
-            "resignations": "الاستقالات"
+            "resignations": "الاستقالات",
+            "create-new-resignation-form": "نموذج انشاء استقالة جديدة",
+            "create-new-resignation-form-help": "هنا يمكنك اختيار الشركة المراد ارسال لها الاستقالات."
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",

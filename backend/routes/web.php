@@ -374,7 +374,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::get('orders/it', [\App\Http\Controllers\OrdersController::class, 'IT'])->name('orders.it');
     Route::get('orders/it/new-email', [\App\Http\Controllers\NewEmailController::class, 'index'])->name('new_email.index');
     Route::post('orders/it/new-email', [\App\Http\Controllers\NewEmailController::class, 'store'])->name('new_email.store');
-    Route::get('orders/resignations', [\App\Http\Controllers\OrdersController::class, 'resignations'])->name('orders.resignations');
+
+    Route::get('orders/resignations', [\App\Http\Controllers\Back\OrdersResignationsController::class, 'index'])->name('orders.resignations.index');
+    Route::get('orders/resignations/create', [\App\Http\Controllers\Back\OrdersResignationsController::class, 'create'])->name('orders.resignations.create');
 
 
     // For admins
