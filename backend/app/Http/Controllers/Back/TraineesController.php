@@ -28,6 +28,7 @@ use App\Notifications\TraineePrivateMessage;
 use App\Notifications\TraineeRestoredNotification;
 use App\Notifications\TraineeSetupAccountNotification;
 use App\Notifications\TraineeWelcomeNotification;
+use App\Rules\TraineeGroupLimit;
 use App\Services\TraineesServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -561,6 +562,7 @@ class TraineesController extends Controller
             'marital_status_id' => 'nullable|exists:marital_statuses,id',
             'bill_from_date' => ['nullable', 'date'],
             'linked_date' => ['nullable', 'date'],
+            'trainee_group_name' => ['nullable', 'string', 'max:255', new TraineeGroupLimit],
         ]);
 
         $request->validate([
