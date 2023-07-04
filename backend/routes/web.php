@@ -120,6 +120,28 @@ Route::get('unpaid-invoices-x', function() {
 
     return $invoicesData;
 });
+Route::get('invoices-x', function() {
+    set_time_limit(1000);
+
+    $invoices = Invoice::whereBetween('from_date', ['2023-06-01', '2023-06-30'])->get();
+
+    $invoicesData = [];
+
+    foreach ($invoices as $invoice) {
+        $invoicesData[] = [
+            'is_ptc_net' => $invoice->company->is_ptc_net,
+            'trainee' => optional($invoice->trainee)->name,
+            'company' => optional($invoice->company)->name_ar,
+            'number' => $invoice->number,
+            'grand_total' => $invoice->grand_total,
+            'from_date' => $invoice->from_date,
+            'to_date' => $invoice->to_date,
+            'status' => $invoice->status,
+        ];
+    }
+
+    return $invoicesData;
+});
 Route::get('last-logged-at', function() {
     set_time_limit(1000);
     $users = User::all();
