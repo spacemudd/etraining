@@ -129,6 +129,8 @@ class TraineesController extends Controller
 
         Audit::create([
             'event' => 'trainees.show',
+            'user_type' => User::class,
+            'user_id' => auth()->user()->id,
             'auditable_id' => auth()->user()->id,
             'auditable_type' => User::class,
             'new_values' => [
