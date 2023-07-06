@@ -103,6 +103,7 @@
                     @endif
                 </td>
                 <td style="border:1px solid black;">{{ $attendanceRecord->trainee->email }}</td>
+                <td style="border:1px solid black;">{{ $attendanceRecord->trainee->identity_number }}</td>
                 <td style="text-align:center;border:1px solid black;">
                     ="{{ $attendanceRecord->trainee->phone }}"
                 </td>
