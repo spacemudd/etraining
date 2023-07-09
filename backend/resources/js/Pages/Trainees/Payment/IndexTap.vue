@@ -10,18 +10,71 @@
 
 <template>
     <app-layout-trainee>
-        <div class="container px-6 mx-auto grid pt-6">
+        <div class="container px-6 mx-auto grid pt-6" v-if="user.trainee.deleted_at">
             <breadcrumb-container
                 :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
                     {title: 'payment', link: route('trainees.payment.choose-invoice')},
                 ]"
             ></breadcrumb-container>
+            <div class="container px-6 mx-auto grid" v-if="user.trainee.deleted_at">
+                <div class="container mx-auto grid">
+                    <div class="bg-red-100 rounded-lg p-10 border-red-500 border-2">
+                        <div style="width: 100%;">
+                            <p class="mt-2 text-gray-500" style="text-align: center;
+                                font-size: 20px;
+                                color: #323232;
+                                letter-spacing: 1px;
+                            }">لا يمكنك حضور الدورات في الوقت الحالي، للتواصل معنا على الأرقام التالية.
+                                <br><br/>
+                                <span class="img {display:block} center-block inline-flex" style="text-align: center;">
+                                <svg width="40" height="40" class="mx-0.5 mt-1">
+                                    <image class="inline" xlink:href="https://i.ibb.co/CWK3g2s/whatsapp.png" src="https://i.ibb.co/CWK3g2s/whatsapp.png" width="15" height="15"/>
+                                </svg>
+                            <a class="center text-green-600 text-sm" style="text-align: center;" href="https://api.whatsapp.com/send?phone=966553139979"> &nbsp;  شؤون المتدربات </a>
+                            </span>
+                                <span class="img {display:block} center-block inline-flex" style="text-align: center;">
+                                <svg width="40" height="40" class="mx-0.5 mt-1">
+                                    <image class="inline" xlink:href="https://i.ibb.co/CWK3g2s/whatsapp.png" src="https://i.ibb.co/CWK3g2s/whatsapp.png" width="15" height="15"/>
+                                </svg>
+                            <a class="center text-green-600 text-sm" style="text-align: center;" href="https://api.whatsapp.com/send?phone=966553139979"> &nbsp;  إدارة المعهد </a>
+                            </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container mx-auto grid p-6" v-if="user.trainee.has_outstanding_amount">
+                <div class="bg-blue-100 rounded-lg p-10 border-blue-500 border-2">
+                    <p class="text-gray-600 flex">
+                        <svg style="margin-left:10px;" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {{ $t('words.due-balance-notice') }}
+                    </p>
+                    <div class="grid grid-cols-2 gap-6 mt-4">
+                        <div>
 
+                            <p class="text-red-600 flex mr-0.5">
+                                <svg style="margin-left:10px;" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                {{ $t('words.to-pay-by-credit') }}
+                            </p>
+
+                        </div>
+                        <div>
+                            <!--<p class="text-black flex mr-0.5">-->
+                            <!--    <b>2)</b> &ensp; {{ $t('words.to-pay-by-bank') }}-->
+                            <!--</p>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="grid md:grid-cols-4 grid-cols-1 gap-6">
                 <div class="col-span-1 p-5 transition-all duration-500 ease-in-out hover:bg-gray-200">
                     <form @submit.prevent="submitForm">
-                        <div class="payment-options mt-2 mb-4" value="cc" v-if="online_payment">
+                        <div class="payment-options mt-2 mb-4" value="cc" >
                             <p class="text-xl font-bold mb-1">{{ $t('words.credit-card-method') }}</p>
                             <span class="img {display:block} inline-flex">
                                 <svg width="40" height="40" class="mx-0.5">
@@ -82,6 +135,7 @@ export default {
         BreadcrumbContainer,
     },
     props: [
+        'user',
         'pending_amount',
         'online_payment',
         'invoice',

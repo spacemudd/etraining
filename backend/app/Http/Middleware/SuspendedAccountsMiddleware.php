@@ -24,8 +24,10 @@ class SuspendedAccountsMiddleware
         // This is enabled after 12-04-2023 - Shafiq.
 
         if ($trainee = optional(auth()->user())->trainee) {
-            if ($trainee->deleted_at) {
+            if ($trainee->deleted_at && !$trainee->has_outstanding_amount) {
                 return Inertia::render('Trainees/Dashboard');
+            } else if ($trainee->deleted_at && $trainee->has_outstanding_amount) {
+                return Inertia::render('Trainees/Payment/IndexTap');
             }
 
             $suspended = TraineeBlockList::where('name', $trainee->name)
