@@ -620,5 +620,6 @@ return [
     'resignations' => 'الاستقالات',
     'create-new-resignation-form' => 'نموذج انشاء استقالة جديدة',
     'create-new-resignation-form-help' => 'هنا يمكنك اختيار الشركة المراد ارسال لها الاستقالات.',
-
+    'manage-resignations' => 'أدارة الاستقالات',
+    'trainee-must-be-in-the-same-company' => 'المتدربة ليست في نفس الشركة',
 ];

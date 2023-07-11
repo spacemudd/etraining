@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Back\CompanyResignationsController;
 use App\Http\Controllers\Back\TraineesGroupsController;
 use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
@@ -410,6 +411,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('/settings/trainees-applications/required-files', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'store'])->name('settings.trainees-application.required-files.store');
         Route::delete('/settings/trainees-applications/required-files/{id}', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'delete'])->name('settings.trainees-application.required-files.delete');
 
+        Route::resource('companies/{company_id}/resignations', CompanyResignationsController::class);
         Route::get('companies/deleted', [\App\Http\Controllers\Back\CompaniesController::class, 'deleted'])->name('companies.deleted');
         Route::get('companies/{id}/restore', [\App\Http\Controllers\Back\CompaniesController::class, 'restore'])->name('companies.restore');
         Route::get('companies/export', [\App\Http\Controllers\Back\CompaniesController::class, 'export'])->name('companies.export');

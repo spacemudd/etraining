@@ -107,6 +107,7 @@ class CompaniesController extends Controller
                     ]);
                 },
                 'region',
+                'resignations',
             ])
             ->withCount([
                 'trainees',

@@ -643,7 +643,9 @@ export default {
             "accept-reject-new-email": "قبول ورفض البريد الالكتروني الجديد",
             "resignations": "الاستقالات",
             "create-new-resignation-form": "نموذج انشاء استقالة جديدة",
-            "create-new-resignation-form-help": "هنا يمكنك اختيار الشركة المراد ارسال لها الاستقالات."
+            "create-new-resignation-form-help": "هنا يمكنك اختيار الشركة المراد ارسال لها الاستقالات.",
+            "manage-resignations": "أدارة الاستقالات",
+            "trainee-must-be-in-the-same-company": "المتدربة ليست في نفس الشركة"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1420,7 +1422,11 @@ export default {
             "backend": "Backend",
             "view-orders": "View orders",
             "accept-reject-new-email": "Accept Reject the new email",
-            "resignations": "Resignations"
+            "resignations": "Resignations",
+            "create-new-resignation-form": "Create new resignations form",
+            "create-new-resignation-form-help": "Here you can select the company you want to send resignation files to.",
+            "manage-resignations": "Manage resignations",
+            "trainee-must-be-in-the-same-company": "Trainee must be in the same company"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

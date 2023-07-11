@@ -128,7 +128,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string) Str::uuid();
             if (auth()->user()) {
-                $model->team_id = $model->team_id = auth()->user()->currentTeam()->first()->id;
+                $model->team_id = auth()->user()->currentTeam()->first()->id;
             }
         });
 
@@ -160,7 +160,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
 
     public function company()
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Company::class)->withTrashed();
     }
 
     public function educational_level()

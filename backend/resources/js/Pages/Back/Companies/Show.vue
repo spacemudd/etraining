@@ -374,6 +374,77 @@
                     </table>
                 </div>
             </div>
+
+            <jet-section-border></jet-section-border>
+
+            <div
+                v-can="'manage-resignations'"
+                class="grid grid-cols-1 gap-6 mt-2"
+            >
+                <div class="flex justify-between items-center">
+                    <div class="px-4 sm:px-0">
+                        <h3 class="text-lg font-medium text-gray-900">
+                            {{ $t('words.resignations') }}
+                        </h3>
+                    </div>
+
+                    <inertia-link
+                        class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
+                        :href="route('back.resignations.create', {company_id: company.id})"
+                    >
+                        <span>{{ $t('words.new') }}</span>
+                    </inertia-link>
+                </div>
+
+                <div>
+                    <table class="w-full whitespace-no-wrap bg-white rounded-lg my-5 p-5 shadow text-sm">
+                        <tr class="text-left font-bold">
+                            <th class="p-4">{{ $t('words.created-by') }}</th>
+                            <th class="p-4">{{ $t('words.trainees') }}</th>
+                            <th class="p-4">{{ $t('words.status') }}</th>
+                            <th class="p-4">{{ $t('words.actions') }}</th>
+                        </tr>
+                        <tr
+                            v-for="resignation in company.resignations"
+                            :key="resignation.id"
+                            class="hover:bg-gray-100 focus-within:bg-gray-100"
+                        >
+                            <td class="border-t">
+                                <div class="px-4 py-2 flex items-center focus:text-indigo-500">
+                                    {{ resignation.created_by.email }}
+                                </div>
+                            </td>
+                            <td class="border-t w-px">
+                                <div class="px-4 py-2 flex items-center focus:text-indigo-500">
+                                    {{ resignation.trainees_count }}
+                                </div>
+                            </td>
+                            <td class="border-t w-px">
+                                <div class="px-4 py-2 flex items-center focus:text-indigo-500">
+                                    {{ resignation.status }}
+                                </div>
+                            </td>
+
+                            <td class="border-t w-px">
+                                <div class="px-4 py-2 flex items-center focus:text-indigo-500">
+                                    <button>send test email</button>
+                                    <button>send</button>
+                                </div>
+                            </td>
+
+                        </tr>
+                        <tr v-if="company.trainees.length === 0">
+                            <td
+                                class="border-t px-4 py-4"
+                                colspan="4"
+                            >
+                                <empty-slate />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
         </div>
     </app-layout>
 </template>
