@@ -622,4 +622,6 @@ return [
     'create-new-resignation-form-help' => 'هنا يمكنك اختيار الشركة المراد ارسال لها الاستقالات.',
     'manage-resignations' => 'أدارة الاستقالات',
     'trainee-must-be-in-the-same-company' => 'المتدربة ليست في نفس الشركة',
+    'cc' => 'نسخة (Cc)',
+    'bcc' => 'نسخة خفية (Bcc)',
 ];

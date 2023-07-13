@@ -39,8 +39,18 @@
 
                                     <div class="mt-2">
                                         <div class="col-span-4 sm:col-span-4">
-                                            <jet-label for="to" :value="$t('words.to')" />
-
+                                            <p>
+                                                <ion-icon name="add-circle-outline" class="mt-2 mx-1 w-4 h-4 fill-red-400"></ion-icon>
+                                                <b>{{ $t('words.to') }}:</b> shafiqalshaar@gmail.com, hello@gmail.com
+                                            </p>
+                                            <p>
+                                                <ion-icon name="add-circle-outline" class="mt-2 mx-1 w-4 h-4 fill-red-400"></ion-icon>
+                                                <b>{{ $t('words.cc') }}:</b> shafiqalshaar@gmail.com, hello@gmail.com
+                                            </p>
+                                            <p>
+                                                <ion-icon name="add-circle-outline" class="mt-2 mx-1 w-4 h-4 fill-red-400"></ion-icon>
+                                                <b>{{ $t('words.bcc') }}:</b> shafiqalshaar@gmail.com, hello@gmail.com
+                                            </p>
                                         </div>
                                     </div>
 
@@ -209,6 +219,9 @@ export default {
                 company_id: null,
                 trainees: [],
                 date: new Date(),
+                emails_to: [],
+                emails_cc: [],
+                emails_bcc: [],
             }),
             searchString: '',
             searchResults: [],

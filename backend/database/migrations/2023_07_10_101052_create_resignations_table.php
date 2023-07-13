@@ -23,6 +23,9 @@ class CreateResignationsTable extends Migration
             $table->foreign('company_id')->references('id')->on('companies');
             $table->string('status');
             $table->timestamp('date');
+            $table->string('emails_to');
+            $table->string('emails_cc')->nullable();
+            $table->string('emails_bcc')->nullable();
             $table->timestamps();
         });
     }

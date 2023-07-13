@@ -645,7 +645,9 @@ export default {
             "create-new-resignation-form": "نموذج انشاء استقالة جديدة",
             "create-new-resignation-form-help": "هنا يمكنك اختيار الشركة المراد ارسال لها الاستقالات.",
             "manage-resignations": "أدارة الاستقالات",
-            "trainee-must-be-in-the-same-company": "المتدربة ليست في نفس الشركة"
+            "trainee-must-be-in-the-same-company": "المتدربة ليست في نفس الشركة",
+            "cc": "نسخة (Cc)",
+            "bcc": "نسخة خفية (Bcc)"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1426,7 +1428,9 @@ export default {
             "create-new-resignation-form": "Create new resignations form",
             "create-new-resignation-form-help": "Here you can select the company you want to send resignation files to.",
             "manage-resignations": "Manage resignations",
-            "trainee-must-be-in-the-same-company": "Trainee must be in the same company"
+            "trainee-must-be-in-the-same-company": "Trainee must be in the same company",
+            "cc": "Cc",
+            "bcc": "Bcc"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",
