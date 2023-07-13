@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Back;
 
 use App\Exports\CompanyAttendanceReportSendStatusExcel;
+use App\Exports\CompanyAttendanceSheetExport;
 use App\Http\Controllers\Controller;
 use App\Mail\CompanyAttendanceReportMail;
 use App\Models\Back\Company;
@@ -236,5 +237,12 @@ class CompanyAttendanceReportController extends Controller
             $report->trainees()->update(['active' => true]);
         }
         return redirect()->route('back.reports.company-attendance.show', $id);
+    }
+    public function excel($report_id)
+    {
+        $report = CompanyAttendanceReport::findOrFail($report_id);
+        $courseName = $report->company->name_ar;
+        $sessionDate = $report->date_from->format('Y-m-d');
+        return Excel::download(new CompanyAttendanceSheetExport($report), $courseName.'-'.$sessionDate.'-.xlsx');
     }
 }
