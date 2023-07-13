@@ -49,12 +49,12 @@
                             <p class="text-xl font-bold">{{ $t('words.amount') }}<p>
                             <p class="text-xl">{{ invoiceToPay ? invoiceToPay.grand_total : '' }} {{ $t('words.sr')}}</p>
 
-                            <inertia-link
-                                class="text-blue-600"
-                                target="_blank"
-                                :href="route('trainees.payment.objection', {invoice_id: this.invoiceToPay ? this.invoiceToPay.id : '' })">
-                                دفع مبلغ آخر
-                            </inertia-link>
+<!--                            <inertia-link-->
+<!--                                class="text-blue-600"-->
+<!--                                target="_blank"-->
+<!--                                :href="route('trainees.payment.objection', {invoice_id: this.invoiceToPay ? this.invoiceToPay.id : '' })">-->
+<!--                                دفع مبلغ آخر-->
+<!--                            </inertia-link>-->
                         </div>
 
                         <button class="mt-10 inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-">
