@@ -791,7 +791,10 @@ export default {
             "employees": "الموظفين",
             "backend": "المطورون",
             "view-orders": "عرض الطلبات",
-            "accept-reject-new-email": "قبول ورفض البريد الالكتروني الجديد"
+            "accept-reject-new-email": "قبول ورفض البريد الالكتروني الجديد",
+            "are-you-sure-to-change": "سيتم حذف هذه الفاتورة وانشاء فاتورة جديدة بالمبلغ المدخل، هل أنت متأكد من تنفيذ العملية؟",
+            "the-invoice-amount-has-been-modified": "تم التعديل على مبلغ الفاتورة:",
+            "edit-invoice-amount": "التعديل على مبلغ الفاتورة"
         }
     },
     "en": {
@@ -1528,7 +1531,10 @@ export default {
             "employees": "Employees",
             "backend": "Backend",
             "view-orders": "View orders",
-            "accept-reject-new-email": "Accept Reject the new email"
+            "accept-reject-new-email": "Accept Reject the new email",
+            "are-you-sure-to-change": "This invoice will be deleted and a new invoice will be created with the amount entered. Are you sure you want to carry out the order?",
+            "the-invoice-amount-has-been-modified": "The invoice amount has been modified:",
+            "edit-invoice-amount": "Edit invoice amount"
         }
     }
 }
