@@ -602,7 +602,9 @@ return [
     'backend' => 'Backend',
     'view-orders' => 'View orders',
     'accept-reject-new-email' => 'Accept Reject the new email',
-
+    'are-you-sure-to-change' => 'This invoice will be deleted and a new invoice will be created with the amount entered. Are you sure you want to carry out the order?',
+    'the-invoice-amount-has-been-modified' => 'The invoice amount has been modified:',
+    'edit-invoice-amount' => 'Edit invoice amount',
 
 
 ];

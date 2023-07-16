@@ -617,4 +617,8 @@ return [
     'backend' => 'المطورون',
     'view-orders' => 'عرض الطلبات',
     'accept-reject-new-email' => 'قبول ورفض البريد الالكتروني الجديد',
-];
+    'are-you-sure-to-change' => 'سيتم حذف هذه الفاتورة وانشاء فاتورة جديدة بالمبلغ المدخل، هل أنت متأكد من تنفيذ العملية؟',
+    'the-invoice-amount-has-been-modified' => 'تم التعديل على مبلغ الفاتورة:',
+    'edit-invoice-amount' => 'التعديل على مبلغ الفاتورة',
+
+    ];
