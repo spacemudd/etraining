@@ -76,19 +76,16 @@ class CompanyAttendanceSheetExport implements FromView, WithEvents, WithStyles, 
         }
 
         $attendances = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->report->id)
-            ->whereHas('trainee', function($q) {
-                $q->withTrashed();
-            })
             ->with(['trainee' => function($q) {
                 $q->withTrashed();
-            }]);
+            }])->get();
 
         $attendancesCount = $attendances->count();
 
          return view('exports.company-attendance-sheet', [
              'report' => $this->report,
              'company_name' => $company_name,
-             'company_attendance' => $this->report->company_attendance_reports,
+             'company_attendance' => $attendances,
         ]);
     }
 }

@@ -67,12 +67,15 @@
                        target="_blank"
                        class="btn-secondary">{{ $t('words.preview') }}</a>
                     <button v-if="!report.approved_at" @click="approveReport" class="btn-primary">{{ $t('words.approve') }}</button>
-                    <a
-                        :href="route('back.reports.company-attendance.excel', report.id)"
-                        target="_blank"
-                       class="bg-gray-200 py-1 px-2 rounded text-black text-sm hover:bg-gray-300 w-full text-center">
-                        <img src="/img/excel.svg" class="float inline-block ml-2" style="max-width:16px;">
-                    </a>
+                    <div class="my-4 ">
+                        <a
+                            :href="route('back.reports.company-attendance.excel', report.id)"
+                            target="_blank"
+                            class="bg-gray-200 py-2.5 px-1 rounded text-black text-sm hover:bg-gray-300 w-full text-center">
+                            {{ $t('words.export') }}
+                            <img src="/img/excel.svg" class="float inline-block ml-2" style="max-width:16px;">
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
