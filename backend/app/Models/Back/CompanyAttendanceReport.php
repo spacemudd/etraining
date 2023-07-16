@@ -81,6 +81,11 @@ class CompanyAttendanceReport extends Model implements Auditable
         return $this->belongsTo(Company::class);
     }
 
+    public function company_attendance_reports_trainee()
+    {
+        return $this->hasMany(CompanyAttendanceReportsTrainee::class);
+    }
+
     public function approved_by()
     {
         return $this->belongsTo(User::class);
@@ -106,6 +111,13 @@ class CompanyAttendanceReport extends Model implements Auditable
         return CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->id)
                 ->where('active', true)
                 ->count();
+    }
+
+    public function TraineesReport()
+    {
+        return CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->id)
+            ->where('active', true)
+            ->get();
     }
 
     public function getActiveTrainees()
