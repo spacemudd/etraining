@@ -468,7 +468,7 @@ class FinancialInvoicesController extends Controller
         // todo: copy invoice_items too
 
         $users = User::permission('edit-invoice-amount')->get();
-        Mail::to($users)
+        Mail::bcc($users)
             ->queue(new EditInvoiceMail($new, $t, auth()->user()->email));
 
         DB::commit();
