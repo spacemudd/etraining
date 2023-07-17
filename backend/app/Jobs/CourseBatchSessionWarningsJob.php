@@ -79,9 +79,9 @@ class CourseBatchSessionWarningsJob implements ShouldQueue
                 $startDate = Carbon::createFromFormat('Y-m-d', '2023-06-01')->startOfDay();
                 $endDate = now();
                 if ($attendance->trainee->warnings()->whereBetween('created_at', [$startDate, $endDate])->count() >= 3) {
-                    User::where('email', 'trainee.affairs@ptc-ksa.net')
-                        ->first()
-                        ->notify(new ManageMissedClassNotification($attendance->trainee));
+                    //User::where('email', 'trainee.affairs@ptc-ksa.net')
+                    //    ->first()
+                    //    ->notify(new ManageMissedClassNotification($attendance->trainee));
 
 //                    User::permission('manage-missed-course-notices')
 //                        ->whereBetween('created_at', [$startDate, $endDate])
