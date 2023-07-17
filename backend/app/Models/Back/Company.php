@@ -150,6 +150,6 @@ class Company extends Model implements SearchableLabels, Auditable
 
     public function resignations()
     {
-        return $this->hasMany(Resignation::class);
+        return $this->hasMany(Resignation::class)->latest();
     }
 }

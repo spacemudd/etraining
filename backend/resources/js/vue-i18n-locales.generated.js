@@ -647,7 +647,8 @@ export default {
             "manage-resignations": "أدارة الاستقالات",
             "trainee-must-be-in-the-same-company": "المتدربة ليست في نفس الشركة",
             "cc": "نسخة (Cc)",
-            "bcc": "نسخة خفية (Bcc)"
+            "bcc": "نسخة خفية (Bcc)",
+            "resignation-file": "ملف الاستقالة"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1430,7 +1431,8 @@ export default {
             "manage-resignations": "Manage resignations",
             "trainee-must-be-in-the-same-company": "Trainee must be in the same company",
             "cc": "Cc",
-            "bcc": "Bcc"
+            "bcc": "Bcc",
+            "resignation-file": "Resignation file"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

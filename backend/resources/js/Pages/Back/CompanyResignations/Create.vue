@@ -39,17 +39,39 @@
 
                                     <div class="mt-2">
                                         <div class="col-span-4 sm:col-span-4">
+                                            <jet-label for="notes" :value="$t('words.reason')" />
+                                            <div class="relative mt-2">
+                                                <select class="mt-1 block w-full bg-gray-100 appearance-none border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:border-gray-500"
+                                                        v-model="form.reason"
+                                                        id="reason">
+                                                    <option value="عدم سداد">عدم سداد</option>
+                                                    <option value="استبعاد من الشركة">استبعاد من الشركة</option>
+                                                    <option value="استقالة">استقالة</option>
+                                                    <option value="انسحاب">انسحاب</option>
+                                                    <option value="عمل مشاكل">عمل مشاكل</option>
+                                                    <option value="غير مسجلة في الشركة">غير مسجلة في الشركة</option>
+                                                </select>
+                                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                                                </div>
+                                            </div>
+                                            <jet-input-error :message="form.error('reason')" class="mt-2" />
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-2">
+                                        <div class="col-span-4 sm:col-span-4">
                                             <p>
                                                 <ion-icon name="add-circle-outline" class="mt-2 mx-1 w-4 h-4 fill-red-400"></ion-icon>
-                                                <b>{{ $t('words.to') }}:</b> shafiqalshaar@gmail.com, hello@gmail.com
+                                                <b>{{ $t('words.to') }}:</b> <jet-input type="text" class="mt-1 block w-full" v-model="form.emails_to" required/>
                                             </p>
                                             <p>
                                                 <ion-icon name="add-circle-outline" class="mt-2 mx-1 w-4 h-4 fill-red-400"></ion-icon>
-                                                <b>{{ $t('words.cc') }}:</b> shafiqalshaar@gmail.com, hello@gmail.com
+                                                <b>{{ $t('words.cc') }}:</b> <jet-input type="text" class="mt-1 block w-full" v-model="form.emails_cc" />
                                             </p>
                                             <p>
                                                 <ion-icon name="add-circle-outline" class="mt-2 mx-1 w-4 h-4 fill-red-400"></ion-icon>
-                                                <b>{{ $t('words.bcc') }}:</b> shafiqalshaar@gmail.com, hello@gmail.com
+                                                <b>{{ $t('words.bcc') }}:</b> <jet-input type="text" class="mt-1 block w-full" v-model="form.emails_bcc" />
                                             </p>
                                         </div>
                                     </div>
@@ -218,7 +240,8 @@ export default {
             form: this.$inertia.form({
                 company_id: null,
                 trainees: [],
-                date: new Date(),
+                date: new Date().toISOString().substring(0, 10),
+                reason: 'عدم سداد مالي',
                 emails_to: [],
                 emails_cc: [],
                 emails_bcc: [],
@@ -229,7 +252,14 @@ export default {
         }
     },
     mounted() {
-        this.form.company_id = this.company.id;
+        if (this.company.id) {
+            this.form.company_id = this.company.id;
+            if (this.company.resignations.length) {
+                this.form.emails_to = this.company.resignations[0].emails_to;
+                this.form.emails_cc = this.company.resignations[0].emails_cc;
+                this.form.emails_bcc = this.company.resignations[0].emails_bcc;
+            }
+        }
     },
     methods: {
         triggerSearching() {
@@ -269,7 +299,6 @@ export default {
             }
         },
         submitForm() {
-
             if (this.form.trainees.length === 0) {
                 alert(this.$t('words.please-select'));
                 return;

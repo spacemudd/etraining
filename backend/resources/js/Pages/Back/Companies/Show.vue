@@ -400,6 +400,7 @@
                     <table class="w-full whitespace-no-wrap bg-white rounded-lg my-5 p-5 shadow text-sm">
                         <tr class="text-left font-bold">
                             <th class="p-4">{{ $t('words.created-by') }}</th>
+                            <th class="p-4">{{ $t('words.emails') }}</th>
                             <th class="p-4">{{ $t('words.trainees') }}</th>
                             <th class="p-4">{{ $t('words.status') }}</th>
                             <th class="p-4">{{ $t('words.actions') }}</th>
@@ -410,8 +411,18 @@
                             class="hover:bg-gray-100 focus-within:bg-gray-100"
                         >
                             <td class="border-t">
-                                <div class="px-4 py-2 flex items-center focus:text-indigo-500">
+                                <div class="px-4 py-2 focus:text-indigo-500">
+                                    {{ resignation.number }}<br/>
                                     {{ resignation.created_by.email }}
+                                    <br/>
+                                    <p dir="ltr" class="text-right text-gray-400 text-sm">{{ resignation.created_at_timezone }}</p>
+                                </div>
+                            </td>
+                            <td class="border-t">
+                                <div class="px-4 py-2 focus:text-indigo-500">
+                                    {{ resignation.emails_to }}
+                                    <template v-if="resignation.emails_cc"><br/>{{ resignation.emails_cc }}</template>
+                                    <template v-if="resignation.emails_bcc"><br/>{{ resignation.emails_bcc }}</template>
                                 </div>
                             </td>
                             <td class="border-t w-px">
@@ -421,14 +432,32 @@
                             </td>
                             <td class="border-t w-px">
                                 <div class="px-4 py-2 flex items-center focus:text-indigo-500">
-                                    {{ resignation.status }}
+                                    <template v-if="resignation.sent_at">
+                                        <br/>
+                                        <p class="text-right text-sm">{{ $t('words.sent') }} <br/><span dir="ltr">{{ resignation.sent_at_timezone }}</span></p>
+                                    </template>
+                                    <p v-else>{{ $t('words.'+resignation.status) }}</p>
                                 </div>
                             </td>
 
                             <td class="border-t w-px">
-                                <div class="px-4 py-2 flex items-center focus:text-indigo-500">
-                                    <button>send test email</button>
-                                    <button>send</button>
+                                <div class="px-4 py-2 flex items-center focus:text-indigo-500 gap-2">
+                                    <button class="bg-red-500 text-white px-2 py-1 rounded disabled:bg-yellow-100"
+                                            v-if="!resignation.sent_at"
+                                            @click="destroyResignation(resignation)"
+                                            :href="route('back.resignations.destroy', {company_id: resignation.company_id, resignation: resignation.id})">
+                                        {{ $t('words.delete') }}
+                                    </button>
+                                    <inertia-link class="bg-yellow-300 text-black px-2 py-1 rounded"
+                                                  :href="route('back.resignations.upload', {company_id: resignation.company_id, id: resignation.id})">
+                                        {{ $t('words.resignation-file') }}
+                                    </inertia-link>
+                                    <button class="bg-yellow-300 text-black px-2 py-1 rounded disabled:bg-yellow-100"
+                                            v-if="resignation.has_file && !resignation.sent_at"
+                                            @click="approveResignation(resignation)"
+                                            :href="route('back.resignations.approve', {company_id: resignation.company_id, id: resignation.id})">
+                                        {{ $t('words.approve') }}
+                                    </button>
                                 </div>
                             </td>
 
@@ -507,6 +536,16 @@ export default {
         }
     },
     methods: {
+        destroyResignation(resignation) {
+            if (confirm(this.$t('words.are-you-sure'))) {
+                this.$inertia.delete(route('back.resignations.destroy', {company_id: resignation.company_id, resignation: resignation.id}));
+            }
+        },
+        approveResignation(resignation) {
+            if (confirm(this.$t('words.are-you-sure'))) {
+                this.$inertia.post(route('back.resignations.approve', {company_id: resignation.company_id, id: resignation.id}));
+            }
+        },
         deleteInvoice(invoiceCollection) {
             if (confirm(this.$t('words.are-you-sure'))) {
                 this.$inertia.delete(route('back.finance.invoices.destroy', {

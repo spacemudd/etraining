@@ -411,6 +411,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('/settings/trainees-applications/required-files', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'store'])->name('settings.trainees-application.required-files.store');
         Route::delete('/settings/trainees-applications/required-files/{id}', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'delete'])->name('settings.trainees-application.required-files.delete');
 
+        Route::post('companies/{company_id}/resignations/{id}/approve', [CompanyResignationsController::class, 'approve'])->name('resignations.approve');
+        Route::post('companies/{company_id}/resignations/{id}/upload/store', [CompanyResignationsController::class, 'uploadStore'])->name('resignations.upload.store');
+        Route::get('companies/{company_id}/resignations/{id}/upload', [CompanyResignationsController::class, 'upload'])->name('resignations.upload');
         Route::resource('companies/{company_id}/resignations', CompanyResignationsController::class);
         Route::get('companies/deleted', [\App\Http\Controllers\Back\CompaniesController::class, 'deleted'])->name('companies.deleted');
         Route::get('companies/{id}/restore', [\App\Http\Controllers\Back\CompaniesController::class, 'restore'])->name('companies.restore');

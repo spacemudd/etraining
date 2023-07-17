@@ -624,4 +624,5 @@ return [
     'trainee-must-be-in-the-same-company' => 'المتدربة ليست في نفس الشركة',
     'cc' => 'نسخة (Cc)',
     'bcc' => 'نسخة خفية (Bcc)',
+    'resignation-file' => 'ملف الاستقالة',
 ];

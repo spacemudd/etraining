@@ -20,7 +20,7 @@ class CreateResignationTraineesTable extends Migration
             $table->foreign('team_id')->references('id')->on('teams');
 
             $table->uuid('resignation_id');
-            $table->foreign('resignation_id')->references('id')->on('resignations');
+            $table->foreign('resignation_id')->references('id')->on('resignations')->cascadeOnDelete();
 
             $table->uuid('trainee_id');
             $table->foreign('trainee_id')->references('id')->on('trainees');

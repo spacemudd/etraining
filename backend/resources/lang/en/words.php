@@ -609,4 +609,5 @@ return [
     'trainee-must-be-in-the-same-company' => 'Trainee must be in the same company',
     'cc' => 'Cc',
     'bcc' => 'Bcc',
+    'resignation-file' => 'Resignation file',
 ];
