@@ -629,5 +629,3 @@ return [
     'bcc' => 'نسخة خفية (Bcc)',
     'resignation-file' => 'ملف الاستقالة',
 ];
-
-    ];

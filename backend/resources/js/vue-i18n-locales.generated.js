@@ -641,39 +641,9 @@ export default {
             "backend": "المطورون",
             "view-orders": "عرض الطلبات",
             "accept-reject-new-email": "قبول ورفض البريد الالكتروني الجديد",
-<<<<<<< HEAD
             "are-you-sure-to-change": "سيتم حذف هذه الفاتورة وانشاء فاتورة جديدة بالمبلغ المدخل، هل أنت متأكد من تنفيذ العملية؟",
             "the-invoice-amount-has-been-modified": "تم التعديل على مبلغ الفاتورة:",
-            "edit-invoice-amount": "التعديل على مبلغ الفاتورة"
-        }
-    },
-    "en": {
-        "email": "Email",
-        "password": "Password",
-        "Reset Password Notification": "Reset Password Notification",
-        "You are receiving this email because we received a password reset request for your account.": "You are receiving this email because we received a password reset request for your account.",
-        "Reset Password": "Reset Password",
-        "This password reset link will expire in {count} minutes.": "This password reset link will expire in {count} minutes.",
-        "If you did not request a password reset, no further action is required.": "If you did not request a password reset, no further action is required.",
-        "auth": {
-            "failed": "These credentials do not match our records.",
-            "throttle": "Too many login attempts. Please try again in {seconds} seconds."
-        },
-        "pagination": {
-            "previous": "&laquo; Previous",
-            "next": "Next &raquo;",
-            "to": "to",
-            "of": "of",
-            "results": "Results",
-            "filter": "Filter"
-        },
-        "passwords": {
-            "reset": "Your password has been reset!",
-            "sent": "We have emailed your password reset link!",
-            "throttled": "Please wait before retrying.",
-            "token": "This password reset token is invalid.",
-            "user": "We can't find a user with that email address."
-=======
+            "edit-invoice-amount": "التعديل على مبلغ الفاتورة",
             "resignations": "الاستقالات",
             "create-new-resignation-form": "نموذج انشاء استقالة جديدة",
             "create-new-resignation-form-help": "هنا يمكنك اختيار الشركة المراد ارسال لها الاستقالات.",
@@ -682,7 +652,6 @@ export default {
             "cc": "نسخة (Cc)",
             "bcc": "نسخة خفية (Bcc)",
             "resignation-file": "ملف الاستقالة"
->>>>>>> resignations
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -832,7 +801,8 @@ export default {
                 "sender_name": "اسم المحول",
                 "amount": "المبلغ",
                 "trainee_id": "متدرب",
-                "company": "شركة"
+                "company": "شركة",
+                "resignation_file": "ملف الاستقالة"
             }
         }
     },
@@ -1459,11 +1429,9 @@ export default {
             "backend": "Backend",
             "view-orders": "View orders",
             "accept-reject-new-email": "Accept Reject the new email",
-<<<<<<< HEAD
             "are-you-sure-to-change": "This invoice will be deleted and a new invoice will be created with the amount entered. Are you sure you want to carry out the order?",
             "the-invoice-amount-has-been-modified": "The invoice amount has been modified:",
-            "edit-invoice-amount": "Edit invoice amount"
-=======
+            "edit-invoice-amount": "Edit invoice amount",
             "resignations": "Resignations",
             "create-new-resignation-form": "Create new resignations form",
             "create-new-resignation-form-help": "Here you can select the company you want to send resignation files to.",
@@ -1583,8 +1551,9 @@ export default {
                     "rule-name": "custom-message"
                 }
             },
-            "attributes": []
->>>>>>> resignations
+            "attributes": {
+                "resignation_file": "Resignation file"
+            }
         }
     }
 }

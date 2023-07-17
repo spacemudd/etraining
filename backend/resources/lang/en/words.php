@@ -605,8 +605,6 @@ return [
     'are-you-sure-to-change' => 'This invoice will be deleted and a new invoice will be created with the amount entered. Are you sure you want to carry out the order?',
     'the-invoice-amount-has-been-modified' => 'The invoice amount has been modified:',
     'edit-invoice-amount' => 'Edit invoice amount',
-
-
     'resignations' => 'Resignations',
     'create-new-resignation-form' => 'Create new resignations form',
     'create-new-resignation-form-help' => 'Here you can select the company you want to send resignation files to.',
