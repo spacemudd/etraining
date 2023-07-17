@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Back\CompanyResignationsController;
 use App\Http\Controllers\Back\TraineesGroupsController;
 use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
@@ -366,7 +367,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     // Orders
     Route::get('orders', [\App\Http\Controllers\OrdersController::class, 'index'])->name('orders.index');
     Route::get('orders-list', [\App\Http\Controllers\OrdersController::class, 'orders'])->name('orders-list');
-    Route::post('orders-list/new-email/approved/{id}', [\App\Http\Controllers\OrdersController::class, 'approveMail'])->name('new_email.approve-mail');
+    Route::post('orders-lix1st/new-email/approved/{id}', [\App\Http\Controllers\OrdersController::class, 'approveMail'])->name('new_email.approve-mail');
     Route::post('orders-list/new-email/rejected/{id}', [\App\Http\Controllers\OrdersController::class, 'rejectMail'])->name('new_email.reject-mail');
     Route::get('orders/hr', [\App\Http\Controllers\OrdersController::class, 'HR'])->name('orders.hr');
     Route::get('orders/finance', [\App\Http\Controllers\OrdersController::class, 'finance'])->name('orders.finance');
@@ -374,6 +375,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::get('orders/it', [\App\Http\Controllers\OrdersController::class, 'IT'])->name('orders.it');
     Route::get('orders/it/new-email', [\App\Http\Controllers\NewEmailController::class, 'index'])->name('new_email.index');
     Route::post('orders/it/new-email', [\App\Http\Controllers\NewEmailController::class, 'store'])->name('new_email.store');
+
+    Route::get('orders/resignations', [\App\Http\Controllers\Back\OrdersResignationsController::class, 'index'])->name('orders.resignations.index');
+    Route::get('orders/resignations/create', [\App\Http\Controllers\Back\OrdersResignationsController::class, 'create'])->name('orders.resignations.create');
 
 
     // For admins
@@ -407,6 +411,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('/settings/trainees-applications/required-files', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'store'])->name('settings.trainees-application.required-files.store');
         Route::delete('/settings/trainees-applications/required-files/{id}', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'delete'])->name('settings.trainees-application.required-files.delete');
 
+        Route::post('companies/{company_id}/resignations/{id}/approve', [CompanyResignationsController::class, 'approve'])->name('resignations.approve');
+        Route::post('companies/{company_id}/resignations/{id}/upload/store', [CompanyResignationsController::class, 'uploadStore'])->name('resignations.upload.store');
+        Route::get('companies/{company_id}/resignations/{id}/upload', [CompanyResignationsController::class, 'upload'])->name('resignations.upload');
+        Route::resource('companies/{company_id}/resignations', CompanyResignationsController::class);
         Route::get('companies/deleted', [\App\Http\Controllers\Back\CompaniesController::class, 'deleted'])->name('companies.deleted');
         Route::get('companies/{id}/restore', [\App\Http\Controllers\Back\CompaniesController::class, 'restore'])->name('companies.restore');
         Route::get('companies/export', [\App\Http\Controllers\Back\CompaniesController::class, 'export'])->name('companies.export');

@@ -184,5 +184,6 @@ return [
         'amount'                => 'المبلغ',
         'trainee_id' => 'متدرب',
         'company' => 'شركة',
+        'resignation_file' => 'ملف الاستقالة',
     ],
 ];

@@ -71,7 +71,7 @@
             </template>
         </sidebar-link>
 
-        <sidebar-link v-can="'view-orders'" :link-value="route('orders-list')" :active="$page.currentRouteName == 'orders.index'">
+        <sidebar-link v-can="'view-orders'" :link-value="route('orders.index')" :active="$page.currentRouteName == 'orders.index'">
             <template #icon>
                 <img src="https://icons.veryicon.com/png/o/miscellaneous/linear-icon-14/place-order-1.png" alt="" class="w-5 h-5">
             </template>
