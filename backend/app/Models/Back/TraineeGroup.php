@@ -70,7 +70,7 @@ class TraineeGroup extends Model implements Auditable
     {
         switch ($this->name) {
             case 'شعبة 1':
-                return 'كل أحد والإثنين الساعة 10:00 الى 12:00 ظهراً';
+                return 'كل أحد والإثنين الساعة 01:00 الى 03:00 مساءً';
             case 'شعبة 2':
                 return 'كل ثلاثاء والأربعاء الساعة 10:00 الى 12:00 ظهراً';
             case 'شعبة 3':
