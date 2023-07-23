@@ -158,6 +158,7 @@
                     <img src="/img/student.svg" alt="student" class="h-20">
                     <div>
                         <h1 class="text-2xl font-heavy">{{ $t('words.welcome') }}!</h1>
+                        <h2 class="my-5" v-if="class_timings"><p class="d-block text-red-600">توقيت الدورة:</p> {{ class_timings }}</h2>
                         <p class="mt-2 text-gray-500">{{ user.email }}</p>
                         <p class="mt-2 text-xs text-gray-500">{{ $t('words.last-login-at') }}: <span dir="ltr">{{ user.last_login_at_timezone }}</span></p>
                     </div>
@@ -246,7 +247,7 @@
     import HeaderCard from "@/Components/HeaderCard";
 
     export default {
-        props: ['sessions', 'user', 'show_success_payment', 'show_failed_payment'],
+        props: ['sessions', 'user', 'show_success_payment', 'show_failed_payment', 'class_timings'],
         components: {
             AppLayout,
             Welcome,

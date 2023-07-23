@@ -36,6 +36,7 @@ class TraineeGroup extends Model implements Auditable
 
     protected $appends = [
         'name_selectable',
+        'class_timings'
     ];
 
     protected static function boot(): void
@@ -63,5 +64,39 @@ class TraineeGroup extends Model implements Auditable
     public function getNameSelectableAttribute()
     {
         return $this->name;
+    }
+
+    public function getClassTimingsAttribute()
+    {
+        switch ($this->name) {
+            case 'شعبة 1':
+                return 'كل أحد والإثنين الساعة 10:00 الى 3:00 ظهراً';
+            case 'شعبة 2':
+                return 'كل ثلاثاء والأربعاء الساعة 10:00 الى 12:00 ظهراً';
+            case 'شعبة 3':
+                return 'كل أحد والإثنين الساعة 10:00 الى 12:00 ظهراً';
+            case 'شعبة 4':
+                return 'كل ثلاثاء والأربعاء الساعة 1:00 الى 3:00 مساءً';
+            case 'شعبة 5':
+                return 'كل ثلاثاء والأربعاء الساعة 1:00 الى 3:00 مساءً';
+            case 'شعبة 6':
+                return 'كل ثلاثاء والأربعاء الساعة 10:00 الى 12:00 ظهراً';
+            case 'شعبة 7':
+                return 'كل أحد والإثنين الساعة 1:00 الى 3:00 ظهراً';
+            case 'شعبة 8':
+                return 'كل أحد والإثنين الساعة 10:00 الى 12:00 ظهراً';
+            case 'شعبة 9':
+                return 'كل احد والإثنين الساعة 800 الى 10:00 صباحًا';
+            case 'شعبة 10':
+                return 'كل احد والإثنين الساعة 10:00 الى 12:00 ظهراً';
+            case 'شعبة 11':
+                return 'كل احد والإثنين الساعة 10:00 الى 12:00 ظهراً';
+            case 'شعبة 12':
+                return 'كل ثلاثاء والأربعاء الساعة 10:00 الى 12:00 ظهراً';
+            case 'شعبة 13':
+                return 'كل ثلاثاء والأربعاء الساعة 1:00 الى 3:00 مساءً';
+        }
+
+        return;
     }
 }
