@@ -100,6 +100,8 @@ class PaymentCardController extends Controller
                 'payment_reference_id' => $order->result->order->id,
                 'paid_at' => now(),
                 'status' => Invoice::STATUS_PAID,
+                'payment_detail_method' => $order->result->paymentDetails->mode,
+                'payment_detail_brand' => $order->result->paymentDetails->brand,
             ]);
 
             AccountingLedgerBook::create([
