@@ -38,6 +38,7 @@ class Media extends \Spatie\MediaLibrary\MediaCollections\Models\Media
             $model->{$model->getKeyName()} = (string) Str::uuid();
             if (auth()->user()) {
                 $model->team_id = auth()->user()->currentTeam()->first()->id;
+                $model->created_by_id = auth()->user()->id;
             }
         });
     }
