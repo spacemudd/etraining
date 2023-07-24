@@ -65,7 +65,7 @@
                 <tbody>
                 <tr class="border-t">
                     <td class="px-6 py-4">--</td>
-                    <td class="px-6 py-4">عم الفني والتقني للمنصة التدريبية +  تقديم المساعدة</td>
+                    <td class="px-6 py-4">دعم الفني والتقني للمنصة التدريبية + الرد على اسئلة المتدربات +  تقديم المساعدة</td>
                     <td class="px-6 py-4">info@ptc-ksa.net</td>
                 </tr>
                 </tbody>
