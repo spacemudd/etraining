@@ -47,7 +47,7 @@ class PullNoonInvoicePaymentDetails extends Command
 
         $bar->start();
 
-        $q->chunk(10, function ($invoices) use (&$bar) {
+        $q->chunk(100, function ($invoices) use (&$bar) {
                 foreach ($invoices as $invoice) {
                     $noon = app()->make(NoonService::class)->getOrder($invoice->payment_reference_id);
                     $invoice->update([
@@ -55,7 +55,7 @@ class PullNoonInvoicePaymentDetails extends Command
                         'payment_detail_brand' => $noon->result->paymentDetails->brand,
                     ]);
                 }
-                $bar->advance(10);
+                $bar->advance(100);
             });
 
         return 1;
