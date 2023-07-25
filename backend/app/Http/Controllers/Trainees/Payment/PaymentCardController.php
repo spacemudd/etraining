@@ -127,11 +127,12 @@ class PaymentCardController extends Controller
     public function recordFailure(Request $request, $order)
     {
         DB::beginTransaction();
-        $invoice = Invoice::with([
-            'trainee' => function ($q) {
-                $q->withTrashed();
-            }
-        ])->find($order->result->order->reference);
+        $invoice = Invoice::withTrashed()
+            ->with([
+                'trainee' => function ($q) {
+                    $q->withTrashed();
+                }
+            ])->find($order->result->order->reference);
 
         Audit::create([
             'team_id' => $invoice->trainee->team_id,
