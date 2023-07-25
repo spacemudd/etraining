@@ -20,6 +20,7 @@
 
             <div class="mt-4">
                 <x-jet-label value="{{ __('words.email') }}" />
+                <input type="hidden" name="email" value="{{ $invite->email }}">
                 <x-jet-input class="block mt-1 w-full disabled:bg-grey-200" type="email" name="email" value="{{ $invite->email }}" disabled required />
             </div>
 
