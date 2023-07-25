@@ -91,9 +91,11 @@ class PaymentCardController extends Controller
                 'new_values' => $request->toArray(),
             ]);
 
-            $invoice = Invoice::withoutGlobalScopes()->notPaid()->with(['trainee' => function($q) {
-                $q->withTrashed();
-            }])->find($invoice_id);
+            $invoice = Invoice::withoutGlobalScopes()
+                ->withTrashed()
+                ->notPaid()->with(['trainee' => function($q) {
+                    $q->withTrashed();
+                }])->find($invoice_id);
 
             $invoice->update([
                 'payment_method' => Invoice::PAYMENT_METHOD_CREDIT_CARD,
