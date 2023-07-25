@@ -120,7 +120,7 @@ class TraineesController extends Controller
      */
     public function show($id)
     {
-        $trainee = Trainee::find($id);
+        $trainee = Trainee::withTrashed()->find($id);
         $in_block_list = TraineeBlockList::where('phone', $trainee->phone)
             ->orWhere('identity_number', $trainee->identity_number)
             ->orWhere('email', $trainee->email)
