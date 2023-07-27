@@ -80,9 +80,8 @@ class PaymentCardController extends Controller
         // Confirm that Noon has the payment.
         throw_if(!$order, 'Invoice not found in payment gateway');
 
-        $invoice_id = $order->result->order->reference;
-
         if ($this->paymentService->isPaymentSuccess($order)) {
+            $invoice_id = $order->result->order->reference;
             DB::beginTransaction();
             Audit::create([
                 'event' => 'noon',
