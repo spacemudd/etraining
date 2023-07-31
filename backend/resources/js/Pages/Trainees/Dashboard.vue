@@ -1,35 +1,7 @@
 <template>
     <app-layout>
-        <div class="container px-6 mx-auto grid" v-if="user.trainee.deleted_at">
-            <div class="container mx-auto grid p-6">
-                <div class="bg-white rounded-lg p-10 flex gap-10 border-1 border-emerald-500"
-                     style="border-top: 20px solid rgb(255,42,42);background: #eff1ef;">
-                    <div style="width: 100%;">
-                        <p class="mt-2 text-gray-500" style="text-align: center;
-                                font-size: 20px;
-                                color: #323232;
-                                letter-spacing: 1px;
-                            }">لا يمكنك حضور الدورات في الوقت الحالي، للتواصل معنا على الأرقام التالية.
-                            <br><br/>
-                            <span class="img {display:block} center-block inline-flex" style="text-align: center;">
-                                <svg width="40" height="40" class="mx-0.5 mt-1">
-                                    <image class="inline" xlink:href="https://i.ibb.co/CWK3g2s/whatsapp.png" src="https://i.ibb.co/CWK3g2s/whatsapp.png" width="15" height="15"/>
-                                </svg>
-                            <a class="center text-green-600 text-sm" style="text-align: center;" href="https://api.whatsapp.com/send?phone=966553139979"> &nbsp;  شؤون المتدربات </a>
-                            </span>
-                            <span class="img {display:block} center-block inline-flex" style="text-align: center;">
-                                <svg width="40" height="40" class="mx-0.5 mt-1">
-                                    <image class="inline" xlink:href="https://i.ibb.co/CWK3g2s/whatsapp.png" src="https://i.ibb.co/CWK3g2s/whatsapp.png" width="15" height="15"/>
-                                </svg>
-                            <a class="center text-green-600 text-sm" style="text-align: center;" href="https://api.whatsapp.com/send?phone=966553139979"> &nbsp;  إدارة المعهد </a>
-                            </span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="container px-6 mx-auto grid" v-if="!user.trainee.deleted_at">
-            <div class="grid grid-cols-3 gap-4 place-items-center h-26">
+        <div class="container px-6 mx-auto grid">
+            <div class="grid grid-cols-3 gap-4 place-items-center h-26"  v-if="!user.trainee.deleted_at">
                 <div></div>
                 <div>
                     <inertia-link class="font-bold text-center mt-5 inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
@@ -68,6 +40,33 @@
 
 
             <!-- Payment notice -->
+            <div class="container px-6 mx-auto grid pt-10" v-if="user.trainee.deleted_at">
+            <div class="container mx-auto grid">
+                <div class="bg-red-100 rounded-lg p-10 border-red-500 border-2">
+                    <div style="width: 100%;">
+                        <p class="mt-2 text-gray-500" style="text-align: center;
+                                font-size: 20px;
+                                color: #323232;
+                                letter-spacing: 1px;
+                            }">لا يمكنك حضور الدورات في الوقت الحالي، للتواصل معنا على الأرقام التالية.
+                            <br><br/>
+                            <span class="img {display:block} center-block inline-flex" style="text-align: center;">
+                                <svg width="40" height="40" class="mx-0.5 mt-1">
+                                    <image class="inline" xlink:href="https://i.ibb.co/CWK3g2s/whatsapp.png" src="https://i.ibb.co/CWK3g2s/whatsapp.png" width="15" height="15"/>
+                                </svg>
+                            <a class="center text-green-600 text-sm" style="text-align: center;" href="https://api.whatsapp.com/send?phone=966553139979"> &nbsp;  شؤون المتدربات </a>
+                            </span>
+                            <span class="img {display:block} center-block inline-flex" style="text-align: center;">
+                                <svg width="40" height="40" class="mx-0.5 mt-1">
+                                    <image class="inline" xlink:href="https://i.ibb.co/CWK3g2s/whatsapp.png" src="https://i.ibb.co/CWK3g2s/whatsapp.png" width="15" height="15"/>
+                                </svg>
+                            <a class="center text-green-600 text-sm" style="text-align: center;" href="https://api.whatsapp.com/send?phone=966553139979"> &nbsp;  إدارة المعهد </a>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
             <div class="container mx-auto grid p-6" v-if="user.trainee.has_outstanding_amount">
                 <div class="bg-blue-100 rounded-lg p-10 border-blue-500 border-2">
                     <p class="text-gray-600 flex">
@@ -153,7 +152,7 @@
                 </div>
             </div>
 
-            <div class="container mx-auto grid p-6">
+            <div class="container mx-auto grid p-6" v-if="!user.trainee.deleted_at">
                 <div class="bg-white rounded-lg p-10 flex gap-10">
                     <img src="/img/student.svg" alt="student" class="h-20">
                     <div>
