@@ -533,6 +533,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('trainees/{trainee_id}/block', [\App\Http\Controllers\Back\TraineesController::class, 'blockView'])->name('trainees.block');
         Route::post('trainees/{trainee_id}/block', [\App\Http\Controllers\Back\TraineesController::class, 'block'])->name('trainees.block.store');
         Route::post('trainees/{trainee_id}/suspend', [\App\Http\Controllers\Back\TraineesController::class, 'suspend'])->name('trainees.suspend.store');
+        Route::post('trainees/{trainee_id}/suspendSelectedTrainees', [\App\Http\Controllers\Back\TraineesController::class, 'suspendSelectedTrainees'])->name('trainees.suspend.selected.trainees');
         Route::get('trainees/{trainee_id}/suspend/create', [\App\Http\Controllers\Back\TraineesController::class, 'suspendCreate'])->name('trainees.suspend.create');
         Route::get('trainees/suspend/{trainee_block_list_id}/edit', [\App\Http\Controllers\Back\TraineesController::class, 'suspendEdit'])->name('trainees.suspend.edit');
         Route::put('trainees/suspend/{trainee_block_list_id}/update', [\App\Http\Controllers\Back\TraineesController::class, 'suspendUpdate'])->name('trainees.suspend.update');

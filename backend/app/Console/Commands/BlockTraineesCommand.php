@@ -52,7 +52,7 @@ class BlockTraineesCommand extends Command
         $Trainees = Trainee::where('company_id', 'bf4340d7-8058-4cfa-93d4-fdb1bcc6465e')->get();
         foreach ($Trainees as $Trainee) {
             $Trainee->update([
-                'deleted_remark' => 'عدم التسجيل من الشركة '
+                'deleted_remark' => 'عدم التسجيل من الشركة'
             ]);
             $Trainee->suspended_at = now()->setSecond(0);
 
