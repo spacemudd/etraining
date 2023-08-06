@@ -49,7 +49,7 @@
             {{-- Add listener to email field --}}
             var emailField = document.getElementById("email");
             emailField.addEventListener('input', function() {
-                if (document.getElementById('email').value.includes('ptc-ksa.net')) {
+                if (document.getElementById('email').value.includes('ptc-ksa.net')  && !document.getElementById('email').value.includes('info')) {
                     document.getElementById('hideFor2Fa').style.display = 'none';
                     document.getElementById('password').required = false;
                 } else {
