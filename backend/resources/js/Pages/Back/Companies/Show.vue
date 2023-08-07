@@ -189,7 +189,7 @@
                         </tr>
                         <tr
                             v-for="trainees in company.trainees"
-                            :key="company.trainees.id"
+                            :key="trainees.id"
                             class="hover:bg-gray-100 focus-within:bg-gray-100"
                         >
 
@@ -555,18 +555,18 @@ export default {
         }
     },
     methods: {
-        // getSelected() {
-        //     axios({
-        //         url: '/back/companies',
-        //         method: 'get'
-        //     })
-        //         .then(res => {
-        //             this.selectedTrainees = res.company.trainees.rows
-        //         })
-        //         .catch(err => {
-        //             console.log(err)
-        //         })
-        // },
+        getSelected() {
+            axios({
+                url: '/back/companies',
+                method: 'get'
+            })
+                .then(res => {
+                    this.selectedTrainees = res.company.trainees.rows
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
         selectAll() {
             this.selected = [];
             if(!this.select_all){
@@ -578,7 +578,7 @@ export default {
             }
         },
         selectSinlge() {
-            if(this.selectedTrainees.length === this.selected.length){
+            if(!this.selectedTrainees.length === this.selected.length){
                 this.select_all = true
             } else {
                 this.select_all = false
@@ -608,8 +608,12 @@ export default {
         },
         suspendTrainees(traineeCollection) {
             if (confirm(this.$t('words.are-you-sure'))) {
-                this.$inertia.delete(route('back.trainees.suspend.selected.trainees', {
-                    trainees: traineeCollection.id,
+                this.$inertia.delete(route('back.trainees.destroy', {
+                    company: traineeCollection.id,
+                    name: traineeCollection.name,
+                    trainee_group_id: traineeCollection.trainee_group_id,
+                    phone: traineeCollection.phone,
+                    company_id: traineeCollection.company_id,
                 }));
             }
         },
@@ -626,3 +630,4 @@ export default {
     }
 }
 </script>
+

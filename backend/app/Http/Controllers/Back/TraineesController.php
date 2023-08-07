@@ -1093,4 +1093,45 @@ class TraineesController extends Controller
 
         return redirect()->route('back.trainees.show', $trainee->id);
     }
+
+    public function destroy(Request $request, $trainee_id){
+        $request->validate([
+            'reason' => 'required|string|max:255',
+        ]);
+
+        DB::beginTransaction();
+//            $trainees = Trainee::findOrFail($trainee_id);
+            $trainees = Trainee::where('name', request()->name)
+                ->where('phone', request()->phone)
+                ->where('company_id', request()->company_id)
+                ->get();
+
+            foreach ($trainees as $trainee) {
+                $trainee->deleted_remark = 'استبعاد من الشركة';
+                $trainee->suspended_at = now()->setSecond(0);
+                $trainee->deleted_by_id = auth()->user()->id;
+                $trainee->save();
+                $block = TraineeBlockList::create([
+                    'trainee_id' => $trainee->id,
+                    'identity_number' => $trainee->identity_number,
+                    'name' => $trainee->name,
+                    'email' => $trainee->email,
+                    'phone' => $trainee->phone,
+                    'phone_additional' => $trainee->phone_additional,
+                    'reason' => $request->reason,
+                ]);
+                $trainee->delete();
+                }
+
+        DB::commit();
+
+
+        if (Str::contains(redirect()->back()->getTargetUrl(), 'companies')) {
+            return redirect()->back();
+        }
+
+        return redirect()->route('back.trainees.block-list.index');
+
+
+    }
 }
