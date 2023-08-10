@@ -608,12 +608,8 @@ export default {
         },
         suspendTrainees(traineeCollection) {
             if (confirm(this.$t('words.are-you-sure'))) {
-                this.$inertia.delete(route('back.trainees.destroy', {
-                    company: traineeCollection.id,
-                    name: traineeCollection.name,
-                    trainee_group_id: traineeCollection.trainee_group_id,
-                    phone: traineeCollection.phone,
-                    company_id: traineeCollection.company_id,
+                this.$inertia.delete(route('back.trainees.suspend.all', {
+                    trainees: traineeCollection,
                 }));
             }
         },
