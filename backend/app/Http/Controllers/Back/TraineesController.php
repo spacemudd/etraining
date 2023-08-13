@@ -1094,44 +1094,43 @@ class TraineesController extends Controller
         return redirect()->route('back.trainees.show', $trainee->id);
     }
 
-    public function suspendAll(Request $request, $trainee_id){
-        dd($trainee_id);
+    public function suspendAll(Request $request){
 
 //        $request->validate([
 //            'reason' => 'required|string|max:255',
 //        ]);
 //
-//        DB::beginTransaction();
-//
-//        $trainees = Trainee::findOrFail($trainee_id);
-//            foreach ($trainees as $trainee) {
-//                DB::beginTransaction();
-//                $trainee->deleted_remark = $request->reason;
-//                $trainee->suspended_at = now()->setSecond(0);
-//                $trainee->deleted_by_id = auth()->user()->id;
-//                $trainee->save();
-//                $block = TraineeBlockList::create([
-//                    'trainee_id' => $trainee->id,
-//                    'identity_number' => $trainee->identity_number,
-//                    'name' => $trainee->name,
-//                    'email' => $trainee->email,
-//                    'phone' => $trainee->phone,
-//                    'phone_additional' => $trainee->phone_additional,
-//                    'reason' => $request->reason,
-//                ]);
-//                $trainee->delete();
-//                DB::commit();
-//                }
-//
-//        DB::commit();
-//
-//
-//        if (Str::contains(redirect()->back()->getTargetUrl(), 'companies')) {
-//            return redirect()->back();
-//        }
-//
-//        return redirect()->route('back.trainees.block-list.index');
-//
-//
+        DB::beginTransaction();
+        $reason = 'استبعاد من الشركة';
+        $trainees = Trainee::findOrFail($request->data);
+            foreach ($trainees as $trainee) {
+                DB::beginTransaction();
+                $trainee->deleted_remark = $reason;
+                $trainee->suspended_at = now()->setSecond(0);
+                $trainee->deleted_by_id = auth()->user()->id;
+                $trainee->save();
+                $block = TraineeBlockList::create([
+                    'trainee_id' => $trainee->id,
+                    'identity_number' => $trainee->identity_number,
+                    'name' => $trainee->name,
+                    'email' => $trainee->email,
+                    'phone' => $trainee->phone,
+                    'phone_additional' => $trainee->phone_additional,
+                    'reason' => $reason,
+                ]);
+                $trainee->delete();
+                DB::commit();
+                }
+
+        DB::commit();
+
+
+        if (Str::contains(redirect()->back()->getTargetUrl(), 'companies')) {
+            return redirect()->back();
+        }
+
+        return redirect()->route('back.trainees.block-list.index');
+
+
     }
 }

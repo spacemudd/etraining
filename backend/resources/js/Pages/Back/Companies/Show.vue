@@ -157,6 +157,18 @@
 
                 <div class="md:col-span-4 sm:col-span-1">
                     <div class="flex justify-end items-center gap-4">
+                        <button @click="deleteTrainees(selected)"
+                                type="button"
+                                :disabled="!isSelected"
+                                class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">
+                            {{ $t('words.block') }}
+                        </button>
+                        <button @click="deleteTrainees(selected)"
+                                type="button"
+                                :disabled="!isSelected"
+                                class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed bg-green-500 hover:bg-green-600 active:bg-green-700 foucs:bg-green-700">
+                            {{ $t('words.unblock') }}
+                        </button>
                         <post-trainees-button :company-id="company.id"></post-trainees-button>
                         <inertia-link class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
                            :href="route('back.companies.trainees.company-trainee-link-audit', {company_id: company.id})">
@@ -167,19 +179,7 @@
                            :href="route('back.companies.trainees.excel', {company_id: company.id})">
                             <span>{{ $t('words.export') }}</span>
                         </a>
-                        <a class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
-                           target="_blank"
-                           >
-                            <span>{{ $t('words.suspend-account') }}</span>
-                        </a>
-                        <button @click="suspendTrainees(company.trainees)"
-                                type="button"
-                                class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">
-                            {{ $t('words.delete') }}
-                        </button>
                     </div>
-                    {{selected}} <br>
-                    {{select_all}}
                     <table class="w-full whitespace-no-wrap bg-white rounded-lg my-5 p-5 shadow text-sm">
                         <tr class="text-left font-bold">
                             <th class="p-4 pr-8"><input type="checkbox" v-model="select_all"  @click="selectAll()"></th>
@@ -193,7 +193,7 @@
                             class="hover:bg-gray-100 focus-within:bg-gray-100"
                         >
 
-                            <td class="border-t pr-8"><input type="checkbox" :value="trainees.id" v-model="selected" @click="selectSinlge()" /> </td>
+                            <td class="border-t pr-8"><input type="checkbox" :value="trainees.id" v-model="selected"/> </td>
                             <td class="border-t">
                                 <div class="px-4 py-2 flex items-center focus:text-indigo-500">
                                     <inertia-link :href="trainees.show_url">
@@ -532,7 +532,8 @@ export default {
     data() {
         return {
             select_all: false,
-            selectedTrainees: [],
+            isSelected: false,
+            // selectedTrainees: [],
             selected: [],
             reportDateFrom: null,
             reportDateTo: null,
@@ -552,6 +553,12 @@ export default {
             }, {
                 bag: 'createCompany',
             })
+        }
+    },
+    watch: {
+        selected: function (selected) {
+            this.isSelected = (selected.length > 0);
+            this.select_all = (selected.length === this.company.trainees.length)
         }
     },
     methods: {
@@ -577,13 +584,18 @@ export default {
                 this.select_all = false;
             }
         },
-        selectSinlge() {
-            if(!this.selectedTrainees.length === this.selected.length){
-                this.select_all = true
-            } else {
-                this.select_all = false
-            }
-        },
+        // selectSinlge() {
+        //     if(!this.selectedTrainees.length === this.selected.length){
+        //         this.select_all = true
+        //     } else {
+        //         this.select_all = false
+        //     }
+            // if(this.selected !== 0){
+            //     this.isSelected = true;
+            // } else {
+            //     this.isSelected = false;
+            // }
+        // },
         destroyResignation(resignation) {
             if (confirm(this.$t('words.are-you-sure'))) {
                 this.$inertia.delete(route('back.resignations.destroy', {company_id: resignation.company_id, resignation: resignation.id}));
@@ -621,6 +633,14 @@ export default {
         deleteCompany() {
             if (confirm(this.$t('words.are-you-sure'))) {
                 this.$inertia.delete('/back/companies/' + this.company.id);
+            }
+        },
+        deleteTrainees: function (selected){
+            // console.log(selected);
+            if (confirm(this.$t('words.are-you-sure'))) {
+                this.$inertia.post(route('back.trainees.suspend.all', {
+                    data: selected,
+                }));
             }
         }
     }
