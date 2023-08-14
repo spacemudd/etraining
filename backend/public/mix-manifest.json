@@ -1,11 +1,6 @@
 {
-<<<<<<< HEAD
-    "/js/app.js": "/js/app.js?id=0252fae18de1874b7093",
-    "/css/app.css": "/css/app.css?id=7cdb76636551254db227",
-=======
     "/js/app.js": "/js/app.js?id=12542288b1e03a357772",
     "/css/app.css": "/css/app.css?id=27a6fb2e4a98a3aea42e",
->>>>>>> deleteSelectedTrainees
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
-    "/js/vendor.js": "/js/vendor.js?id=d7394c814f737bddfef6"
+    "/js/vendor.js": "/js/vendor.js?id=18437c157f4839a717e0"
 }
