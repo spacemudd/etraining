@@ -163,7 +163,7 @@
                                 class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">
                             {{ $t('words.block') }}
                         </button>
-                        <button @click="deleteTrainees(selected)"
+                        <button @click="unBlockTrainees(selected)"
                                 type="button"
                                 :disabled="!isSelected"
                                 class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed bg-green-500 hover:bg-green-600 active:bg-green-700 foucs:bg-green-700">
@@ -636,9 +636,15 @@ export default {
             }
         },
         deleteTrainees: function (selected){
-            // console.log(selected);
             if (confirm(this.$t('words.are-you-sure'))) {
                 this.$inertia.post(route('back.trainees.suspend.all', {
+                    data: selected,
+                }));
+            }
+        },
+        unBlockTrainees: function (selected){
+            if (confirm(this.$t('words.are-you-sure'))) {
+                this.$inertia.post(route('back.trainees.unblock.all', {
                     data: selected,
                 }));
             }

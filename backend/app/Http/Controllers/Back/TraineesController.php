@@ -1096,10 +1096,6 @@ class TraineesController extends Controller
 
     public function suspendAll(Request $request){
 
-//        $request->validate([
-//            'reason' => 'required|string|max:255',
-//        ]);
-//
         DB::beginTransaction();
         $reason = 'استبعاد من الشركة';
         $trainees = Trainee::findOrFail($request->data);
@@ -1131,6 +1127,30 @@ class TraineesController extends Controller
 
         return redirect()->route('back.trainees.block-list.index');
 
+
+    }
+
+    public function unBlockAll(Request $request){
+
+        DB::beginTransaction();
+        $trainees = Trainee::onlyTrashed()->findOrFail($request->data);
+        foreach ($trainees as $trainee) {
+            $trainee->suspended_at = null;
+            $trainee->deleted_by_id = null;
+            $trainee->save();
+            $trainee->restore();
+            $blockList = TraineeBlockList::where('trainee_id', $trainee->id)->first();
+            if ($blockList) {
+                $blockList->delete();
+            }
+        }
+        DB::commit();
+
+        if (Str::contains(redirect()->back()->getTargetUrl(), 'companies')) {
+            return redirect()->back();
+        }
+
+        return redirect()->route('back.trainees.block-list.index');
 
     }
 }
