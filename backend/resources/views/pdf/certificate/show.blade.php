@@ -63,7 +63,7 @@
         <p style="margin-top:5rem;">والله الموفق،،،</p>
         <div class="row" style="margin-top: 2rem;">
             <div class="col-7">
-                <p style="margin-bottom:0;padding-bottom: 0"><b>ختم المنشأة التدريبية</b></p>
+                <p style="margin-bottom:0;padding-bottom: 0"><b>ختم المنشأة التدريبية</b></p><br>
                 <img id="page-stamp" src="{{ public_path('/img/certificate-stamp-new.png') }}">
             </div>
             <div class="col-4" style="text-align: right;">
