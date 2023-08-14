@@ -71,6 +71,7 @@
                     <b>حررت بتاريخ:    19 / 12  /1444  هـ </b><br/>
                     <b>الموافق:            3 /  8 /2023 م</b>
                 </p>
+                <p>توقيع لمديرة: <img width="10" id="page-stamp" src="{{ public_path('/img/signature.png') }}"></p>
                 <p class="small-text">ملاحظة: أي كشط او تعديل على الشهادة تعتبر لاغية</p>
             </div>
         </div>
