@@ -534,6 +534,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('trainees/{trainee_id}/block', [\App\Http\Controllers\Back\TraineesController::class, 'block'])->name('trainees.block.store');
         Route::post('trainees/{trainee_id}/suspend', [\App\Http\Controllers\Back\TraineesController::class, 'suspend'])->name('trainees.suspend.store');
         Route::get('trainees/{trainee_id}/suspend/create', [\App\Http\Controllers\Back\TraineesController::class, 'suspendCreate'])->name('trainees.suspend.create');
+        Route::post('trainees/suspend', [\App\Http\Controllers\Back\TraineesController::class, 'suspendAll'])->name('trainees.suspend.all');
+        Route::post('trainees/unblock', [\App\Http\Controllers\Back\TraineesController::class, 'unBlockAll'])->name('trainees.unblock.all');
         Route::get('trainees/suspend/{trainee_block_list_id}/edit', [\App\Http\Controllers\Back\TraineesController::class, 'suspendEdit'])->name('trainees.suspend.edit');
         Route::put('trainees/suspend/{trainee_block_list_id}/update', [\App\Http\Controllers\Back\TraineesController::class, 'suspendUpdate'])->name('trainees.suspend.update');
         Route::get('trainees/blocked/show/{trainee_id}', [\App\Http\Controllers\Back\TraineesController::class, 'showBlocked'])->name('trainees.show.blocked');
@@ -542,7 +544,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::resource('trainees', \App\Http\Controllers\Back\TraineesController::class);
         Route::resource('trainees.invoices', \App\Http\Controllers\Back\TraineeInvoicesController::class)->only(['create', 'store']);
         Route::get('candidates', [\App\Http\Controllers\Back\CandidatesController::class, 'index'])->name('candidates.index');
-
+        Route::post('trainees/{trainee_id}/suspendSelectedTrainees', [\App\Http\Controllers\Back\TraineesController::class, 'suspendSelectedTrainees'])->name('trainees.suspend.selected.trainees');
         // Export trainees
         Route::get('candidates/excel/{id}/download', [\App\Http\Controllers\Back\TraineesController::class, 'excelJobDownload'])->name('candidates.excel.job.download');
         Route::get('candidates/excel/{id}', [\App\Http\Controllers\Back\TraineesController::class, 'excelJob'])->name('candidates.excel.job');

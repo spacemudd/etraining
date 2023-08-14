@@ -157,6 +157,18 @@
 
                 <div class="md:col-span-4 sm:col-span-1">
                     <div class="flex justify-end items-center gap-4">
+                        <button @click="deleteTrainees(selected)"
+                                type="button"
+                                :disabled="!isSelected"
+                                class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">
+                            {{ $t('words.block') }}
+                        </button>
+                        <button @click="unBlockTrainees(selected)"
+                                type="button"
+                                :disabled="!isSelected"
+                                class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed bg-green-500 hover:bg-green-600 active:bg-green-700 foucs:bg-green-700">
+                            {{ $t('words.unblock') }}
+                        </button>
                         <post-trainees-button :company-id="company.id"></post-trainees-button>
                         <inertia-link class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
                            :href="route('back.companies.trainees.company-trainee-link-audit', {company_id: company.id})">
@@ -168,18 +180,20 @@
                             <span>{{ $t('words.export') }}</span>
                         </a>
                     </div>
-
                     <table class="w-full whitespace-no-wrap bg-white rounded-lg my-5 p-5 shadow text-sm">
                         <tr class="text-left font-bold">
+                            <th class="p-4 pr-8"><input type="checkbox" v-model="select_all"  @click="selectAll()"></th>
                             <th class="p-4">{{ $t('words.name') }}</th>
                             <th class="p-4">{{ $t('words.group-name') }}</th>
                             <th class="p-4">{{ $t('words.phone') }}</th>
                         </tr>
                         <tr
                             v-for="trainees in company.trainees"
-                            :key="company.trainees.id"
+                            :key="trainees.id"
                             class="hover:bg-gray-100 focus-within:bg-gray-100"
                         >
+
+                            <td class="border-t pr-8"><input type="checkbox" :value="trainees.id" v-model="selected"/> </td>
                             <td class="border-t">
                                 <div class="px-4 py-2 flex items-center focus:text-indigo-500">
                                     <inertia-link :href="trainees.show_url">
@@ -493,11 +507,13 @@ import CompanyContractsPagination from "@/Components/CompanyContractsPagination"
 import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
 import EmptySlate from "@/Components/EmptySlate";
 import PostTraineesButton from "@/Components/PostTraineesButton";
+import Input from "../../../Jetstream/Input";
 
 export default {
-    props: ['sessions', 'company', 'instructors', 'invoices', 'trainees_trashed_count', 'regions'],
+    props: ['sessions', 'company', 'instructors', 'invoices', 'trainees_trashed_count', 'regions', 'trainees'],
 
     components: {
+        Input,
         PostTraineesButton,
         AppLayout,
         JetSectionBorder,
@@ -515,6 +531,10 @@ export default {
     },
     data() {
         return {
+            select_all: false,
+            isSelected: false,
+            // selectedTrainees: [],
+            selected: [],
             reportDateFrom: null,
             reportDateTo: null,
             form: this.$inertia.form({
@@ -535,7 +555,47 @@ export default {
             })
         }
     },
+    watch: {
+        selected: function (selected) {
+            this.isSelected = (selected.length > 0);
+            this.select_all = (selected.length === this.company.trainees.length)
+        }
+    },
     methods: {
+        getSelected() {
+            axios({
+                url: '/back/companies',
+                method: 'get'
+            })
+                .then(res => {
+                    this.selectedTrainees = res.company.trainees.rows
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+        selectAll() {
+            this.selected = [];
+            if(!this.select_all){
+                for(let i in this.company.trainees){
+                    this.selected.push(this.company.trainees[i].id);
+                }
+            }else{
+                this.select_all = false;
+            }
+        },
+        // selectSinlge() {
+        //     if(!this.selectedTrainees.length === this.selected.length){
+        //         this.select_all = true
+        //     } else {
+        //         this.select_all = false
+        //     }
+            // if(this.selected !== 0){
+            //     this.isSelected = true;
+            // } else {
+            //     this.isSelected = false;
+            // }
+        // },
         destroyResignation(resignation) {
             if (confirm(this.$t('words.are-you-sure'))) {
                 this.$inertia.delete(route('back.resignations.destroy', {company_id: resignation.company_id, resignation: resignation.id}));
@@ -558,6 +618,13 @@ export default {
                 }));
             }
         },
+        suspendTrainees(traineeCollection) {
+            if (confirm(this.$t('words.are-you-sure'))) {
+                this.$inertia.delete(route('back.trainees.suspend.all', {
+                    trainees: traineeCollection,
+                }));
+            }
+        },
         createCompany() {
             this.form.post('/back/companies', {
                 preserveScroll: true
@@ -567,7 +634,22 @@ export default {
             if (confirm(this.$t('words.are-you-sure'))) {
                 this.$inertia.delete('/back/companies/' + this.company.id);
             }
+        },
+        deleteTrainees: function (selected){
+            if (confirm(this.$t('words.are-you-sure'))) {
+                this.$inertia.post(route('back.trainees.suspend.all', {
+                    data: selected,
+                }));
+            }
+        },
+        unBlockTrainees: function (selected){
+            if (confirm(this.$t('words.are-you-sure'))) {
+                this.$inertia.post(route('back.trainees.unblock.all', {
+                    data: selected,
+                }));
+            }
         }
     }
 }
 </script>
+

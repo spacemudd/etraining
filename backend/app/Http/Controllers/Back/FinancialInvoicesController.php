@@ -27,7 +27,7 @@ use Mail;
 use PDF;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class FinancialInvoicesController extends Controller
+class  FinancialInvoicesController extends Controller
 {
     public function index()
     {
