@@ -69,8 +69,8 @@
             <div class="col-4" style="text-align: right;">
                 <p>توقيع المديرة: <img  id="page-stamp" src="{{ public_path('/img/signature.png') }}"></p>
                 <p class="small-text">
-                    <b>حررت بتاريخ:    7 / 9  /1444  هـ </b><br/>
-                    <b>الموافق:            29 /  3 /2023 م</b>
+                    <b>حررت بتاريخ:    19 / 12  /1444  هـ </b><br/>
+                    <b>الموافق:            3 /  8 /2023 م</b>
                 </p>
                 <p class="small-text">ملاحظة: أي كشط او تعديل على الشهادة تعتبر لاغية</p>
             </div>
