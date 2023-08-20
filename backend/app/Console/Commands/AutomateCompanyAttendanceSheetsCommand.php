@@ -66,12 +66,15 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 ->first();
 
             if ($lastReport && $lastReport->to_emails) {
+                // هل العدد الكلي للمتدربين مطابق لعدد المتدربين في الكشف السابق؟
                 // Is the number of trainees equal to the number of trainees in the company?
                 //if ($lastReport->trainees()->count() !== $company->trainees()->count()) {
                 //    $this->info('Number of trainees in the last report is not equal to the number of trainees in the company. Skipping: '.$company->name_ar);
                 //    continue;
                 //}
 
+
+                // هل ارقام الهويات مطابقة لارقام الهويات لجميع المتدربين في الشركة؟
                 // Are the trainees matching the IDs of the all the trainees in the company?
                 //foreach ($lastReport->trainees as $trainee) {
                 //    if (! $company->trainees()->where('id', $trainee->id)->first()) {
