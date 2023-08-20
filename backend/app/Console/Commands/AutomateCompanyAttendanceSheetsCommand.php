@@ -53,7 +53,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
             // Has report for current month?
             $currentMonthReport = $company->company_attendance_reports()
-                ->whereBetween('date_from', ['2023-07-01', '2023-07-31'])
+                ->whereBetween('date_from', ['2023-08-01', '2023-08-31'])
                 ->first();
 
             if ($currentMonthReport) {
