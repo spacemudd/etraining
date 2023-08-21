@@ -21,7 +21,7 @@
                     <tr class="border-t">
                         <td class="px-6 py-4">--</td>
                         <td class="px-6 py-4">التدريب+ تقديم برامج تدريبية + متابعة المتدربات في التدريب جدولة اختبارات واوراق عمل</td>
-                        <td class="px-6 py-4">moudi@ptc-ksa.net</td>
+                        <td class="px-6 py-4">amiah.b@ptc-ksa.net</td>
                     </tr>
             	</tbody>
             </table>
