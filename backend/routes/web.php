@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Back\CompanyResignationsController;
 use App\Http\Controllers\Back\TraineesGroupsController;
 use App\Http\Controllers\Teaching\TraineeGroupsController;
 use App\Http\Middleware\IsDisabledWebsiteMiddleware;
@@ -448,7 +449,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     // Orders
     Route::get('orders', [\App\Http\Controllers\OrdersController::class, 'index'])->name('orders.index');
     Route::get('orders-list', [\App\Http\Controllers\OrdersController::class, 'orders'])->name('orders-list');
-    Route::post('orders-list/new-email/approved/{id}', [\App\Http\Controllers\OrdersController::class, 'approveMail'])->name('new_email.approve-mail');
+    Route::post('orders-lix1st/new-email/approved/{id}', [\App\Http\Controllers\OrdersController::class, 'approveMail'])->name('new_email.approve-mail');
     Route::post('orders-list/new-email/rejected/{id}', [\App\Http\Controllers\OrdersController::class, 'rejectMail'])->name('new_email.reject-mail');
     Route::get('orders/hr', [\App\Http\Controllers\OrdersController::class, 'HR'])->name('orders.hr');
     Route::get('orders/finance', [\App\Http\Controllers\OrdersController::class, 'finance'])->name('orders.finance');
@@ -456,6 +457,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::get('orders/it', [\App\Http\Controllers\OrdersController::class, 'IT'])->name('orders.it');
     Route::get('orders/it/new-email', [\App\Http\Controllers\NewEmailController::class, 'index'])->name('new_email.index');
     Route::post('orders/it/new-email', [\App\Http\Controllers\NewEmailController::class, 'store'])->name('new_email.store');
+
+    Route::get('orders/resignations', [\App\Http\Controllers\Back\OrdersResignationsController::class, 'index'])->name('orders.resignations.index');
+    Route::get('orders/resignations/create', [\App\Http\Controllers\Back\OrdersResignationsController::class, 'create'])->name('orders.resignations.create');
 
 
     // For admins
@@ -489,6 +493,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('/settings/trainees-applications/required-files', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'store'])->name('settings.trainees-application.required-files.store');
         Route::delete('/settings/trainees-applications/required-files/{id}', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'delete'])->name('settings.trainees-application.required-files.delete');
 
+        Route::post('companies/{company_id}/resignations/{id}/approve', [CompanyResignationsController::class, 'approve'])->name('resignations.approve');
+        Route::post('companies/{company_id}/resignations/{id}/upload/store', [CompanyResignationsController::class, 'uploadStore'])->name('resignations.upload.store');
+        Route::get('companies/{company_id}/resignations/{id}/upload', [CompanyResignationsController::class, 'upload'])->name('resignations.upload');
+        Route::resource('companies/{company_id}/resignations', CompanyResignationsController::class);
         Route::get('companies/deleted', [\App\Http\Controllers\Back\CompaniesController::class, 'deleted'])->name('companies.deleted');
         Route::get('companies/{id}/restore', [\App\Http\Controllers\Back\CompaniesController::class, 'restore'])->name('companies.restore');
         Route::get('companies/export', [\App\Http\Controllers\Back\CompaniesController::class, 'export'])->name('companies.export');
@@ -608,6 +616,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('trainees/{trainee_id}/block', [\App\Http\Controllers\Back\TraineesController::class, 'block'])->name('trainees.block.store');
         Route::post('trainees/{trainee_id}/suspend', [\App\Http\Controllers\Back\TraineesController::class, 'suspend'])->name('trainees.suspend.store');
         Route::get('trainees/{trainee_id}/suspend/create', [\App\Http\Controllers\Back\TraineesController::class, 'suspendCreate'])->name('trainees.suspend.create');
+        Route::post('trainees/suspend', [\App\Http\Controllers\Back\TraineesController::class, 'suspendAll'])->name('trainees.suspend.all');
+        Route::post('trainees/unblock', [\App\Http\Controllers\Back\TraineesController::class, 'unBlockAll'])->name('trainees.unblock.all');
         Route::get('trainees/suspend/{trainee_block_list_id}/edit', [\App\Http\Controllers\Back\TraineesController::class, 'suspendEdit'])->name('trainees.suspend.edit');
         Route::put('trainees/suspend/{trainee_block_list_id}/update', [\App\Http\Controllers\Back\TraineesController::class, 'suspendUpdate'])->name('trainees.suspend.update');
         Route::get('trainees/blocked/show/{trainee_id}', [\App\Http\Controllers\Back\TraineesController::class, 'showBlocked'])->name('trainees.show.blocked');
@@ -616,7 +626,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::resource('trainees', \App\Http\Controllers\Back\TraineesController::class);
         Route::resource('trainees.invoices', \App\Http\Controllers\Back\TraineeInvoicesController::class)->only(['create', 'store']);
         Route::get('candidates', [\App\Http\Controllers\Back\CandidatesController::class, 'index'])->name('candidates.index');
-
+        Route::post('trainees/{trainee_id}/suspendSelectedTrainees', [\App\Http\Controllers\Back\TraineesController::class, 'suspendSelectedTrainees'])->name('trainees.suspend.selected.trainees');
         // Export trainees
         Route::get('candidates/excel/{id}/download', [\App\Http\Controllers\Back\TraineesController::class, 'excelJobDownload'])->name('candidates.excel.job.download');
         Route::get('candidates/excel/{id}', [\App\Http\Controllers\Back\TraineesController::class, 'excelJob'])->name('candidates.excel.job');
@@ -655,6 +665,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::post('contracts/generate', [\App\Http\Controllers\Back\ReportsController::class, 'generateContractsReport'])->name('reports.contracts.generate');
 
             Route::get('company-attendance/{report_id}/toggle-select', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'toggleSelect'])->name('reports.company-attendance.toggle-select');
+            Route::get('company-attendance/{report_id}/excel', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'excel'])->name('reports.company-attendance.excel');
             Route::post('company-attendance/{report_id}/trainees/{trainee_id}', [\App\Http\Controllers\Back\CompanyAttendanceReportTraineesController::class, 'update'])->name('reports.company-attendance.trainees.update');
             Route::get('company-attendance/{report_id}/edit', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'edit'])->name('reports.company-attendance.edit');
             Route::post('company-attendance/{id}/clone', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'clone'])->name('reports.company-attendance.clone');

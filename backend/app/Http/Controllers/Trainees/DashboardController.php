@@ -48,12 +48,14 @@ class DashboardController extends Controller
             $show_failed_payment = false;
         }
 
+        $class_timings = optional(auth()->user()->trainee->trainee_group)->class_timings;
 
         return Inertia::render('Trainees/Dashboard', [
             'user' => auth()->user(),
             'sessions' => $sessions,
             'show_success_payment' => $show_success_payment,
             'show_failed_payment' => $show_failed_payment,
+            'class_timings' => $class_timings,
         ]);
     }
 }

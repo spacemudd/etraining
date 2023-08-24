@@ -80,9 +80,8 @@ class PaymentCardController extends Controller
         // Confirm that Noon has the payment.
         throw_if(!$order, 'Invoice not found in payment gateway');
 
-        $invoice_id = $order->result->order->reference;
-
         if ($this->paymentService->isPaymentSuccess($order)) {
+            $invoice_id = $order->result->order->reference;
             DB::beginTransaction();
             Audit::create([
                 'event' => 'noon',
@@ -91,15 +90,19 @@ class PaymentCardController extends Controller
                 'new_values' => $request->toArray(),
             ]);
 
-            $invoice = Invoice::withoutGlobalScopes()->notPaid()->with(['trainee' => function($q) {
-                $q->withTrashed();
-            }])->find($invoice_id);
+            $invoice = Invoice::withoutGlobalScopes()
+                ->withTrashed()
+                ->notPaid()->with(['trainee' => function($q) {
+                    $q->withTrashed();
+                }])->find($invoice_id);
 
             $invoice->update([
                 'payment_method' => Invoice::PAYMENT_METHOD_CREDIT_CARD,
                 'payment_reference_id' => $order->result->order->id,
                 'paid_at' => now(),
                 'status' => Invoice::STATUS_PAID,
+                'payment_detail_method' => $order->result->paymentDetails->mode,
+                'payment_detail_brand' => $order->result->paymentDetails->brand,
             ]);
 
             AccountingLedgerBook::create([
@@ -123,11 +126,12 @@ class PaymentCardController extends Controller
     public function recordFailure(Request $request, $order)
     {
         DB::beginTransaction();
-        $invoice = Invoice::with([
-            'trainee' => function ($q) {
-                $q->withTrashed();
-            }
-        ])->find($order->result->order->reference);
+        $invoice = Invoice::withTrashed()
+            ->with([
+                'trainee' => function ($q) {
+                    $q->withTrashed();
+                }
+            ])->find($order->result->order->reference);
 
         Audit::create([
             'team_id' => $invoice->trainee->team_id,

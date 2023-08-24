@@ -146,6 +146,8 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'resignation_file' => 'Resignation file',
+    ],
 
 ];

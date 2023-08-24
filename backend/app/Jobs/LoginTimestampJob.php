@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Back\Audit;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
@@ -44,6 +45,13 @@ class LoginTimestampJob implements ShouldQueue
      */
     public function handle()
     {
+        Audit::create([
+            'user_id' => $this->user_id,
+            'event' => 'login',
+            'auditable_type' => User::class,
+            'auditable_id' => $this->user_id,
+        ]);
+
         User::withoutGlobalScopes()
             ->find($this->user_id)
             ->update([

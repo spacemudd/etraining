@@ -12,6 +12,7 @@ class TraineesGroupsController extends Controller
     public function index()
     {
         $traineeGroups = TraineeGroup::withCount('trainees')
+            ->orderBy('name')
             ->get();
 
         foreach ($traineeGroups as $traineeGroup) {

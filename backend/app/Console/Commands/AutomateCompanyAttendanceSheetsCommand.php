@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Back\Company;
 use App\Services\CompanyAttendanceReportService;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
@@ -131,7 +132,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
             // Has report for current month?
             $currentMonthReport = $company->company_attendance_reports()
-                ->whereBetween('date_from', ['2023-06-01', '2023-06-31'])
+                ->whereBetween('date_from', ['2023-07-01', '2023-07-31'])
                 ->first();
 
             if ($currentMonthReport) {
@@ -160,11 +161,10 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
                 //$clone = app()->make(CompanyAttendanceReportService::class)->clone($lastReport->id);
                 $clone = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
-                $clone->date_from = '2023-06-01';
-                $clone->date_to = '2023-06-30';
+                $clone->date_from = Carbon::parse('2023-07-01')->setTimezone('Asia/Riyadh')->startOfDay();
+                $clone->date_to = Carbon::parse('2023-07-31')->setTimezone('Asia/Riyadh')->endOfDay();
                 $clone->cc_emails = Str::replace('ptc-ksa.com', 'ptc-ksa.net', $lastReport->cc_emails);
-                $clone->cc_emails = Str::replace('mashal.a@ptc-ksa.net', 'mashael.a@ptc-ksa.net', $clone->cc_emails);
-                if ($company->salesperson_email) {
+                if ($company->salesperson_email && !Str::contains($clone->cc_emails, $company->salesperson_email)) {
                     $clone->cc_emails .= ', '.$company->salesperson_email;
                 }
                 $clone->save();
@@ -176,10 +176,10 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 }
                 $this->info('No last report. Creating new report - '.$company->name_ar);
                 $report = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
-                $report->date_from = '2023-06-01';
-                $report->date_to = '2023-06-30';
+                $report->date_from = Carbon::parse('2023-07-01')->setTimezone('Asia/Riyadh')->startOfDay();
+                $report->date_to = Carbon::parse('2023-07-31')->setTimezone('Asia/Riyadh')->endOfDay();
                 $report->cc_emails = 'sara@ptc-ksa.net, m_shehatah@ptc-ksa.net, ceo@ptc-ksa.net, mashael.a@ptc-ksa.net';
-                if ($company->salesperson_email) {
+                if ($company->salesperson_email && !Str::contains($report->cc_emails, $company->salesperson_email)) {
                     $report->cc_emails .= ', '.$company->salesperson_email;
                 }
                 $report->save();

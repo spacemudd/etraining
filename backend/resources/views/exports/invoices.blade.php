@@ -20,6 +20,7 @@
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.paid-at') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.chased-at') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.verified-at') }}</strong></th>
+        <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.created-by') }}</strong></th>
     </tr>
     </thead>
 
@@ -40,6 +41,7 @@
             <td style="border:1px solid black;">{{ optional(optional($invoice->paid_at)->setTimezone('Asia/Riyadh'))->toDateTimeString() }}</td>
             <td style="border:1px solid black;">{{ optional(optional($invoice->chased_at)->setTimezone('Asia/Riyadh'))->toDateTimeString() }}</td>
             <td style="border:1px solid black;">{{ optional(optional($invoice->verified_at)->setTimezone('Asia/Riyadh'))->toDateTimeString() }}</td>
+            <td style="border:1px solid black;">{{ optional($invoice->created_by)->email }}</td>
         </tr>
     @endforeach
     </tbody>

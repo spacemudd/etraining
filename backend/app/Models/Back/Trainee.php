@@ -107,28 +107,10 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         parent::boot();
         // static::addGlobalScope(new TeamScope());
 
-        if (!in_array(optional(auth()->user())->email, ['sara@ptc-ksa.net', 'mashael.a@ptc-ksa.net', 'jawaher@ptc-ksa.net'])) {
-            if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.com')) {
-                static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
-                    $builder->whereHas('company', function ($query) {
-                        $query->whereNull('is_ptc_net');
-                    })->orWhereDoesntHave('company');
-                });
-            }
-
-            if (Str::contains(optional(auth()->user())->email, 'ptc-ksa.net')) {
-                static::addGlobalScope('RiyadhBankAccounts', function (Builder $builder) {
-                    $builder->whereHas('company', function ($query) {
-                        $query->whereNotNull('is_ptc_net');
-                    })->orWhereDoesntHave('company');
-                });
-            }
-        }
-
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string) Str::uuid();
             if (auth()->user()) {
-                $model->team_id = $model->team_id = auth()->user()->currentTeam()->first()->id;
+                $model->team_id = auth()->user()->currentTeam()->first()->id;
             }
         });
 
@@ -160,7 +142,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
 
     public function company()
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Company::class)->withTrashed();
     }
 
     public function educational_level()

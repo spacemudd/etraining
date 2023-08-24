@@ -29,6 +29,11 @@
                     <center><img style="width: 78px;" src="https://i.ibb.co/PTqF4nk/1000-F-20889267z7-LAXfh69b-SQa7n-Qp-JY1ma-QBw-Ys90-Siw0u-1.png" alt="Rejected" class="w-56 mt-3"></center> <br>
                     {{ $t('words.collection') }}
                 </inertia-link>
+                <inertia-link :href="route('orders.resignations.index')"
+                              class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
+                    <center><img style="width: 78px;" src="/img/resignations.svg" alt="Rejected" class="w-56 mt-3"></center> <br>
+                    {{ $t('words.resignations') }}
+                </inertia-link>
             </div>
         </div>
     </app-layout>
