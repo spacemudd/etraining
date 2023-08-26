@@ -613,4 +613,7 @@ return [
     'cc' => 'Cc',
     'bcc' => 'Bcc',
     'resignation-file' => 'Resignation file',
+    'ownership-is-verified' => 'Ownership is verified',
+    'not-owned' => 'Phone is not owned',
+    'ownership-is-pending' => 'Ownership is pending',
 ];

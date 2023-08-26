@@ -100,6 +100,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'clean_identity_number',
         'whatsapp_link',
         'clean_phone_additional',
+        'phone_ownership_status',
     ];
 
     protected static function boot(): void
@@ -512,5 +513,22 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     public function warnings()
     {
         return $this->hasMany(AttendanceReportRecordWarning::class);
+    }
+
+    public function getPhoneOwnershipStatusAttribute()
+    {
+        if (!$this->phone_ownership_verified_at) {
+            return __('words.ownership-is-pending');
+        }
+
+        if ($this->phone_ownership_verified_at) {
+            if ($this->phone_is_owned) {
+                return __('words.ownership-is-verified');
+            } else {
+                return __('words.not-owned');
+            }
+        }
+
+        return __('words.ownership-is-pending');
     }
 }
