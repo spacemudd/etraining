@@ -679,7 +679,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
 });
 
 // Some routes for nowyer
-Route::get('sm3', function() { return redirect()->to('https://forms.gle/45cDanZH4Dc7rd3X7'); }); // survey
-Route::get('sm4', function() { return redirect()->to('https://forms.gle/XTkHV7usab5fpM557'); }); // attendance
-Route::get('sm1', function() { return redirect()->to('https://forms.gle/9o7ZCm3SUhw9x9wXA'); }); // before
-Route::get('sm2', function() { return redirect()->to('https://forms.gle/LUyvoyY8WJgJkUe1A'); }); // after
+Route::get('sm3', function() { return redirect()->to('https://forms.gle/VjEwWFHDL8YkwA4D8'); }); // survey
+Route::get('sm4', function() { return redirect()->to('https://forms.gle/sB8z3U6NmgJQxKnC8'); }); // attendance
+Route::get('sm1', function() { return redirect()->to('https://forms.gle/praCZ6mg8JWrpQXH9'); }); // before
+Route::get('sm2', function() { return redirect()->to('https://forms.gle/N6TY7zwxgBqWK3jTA'); }); // after
