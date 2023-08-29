@@ -40,4 +40,9 @@ class TraineesServices
 
         return $trainee;
     }
+
+    public function verifyPhoneOwnership()
+    {
+
+    }
 }

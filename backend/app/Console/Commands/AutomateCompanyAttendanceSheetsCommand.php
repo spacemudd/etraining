@@ -51,7 +51,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
             $this->info('Processing company: '.$company->name_ar);
 
-            // Has report for current month?
+            // TODO: Has report for current month? Update for the current month
             $currentMonthReport = $company->company_attendance_reports()
                 ->whereBetween('date_from', ['2023-08-01', '2023-08-31'])
                 ->first();
@@ -80,6 +80,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                     }
                 }
 
+                // TODO: Choose, clone from previous period or new report with current months' students?
                 //$clone = app()->make(CompanyAttendanceReportService::class)->clone($lastReport->id);
                 $clone = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
                 $clone->date_from = Carbon::parse('2023-08-01')->setTimezone('Asia/Riyadh')->startOfDay();

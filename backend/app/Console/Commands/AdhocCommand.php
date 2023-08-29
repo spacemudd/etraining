@@ -2,13 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Back\AttendanceReportRecord;
+use App\Jobs\VerifyPhoneOwnershipJob;
 use App\Models\Back\Company;
 use App\Models\Back\Trainee;
-use App\Models\Back\TraineeGroup;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 
 class AdhocCommand extends Command
 {
@@ -44,16 +41,12 @@ class AdhocCommand extends Command
      */
     public function handle()
     {
-        // $msg = \Msegat::sendMessage('966565176235', 'Hello there test from Msegat');
-
-        foreach (Company::get() as $company) {
-            $report = $company->company_attendance_reports()->first();
-            if (optional($report)->to_emails) {
-                $company->email = explode(', ', $report->to_emails)[0];
-                $company->save();
+        Trainee::chunk(100, function($trainees) {
+            foreach ($trainees as $trainee) {
+                usleep(500);
+                VerifyPhoneOwnershipJob::dispatch($trainee);
             }
-        }
-
+        });
 
         return 1;
     }

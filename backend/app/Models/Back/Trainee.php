@@ -3,6 +3,7 @@
 namespace App\Models\Back;
 
 use App\Events\TraineeAttachedToCompany;
+use App\Jobs\VerifyPhoneOwnershipJob;
 use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\MaritalStatus;
@@ -100,6 +101,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'clean_identity_number',
         'whatsapp_link',
         'clean_phone_additional',
+        'phone_ownership_status',
     ];
 
     protected static function boot(): void
@@ -114,10 +116,13 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
             }
         });
 
-        static::updating(function ($model) {
-            $companyChanged = $model->company_id != $model->getOriginal('company_id');
+        static::created(function ($model) {
+            VerifyPhoneOwnershipJob::dispatchSync($model->id);
+        });
 
-            if ($companyChanged) {
+        static::updating(function ($model) {
+
+            if ($model->isDirty('company_id')) {
                 TraineeAttachedToCompany::dispatch($model->id, $model->company_id);
                 app()->make(TraineeCompanyMovementService::class)
                     ->recordMovement($model->id, $model->company_id, $model->getOriginal('company_id'));
@@ -127,6 +132,12 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
             //if ($companyChanged && $model->company_id && !$isFinanceUser) {
             //    $model->notify(new AssignedToCompanyTraineeNotification());
             //}
+        });
+
+        static::updated(function ($model) {
+            if ($model->isDirty('phone')) {
+                VerifyPhoneOwnershipJob::dispatch($model->id);
+            }
         });
     }
 
@@ -512,5 +523,22 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     public function warnings()
     {
         return $this->hasMany(AttendanceReportRecordWarning::class);
+    }
+
+    public function getPhoneOwnershipStatusAttribute()
+    {
+        if (!$this->phone_ownership_verified_at) {
+            return __('words.ownership-is-pending');
+        }
+
+        if ($this->phone_ownership_verified_at) {
+            if ($this->phone_is_owned) {
+                return __('words.ownership-is-verified');
+            } else {
+                return __('words.not-owned');
+            }
+        }
+
+        return __('words.ownership-is-pending');
     }
 }
