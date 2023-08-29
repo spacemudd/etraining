@@ -89,8 +89,7 @@
             </template>
         </sidebar-link>
 
-        <li class="pr-8 mt-2 text-xs"><a class="hover:text-blue-600" href="/terms#attendance-policy">السياسة الاكاديمية والتدريبية</a>
-        <li class="pr-8 text-xs"><a class="hover:text-blue-600" href="/terms">{{ $t('words.support-policy') }}</a></li>
+        <li class="pr-8 text-xs"><a class="hover:text-blue-600" href="/terms">السياسات</a></li>
     </ul>
 </template>
 
