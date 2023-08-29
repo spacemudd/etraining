@@ -397,9 +397,10 @@
       <path value="$PROJECT_DIR$/backend/vendor/moemengaballah/msegat" />
       <path value="$PROJECT_DIR$/backend/vendor/codebuglab/noon-payment-laravel" />
       <path value="$PROJECT_DIR$/backend/vendor/jn-jairo/laravel-ngrok" />
+      <path value="$PROJECT_DIR$/backend/vendor/kamermans/guzzle-oauth2-subscriber" />
     </include_path>
   </component>
-  <component name="PhpProjectSharedConfiguration" php_language_level="7.3">
+  <component name="PhpProjectSharedConfiguration" php_language_level="7.4">
     <option name="suggestChangeDefaultLanguageLevel" value="false" />
   </component>
   <component name="PhpStanOptionsConfiguration">
