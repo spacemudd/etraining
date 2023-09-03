@@ -19,7 +19,7 @@
                         <!--    <td class="px-6 py-4">samar@ptc-ksa.net</td>-->
             			<!--</tr>-->
                     <tr class="border-t">
-                        <td class="px-6 py-4">--</td>
+                        <td class="px-6 py-4">أمية البلوشي</td>
                         <td class="px-6 py-4">التدريب+ تقديم برامج تدريبية + متابعة المتدربات في التدريب جدولة اختبارات واوراق عمل</td>
                         <td class="px-6 py-4">amiah.b@ptc-ksa.net</td>
                     </tr>
@@ -39,7 +39,7 @@
                 </thead>
                 <tbody>
                 <tr class="border-t">
-                    <td class="px-6 py-4">--</td>
+                    <td class="px-6 py-4">جواهر الحربي</td>
                     <td class="px-6 py-4">شوؤن المتدربات + متابعة واصدار الشهادات للمتدربات + متابعة الحضور والانصراف +اشراف عام</td>
                     <td class="px-6 py-4">jawaher@ptc-ksa.net</td>
                 </tr>
@@ -64,7 +64,7 @@
                 </thead>
                 <tbody>
                 <tr class="border-t">
-                    <td class="px-6 py-4">--</td>
+                    <td class="px-6 py-4">سمر العلي</td>
                     <td class="px-6 py-4">دعم الفني والتقني للمنصة التدريبية + الرد على اسئلة المتدربات +  تقديم المساعدة</td>
                     <td class="px-6 py-4">info@ptc-ksa.net</td>
                 </tr>
