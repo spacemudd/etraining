@@ -18,10 +18,13 @@
                 ]"
             ></breadcrumb-container>
 
-            <div class="grid md:grid-cols-4 grid-cols-1 gap-6">
-                <div class="col-span-1 p-5 transition-all duration-500 ease-in-out hover:bg-gray-200">
-                    <h2>قريبا</h2>
-                </div>
+            <div class="col text-center h-20">
+                <a target="_blank"
+                   rel="noopener noreferrer"
+                   href="/TrainingSchedule2023.pdf"
+                   class="bg-red-500 px-2 py-1 rounded mx-auto text-white hover:bg-red-700">
+                    الخطة التدريبية
+                </a>
             </div>
         </div>
     </app-layout-trainee>
