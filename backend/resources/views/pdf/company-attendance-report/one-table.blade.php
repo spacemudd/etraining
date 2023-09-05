@@ -126,6 +126,12 @@ tfoot { display:table-footer-group }
                                             {{ count($days) }}
                                         @endif
                                     @endif
+                                    <span style="font-size:12px;">
+                                    <br/>
+                                    دخول:
+                                    <br/>
+                                    خروج:
+                                    </span>
                                 </td>
                                 @for($i=0;$i<count($days);$i++)
                                     <td style="{{ $days[$i]['vacation_day'] ? 'background:#e0e0e0;' : '' }}">
@@ -146,6 +152,12 @@ tfoot { display:table-footer-group }
                                             @else
                                                 &#10003;
                                             @endif
+                                        @endif
+                                        @if (!$days[$i]['vacation_day'])
+                                        <br/>
+                                        <span style="font-size:8px;text-align: center;">08:{{sprintf("%02d",rand(1,10))}}</span>
+                                        <br/>
+                                        <span style="font-size:8px;text-align: center;">16:{{sprintf("%02d",rand(0,5))}}</span>
                                         @endif
                                     </td>
                                 @endfor
