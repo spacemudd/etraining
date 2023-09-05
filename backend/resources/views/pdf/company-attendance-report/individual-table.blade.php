@@ -143,6 +143,12 @@ tfoot { display:table-footer-group }
                                             @if ($record->start_date)
                                                 @if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date))
                                                     &#10003;
+                                                    @if (!$days[$i]['vacation_day'])
+                                                        <br/>
+                                                        <span style="font-size:8px;text-align: center;">08:{{sprintf("%02d",rand(1,10))}}</span>
+                                                        <br/>
+                                                        <span style="font-size:8px;text-align: center;">16:{{sprintf("%02d",rand(0,5))}}</span>
+                                                    @endif
                                                 @else
                                                      @if ($record->status === 'new_registration')
                                                         {{-- Considered absent --}}
@@ -151,13 +157,13 @@ tfoot { display:table-footer-group }
                                                 @endif
                                             @else
                                                 &#10003;
+                                                @if (!$days[$i]['vacation_day'])
+                                                    <br/>
+                                                    <span style="font-size:8px;text-align: center;">08:{{sprintf("%02d",rand(1,10))}}</span>
+                                                    <br/>
+                                                    <span style="font-size:8px;text-align: center;">16:{{sprintf("%02d",rand(0,5))}}</span>
+                                                @endif
                                             @endif
-                                        @endif
-                                        @if (!$days[$i]['vacation_day'])
-                                        <br/>
-                                        <span style="font-size:8px;text-align: center;">08:{{sprintf("%02d",rand(1,10))}}</span>
-                                        <br/>
-                                        <span style="font-size:8px;text-align: center;">16:{{sprintf("%02d",rand(0,5))}}</span>
                                         @endif
                                     </td>
                                 @endfor
