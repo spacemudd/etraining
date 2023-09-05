@@ -138,12 +138,12 @@ tfoot { display:table-footer-group }
                                         @if ($record->status === 'suspend_account')
                                             &#120;
                                         @elseif($days[$i]['vacation_day'])
-                                            X
+                                            <span style="font-size:12px;">X</span>
                                         @else
                                             @if ($record->start_date)
                                                 @if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date))
                                                     &#10003;
-                                                    @if (!$days[$i]['vacation_day'] || )
+                                                    @if (!$days[$i]['vacation_day'])
                                                         <br/>
                                                         <span style="font-size:8px;text-align: center;">08:{{sprintf("%02d",rand(1,10))}}</span>
                                                         <br/>
