@@ -631,4 +631,6 @@ return [
     'ownership-is-verified' => 'تم التحقق من الملكية بنجاح',
     'not-owned' => 'ملكية رقم الجوال غير مطابقة',
     'ownership-is-pending' => 'جاري التحقق من الملكية',
+    'individual-report' => 'تقرير منفصل',
+    'main' => 'الرئيسية',
 ];

@@ -126,17 +126,21 @@
                                 </td>
                                 @for($i=0;$i<count($days);$i++)
                                     <td style="{{ $days[$i]['vacation_day'] ? 'background:#e0e0e0;' : '' }}">
-                                        @if ($record->start_date)
-                                            @if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date))
-                                                &#10003;
-                                            @else
-                                                @if ($record->status === 'new_registration')
-                                                    {{-- Considered absent --}}
-                                                    &#120;
-                                                @endif
-                                            @endif
+                                        @if ($days[$i]['vacation_day'])
+                                            X
                                         @else
-                                            &#10003;
+                                            @if ($record->start_date)
+                                                @if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date))
+                                                    &#10003;
+                                                @else
+                                                    @if ($record->status === 'new_registration')
+                                                        {{-- Considered absent --}}
+                                                        &#120;
+                                                    @endif
+                                                @endif
+                                            @else
+                                                &#10003;
+                                            @endif
                                         @endif
                                     </td>
                                 @endfor

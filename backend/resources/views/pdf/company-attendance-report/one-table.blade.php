@@ -131,6 +131,8 @@ tfoot { display:table-footer-group }
                                     <td style="{{ $days[$i]['vacation_day'] ? 'background:#e0e0e0;' : '' }}">
                                         @if ($record->status === 'suspend_account')
                                             &#120;
+                                        @elseif($days[$i]['vacation_day'])
+                                            X
                                         @else
                                             @if ($record->start_date)
                                                 @if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date))

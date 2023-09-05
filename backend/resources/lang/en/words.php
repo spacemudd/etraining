@@ -616,4 +616,6 @@ return [
     'ownership-is-verified' => 'Ownership is verified',
     'not-owned' => 'Phone is not owned',
     'ownership-is-pending' => 'Ownership is pending',
+    'individual-report' => 'Individual report',
+    'main' => 'Main',
 ];

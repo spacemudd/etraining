@@ -245,4 +245,33 @@ class CompanyAttendanceReportController extends Controller
         $sessionDate = $report->date_from->format('Y-m-d');
         return Excel::download(new CompanyAttendanceSheetExport($report), $courseName.'-'.$sessionDate.'-.xlsx');
     }
+
+    public function individual($report_id, $trainee_id)
+    {
+        $record = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $report_id)
+            ->where('trainee_id', $trainee_id)
+            ->with('trainee', 'report')
+            ->first();
+
+        return Inertia::render('Back/Reports/CompanyAttendance/Individual', [
+            'record' => $record,
+        ]);
+    }
+
+    public function individualPdf($report_id, $trainee_id)
+    {
+        $pdf = CompanyAttendanceReportService::makeIndividualPdf($report_id, $trainee_id);
+        return $pdf->inline();
+    }
+
+    public function individualEmail($report_id, $trainee_id)
+    {
+        //$report = CompanyAttendanceReport::findOrFail($id);
+        //
+        //Mail::to($report->to_emails ? explode(', ', $report->to_emails) : null)
+        //    ->cc($report->cc_emails ? explode(', ', $report->cc_emails) : null)
+        //    ->send(new CompanyAttendanceReportMail($report->id));
+        //
+        //return redirect()->route('back.reports.company-attendance.show', $id);
+    }
 }

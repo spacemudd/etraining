@@ -28,6 +28,15 @@ class CompanyAttendanceReportsTrainee extends Model
         return $this->belongsTo(Trainee::class)->withTrashed();
     }
 
+    public function report()
+    {
+        return $this->belongsTo(CompanyAttendanceReport::class, 'company_attendance_report_id')->withTrashed();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @deprecated
+     */
     public function company_attendance_reports()
     {
         return $this->belongsTo(CompanyAttendanceReport::class)->withTrashed();

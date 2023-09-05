@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Back\CompanyAttendanceReportController;
 use App\Http\Controllers\Back\CompanyResignationsController;
 use App\Http\Controllers\Back\TraineesGroupsController;
 use App\Models\Back\Invoice;
@@ -600,6 +601,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('company-attendance/create', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'create'])->name('reports.company-attendance.create');
             Route::get('company-attendance', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'index'])->name('reports.company-attendance.index');
             Route::get('company-attendance/{id}', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'show'])->name('reports.company-attendance.show');
+            Route::get('company-attendance/{id}/trainee/{trainee_id}', [CompanyAttendanceReportController::class, 'individual'])->name('reports.company-attendance.individual');
+            Route::get('company-attendance/{id}/trainee/{trainee_id}/pdf', [CompanyAttendanceReportController::class, 'individualPdf'])->name('reports.company-attendance.individual.pdf');
+            Route::get('company-attendance/{id}/trainee/{trainee_id}/email', [CompanyAttendanceReportController::class, 'individualEmail'])->name('reports.company-attendance.individual.email');
 
         });
     });
