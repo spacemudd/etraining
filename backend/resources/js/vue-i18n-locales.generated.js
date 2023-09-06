@@ -656,7 +656,10 @@ export default {
             "not-owned": "ملكية رقم الجوال غير مطابقة",
             "ownership-is-pending": "جاري التحقق من الملكية",
             "individual-report": "تقرير منفصل",
-            "main": "الرئيسية"
+            "main": "الرئيسية",
+            "number": "الرقم",
+            "with-attendance-times": "مع اوقات الحضور (ساعة:دقيقة)؟",
+            "includes-attendance-times": "مع اوقات الدخول والخروج"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1449,7 +1452,10 @@ export default {
             "not-owned": "Phone is not owned",
             "ownership-is-pending": "Ownership is pending",
             "individual-report": "Individual report",
-            "main": "Main"
+            "main": "Main",
+            "number": "Number",
+            "with-attendance-times": "With attendance times (hour{minute})?",
+            "includes-attendance-times": "Includes attendance times"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

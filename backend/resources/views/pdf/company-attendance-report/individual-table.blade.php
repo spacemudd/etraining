@@ -126,12 +126,14 @@ tfoot { display:table-footer-group }
                                             {{ count($days) }}
                                         @endif
                                     @endif
+                                    @if ($with_attendance_times)
                                     <span style="font-size:12px;">
-                                    <br/>
-                                    دخول:
-                                    <br/>
-                                    خروج:
+                                        <br/>
+                                        دخول:
+                                        <br/>
+                                        خروج:
                                     </span>
+                                    @endif
                                 </td>
                                 @for($i=0;$i<count($days);$i++)
                                     <td style="{{ $days[$i]['vacation_day'] ? 'background:#e0e0e0;' : '' }}">
@@ -143,11 +145,13 @@ tfoot { display:table-footer-group }
                                             @if ($record->start_date)
                                                 @if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date))
                                                     &#10003;
-                                                    @if (!$days[$i]['vacation_day'])
-                                                        <br/>
-                                                        <span style="font-size:8px;text-align: center;">08:{{sprintf("%02d",rand(1,10))}}</span>
-                                                        <br/>
-                                                        <span style="font-size:8px;text-align: center;">16:{{sprintf("%02d",rand(0,5))}}</span>
+                                                    @if ($with_attendance_times)
+                                                        @if (!$days[$i]['vacation_day'])
+                                                            <br/>
+                                                            <span style="font-size:8px;text-align: center;">08:{{sprintf("%02d",rand(1,10))}}</span>
+                                                            <br/>
+                                                            <span style="font-size:8px;text-align: center;">16:{{sprintf("%02d",rand(0,5))}}</span>
+                                                        @endif
                                                     @endif
                                                 @else
                                                      @if ($record->status === 'new_registration')
@@ -157,11 +161,13 @@ tfoot { display:table-footer-group }
                                                 @endif
                                             @else
                                                 &#10003;
-                                                @if (!$days[$i]['vacation_day'])
-                                                    <br/>
-                                                    <span style="font-size:8px;text-align: center;">08:{{sprintf("%02d",rand(1,10))}}</span>
-                                                    <br/>
-                                                    <span style="font-size:8px;text-align: center;">16:{{sprintf("%02d",rand(0,5))}}</span>
+                                                @if ($with_attendance_times)
+                                                    @if (!$days[$i]['vacation_day'])
+                                                        <br/>
+                                                        <span style="font-size:8px;text-align: center;">08:{{sprintf("%02d",rand(1,10))}}</span>
+                                                        <br/>
+                                                        <span style="font-size:8px;text-align: center;">16:{{sprintf("%02d",rand(0,5))}}</span>
+                                                    @endif
                                                 @endif
                                             @endif
                                         @endif

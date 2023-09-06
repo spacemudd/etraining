@@ -126,12 +126,14 @@ tfoot { display:table-footer-group }
                                             {{ count($days) }}
                                         @endif
                                     @endif
-                                    <span style="font-size:12px;">
-                                    <br/>
-                                    دخول:
-                                    <br/>
-                                    خروج:
-                                    </span>
+                                    @if ($report->with_attendance_times)
+                                        <span style="font-size:12px;">
+                                        <br/>
+                                        دخول:
+                                        <br/>
+                                        خروج:
+                                        </span>
+                                    @endif
                                 </td>
                                 @for($i=0;$i<count($days);$i++)
                                     <td style="{{ $days[$i]['vacation_day'] ? 'background:#e0e0e0;' : '' }}">
@@ -143,7 +145,7 @@ tfoot { display:table-footer-group }
                                             @if ($record->start_date)
                                                 @if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date))
                                                     &#10003;
-                                                    @if (!$days[$i]['vacation_day'])
+                                                    @if (!$days[$i]['vacation_day'] && $report->with_attendance_times)
                                                         <br/>
                                                         <span style="font-size:8px;text-align: center;">08:{{sprintf("%02d",rand(1,10))}}</span>
                                                         <br/>
@@ -157,7 +159,7 @@ tfoot { display:table-footer-group }
                                                 @endif
                                             @else
                                                 &#10003;
-                                                @if (!$days[$i]['vacation_day'])
+                                                @if (!$days[$i]['vacation_day'] && $report->with_attendance_times)
                                                     <br/>
                                                     <span style="font-size:8px;text-align: center;">08:{{sprintf("%02d",rand(1,10))}}</span>
                                                     <br/>

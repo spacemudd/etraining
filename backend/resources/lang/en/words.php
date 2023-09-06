@@ -618,4 +618,7 @@ return [
     'ownership-is-pending' => 'Ownership is pending',
     'individual-report' => 'Individual report',
     'main' => 'Main',
+    'number' => 'Number',
+    'with-attendance-times' => 'With attendance times (hour:minute)?',
+    'includes-attendance-times' => 'Includes attendance times',
 ];

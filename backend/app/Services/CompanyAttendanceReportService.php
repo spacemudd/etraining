@@ -135,7 +135,7 @@ class CompanyAttendanceReportService
         return $pdf;
     }
 
-    public function makeIndividualPdf($report_id, $trainee_id)
+    public function makeIndividualPdf($report_id, $trainee_id, bool $with_attendance_times)
     {
         $record = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $report_id)
             ->where('trainee_id', $trainee_id)
@@ -185,6 +185,7 @@ class CompanyAttendanceReportService
                 'report' => $record->report,
                 'active_trainees' => [$record],
                 'days' => $days,
+                'with_attendance_times' => $with_attendance_times,
             ]);
 
         return $pdf;

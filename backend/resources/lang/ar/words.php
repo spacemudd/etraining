@@ -633,4 +633,7 @@ return [
     'ownership-is-pending' => 'جاري التحقق من الملكية',
     'individual-report' => 'تقرير منفصل',
     'main' => 'الرئيسية',
+    'number' => 'الرقم',
+    'with-attendance-times' => 'مع اوقات الحضور (ساعة:دقيقة)؟',
+    'includes-attendance-times' => 'مع اوقات الدخول والخروج',
 ];

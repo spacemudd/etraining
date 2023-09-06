@@ -603,7 +603,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('company-attendance/{id}', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'show'])->name('reports.company-attendance.show');
             Route::get('company-attendance/{id}/trainee/{trainee_id}', [CompanyAttendanceReportController::class, 'individual'])->name('reports.company-attendance.individual');
             Route::get('company-attendance/{id}/trainee/{trainee_id}/pdf', [CompanyAttendanceReportController::class, 'individualPdf'])->name('reports.company-attendance.individual.pdf');
-            Route::get('company-attendance/{id}/trainee/{trainee_id}/email', [CompanyAttendanceReportController::class, 'individualEmail'])->name('reports.company-attendance.individual.email');
+            Route::post('company-attendance/{id}/trainee/{trainee_id}/email', [CompanyAttendanceReportController::class, 'individualEmail'])->name('reports.company-attendance.individual.email');
 
         });
     });

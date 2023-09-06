@@ -1,12 +1,15 @@
 @component($report->company->is_ptc_net ? 'vendor.mail.html.messageptcnet' : 'vendor.mail.html.message')
 
-شكرا لكم،
+تحية طيبة،
 
-مرفق لكم كشف الحضور والانصراف للمتدربين.
+مرفق لكم كشف الحضور والانصراف للمتدربة.
+
+**الاسم:** {{ $trainee->name }}
+
+**الهوية:** {{ $trainee->identity_number }}
 
 
 مع تحياتنا،
 
 شركة مركز احترافية التدريب
-
 @endcomponent

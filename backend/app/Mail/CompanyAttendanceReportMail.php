@@ -51,11 +51,7 @@ class CompanyAttendanceReportMail extends Mailable implements ShouldQueue
 
     public function attachReportFile($report)
     {
-        if (true) { //is_ptc_net
-            $filename = 'atr-'.Str::slug($report->number).'.pdf';
-        } else {
-            $filename = 'ptc-'.Str::slug($report->number).'.pdf';
-        }
+        $filename = Str::slug($report->number).'.pdf';
 
         $this->attachData(CompanyAttendanceReportService::makePdf($this->report_id)->inline($filename), $filename);
 

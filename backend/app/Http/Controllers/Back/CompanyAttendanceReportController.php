@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Back;
 use App\Exports\CompanyAttendanceReportSendStatusExcel;
 use App\Exports\CompanyAttendanceSheetExport;
 use App\Http\Controllers\Controller;
+use App\Mail\CompanyAttendanceIndividualReportMail;
 use App\Mail\CompanyAttendanceReportMail;
 use App\Models\Back\Company;
 use App\Models\Back\CompanyAttendanceReport;
@@ -27,10 +28,12 @@ class CompanyAttendanceReportController extends Controller
         $this->authorize('submit-company-attendance-report');
 
         $reports = QueryBuilder::for(CompanyAttendanceReport::class)
-            ->with('company')
-            ->withCount('trainees')
+            ->with('company', 'created_by')
+            ->withCount(['trainees' => function($q) {
+                $q->where('active', true);
+            }])
             ->defaultSort('-created_at')
-            ->allowedFilters(['company.name_ar', 'status', 'date_from'])
+            ->allowedFilters(['company.name_ar', 'status', 'date_from', 'number'])
             ->allowedSorts(['number'])
             ->paginate()
             ->withQueryString();
@@ -41,6 +44,7 @@ class CompanyAttendanceReportController extends Controller
             $table->disableGlobalSearch();
 
             $table->addSearchRows([
+                'number' => __('words.number'),
                 'company.name_ar' => __('words.company'),
                 'date_from' => __('words.date'),
             ]);
@@ -149,6 +153,7 @@ class CompanyAttendanceReportController extends Controller
             'cc_emails' => 'nullable|string',
             'company_id' => 'nullable|exists:companies,id',
             'period' => 'nullable',
+            'with_attendance_times' => 'nullable|boolean',
         ]);
 
         $report = CompanyAttendanceReport::findOrFail($id);
@@ -161,8 +166,9 @@ class CompanyAttendanceReportController extends Controller
                 'company_id' => $company->id,
                 'date_from' => $date_from,
                 'date_to' => $date_to,
-                'to_emails' => $request->to_emails,
-                'cc_emails' => $request->cc_emails,
+                'to_emails' => $request->to_emails ?: $report->to_emails,
+                'cc_emails' => $request->cc_emails ?: $report->cc_emails,
+                'with_attendance_times' => $request->with_attendance_times,
             ]);
         } else {
             $report->update($request->except('_token'));
@@ -260,18 +266,18 @@ class CompanyAttendanceReportController extends Controller
 
     public function individualPdf($report_id, $trainee_id)
     {
-        $pdf = CompanyAttendanceReportService::makeIndividualPdf($report_id, $trainee_id);
+        $pdf = CompanyAttendanceReportService::makeIndividualPdf($report_id, $trainee_id, request()->boolean('with_attendance_times'));
         return $pdf->inline();
     }
 
     public function individualEmail($report_id, $trainee_id)
     {
-        //$report = CompanyAttendanceReport::findOrFail($id);
-        //
-        //Mail::to($report->to_emails ? explode(', ', $report->to_emails) : null)
-        //    ->cc($report->cc_emails ? explode(', ', $report->cc_emails) : null)
-        //    ->send(new CompanyAttendanceReportMail($report->id));
-        //
-        //return redirect()->route('back.reports.company-attendance.show', $id);
+        $report = CompanyAttendanceReport::findOrFail($report_id);
+
+        Mail::to($report->to_emails ? explode(', ', $report->to_emails) : null)
+            ->cc($report->cc_emails ? explode(', ', $report->cc_emails) : null)
+            ->send(new CompanyAttendanceIndividualReportMail($report->id, $trainee_id, request()->boolean('with_attendance_times')));
+
+        return redirect()->route('back.reports.company-attendance.show', $report->id);
     }
 }

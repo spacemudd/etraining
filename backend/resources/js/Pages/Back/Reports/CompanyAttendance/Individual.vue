@@ -22,98 +22,84 @@
             ></breadcrumb-container>
         </div>
 
-        <div class="container px-6 mx-auto grid grid-cols-12">
-            <a target="_blank" :href="route('back.reports.company-attendance.individual.pdf', {id: record.report.id, trainee_id: record.trainee.id})">pdf</a>
-            <a :href="route('back.reports.company-attendance.individual.email', {id: record.report.id, trainee_id: record.trainee.id})">email</a>
+        <div class="container px-6 mx-auto grid grid-cols-12 gap-5">
+            <div class="col-span-12">
+                <div>
+                    <input type="checkbox" id="with_attendance_times" v-model="withAttendanceTimes" />
+                    <label for="with_attendance_times">{{ $t('words.with-attendance-times') }}</label>
+                </div>
+            </div>
+            <div class="col-span-12">
+                <a target="_blank"
+                   class="btn btn-secondary"
+                   :href="route('back.reports.company-attendance.individual.pdf', {id: record.report.id, trainee_id: record.trainee.id, with_attendance_times: withAttendanceTimes})">
+                    PDF
+                </a>
+                <button class="btn btn-secondary"
+                        @click="sendByEmail">
+                    Email
+                </button>
+            </div>
         </div>
 
     </app-layout>
 </template>
 
 <script>
-    import JetLabel from '@/Jetstream/Label';
-    import JetInput from '@/Jetstream/Input';
-    import JetInputError from '@/Jetstream/InputError';
-    import JetFormSection from '@/Jetstream/FormSection';
-    import JetActionMessage from '@/Jetstream/ActionMessage';
-    import JetButton from '@/Jetstream/Button';
-    import AppLayout from '@/Layouts/AppLayout'
-    import IconNavigate from 'vue-ionicons/dist/ios-arrow-dropright'
-    import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
-    import BtnLoadingIndicator from "../../../../Components/BtnLoadingIndicator";
-    import SelectCompany from "../../../../Components/SelectCompany";
-    import DateRangePicker from 'vue2-daterange-picker'
-    import 'vue2-daterange-picker/dist/vue2-daterange-picker.css'
-    import CompanyAttendanceState from "./company-attendance-state";
+import JetLabel from '@/Jetstream/Label';
+import JetInput from '@/Jetstream/Input';
+import JetInputError from '@/Jetstream/InputError';
+import JetFormSection from '@/Jetstream/FormSection';
+import JetActionMessage from '@/Jetstream/ActionMessage';
+import JetButton from '@/Jetstream/Button';
+import AppLayout from '@/Layouts/AppLayout'
+import IconNavigate from 'vue-ionicons/dist/ios-arrow-dropright'
+import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
+import BtnLoadingIndicator from "../../../../Components/BtnLoadingIndicator";
+import SelectCompany from "../../../../Components/SelectCompany";
+import DateRangePicker from 'vue2-daterange-picker'
+import 'vue2-daterange-picker/dist/vue2-daterange-picker.css'
+import CompanyAttendanceState from "./company-attendance-state";
 
-    export default {
-        metaInfo() {
-            return {
-                title: this.$t('words.company-attendance'),
+export default {
+    metaInfo() {
+        return {
+            title: this.$t('words.company-attendance'),
+        }
+    },
+    components: {
+        CompanyAttendanceState,
+        SelectCompany,
+        IconNavigate,
+        AppLayout,
+        JetLabel,
+        JetInput,
+        JetInputError,
+        JetFormSection,
+        JetActionMessage,
+        JetButton,
+        BreadcrumbContainer,
+        BtnLoadingIndicator,
+        DateRangePicker,
+    },
+    props: [
+        'record',
+    ],
+    data() {
+        return {
+            withAttendanceTimes: false,
+        }
+    },
+    methods: {
+        sendByEmail() {
+            if (confirm(this.$t('words.are-you-sure'))) {
+                this.$inertia.post(route('back.reports.company-attendance.individual.email', {
+                    id: this.record.report.id,
+                    trainee_id: this.record.trainee.id,
+                    with_attendance_times: this.withAttendanceTimes,
+                }));
             }
         },
-        components: {
-            CompanyAttendanceState,
-            SelectCompany,
-            IconNavigate,
-            AppLayout,
-            JetLabel,
-            JetInput,
-            JetInputError,
-            JetFormSection,
-            JetActionMessage,
-            JetButton,
-            BreadcrumbContainer,
-            BtnLoadingIndicator,
-            DateRangePicker,
-        },
-        props: [
-            'record',
-        ],
-        mounted() {
-
-        },
-        data() {
-            var date = new Date(), y = date.getFullYear(), m = date.getMonth();
-            var startDate = new Date(y, m, 1);
-            var endDate = new Date(y, m + 1, 0);
-            return {
-                createAttendanceReportForm: this.$inertia.form({
-                    company_id: null,
-                    period: {startDate, endDate},
-                }, {
-                    bag: 'createAttendanceReport',
-                    resetOnSuccess: true,
-                }),
-            }
-        },
-        methods: {
-            send() {
-                if (confirm(this.$t('words.are-you-sure'))) {
-                    this.$inertia.post(route('back.reports.company-attendance.send', this.report.id));
-                }
-            },
-            clone() {
-                if (confirm(this.$t('words.are-you-sure'))) {
-                    this.$inertia.post(route('back.reports.company-attendance.clone', this.report.id));
-                }
-            },
-            approveReport() {
-                if (confirm(this.$t('words.are-you-sure'))) {
-                    this.$inertia.post(route('back.reports.company-attendance.approve', this.report.id));
-                }
-            },
-            saveEmails() {
-                this.$inertia.put(route('back.reports.company-attendance.update', this.report.id), {
-                    to_emails: this.report.to_emails,
-                    cc_emails: this.report.cc_emails,
-                });
-            },
-            deleteReport() {
-                if (confirm(this.$t('words.are-you-sure'))) {
-                    this.$inertia.delete(route('back.reports.company-attendance.destroy', this.report.id));
-                }
-            },
-        },
-    }
+    },
+}
 </script>
