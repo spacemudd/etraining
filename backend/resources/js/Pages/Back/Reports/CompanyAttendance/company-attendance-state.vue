@@ -17,6 +17,11 @@
             <button @click="markAs('block')"
                     class="btn btn-action"
                     :class="{'btn-action-active': trainee.pivot.status === 'block'}">{{ $t('words.block') }}</button>
+
+            <inertia-link class="btn btn-action bg-black-500" :href="route('back.reports.company-attendance.individual', {id: report.id, trainee_id: trainee.id})">
+                {{ $t('words.individual-report') }}
+            </inertia-link>
+
         </div>
         <div class="mt-2">
             <button @click.prevent="addManualAttendance=!addManualAttendance"

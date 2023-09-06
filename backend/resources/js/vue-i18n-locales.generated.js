@@ -651,7 +651,15 @@ export default {
             "trainee-must-be-in-the-same-company": "المتدربة ليست في نفس الشركة",
             "cc": "نسخة (Cc)",
             "bcc": "نسخة خفية (Bcc)",
-            "resignation-file": "ملف الاستقالة"
+            "resignation-file": "ملف الاستقالة",
+            "ownership-is-verified": "تم التحقق من الملكية بنجاح",
+            "not-owned": "ملكية رقم الجوال غير مطابقة",
+            "ownership-is-pending": "جاري التحقق من الملكية",
+            "individual-report": "تقرير منفصل",
+            "main": "الرئيسية",
+            "number": "الرقم",
+            "with-attendance-times": "مع اوقات الحضور (ساعة:دقيقة)؟",
+            "includes-attendance-times": "مع اوقات الدخول والخروج"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1439,7 +1447,15 @@ export default {
             "trainee-must-be-in-the-same-company": "Trainee must be in the same company",
             "cc": "Cc",
             "bcc": "Bcc",
-            "resignation-file": "Resignation file"
+            "resignation-file": "Resignation file",
+            "ownership-is-verified": "Ownership is verified",
+            "not-owned": "Phone is not owned",
+            "ownership-is-pending": "Ownership is pending",
+            "individual-report": "Individual report",
+            "main": "Main",
+            "number": "Number",
+            "with-attendance-times": "With attendance times (hour{minute})?",
+            "includes-attendance-times": "Includes attendance times"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",
