@@ -61,7 +61,7 @@
                             <td>
                                 {{ report.updated_at_human }}
                                 <br/>
-                                {{ report.created_by.email }}
+                                <span v-if="report.created_by">{{ report.created_by.email }}</span>
                             </td>
                             <td>
                                 <inertia-link class="px-4 flex items-center" :href="route('back.reports.company-attendance.show', report.id)">
