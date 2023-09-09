@@ -27,32 +27,32 @@ RUN apk add \
     mariadb-client \
     zip \
     coreutils \
-    php81-ctype \
-    php81-curl \
-    php81-dom \
-    php81-gd \
-    php81-iconv \
-    php81-json \
-    php81-intl \
-    php81-fileinfo\
-    php81-mbstring \
-    php81-opcache \
-    php81-openssl \
-    php81-pdo \
-    php81-pdo_mysql \
-    php81-mysqli \
-    php81-sqlite3 \
-    php81-pdo_sqlite \
-    php81-xml \
-    php81-zlib \
-    php81-phar \
-    php81-tokenizer \
-    php81-session \
-    php81-simplexml \
-    php81-xmlwriter \
-    php81-zip \
-    php81-exif \
-    php81-xmlreader
+    php82-ctype \
+    php82-curl \
+    php82-dom \
+    php82-gd \
+    php82-iconv \
+    php82-json \
+    php82-intl \
+    php82-fileinfo\
+    php82-mbstring \
+    php82-opcache \
+    php82-openssl \
+    php82-pdo \
+    php82-pdo_mysql \
+    php82-mysqli \
+    php82-sqlite3 \
+    php82-pdo_sqlite \
+    php82-xml \
+    php82-zlib \
+    php82-phar \
+    php82-tokenizer \
+    php82-session \
+    php82-simplexml \
+    php82-xmlwriter \
+    php82-zip \
+    php82-exif \
+    php82-xmlreader
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
