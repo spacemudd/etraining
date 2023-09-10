@@ -3,11 +3,12 @@
         <div>
             <div style="margin-top: 2rem; margin-left: 40px;">
                 <div>
-                    <button @click="joinMeeting"
-                            :disabled="$wait.is('STARTING_INSTRUCTOR_SESSION')"
-                            class="btn btn-primary">
-                        {{ $t('words.join-meeting-via-browser') }}
-                    </button>
+                    <span style="color:white;">{{ account_id }}</span>
+                    <!--<button @click="joinMeeting"-->
+                    <!--        :disabled="$wait.is('STARTING_INSTRUCTOR_SESSION')"-->
+                    <!--        class="btn btn-primary">-->
+                    <!--    {{ $t('words.join-meeting-via-browser') }}-->
+                    <!--</button>-->
 
                     <br/><br/>
 
@@ -29,7 +30,7 @@
     import ZoomArabic from '@/zoom-ar-language-key-value.js';
 
     export default {
-        props: ['course_batch_session'],
+        props: ['course_batch_session', 'account_id'],
 
         components: {
             //

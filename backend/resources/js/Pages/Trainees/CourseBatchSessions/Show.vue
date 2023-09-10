@@ -3,6 +3,7 @@
         <div class="">
             <div class="" style="margin-top: 2rem;width:200px;margin-left:5rem;">
                 <div class="">
+                    <span style="color:white;">{{ account_id }}</span>
                     <!--<button @click="joinMeeting"-->
                     <!--        :disabled="$wait.is('STARTING_TRAINEE_SESSION')"-->
                     <!--        class="btn btn-primary">-->
@@ -37,7 +38,7 @@
     import ZoomArabic from '@/zoom-ar-language-key-value.js';
 
     export default {
-        props: ['course_batch_session'],
+        props: ['course_batch_session', 'account_id'],
 
         components: {
             //
