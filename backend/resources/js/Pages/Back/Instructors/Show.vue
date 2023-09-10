@@ -11,31 +11,35 @@
 
             <div class="grid grid-cols-6 gap-6">
 
-                <div class="col-span-6 items-center justify-end bg-gray-50 text-right gap-6">
+                <div class="col-span-6 bg-gray-50 flex gap-2 justify-end">
 
-                    <button @click="blockInstructor" class=" items-center justify-start text-left float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right">
-                        {{ $t('words.block-instructor') }}
+                    <inertia-link :href="route('back.instructors.zoom-account.index', {instructor_id: instructor.id})"
+                                  class="rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
+                        {{ $t('words.zoom-account') }}
+                    </inertia-link>
+
+                    <button v-if="!editButton.editOption" @click="editInstructor"
+                            class="rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
+                        {{ editButton.text }}
                     </button>
-
-                    <button v-if="!editButton.editOption" @click="editInstructor" class=" items-center justify-end rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
+                    <button v-else @click="editInstructor" class="rounded-md px-4 py-2 bg-green-300 hover:bg-green-400 text-right">
                         {{ editButton.text }}
                     </button>
 
-                    <button v-else @click="editInstructor" class=" items-center justify-end rounded-md px-4 py-2 bg-green-300 hover:bg-green-400 text-right">
-                        {{ editButton.text }}
-                    </button>
-
-                    <button v-if="editButton.editOption" @click="cancelEdit" class=" items-center justify-end rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right">
+                    <button v-if="editButton.editOption" @click="cancelEdit" class="rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right">
                         {{ cancelButton.text }}
                     </button>
 
-
-                    <button v-if="!instructor.user_id" @click="openInstructorAccount" class=" items-center justify-end rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
+                    <button v-if="!instructor.user_id" @click="openInstructorAccount" class="rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
                         {{ $t('words.open-an-account') }}
                     </button>
 
-                    <button v-if="instructor.is_pending_approval" @click="approveInstructor" class=" items-center justify-end rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
+                    <button v-if="instructor.is_pending_approval" @click="approveInstructor" class="rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right">
                         {{ $t('words.approve-instructor') }}
+                    </button>
+
+                    <button @click="blockInstructor" class="rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right">
+                        {{ $t('words.block-instructor') }}
                     </button>
                 </div>
 

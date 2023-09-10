@@ -3,6 +3,7 @@
 use App\Http\Controllers\Back\CompanyAttendanceReportController;
 use App\Http\Controllers\Back\CompanyResignationsController;
 use App\Http\Controllers\Back\TraineesGroupsController;
+use App\Http\Controllers\ZoomAccountController;
 use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
 use App\Models\User;
@@ -550,6 +551,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('candidates/excel/{id}/download', [\App\Http\Controllers\Back\TraineesController::class, 'excelJobDownload'])->name('candidates.excel.job.download');
         Route::get('candidates/excel/{id}', [\App\Http\Controllers\Back\TraineesController::class, 'excelJob'])->name('candidates.excel.job');
         Route::post('candidates/excel', [\App\Http\Controllers\Back\CandidatesController::class, 'excel'])->name('candidates.excel');
+
+        Route::get('instructors/{instructor_id}/zoom-account', [ZoomAccountController::class, 'index'])->name('instructors.zoom-account.index');
+        Route::put('instructors/{instructor_id}/zoom-account', [ZoomAccountController::class, 'update'])->name('instructors.zoom-account.update');
 
         Route::post('instructors/{instructor_id}/approve-user', [\App\Http\Controllers\Back\InstructorsController::class, 'approveUser'])->name('instructors.approve-user');
         Route::post('instructors/{instructor_id}/create-user', [\App\Http\Controllers\Back\InstructorsController::class, 'createUser'])->name('instructors.create-user');

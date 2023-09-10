@@ -636,4 +636,5 @@ return [
     'number' => 'الرقم',
     'with-attendance-times' => 'مع اوقات الحضور (ساعة:دقيقة)؟',
     'includes-attendance-times' => 'مع اوقات الدخول والخروج',
+    'zoom-account' => 'حساب الزوم',
 ];
