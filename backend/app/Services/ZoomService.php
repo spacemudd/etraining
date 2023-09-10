@@ -29,6 +29,7 @@ class ZoomService
     }
 
     /**
+     * Used for when joining the meeting via the browser.
      *
      * @param $meeting_number
      * @param $role
@@ -39,20 +40,25 @@ class ZoomService
         $session = CourseBatchSession::where('zoom_meeting_id', $meeting_number)->first();
 
         $zoomSettings = $session->course->instructor->zoom_account;
-        $zoom = new Entry($zoomSettings->ZOOM_CLIENT_KEY, $zoomSettings->ZOOM_CLIENT_SECRET);
+        $zoom = new Entry($zoomSettings->account_id, $zoomSettings->client_id, $zoomSettings->client_secret);
         $user = new User($zoom);
-        $this->api_key = $zoomSettings->ZOOM_CLIENT_KEY;
-        $this->api_secret = $zoomSettings->ZOOM_CLIENT_SECRET;
 
-        $time = time() * 1000 - 30000; // time in milliseconds (or close enough)
+        return '';
 
-        $data = base64_encode($this->api_key . $meeting_number . $time . $role);
+        // removed because zoom switched from jwt to oauth2.
 
-        $hash = hash_hmac('sha256', $data, $this->api_secret, true);
-
-        $_sig = $this->api_key . "." . $meeting_number . "." . $time . "." . $role . "." . base64_encode($hash);
-
-        // return signature, url safe base64 encoded
-        return rtrim(strtr(base64_encode($_sig), '+/', '-_'), '=');
+        //$this->api_key = $zoomSettings->ZOOM_CLIENT_KEY;
+        //$this->api_secret = $zoomSettings->ZOOM_CLIENT_SECRET;
+        //
+        //$time = time() * 1000 - 30000; // time in milliseconds (or close enough)
+        //
+        //$data = base64_encode($this->api_key . $meeting_number . $time . $role);
+        //
+        //$hash = hash_hmac('sha256', $data, $this->api_secret, true);
+        //
+        //$_sig = $this->api_key . "." . $meeting_number . "." . $time . "." . $role . "." . base64_encode($hash);
+        //
+        //// return signature, url safe base64 encoded
+        //return rtrim(strtr(base64_encode($_sig), '+/', '-_'), '=');
     }
 }

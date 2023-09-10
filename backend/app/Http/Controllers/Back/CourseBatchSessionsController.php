@@ -91,7 +91,7 @@ class CourseBatchSessionsController extends Controller
         $session = CourseBatchSession::with(['course', 'course_batch'])->findOrFail($course_batch_session_id);
 
         $zoomSettings = $session->course->instructor->zoom_account;
-        $zoom = new Entry($zoomSettings->ZOOM_CLIENT_KEY, $zoomSettings->ZOOM_CLIENT_SECRET);
+        $zoom = new Entry($zoomSettings->account_id, $zoomSettings->client_id, $zoomSettings->client_secret);
         $user = new User($zoom);
 
         if (! $session->zoom_meeting_id) {
