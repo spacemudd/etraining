@@ -47,7 +47,6 @@
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/brick/math" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/brick/money" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/protonemedia/inertiajs-tables-laravel-query-builder" />
-      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/moneyphp/money" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/vlucas/phpdotenv" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/phpunit/php-code-coverage" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/phpunit/php-file-iterator" />
@@ -99,10 +98,8 @@
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/spatie/db-dumper" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/teamtnt/laravel-scout-tntsearch-driver" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/ramsey/uuid" />
-      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/spatie/macroable" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/teamtnt/tntsearch" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/ramsey/collection" />
-      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/spatie/url" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/spatie/laravel-medialibrary" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/spatie/image-optimizer" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/spatie/image" />
@@ -132,7 +129,6 @@
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/symfony/deprecation-contracts" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/symfony/filesystem" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/nesbot/carbon" />
-      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/laravel/cashier-paddle" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/laravel/ui" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/laravel/sanctum" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/symfony/console" />
@@ -218,7 +214,6 @@
       <excludeFolder url="file://$MODULE_DIR$/backend/storage/framework" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/_laravel_idea" />
       <excludeFolder url="file://$MODULE_DIR$/backend/public" />
-      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/symfony/polyfill-intl-icu" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/milon/barcode" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/codebuglab/noon-payment-laravel" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/jn-jairo/laravel-ngrok" />

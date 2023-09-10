@@ -48,7 +48,6 @@
       <path value="$PROJECT_DIR$/backend/vendor/brick/math" />
       <path value="$PROJECT_DIR$/backend/vendor/brick/money" />
       <path value="$PROJECT_DIR$/backend/vendor/protonemedia/inertiajs-tables-laravel-query-builder" />
-      <path value="$PROJECT_DIR$/backend/vendor/moneyphp/money" />
       <path value="$PROJECT_DIR$/backend/vendor/vlucas/phpdotenv" />
       <path value="$PROJECT_DIR$/backend/vendor/phpunit/php-code-coverage" />
       <path value="$PROJECT_DIR$/backend/vendor/phpunit/php-file-iterator" />
@@ -100,10 +99,8 @@
       <path value="$PROJECT_DIR$/backend/vendor/spatie/db-dumper" />
       <path value="$PROJECT_DIR$/backend/vendor/teamtnt/laravel-scout-tntsearch-driver" />
       <path value="$PROJECT_DIR$/backend/vendor/ramsey/uuid" />
-      <path value="$PROJECT_DIR$/backend/vendor/spatie/macroable" />
       <path value="$PROJECT_DIR$/backend/vendor/teamtnt/tntsearch" />
       <path value="$PROJECT_DIR$/backend/vendor/ramsey/collection" />
-      <path value="$PROJECT_DIR$/backend/vendor/spatie/url" />
       <path value="$PROJECT_DIR$/backend/vendor/spatie/laravel-medialibrary" />
       <path value="$PROJECT_DIR$/backend/vendor/spatie/image-optimizer" />
       <path value="$PROJECT_DIR$/backend/vendor/spatie/image" />
@@ -133,7 +130,6 @@
       <path value="$PROJECT_DIR$/backend/vendor/symfony/deprecation-contracts" />
       <path value="$PROJECT_DIR$/backend/vendor/symfony/filesystem" />
       <path value="$PROJECT_DIR$/backend/vendor/nesbot/carbon" />
-      <path value="$PROJECT_DIR$/backend/vendor/laravel/cashier-paddle" />
       <path value="$PROJECT_DIR$/backend/vendor/laravel/ui" />
       <path value="$PROJECT_DIR$/backend/vendor/laravel/sanctum" />
       <path value="$PROJECT_DIR$/backend/vendor/symfony/console" />
@@ -214,7 +210,6 @@
       <path value="$PROJECT_DIR$/backend/vendor/league/commonmark" />
       <path value="$PROJECT_DIR$/backend/vendor/components/font-awesome" />
       <path value="$PROJECT_DIR$/backend/vendor/_laravel_idea" />
-      <path value="$PROJECT_DIR$/backend/vendor/symfony/polyfill-intl-icu" />
       <path value="$PROJECT_DIR$/vendor/voku/portable-ascii" />
       <path value="$PROJECT_DIR$/vendor/psr/http-message" />
       <path value="$PROJECT_DIR$/vendor/psr/log" />
