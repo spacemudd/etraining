@@ -25,7 +25,7 @@ class ZoomMeetingsController extends Controller
         $session = CourseBatchSession::find($request->course_batch_session_id);
 
         $zoomSettings = $session->course->instructor->zoom_account;
-        $zoom = new Entry($zoomSettings->ZOOM_CLIENT_KEY, $zoomSettings->ZOOM_CLIENT_SECRET);
+        $zoom = new Entry($zoomSettings->account_id, $zoomSettings->client_id, $zoomSettings->client_secret);
         $user = new User($zoom);
 
         $meeting = $user->find('me')->meetings()->create([
@@ -50,7 +50,7 @@ class ZoomMeetingsController extends Controller
         $session = CourseBatchSession::find($request->course_batch_session_id);
 
         $zoomSettings = $session->course->instructor->zoom_account;
-        $zoom = new Entry($zoomSettings->ZOOM_CLIENT_KEY, $zoomSettings->ZOOM_CLIENT_SECRET);
+        $zoom = new Entry($zoomSettings->account_id, $zoomSettings->client_id, $zoomSettings->client_secret);
         $user = new User($zoom);
 
         $meeting = $zoom->meeting()->find($session->zoom_meeting_id);

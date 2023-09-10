@@ -1,4 +1,4 @@
-FROM trafex/alpine-nginx-php7:1.10.0
+FROM trafex/php-nginx:latest
 
 # Supervisord settings
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -8,10 +8,10 @@ COPY nginx.default.conf /etc/nginx/nginx.conf
 COPY nginx.server.conf /etc/nginx/conf.d/server.conf
 
 # PHP-FPM settings
-COPY php-fpm-settings.conf /etc/php7/php-fpm.d/www.conf
+COPY php-fpm-settings.conf /etc/php82/php-fpm.d/server.conf
 
 # PHP settings
-COPY php-settings.ini /etc/php7/conf.d/settings.ini
+COPY php-settings.ini /etc/php82/conf.d/settings.ini
 
 COPY --chown=nobody . /var/www/html
 RUN mkdir -p /var/run/php && \
@@ -27,34 +27,32 @@ RUN apk add \
     mariadb-client \
     zip \
     coreutils \
-    php7-ctype \
-    php7-curl \
-    php7-dom \
-    php7-gd \
-    php7-iconv \
-    php7-imagick \
-    php7-json \
-    php7-intl \
-    php7-mcrypt \
-    php7-fileinfo\
-    php7-mbstring \
-    php7-opcache \
-    php7-openssl \
-    php7-pdo \
-    php7-pdo_mysql \
-    php7-mysqli \
-    php7-sqlite3 \
-    php7-pdo_sqlite \
-    php7-xml \
-    php7-zlib \
-    php7-phar \
-    php7-tokenizer \
-    php7-session \
-    php7-simplexml \
-    php7-xmlwriter \
-    php7-zip \
-    php7-exif \
-    php7-xmlreader
+    php82-ctype \
+    php82-curl \
+    php82-dom \
+    php82-gd \
+    php82-iconv \
+    php82-json \
+    php82-intl \
+    php82-fileinfo\
+    php82-mbstring \
+    php82-opcache \
+    php82-openssl \
+    php82-pdo \
+    php82-pdo_mysql \
+    php82-mysqli \
+    php82-sqlite3 \
+    php82-pdo_sqlite \
+    php82-xml \
+    php82-zlib \
+    php82-phar \
+    php82-tokenizer \
+    php82-session \
+    php82-simplexml \
+    php82-xmlwriter \
+    php82-zip \
+    php82-exif \
+    php82-xmlreader
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 

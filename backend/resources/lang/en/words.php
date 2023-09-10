@@ -621,4 +621,5 @@ return [
     'number' => 'Number',
     'with-attendance-times' => 'With attendance times (hour:minute)?',
     'includes-attendance-times' => 'Includes attendance times',
+    'zoom-account' => 'Zoom account',
 ];
