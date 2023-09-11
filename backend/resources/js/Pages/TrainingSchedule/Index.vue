@@ -10,14 +10,6 @@
                         الخطة التدريبية
                     </a>
                 </div>
-                <div class="col text-center h-20">
-                    <a target="_blank"
-                       rel="noopener noreferrer"
-                       href="/TrainingScheduleTimings.pdf"
-                       class="bg-red-500 px-2 py-1 rounded mx-auto text-white hover:bg-red-700">
-                        الجدول الزمني
-                    </a>
-                </div>
             </div>
         </div>
     </app-layout>
