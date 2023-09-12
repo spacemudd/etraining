@@ -37,7 +37,7 @@ class CertificatesController extends Controller
         $import->imported_by_id = auth()->user()->id;
         $import->save();
 
-        dispatch(new CertificateCsvImportJob($import));
+        dispatch_sync(new CertificateCsvImportJob($import));
 
         return response()->json($import);
     }
