@@ -83,7 +83,7 @@
             if (!this.job.completed_at) {
                 setTimeout(function() {
                     vm.pollJob();
-                }, 2000);
+                }, 5000);
             }
         },
         methods: {
@@ -99,7 +99,7 @@
                         if (!this.job.completed_at) {
                             setTimeout(function() {
                                 vm.pollJob();
-                            }, 2000);
+                            }, 5000);
                         }
                     })
             }
