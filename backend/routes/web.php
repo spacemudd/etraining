@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Back\CompaniesChasersController;
 use App\Http\Controllers\Back\CompanyAttendanceReportController;
 use App\Http\Controllers\Back\CompanyResignationsController;
 use App\Http\Controllers\Back\TraineesGroupsController;
@@ -412,6 +413,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('/settings/trainees-applications/required-files', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'requiredFiles'])->name('settings.trainees-application.required-files');
         Route::post('/settings/trainees-applications/required-files', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'store'])->name('settings.trainees-application.required-files.store');
         Route::delete('/settings/trainees-applications/required-files/{id}', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'delete'])->name('settings.trainees-application.required-files.delete');
+
+        Route::get('companies/chasers', [CompaniesChasersController::class, 'index'])->name('companies-chasers.index');
 
         Route::post('companies/{company_id}/resignations/{id}/approve', [CompanyResignationsController::class, 'approve'])->name('resignations.approve');
         Route::post('companies/{company_id}/resignations/{id}/upload/store', [CompanyResignationsController::class, 'uploadStore'])->name('resignations.upload.store');

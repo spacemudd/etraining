@@ -60,7 +60,8 @@ class RolesService
         'view-orders',
         'accept-reject-new-email',
         'manage-resignations',
-        'edit-invoice-amount'
+        'edit-invoice-amount',
+        'manage-chasers',
         // add the same name of the role to translation files.
     ];
 

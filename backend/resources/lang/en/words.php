@@ -622,4 +622,5 @@ return [
     'with-attendance-times' => 'With attendance times (hour:minute)?',
     'includes-attendance-times' => 'Includes attendance times',
     'zoom-account' => 'Zoom account',
+    'manage-chasers' => 'Manage chasers',
 ];

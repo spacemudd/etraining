@@ -660,7 +660,8 @@ export default {
             "number": "الرقم",
             "with-attendance-times": "مع اوقات الحضور (ساعة:دقيقة)؟",
             "includes-attendance-times": "مع اوقات الدخول والخروج",
-            "zoom-account": "حساب الزوم"
+            "zoom-account": "حساب الزوم",
+            "manage-chasers": "ادارة المحصلين"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1457,7 +1458,8 @@ export default {
             "number": "Number",
             "with-attendance-times": "With attendance times (hour{minute})?",
             "includes-attendance-times": "Includes attendance times",
-            "zoom-account": "Zoom account"
+            "zoom-account": "Zoom account",
+            "manage-chasers": "Manage chasers"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

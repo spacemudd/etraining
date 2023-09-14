@@ -25,12 +25,6 @@
 
                 <div class="col-span-4 flex items-center justify-end bg-gray-50 text-right gap-6">
                     <inertia-link
-                        v-if="$page.props.user.email === 'shafiqalshaar@clarastars.com'"
-                        :href="`/back/companies/${this.company.id}/ptcnet`"
-                        class="flex items-center justify-start rounded-md mx-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">
-                        Mark as PTCNet <span v-if="this.company.is_ptc_net">T</span>
-                    </inertia-link>
-                    <inertia-link
                         :href="`/back/companies/${this.company.id}/restore`"
                         v-can="'restore-deleted-companies'"
                         class="flex items-center justify-start rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right"
@@ -39,6 +33,7 @@
                     </inertia-link>
                     <inertia-link
                         v-if="!company.deleted_at"
+                        v-can="'edit-companies'"
                         :href="`/back/companies/${this.company.id}/edit`"
                         class="flex items-center justify-start rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right"
                     >
@@ -46,6 +41,7 @@
                     </inertia-link>
                     <button
                         v-if="!company.deleted_at"
+                        v-can="'edit-companies'"
                         class="flex items-center justify-start rounded-md py-2 px-2 bg-red-600 text-white hover:bg-red-700 text-right"
                         tabindex="-1"
                         type="button"
