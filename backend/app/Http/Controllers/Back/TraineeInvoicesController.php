@@ -42,6 +42,7 @@ class TraineeInvoicesController extends Controller
         $trainee = Trainee::query()
             ->whereHas('company')
             ->with(['company'])
+            ->withTrashed()
             ->findOrFail($trainee_id);
 
         $validatedData = $this->validateStoreRequest($request, $trainee->id);
@@ -107,8 +108,8 @@ class TraineeInvoicesController extends Controller
 
             // Trainee::find($invoice->trainee->id)->notify(new NewInvoiceIssued());
         });
-
-        return redirect()->route('back.trainees.show', $trainee_id);
+        return redirect(\route('back.finance.invoices.index'));
+//        return redirect()->route('back.trainees.show', $trainee_id);
     }
 
     private function validateStoreRequest(Request $request, string $trainee_id): array

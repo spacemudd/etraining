@@ -250,6 +250,13 @@
                     </div>
                 </div>
                 <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
+                    <div class="flex w-full justify-end">
+                        <inertia-link :href="route('back.trainees.invoices.create', trainee.id)">
+                            <jet-button type="button">
+                                {{ $t('words.issue-invoice') }}
+                            </jet-button>
+                        </inertia-link>
+                    </div>
                     <table class="w-full whitespace-no-wrap bg-white rounded-lg my-5 p-5 shadow text-sm">
                         <tr class="text-left font-bold text-center">
                             <th class="px-6 pt-6 pb-4 text-left">{{ $t('words.invoice-no') }}</th>
