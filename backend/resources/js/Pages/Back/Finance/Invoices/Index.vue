@@ -59,10 +59,13 @@
                     <!--                    class="sticky top-0 bg-white"-->
                     <template #body>
                         <tr v-for="invoice in invoices.data" :key="invoice.id">
+<!--                            <td v-if="users.trainee.deleted_at" :style="{background: ['#f7f7f7'], position: ['sticky'], right: [0], top: ['35px']}">-->
+<!--                                <inertia-link :href="route('back.trainees.show', invoice.trainee_id)">-->
+<!--                                    {{ invoice.trainee.name }}-->
+<!--                                </inertia-link>-->
+<!--                            </td>-->
                             <td :style="{background: ['#f7f7f7'], position: ['sticky'], right: [0], top: ['35px']}">
-                                <inertia-link :href="route('back.trainees.show', invoice.trainee_id)">
-                                    {{ invoice.trainee.name }}
-                                </inertia-link>
+                                <inertia-link class="hover:text-blue-600" :href="invoice.trainee.show_url">{{ invoice.trainee ? invoice.trainee.name : '-' }}</inertia-link>
                             </td>
                             <td :style="{background: ['#f7f7f7'], position: ['sticky'], right: ['90px'], top: ['35px']}">
                                 <input type="checkbox"
@@ -338,6 +341,7 @@ export default {
         Table,
     },
     props: {
+        users: Object,
         invoices: Object,
         filters: Object,
     },
