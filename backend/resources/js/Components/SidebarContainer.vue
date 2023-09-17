@@ -62,7 +62,7 @@
             </template>
         </sidebar-link>
 
-        <sidebar-link :link-value="route('back.finance')" :active="$page.currentRouteName == 'back.finance'">
+        <sidebar-link v-can="'view-backoffice-reports'" :link-value="route('back.finance')" :active="$page.currentRouteName == 'back.finance'">
             <template #icon>
                 <img src="/img/bank.svg" alt="" class="w-5 h-5">
             </template>
