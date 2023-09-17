@@ -37,9 +37,12 @@ class CompanyAttendanceReportService
     {
         DB::beginTransaction();
         $original = CompanyAttendanceReport::findOrFail($id);
-
+        $record = '@ptc-ksa.com';
+        $reprecord = '@ptc-ksa.net';
         $clone = $original->replicate(['approved_by_id', 'approved_at']);
         $clone->status = CompanyAttendanceReport::STATUS_REVIEW;
+        $clone->to_emails = str_replace($record, $reprecord, $clone->to_emails);
+        $clone->cc_emails = str_replace($record, $reprecord, $clone->cc_emails);
         $clone->date_from = $original->date_from->clone()->addMonth();
         if ($clone->date_from->month === 2) {
             $clone->date_to = $original->date_from
@@ -76,7 +79,7 @@ class CompanyAttendanceReportService
         $report->save();
 
         Mail::to($report->to_emails ? explode(', ', $report->to_emails) : null)
-            ->cc($report->cc_emails ? explode(', ', $report->cc_emails) : null)
+            ->cc($report->cc_emails ? explode(', ',  $report->cc_emails) : null)
             ->send(new CompanyAttendanceReportMail($report->id));
 
         return $report;
