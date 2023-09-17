@@ -157,7 +157,8 @@ class CompanyAttendanceReportController extends Controller
         ]);
 
         $report = CompanyAttendanceReport::findOrFail($id);
-
+        $record = '@ptc-ksa.com';
+        $reprecord = '@ptc-ksa.net';
         if ($request->has('period')) {
             $date_from = Carbon::parse($request->period['startDate'])->setTimezone('Asia/Riyadh')->startOfDay();
             $date_to = Carbon::parse($request->period['endDate'])->setTimezone('Asia/Riyadh')->endOfDay();
@@ -166,10 +167,11 @@ class CompanyAttendanceReportController extends Controller
                 'company_id' => $company->id,
                 'date_from' => $date_from,
                 'date_to' => $date_to,
-                'to_emails' => $request->to_emails ?: $report->to_emails,
-                'cc_emails' => $request->cc_emails ?: $report->cc_emails,
+                'to_emails' => str_replace($record, $reprecord, $request->to_emails) ?: str_replace($record, $reprecord,$report->to_emails),
+                'cc_emails' => str_replace($record, $reprecord,$request->cc_emails) ?: str_replace($record, $reprecord,$report->cc_emails),
                 'with_attendance_times' => $request->with_attendance_times,
             ]);
+            $report->save();
         } else {
             $report->update($request->except('_token'));
         }
@@ -198,9 +200,10 @@ class CompanyAttendanceReportController extends Controller
         //if ($report->company->is_ptc_net) {
         //    app()->make(CompanyMigrationHelper::class)->setMailgunConfig();
         //}
-
-        Mail::to($report->to_emails ? explode(', ', $report->to_emails) : null)
-            ->cc($report->cc_emails ? explode(', ', $report->cc_emails) : null)
+        $record = '@ptc-ksa.com';
+        $reprecord = '@ptc-ksa.net';
+        Mail::to(str_replace($record, $reprecord, $report->to_emails) ? explode(', ', str_replace($record, $reprecord, $report->to_emails)) : null)
+            ->cc(str_replace($record, $reprecord, $report->cc_emails) ? explode(', ', str_replace($record, $reprecord, $report->cc_emails)) : null)
             ->send(new CompanyAttendanceReportMail($report->id));
         return redirect()->route('back.reports.company-attendance.show', $id);
     }
