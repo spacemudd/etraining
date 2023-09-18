@@ -49,7 +49,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 continue;
             }
 
-            $this->info('Processing company: '.$company->name_ar);
+            //$this->info('Processing company: '.$company->name_ar);
 
             // TODO: Has report for current month? Update for the current month
             $currentMonthReport = $company->company_attendance_reports()
