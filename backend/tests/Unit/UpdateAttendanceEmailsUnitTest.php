@@ -23,10 +23,14 @@ class UpdateAttendanceEmailsUnitTest extends TestCase
         ]);
         app()->make(RolesService::class)->seedRolesToTeam($team);
 
-        $company = \App\Models\Back\Company::factory()->create();
-
-        $this->post(route('reports.company-attendance.store'), [
-            'company_id' => '',
+        $company = \App\Models\Back\Company::factory()->create([
+            'team_id' => $team->id
         ]);
+
+        $response = $this->post(route('back.reports.company-attendance.store'), [
+            'company_id' => $company->id,
+        ]);
+
+        dd($response->getContent());
     }
 }
