@@ -24,14 +24,6 @@ class CleanUpThePhoneUnitTest extends TestCase
             'phone' => '٠٥٠٤١٢٣٣١٨',
         ]);
 
-        //$this->assertEquals('966504123318', $trainee->routeNotificationForClickSend());
-        //
-        //$trainee->update([
-        //    'phone' => '٩٦٦٥٠٤١٢٣٣١٨',
-        //]);
-        //
-        //$this->assertEquals('966504123318', $trainee->routeNotificationForClickSend());
-
         $trainee->update([
             'phone' => '٥٠٤١٢٣٣١٨',
         ]);
