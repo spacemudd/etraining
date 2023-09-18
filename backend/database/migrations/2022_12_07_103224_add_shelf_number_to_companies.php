@@ -14,7 +14,7 @@ class AddShelfNumberToCompanies extends Migration
     public function up()
     {
         Schema::table('companies', function (Blueprint $table) {
-            $table->string('shelf_number');
+            $table->string('shelf_number')->nullable();
         });
     }
 

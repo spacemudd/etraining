@@ -14,7 +14,7 @@ class AddObjectionOfAmountToInvoices extends Migration
     public function up()
     {
         Schema::table('invoices', function (Blueprint $table) {
-            $table->unsignedDecimal('objection_of_amount');
+            $table->unsignedDecimal('objection_of_amount')->nullable();
         });
     }
 

@@ -27,7 +27,9 @@ class AddDeletedByIdToTrainees extends Migration
     public function down()
     {
         Schema::table('trainees', function (Blueprint $table) {
-            $table->dropForeign(['deleted_by_id']);
+            if (env('DB_CONNECTION') != 'sqlite') {
+                $table->dropForeign(['deleted_by_id']);
+            }
             $table->dropColumn(['deleted_by_id']);
         });
     }

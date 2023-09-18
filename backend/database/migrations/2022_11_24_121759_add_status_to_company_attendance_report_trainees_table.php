@@ -28,6 +28,9 @@ class AddStatusToCompanyAttendanceReportTraineesTable extends Migration
     {
         Schema::table('company_attendance_reports_trainees', function (Blueprint $table) {
             $table->dropColumn(['status']);
+        });
+
+        Schema::table('company_attendance_reports_trainees', function (Blueprint $table) {
             $table->dropColumn(['comment']);
         });
     }

@@ -14,7 +14,7 @@ class AddChasedAtColToInvoices extends Migration
     public function up()
     {
         Schema::table('invoices', function (Blueprint $table) {
-            $table->timestamp('chased_at')->nullable()->useCurrent();
+            $table->timestamp('chased_at')->nullable();
             $table->uuid('chased_by_id')->nullable();
             $table->foreign('chased_by_id')->references('id')->on('users');
             $table->string('chased_note')->nullable();
@@ -30,8 +30,19 @@ class AddChasedAtColToInvoices extends Migration
     {
         Schema::table('invoices', function (Blueprint $table) {
             $table->dropColumn(['chased_at']);
+        });
+
+        Schema::table('invoices', function (Blueprint $table) {
             $table->dropColumn(['chased_note']);
-            $table->dropForeign(['chased_by_id']);
+        });
+
+        Schema::table('invoices', function (Blueprint $table) {
+            if (env('DB_CONNECTION') != 'sqlite') {
+                $table->dropForeign(['chased_by_id']);
+            }
+        });
+
+        Schema::table('invoices', function (Blueprint $table) {
             $table->dropColumn(['chased_by_id']);
         });
     }

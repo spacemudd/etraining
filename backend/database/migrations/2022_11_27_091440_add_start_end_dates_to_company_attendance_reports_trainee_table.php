@@ -28,6 +28,9 @@ class AddStartEndDatesToCompanyAttendanceReportsTraineeTable extends Migration
     {
         Schema::table('company_attendance_reports_trainees', function (Blueprint $table) {
             $table->dropColumn(['start_date']);
+        });
+
+        Schema::table('company_attendance_reports_trainees', function (Blueprint $table) {
             $table->dropColumn(['end_date']);
         });
     }

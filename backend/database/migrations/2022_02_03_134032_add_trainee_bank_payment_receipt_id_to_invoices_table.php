@@ -27,7 +27,9 @@ class AddTraineeBankPaymentReceiptIdToInvoicesTable extends Migration
     public function down()
     {
         Schema::table('invoices', function (Blueprint $table) {
-            $table->dropForeign(['trainee_bank_payment_receipt_id']);
+            if (env('DB_CONNECTION') != 'sqlite') {
+                $table->dropForeign(['trainee_bank_payment_receipt_id']);
+            }
             $table->dropColumn(['trainee_bank_payment_receipt_id']);
         });
     }

@@ -28,7 +28,9 @@ class AddRegionIdToCompaniesTable extends Migration
     {
         Schema::table('companies', function (Blueprint $table) {
             $table->dropColumn(['region_id']);
-            $table->dropForeign(['region_id']);
+            if (env('DB_CONNECTION') != 'sqlite') {
+                $table->dropForeign(['region_id']);
+            }
         });
     }
 }

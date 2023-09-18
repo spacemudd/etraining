@@ -27,7 +27,9 @@ class AddVerifiedByIdColToInvoicesTable extends Migration
     public function down()
     {
         Schema::table('invoices', function (Blueprint $table) {
-            $table->dropForeign(['verified_by_id']);
+            if (env('DB_CONNECTION') != 'sqlite') {
+                $table->dropForeign(['verified_by_id']);
+            }
             $table->dropColumn(['verified_by_id']);
         });
     }
