@@ -249,19 +249,15 @@ Route::get('s1s2', function() {
     return $traineeData;
 });
 Route::get('s1s3', function() {
-//    $trainees = Trainee::onlyTrashed()->get();
-    $trainees = Trainee::where('company_id',null)->get();
+    $trainees = Trainee::where('status', 1)->toBase();
 
     $traineeData = [];
 
     foreach ($trainees as $trainee) {
         $traineeData[] = [
             'name' => $trainee->name,
-            'company' => optional($trainee->company)->name_ar,
             'email' => $trainee->email,
-            'phone' => $trainee->clean_phone,
-            'instructor' => optional($trainee->instructor)->name,
-            'group' => optional($trainee->trainee_group)->name,
+            'phone' => $trainee->phone,
         ];
     }
 
