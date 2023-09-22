@@ -39,6 +39,11 @@
 <!--            </div>-->
 
 
+                <a href="/national-day.png">
+                    <img src="/national-day.png" class="w-full" alt="">
+                </a>
+
+
             <!-- Payment notice -->
             <div class="container px-6 mx-auto grid pt-10" v-if="user.trainee.deleted_at">
             <div class="container mx-auto grid">
