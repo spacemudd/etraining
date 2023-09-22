@@ -255,9 +255,9 @@ Route::get('s1s3', function() {
 
     foreach ($trainees as $trainee) {
         $traineeData[] = [
-            'name' => $trainee->name,
-            'email' => $trainee->email,
-            'phone' => $trainee->phone,
+            'name' => $trainee['name'],
+            'email' => $trainee['email'],
+            'phone' => $trainee['phone'],
         ];
     }
 
