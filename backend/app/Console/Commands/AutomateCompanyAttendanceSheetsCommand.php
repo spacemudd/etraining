@@ -81,17 +81,18 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 }
 
                 // TODO: Choose, clone from previous period or new report with current months' students?
-                // $clone = app()->make(CompanyAttendanceReportService::class)->clone($lastReport->id);
+                $clone = app()->make(CompanyAttendanceReportService::class)->clone($lastReport->id);
 
-                //$clone = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
-                //$clone->date_from = Carbon::parse('2023-08-01')->setTimezone('Asia/Riyadh')->startOfDay();
-                //$clone->date_to = Carbon::parse('2023-08-31')->setTimezone('Asia/Riyadh')->endOfDay();
-                //$clone->cc_emails = Str::replace('ptc-ksa.com', 'ptc-ksa.net', $lastReport->cc_emails);
-                //if ($company->salesperson_email && !Str::contains($clone->cc_emails, $company->salesperson_email)) {
-                //    $clone->cc_emails .= ', '.$company->salesperson_email;
-                //}
-                //$clone->save();
-                //app()->make(CompanyAttendanceReportService::class)->approve($clone->id);
+                // $clone = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
+                $clone->date_from = Carbon::parse('2023-09-01')->setTimezone('Asia/Riyadh')->startOfDay();
+                $clone->date_to = Carbon::parse('2023-09-31')->setTimezone('Asia/Riyadh')->endOfDay();
+                $clone->cc_emails = Str::replace('ptc-ksa.com', 'ptc-ksa.net', $lastReport->cc_emails);
+                if ($company->salesperson_email && !Str::contains($clone->cc_emails, $company->salesperson_email)) {
+                    $clone->cc_emails .= ', '.$company->salesperson_email;
+                }
+                $clone->save();
+                app()->make(CompanyAttendanceReportService::class)->approve($clone->id);
+                $this->info('Sent company: '.$company->name_ar);
             } else {
                 if (!$company->email) {
                     $this->info('No email for company. Skipping: '.$company->name_ar);
