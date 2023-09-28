@@ -68,7 +68,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
             if ($lastReport && $lastReport->to_emails) {
                 // Is the number of trainees equal to the number of trainees in the company?
                 if ($lastReport->trainees()->count() !== $company->trainees()->count()) {
-                    $this->info('Number of trainees in the last report is not equal to the number of trainees in the company. Skipping: '.$company->name_ar);
+                    $this->info('Number of trainees in the last report is not equal to the number of trainees in the company. Skipping: '.$company->name_ar.' , ('.$company->trainees()->count()-$lastReport->trainees()->count() .')');
                     continue;
                 }
 
