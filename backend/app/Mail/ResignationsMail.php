@@ -35,7 +35,7 @@ class ResignationsMail extends Mailable implements ShouldQueue
         $this->attachResignationFile();
 
         return $this
-            ->subject('(#'.$this->resignation->number.') استقالات - '.$this->resignation->company->name_ar)
+            ->subject('(#'.$this->resignation->number.') انسحاب متدربة - '.$this->resignation->company->name_ar)
             ->markdown('emails.resignations');
     }
 
