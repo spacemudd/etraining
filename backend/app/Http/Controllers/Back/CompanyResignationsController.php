@@ -112,8 +112,9 @@ class CompanyResignationsController extends Controller
         ]);
 
         foreach ($resignation->trainees as $trainee) {
-            $trainee->update(['deleted_remark' => $resignation->reason]);
+            $trainee->deleted_remark = $resignation->reason;
             $trainee->deleted_by_id = auth()->user()->id;
+            $trainee->save();
             $trainee->delete();
         }
 
