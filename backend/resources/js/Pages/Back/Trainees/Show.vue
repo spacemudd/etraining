@@ -254,7 +254,11 @@
                         for="company_id"
                         :value="$t('words.company')"
                     />
+                    <inertia-link v-if="trainee.company"
+                                  class="block text-blue-600 hover:text-blue-800 border rounded-lg p-2 mt-1 bg-gray-100"
+                                  :href="route('back.companies.show', trainee.company.id)">{{ trainee.company.name_ar }}</inertia-link>
                     <jet-input
+                        v-else
                         id="company_id"
                         type="text"
                         :class="editButton.inputClass"
