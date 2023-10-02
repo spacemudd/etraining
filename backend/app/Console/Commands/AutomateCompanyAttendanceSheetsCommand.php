@@ -81,7 +81,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 }
 
                 // TODO: Choose, clone from previous period or new report with current months' students?
-                $clone = app()->make(CompanyAttendanceReportService::class)->clone($lastReport->id);
+                // $clone = app()->make(CompanyAttendanceReportService::class)->clone($lastReport->id);
 
                 // $clone = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
                 //$clone->date_from = Carbon::parse('2023-09-01')->setTimezone('Asia/Riyadh')->startOfDay();
