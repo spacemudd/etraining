@@ -1,5 +1,14 @@
 <template>
     <ul class="mt-6">
+
+        <li class="relative px-6 py-3">
+            <span class="inline-flex items-center w-full text-sm font-semibold text-gray-800 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100" aria-hidden="true"></span>
+            <a href="https://ptc-ksa.net" class="inline-flex items-center w-full text-sm text-gray-800 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100">
+                <EarthIcon w="20px" h="20px" class="w-5 h-5" />
+                <span class="ltr:ml-4 rtl:mr-4 hover:text-red-600 hover:font-bold">{{ $t('words.main') }}</span>
+            </a>
+        </li>
+
         <sidebar-link link-value="/dashboard" :active="$page.currentRouteName == 'dashboard'">
             <template #icon><DesktopIcon w="20px" h="20px" class="w-5 h-5" /></template>
             <template #title>
@@ -53,7 +62,7 @@
             </template>
         </sidebar-link>
 
-        <sidebar-link :link-value="route('back.finance')" :active="$page.currentRouteName == 'back.finance'">
+        <sidebar-link v-can="'view-backoffice-reports'" :link-value="route('back.finance')" :active="$page.currentRouteName == 'back.finance'">
             <template #icon>
                 <img src="/img/bank.svg" alt="" class="w-5 h-5">
             </template>
@@ -89,19 +98,20 @@
             </template>
         </sidebar-link>
 
-        <li class="pr-8 mt-2 text-xs"><a class="hover:text-blue-600" href="/terms#attendance-policy">السياسة الاكاديمية والتدريبية</a>
-        <li class="pr-8 text-xs"><a class="hover:text-blue-600" href="/terms">{{ $t('words.support-policy') }}</a></li>
+        <li class="pr-8 text-xs"><a class="hover:text-blue-600" href="/terms">السياسات</a></li>
     </ul>
 </template>
 
 <script>
-    import DesktopIcon from 'vue-ionicons/dist/ios-desktop.vue'
+    import EarthIcon from 'vue-ionicons/dist/ios-easel.vue';
+    import DesktopIcon from 'vue-ionicons/dist/ios-desktop.vue';
     import BusinessIcon from 'vue-ionicons/dist/ios-business';
     import SidebarLink from "./SidebarLink";
     export default {
         components: {
             DesktopIcon,
             SidebarLink,
+            EarthIcon,
             BusinessIcon,
         },
         data() {

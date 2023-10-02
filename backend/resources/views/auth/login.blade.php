@@ -49,7 +49,15 @@
             {{-- Add listener to email field --}}
             var emailField = document.getElementById("email");
             emailField.addEventListener('input', function() {
-                if (document.getElementById('email').value.includes('info+2@ptc-ksa.net')) {
+                // if (document.getElementById('email').value.includes('nelc.user@ptc-ksa.net' || 'nelc@ptc-ksa.net')) {
+                //     document.getElementById('hideFor2Fa').style.display = 'block';
+                //     document.getElementById('password').required = true;
+                // }
+                if (document.getElementById('email').value.includes('nelc.instructor@ptc-ksa.net')) {
+                    document.getElementById('hideFor2Fa').style.display = 'block';
+                    document.getElementById('password').required = true;
+                }
+                else if (document.getElementById('email').value.includes('nelc.user@ptc-ksa.net')) {
                     document.getElementById('hideFor2Fa').style.display = 'block';
                     document.getElementById('password').required = true;
                 }
@@ -66,7 +74,15 @@
             {{-- Redirect PTC users to 2FA page --}}
             const form = document.getElementById("loginForm");
             form.onsubmit = function() {
-                if (emailField.value.includes('info+2@ptc-ksa.net')) {
+                // if (emailField.value.includes('nelc.user@ptc-ksa.net' || 'nelc@ptc-ksa.net')) {
+                //     form.action = '/login';
+                //     form.submit();
+                // }
+                if (emailField.value.includes('nelc.instructor@ptc-ksa.net')) {
+                    form.action = '/login';
+                    form.submit();
+                }
+                else if (emailField.value.includes('nelc.user@ptc-ksa.net')) {
                     form.action = '/login';
                     form.submit();
                 }

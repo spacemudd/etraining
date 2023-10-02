@@ -8,68 +8,31 @@
             <thead>
             <tr class="text-left font-bold">
             	<th class="px-6 pt-6 pb-4">الاسم</th>
-                <th class="px-6 pt-6 pb-4">المهام الوظيفية</th>
+                <th class="px-6 pt-6 pb-4">القسم</th>
                 <th class="px-6 pt-6 pb-4">التواصل</th>
             </tr>
             </thead>
             	<tbody>
-            			<!--<tr class="border-t">-->
-            			<!--	<td class="px-6 py-4">سمر احمد ابو دش</td>-->
-                        <!--    <td class="px-6 py-4">التدريب+ تقديم برامج تدريبية + متابعة المتدربات في التدريب جدولة اختبارات واوراق عمل</td>-->
-                        <!--    <td class="px-6 py-4">samar@ptc-ksa.net</td>-->
-            			<!--</tr>-->
                     <tr class="border-t">
-                        <td class="px-6 py-4">--</td>
-                        <td class="px-6 py-4">التدريب+ تقديم برامج تدريبية + متابعة المتدربات في التدريب جدولة اختبارات واوراق عمل</td>
-                        <td class="px-6 py-4">amiah.b@ptc-ksa.net</td>
+                        <td class="px-6 py-4">امية البلوشي</td>
+                        <td class="px-6 py-4">قسم التدريب</td>
+                        <td class="px-6 py-4">amiah.b@ptc-ksa.net <br/> 0555606571</td>
+                    </tr>
+                <tr class="border-t">
+                        <td class="px-6 py-4">سمر العلي</td>
+                        <td class="px-6 py-4">قسم تقنية المعلومات</td>
+                        <td class="px-6 py-4">info@ptc-ksa.net <br/> 0553139979</td>
+                    </tr>
+                <tr class="border-t">
+                        <td class="px-6 py-4">لمى الشقير</td>
+                        <td class="px-6 py-4">قسم الإدارة العامة</td>
+                        <td class="px-6 py-4">lama@ptc-ksa.net <br/> 0555432644</td>
+
                     </tr>
             	</tbody>
             </table>
 
             <hr class="my-5 border-red-500"/>
-
-            <h2>فريق الاداريين</h2>
-            <table class="w-full whitespace-no-wrap">
-                <thead>
-                <tr class="text-left font-bold">
-                    <th class="px-6 pt-6 pb-4">الاسم</th>
-                    <th class="px-6 pt-6 pb-4">المهام الوظيفية</th>
-                    <th class="px-6 pt-6 pb-4">التواصل</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="border-t">
-                    <td class="px-6 py-4">--</td>
-                    <td class="px-6 py-4">شوؤن المتدربات + متابعة واصدار الشهادات للمتدربات + متابعة الحضور والانصراف +اشراف عام</td>
-                    <td class="px-6 py-4">jawaher@ptc-ksa.net</td>
-                </tr>
-                <!--<tr class="border-t">-->
-                <!--    <td class="px-6 py-4">منيره صالح الحمدي</td>-->
-                <!--    <td class="px-6 py-4">القبول والتسجيل والتنسيق والتواصل مع المتدربات</td>-->
-                <!--    <td class="px-6 py-4">monira@ptc-ksa.net</td>-->
-                <!--</tr>-->
-                </tbody>
-            </table>
-
-            <hr class="my-5 border-red-500"/>
-
-            <h2>فريق الفنيين</h2>
-            <table class="w-full whitespace-no-wrap">
-                <thead>
-                <tr class="text-left font-bold">
-                    <th class="px-6 pt-6 pb-4">الاسم</th>
-                    <th class="px-6 pt-6 pb-4">المهام الوظيفية</th>
-                    <th class="px-6 pt-6 pb-4">التواصل</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="border-t">
-                    <td class="px-6 py-4">--</td>
-                    <td class="px-6 py-4">دعم الفني والتقني للمنصة التدريبية + الرد على اسئلة المتدربات +  تقديم المساعدة</td>
-                    <td class="px-6 py-4">info@ptc-ksa.net</td>
-                </tr>
-                </tbody>
-            </table>
         </div>
     </app-layout>
 </template>

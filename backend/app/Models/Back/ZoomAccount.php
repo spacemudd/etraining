@@ -21,6 +21,13 @@ class ZoomAccount extends Model implements AuditableContract
 
     protected $keyType = 'string';
 
+    protected $fillable = [
+        'account_id',
+        'client_id',
+        'client_secret',
+        'instructor_id',
+    ];
+
     protected static function boot(): void
     {
         parent::boot();

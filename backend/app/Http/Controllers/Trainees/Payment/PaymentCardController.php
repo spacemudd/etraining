@@ -37,7 +37,7 @@ class PaymentCardController extends Controller
      */
     public function showPaymentForm(Request $request)
     {
-        $invoice = Invoice::find($request->invoice_id);
+        $invoice = Invoice::notPaid()->find($request->invoice_id);
         $url = $this->paymentService->createPaymentUrlForInvoice($invoice);
         return redirect($url);
     }

@@ -18,7 +18,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="session in sessions" class="focus-within:bg-gray-100">
+        <tr v-for="session in sessions" :id="session.id" class="focus-within:bg-gray-100">
             <td class="border-t py-3 text-left" dir="ltr">
                 {{ session.starts_at_timezone | timestampHours }}<br/>
                 <span class="text-xs">{{ session.starts_at_timezone | timestampDate }}</span>

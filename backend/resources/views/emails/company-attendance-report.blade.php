@@ -7,11 +7,6 @@
 
 مع تحياتنا،
 
-
-@if ($report->company->is_ptc_net)
 شركة مركز احترافية التدريب
-@else
-شركة شركة مركز احترافية التدريب
-@endif
 
 @endcomponent

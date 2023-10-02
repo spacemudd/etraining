@@ -31,15 +31,15 @@ class CompanyResignationsController extends Controller
 
     public function store(Request $request)
     {
-        //$request->validate([
-        //    'company_id' => 'required|exists:companies,id',
-        //    //'trainees.*.id' => 'required|exists:trainees,id',
-        //    'date' => 'required|date',
-        //    'reason' => 'required|string',
-        //    'emails_to' => 'required|string',
-        //    'emails_cc' => 'nullable|string',
-        //    'emails_bcc' => 'nullable|string',
-        //]);
+        $request->validate([
+            //'company_id' => 'required|exists:companies,id',
+            //'trainees.*.id' => 'required|exists:trainees,id',
+            'date' => 'required|date',
+            //'reason' => 'required|string',
+            //'emails_to' => 'required|string',
+            //'emails_cc' => 'nullable|string',
+            //'emails_bcc' => 'nullable|string',
+        ]);
 
         DB::beginTransaction();
 
@@ -112,15 +112,16 @@ class CompanyResignationsController extends Controller
         ]);
 
         foreach ($resignation->trainees as $trainee) {
-            $trainee->update(['deleted_remark' => $resignation->reason]);
+            $trainee->deleted_remark = $resignation->reason;
             $trainee->deleted_by_id = auth()->user()->id;
+            $trainee->save();
             $trainee->delete();
         }
 
         Mail::to($resignation->emails_to ? explode(', ', $resignation->emails_to) : null)
             ->cc($resignation->emails_cc ? explode(', ', $resignation->emails_cc) : null)
             ->bcc($resignation->emails_bcc ? explode(', ', $resignation->emails_bcc) : null)
-            ->queue(new ResignationsMail($resignation));
+            ->send(new ResignationsMail($resignation));
 
         DB::commit();
 

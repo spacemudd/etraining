@@ -10,24 +10,22 @@
         "etraining"
     ],
     "require": {
-        "php": "^7.3",
+        "php": "^7.3|^8.0",
         "barryvdh/laravel-snappy": "^0.4.8",
         "brick/money": "^0.5.0",
         "brick/phonenumber": "^0.4.0",
-        "cca-bheath/laravel-sms-clicksend": "^4.0",
         "codebuglab/noon-payment-laravel": "^0.0.8",
         "components/font-awesome": "^5.15",
         "doctrine/dbal": "2.*",
         "fideloper/proxy": "^4.2",
-        "firebase/php-jwt": "^5.2",
+        "firebase/php-jwt": "^6.8",
         "fruitcake/laravel-cors": "^2.0",
-        "guzzlehttp/guzzle": "7.1.0",
+        "guzzlehttp/guzzle": "^7.8",
         "guzzlehttp/psr7": "^1.6.1",
         "h4cc/wkhtmltopdf-amd64": "^0.12.4",
         "inertiajs/inertia-laravel": "^0.4.0",
         "jamesmills/laravel-timezone": "^1.9",
         "lab404/laravel-impersonate": "^1.7",
-        "laravel/cashier-paddle": "^1.2",
         "laravel/framework": "^8.0",
         "laravel/helpers": "^1.3",
         "laravel/horizon": "^5.3",
@@ -38,15 +36,14 @@
         "laravel/ui": "^3.0",
         "league/flysystem-aws-s3-v3": "^1.0",
         "maatwebsite/excel": "^3.1",
-        "macsidigital/laravel-zoom": "^4.1",
+        "macsidigital/laravel-zoom": "dev-master",
         "milon/barcode": "^9.0",
         "moemengaballah/msegat": "dev-main",
-        "owen-it/laravel-auditing": "^11.0",
+        "owen-it/laravel-auditing": "^12.0",
         "predis/predis": "^1.1",
         "protonemedia/inertiajs-tables-laravel-query-builder": "^1.4",
         "sentry/sentry-laravel": "^2.3",
         "skagarwal/google-places-api": "^1.7",
-        "spacemudd/laravel-tap-payments": "^2.0",
         "spatie/laravel-backup": "^6.14",
         "spatie/laravel-medialibrary": "^8.9",
         "spatie/laravel-permission": "^3.17",
@@ -76,7 +73,8 @@
         },
         "allow-plugins": {
             "composer/package-versions-deprecated": true,
-            "treeware/plant": true
+            "treeware/plant": true,
+            "php-http/discovery": true
         }
     },
     "extra": {
@@ -113,7 +111,9 @@
             "@php artisan key:generate --ansi"
         ],
         "post-update-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
+            "Illuminate\\Foundation\\ComposerScripts::postUpdate"
+        ],
+        "dev-post-update-cmd": [
             "@php artisan ide-helper:generate",
             "@php artisan ide-helper:meta"
         ]

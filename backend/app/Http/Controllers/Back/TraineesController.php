@@ -136,6 +136,7 @@ class TraineesController extends Controller
             'new_values' => [
                 'company' => $trainee->company->name_ar ?? null,
                 'trainee' => $trainee->name,
+                'trainee_id' => $trainee->id,
             ],
         ]);
 
@@ -631,6 +632,7 @@ class TraineesController extends Controller
             'new_values' => [
                 'company' => $trainee->company->name_ar ?? null,
                 'trainee' => $trainee->name,
+                'trainee_id' => $trainee->id,
             ],
         ]);
 

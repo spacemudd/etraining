@@ -26,6 +26,7 @@ class CompanyAttendanceReport extends Model implements Auditable
         'status',
         'to_emails',
         'cc_emails',
+        'with_attendance_times',
     ];
 
     protected $casts = [
@@ -130,5 +131,10 @@ class CompanyAttendanceReport extends Model implements Auditable
     public function getFallsUnderPtcNetAttribute()
     {
         return $this->company->is_ptc_net;
+    }
+
+    public function created_by()
+    {
+        return $this->belongsTo(User::class);
     }
 }

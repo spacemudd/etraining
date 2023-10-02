@@ -254,7 +254,11 @@
                         for="company_id"
                         :value="$t('words.company')"
                     />
+                    <inertia-link v-if="trainee.company"
+                                  class="block text-blue-600 hover:text-blue-800 border rounded-lg p-2 mt-1 bg-gray-100"
+                                  :href="route('back.companies.show', trainee.company.id)">{{ trainee.company.name_ar }}</inertia-link>
                     <jet-input
+                        v-else
                         id="company_id"
                         type="text"
                         :class="editButton.inputClass"
@@ -333,11 +337,17 @@
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
-                    <label for="phone" class="block font-medium text-sm text-gray-700">
-                        <span>{{ $t('words.phone') }}</span>
-                        <a class="mt-10" :href="trainee.whatsapp_link" target="_blank">
-                            <ion-icon name="logo-whatsapp" class="w-4 h-4 text-green-600"></ion-icon>
-                        </a>
+                    <label for="phone" class="block font-medium text-sm text-gray-700 flex justify-between">
+                        <span>
+                            <a class="mt-10" :href="trainee.whatsapp_link" target="_blank">
+                                <span>{{ $t('words.phone') }}</span>
+                                <ion-icon name="logo-whatsapp" class="w-4 h-4 text-green-600"></ion-icon>
+                            </a>
+                        </span>
+                        <span class="border border-green-400 px-2 gap-2 text-sm rounded pull-right flex">
+                            <img src="/img/absher.svg" alt="Absher" width="9px">
+                            {{ trainee.phone_ownership_status }}
+                        </span>
                     </label>
                     <jet-input
                         id="phone"

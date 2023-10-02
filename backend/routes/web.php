@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\Back\CompanyAttendanceReportController;
 use App\Http\Controllers\Back\CompanyResignationsController;
 use App\Http\Controllers\Back\TraineesGroupsController;
 use App\Http\Controllers\Teaching\TraineeGroupsController;
 use App\Http\Middleware\IsDisabledWebsiteMiddleware;
+use App\Http\Controllers\ZoomAccountController;
 use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
 use App\Models\User;
@@ -628,6 +630,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('candidates/excel/{id}', [\App\Http\Controllers\Back\TraineesController::class, 'excelJob'])->name('candidates.excel.job');
         Route::post('candidates/excel', [\App\Http\Controllers\Back\CandidatesController::class, 'excel'])->name('candidates.excel');
 
+        Route::get('instructors/{instructor_id}/zoom-account', [ZoomAccountController::class, 'index'])->name('instructors.zoom-account.index');
+        Route::put('instructors/{instructor_id}/zoom-account', [ZoomAccountController::class, 'update'])->name('instructors.zoom-account.update');
+
         Route::post('instructors/{instructor_id}/approve-user', [\App\Http\Controllers\Back\InstructorsController::class, 'approveUser'])->name('instructors.approve-user');
         Route::post('instructors/{instructor_id}/create-user', [\App\Http\Controllers\Back\InstructorsController::class, 'createUser'])->name('instructors.create-user');
         Route::post('instructors/{instructor_id}/attachments/cv-full', [\App\Http\Controllers\Back\InstructorsController::class, 'storeCvFull'])->name('instructors.attachments.cv-full');
@@ -678,6 +683,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('company-attendance/create', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'create'])->name('reports.company-attendance.create');
             Route::get('company-attendance', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'index'])->name('reports.company-attendance.index');
             Route::get('company-attendance/{id}', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'show'])->name('reports.company-attendance.show');
+            Route::get('company-attendance/{id}/trainee/{trainee_id}', [CompanyAttendanceReportController::class, 'individual'])->name('reports.company-attendance.individual');
+            Route::get('company-attendance/{id}/trainee/{trainee_id}/pdf', [CompanyAttendanceReportController::class, 'individualPdf'])->name('reports.company-attendance.individual.pdf');
+            Route::post('company-attendance/{id}/trainee/{trainee_id}/email', [CompanyAttendanceReportController::class, 'individualEmail'])->name('reports.company-attendance.individual.email');
 
         });
     });
@@ -757,7 +765,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
 });
 
 // Some routes for nowyer
-Route::get('sm3', function() { return redirect()->to('https://forms.gle/45cDanZH4Dc7rd3X7'); }); // survey
-Route::get('sm4', function() { return redirect()->to('https://forms.gle/XTkHV7usab5fpM557'); }); // attendance
-Route::get('sm1', function() { return redirect()->to('https://forms.gle/9o7ZCm3SUhw9x9wXA'); }); // before
-Route::get('sm2', function() { return redirect()->to('https://forms.gle/LUyvoyY8WJgJkUe1A'); }); // after
+Route::get('sm3', function() { return redirect()->to('https://forms.gle/57h3889NpA38hLvb8'); }); // survey
+Route::get('sm4', function() { return redirect()->to('https://forms.gle/UgEsXdEbNkAWNHuA8'); }); // attendance
+Route::get('sm1', function() { return redirect()->to('https://forms.gle/erZPhk4ZHwGivFNs8'); }); // before
+Route::get('sm2', function() { return redirect()->to('https://forms.gle/zKitHhs6u7aBwVA2A'); }); // after
