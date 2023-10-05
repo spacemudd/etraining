@@ -78,6 +78,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                                 ($company->trainees()->count() - $lastReport->trainees()->count()),
                                 Trainee::withTrashed()->find($notFound)->name,
                             ];
+                            $this->info(implode(' , ', $info));
                         }
                     }
                     //$this->info('Number of trainees in the last report is not equal to the number of trainees in the company. Skipping: '.$company->name_ar.' , '.());
