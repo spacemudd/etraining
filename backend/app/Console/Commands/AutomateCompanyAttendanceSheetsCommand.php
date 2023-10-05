@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Back\Company;
+use App\Models\Back\Trainee;
 use App\Services\CompanyAttendanceReportService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -68,7 +69,18 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
             if ($lastReport && $lastReport->to_emails) {
                 // Is the number of trainees equal to the number of trainees in the company?
                 if ($lastReport->trainees()->count() !== $company->trainees()->count()) {
-                    $this->info('Number of trainees in the last report is not equal to the number of trainees in the company. Skipping: '.$company->name_ar.' , ('.($company->trainees()->count()-$lastReport->trainees()->count()) .')');
+                    $traineesNotFound = $lastReport->trainees()->pluck('id')->diff($company->trainees()->pluck('id'));
+                    if ($traineesNotFound->count() > 0) {
+                        foreach ($traineesNotFound as $notFound) {
+                            $info = [
+                                'Count is not equal to last report',
+                                $company->name_ar,
+                                ($company->trainees()->count() - $lastReport->trainees()->count()),
+                                Trainee::withTrashed()->find($notFound)->name,
+                            ];
+                        }
+                    }
+                    //$this->info('Number of trainees in the last report is not equal to the number of trainees in the company. Skipping: '.$company->name_ar.' , '.());
                     continue;
                 }
 
