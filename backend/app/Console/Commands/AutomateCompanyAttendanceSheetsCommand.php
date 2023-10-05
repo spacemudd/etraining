@@ -69,7 +69,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
             if ($lastReport && $lastReport->to_emails) {
                 // Is the number of trainees equal to the number of trainees in the company?
                 if ($lastReport->trainees()->count() !== $company->trainees()->count()) {
-                    $traineesNotFound = $lastReport->trainees()->pluck('id')->diff($company->trainees()->pluck('id'));
+                    $traineesNotFound = $lastReport->trainees()->pluck('trainees.id')->diff($company->trainees()->pluck('trainees.id'));
                     if ($traineesNotFound->count() > 0) {
                         foreach ($traineesNotFound as $notFound) {
                             $info = [
