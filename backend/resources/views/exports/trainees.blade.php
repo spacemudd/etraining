@@ -83,7 +83,7 @@
             <td style="border:1px solid black;">{{ optional($trainee->instructor)->name }}</td>
             <td style="border:1px solid black;">{{ optional($trainee->trainee_group)->name }}</td>
             <td style="border:1px solid black;">{{ $trainee->deleted_at_timezone }}</td>
-            <td style="border:1px solid black;">{{ $trainee->reason }}</td>
+            <td style="border:1px solid black;">{{ $trainee->deleted_remark }}</td>
         </tr>
     @endforeach
     </tbody>
