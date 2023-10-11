@@ -55,6 +55,7 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
     ];
 
     protected $appends = [
+        'noon_link',
         'number_formatted',
         'status_formatted',
         'payment_method_formatted',
@@ -145,6 +146,11 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
     public function items(): HasMany
     {
         return $this->hasMany(InvoiceItem::class);
+    }
+
+    public function getNoonLinkAttribute()
+    {
+        return 'https://portal.noonpayments.com/order-details/manageorder?orderid='.$this->payment_reference_id;
     }
 
     public function getNumberFormattedAttribute(): string

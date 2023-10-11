@@ -178,7 +178,7 @@
                                 <hr class="my-3" v-if="invoice.payment_method === 1">
                                 <hr class="my-3" v-if="invoice.payment_method === 1">
                                 <div v-if="invoice.payment_method === 1" class="font-bold my-0.5">{{ $t('words.payment-reference-id') }}</div>
-                                <div v-if="invoice.payment_method === 1" class="truncate my-0.5" >{{ invoice.payment_reference_id }}</div>
+                                <a class="a-9" :href="invoice.noon_link"><div v-if="invoice.payment_method === 1" class="truncate my-0.5" >{{ invoice.payment_reference_id }}</div></a>
                                 <div v-if="invoice.payment_method === 1" class="font-bold my-0.5">{{ $t('words.paid-at') }}</div>
                                 <div v-if="invoice.payment_method === 1" class="truncate my-0.5">{{ invoice.paid_at_time }}</div>
                             </div>
