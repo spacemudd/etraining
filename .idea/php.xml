@@ -393,9 +393,19 @@
       <path value="$PROJECT_DIR$/backend/vendor/guzzlehttp/oauth-subscriber" />
       <path value="$PROJECT_DIR$/backend/vendor/paragonie/random_compat" />
       <path value="$PROJECT_DIR$/backend/vendor/league/oauth2-client" />
+      <path value="$PROJECT_DIR$/backend/vendor/moneyphp/money" />
+      <path value="$PROJECT_DIR$/backend/vendor/hju-fork/clicksend-php" />
+      <path value="$PROJECT_DIR$/backend/vendor/spacemudd/laravel-tap-payments" />
+      <path value="$PROJECT_DIR$/backend/vendor/spatie/macroable" />
+      <path value="$PROJECT_DIR$/backend/vendor/cca-bheath/laravel-sms-clicksend" />
+      <path value="$PROJECT_DIR$/backend/vendor/spatie/url" />
+      <path value="$PROJECT_DIR$/backend/vendor/laravel/cashier-paddle" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/polyfill-php81" />
+      <path value="$PROJECT_DIR$/backend/vendor/treeware/plant" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/polyfill-intl-icu" />
     </include_path>
   </component>
-  <component name="PhpProjectSharedConfiguration" php_language_level="7.4">
+  <component name="PhpProjectSharedConfiguration" php_language_level="8.0">
     <option name="suggestChangeDefaultLanguageLevel" value="false" />
   </component>
   <component name="PhpStanOptionsConfiguration">
