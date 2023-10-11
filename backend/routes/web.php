@@ -5,6 +5,7 @@ use App\Http\Controllers\Back\CompanyResignationsController;
 use App\Http\Controllers\Back\TraineesGroupsController;
 use App\Http\Controllers\Teaching\TraineeGroupsController;
 use App\Http\Middleware\IsDisabledWebsiteMiddleware;
+use App\Http\Controllers\Webhooks\MailController;
 use App\Http\Controllers\ZoomAccountController;
 use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
@@ -62,6 +63,7 @@ Route::get('login/verify-code', [\App\Http\Controllers\VerificationsController::
 Route::post('login/verify-code', [\App\Http\Controllers\VerificationsController::class, 'verifyCode'])->name('login.verify-code');
 
 
+Route::post('webhooks/mail', [MailController::class, 'store'])->name('webhooks.mail');
 Route::post('noon', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'storeNoonReceipt'])->name('webhooks.noon');
 
 Route::get('version', function() {

@@ -12,6 +12,7 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
+        '/webhooks/*',
         '/noon',
         '/api/trainees/uploadcv',
         '/login', //  For testing purposes.
