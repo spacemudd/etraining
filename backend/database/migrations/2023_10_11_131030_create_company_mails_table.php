@@ -18,6 +18,7 @@ class CreateCompanyMailsTable extends Migration
             $table->uuid('company_id');
             $table->foreign('company_id')->references('id')->on('companies');
             $table->string('from');
+            $table->string('sender');
             $table->text('body_text');
             $table->text('body_html');
             $table->timestamps();
