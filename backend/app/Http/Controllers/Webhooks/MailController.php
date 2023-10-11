@@ -1,0 +1,48 @@
+<?php
+
+namespace App\Http\Controllers\Webhooks;
+
+use App\Http\Controllers\Controller;
+use App\Models\Back\CompanyMail;
+use App\Services\CompaniesService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
+
+class MailController extends Controller
+{
+    public function store(Request $request)
+    {
+        $company = CompaniesService::new()->findByDomainName(Str::after($request->input('sender'), '@'));
+
+        $sender = $request->input('sender'); // mohammad@acme.com
+        $from = $request->input('from'); // Mohammad <mohammad@acme.com>
+
+        $bodyPlain = $request->input('body-plain');
+        $bodyHtml = $request->input('body-html');
+
+        $companyMail = CompanyMail::create([
+            'company_id' => $company->id,
+            'from' => $from,
+            'sender' => $sender,
+            'body_text' => $bodyPlain,
+            'body_html' => $bodyHtml,
+        ]);
+
+        if ($request->has('attachments')) {
+            $attachments = collect(json_decode($request->input('attachments'), true, 512, JSON_THROW_ON_ERROR));
+
+            // loop through each attachment and save them on the local filesystem.
+            $attachments->each(function ($attachment) use ($companyMail) {
+                $fileContents = Http::withBasicAuth(
+                    config('services.mailgun.domain'),
+                    config('services.mailgun.secret')
+                )->get(Arr::get($attachment, 'url'));
+
+                $companyMail->storeToFolder($fileContents, 'attachments');
+            });
+        }
+
+        return response()->json(['company_mail_id' => $companyMail->id]);
+    }
+}
