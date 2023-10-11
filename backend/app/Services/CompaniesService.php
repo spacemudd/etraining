@@ -23,13 +23,13 @@ class CompaniesService
      */
     public function findByDomainName($domain): Company
     {
-        $company = Company::where('email', '%'.$domain.'%')->first();
+        $company = Company::where('email', 'LIKE', '%'.$domain.'%')->first();
 
         if ($company) {
             return $company;
         }
 
-        $report = CompanyAttendanceReport::where('to_emails', '%'.$domain.'%')->first();
+        $report = CompanyAttendanceReport::where('to_emails', 'LIKE', '%'.$domain.'%')->first();
 
         return $report->company;
     }
