@@ -82,7 +82,6 @@ class PaymentCardController extends Controller
 
         if ($this->paymentService->isPaymentSuccess($order)) {
             $invoice_id = $order->result->order->reference;
-            DB::beginTransaction();
             Audit::create([
                 'event' => 'noon',
                 'auditable_id' => $invoice_id,
@@ -90,9 +89,10 @@ class PaymentCardController extends Controller
                 'new_values' => $request->toArray(),
             ]);
 
+            DB::beginTransaction();
+
             $invoice = Invoice::withoutGlobalScopes()
-                ->withTrashed()
-                ->notPaid()->with(['trainee' => function($q) {
+                ->with(['trainee' => function($q) {
                     $q->withTrashed();
                 }])->find($invoice_id);
 
