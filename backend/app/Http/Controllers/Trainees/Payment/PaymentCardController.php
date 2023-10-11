@@ -92,9 +92,12 @@ class PaymentCardController extends Controller
             DB::beginTransaction();
 
             $invoice = Invoice::withoutGlobalScopes()
+                ->withTrashed()
                 ->with(['trainee' => function($q) {
                     $q->withTrashed();
                 }])->find($invoice_id);
+
+            // TODO: If the invoice is deleted, update the invoice & notify the admins via email.
 
             $invoice->update([
                 'payment_method' => Invoice::PAYMENT_METHOD_CREDIT_CARD,
