@@ -19,9 +19,9 @@ class CompaniesService
      * Find a company by its domain name.
      *
      * @param $domain
-     * @return \App\Models\Back\Company
+     * @return \App\Models\Back\Company|null
      */
-    public function findByDomainName($domain): Company
+    public function findByDomainName($domain)
     {
         $company = Company::where('email', 'LIKE', '%'.$domain.'%')->first();
 
@@ -31,6 +31,6 @@ class CompaniesService
 
         $report = CompanyAttendanceReport::where('to_emails', 'LIKE', '%'.$domain.'%')->first();
 
-        return $report->company;
+        return optional($report)->company;
     }
 }

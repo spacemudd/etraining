@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Webhooks;
 use App\Http\Controllers\Controller;
 use App\Models\Back\CompanyMail;
 use App\Services\CompaniesService;
+use http\Exception\RuntimeException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -14,6 +15,10 @@ class MailController extends Controller
     public function store(Request $request)
     {
         $company = CompaniesService::new()->findByDomainName(Str::after($request->input('sender'), '@'));
+
+        if (!$company) {
+            throw new RuntimeException('No company found to save the mail under.');
+        }
 
         $sender = $request->input('sender'); // mohammad@acme.com
         $from = $request->input('from'); // Mohammad <mohammad@acme.com>
