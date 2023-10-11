@@ -43,6 +43,7 @@ class CompanyAttendanceReportMail extends Mailable implements ShouldQueue
         $this->attachReportFile($report);
 
         return $this
+            ->from('system@comms.ptc-ksa.net', 'شركة مركز احترافية التدريب.')
             ->subject('تقرير الحضور للمتدربات - '.$report->company->name_ar.' - '.$report->date_from->format('Y-m-d'). ' - '.$report->date_to->format('Y-m-d'))
             ->markdown('emails.company-attendance-report', [
                 'report' => $report,
