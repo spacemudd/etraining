@@ -7,6 +7,7 @@ use App\Models\Back\CompanyMail;
 use App\Services\CompaniesService;
 use http\Exception\RuntimeException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -17,7 +18,7 @@ class MailController extends Controller
         $company = CompaniesService::new()->findByDomainName(Str::after($request->input('sender'), '@'));
 
         if (!$company) {
-            throw new RuntimeException('No company found to save the mail under.');
+            throw new \RuntimeException('No company found to save the mail under.');
         }
 
         $sender = $request->input('sender'); // mohammad@acme.com
@@ -38,13 +39,18 @@ class MailController extends Controller
             $attachments = collect(json_decode($request->input('attachments'), true, 512, JSON_THROW_ON_ERROR));
 
             // loop through each attachment and save them on the local filesystem.
-            $attachments->each(function ($attachment) use ($companyMail) {
+            $attachments->each(function ($attachment) use ($companyMail, $company) {
                 $fileContents = Http::withBasicAuth(
                     config('services.mailgun.domain'),
                     config('services.mailgun.secret')
                 )->get(Arr::get($attachment, 'url'));
 
-                $companyMail->storeToFolder($fileContents, 'attachments');
+                $companyMail->addMediaFromString($fileContents)
+                    ->usingFileName(Arr::get($attachment, 'name'))
+                    ->withAttributes([
+                        'team_id' => $company->team_id,
+                    ])
+                    ->toMediaCollection('attachments');
             });
         }
 
