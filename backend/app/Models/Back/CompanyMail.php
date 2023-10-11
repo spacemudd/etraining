@@ -4,14 +4,20 @@ namespace App\Models\Back;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class CompanyMail extends Model implements Auditable
 {
     use HasFactory;
+    use HasUuid;
     use \OwenIt\Auditing\Auditable;
     use InteractsWithMedia;
+
+    public $incrementing = false;
+
+    protected $keyType = 'string';
 
     protected $fillable = [
         'company_id',
@@ -20,6 +26,14 @@ class CompanyMail extends Model implements Auditable
         'body_text',
         'body_html',
     ];
+
+    protected static function boot(): void
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            $model->{$model->getKeyName()} = (string) Str::uuid();
+        });
+    }
 
         /**
      * Upload scan(s) of the documents.
