@@ -488,6 +488,47 @@
                 </div>
 
             </div>
+            <div class="grid grid-cols-1 gap-6 mt-2">
+                <div>
+                    <table class="w-full whitespace-no-wrap bg-white rounded-lg my-5 p-5 shadow text-sm">
+                        <tr class="text-left font-bold">
+                            <th class="p-4">{{ $t('words.from') }}</th>
+                            <th class="p-4">{{ $t('words.sender') }}</th>
+                            <th class="p-4">{{ $t('words.text-body') }}</th>
+                            <th class="p-4">{{ $t('words.created-at') }}</th>
+                        </tr>
+                        <tr
+                            v-for="company_mail in company.company_mails"
+                            :key="company_mail.id"
+                            class="hover:bg-gray-100 focus-within:bg-gray-100"
+                        >
+                            <td class="border-t">
+                                <div class="px-4 py-2 focus:text-indigo-500">
+                                    {{ company_mail.from }}<br/>
+                                    {{ company_mail.sender }}
+                                </div>
+                            </td>
+                            <td class="border-t">
+                                <div class="px-4 py-2 focus:text-indigo-500">
+                                    {{ company_mail.body_text }}
+                                </div>
+                            </td>
+                            <td class="border-t w-px">
+                                <div class="px-4 py-2 flex items-center focus:text-indigo-500">
+                                    {{ company_mail.create_at }}
+                                </div>
+                            </td>
+                        <tr v-if="company.trainees.length === 0">
+                            <td
+                                class="border-t px-4 py-4"
+                                colspan="4"
+                            >
+                                <empty-slate />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </div>
     </app-layout>
 </template>
@@ -510,7 +551,7 @@ import PostTraineesButton from "@/Components/PostTraineesButton";
 import Input from "../../../Jetstream/Input";
 
 export default {
-    props: ['sessions', 'company', 'instructors', 'invoices', 'trainees_trashed_count', 'regions', 'trainees'],
+    props: ['sessions', 'company', 'instructors', 'invoices', 'trainees_trashed_count', 'regions', 'trainees', 'company_mails'],
 
     components: {
         Input,

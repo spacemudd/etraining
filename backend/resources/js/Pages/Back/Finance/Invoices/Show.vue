@@ -338,7 +338,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </app-layout>
 </template>

@@ -637,4 +637,6 @@ return [
     'with-attendance-times' => 'مع اوقات الحضور (ساعة:دقيقة)؟',
     'includes-attendance-times' => 'مع اوقات الدخول والخروج',
     'zoom-account' => 'حساب الزوم',
+    'sender' => 'المرسل',
+    'text-body' => 'محتوى الرسالة',
 ];
