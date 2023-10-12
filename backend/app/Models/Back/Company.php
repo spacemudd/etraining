@@ -12,6 +12,7 @@ use Laravel\Scout\Searchable;
 use OwenIt\Auditing\Contracts\Auditable;
 use Str;
 use Illuminate\Database\Eloquent\Builder;
+use Timezone;
 
 class Company extends Model implements SearchableLabels, Auditable
 {
@@ -46,6 +47,7 @@ class Company extends Model implements SearchableLabels, Auditable
         'show_url',
         'resource_label',
         'resource_type',
+        'created_at_timezone',
     ];
 
     protected static function boot(): void
@@ -151,5 +153,16 @@ class Company extends Model implements SearchableLabels, Auditable
     public function resignations()
     {
         return $this->hasMany(Resignation::class)->latest();
+    }
+
+    /**
+     *
+     * @return string|void
+     */
+    public function getCreatedAtTimezoneAttribute()
+    {
+        if ($this->created_at) {
+            return Timezone::convertToLocal($this->created_at, 'Y-m-d h:i A');
+        }
     }
 }

@@ -109,6 +109,12 @@
 
 <!--            <span class="text-xs" v-if="this.company.region">{{ this.company.region.name }}</span>-->
 
+            <div class="grid grid-cols-1 md:grid-cols-6 gap-6 mt-2">
+                <div class="md:col-span-2 sm:col-span-3">
+                    <p class="text-xs">{{ $t('words.created-at') }}: <span dir="ltr">{{ company.created_at_timezone }}</span></p>
+                </div>
+            </div>
+
             <jet-section-border></jet-section-border>
 
             <div
