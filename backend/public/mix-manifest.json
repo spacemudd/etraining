@@ -1,11 +1,6 @@
 {
-<<<<<<< HEAD
-    "/js/app.js": "/js/app.js?id=a95bbbd5fee2200dcfcf",
-    "/css/app.css": "/css/app.css?id=e1282bd1f9506ecb11e3",
-=======
-    "/js/app.js": "/js/app.js?id=75629017eb84d72218e6",
+    "/js/app.js": "/js/app.js?id=81b4474d5f113e845291",
     "/css/app.css": "/css/app.css?id=f4f38cc1f30d7462b4f1",
->>>>>>> mail-view
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
-    "/js/vendor.js": "/js/vendor.js?id=9533a16d8a9ae3ab5431"
+    "/js/vendor.js": "/js/vendor.js?id=213896e48ed67ee06157"
 }
