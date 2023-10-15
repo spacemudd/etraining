@@ -23,6 +23,7 @@ class MailController extends Controller
 
         $sender = $request->input('sender'); // mohammad@acme.com
         $from = $request->input('from'); // Mohammad <mohammad@acme.com>
+        $subject = $request->input('subject');
 
         $bodyPlain = $request->input('body-plain');
         $bodyHtml = $request->input('body-html');
@@ -30,6 +31,7 @@ class MailController extends Controller
         $companyMail = CompanyMail::create([
             'company_id' => $company->id,
             'from' => $from,
+            'subject' => $subject,
             'sender' => $sender,
             'body_text' => $bodyPlain,
             'body_html' => $bodyHtml,

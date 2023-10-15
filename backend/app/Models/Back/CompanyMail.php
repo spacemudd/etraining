@@ -25,6 +25,7 @@ class CompanyMail extends Model implements Auditable, HasMedia
         'company_id',
         'from',
         'sender',
+        'subject',
         'body_text',
         'body_html',
     ];
