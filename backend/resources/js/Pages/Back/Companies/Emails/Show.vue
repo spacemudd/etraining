@@ -5,7 +5,6 @@
                 :crumbs="[  {title: 'dashboard', link: route('dashboard')},  ]"
             ></breadcrumb-container>
             <div v-html="company_mails.body_html"></div><br>
-            <div v-html="viewMail"></div><br>
 
         </div>
     </app-layout>
@@ -27,7 +26,6 @@ export default {
 
     data() {
         return {
-            viewMail: "<h2>Display h2</h2>"
         }
     },
     methods: {
