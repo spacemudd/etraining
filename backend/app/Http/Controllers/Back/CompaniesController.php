@@ -108,6 +108,7 @@ class CompaniesController extends Controller
                 },
                 'region',
                 'resignations',
+                'company_mails',
             ])
             ->withCount([
                 'trainees',

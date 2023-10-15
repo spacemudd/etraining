@@ -492,7 +492,6 @@
                 <div>
                     <table class="w-full whitespace-no-wrap bg-white rounded-lg my-5 p-5 shadow text-sm">
                         <tr class="text-left font-bold">
-                            <th class="p-4">{{ $t('words.from') }}</th>
                             <th class="p-4">{{ $t('words.sender') }}</th>
                             <th class="p-4">{{ $t('words.text-body') }}</th>
                             <th class="p-4">{{ $t('words.created-at') }}</th>
@@ -515,7 +514,7 @@
                             </td>
                             <td class="border-t w-px">
                                 <div class="px-4 py-2 flex items-center focus:text-indigo-500">
-                                    {{ company_mail.create_at }}
+                                    {{ company_mail.created_at }}
                                 </div>
                             </td>
                         <tr v-if="company.trainees.length === 0">
