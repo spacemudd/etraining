@@ -42,4 +42,10 @@ class CompanyMail extends Model implements Auditable, HasMedia
     {
         return $this->media()->where('collection_name', $folder);
     }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
 }

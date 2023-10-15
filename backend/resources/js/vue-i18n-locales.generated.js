@@ -814,7 +814,9 @@ export default {
             "includes-attendance-times": "مع اوقات الدخول والخروج",
             "zoom-account": "حساب الزوم",
             "sender": "المرسل",
-            "text-body": "محتوى الرسالة"
+            "text-body": "محتوى الرسالة",
+            "mail-body": "محتوى البريد الإلكتروني",
+            "mail-subject": "عنوان البريد الإلكتروني"
         }
     },
     "en": {
@@ -1575,7 +1577,9 @@ export default {
             "includes-attendance-times": "Includes attendance times",
             "zoom-account": "Zoom account",
             "sender": "Sender",
-            "text-body": "Text Body"
+            "text-body": "Text Body",
+            "mail-body": "Email Content",
+            "mail-subject": "Subject"
         }
     }
 }

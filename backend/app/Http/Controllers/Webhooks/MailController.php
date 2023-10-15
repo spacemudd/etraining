@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Webhooks;
 
 use App\Http\Controllers\Controller;
+use App\Models\Back\Company;
 use App\Models\Back\CompanyMail;
 use App\Services\CompaniesService;
 use http\Exception\RuntimeException;
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class MailController extends Controller
 {
@@ -58,4 +60,15 @@ class MailController extends Controller
 
         return response()->json(['company_mail_id' => $companyMail->id]);
     }
+
+    public function viewCompanyMails($company_id, $id)
+    {
+        $company_mails = CompanyMail::findOrFail($id);
+
+        return Inertia::render('Back/Companies/Emails/Show', [
+            'company' => Company::findOrFail($company_id),
+            'company_mails' => $company_mails,
+        ]);
+    }
+
 }

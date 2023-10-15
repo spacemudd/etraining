@@ -499,8 +499,9 @@
                     <table class="w-full whitespace-no-wrap bg-white rounded-lg my-5 p-5 shadow text-sm">
                         <tr class="text-left font-bold">
                             <th class="p-4">{{ $t('words.sender') }}</th>
-                            <th class="p-4">{{ $t('words.text-body') }}</th>
+                            <th class="p-4">{{ $t('words.mail-subject') }}</th>
                             <th class="p-4">{{ $t('words.created-at') }}</th>
+                            <th class="p-4">{{ $t('words.actions') }}</th>
                         </tr>
                         <tr
                             v-for="company_mail in company.company_mails"
@@ -515,12 +516,20 @@
                             </td>
                             <td class="border-t">
                                 <div class="px-4 py-2 focus:text-indigo-500">
-                                    {{ company_mail.body_text }}
+                                    {{ company_mail.subject }}
                                 </div>
                             </td>
                             <td class="border-t w-px">
                                 <div class="px-4 py-2 flex items-center focus:text-indigo-500">
                                     {{ company_mail.created_at }}
+                                </div>
+                            </td>
+
+                            <td class="border-t w-px">
+                                <div class="px-4 py-2 flex items-center focus:text-indigo-500">
+                                    <inertia-link class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-gray-500 hover:bg-gray-600 active:bg-gray-700 foucs:bg-gray-700" :href="route('back.companies.mail', {company_id: company_mail.company_id, id: company_mail.id})">
+                                        {{ $t('words.view') }}
+                                    </inertia-link>
                                 </div>
                             </td>
                         <tr v-if="company.trainees.length === 0">

@@ -425,6 +425,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('companies/{id}/ptcnet', [\App\Http\Controllers\Back\CompaniesController::class, 'markAsPtcNet']);
         Route::resource('companies', \App\Http\Controllers\Back\CompaniesController::class);
         Route::resource('companies.invoices', \App\Http\Controllers\Back\CompanyInvoicesController::class)->only(['create', 'store']);
+        Route::get('companies/{company_id}/mails/{id}', [App\Http\Controllers\Webhooks\MailController::class,'viewCompanyMails'])->name('companies.mail');
 
         //Route::put('user/{id}', [\App\Http\Controllers\Back\UserCompanyController::class, 'index'])->name('user.index');
         //Route::resource('user', \App\Http\Controllers\Back\UserCompanyController::class);
@@ -440,9 +441,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('{company_id}/trainees/excel', [\App\Http\Controllers\Back\CompaniesContractsController::class, 'excel'])->name('trainees.excel');
             Route::resource('{company_id}/contracts', \App\Http\Controllers\Back\CompaniesContractsController::class);
             Route::get('{company_id}/invoices/bulk-pdf', [\App\Http\Controllers\Back\CompanyInvoicesController::class, 'bulkPdf'])->name('invoices.bulk-pdf');
-            Route::get('{company_id}/invoices/pdf', [\App\Http\Controllers\Back\CompanyInvoicesController::class, 'pdf'])->name('invoices.pdf');
-        });
+            Route::get('/invoices/pdf', [\App\Http\Controllers\Back\CompanyInvoicesController::class, 'pdf'])->name('invoices.pdf');
 
+        });
         Route::post('company-contracts/attach-instructor', [\App\Http\Controllers\Back\CompaniesContractsController::class, 'attachInstructor'])->name('company-contracts.attach-instructor');
         Route::post('company-contracts/detach-instructor', [\App\Http\Controllers\Back\CompaniesContractsController::class, 'detachInstructor'])->name('company-contracts.detach-instructor');
 

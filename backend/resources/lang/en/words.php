@@ -624,4 +624,6 @@ return [
     'zoom-account' => 'Zoom account',
     'sender' => 'Sender',
     'text-body' => 'Text Body',
+    'mail-body' => 'Email Content',
+    'mail-subject' => 'Subject',
 ];
