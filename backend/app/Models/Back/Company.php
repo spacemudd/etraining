@@ -165,4 +165,9 @@ class Company extends Model implements SearchableLabels, Auditable
             return Timezone::convertToLocal($this->created_at, 'Y-m-d h:i A');
         }
     }
+
+    public function company_mails()
+    {
+        return $this->hasMany(CompanyMail::class)->latest();
+    }
 }
