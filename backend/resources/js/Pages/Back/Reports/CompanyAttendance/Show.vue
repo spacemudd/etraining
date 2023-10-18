@@ -126,7 +126,8 @@
                         <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             <label @click.prevent="toggleTrainee(trainee)">
                                 <input class="ml-5" type="checkbox" name="checkbox" :checked="Number(trainee.pivot.active)">
-                                {{ trainee.name }}
+                                {{ trainee.name }}<br/>
+                                {{ trainee.clean_phone }}
                             </label>
                         </th>
                         <td class="py-4 px-6">
