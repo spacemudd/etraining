@@ -241,7 +241,7 @@ export default {
                 company_id: null,
                 trainees: [],
                 date: new Date().toISOString().substring(0, 10),
-                reason: 'عدم سداد مالي',
+                reason: '',
                 emails_to: [],
                 emails_cc: [],
                 emails_bcc: [],
