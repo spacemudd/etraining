@@ -411,7 +411,7 @@
                 }
             },
             unblock() {
-                if (confirm(this.$t('words.are-you-sure') + this.trainee.deleted_remark)) {
+                if (confirm(this.$t('words.are-you-sure') + ' ' + this.trainee.deleted_remark)) {
                     this.$inertia.post(route('back.trainees.unblock', {trainee_id: this.trainee.id}));
                 }
             },
