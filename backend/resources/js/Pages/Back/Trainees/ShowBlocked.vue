@@ -19,7 +19,7 @@
                         {{ $t('words.attendance-sheet') }}
                     </a>
 
-                    <button @click="unblock" class="items-center justify-end rounded-md px-4 py-2 bg-red-600 hover:bg-red-600 text-right">
+                    <button @click="unblock" class="items-center justify-end rounded-md px-4 py-2 bg-red-600 hover:bg-red-600 text-right text-white">
                         {{ $t('words.unblock') }}
                     </button>
 
