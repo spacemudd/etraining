@@ -19,7 +19,7 @@
                         {{ $t('words.attendance-sheet') }}
                     </a>
 
-                    <button @click="unblock" class=" items-center justify-end rounded-md px-4 py-2 bg-blue-200 hover:bg-blue-300 text-right">
+                    <button @click="unblock" class="items-center justify-end rounded-md px-4 py-2 bg-red-600 hover:bg-red-600 text-right">
                         {{ $t('words.unblock') }}
                     </button>
 
@@ -150,6 +150,7 @@
                 <div class="col-span-6 sm:col-span-2">
                     <jet-label for="reason" :value="$t('words.delete-remark')" />
                     <input id="reason"
+                            autocomplete="off"
                                type="text"
                                class="mt-1 block w-full border-2 border-gray-200 bg-white py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none focus:border-blue-300"
                                @blur="saveDeletedRemark(trainee)"
@@ -410,7 +411,7 @@
                 }
             },
             unblock() {
-                if (confirm(this.$t('words.are-you-sure'))) {
+                if (confirm(this.$t('words.are-you-sure') + this.trainee.deleted_remark)) {
                     this.$inertia.post(route('back.trainees.unblock', {trainee_id: this.trainee.id}));
                 }
             },
