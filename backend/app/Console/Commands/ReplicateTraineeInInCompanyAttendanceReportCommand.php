@@ -6,7 +6,7 @@ use App\Models\Back\CompanyAttendanceReportsTrainee;
 use DB;
 use Illuminate\Console\Command;
 
-class ReplicateTraineeInAttendanceReportCommand extends Command
+class ReplicateTraineeInInCompanyAttendanceReportCommand extends Command
 {
     /**
      * The name and signature of the console command.
