@@ -65,10 +65,10 @@
             <p style="margin-top:2.5rem;">يشهد مركز احترافية المدرب للتدريب بأن المتدربة  "{{ $certificate->trainee->name }}"</p>
             <p style="margin-top:2.5rem;">وجنسيتها سعودية بموجب السجل المدني رقم "{{ $certificate->trainee->identity_number }}"</p>
             <p style="margin-top:2.5rem;">قـــد حضرت دورة ({{ $certificate->course->name_ar }}) عدد ساعاتها التدريبية 16 ساعة</p>
-            <p style="margin-top:2.5rem;">وعدد أيامها التدريبية (8) أيام والمنعقدة في الفترة من </p>
-            <p style="margin-top:2.5rem;">(18 - 02 - 1445هـ  إلى 12 - 03 - 1445هـ  )</p>
+            <p style="margin-top:2.5rem;">وعدد أيامها التدريبية (4) أيام والمنعقدة في الفترة من </p>
+            <p style="margin-top:2.5rem;">(16 - 03 - 1445هـ  إلى 11 - 04 - 1445هـ  )</p>
             <p style="margin-top:2.5rem;">والمعتمدة من المؤسسة العامة للتدريب التقني والمهني برقم</p>
-            <p style="margin-top:2.5rem;">(11581649)</p>
+            <p style="margin-top:2.5rem;">(11588141)</p>
             <p style="margin-top:5rem;">والله الموفق،،،</p>
             <div class="col-7">
                 <p style="margin-bottom:0;padding-bottom: 0"><b>ختم المنشأة التدريبية</b></p>
@@ -77,8 +77,8 @@
             <div class="col-4" style="text-align: right;">
                 <p>توقيع المديرة: <img  id="page-stamp" src="{{ public_path('/img/signature.png') }}"></p>
                 <p class="small-text">
-                    <b>حررت بتاريخ:    12 / 3  /1445  هـ </b><br/>
-                    <b>الموافق:            28 /  9 /2023 م</b>
+                    <b>حررت بتاريخ:    11 / 4  /1445  هـ </b><br/>
+                    <b>الموافق:            26 /  10 /2023 م</b>
                 </p>
                 <p class="small-text">ملاحظة: أي كشط او تعديل على الشهادة تعتبر لاغية</p>
             </div>
