@@ -816,7 +816,10 @@ export default {
             "sender": "المرسل",
             "text-body": "محتوى الرسالة",
             "mail-body": "محتوى البريد الإلكتروني",
-            "mail-subject": "عنوان البريد الإلكتروني"
+            "mail-subject": "عنوان البريد الإلكتروني",
+            "course-review": "تقييم البرنامج",
+            "review-by-trainee": "قياس رضا المتدرب",
+            "review-by-instructor": "قياس رضا المدرب"
         }
     },
     "en": {
@@ -1579,7 +1582,10 @@ export default {
             "sender": "Sender",
             "text-body": "Text Body",
             "mail-body": "Email Content",
-            "mail-subject": "Subject"
+            "mail-subject": "Subject",
+            "course-review": "Course Review",
+            "review-by-trainee": "Measuring trainee satisfaction",
+            "review-by-instructor": "Measuring instructor satisfaction"
         }
     }
 }

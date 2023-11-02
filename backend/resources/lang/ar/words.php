@@ -641,4 +641,8 @@ return [
     'text-body' => 'محتوى الرسالة',
     'mail-body' => 'محتوى البريد الإلكتروني',
     'mail-subject' => 'عنوان البريد الإلكتروني',
+    'course-review' => 'تقييم البرنامج',
+    'review-by-trainee' => 'قياس رضا المتدرب',
+    'review-by-instructor' => 'قياس رضا المدرب',
+
 ];

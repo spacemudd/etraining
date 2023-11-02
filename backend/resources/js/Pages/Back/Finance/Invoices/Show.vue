@@ -292,6 +292,7 @@
                         </div>
                         <div>
                             <button
+                                v-model="edit"
                                 v-if="!editButton.editOption"
                                 @click="editInvoice"
                                 class="items-center justify-end rounded-md px-4 py-2 bg-yellow-200 hover:bg-gray-300 float-left text-right"
@@ -324,10 +325,12 @@
                     <div class="white-bg rounded bg-gray-50 rounded shadow-lg p-5">
                         <div class="col-span-6 sm:col-span-2 px-8">
                             <jet-label
+                                v-if="edit"
                                 for="identity_number"
                                 :value="$t('words.amount')"
                             />
                             <jet-input
+
                                 id="grand_total"
                                 type="text"
                                 :class="editButton.inputClass"
@@ -335,6 +338,23 @@
                                 :disabled="!editButton.editOption"
                             />
                         </div>
+                    </div>
+                    <div class="col-span-3 sm:col-span-2">
+                        <jet-label :value="$t('words.time-period')" />
+                        <date-range-picker
+                            ref="picker"
+                            :locale-data="{ firstDay: 1, format: 'dd-mm-yyyy' }"
+                            :singleDatePicker="false"
+                            :timePicker="false"
+                            :showWeekNumbers="true"
+                            :showDropdowns="true"
+                            :autoApply="false"
+                            v-model="updateDate.period"
+                        >
+                            <template v-slot:input="picker" style="width:100%;">
+                                {{ picker.fromDate | date }} - {{ picker.toDate | date }}
+                            </template>
+                        </date-range-picker>
                     </div>
                 </div>
             </div>
@@ -391,8 +411,16 @@ export default {
         ValidationErrors,
         TraineeAuditContainer,
     },
+    filters: {
+        date (val) {
+            return val ? val.toLocaleString('en-GB', {year: 'numeric', month: '2-digit', day: '2-digit'}) : ''
+        }
+    },
     data() {
         return {
+            updateDate: this.$inertia.form({
+                period: {fromDate, toDate}
+            }),
             cancelButton: {
                 text: this.$t('words.cancel'),
             },
@@ -402,10 +430,14 @@ export default {
                 inputClass: "mt-1 block w-full bg-gray-200",
                 selectInputClass: "mt-1 block w-full border border-gray-200 bg-gray-200 py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none"
             },
+            edit: true,
         }
     },
     mounted() {
-
+            this.updateDate.period = {
+                fromDate: this.invoice.from_date,
+                toDate: this.invoice.to_date,
+            }
     },
     methods: {
         cancelEdit() {

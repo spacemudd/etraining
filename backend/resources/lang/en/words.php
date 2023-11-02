@@ -626,4 +626,7 @@ return [
     'text-body' => 'Text Body',
     'mail-body' => 'Email Content',
     'mail-subject' => 'Subject',
+    'course-review' => 'Course Review',
+    'review-by-trainee' => 'Measuring trainee satisfaction',
+    'review-by-instructor' => 'Measuring instructor satisfaction'
 ];

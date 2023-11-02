@@ -189,7 +189,7 @@ class PaymentCardController extends Controller
     {
         if (request()->invoice_id) {
             $invoice = Invoice::findOrFail(request()->invoice_id);
-          $pending_amount = $invoice->grand_total;
+            $pending_amount = $invoice->grand_total;
         } else {
             $invoice = null;
             $pending_amount = auth()->user()->trainee->total_amount_owed;
