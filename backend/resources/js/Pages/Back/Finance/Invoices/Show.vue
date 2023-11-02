@@ -48,7 +48,7 @@
 
                             <inertia-link v-if="invoice.can_upload_receipt"
                                           :href="route('back.finance.invoices.upload-receipt-form', invoice.id)"
-                                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">
+                                          class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">
                                 {{ $t('words.upload-receipt') }}
                             </inertia-link>
                             <button @click="deleteInvoice(invoice)"
@@ -61,8 +61,8 @@
                             <button @click="markAsUnpaid"
                                     v-can="'approve-payment-receipt'"
                                     type="button"
-                                          v-if="invoice.status === 3 || invoice.status === 2"
-                                          class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">
+                                    v-if="invoice.status === 3 || invoice.status === 2"
+                                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">
                                 [{{ $t('words.chase') }}] {{ $t('words.mark-as-unpaid') }}
                             </button>
                             <button @click="markAsPaid"
@@ -84,8 +84,8 @@
 
                                 <inertia-link :href="route('back.finance.invoices.approve-payment-receipt', invoice.id)"
                                               v-can="'approve-invoice-paid'"
-                                            v-if="invoice.status === 3 || invoice.status === 4"
-                                            class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-green-500 hover:bg-green-600 active:bg-green-700 foucs:bg-green-700">
+                                              v-if="invoice.status === 3 || invoice.status === 4"
+                                              class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-green-500 hover:bg-green-600 active:bg-green-700 foucs:bg-green-700">
                                     [{{ $t('words.finance') }}] {{ $t('words.approve-payment-receipt') }}
                                 </inertia-link>
                             </template>
@@ -292,7 +292,6 @@
                         </div>
                         <div>
                             <button
-                                v-model="edit"
                                 v-if="!editButton.editOption"
                                 @click="editInvoice"
                                 class="items-center justify-end rounded-md px-4 py-2 bg-yellow-200 hover:bg-gray-300 float-left text-right"
@@ -325,12 +324,10 @@
                     <div class="white-bg rounded bg-gray-50 rounded shadow-lg p-5">
                         <div class="col-span-6 sm:col-span-2 px-8">
                             <jet-label
-                                v-if="edit"
                                 for="identity_number"
                                 :value="$t('words.amount')"
                             />
                             <jet-input
-
                                 id="grand_total"
                                 type="text"
                                 :class="editButton.inputClass"
@@ -338,23 +335,6 @@
                                 :disabled="!editButton.editOption"
                             />
                         </div>
-                    </div>
-                    <div class="col-span-3 sm:col-span-2">
-                        <jet-label :value="$t('words.time-period')" />
-                        <date-range-picker
-                            ref="picker"
-                            :locale-data="{ firstDay: 1, format: 'dd-mm-yyyy' }"
-                            :singleDatePicker="false"
-                            :timePicker="false"
-                            :showWeekNumbers="true"
-                            :showDropdowns="true"
-                            :autoApply="false"
-                            v-model="updateDate.period"
-                        >
-                            <template v-slot:input="picker" style="width:100%;">
-                                {{ picker.fromDate | date }} - {{ picker.toDate | date }}
-                            </template>
-                        </date-range-picker>
                     </div>
                 </div>
             </div>
@@ -411,16 +391,8 @@ export default {
         ValidationErrors,
         TraineeAuditContainer,
     },
-    filters: {
-        date (val) {
-            return val ? val.toLocaleString('en-GB', {year: 'numeric', month: '2-digit', day: '2-digit'}) : ''
-        }
-    },
     data() {
         return {
-            updateDate: this.$inertia.form({
-                period: {fromDate, toDate}
-            }),
             cancelButton: {
                 text: this.$t('words.cancel'),
             },
@@ -430,14 +402,10 @@ export default {
                 inputClass: "mt-1 block w-full bg-gray-200",
                 selectInputClass: "mt-1 block w-full border border-gray-200 bg-gray-200 py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none"
             },
-            edit: true,
         }
     },
     mounted() {
-            this.updateDate.period = {
-                fromDate: this.invoice.from_date,
-                toDate: this.invoice.to_date,
-            }
+
     },
     methods: {
         cancelEdit() {
