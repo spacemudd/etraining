@@ -690,7 +690,4 @@ Route::middleware(['auth:sanctum'])->group(function() {
 });
 
 // Some routes for nowyer
-Route::get('sm3', function() { return redirect()->to('https://forms.gle/57h3889NpA38hLvb8'); }); // survey
-Route::get('sm4', function() { return redirect()->to('https://forms.gle/UgEsXdEbNkAWNHuA8'); }); // attendance
-Route::get('sm1', function() { return redirect()->to('https://forms.gle/erZPhk4ZHwGivFNs8'); }); // before
-Route::get('sm2', function() { return redirect()->to('https://forms.gle/zKitHhs6u7aBwVA2A'); }); // after
+Route::get('sm3', function() { return redirect()->to('https://linktr.ee/ptcksa'); }); // used for events, linktree account registered by billing@ptc-ksa.net
