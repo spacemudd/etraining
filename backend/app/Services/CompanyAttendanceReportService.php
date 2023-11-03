@@ -44,7 +44,7 @@ class CompanyAttendanceReportService
         $clone->to_emails = str_replace($record, $reprecord, $clone->to_emails);
         $clone->cc_emails = str_replace($record, $reprecord, $clone->cc_emails);
         $clone->date_from = $original->date_from->clone()->addMonth();
-        if ($clone->date_from->month === 2) {
+        if ($clone->date_from->daysInMonth < $original->date_from->daysInMonth) {
             $clone->date_to = $original->date_from
                 ->clone()
                 ->endOfMonth()
