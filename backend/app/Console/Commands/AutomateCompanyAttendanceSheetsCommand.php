@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Back\Company;
+use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
 use App\Services\CompanyAttendanceReportService;
 use Carbon\Carbon;
