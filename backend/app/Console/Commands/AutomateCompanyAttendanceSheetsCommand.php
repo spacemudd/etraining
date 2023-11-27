@@ -47,18 +47,22 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
         foreach ($companies as $company) {
             if ($company->trainees()->count() === 0) {
+                 $this->info('No trainees, skipping');
                 continue;
             }
 
-            //$this->info('Processing company: '.$company->name_ar);
+            if (Invoice::where('company_id', $company->id)->whereBetween('to_date', ['2023-10-01', '2023-11-30'])->count() === 0) {
+                $this->info('No invoices in 2023-10 -> 2023-11. Skipping: '.$company->name_ar);
+                continue;
+            }
 
             // TODO: Has report for current month? Update for the current month
             $currentMonthReport = $company->company_attendance_reports()
-                ->whereBetween('created_at', ['2023-09-01', '2023-09-30'])
+                ->whereBetween('date_to', ['2023-11-01', '2023-11-30'])
                 ->first();
 
             if ($currentMonthReport) {
-                // $this->info('Current report already exists for the same period, skipping');
+                 $this->info('Current report already exists for the same period, skipping');
                 continue;
             }
 
@@ -69,19 +73,19 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
             if ($lastReport && $lastReport->to_emails) {
                 // Is the number of trainees equal to the number of trainees in the company?
                 if ($lastReport->trainees()->count() !== $company->trainees()->count()) {
-                    $traineesNotFound = $lastReport->trainees()->pluck('trainees.id')->diff($company->trainees()->pluck('trainees.id'));
-                    if ($traineesNotFound->count() > 0) {
-                        foreach ($traineesNotFound as $notFound) {
-                            $info = [
-                                'Count is not equal to last report',
-                                $company->name_ar,
-                                ($company->trainees()->count() - $lastReport->trainees()->count()),
-                                Trainee::withTrashed()->find($notFound)->name,
-                            ];
-                            $this->info(implode(' , ', $info));
-                        }
-                    }
-                    //$this->info('Number of trainees in the last report is not equal to the number of trainees in the company. Skipping: '.$company->name_ar.' , '.());
+                    //$traineesNotFound = $lastReport->trainees()->pluck('trainees.id')->diff($company->trainees()->pluck('trainees.id'));
+                    //if ($traineesNotFound->count() > 0) {
+                    //    foreach ($traineesNotFound as $notFound) {
+                    //        $info = [
+                    //            'Count is not equal to last report',
+                    //            $company->name_ar,
+                    //            ($company->trainees()->count() - $lastReport->trainees()->count()),
+                    //            Trainee::withTrashed()->find($notFound)->name,
+                    //        ];
+                    //        $this->info(implode(' , ', $info));
+                    //    }
+                    //}
+                    $this->info('Number of trainees in the last report is not equal to the number of trainees in the company. Skipping: '.$company->name_ar.' , '.());
                     continue;
                 }
 
@@ -96,31 +100,31 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 // TODO: Choose, clone from previous period or new report with current months' students?
                 // $clone = app()->make(CompanyAttendanceReportService::class)->clone($lastReport->id);
 
-                // $clone = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
-                //$clone->date_from = Carbon::parse('2023-09-01')->setTimezone('Asia/Riyadh')->startOfDay();
-                //$clone->date_to = Carbon::parse('2023-09-31')->setTimezone('Asia/Riyadh')->endOfDay();
-                //$clone->cc_emails = Str::replace('ptc-ksa.com', 'ptc-ksa.net', $lastReport->cc_emails);
-                //if ($company->salesperson_email && !Str::contains($clone->cc_emails, $company->salesperson_email)) {
-                //    $clone->cc_emails .= ', '.$company->salesperson_email;
-                //}
-                //$clone->save();
-                //app()->make(CompanyAttendanceReportService::class)->approve($clone->id);
-                //$this->info('Sent company: '.$company->name_ar);
+                $clone = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
+                $clone->date_from = Carbon::parse('2023-11-01')->setTimezone('Asia/Riyadh')->startOfDay();
+                $clone->date_to = Carbon::parse('2023-11-30')->setTimezone('Asia/Riyadh')->endOfDay();
+                $clone->cc_emails = Str::replace('ptc-ksa.com', 'ptc-ksa.net', $lastReport->cc_emails);
+                if ($company->salesperson_email && !Str::contains($clone->cc_emails, $company->salesperson_email)) {
+                    $clone->cc_emails .= ', '.$company->salesperson_email;
+                }
+                $clone->save();
+                app()->make(CompanyAttendanceReportService::class)->approve($clone->id);
+                $this->info('Sent company: '.$company->name_ar);
             } else {
                 if (!$company->email) {
                     $this->info('No email for company. Skipping: '.$company->name_ar);
                     continue;
                 }
-                //$this->info('No last report. Creating new report - '.$company->name_ar);
-                //$report = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
-                //$report->date_from = Carbon::parse('2023-08-01')->setTimezone('Asia/Riyadh')->startOfDay();
-                //$report->date_to = Carbon::parse('2023-08-31')->setTimezone('Asia/Riyadh')->endOfDay();
-                //$report->cc_emails = 'sara@ptc-ksa.net, m_shehatah@ptc-ksa.net, ceo@ptc-ksa.net, mashael.a@ptc-ksa.net';
-                //if ($company->salesperson_email && !Str::contains($report->cc_emails, $company->salesperson_email)) {
-                //    $report->cc_emails .= ', '.$company->salesperson_email;
-                //}
-                //$report->save();
-                //app()->make(CompanyAttendanceReportService::class)->approve($report->id);
+                $this->info('No last report. Creating new report - '.$company->name_ar);
+                $report = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
+                $report->date_from = Carbon::parse('2023-11-01')->setTimezone('Asia/Riyadh')->startOfDay();
+                $report->date_to = Carbon::parse('2023-11-30')->setTimezone('Asia/Riyadh')->endOfDay();
+                $report->cc_emails = 'sara@ptc-ksa.net, m_shehatah@ptc-ksa.net, ceo@ptc-ksa.net, mashael.a@ptc-ksa.net';
+                if ($company->salesperson_email && !Str::contains($report->cc_emails, $company->salesperson_email)) {
+                    $report->cc_emails .= ', '.$company->salesperson_email;
+                }
+                $report->save();
+                app()->make(CompanyAttendanceReportService::class)->approve($report->id);
             }
         }
 
