@@ -201,12 +201,14 @@
                                         @else
                                             {{ count($days) }}
                                         @endif
+                                        @if ($report->with_attendance_times)
                                         <span style="font-size:12px;">
                                             <br/>
                                             دخول:
                                             <br/>
                                             خروج:
                                         </span>
+                                        @endif
                                     </td>
                                     @for($i=0;$i<count($days);$i++)
                                         <td style="{{ $days[$i]['vacation_day'] ? 'background:#e0e0e0;' : '' }}">
