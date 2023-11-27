@@ -85,7 +85,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                     //        $this->info(implode(' , ', $info));
                     //    }
                     //}
-                    $this->info('Number of trainees in the last report is not equal to the number of trainees in the company. Skipping: '.$company->name_ar.' , '.());
+                    $this->info('Number of trainees in the last report is not equal to the number of trainees in the company. Skipping: '.$company->name_ar);
                     continue;
                 }
 
