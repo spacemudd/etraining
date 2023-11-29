@@ -3,7 +3,10 @@
 namespace App\Models\Back;
 
 use App\Models\Back\Region;
+use App\Models\CompanyAllowedUser;
 use App\Models\SearchableLabels;
+use App\Models\User;
+use Gate;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -67,6 +70,15 @@ class Company extends Model implements SearchableLabels, Auditable
                     $builder->whereNotNull('is_ptc_net');
                 });
             }
+        }
+
+        if (!auth()->user()->can('view-all-companies')) {
+            static::addGlobalScope('companyAllowedUsers', function (Builder $builder) {
+                $builder->whereHas('allowed_users', function ($q) {
+                    $q->where('user_id', auth()->user()->id);
+                });
+            });
+
         }
 
         static::creating(function ($model) {
@@ -153,6 +165,14 @@ class Company extends Model implements SearchableLabels, Auditable
     public function resignations()
     {
         return $this->hasMany(Resignation::class)->latest();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function allowed_users()
+    {
+        return $this->belongsToMany(User::class, 'company_allowed_users', 'company_id', 'user_id');
     }
 
     /**

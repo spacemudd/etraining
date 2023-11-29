@@ -25,6 +25,13 @@
 
                 <div class="col-span-4 flex items-center justify-end bg-gray-50 text-right gap-6">
                     <inertia-link
+                        v-can="'restrict-user-companies-settings'"
+                        :href="route('back.companies.allowed-users.index', {company_id: company.id})"
+                        class="flex items-center justify-start rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right"
+                    >
+                        {{ $t('words.open-permissions') }}
+                    </inertia-link>
+                    <inertia-link
                         v-if="$page.props.user.email === 'shafiqalshaar@clarastars.com'"
                         :href="`/back/companies/${this.company.id}/ptcnet`"
                         class="flex items-center justify-start rounded-md mx-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right">

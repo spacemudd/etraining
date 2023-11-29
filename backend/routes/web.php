@@ -3,6 +3,7 @@
 use App\Http\Controllers\Back\CompanyAttendanceReportController;
 use App\Http\Controllers\Back\CompanyResignationsController;
 use App\Http\Controllers\Back\TraineesGroupsController;
+use App\Http\Controllers\CompanyAllowedUsersController;
 use App\Http\Controllers\Webhooks\MailController;
 use App\Http\Controllers\ZoomAccountController;
 use App\Models\Back\Invoice;
@@ -442,7 +443,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::resource('{company_id}/contracts', \App\Http\Controllers\Back\CompaniesContractsController::class);
             Route::get('{company_id}/invoices/bulk-pdf', [\App\Http\Controllers\Back\CompanyInvoicesController::class, 'bulkPdf'])->name('invoices.bulk-pdf');
             Route::get('{company_id}/invoices/pdf', [\App\Http\Controllers\Back\CompanyInvoicesController::class, 'pdf'])->name('invoices.pdf');
-
+            Route::get('{company_id}/allowed-users', [CompanyAllowedUsersController::class, 'index'])->name('allowed-users.index');
+            Route::post('{company_id}/allowed-users', [CompanyAllowedUsersController::class, 'store'])->name('allowed-users.store');
+            Route::delete('{company_id}/allowed-users/{id}', [CompanyAllowedUsersController::class, 'delete'])->name('allowed-users.delete');
         });
         Route::post('company-contracts/attach-instructor', [\App\Http\Controllers\Back\CompaniesContractsController::class, 'attachInstructor'])->name('company-contracts.attach-instructor');
         Route::post('company-contracts/detach-instructor', [\App\Http\Controllers\Back\CompaniesContractsController::class, 'detachInstructor'])->name('company-contracts.detach-instructor');

@@ -644,5 +644,7 @@ return [
     'course-review' => 'تقييم البرنامج',
     'review-by-trainee' => 'قياس رضا المتدرب',
     'review-by-instructor' => 'قياس رضا المدرب',
-
+    'view-all-companies' => 'عرض جميع الشركات',
+    'open-permissions' => 'صلاحيات الدخول',
+    'in-addition-to-users-with-global-permissions' => 'بالإضافة الى المستخدمين الذي لديهم صلاحيات عامة',
 ];
