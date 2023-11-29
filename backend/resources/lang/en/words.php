@@ -628,5 +628,9 @@ return [
     'mail-subject' => 'Subject',
     'course-review' => 'Course Review',
     'review-by-trainee' => 'Measuring trainee satisfaction',
-    'review-by-instructor' => 'Measuring instructor satisfaction'
+    'review-by-instructor' => 'Measuring instructor satisfaction',
+    'restrict-user-companies-settings' => 'Restrict user companies settings',
+    'view-all-companies' => 'View all companies',
+    'open-permissions' => 'Open permissions',
+    'in-addition-to-users-with-global-permissions' => 'In addition to users with global permissions',
 ];

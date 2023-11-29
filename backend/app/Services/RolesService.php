@@ -60,8 +60,10 @@ class RolesService
         'view-orders',
         'accept-reject-new-email',
         'manage-resignations',
-        'edit-invoice-amount'
+        'edit-invoice-amount',
         // add the same name of the role to translation files.
+        'restrict-user-companies-settings',
+        'view-all-companies',
     ];
 
     public $instructorPermissions = [
