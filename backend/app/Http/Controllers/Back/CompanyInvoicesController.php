@@ -28,7 +28,7 @@ class CompanyInvoicesController extends Controller
 
         $company = Company::query()
             ->with(['trainees' => function($q) {
-                $q->withTrashed();
+
             }])
             ->findOrFail($company_id);
 
