@@ -1,4 +1,4 @@
-@component('mail::resignation-message-layout')
+@component('mail::message')
 
 السادة الكرام / {{ $resignation->company->name_ar }}
 
@@ -19,4 +19,12 @@
 
 مع تحياتنا،
 @endif
+
+    @slot('footer')
+        @component('mail::footer')
+            البريد الالكتروني مرسل عن طريق النظام الالكتروني بشكل تلقائي في حالة وجود اي ملاحظة لا تترددوا بالتواصل معنا على البريد الالكتروني المعتمد بدون اي مسؤولية قانونية على المرسل.
+            <br/>
+            © {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved.')
+        @endcomponent
+    @endslot
 @endcomponent
