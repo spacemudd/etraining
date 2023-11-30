@@ -72,13 +72,12 @@ class Company extends Model implements SearchableLabels, Auditable
             }
         }
 
-        if (!auth()->user()->can('view-all-companies')) {
+        if (!optional(auth()->user())->can('view-all-companies')) {
             static::addGlobalScope('companyAllowedUsers', function (Builder $builder) {
                 $builder->whereHas('allowed_users', function ($q) {
                     $q->where('user_id', auth()->user()->id);
                 });
             });
-
         }
 
         static::creating(function ($model) {
