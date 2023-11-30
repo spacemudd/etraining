@@ -61,16 +61,10 @@ class Role extends \Spatie\Permission\Models\Role
 
     public function getCanManageUsersAttribute()
     {
-        if (Str::contains($this->name, 'admins')) return true;
-        if (Str::contains($this->name, 'finance')) return true;
-        if (Str::contains($this->name, 'chasers')) return true;
-
         if (Str::contains($this->name, 'instructors')) return false;
         if (Str::contains($this->name, 'trainees')) return false;
 
-        if (Str::contains($this->name, 'services')) return true;
-        if (Str::contains($this->name, 'services_manager')) return true;
-        if (Str::contains($this->name, 'backend')) return true;
+        return true;
     }
 
     /**
