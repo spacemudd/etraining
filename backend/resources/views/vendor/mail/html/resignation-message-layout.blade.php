@@ -22,7 +22,7 @@
 
 {{-- Footer --}}
 @slot('footer')
-@component('mail::footer')
+@component('mail::resignation-footer')
 © {{ date('Y') }} {{ config('app.developer-name') }}. @lang('words.all-rights-reserved')
 @endcomponent
 @endslot
