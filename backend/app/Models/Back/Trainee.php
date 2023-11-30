@@ -139,6 +139,10 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
                 VerifyPhoneOwnershipJob::dispatch($model->id);
             }
         });
+
+        static::restored(function($model) {
+            $model->posted_at = null;
+        });
     }
 
     /**

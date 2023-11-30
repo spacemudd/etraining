@@ -98,7 +98,7 @@ class CompaniesController extends Controller
         $company = Company::query()
             ->with([
                 'trainees' => function($model) {
-                    $model->withTrashed();
+                    $model->where('posted_at', '=', null)->withTrashed();
                 },
                 'contracts' => function ($model) {
                     $model->with([
@@ -122,7 +122,7 @@ class CompaniesController extends Controller
 
         $company = $company->findOrFail($id);
 
-        Gate::authorize('view-company', $company);
+//        Gate::authorize('view-company', $company);
 
         $invoices = $company->invoices()
             ->select('*')
@@ -209,7 +209,7 @@ class CompaniesController extends Controller
     {
         DB::beginTransaction();
         $company = Company::findOrFail($id);
-        $company->trainees()->onlyTrashed()->update(['company_id' => null]);
+        $company->trainees()->onlyTrashed()->update(['posted_at' => now()]);
         DB::commit();
         return redirect()->route('back.companies.show', $id);
     }
