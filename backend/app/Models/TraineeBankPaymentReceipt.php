@@ -59,7 +59,7 @@ class TraineeBankPaymentReceipt extends Model implements Auditable, HasMedia
     {
         return $this->addMedia($file)
             ->sanitizingFileName(function ($fileName) {
-                return Str::slug($fileName);
+                return Str::slug(Str::beforeLast($fileName, '.')) . '.' . Str::afterLast($fileName, '.');
             })
             ->withAttributes([
                 'team_id' => $this->team_id,

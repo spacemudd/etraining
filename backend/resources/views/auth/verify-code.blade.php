@@ -19,7 +19,7 @@
 
             <div>
                 <x-jet-label value="{{ __('words.verify_code') }}" />
-                <x-jet-input dir="ltr" class="block mt-1 w-full" type="text" name="code" required autofocus />
+                <x-jet-input dir="ltr" class="block mt-1 w-full" type="text" name="code" autocomplete="off" required autofocus />
             </div>
 
             <div class="flex items-center justify-end mt-4">

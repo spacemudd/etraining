@@ -545,4 +545,15 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
 
         return __('words.ownership-is-pending');
     }
+
+    public function withdraws()
+    {
+        return $this->hasMany(TraineeWithdraw::class);
+    }
+
+    public function pending_withdraws()
+    {
+        return $this->hasMany(TraineeWithdraw::class)
+            ->where('approved_at', null);
+    }
 }

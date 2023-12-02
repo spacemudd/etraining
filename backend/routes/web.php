@@ -4,6 +4,8 @@ use App\Http\Controllers\Back\CompanyAttendanceReportController;
 use App\Http\Controllers\Back\CompanyResignationsController;
 use App\Http\Controllers\Back\TraineesGroupsController;
 use App\Http\Controllers\CompanyAllowedUsersController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Trainees\WithdrawsController;
 use App\Http\Controllers\Webhooks\MailController;
 use App\Http\Controllers\ZoomAccountController;
 use App\Models\Back\Invoice;
@@ -381,9 +383,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::get('orders/it/new-email', [\App\Http\Controllers\NewEmailController::class, 'index'])->name('new_email.index');
     Route::post('orders/it/new-email', [\App\Http\Controllers\NewEmailController::class, 'store'])->name('new_email.store');
 
-    Route::get('orders/resignations', [\App\Http\Controllers\Back\OrdersResignationsController::class, 'index'])->name('orders.resignations.index');
-    Route::get('orders/resignations/create', [\App\Http\Controllers\Back\OrdersResignationsController::class, 'create'])->name('orders.resignations.create');
-
+    Route::get('orders/withdrawal-requests', [\App\Http\Controllers\Back\OrdersWithdrawalRequestsController::class, 'index'])->name('orders.withdrawal-requests.index');
+    Route::post('orders/withdrawal-requests/{id}', [\App\Http\Controllers\Back\OrdersWithdrawalRequestsController::class, 'approve'])->name('orders.withdrawal-requests.approve');
+    Route::delete('orders/withdrawal-requests/{id}', [\App\Http\Controllers\Back\OrdersWithdrawalRequestsController::class, 'destroy'])->name('orders.withdrawal-requests.destroy');
 
     // For admins
     Route::prefix('back')->middleware('redirect-trainees-to-dashboard')->name('back.')->group(function() {
@@ -658,6 +660,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
     // For trainees
     Route::prefix('trainees')->name('trainees.')->group(function() {
+
+        Route::get('profile', [\App\Http\Controllers\Trainees\ProfileController::class, 'index'])->name('profile.index');
+        Route::get('withdraw', [WithdrawsController::class, 'create'])->name('withdraws.create');
+        Route::post('withdraw', [WithdrawsController::class, 'store'])->name('withdraws.store');
 
         Route::get('attendance-sheet', [\App\Http\Controllers\Trainees\AttendanceSheetController::class, 'index'])->name('attendance-sheet.index');
         Route::get('training-packages', [\App\Http\Controllers\Trainees\TrainingPackagesController::class, 'index'])->name('training-packages.index');

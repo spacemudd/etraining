@@ -198,9 +198,9 @@
                                     aria-label="submenu"
                                 >
                                     <li class="flex">
-                                        <a
+                                        <inertia-link
                                             class="inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200"
-                                            href="#"
+                                            :href="route('trainees.profile.index')"
                                         >
                                             <svg
                                                 class="w-4 h-4 ltr:mr-3 rtl:ml-3"
@@ -217,7 +217,7 @@
                                                 ></path>
                                             </svg>
                                             <span>{{ $t('words.profile') }}</span>
-                                        </a>
+                                        </inertia-link>
                                     </li>
                                     <li class="flex">
                                         <a
