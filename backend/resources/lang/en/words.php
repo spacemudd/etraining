@@ -648,4 +648,6 @@ return [
     'submitted-at' => 'Submitted at',
     'approved-at' => 'Approved at',
     'file' => 'File',
+    'receive-trainee-withdrawal-notifications' => 'Receive trainee withdrawal notifications',
+    'new-withdrawal-request' => 'New withdrawal request',
 ];

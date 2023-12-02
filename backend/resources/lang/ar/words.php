@@ -663,4 +663,6 @@ return [
     'submitted-at' => 'تاريخ الطلب',
     'approved-at' => 'تاريخ الاعتماد',
     'file' => 'الملف',
+    'receive-trainee-withdrawal-notifications' => 'استلام اشعارات الانسحاب',
+    'new-withdrawal-request' => 'طلب انسحاب جديد',
 ];

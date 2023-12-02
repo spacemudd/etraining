@@ -61648,7 +61648,9 @@ __webpack_require__.r(__webpack_exports__);
       "application-number": "رقم الطلب",
       "submitted-at": "تاريخ الطلب",
       "approved-at": "تاريخ الاعتماد",
-      "file": "الملف"
+      "file": "الملف",
+      "receive-trainee-withdrawal-notifications": "استلام اشعارات الانسحاب",
+      "new-withdrawal-request": "طلب انسحاب جديد"
     },
     "validation": {
       "accepted": "يجب قبول {attribute}.",
@@ -62471,7 +62473,9 @@ __webpack_require__.r(__webpack_exports__);
       "application-number": "Application number",
       "submitted-at": "Submitted at",
       "approved-at": "Approved at",
-      "file": "File"
+      "file": "File",
+      "receive-trainee-withdrawal-notifications": "Receive trainee withdrawal notifications",
+      "new-withdrawal-request": "New withdrawal request"
     },
     "validation": {
       "accepted": "The {attribute} must be accepted.",

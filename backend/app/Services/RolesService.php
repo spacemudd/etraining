@@ -64,6 +64,7 @@ class RolesService
         // add the same name of the role to translation files.
         'restrict-user-companies-settings',
         'view-all-companies',
+        'receive-trainee-withdrawal-notifications',
     ];
 
     public $instructorPermissions = [

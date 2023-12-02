@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Trainees;
 
 use App\Http\Controllers\Controller;
+use App\Mail\TraineeWithdrawalMail;
 use App\Models\Back\TraineeWithdraw;
+use App\Models\User;
+use App\Notifications\TraineeWithdrawalNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Mail;
 
 class WithdrawsController extends Controller
 {
@@ -41,6 +45,15 @@ class WithdrawsController extends Controller
         }
         DB::commit();
 
+        //$users = User::permission('receive-trainee-withdrawal-notifications')->get();
+        //foreach ($users as $user) {
+        //    $user->notify(new TraineeWithdrawalNotification($withdraw));
+        //}
+        Mail::to('trainee.affairs@ptc-ksa.net')
+
+            ->send(new TraineeWithdrawalMail($withdraw));
+
+        dd(123);
         return redirect()->route('trainees.profile.index');
     }
 }
