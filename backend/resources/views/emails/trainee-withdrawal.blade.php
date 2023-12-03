@@ -21,6 +21,7 @@ _________________________________________________
 الشركة:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $withdrawal->trainee->company->name_ar }}<br/>
 الاسم:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $withdrawal->trainee->name }}<br/>
 الإيميل:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span dir="ltr">{{ $withdrawal->trainee->email }}</span><br/>
+السبب:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span dir="ltr">{{ $withdrawal->reason ?: '-' }}</span><br/>
 
 <br/>
 _________________________________________________
@@ -29,6 +30,9 @@ _________________________________________________
 
 رابط ملف المتدربة:<br/>
 <a href="{{ route('back.trainees.show', $withdrawal->trainee->id) }}">{{ route('back.trainees.show', $withdrawal->trainee->id) }}</a>
+<br/><br/>
+رابط الطلبات:<br/>
+<a href="{{ route('orders.withdrawal-requests.index') }}">{{ route('orders.withdrawal-requests.index') }}</a>
 
 <br/>
 <br/>

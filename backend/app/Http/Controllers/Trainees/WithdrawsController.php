@@ -31,6 +31,10 @@ class WithdrawsController extends Controller
             'files.*' => 'required|file',
         ]);
 
+        if (auth()->user()->trainee->withdraws()->where('approved_at', null)->count()) {
+            return redirect()->route('trainees.profile.index');
+        }
+
         DB::beginTransaction();
         $withdraw = auth()->user()->trainee->withdraws()->create([
             'company_id' => auth()->user()->trainee->company_id,
@@ -50,10 +54,8 @@ class WithdrawsController extends Controller
         //    $user->notify(new TraineeWithdrawalNotification($withdraw));
         //}
         Mail::to('trainee.affairs@ptc-ksa.net')
-
             ->send(new TraineeWithdrawalMail($withdraw));
 
-        dd(123);
         return redirect()->route('trainees.profile.index');
     }
 }
