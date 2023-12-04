@@ -7,8 +7,10 @@ use App\Http\Controllers\CompanyAllowedUsersController;
 use App\Http\Controllers\Webhooks\MailController;
 use App\Http\Controllers\ZoomAccountController;
 use App\Models\Back\Invoice;
+use App\Models\Back\Resignation;
 use App\Models\Back\Trainee;
 use App\Models\User;
+use Illuminate\Mail\Markdown;
 
 Route::get('my-ip', function() {
    return request()->ip();

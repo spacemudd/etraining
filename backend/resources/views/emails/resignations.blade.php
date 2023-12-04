@@ -1,4 +1,4 @@
-@component('mail::message')
+@component('mail::resignation-message-layout')
 
 السادة الكرام / {{ $resignation->company->name_ar }}
 
@@ -21,7 +21,7 @@
 @endif
 
     @slot('footer')
-        @component('mail::footer')
+        @component('mail::resignation-footer')
             البريد الالكتروني مرسل عن طريق النظام الإلكتروني بشكل تلقائي من قبل المتدربة والمستندات المرفقة مرفوعة من قبلها وفي حالة وجود اي ملاحظة لا تترددوا بالتواصل معنا على البريد الالكتروني المعتمد في العقد بدون اي مسؤولية قانونية على شركة مركز احترافية التدريب.
             <br/>
             © {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved.')
