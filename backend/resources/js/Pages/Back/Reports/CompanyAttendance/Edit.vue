@@ -63,9 +63,7 @@
                 <div class="col-span-3 sm:col-span-2">
                     <input type="checkbox" id="with_attendance_times" v-model="updateAttendanceReportForm.with_attendance_times">
                     <label for="with_attendance_times">{{ $t('words.with-attendance-times') }}</label>
-                </div>
-
-                <div class="col-span-3 sm:col-span-2">
+                    <br/>
                     <input type="checkbox" id="with_logo" v-model="updateAttendanceReportForm.with_logo">
                     <label for="with_logo">{{ $t('words.with-logo') }}</label>
                 </div>
