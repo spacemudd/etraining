@@ -671,7 +671,7 @@ export default {
             "view-all-companies": "عرض جميع الشركات",
             "open-permissions": "صلاحيات الدخول",
             "in-addition-to-users-with-global-permissions": "بالإضافة الى المستخدمين الذي لديهم صلاحيات عامة",
-            "with_logo": "مع شعار"
+            "with-logo": "مع شعار"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1480,7 +1480,7 @@ export default {
             "view-all-companies": "View all companies",
             "open-permissions": "Open permissions",
             "in-addition-to-users-with-global-permissions": "In addition to users with global permissions",
-            "with_logo": "With Logo"
+            "with-logo": "With Logo"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

@@ -647,5 +647,5 @@ return [
     'view-all-companies' => 'عرض جميع الشركات',
     'open-permissions' => 'صلاحيات الدخول',
     'in-addition-to-users-with-global-permissions' => 'بالإضافة الى المستخدمين الذي لديهم صلاحيات عامة',
-    'with_logo' => 'مع شعار',
+    'with-logo' => 'مع شعار',
 ];
