@@ -20,6 +20,7 @@ tfoot { display:table-footer-group }
 </head>
 <body>
 <div class="container">
+    @if ($report->with_logo)
     <div class="row">
         <div class="col-2">
             <table class="table" style="width:100%;">
@@ -54,6 +55,7 @@ tfoot { display:table-footer-group }
             @endif
         </div>
     </div>
+    @endif
 
     <div class="row" style="margin-top: 10px;">
         <table class="table">
@@ -182,6 +184,7 @@ tfoot { display:table-footer-group }
                                 </td>
                             </tr>
                     @endforeach
+                    @if ($report->with_logo)
                 <tr>
                             @if ($report->falls_under_ptc_net)
                             <td colspan="100%" style="background:#e0e0e0;text-align: center;">** هذا الكشف صحيح مالم تشعر شركة مركز احترافية التدريب من قبل العميل ببريد إلكتروني يفيد بخلاف ذلك خلال ٥ ايام عمل من تاريخه.
@@ -190,13 +193,16 @@ tfoot { display:table-footer-group }
                                 <td colspan="100%" style="background:#e0e0e0;text-align: center;">** يعتبر الكشف صحيح ما لم يردنا اي ملاحظات خلال الاسبوع من الارسال</td>
                             @endif
                         </tr>
+                    @endif
                 </tbody>
         </table>
         <div class="row" style="text-align:center;">
-            @if ($report->falls_under_ptc_net)
-                <img style="margin:0 auto;border:none;" src="{{ public_path('/img/ptc_stamp_2023.png')}}" alt="logo" width="200"/>
-            @else
-                <img style="margin:0 auto;border:none;" src="{{ public_path('/img/ptc-signature.png')}}" alt="logo" width="200"/>
+            @if ($report->with_logo)
+                @if ($report->falls_under_ptc_net)
+                    <img style="margin:0 auto;border:none;" src="{{ public_path('/img/ptc_stamp_2023.png')}}" alt="logo" width="200"/>
+                @else
+                    <img style="margin:0 auto;border:none;" src="{{ public_path('/img/ptc-signature.png')}}" alt="logo" width="200"/>
+                @endif
             @endif
         </div>
         </div>

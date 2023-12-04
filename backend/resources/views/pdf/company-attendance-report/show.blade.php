@@ -20,6 +20,7 @@
 </head>
 <body>
 <div class="container">
+    @if ($report->with_logo)
     <div class="row">
         <div class="col-2">
             <table class="table" style="width:100%;">
@@ -54,6 +55,7 @@
             @endif
         </div>
     </div>
+    @endif
 
     <div class="row" style="margin-top: 10px;">
         <table class="table" style="width:100%;">
@@ -254,15 +256,18 @@
 {{--                            <td>0</td>--}}
 {{--                        </tr>--}}
                         <tr>
+                            @if ($report->with_logo)
                             @if ($report->falls_under_ptc_net)
                             <td colspan="100%" style="background:#e0e0e0;text-align: center;">** هذا الكشف صحيح مالم تشعر شركة مركز احترافية التدريب من قبل العميل ببريد الكتروني يفيد بخلاف ذلك خلال ٥ ايام عمل من تاريخه.
 في حال وجود اي استفسارات لا تترددو بالتواصل معنا على البريد الاكتروني.</td>
                             @else
                                 <td colspan="100%" style="background:#e0e0e0;text-align: center;">** يعتبر الكشف صحيح ما لم يردنا اي ملاحظات خلال الاسبوع من الارسال</td>
                             @endif
+                            @endif
                         </tr>
                     </tbody>
                 </table>
+            @if ($report->with_logo)
                 <div class="row" style="text-align:center;">
                     @if ($report->falls_under_ptc_net)
                         <img style="margin:0 auto;border:none;" src="{{ public_path('/img/ptc_stamp_2023.png')}}" alt="logo" width="200"/>
@@ -270,6 +275,7 @@
                         <img style="margin:0 auto;border:none;" src="{{ public_path('/img/ptc-signature.png')}}" alt="logo" width="200"/>
                     @endif
                 </div>
+            @endif
             </div>
         </div>
     </div>

@@ -64,6 +64,11 @@
                     <input type="checkbox" id="with_attendance_times" v-model="updateAttendanceReportForm.with_attendance_times">
                     <label for="with_attendance_times">{{ $t('words.with-attendance-times') }}</label>
                 </div>
+
+                <div class="col-span-3 sm:col-span-2">
+                    <input type="checkbox" id="with_logo" v-model="updateAttendanceReportForm.with_logo">
+                    <label for="with_logo">{{ $t('words.with-logo') }}</label>
+                </div>
             </template>
 
             <template #actions>
@@ -123,6 +128,7 @@
         mounted() {
             this.updateAttendanceReportForm.company_id = this.report.company_id;
             this.updateAttendanceReportForm.with_attendance_times = this.report.with_attendance_times;
+            this.updateAttendanceReportForm.with_logo = this.report.with_logo;
             this.updateAttendanceReportForm.period = {
                 startDate: this.report.date_from,
                 endDate: this.report.date_to,
@@ -142,6 +148,7 @@
                     company_id: null,
                     period: {startDate, endDate},
                     with_attendance_times: null,
+                    with_logo: null,
                 }, {
                     bag: 'createAttendanceReport',
                     resetOnSuccess: true,

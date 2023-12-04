@@ -154,6 +154,7 @@ class CompanyAttendanceReportController extends Controller
             'company_id' => 'nullable|exists:companies,id',
             'period' => 'nullable',
             'with_attendance_times' => 'nullable|boolean',
+            'with_logo' => 'nullable|boolean',
         ]);
 
         $report = CompanyAttendanceReport::findOrFail($id);
@@ -170,6 +171,7 @@ class CompanyAttendanceReportController extends Controller
                 'to_emails' => str_replace($record, $reprecord, $request->to_emails) ?: str_replace($record, $reprecord,$report->to_emails),
                 'cc_emails' => str_replace($record, $reprecord,$request->cc_emails) ?: str_replace($record, $reprecord,$report->cc_emails),
                 'with_attendance_times' => $request->with_attendance_times,
+                'with_logo' => $request->with_logo,
             ]);
             $report->save();
         } else {

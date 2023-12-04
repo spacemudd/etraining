@@ -633,4 +633,5 @@ return [
     'view-all-companies' => 'View all companies',
     'open-permissions' => 'Open permissions',
     'in-addition-to-users-with-global-permissions' => 'In addition to users with global permissions',
+    'with_logo' => 'With Logo',
 ];
