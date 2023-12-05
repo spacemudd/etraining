@@ -112,7 +112,9 @@ class CompaniesController extends Controller
                 'company_mails',
             ])
             ->withCount([
-                'trainees',
+                'trainees' => function($model) {
+                    $model->where('posted_at', '=', null)->withTrashed();
+                },
             ])
             ->with('region');
 
