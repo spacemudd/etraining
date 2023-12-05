@@ -124,12 +124,17 @@
             'report',
         ],
         mounted() {
+            var startDateObj = new Date(this.report.date_from), sDateJ = startDateObj.getFullYear(), mDateJ = startDateObj.getMonth(), dDateJ = startDateObj.getDay();
+            var endDateObj = new Date(this.report.date_to), eDateJ = endDateObj.getFullYear(), mDateJ = endDateObj.getMonth(), dDateJ = endDateObj.getDay();
+            var startDate = new Date(sDateJ, mDateJ, dDateJ)
+            var endDate = new Date(eDateJ, mDateJ, dDateJ);
+
             this.updateAttendanceReportForm.company_id = this.report.company_id;
             this.updateAttendanceReportForm.with_attendance_times = this.report.with_attendance_times;
             this.updateAttendanceReportForm.with_logo = this.report.with_logo;
             this.updateAttendanceReportForm.period = {
-                startDate: this.report.date_from,
-                endDate: this.report.date_to,
+                startDate: startDate,
+                endDate: endDate,
             }
         },
       filters: {
