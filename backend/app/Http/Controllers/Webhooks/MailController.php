@@ -11,6 +11,7 @@ use http\Exception\RuntimeException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -18,8 +19,31 @@ class MailController extends Controller
 {
     public function store(Request $request)
     {
-        // Does the mail have any headers we know?
-        if ($request->message->headers->has('Ptc-Company-Attendance-Report-Id')) {
+        $eventData = $request->input('event-data');
+
+        // tracking delivery of company attendances reports
+        if (array_key_exists('company_attendance_report_id', $eventData['user-variables'])) {
+            if ($eventData['event'] === 'failed') {
+                CompanyAttendanceReport::find($eventData['user-variables']['company_attendance_report_id'])
+                    ->emails()
+                    ->where('email', $eventData['recipient'])
+                    ->update([
+                        'failed_at' => now(),
+                        'failed_reason' => $eventData['delivery-status']['message'],
+                    ]);
+            } elseif ($eventData['event'] === 'delivered') {
+                CompanyAttendanceReport::find($eventData['user-variables']['company_attendance_report_id'])
+                    ->emails()
+                    ->where('email', $eventData['recipient'])
+                    ->update([
+                        'delivered_at' => now(),
+                    ]);
+            }
+        }
+
+        dd($request->get('event-data')['user-variables']);
+        if ($request['user-variables']->has('company_attendance_report_id')) {
+            Log::info('Caught!'. $request['user-variables']->get('company_attendance_report_id'));
             if ($request->event === 'failed') {
                 CompanyAttendanceReport::find($request->message->headers->get('Ptc-Company-Attendance-Report-Id'))
                     ->emails()
@@ -37,6 +61,8 @@ class MailController extends Controller
                     ]);
             }
         }
+
+        dd('done');
 
         $company = CompaniesService::new()->findByDomainName(Str::after($request->input('sender'), '@'));
 

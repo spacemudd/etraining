@@ -4,6 +4,7 @@ namespace App\Models\Back;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use JamesMills\LaravelTimezone\Facades\Timezone;
 
 class CompanyAttendanceReportsEmails extends Model
 {
@@ -18,4 +19,36 @@ class CompanyAttendanceReportsEmails extends Model
         'failed_at',
         'failed_reason',
     ];
+
+    protected $appends = [
+        'delivered_at_timezone',
+    ];
+
+    public $dates = [
+        'delivered_at',
+        'failed_at',
+        'opened_at',
+    ];
+
+    /**
+     *
+     * @return string|void
+     */
+    public function getDeliveredAtTimezoneAttribute()
+    {
+        if ($this->delivered_at) {
+            return Timezone::convertToLocal($this->delivered_at, 'Y-m-d h:i A').' GMT+3';
+        }
+    }
+
+        /**
+     *
+     * @return string|void
+     */
+    public function getFailedAtTimezoneAttribute()
+    {
+        if ($this->failed_at) {
+            return Timezone::convertToLocal($this->failed_at, 'Y-m-d h:i A');
+        }
+    }
 }

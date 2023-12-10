@@ -103,6 +103,9 @@
                                 </td>
                 				<td class="border border-2 px-2">
                                     <span :class="{'text-red-800 font-heavy': record.failed_at}">{{ record.email }}</span>
+                                    <div class="bg-green-600 text-white px-2">
+                                        <span dir="ltr">{{ record.delivered_at_timezone }}</span>
+                                    </div>
                                     <div class="bg-red-500 text-white px-2">
                                         {{ record.failed_reason }}
                                     </div>
@@ -129,7 +132,15 @@
                                         </svg>
                                     </button>
                                 </td>
-                				<td :class="{'text-red-500': record.failed_at}" class="border border-2 px-2">{{ record.email }}</td>
+                				<td class="border border-2 px-2">
+                                    <span :class="{'text-red-800 font-heavy': record.failed_at}">{{ record.email }}</span>
+                                    <div class="bg-green-600 text-white px-2">
+                                        <span dir="ltr">{{ record.delivered_at_timezone }}</span>
+                                    </div>
+                                    <div class="bg-red-500 text-white px-2" dir="ltr">
+                                        {{ record.failed_reason }}
+                                    </div>
+                                </td>
                 			</tr>
                 	</tbody>
                 </table>

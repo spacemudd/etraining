@@ -50,7 +50,7 @@ class CompanyAttendanceReportMail extends Mailable
             ])
             ->withSwiftMessage(function ($message) {
                 $message->getHeaders()
-                    ->addTextHeader('Ptc-Company-Attendance-Report-Id', $this->report_id);
+                    ->addTextHeader('X-Mailgun-Variables', '{"company_attendance_report_id": "'.$this->report_id.'"}');
             });
     }
 
