@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\Webhooks;
 
 use App\Http\Controllers\Controller;
+use App\Mail\CompanyAttendanceFailureMail;
 use App\Models\Back\Company;
 use App\Models\Back\CompanyAttendanceReport;
 use App\Models\Back\CompanyMail;
 use App\Services\CompaniesService;
-use http\Exception\RuntimeException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Mail;
 
 class MailController extends Controller
 {
@@ -24,13 +24,19 @@ class MailController extends Controller
         // tracking delivery of company attendances reports
         if (array_key_exists('company_attendance_report_id', $eventData['user-variables'])) {
             if ($eventData['event'] === 'failed') {
-                CompanyAttendanceReport::find($eventData['user-variables']['company_attendance_report_id'])
+
+                $email = CompanyAttendanceReport::find($eventData['user-variables']['company_attendance_report_id'])
                     ->emails()
                     ->where('email', $eventData['recipient'])
-                    ->update([
+                    ->first();
+
+                $email->update([
                         'failed_at' => now(),
                         'failed_reason' => $eventData['delivery-status']['message'],
                     ]);
+                Mail::to(['trainee.affairs@ptc-ksa.net', 'sara@ptc-ksa.net', 'samar.h@ptc-ksa.net', 'ceo@ptc-ksa.net', 'billing@ptc-ksa.net'])
+                    ->send(new CompanyAttendanceFailureMail($email));
+
             } elseif ($eventData['event'] === 'delivered') {
                 CompanyAttendanceReport::find($eventData['user-variables']['company_attendance_report_id'])
                     ->emails()
@@ -39,30 +45,9 @@ class MailController extends Controller
                         'delivered_at' => now(),
                     ]);
             }
-        }
 
-        dd($request->get('event-data')['user-variables']);
-        if ($request['user-variables']->has('company_attendance_report_id')) {
-            Log::info('Caught!'. $request['user-variables']->get('company_attendance_report_id'));
-            if ($request->event === 'failed') {
-                CompanyAttendanceReport::find($request->message->headers->get('Ptc-Company-Attendance-Report-Id'))
-                    ->emails()
-                    ->where('email', $request->event->recipient)
-                    ->update([
-                        'failed_at' => now(),
-                        'failed_reason' => $request->reason,
-                    ]);
-            } elseif ($request->event === 'delivered') {
-                CompanyAttendanceReport::find($request->message->headers->get('Ptc-Company-Attendance-Report-Id'))
-                    ->emails()
-                    ->where('email', $request->event->recipient)
-                    ->update([
-                        'delivered_at' => now(),
-                    ]);
-            }
+            return true;
         }
-
-        dd('done');
 
         $company = CompaniesService::new()->findByDomainName(Str::after($request->input('sender'), '@'));
 

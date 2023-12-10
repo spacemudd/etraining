@@ -2,11 +2,12 @@
 
 namespace App\Models\Back;
 
+use App\Mail\CompanyAttendanceFailureMail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use JamesMills\LaravelTimezone\Facades\Timezone;
 
-class CompanyAttendanceReportsEmails extends Model
+class CompanyAttendanceReportsEmail extends Model
 {
     use HasFactory;
 
@@ -29,6 +30,11 @@ class CompanyAttendanceReportsEmails extends Model
         'failed_at',
         'opened_at',
     ];
+
+    public function report()
+    {
+        return $this->belongsTo(CompanyAttendanceReport::class, 'company_attendance_report_id');
+    }
 
     /**
      *

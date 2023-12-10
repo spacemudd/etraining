@@ -9,7 +9,7 @@ use App\Mail\CompanyAttendanceIndividualReportMail;
 use App\Mail\CompanyAttendanceReportMail;
 use App\Models\Back\Company;
 use App\Models\Back\CompanyAttendanceReport;
-use App\Models\Back\CompanyAttendanceReportsEmails;
+use App\Models\Back\CompanyAttendanceReportsEmail;
 use App\Models\Back\CompanyAttendanceReportsTrainee;
 use App\Services\CompanyAttendanceReportService;
 use App\Services\CompanyMigrationHelper;
@@ -315,7 +315,7 @@ class CompanyAttendanceReportController extends Controller
 
     public function removeEmail($report_id, $id)
     {
-        CompanyAttendanceReportsEmails::findOrFail($id)->delete();
+        CompanyAttendanceReportsEmail::findOrFail($id)->delete();
         return redirect()->route('back.reports.company-attendance.show', $report_id);
     }
 }
