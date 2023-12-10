@@ -19,7 +19,7 @@ _________________________________________________
 <br/>
 
 الشركة:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $company_attendance_reports_email->report->company->name_ar }}<br/>
-الإيميل:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:red;">{{ $company_attendance_reports_email->email }}</span><br/>
+الإيميل:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#ff0000;">{{ $company_attendance_reports_email->email }}</span><br/>
 السبب:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="direction:ltr">{{ $company_attendance_reports_email->failed_reason }}</span><br/>
 
 <br/>
