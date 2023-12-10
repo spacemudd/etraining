@@ -67,7 +67,7 @@ Route::get('login/verify-code', [\App\Http\Controllers\VerificationsController::
 Route::post('login/verify-code', [\App\Http\Controllers\VerificationsController::class, 'verifyCode'])->name('login.verify-code');
 
 
-Route::get('/resignations/{id}/{email}', [CompanyResignationsController::class, 'confirmReceived'])->name('resignations.confirm-received');
+Route::get('/resignations/{id}', [CompanyResignationsController::class, 'confirmReceived'])->name('resignations.confirm-received');
 
 Route::post('webhooks/mail', [MailController::class, 'store'])->name('webhooks.mail');
 Route::post('noon', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'storeNoonReceipt'])->name('webhooks.noon');

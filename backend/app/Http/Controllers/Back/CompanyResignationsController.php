@@ -134,4 +134,13 @@ class CompanyResignationsController extends Controller
         $resignation->delete();
         return redirect()->route('back.companies.show', $resignation->company_id);
     }
+
+    public function confirmReceived($resignation_id)
+    {
+        $resignation = Resignation::find($resignation_id);
+        $resignation->update([
+            'received_at' => now(),
+        ]);
+        return 'شكرًا لتأكيد الاستلام'.' - '.now()->setTimezone('Asia/Riyadh');
+    }
 }
