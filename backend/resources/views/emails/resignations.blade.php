@@ -1,6 +1,6 @@
 @component('mail::resignation-message-layout')
 
-السادة الكرام / {{ $resignation->company->name_ar }}
+{{--السادة الكرام / {{ $resignation->company->name_ar }}--}}
 
 @if ($resignation->trainees()->count() > 1)
 بالإشارة إلى عقد التدريب نفيدكم بأن المتدربات أدناه:
@@ -16,6 +16,16 @@
 بالإشارة إلى عقد التدريب نفيدكم بأن المتدربة / **{{ $resignation->trainees()->first()->name }}**
 
 تم إيقافها من البرنامج التدريبي بناء على رغبتها وطلبها، ومرفق لكم المستندات المستلمة من قبل المتدربة.
+
+<br/>
+<hr style="color:white;">
+<br/>
+
+يرجى الضغط أدناه لتأكيد استلامكم للمستندات المرفقة.
+
+@component('mail::button', ['url' => route('resignations.confirm-received', ['id' => $resignation->id, 'email' => 'shafiqalshaar@gmail.com'])])
+تأكيد استلام المستندات
+@endcomponent
 
 مع تحياتنا،
 @endif

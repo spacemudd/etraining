@@ -3,20 +3,52 @@
 namespace App\Http\Controllers\Webhooks;
 
 use App\Http\Controllers\Controller;
+use App\Mail\CompanyAttendanceFailureMail;
 use App\Models\Back\Company;
+use App\Models\Back\CompanyAttendanceReport;
 use App\Models\Back\CompanyMail;
 use App\Services\CompaniesService;
-use http\Exception\RuntimeException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Mail;
 
 class MailController extends Controller
 {
     public function store(Request $request)
     {
+        $eventData = $request->input('event-data');
+
+        // tracking delivery of company attendances reports
+        if (array_key_exists('company_attendance_report_id', $eventData['user-variables'])) {
+            if ($eventData['event'] === 'failed') {
+
+                $email = CompanyAttendanceReport::find($eventData['user-variables']['company_attendance_report_id'])
+                    ->emails()
+                    ->where('email', $eventData['recipient'])
+                    ->first();
+
+                $email->update([
+                        'failed_at' => now(),
+                        'failed_reason' => $eventData['delivery-status']['message'],
+                    ]);
+                Mail::to(['trainee.affairs@ptc-ksa.net', 'sara@ptc-ksa.net', 'samar.h@ptc-ksa.net', 'ceo@ptc-ksa.net', 'billing@ptc-ksa.net'])
+                    ->send(new CompanyAttendanceFailureMail($email));
+
+            } elseif ($eventData['event'] === 'delivered') {
+                CompanyAttendanceReport::find($eventData['user-variables']['company_attendance_report_id'])
+                    ->emails()
+                    ->where('email', $eventData['recipient'])
+                    ->update([
+                        'delivered_at' => now(),
+                    ]);
+            }
+
+            return true;
+        }
+
         $company = CompaniesService::new()->findByDomainName(Str::after($request->input('sender'), '@'));
 
         if (!$company) {

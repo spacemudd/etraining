@@ -138,4 +138,19 @@ class CompanyAttendanceReport extends Model implements Auditable
     {
         return $this->belongsTo(User::class);
     }
+
+    public function emails()
+    {
+        return $this->hasMany(CompanyAttendanceReportsEmail::class);
+    }
+
+    public function emails_to()
+    {
+        return $this->emails()->where('type', 'to');
+    }
+
+    public function emails_cc()
+    {
+        return $this->emails()->where('type', 'cc');
+    }
 }

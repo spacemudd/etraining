@@ -9,6 +9,7 @@ use App\Mail\CompanyAttendanceIndividualReportMail;
 use App\Mail\CompanyAttendanceReportMail;
 use App\Models\Back\Company;
 use App\Models\Back\CompanyAttendanceReport;
+use App\Models\Back\CompanyAttendanceReportsEmail;
 use App\Models\Back\CompanyAttendanceReportsTrainee;
 use App\Services\CompanyAttendanceReportService;
 use App\Services\CompanyMigrationHelper;
@@ -72,14 +73,28 @@ class CompanyAttendanceReportController extends Controller
         $company = Company::findOrFail($request->company_id);
 
         DB::beginTransaction();
+        $previousReport = CompanyAttendanceReport::where('company_id', $company->id)->latest()->first();
+
         $report = CompanyAttendanceReport::create([
             'company_id' => $company->id,
             'date_from' => $date_from,
             'date_to' => $date_to,
-            'to_emails' => implode(', ', [$company->email]),
-            'cc_emails' => implode(', ', [auth()->user()->email]),
         ]);
         $report->trainees()->attach($company->trainees()->pluck('id'));
+
+        // If there is an old report, use the previous emails. Otherwise, copy the company's emails.
+        if ($previousReport) {
+            $report->emails()->createMany($previousReport->emails()->get()->map(function ($email) {
+                return [
+                    'type' => $email->type,
+                    'email' => $email->email,
+                ];
+            })->toArray());
+        } else {
+            $report->emails()->create(['type' => 'to', 'email' => $company->email]);
+            $report->emails()->create(['type' => 'cc', 'email' => auth()->user()->email]);
+        }
+
         DB::commit();
 
         return redirect()->route('back.reports.company-attendance.show', $report->id);
@@ -108,6 +123,8 @@ class CompanyAttendanceReportController extends Controller
         $report = CompanyAttendanceReport::with('company')
             ->with('approved_by')
             ->with('trainees')
+            ->with('emails_to')
+            ->with('emails_cc')
             ->findOrFail($id);
 
         return Inertia::render('Back/Reports/CompanyAttendance/Show', [
@@ -149,8 +166,6 @@ class CompanyAttendanceReportController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'to_emails' => 'nullable|string',
-            'cc_emails' => 'nullable|string',
             'company_id' => 'nullable|exists:companies,id',
             'period' => 'nullable',
             'with_attendance_times' => 'nullable|boolean',
@@ -158,8 +173,7 @@ class CompanyAttendanceReportController extends Controller
         ]);
 
         $report = CompanyAttendanceReport::findOrFail($id);
-        $record = '@ptc-ksa.com';
-        $reprecord = '@ptc-ksa.net';
+
         if ($request->has('period')) {
             $date_from = Carbon::parse($request->period['startDate'])->setTimezone('Asia/Riyadh')->startOfDay();
             $date_to = Carbon::parse($request->period['endDate'])->setTimezone('Asia/Riyadh')->endOfDay();
@@ -168,8 +182,6 @@ class CompanyAttendanceReportController extends Controller
                 'company_id' => $company->id,
                 'date_from' => $date_from,
                 'date_to' => $date_to,
-                'to_emails' => str_replace($record, $reprecord, $request->to_emails) ?: str_replace($record, $reprecord,$report->to_emails),
-                'cc_emails' => str_replace($record, $reprecord,$request->cc_emails) ?: str_replace($record, $reprecord,$report->cc_emails),
                 'with_attendance_times' => $request->with_attendance_times,
                 'with_logo' => $request->with_logo,
             ]);
@@ -199,14 +211,10 @@ class CompanyAttendanceReportController extends Controller
     {
         $report = CompanyAttendanceReport::findOrFail($id);
 
-        //if ($report->company->is_ptc_net) {
-        //    app()->make(CompanyMigrationHelper::class)->setMailgunConfig();
-        //}
-        $record = '@ptc-ksa.com';
-        $reprecord = '@ptc-ksa.net';
-        Mail::to(str_replace($record, $reprecord, $report->to_emails) ? explode(', ', str_replace($record, $reprecord, $report->to_emails)) : null)
-            ->cc(str_replace($record, $reprecord, $report->cc_emails) ? explode(', ', str_replace($record, $reprecord, $report->cc_emails)) : null)
+        Mail::to($report->emails_to()->pluck('email') ?: null)
+            ->cc($report->emails_cc()->pluck('email') ?: null)
             ->send(new CompanyAttendanceReportMail($report->id));
+
         return redirect()->route('back.reports.company-attendance.show', $id);
     }
 
@@ -279,10 +287,35 @@ class CompanyAttendanceReportController extends Controller
     {
         $report = CompanyAttendanceReport::findOrFail($report_id);
 
-        Mail::to($report->to_emails ? explode(', ', $report->to_emails) : null)
-            ->cc($report->cc_emails ? explode(', ', $report->cc_emails) : null)
+        Mail::to($report->emails_to()->pluck('email') ?: null)
+            ->cc($report->emails_cc()->pluck('email') ?: null)
             ->send(new CompanyAttendanceIndividualReportMail($report->id, $trainee_id, request()->boolean('with_attendance_times')));
 
         return redirect()->route('back.reports.company-attendance.show', $report->id);
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @return void
+     */
+    public function addEmail(Request $request, $id)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'type' => 'required|in:to,cc,bcc',
+        ]);
+
+        $company_attendance = CompanyAttendanceReport::findOrFail($id);
+        if (!$company_attendance->emails()->where('type', $request->type)->where('email', $request->email)->exists()) {
+            $company_attendance->emails()->create($request->except('_token'));
+        }
+
+        return redirect()->route('back.reports.company-attendance.show', $id);
+    }
+
+    public function removeEmail($report_id, $id)
+    {
+        CompanyAttendanceReportsEmail::findOrFail($id)->delete();
+        return redirect()->route('back.reports.company-attendance.show', $report_id);
     }
 }
