@@ -11,7 +11,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Str;
 
-class CompanyAttendanceReportMail extends Mailable implements ShouldQueue
+class CompanyAttendanceReportMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -47,7 +47,11 @@ class CompanyAttendanceReportMail extends Mailable implements ShouldQueue
             ->subject('تقرير الحضور للمتدربات - '.$report->company->name_ar.' - '.$report->date_from->format('Y-m-d'). ' - '.$report->date_to->format('Y-m-d'))
             ->markdown('emails.company-attendance-report', [
                 'report' => $report,
-            ]);
+            ])
+            ->withSwiftMessage(function ($message) {
+                $message->getHeaders()
+                    ->addTextHeader('Ptc-Company-Attendance-Report-Id', $this->report_id);
+            });
     }
 
     public function attachReportFile($report)

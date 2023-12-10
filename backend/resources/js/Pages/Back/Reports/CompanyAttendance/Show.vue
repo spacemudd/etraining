@@ -85,19 +85,54 @@
         <div class="mt-10 container px-6 mx-auto grid grid-cols-12 gap-4">
             <div class="col-span-12 lg:col-span-6">
                 <jet-label for="to_emails" :value="$t('words.to')" />
-                <jet-input dir="ltr" id="to_emails" type="text" class="mt-1 block w-full"
-                           :disabled="report.approved_at"
-                           @blur="saveEmails"
-                           v-model="report.to_emails" />
-                <p class="mt-1 text-xs">{{ $t('words.comma-separated-emails') }}</p>
+                <jet-input dir="ltr"
+                           id="to_emails"
+                           type="email"
+                           class="mt-1 block w-full"
+                           @keyup.enter.native="saveEmailTo"
+                           v-model="email_to" />
+                <table class="w-full text-xs mt-2">
+                	<tbody>
+                			<tr v-for="record in report.emails_to">
+                                <td class="border border-2" style="width:20px;">
+                                    <button class="m-auto mt-1" @click.prevent="removeEmail(record.id)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="hover:text-red-500 w-3 h-3">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                        </svg>
+                                    </button>
+                                </td>
+                				<td class="border border-2 px-2">
+                                    <span :class="{'text-red-800 font-heavy': record.failed_at}">{{ record.email }}</span>
+                                    <div class="bg-red-500 text-white px-2">
+                                        {{ record.failed_reason }}
+                                    </div>
+                                </td>
+                			</tr>
+                	</tbody>
+                </table>
             </div>
             <div class="col-span-12 lg:col-span-6">
                 <jet-label for="cc_emails" :value="$t('words.cc-emails')" />
-                <jet-input dir="ltr" id="cc_emails" type="text" class="mt-1 block w-full"
-                           :disabled="report.approved_at"
-                           @blur="saveEmails"
-                           v-model="report.cc_emails" />
-                <p class="mt-1 text-xs">{{ $t('words.comma-separated-emails') }}</p>
+                <jet-input dir="ltr"
+                           id="cc_emails"
+                           type="email"
+                           class="mt-1 block w-full"
+                           @keyup.enter.native="saveEmailCc"
+                           v-model="email_cc" />
+                <table class="w-full text-xs mt-2">
+                	<tbody>
+                			<tr v-for="record in report.emails_cc">
+                                <td class="border border-2" style="width:20px;">
+                                    <button class="m-auto mt-1" @click.prevent="removeEmail(record.id)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="hover:text-red-500 w-3 h-3">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                        </svg>
+                                    </button>
+                                </td>
+                				<td :class="{'text-red-500': record.failed_at}" class="border border-2 px-2">{{ record.email }}</td>
+                			</tr>
+                	</tbody>
+                </table>
             </div>
         </div>
 
@@ -205,6 +240,8 @@ export default {
         var startDate = new Date(y, m, 1);
         var endDate = new Date(y, m + 1, 0);
         return {
+            email_cc: '',
+            email_to: '',
             createAttendanceReportForm: this.$inertia.form({
                 company_id: null,
                 period: {startDate, endDate},
@@ -215,6 +252,41 @@ export default {
         }
     },
     methods: {
+        saveEmailTo() {
+            this.$inertia.post(route('back.reports.company-attendance.add-email', {report_id: this.report.id}), {
+                email: this.email_to,
+                type: 'to',
+            }, {
+                preserveScroll: true,
+                onSuccess: () => {
+                    this.email_to = '';
+                },
+                onError: (res) => {
+                    if (res.email) {
+                        alert(res.email);
+                    }
+                }
+            });
+        },
+        saveEmailCc() {
+            this.$inertia.post(route('back.reports.company-attendance.add-email', {report_id: this.report.id}), {
+                email: this.email_cc,
+                type: 'cc',
+            }, {
+                preserveScroll: true,
+                onSuccess: () => {
+                    this.email_cc = '';
+                },
+                onError: (res) => {
+                    if (res.email) {
+                        alert(res.email);
+                    }
+                }
+            });
+        },
+        removeEmail(id) {
+          this.$inertia.delete(route('back.reports.company-attendance.remove-email', {report_id: this.report.id, id: id}))
+        },
         send() {
             if (confirm(this.$t('words.are-you-sure'))) {
                 this.$inertia.post(route('back.reports.company-attendance.send', this.report.id));

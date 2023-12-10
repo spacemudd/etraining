@@ -12,6 +12,13 @@ use App\Models\Back\Trainee;
 use App\Models\User;
 use Illuminate\Mail\Markdown;
 
+Route::get('preview', function () {
+ $markdown = new Markdown(view(), config('mail.markdown'));
+ return $markdown->render("emails.resignations", [
+     'resignation' => Resignation::first(),
+ ]);
+});
+
 Route::get('my-ip', function() {
    return request()->ip();
 });
@@ -59,6 +66,8 @@ Route::post('login/2fa-code', [\App\Http\Controllers\VerificationsController::cl
 Route::get('login/verify-code', [\App\Http\Controllers\VerificationsController::class, 'show'])->name('login.verify');
 Route::post('login/verify-code', [\App\Http\Controllers\VerificationsController::class, 'verifyCode'])->name('login.verify-code');
 
+
+Route::get('/resignations/{id}/{email}', [CompanyResignationsController::class, 'confirmReceived'])->name('resignations.confirm-received');
 
 Route::post('webhooks/mail', [MailController::class, 'store'])->name('webhooks.mail');
 Route::post('noon', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'storeNoonReceipt'])->name('webhooks.noon');
@@ -595,6 +604,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('contracts', [\App\Http\Controllers\Back\ReportsController::class, 'formContractsReport'])->name('reports.contracts.index');
             Route::post('contracts/generate', [\App\Http\Controllers\Back\ReportsController::class, 'generateContractsReport'])->name('reports.contracts.generate');
 
+            Route::delete('company-attendance/{report_id}/remove-email/{id}', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'removeEmail'])->name('reports.company-attendance.remove-email');
+            Route::post('company-attendance/{report_id}/add-email', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'addEmail'])->name('reports.company-attendance.add-email');
             Route::get('company-attendance/{report_id}/toggle-select', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'toggleSelect'])->name('reports.company-attendance.toggle-select');
             Route::get('company-attendance/{report_id}/excel', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'excel'])->name('reports.company-attendance.excel');
             Route::post('company-attendance/{report_id}/trainees/{trainee_id}', [\App\Http\Controllers\Back\CompanyAttendanceReportTraineesController::class, 'update'])->name('reports.company-attendance.trainees.update');

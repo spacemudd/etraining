@@ -13,36 +13,12 @@ use PDF;
 
 class CompanyAttendanceReportService
 {
-    public function newReport($company_id)
-    {
-        DB::beginTransaction();
-        $report = new CompanyAttendanceReport();
-        $report->company_id = $company_id;
-        $report->status = CompanyAttendanceReport::STATUS_REVIEW;
-        $report->to_emails = implode(', ', [Company::find($company_id)->email]);
-        $report->date_from = Carbon::now()->startOfMonth();
-        $report->date_to = Carbon::now()->endOfMonth();
-        $report->save();
-        $report = $report->refresh();
-
-        $report->trainees()->attach($report->company->trainees->flatMap(function($trainee) {
-            return [$trainee->id => ['active' => true]];
-        }));
-        DB::commit();
-
-        return $report;
-    }
-
     public function clone($id)
     {
         DB::beginTransaction();
         $original = CompanyAttendanceReport::findOrFail($id);
-        $record = '@ptc-ksa.com';
-        $reprecord = '@ptc-ksa.net';
         $clone = $original->replicate(['approved_by_id', 'approved_at']);
         $clone->status = CompanyAttendanceReport::STATUS_REVIEW;
-        $clone->to_emails = str_replace($record, $reprecord, $clone->to_emails);
-        $clone->cc_emails = str_replace($record, $reprecord, $clone->cc_emails);
         $clone->date_from = $original->date_from->clone()->addMonth();
         if ($clone->date_from->daysInMonth < $original->date_from->daysInMonth) {
             $clone->date_to = $original->date_from
@@ -56,6 +32,12 @@ class CompanyAttendanceReportService
         $clone->save();
         $clone = $clone->refresh();
 
+        $clone->emails()->createMany($original->emails()->get()->map(function ($email) {
+                return [
+                    'type' => $email->type,
+                    'email' => $email->email,
+                ];
+            })->toArray());
 
         $original_trainees = $original->trainees->flatMap(function($trainee) {
             return [$trainee->id => ['active' => $trainee->pivot->active]];
@@ -78,8 +60,8 @@ class CompanyAttendanceReportService
         $report->approved_at = now();
         $report->save();
 
-        Mail::to($report->to_emails ? explode(', ', $report->to_emails) : null)
-            ->cc($report->cc_emails ? explode(', ',  $report->cc_emails) : null)
+        Mail::to($report->emails_to()->pluck('email') ?: null)
+            ->cc($report->emails_cc()->pluck('email') ?: null)
             ->send(new CompanyAttendanceReportMail($report->id));
 
         return $report;

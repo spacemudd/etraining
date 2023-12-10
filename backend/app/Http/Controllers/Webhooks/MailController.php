@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Webhooks;
 
 use App\Http\Controllers\Controller;
 use App\Models\Back\Company;
+use App\Models\Back\CompanyAttendanceReport;
 use App\Models\Back\CompanyMail;
 use App\Services\CompaniesService;
 use http\Exception\RuntimeException;
@@ -17,6 +18,26 @@ class MailController extends Controller
 {
     public function store(Request $request)
     {
+        // Does the mail have any headers we know?
+        if ($request->message->headers->has('Ptc-Company-Attendance-Report-Id')) {
+            if ($request->event === 'failed') {
+                CompanyAttendanceReport::find($request->message->headers->get('Ptc-Company-Attendance-Report-Id'))
+                    ->emails()
+                    ->where('email', $request->event->recipient)
+                    ->update([
+                        'failed_at' => now(),
+                        'failed_reason' => $request->reason,
+                    ]);
+            } elseif ($request->event === 'delivered') {
+                CompanyAttendanceReport::find($request->message->headers->get('Ptc-Company-Attendance-Report-Id'))
+                    ->emails()
+                    ->where('email', $request->event->recipient)
+                    ->update([
+                        'delivered_at' => now(),
+                    ]);
+            }
+        }
+
         $company = CompaniesService::new()->findByDomainName(Str::after($request->input('sender'), '@'));
 
         if (!$company) {
