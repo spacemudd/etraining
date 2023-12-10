@@ -17,15 +17,15 @@
 
 تم إيقافها من البرنامج التدريبي بناء على رغبتها وطلبها، ومرفق لكم المستندات المستلمة من قبل المتدربة.
 
-<br/>
-<hr style="color:white;">
-<br/>
+{{--<br/>--}}
+{{--<hr style="color:white;">--}}
+{{--<br/>--}}
 
-يرجى الضغط أدناه لتأكيد استلامكم للمستندات المرفقة.
+{{--يرجى الضغط أدناه لتأكيد استلامكم للمستندات المرفقة.--}}
 
-@component('mail::button', ['url' => route('resignations.confirm-received', ['id' => $resignation->id, 'email' => 'shafiqalshaar@gmail.com'])])
-تأكيد استلام المستندات
-@endcomponent
+{{--@component('mail::button', ['url' => route('resignations.confirm-received', ['id' => $resignation->id, 'email' => 'shafiqalshaar@gmail.com'])])--}}
+{{--تأكيد استلام المستندات--}}
+{{--@endcomponent--}}
 
 مع تحياتنا،
 @endif
