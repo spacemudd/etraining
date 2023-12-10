@@ -64,7 +64,7 @@
             <h1 style="margin-top:8rem;">شهادة حضور دورة تطويرية</h1>
             <p style="margin-top:2.5rem;">يشهد مركز احترافية المدرب للتدريب بأن المتدربة  "{{ $certificate->trainee->name }}"</p>
             <p style="margin-top:2.5rem;">وجنسيتها سعودية بموجب السجل المدني رقم "{{ $certificate->trainee->identity_number }}"</p>
-            <p style="margin-top:2.5rem;">قـــد حضرت دورة ({{ $certificate->course->name_ar }}) عدد ساعاتها التدريبية 16 ساعة</p>
+            <p style="margin-top:2.5rem;">قـــد حضرت دورة ({{ $certificate->course->name_ar }}) عدد ساعاتها التدريبية 20 ساعة</p>
             <p style="margin-top:2.5rem;">وعدد أيامها التدريبية (10) أيام والمنعقدة في الفترة من </p>
             <p style="margin-top:2.5rem;">(14 - 04 - 1445هـ  إلى 09 - 05 - 1445هـ  )</p>
             <p style="margin-top:2.5rem;">والمعتمدة من المؤسسة العامة للتدريب التقني والمهني برقم</p>
