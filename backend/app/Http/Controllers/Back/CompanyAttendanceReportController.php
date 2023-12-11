@@ -296,12 +296,13 @@ class CompanyAttendanceReportController extends Controller
 
     /**
      * @param \Illuminate\Http\Request $request
+     * @param $id
      * @return void
      */
     public function addEmail(Request $request, $id)
     {
         $request->validate([
-            'email' => 'required|email',
+            'email' => 'required|email:rfc,dns',
             'type' => 'required|in:to,cc,bcc',
         ]);
 

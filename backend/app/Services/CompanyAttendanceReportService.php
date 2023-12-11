@@ -35,7 +35,7 @@ class CompanyAttendanceReportService
         $clone->emails()->createMany($original->emails()->get()->map(function ($email) {
                 return [
                     'type' => $email->type,
-                    'email' => $email->email,
+                    'email' => \Str::replace(' ', '', $email->email),
                 ];
             })->toArray());
 
