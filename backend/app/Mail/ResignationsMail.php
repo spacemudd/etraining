@@ -41,6 +41,7 @@ class ResignationsMail extends Mailable
 
     public function attachResignationFile()
     {
+        if (env('APP_ENV') === 'local') return false;
         $file = file_get_contents($this->resignation->media()->first()->getTemporaryUrl(Carbon::now()->addMinutes(5)));
         $this->attachData($file, $this->resignation->media()->first()->file_name);
     }
