@@ -45,10 +45,12 @@ class TtTraineeReport implements FromArray
                 'name' => $trainee->name,
                 'company' => optional($trainee->company)->name_ar,
                 'email' => $trainee->email,
-                'phone' => $trainee->phone,
+                'phone' => $trainee->clean_phone,
                 'instructor' => optional($trainee->instructor)->name,
                 'group' => optional($trainee->trainee_group)->name,
                 'absences_custom' => $trainee->absences_custom_count ?: 0,
+                'oldest_absence' => $trainee->absences_custom()->oldest()->first(),
+                'latest_absence' => $trainee->absences_custom()->latest()->first(),
             ];
         }
 
