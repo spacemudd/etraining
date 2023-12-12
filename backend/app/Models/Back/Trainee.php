@@ -490,10 +490,10 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     public function absences_custom()
     {
         return $this->hasMany(AttendanceReportRecord::class)
-            ->where('status', 0)
+            ->where('attended_at', null)
             ->whereBetween('session_starts_at', [
-                Carbon::parse(request()->from_date)->startOfDay(),
-                Carbon::parse(request()->to_date)->endOfDay(),
+                '2023-11-01',
+                '2023-12-30',
             ]);
 
         //return $this->hasMany(AttendanceReportRecordWarning::class)
