@@ -26,6 +26,7 @@ class TtTraineeReport implements FromArray
             ->withCount([
                 'absences_custom',
             ])
+            ->limit(20)
             ->get();
 
         $traineeData = [];
