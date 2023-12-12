@@ -18,7 +18,7 @@ class TtTraineeReport implements FromArray
             ->where('deleted_remark', null)
             ->where('trainee_group_id', '!=', null)
             ->where('deleted_at', null)
-            ->with(['company', 'instructor', 'trainee_group'])
+            ->with(['company'])
             ->whereHas('company', function($q) {$q->where('deleted_at', null);})
             ->with([
                 'absences_custom',
@@ -46,8 +46,6 @@ class TtTraineeReport implements FromArray
                 'company' => optional($trainee->company)->name_ar,
                 'email' => $trainee->email,
                 'phone' => $trainee->clean_phone,
-                'instructor' => optional($trainee->instructor)->name,
-                'group' => optional($trainee->trainee_group)->name,
                 'absences_custom' => $trainee->absences_custom_count ?: 0,
                 'oldest_absence' => $trainee->absences_custom()->oldest()->first(),
                 'latest_absence' => $trainee->absences_custom()->latest()->first(),
