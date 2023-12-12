@@ -48,8 +48,8 @@ class TtTraineeReport implements FromArray
                 'email' => $trainee->email,
                 'phone' => $trainee->clean_phone,
                 'absences_custom' => $trainee->absences_custom_count ?: 0,
-                'oldest_absence' => $trainee->absences_custom()->oldest()->first()->created_at,
-                'latest_absence' => $trainee->absences_custom()->latest()->first()->created_at,
+                'oldest_absence' => optional($trainee->absences_custom()->oldest()->first())->created_at,
+                'latest_absence' => optional($trainee->absences_custom()->latest()->first())->created_at,
             ];
         }
 
