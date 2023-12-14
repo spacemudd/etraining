@@ -431,7 +431,10 @@ class  FinancialInvoicesController extends Controller
 
         DB::beginTransaction();
 
-        $t = Invoice::withTrashed()->find($invoice_id);
+        $t = Invoice::where('status', Invoice::STATUS_UNPAID)
+            ->where('payment_reference_id', null)
+            ->find($invoice_id);
+
         $new = $t->replicate();
         $new->grand_total = $request->grand_total;
         $new->sub_total = $request->grand_total-($request->grand_total/1.15*0.15);
