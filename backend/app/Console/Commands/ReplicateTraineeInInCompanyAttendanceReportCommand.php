@@ -39,7 +39,7 @@ class ReplicateTraineeInInCompanyAttendanceReportCommand extends Command
      */
     public function handle()
     {
-        $data = ['company_attendance_report_id' => '7086', 'trainee_id' => 'f2e6a762-df1a-4514-a8a5-b21f604dada9'];
+        $data = ['company_attendance_report_id' => '8039', 'trainee_id' => 'f8cc1153-a2d3-4ee4-985f-6db3fc155a12'];
 //        $data = ['company_attendance_report_id' => '1', 'trainee_id' => '08744259-f3ce-46fb-a159-d09ff79ffdac'];
 
         DB::beginTransaction();
