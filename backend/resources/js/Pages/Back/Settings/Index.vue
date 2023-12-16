@@ -46,6 +46,11 @@
                               class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
                     {{ $t('words.edit-payment-settings') }}
                 </inertia-link>
+
+                <inertia-link :href="route('back.settings.global-messages.index')"
+                              class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
+                    {{ $t('words.global-messages') }}
+                </inertia-link>
             </div>
         </div>
     </app-layout>

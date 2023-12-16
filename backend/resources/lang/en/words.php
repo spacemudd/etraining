@@ -634,4 +634,9 @@ return [
     'open-permissions' => 'Open permissions',
     'in-addition-to-users-with-global-permissions' => 'In addition to users with global permissions',
     'with-logo' => 'With Logo',
+    'global-messages' => 'Global messages',
+    'starts-at' => 'Starts at',
+    'expires-at' => 'Expires at',
+    'channels' => 'Channels',
+    'global-message' => 'Global message',
 ];

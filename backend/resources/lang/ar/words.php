@@ -648,4 +648,9 @@ return [
     'open-permissions' => 'صلاحيات الدخول',
     'in-addition-to-users-with-global-permissions' => 'بالإضافة الى المستخدمين الذي لديهم صلاحيات عامة',
     'with-logo' => 'مع شعار',
+    'global-messages' => 'الرسائل العامة',
+    'starts-at' => 'يبدأ من',
+    'expires-at' => 'ينتهي في',
+    'channels' => 'القنوات',
+    'global-message' => 'رسالة عامة',
 ];

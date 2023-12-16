@@ -401,6 +401,11 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
         Route::get('/settings', [\App\Http\Controllers\Back\SettingsController::class, 'index'])->name('settings');
 
+        Route::get('/settings/global-messages', [\App\Http\Controllers\Back\GlobalMessagesController::class, 'index'])->name('settings.global-messages.index');
+        Route::get('/settings/global-messages/create', [\App\Http\Controllers\Back\GlobalMessagesController::class, 'create'])->name('settings.global-messages.create');
+        Route::post('/settings/global-messages', [\App\Http\Controllers\Back\GlobalMessagesController::class, 'store'])->name('settings.global-messages.store');
+        Route::delete('/settings/global-messages/{id}', [\App\Http\Controllers\Back\GlobalMessagesController::class, 'delete'])->name('settings.global-messages.destroy');
+
         Route::get('/settings/complaints', [\App\Http\Controllers\Back\ComplaintsSettingsController::class, 'index'])->name('settings.complaints.index');
         Route::put('/settings/complaints/update', [\App\Http\Controllers\Back\ComplaintsSettingsController::class, 'update'])->name('settings.complaints.update');
 

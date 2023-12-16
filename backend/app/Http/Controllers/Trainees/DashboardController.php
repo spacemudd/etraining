@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Back\Course;
 use App\Models\Back\CourseBatch;
 use App\Models\Back\CourseBatchSession;
+use App\Models\Back\GlobalMessages;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -50,12 +51,18 @@ class DashboardController extends Controller
 
         $class_timings = optional(auth()->user()->trainee->trainee_group)->class_timings;
 
+        $global_messages = GlobalMessages::where('company_id', auth()->user()->trainee->company_id)
+            ->available()
+            ->latest()
+            ->get();
+
         return Inertia::render('Trainees/Dashboard', [
             'user' => auth()->user(),
             'sessions' => $sessions,
             'show_success_payment' => $show_success_payment,
             'show_failed_payment' => $show_failed_payment,
             'class_timings' => $class_timings,
+            'global_messages' => $global_messages,
         ]);
     }
 }

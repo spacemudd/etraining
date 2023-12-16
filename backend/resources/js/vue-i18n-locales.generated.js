@@ -671,7 +671,12 @@ export default {
             "view-all-companies": "عرض جميع الشركات",
             "open-permissions": "صلاحيات الدخول",
             "in-addition-to-users-with-global-permissions": "بالإضافة الى المستخدمين الذي لديهم صلاحيات عامة",
-            "with-logo": "مع شعار"
+            "with-logo": "مع شعار",
+            "global-messages": "الرسائل العامة",
+            "starts-at": "يبدأ من",
+            "expires-at": "ينتهي في",
+            "channels": "القنوات",
+            "global-message": "رسالة عامة"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1480,7 +1485,12 @@ export default {
             "view-all-companies": "View all companies",
             "open-permissions": "Open permissions",
             "in-addition-to-users-with-global-permissions": "In addition to users with global permissions",
-            "with-logo": "With Logo"
+            "with-logo": "With Logo",
+            "global-messages": "Global messages",
+            "starts-at": "Starts at",
+            "expires-at": "Expires at",
+            "channels": "Channels",
+            "global-message": "Global message"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",
