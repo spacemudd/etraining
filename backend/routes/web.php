@@ -610,6 +610,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::post('contracts/generate', [\App\Http\Controllers\Back\ReportsController::class, 'generateContractsReport'])->name('reports.contracts.generate');
 
             Route::delete('company-attendance/{report_id}/remove-email/{id}', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'removeEmail'])->name('reports.company-attendance.remove-email');
+            Route::post('company-attendance/{report_id}/add-email-in-bulk', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'addEmailInBulk'])->name('reports.company-attendance.add-email-in-bulk');
             Route::post('company-attendance/{report_id}/add-email', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'addEmail'])->name('reports.company-attendance.add-email');
             Route::get('company-attendance/{report_id}/toggle-select', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'toggleSelect'])->name('reports.company-attendance.toggle-select');
             Route::get('company-attendance/{report_id}/excel', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'excel'])->name('reports.company-attendance.excel');

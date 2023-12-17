@@ -88,6 +88,7 @@
                 <jet-input dir="ltr"
                            id="to_emails"
                            type="email"
+                           :disabled="emailsToLoading"
                            class="mt-1 block w-full"
                            @keyup.enter.native="saveEmailTo"
                            v-model="email_to" />
@@ -120,6 +121,7 @@
                            id="cc_emails"
                            type="email"
                            class="mt-1 block w-full"
+                           :disabled="emailsCcLoading"
                            @keyup.enter.native="saveEmailCc"
                            v-model="email_cc" />
                 <table class="w-full text-xs mt-2">
@@ -251,6 +253,8 @@ export default {
         var startDate = new Date(y, m, 1);
         var endDate = new Date(y, m + 1, 0);
         return {
+            emailsToLoading: false,
+            emailsCcLoading: false,
             email_cc: '',
             email_to: '',
             createAttendanceReportForm: this.$inertia.form({
@@ -264,33 +268,59 @@ export default {
     },
     methods: {
         saveEmailTo() {
-            this.$inertia.post(route('back.reports.company-attendance.add-email', {report_id: this.report.id}), {
-                email: this.email_to,
+            this.emailsToLoading = true;
+            let url = route('back.reports.company-attendance.add-email', {report_id: this.report.id});
+            let emails = this.email_to;
+
+            if (this.email_to.includes(',')) {
+                url = route('back.reports.company-attendance.add-email-in-bulk', {report_id: this.report.id});
+                emails = this.email_to.split(', ').map((email) => email.trim()).filter((email) => email.length > 0);
+            }
+
+            this.$inertia.post(url, {
+                email: emails,
                 type: 'to',
             }, {
                 preserveScroll: true,
                 onSuccess: () => {
                     this.email_to = '';
+                    this.emailsToLoading = false;
                 },
                 onError: (res) => {
                     if (res.email) {
                         alert(res.email);
+                    } else {
+                        alert('يجب ان يكون البريد صحيح');
                     }
+                    this.emailsToLoading = false;
                 }
             });
         },
         saveEmailCc() {
-            this.$inertia.post(route('back.reports.company-attendance.add-email', {report_id: this.report.id}), {
-                email: this.email_cc,
+            this.emailsCcLoading = true;
+            let url = route('back.reports.company-attendance.add-email', {report_id: this.report.id});
+            let emails = this.email_cc;
+
+            if (this.email_to.includes(',')) {
+                url = route('back.reports.company-attendance.add-email-in-bulk', {report_id: this.report.id});
+                emails = this.email_cc.split(', ').map((email) => email.trim()).filter((email) => email.length > 0);
+            }
+
+            this.$inertia.post(url, {
+                email: emails,
                 type: 'cc',
             }, {
                 preserveScroll: true,
                 onSuccess: () => {
+                    this.emailsCcLoading = false;
                     this.email_cc = '';
                 },
                 onError: (res) => {
+                    this.emailsCcLoading = false;
                     if (res.email) {
                         alert(res.email);
+                    } else {
+                        alert('يجب ان يكون البريد صحيح');
                     }
                 }
             });

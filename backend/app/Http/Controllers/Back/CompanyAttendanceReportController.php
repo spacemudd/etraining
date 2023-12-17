@@ -91,7 +91,9 @@ class CompanyAttendanceReportController extends Controller
                 ];
             })->toArray());
         } else {
-            $report->emails()->create(['type' => 'to', 'email' => $company->email]);
+            if ($company->email) {
+                $report->emails()->create(['type' => 'to', 'email' => $company->email]);
+            }
             $report->emails()->create(['type' => 'cc', 'email' => auth()->user()->email]);
         }
 
@@ -309,6 +311,32 @@ class CompanyAttendanceReportController extends Controller
         $company_attendance = CompanyAttendanceReport::findOrFail($id);
         if (!$company_attendance->emails()->where('type', $request->type)->where('email', $request->email)->exists()) {
             $company_attendance->emails()->create($request->except('_token'));
+        }
+
+        return redirect()->route('back.reports.company-attendance.show', $id);
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @param $id
+     * @return void
+     */
+    public function addEmailInBulk(Request $request, $id)
+    {
+        $request->validate([
+            'email.*' => 'required|email:rfc,dns',
+            'type' => 'required|in:to,cc,bcc',
+        ]);
+
+        $company_attendance = CompanyAttendanceReport::findOrFail($id);
+
+        foreach ($request->email as $email) {
+            if (!$company_attendance->emails()->where('type', $request->type)->where('email', $email)->exists()) {
+                $company_attendance->emails()->create([
+                    'email' => $email,
+                    'type' => $request->type,
+                ]);
+            }
         }
 
         return redirect()->route('back.reports.company-attendance.show', $id);
