@@ -213,6 +213,13 @@ class CompanyAttendanceReportController extends Controller
     {
         $report = CompanyAttendanceReport::findOrFail($id);
 
+        // make sure to remove any spaces from emails
+        foreach ($report->emails as $email) {
+            $email->update([
+                'email' => Str::replace(' ', '', $email->email),
+            ]);
+        }
+
         Mail::to($report->emails_to()->pluck('email') ?: null)
             ->cc($report->emails_cc()->pluck('email') ?: null)
             ->send(new CompanyAttendanceReportMail($report->id));
