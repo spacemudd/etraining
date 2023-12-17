@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Mail;
 use PDF;
+use Str;
 
 class CompanyAttendanceReportService
 {
@@ -35,7 +36,7 @@ class CompanyAttendanceReportService
         $clone->emails()->createMany($original->emails()->get()->map(function ($email) {
                 return [
                     'type' => $email->type,
-                    'email' => \Str::replace(' ', '', $email->email),
+                    'email' => Str::replace(' ', '', $email->email),
                 ];
             })->toArray());
 
@@ -59,6 +60,13 @@ class CompanyAttendanceReportService
         $report->approved_by_id = auth()->user()->id ?? '7289ed33-0250-40dd-af4c-9f3e2b09eecb';
         $report->approved_at = now();
         $report->save();
+
+        // make sure to remove any spaces from emails
+        foreach ($report->emails as $email) {
+            $email->update([
+                'email' => Str::replace(' ', '', $email->email),
+            ]);
+        }
 
         Mail::to($report->emails_to()->pluck('email') ?: null)
             ->cc($report->emails_cc()->pluck('email') ?: null)
