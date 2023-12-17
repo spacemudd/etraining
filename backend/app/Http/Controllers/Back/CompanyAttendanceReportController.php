@@ -18,6 +18,7 @@ use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use PDF;
 use Spatie\QueryBuilder\QueryBuilder;
