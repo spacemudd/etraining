@@ -9,7 +9,9 @@
                     <btn-loading-indicator v-if="$wait.is('LOADING_GOSI')" />
                     <p class="text-xs" v-else>الرجاء الضغط على 'تحديث' لطلب البيانات</p>
                 </div>
-                <table class="w-full text-xs self-center" v-for="record in data">
+                <div v-if="data && data.errorText">{{ data.errorText }}</div>
+                <template v-if="data">
+                    <table class="w-full text-xs self-center" v-for="record in data">
                 <colgroup>
                     <col style="width:110px">
                     <col>
@@ -40,6 +42,7 @@
                 </tr>
                 </tbody>
             </table>
+                </template>
             </div>
             <button class="btn-primary self-center mx-2 mt-2" @click="fetch">{{ $t('words.refresh') }}</button>
         </div>
@@ -51,7 +54,7 @@
 import BtnLoadingIndicator from './BtnLoadingIndicator.vue'
 export default {
     components: {
-        BtnLoadingIndicator,
+        BtnLoadingIndicator
     },
     name: "GosiContainer",
     props: ['ninOrIqama'],

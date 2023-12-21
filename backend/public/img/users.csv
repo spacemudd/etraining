@@ -1,0 +1,128 @@
+First Name [Required],Last Name [Required],Email Address [Required],Password [Required],Password Hash Function [UPLOAD ONLY],Org Unit Path [Required],New Primary Email [UPLOAD ONLY],Recovery Email,Home Secondary Email,Work Secondary Email,Recovery Phone [MUST BE IN THE E.164 FORMAT],Work Phone,Home Phone,Mobile Phone,Work Address,Home Address,Employee ID,Employee Type,Employee Title,Manager Email,Department,Cost Center,Building ID,Floor Name,Floor Section,Change Password at Next Sign-In,New Status [UPLOAD ONLY],New Licenses [UPLOAD ONLY],Advanced Protection Program enrollment
+Abdulrahman,Khaled Taha,a.taha@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+abdulrahman,al tamimi,a_altamimi@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Abdalmenam,Mohamed,abdalmenam@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+AbdulWahab,ALI,abdelwhab@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Abdullah.M,Nasaf,abdullah.m@ptc-ksa.net,****,,/,,,,,+966555945247,,,,,,,,,,,,,,,False,,,False
+Abdulrahman,Laouali,abdulrahman@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Abeer,.,abeer@ptc-ksa.net,****,,/,,,,,+966551777830,,966551777830,,,,,,,,,,,,,False,,,False
+Finance,Department,acc1@ptc-ksa.net,****,,/financial Department,,,,,,,,,,,,,,,,,,,,False,,,False
+Finance,Department,acc2@ptc-ksa.net,****,,/financial Department,,,,,,,,,,,,,,,,,,,,False,,,False
+Finance,Department,acc3@ptc-ksa.net,****,,/financial Department,,,,,,,,,,,,,,,,,,,,False,,,False
+Finance,Department,acc4@ptc-ksa.net,****,,/financial Department,,,,,,,,,,,,,,,,,,,,False,,,False
+Finance,Department,acc5@ptc-ksa.net,****,,/financial Department,,,,,,,,,,,,,,,,,,,,False,,,False
+Finance,Department,acc6@ptc-ksa.net,****,,/financial Department,,,,,,,,,,,,,,,,,,,,False,,,False
+Finance ,Department,acc7@ptc-ksa.net,****,,/Finance Admin,,,,,,,,,,,,,,,,,,,,False,,,False
+Collection, Department,acc8@ptc-ksa.net,****,,/financial Department,,,,,,,,,,,,,,,,,,,,False,,,False
+Finance ,Department,acc9@ptc-ksa.net,****,,/financial Department,,,,,,,,,,,,,,,,,,,,False,,,False
+Accountant,PTC,acc@ptc-ksa.net,****,,/Finance Admin,,,,,+966553092274,,,,,,,,,,,,,,,False,,,False
+All,PTC,admin-ptc@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Administrative,Assistant JED,admin1@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Administrative ,Assistant JED,admin2@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Administrative,Assistant JED,admin@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Afnan,Hassan,afnan@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Ahmad.A,Alhmiadi,ahmad.a@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Alfuton,Alharbi,alfuton@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Amani ,Obaid Al-Subaie,amani.o@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Amiah,Al Balushi,amiah.b@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Amjad ,Al-Asmari,amjada@ptc-ksa.net,****,,/,,Meejj.8888@gmail.com,,,+966556466507,,,,,,,,,,,,,,,False,,,False
+Asya,Abdulrahman,asya.abdulrahman@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Azzah,Abdullah,azzah.abdullah@ptc-ksa.net,****,,/,,,,,+966550110757,,,,,,,,,,,,,,,False,,,False
+Bashayer,Halawany,bashayer.h@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Bayan,Ahmed Al-Afisan,bayan@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Bayan,Al-Qahtani,bayanq@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+PTC,Billing,billing@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Business,Development Specialist,business1@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,True,,,False
+Business,Development Specialist ,business2@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Business, Development Specialist,business3@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Business ,Development Specialist,business@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Business,Development Specialist [DMM],businessdmm@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Call Center ,Administrator,cc1@ptc-ksa.net,****,,/,,,,,+966555698144,,,,,,,,,,,,,,,False,,,False
+Call Center,Administrator,cc@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+CEO,.,ceo@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Financial,Manager,CFO@ptc-ksa.net,****,,/Finance Admin,,,,,,,,,,,,,,,,,,,,False,,,False
+Collection,Department,collection1@ptc-ksa.net,****,,/Collection,,,,,+966551190780,,,,,,,,,,,,,,,False,,,False
+Collection,Department,collection2@ptc-ksa.net,****,,/Collection,,,,,+966500782050,,,,,,,,,,,,,,,False,,,False
+Collection ,Department,collection3@ptc-ksa.net,****,,/Collection,,,,,,,,,,,,,,,,,,,,False,,,False
+ Collection ,Department,collection4@ptc-ksa.net,****,,/Collection,,,,,,,,,,,,,,,,,,,,False,,,False
+Collection,.,collection@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Collection Department,Manager,collectionm@ptc-ksa.net,****,,/Collection Admin,,,,,,,,,,,,,,,,,,,,False,,,False
+Coordination,& Monitoring,coordination@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+ESLAM,MOHAMED MAHRAN,eslam@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Fatima ,Abdullah Al-Abdulkarim,fatima@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Ghaida ,Al-Qasim,ghaida@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Hadeel,AL Kurrizi,hadeel@ptc-ksa.net,****,,/Collection,,,,,,,,,,,,,,,,,,,,False,,,False
+Haidi,Amin,haidi@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Hala,AL-Otaibi,hala@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Abdul,Halim,halim@ptc-ksa.net,****,,/,,,,,+966533506792,,,,,,,,,,,,,,,False,,,False
+Hanan ,Shawkat,hanans@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Haneen,Abdullah,haneen.abdullah@ptc-ksa.net,****,,/Jeddah Center,,,,,,,,,,,,,,,,,,,,False,,,False
+Hasna,Mohammad,hasna@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Hessa,Omar,hessao@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Hissa ,Al Youssef,hissay@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+HR,Department,hr@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Ibrahim,Al Sheikhi,ibrahim.s@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+IBTSAM,AL-SHAMRANI,ibtsam@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Info,PTC,info@ptc-ksa.net,****,,/,,ceo@ptc-ksa.net,,,+966534849989,,,,,,,,,,,,,,,False,,,False
+Jawaher,Herbi,jawaher@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Jobs,HR,jobs@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Khawla ,Al Hatem,khawlah@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Khobar,.,khobar@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Lama,Alqahtani,lama.q@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Lama,Alshugair,lama@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Mohamed,Shehatah,m_shehatah@ptc-ksa.net,****,,/,,,,,+966561454445,,,,,,,,,,,,,,,False,,,False
+Maha ,Al-Ruwaisan,maha.r@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,True,,,False
+Mahmoud,Hamdy,mahmoud.h@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Mashael.A,Alahmari,mashael.a@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+MASHAEL,SHABAAN ALASIRI.,mashael.alasiri@ptc-ksa.net,****,,/,,,,,+966551589713,,,,,,,,,,,,,,,False,,,False
+Mohamd-helal,.,mohamd-helal@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Mohammad.A,Jad,mohammad.a@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Mohammad.Ja,Hajazi,mohammad.ja@ptc-ksa.net,****,,/,,Mohammed.gamal6790@gmail.com,,,,,,,,,,,,,,,,,,False,,,False
+Mohammad.Salah,.,mohammad.salah@ptc-ksa.net,****,,/,,,,,+966555084827,,,,,,,,,,,,,,,False,,,False
+Mohammed,Sayed Ali,mohammed.sayed@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Munayer ,Al-Mutairi,munayer.m@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Muneera,Alhamoudi,muneera@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Najd ,Al-Harthi,najd@ptc-ksa.net,****,,/,,,,,+966554513732,,,,,,,,,,,,,,,False,,,False
+Nawaf,Alharbi,nawaf@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Nehad,Salah,nehad@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Njoud,alharbi,njoud@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+NORAH,AL-QHTANI,norahq@ptc-ksa.net,****,,/,,,,,+966554691524,,,,,,,,,,,,,,,False,,,False
+Nouf, Al Amari,nouf@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Nouf,Al Mutlaq,noufm@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Payments,officer,payments@ptc-ksa.net,****,,/Finance Admin,,,,,,,,,,,,,,,,,,,,False,,,False
+Rafa,Al-Dossary,rafad@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Raghad, Al-Shehri,raghads@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Rawabi,Al Baqami,rawabib@ptc-ksa.net,****,,/Collection,,,,,+966542094111,,,,,,,,,,,,,,,False,,,False
+Rawabi ,Al-Mutairi,rawabim@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Rawan,AlSuwaian,rawan@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Reem,Alghryby,reem@ptc-ksa.net,****,,/Collection,,,,,,,,,,,,,,,,,,,,False,,,False
+Reema,alodhaiani,reema@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Reem ,Abdulaziz Al-Otaibi,reemo@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Roba,ALshahri,roba@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Sahar,Ibrahim,sahar@ptc-ksa.net,****,,/,,,,,,+966537175553,,,,,,,,,,,,,,False,,,False
+Sales,Jeddah,sales-jed@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Sales-khobar,.,sales-khobar@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Sales,PTC,sales@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Samar.H,AlAli,samar.h@ptc-ksa.net,****,,/,,,,,+966555922396,,,,,,,,,,,,,,,False,,,False
+Sara,Almutairi,sara.m@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Sara ,mabrook althebiani,sara.ma@ptc-ksa.net,****,,/,,,,,+966558120609,,,,,,,,,,,,,,,False,,,False
+Sara,Ibrahim,sara@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Sara,ahmed,saraahmed@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Sarah ,Al-Shehri,sarahs@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Sara ,Almushrif,saram@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Seham,Almoutary,seham.m@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+shahad.m,Mohammad,shahad.m@ptc-ksa.net,****,,/Collection,,,,,,,,,,,,,,,,,,,,False,,,False
+Shamail ,Saad,shamails@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Sheehan,Al Amri,sheehan.a@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Sheikha,Jassim Al-Siyafi,sheikha.j@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Shoug,Haidar,shoug@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Siamaa,Albogami,siamaa@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Social Media,Marketing,smm@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+snap,chat,snapchat@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Syed,Ateeq,syed.a@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Taif ,Dighriri,taifd@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Tender,.,tender@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+tik,tok,tiktok@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Trainee.Affairs,Section,trainee.affairs@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+Manal,Al-Otaibi,traineesaffairs1@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False
+training,ptc,training@ptc-ksa.net,****,,/,,,,,,,,,,,,,,,,,,,,False,,,False

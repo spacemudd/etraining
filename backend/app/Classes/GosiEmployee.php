@@ -48,7 +48,6 @@ class GosiEmployee
 
         if (array_key_exists('errorCode', $data)) {
             $this->error = $data;
-            return $this->error;
         }
 
         $this->fetchedData = $data;
@@ -64,7 +63,7 @@ class GosiEmployee
     public function toArray()
     {
         if ($this->error) {
-            return $this->error;
+            return collect($this->error);
         }
 
         return $this->fetchedData;

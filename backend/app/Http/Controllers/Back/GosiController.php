@@ -22,6 +22,6 @@ class GosiController extends Controller
             'ninOrIqama' => 'required|numeric|digits:10',
         ]);
 
-        return response()->json(GosiEmployee::new($request->ninOrIqama)->get()->toArray()['employmentStatusInfo']);
+        return response()->json(GosiEmployee::new($request->ninOrIqama)->get()->toArray());
     }
 }
