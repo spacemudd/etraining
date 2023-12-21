@@ -87,7 +87,7 @@
                     form.submit();
                 }
                 else if (emailField.value.includes('ptc-ksa.net')) {
-                    form.action = '/login/1112fa-code';
+                    form.action = '/login/2fa-code';
                     form.submit();
                 } else {
                     form.action = '/login';
