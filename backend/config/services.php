@@ -30,4 +30,10 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'masdr' => [
+        'endpoint' => env('MASDR_ENDPOINT'),
+        'client_id' => env('MASDR_CLIENT_ID'),
+        'client_secret' => env('MASDR_CLIENT_SECRET'),
+    ],
+
 ];

@@ -639,4 +639,10 @@ return [
     'expires-at' => 'Expires at',
     'channels' => 'Channels',
     'global-message' => 'Global message',
+    'full-wage' => 'Full wage',
+    'employer-name' => 'Employer Name',
+    'salary-starting-date' => 'Salary Starting Date',
+    'employment-status' => 'Employment Status',
+    'updated-date' => 'Last updated',
+    'view-gosi' => 'View GOSI',
 ];
