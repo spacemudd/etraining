@@ -191,6 +191,10 @@
                     </inertia-link>
                 </div>
 
+                <div class="col-span-6 items-center justify-end bg-gray-50 text-right flex gap-6" v-can="'view-gosi'">
+                    <gosi-container :nin-or-iqama="trainee.identity_number"></gosi-container>
+                </div>
+
                 <div
                     v-if="!editButton.editOption"
                     class="col-span-6 sm:col-span-2"
@@ -914,6 +918,7 @@ import EmptySlate from "@/Components/EmptySlate";
 import TraineeAuditContainer from "@/Components/TraineeAuditContainer";
 import {Inertia} from "@inertiajs/inertia";
 import ValidationErrors from "@/Components/ValidationErrors";
+import GosiContainer from "../../../Components/GosiContainer";
 
 export default {
     props: [
@@ -928,6 +933,7 @@ export default {
         'companies',
     ],
     components: {
+        GosiContainer,
         ValidationErrors,
         TraineeAuditContainer,
         AppLayout,

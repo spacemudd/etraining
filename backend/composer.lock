@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4ad0d1a925a7cff3dddf709d2c406c42",
+    "content-hash": "ecf6a796e1a5ca18f57e94280bbdd372",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2842,6 +2842,53 @@
                 }
             ],
             "time": "2020-06-13T08:05:20+00:00"
+        },
+        {
+            "name": "kamermans/guzzle-oauth2-subscriber",
+            "version": "v1.0.13",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kamermans/guzzle-oauth2-subscriber.git",
+                "reference": "10b5cf242c5167afd16f1c1f243ac5be689ecd4c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kamermans/guzzle-oauth2-subscriber/zipball/10b5cf242c5167afd16f1c1f243ac5be689ecd4c",
+                "reference": "10b5cf242c5167afd16f1c1f243ac5be689ecd4c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "suggest": {
+                "guzzlehttp/guzzle": "Guzzle ~4.0|~5.0|~6.0|~7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "kamermans\\OAuth2\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Steve Kamerman",
+                    "email": "stevekamerman@gmail.com"
+                }
+            ],
+            "description": "OAuth 2.0 client for Guzzle 4, 5, 6 and 7+",
+            "keywords": [
+                "Guzzle",
+                "oauth"
+            ],
+            "support": {
+                "issues": "https://github.com/kamermans/guzzle-oauth2-subscriber/issues",
+                "source": "https://github.com/kamermans/guzzle-oauth2-subscriber/tree/v1.0.13"
+            },
+            "time": "2023-07-11T21:43:27+00:00"
         },
         {
             "name": "knplabs/knp-snappy",
@@ -14273,5 +14320,5 @@
         "ext-pcntl": "7.3",
         "ext-posix": "7.3"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

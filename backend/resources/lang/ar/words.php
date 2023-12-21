@@ -653,4 +653,10 @@ return [
     'expires-at' => 'ينتهي في',
     'channels' => 'القنوات',
     'global-message' => 'رسالة عامة',
+    'full-wage' => 'الراتب الكامل',
+    'employer-name' => 'اسم صاحب العمل',
+    'salary-starting-date' => 'تاريخ بداية الراتب',
+    'employment-status' => 'حالة التوظيف',
+    'updated-date' => 'تاريخ التحديث',
+    'view-gosi' => 'عرض بيانات التأمينات',
 ];

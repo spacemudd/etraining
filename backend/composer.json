@@ -25,6 +25,7 @@
         "h4cc/wkhtmltopdf-amd64": "^0.12.4",
         "inertiajs/inertia-laravel": "^0.4.0",
         "jamesmills/laravel-timezone": "^1.9",
+        "kamermans/guzzle-oauth2-subscriber": "^1.0",
         "lab404/laravel-impersonate": "^1.7",
         "laravel/framework": "^8.0",
         "laravel/helpers": "^1.3",

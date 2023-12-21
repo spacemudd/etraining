@@ -676,7 +676,12 @@ export default {
             "starts-at": "يبدأ من",
             "expires-at": "ينتهي في",
             "channels": "القنوات",
-            "global-message": "رسالة عامة"
+            "global-message": "رسالة عامة",
+            "full-wage": "الراتب الكامل",
+            "employer-name": "اسم صاحب العمل",
+            "salary-starting-date": "تاريخ بداية الراتب",
+            "employment-status": "حالة التوظيف",
+            "updated-date": "تاريخ التحديث"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1490,7 +1495,12 @@ export default {
             "starts-at": "Starts at",
             "expires-at": "Expires at",
             "channels": "Channels",
-            "global-message": "Global message"
+            "global-message": "Global message",
+            "full-wage": "Full wage",
+            "employer-name": "Employer Name",
+            "salary-starting-date": "Salary Starting Date",
+            "employment-status": "Employment Status",
+            "updated-date": "Last updated"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

@@ -1,5 +1,6 @@
 <?php
 
+use App\Classes\GosiEmployee;
 use App\Http\Controllers\Back\CompanyAttendanceReportController;
 use App\Http\Controllers\Back\CompanyResignationsController;
 use App\Http\Controllers\Back\TraineesGroupsController;
@@ -10,6 +11,7 @@ use App\Models\Back\Invoice;
 use App\Models\Back\Resignation;
 use App\Models\Back\Trainee;
 use App\Models\User;
+use App\Services\GosiService;
 use Illuminate\Mail\Markdown;
 
 Route::get('preview', function () {
@@ -398,6 +400,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
     // For admins
     Route::prefix('back')->middleware('redirect-trainees-to-dashboard')->name('back.')->group(function() {
+
+        Route::post('gosi', [\App\Http\Controllers\Back\GosiController::class, 'show'])->name('gosi.show');
 
         Route::get('/settings', [\App\Http\Controllers\Back\SettingsController::class, 'index'])->name('settings');
 
