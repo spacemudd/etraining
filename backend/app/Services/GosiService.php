@@ -17,6 +17,8 @@ class GosiService
     {
         $reauth_client = new Client([
             'base_uri' => config('services.masdr.endpoint') .'/token/v1/accesstoken?grant_type=client_credentials',
+            'timeout' => 5,
+            'connect_timeout' => 5,
             'defaults' => [
                 'config' => [
                     'curl' => [
