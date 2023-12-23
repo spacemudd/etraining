@@ -348,7 +348,9 @@
                                 <ion-icon name="logo-whatsapp" class="w-4 h-4 text-green-600"></ion-icon>
                             </a>
                         </span>
-                        <span class="border border-green-400 px-2 gap-2 text-sm rounded pull-right flex">
+                        <span class="border px-2 gap-2 text-sm rounded pull-right flex"
+                              :class="trainee.phone_is_owned ? 'border-green-600 bg-green-300' : 'border-red-600 bg-red-300'"
+                        >
                             <img src="/img/absher.svg" alt="Absher" width="9px">
                             {{ trainee.phone_ownership_status }}
                         </span>
