@@ -39,6 +39,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
      * Execute the console command.
      *
      * @return int
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function handle()
     {
@@ -69,7 +70,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 ->orderBy('date_from', 'desc')
                 ->first();
 
-            if ($lastReport && $lastReport->to_emails) {
+            if ($lastReport && $lastReport->emails()->count()) {
                 // Is the number of trainees equal to the number of trainees in the company?
                 if ($lastReport->trainees()->count() !== $company->trainees()->count()) {
                     $traineesNotFound = $lastReport->trainees()->pluck('trainees.id')->diff($company->trainees()->pluck('trainees.id'));
@@ -96,19 +97,16 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                     }
                 }
 
-                if (Invoice::where('company_id', $company->id)->whereBetween('to_date', ['2023-10-01', '2023-11-30'])->count() === 0) {
-                    $this->info('No invoices in 2023-10 -> 2023-11. Skipping: '.$company->name_ar);
-                    continue;
-                }
-
                 $clone = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
                 $clone->date_from = Carbon::parse('2023-12-01')->setTimezone('Asia/Riyadh')->startOfDay();
                 $clone->date_to = Carbon::parse('2023-12-31')->setTimezone('Asia/Riyadh')->endOfDay();
-                $clone->cc_emails = Str::replace('ptc-ksa.com', 'ptc-ksa.net', $lastReport->cc_emails);
-                if ($company->salesperson_email && !Str::contains($clone->cc_emails, $company->salesperson_email)) {
-                    $clone->cc_emails .= ', '.$company->salesperson_email;
-                }
                 $clone->save();
+                $clone->emails()->createMany($lastReport->emails()->get()->map(function ($email) {
+                    return [
+                        'type' => $email->type,
+                        'email' => Str::replace(' ', '', $email->email),
+                    ];
+                })->toArray());
                 app()->make(CompanyAttendanceReportService::class)->approve($clone->id);
                 $this->info('Sent company: '.$company->name_ar);
             } else {
@@ -120,11 +118,20 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 $report = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
                 $report->date_from = Carbon::parse('2023-12-01')->setTimezone('Asia/Riyadh')->startOfDay();
                 $report->date_to = Carbon::parse('2023-12-31')->setTimezone('Asia/Riyadh')->endOfDay();
-                $report->cc_emails = 'sara@ptc-ksa.net, m_shehatah@ptc-ksa.net, ceo@ptc-ksa.net, mashael.a@ptc-ksa.net';
-                if ($company->salesperson_email && !Str::contains($report->cc_emails, $company->salesperson_email)) {
-                    $report->cc_emails .= ', '.$company->salesperson_email;
-                }
                 $report->save();
+
+                $emails = [
+                    ['type' => 'to', 'email' => $company->email],
+                    ['type' => 'cc',' email' => 'sara@ptc-ksa.net'],
+                    ['type' => 'cc', 'email' => 'm_shehatah@ptc-ksa.net'],
+                    ['type' => 'cc', 'email' => 'ceo@ptc-ksa.net'],
+                    ['type' => 'cc', 'email' => 'mashael.a@ptc-ksa.net'],
+                ];
+                if ($company->salesperson_email) {
+                    $emails[] = ['type' => 'cc', 'email' => $company->salesperson_email];
+                }
+                $report->emails()->createMany($emails);
+
                 app()->make(CompanyAttendanceReportService::class)->approve($report->id);
             }
         }

@@ -14,6 +14,25 @@ use Str;
 
 class CompanyAttendanceReportService
 {
+    public function newReport($company_id)
+    {
+        DB::beginTransaction();
+        $report = new CompanyAttendanceReport();
+        $report->company_id = $company_id;
+        $report->status = CompanyAttendanceReport::STATUS_REVIEW;
+        $report->date_from = Carbon::now()->startOfMonth();
+        $report->date_to = Carbon::now()->endOfMonth();
+        $report->save();
+        $report = $report->refresh();
+
+        $report->trainees()->attach($report->company->trainees->flatMap(function($trainee) {
+            return [$trainee->id => ['active' => true]];
+        }));
+        DB::commit();
+
+        return $report;
+    }
+
     public function clone($id)
     {
         DB::beginTransaction();
