@@ -182,7 +182,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
     public function makeNewReportFromLastReport($company, $lastReport)
     {
-        $this->info('New report from last report: '.$company->name_ar);
+        $this->info('New report from last report: '.$company->name_ar . ',' . $company->trainees()->count());
         //$clone = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
         //$clone->date_from = Carbon::parse('2023-12-01')->setTimezone('Asia/Riyadh')->startOfDay();
         //$clone->date_to = Carbon::parse('2023-12-31')->setTimezone('Asia/Riyadh')->endOfDay();
@@ -198,7 +198,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
     public function makeNewReport($company)
     {
-        $this->info('No last report. Creating new report - '.$company->name_ar);
+        $this->info('No last report. Creating new report - '.$company->name_ar . ',' . $company->trainees()->count());
         //$report = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
         //$report->date_from = Carbon::parse('2023-12-01')->setTimezone('Asia/Riyadh')->startOfDay();
         //$report->date_to = Carbon::parse('2023-12-31')->setTimezone('Asia/Riyadh')->endOfDay();
