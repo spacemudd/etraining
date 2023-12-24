@@ -101,6 +101,7 @@ class CompanyAttendanceReportService
         }
 
         CompanyAttendanceReportsEmail::where('company_attendance_report_id', $report->id)->where('email', '')->delete();
+        CompanyAttendanceReportsEmail::where('company_attendance_report_id', $report->id)->where('email', 'mahmoud.m@ptc-ksa.net')->delete();
 
         Mail::to($report->emails_to()->pluck('email') ?: null)
             ->cc($report->emails_cc()->pluck('email') ?: null)
