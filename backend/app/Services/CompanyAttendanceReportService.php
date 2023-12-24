@@ -100,7 +100,7 @@ class CompanyAttendanceReportService
             ]);
         }
 
-        CompanyAttendanceReportsEmail::where('report_id', $report->id)->where('email', null)->delete();
+        CompanyAttendanceReportsEmail::where('company_attendance_report_id', $report->id)->where('email', null)->delete();
 
         Mail::to($report->emails_to()->pluck('email') ?: null)
             ->cc($report->emails_cc()->pluck('email') ?: null)
