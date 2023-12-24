@@ -59,7 +59,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
             // TODO: Has report for current month? Update for the current month
             $currentMonthReport = $company->company_attendance_reports()
-                ->whereBetween('date_to', ['2023-12-01', '2023-12-31'])
+                ->whereBetween('date_to', [Carbon::parse('2023-12-01')->startOfDay(), Carbon::parse('2023-12-31')->endOfDay()])
                 ->first();
 
             if ($currentMonthReport) {
@@ -129,7 +129,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                     ['type' => 'cc', 'email' => 'mashael.a@ptc-ksa.net'],
                 ];
                 if ($company->salesperson_email) {
-                    $emails[] = ['type' => 'cc', 'email' => $company->salesperson_email];
+                    $emails[] = ['type' => 'to', 'email' => $company->salesperson_email];
                 }
                 $report->emails()->createMany($emails);
 
