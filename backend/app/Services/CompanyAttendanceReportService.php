@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Mail\CompanyAttendanceReportMail;
 use App\Models\Back\Company;
 use App\Models\Back\CompanyAttendanceReport;
+use App\Models\Back\CompanyAttendanceReportsEmail;
 use App\Models\Back\CompanyAttendanceReportsTrainee;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -81,11 +82,25 @@ class CompanyAttendanceReportService
         $report->save();
 
         // make sure to remove any spaces from emails
+        $contact_point = 'sara@ptc-ksa.net';
+        $contact_point_exists = false;
         foreach ($report->emails as $email) {
             $email->update([
                 'email' => Str::replace(' ', '', $email->email),
             ]);
+            if ($email->email == $contact_point) {
+                $contact_point_exists = true;
+            }
         }
+
+        if (!$contact_point_exists) {
+            $report->emails()->create([
+                'type' => 'cc',
+                'email' => $contact_point,
+            ]);
+        }
+
+        CompanyAttendanceReportsEmail::where('report_id', $report->id)->where('email', null)->delete();
 
         Mail::to($report->emails_to()->pluck('email') ?: null)
             ->cc($report->emails_cc()->pluck('email') ?: null)
