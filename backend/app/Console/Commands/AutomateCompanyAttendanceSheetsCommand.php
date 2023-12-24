@@ -151,6 +151,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 $query->whereBetween('to_date', [Carbon::parse('2023-12-01')->startOfDay(), Carbon::parse('2023-12-31')->endOfDay()]);
             })->count();
         $this->info('Found companies with invoices: '.$count);
+
         Company::with('invoices')
             ->whereHas('invoices', function ($query) {
                 $query->whereBetween('to_date', [Carbon::parse('2023-12-01')->startOfDay(), Carbon::parse('2023-12-31')->endOfDay()]);
@@ -159,12 +160,14 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
                     // Checks
                     if ($company->trainees()->count() === 0) {
+                        $this->info('No trainees. Skipping: '.$company->name_ar);
                         continue;
                     }
                     $currentMonthReport = $company->company_attendance_reports()
                         ->whereBetween('date_to', [Carbon::parse('2023-12-01')->startOfDay(), Carbon::parse('2023-12-31')->endOfDay()])
                         ->first();
                     if ($currentMonthReport) {
+                        $this->info('Already created. Skipping: '.$company->name_ar);
                         continue;
                     }
 
