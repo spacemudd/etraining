@@ -30,12 +30,22 @@ class MailController extends Controller
                     ->where('email', $eventData['recipient'])
                     ->first();
 
-                $email->update([
+                if ($email->failed_at) {
+                    // already failed and mailgun is just retrying
+                    // (so we don't send an email in order to not annoy people)...
+                    $email->update([
                         'failed_at' => now(),
                         'failed_reason' => $eventData['delivery-status']['message'],
                     ]);
-                Mail::to(['trainee.affairs@ptc-ksa.net', 'sara@ptc-ksa.net', 'samar.h@ptc-ksa.net', 'ceo@ptc-ksa.net', 'billing@ptc-ksa.net'])
-                    ->send(new CompanyAttendanceFailureMail($email));
+                } else {
+                    // failed for the first time, email people.
+                    $email->update([
+                        'failed_at' => now(),
+                        'failed_reason' => $eventData['delivery-status']['message'],
+                    ]);
+                    Mail::to(['sara@ptc-ksa.net', 'samar.h@ptc-ksa.net', 'ceo@ptc-ksa.net', 'billing@ptc-ksa.net'])
+                        ->send(new CompanyAttendanceFailureMail($email));
+                }
 
             } elseif ($eventData['event'] === 'delivered') {
                 CompanyAttendanceReport::find($eventData['user-variables']['company_attendance_report_id'])
