@@ -148,13 +148,13 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
     {
         $count = Company::with('invoices')
             ->whereHas('invoices', function ($query) {
-                $query->whereBetween('to_date', [Carbon::parse('2023-12-01')->startOfDay(), Carbon::parse('2023-12-31')->endOfDay()]);
+                $query->whereBetween('to_date', [Carbon::parse('2023-11-01')->startOfDay(), Carbon::parse('2023-11-30')->endOfDay()]);
             })->count();
         $this->info('Found companies with invoices: '.$count);
 
         Company::with('invoices')
             ->whereHas('invoices', function ($query) {
-                $query->whereBetween('to_date', [Carbon::parse('2023-12-01')->startOfDay(), Carbon::parse('2023-12-31')->endOfDay()]);
+                $query->whereBetween('to_date', [Carbon::parse('2023-11-01')->startOfDay(), Carbon::parse('2023-11-30')->endOfDay()]);
             })->chunk(20, function($companies) {
                 foreach ($companies as $company) {
 
