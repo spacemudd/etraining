@@ -213,11 +213,14 @@
                                         @endif
                                     </td>
                                     @for($i=0;$i<count($days);$i++)
-                                        <td style="{{ $days[$i]['vacation_day'] ? 'background:#e0e0e0;' : '' }}">
+                                    <td style="{{ $days[$i]['vacation_day'] ? 'background:#e0e0e0;' : '' }}">
+                                        @if ($days[$i]['vacation_day'])
+                                            X
+                                        @else
                                             @if ($record->start_date)
                                                 @if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date))
                                                     &#10003;
-                                                    @if (!$days[$i]['vacation_day'] && $report->with_attendance_times)
+                                                    @if ($report->with_attendance_times)
                                                         <br/>
                                                         <span style="font-size:8px;text-align: center;">08:{{sprintf("%02d",rand(1,10))}}</span>
                                                         <br/>
@@ -231,15 +234,16 @@
                                                 @endif
                                             @else
                                                 &#10003;
-                                                @if (!$days[$i]['vacation_day'] && $report->with_attendance_times)
+                                                @if ($report->with_attendance_times)
                                                     <br/>
                                                     <span style="font-size:8px;text-align: center;">08:{{sprintf("%02d",rand(1,10))}}</span>
                                                     <br/>
                                                     <span style="font-size:8px;text-align: center;">16:{{sprintf("%02d",rand(0,5))}}</span>
                                                 @endif
                                             @endif
-                                        </td>
-                                    @endfor
+                                        @endif
+                                    </td>
+                                @endfor
                                     <td>
                                         @if ($record->start_date)
                                             {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
