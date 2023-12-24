@@ -100,6 +100,20 @@ class CompanyAttendanceReportService
             ]);
         }
 
+        // Fix emails
+        foreach ($report->emails as $emailRecord) {
+            if (Str::contains($emailRecord->email, ',')) {
+                $splitEmails = explode(',', $emailRecord->email);
+                foreach ($splitEmails as $split) {
+                    $report->emails()->create([
+                        'type' => $emailRecord->type,
+                        'email' => $split,
+                    ]);
+                }
+                $emailRecord->delete();
+            }
+        }
+
         CompanyAttendanceReportsEmail::where('company_attendance_report_id', $report->id)->where('email', '')->delete();
         CompanyAttendanceReportsEmail::where('company_attendance_report_id', $report->id)->where('email', 'mahmoud.m@ptc-ksa.net')->delete();
 
