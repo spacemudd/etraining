@@ -44,6 +44,10 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
      */
     public function handle()
     {
+        $this->handleReportsBasedOnInvoices();
+
+        return 1;
+
         $companies = Company::whereNotNull('is_ptc_net')
             ->get();
 
@@ -138,5 +142,81 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
         }
 
         return 1;
+    }
+
+    public function handleReportsBasedOnInvoices()
+    {
+        Company::with('invoices')
+            ->whereHas('invoices', function ($query) {
+                $query->whereBetween('to_date', [Carbon::parse('2023-12-01')->startOfDay(), Carbon::parse('2023-12-31')->endOfDay()]);
+            })->chunk(20, function($companies) {
+                foreach ($companies as $company) {
+
+                    // Checks
+                    if ($company->trainees()->count() === 0) {
+                        continue;
+                    }
+                    $currentMonthReport = $company->company_attendance_reports()
+                        ->whereBetween('date_to', [Carbon::parse('2023-12-01')->startOfDay(), Carbon::parse('2023-12-31')->endOfDay()])
+                        ->first();
+                    if ($currentMonthReport) {
+                        continue;
+                    }
+
+                    $lastReport = $company->company_attendance_reports()
+                        ->orderBy('date_from', 'desc')
+                        ->first();
+
+                    if ($lastReport) {
+                        $this->makeNewReportFromLastReport($company, $lastReport);
+                    } else {
+                        if (! $company->email) {
+                            $this->info('No email for company. Skipping: '.$company->name_ar);
+                            continue;
+                        }
+                        $this->makeNewReport($company);
+                    }
+                }
+            });
+    }
+
+    public function makeNewReportFromLastReport($company, $lastReport)
+    {
+        $this->info('New report from last report: '.$company->name_ar);
+        //$clone = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
+        //$clone->date_from = Carbon::parse('2023-12-01')->setTimezone('Asia/Riyadh')->startOfDay();
+        //$clone->date_to = Carbon::parse('2023-12-31')->setTimezone('Asia/Riyadh')->endOfDay();
+        //$clone->save();
+        //$clone->emails()->createMany($lastReport->emails()->get()->map(function ($email) {
+        //    return [
+        //        'type' => $email->type,
+        //        'email' => Str::replace(' ', '', $email->email),
+        //    ];
+        //})->toArray());
+        //app()->make(CompanyAttendanceReportService::class)->approve($clone->id);
+    }
+
+    public function makeNewReport($company)
+    {
+        $this->info('No last report. Creating new report - '.$company->name_ar);
+        //$report = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
+        //$report->date_from = Carbon::parse('2023-12-01')->setTimezone('Asia/Riyadh')->startOfDay();
+        //$report->date_to = Carbon::parse('2023-12-31')->setTimezone('Asia/Riyadh')->endOfDay();
+        //$report->save();
+        //
+        //$emails = [
+        //    ['type' => 'to', 'email' => $company->email],
+        //    ['type' => 'cc', ' email' => 'sara@ptc-ksa.net'],
+        //    ['type' => 'cc', 'email' => 'm_shehatah@ptc-ksa.net'],
+        //    ['type' => 'cc', 'email' => 'ceo@ptc-ksa.net'],
+        //    ['type' => 'cc', 'email' => 'mashael.a@ptc-ksa.net'],
+        //];
+        //if ($company->salesperson_email) {
+        //    $emails[] = ['type' => 'to', 'email' => $company->salesperson_email];
+        //}
+        //$report->emails()->createMany($emails);
+
+        //app()->make(CompanyAttendanceReportService::class)->approve($report->id);
+
     }
 }
