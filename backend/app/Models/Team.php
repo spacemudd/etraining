@@ -47,4 +47,16 @@ class Team extends JetstreamTeam
         'updated' => TeamUpdated::class,
         'deleted' => TeamDeleted::class,
     ];
+
+    /**
+     * Determine if the given email address belongs to a user on the team.
+     *
+     * @param  string  $email
+     * @return bool
+     */
+    public function hasUserWithEmail(string $email)
+    {
+       return User::where('email', $email)->exists();
+    }
+
 }
