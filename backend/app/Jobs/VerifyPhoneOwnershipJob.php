@@ -36,6 +36,10 @@ class VerifyPhoneOwnershipJob implements ShouldQueue
     {
         $trainee = Trainee::withTrashed()->find($this->trainee_id);
 
+        if (!$trainee->clean_phone) {
+            return 1;
+        }
+
         $response = ElmYakeen::new()
             ->verifyOwnership($trainee->identity_number, $trainee->clean_phone);
 
