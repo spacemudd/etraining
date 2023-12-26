@@ -56,7 +56,7 @@ class Team extends JetstreamTeam
      */
     public function hasUserWithEmail(string $email)
     {
-       return User::where('email', $email)->exists();
+        return false;
     }
 
 }
