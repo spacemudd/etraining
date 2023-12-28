@@ -355,4 +355,17 @@ class CompanyAttendanceReportController extends Controller
         CompanyAttendanceReportsEmail::findOrFail($id)->delete();
         return redirect()->route('back.reports.company-attendance.show', $report_id);
     }
+
+    public function addTrainee($report_id, Request $request)
+    {
+        $request->validate([
+            'trainee_id' => 'required|exists:trainees,id',
+        ]);
+
+        $report = CompanyAttendanceReport::findOrFail($report_id);
+
+        $report->trainees()->attach($request->trainee_id);
+
+        return redirect()->route('back.reports.company-attendance.show', $report_id);
+    }
 }

@@ -672,7 +672,6 @@ export default {
             "open-permissions": "صلاحيات الدخول",
             "in-addition-to-users-with-global-permissions": "بالإضافة الى المستخدمين الذي لديهم صلاحيات عامة",
             "with-logo": "مع شعار",
-<<<<<<< Updated upstream
             "global-messages": "الرسائل العامة",
             "starts-at": "يبدأ من",
             "expires-at": "ينتهي في",
@@ -682,10 +681,9 @@ export default {
             "employer-name": "اسم صاحب العمل",
             "salary-starting-date": "تاريخ بداية الراتب",
             "employment-status": "حالة التوظيف",
-            "updated-date": "تاريخ التحديث"
-=======
+            "updated-date": "تاريخ التحديث",
+            "view-gosi": "عرض بيانات التأمينات",
             "add-trainee": "إضافة متدربة"
->>>>>>> Stashed changes
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1495,7 +1493,6 @@ export default {
             "open-permissions": "Open permissions",
             "in-addition-to-users-with-global-permissions": "In addition to users with global permissions",
             "with-logo": "With Logo",
-<<<<<<< Updated upstream
             "global-messages": "Global messages",
             "starts-at": "Starts at",
             "expires-at": "Expires at",
@@ -1505,10 +1502,9 @@ export default {
             "employer-name": "Employer Name",
             "salary-starting-date": "Salary Starting Date",
             "employment-status": "Employment Status",
-            "updated-date": "Last updated"
-=======
+            "updated-date": "Last updated",
+            "view-gosi": "View GOSI",
             "add-trainee": "Add trainee"
->>>>>>> Stashed changes
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

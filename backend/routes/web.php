@@ -613,6 +613,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('contracts', [\App\Http\Controllers\Back\ReportsController::class, 'formContractsReport'])->name('reports.contracts.index');
             Route::post('contracts/generate', [\App\Http\Controllers\Back\ReportsController::class, 'generateContractsReport'])->name('reports.contracts.generate');
 
+            Route::post('company-attendance/{report_id}/add-trainee', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'addTrainee'])->name('reports.company-attendance.add-trainee');
             Route::delete('company-attendance/{report_id}/remove-email/{id}', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'removeEmail'])->name('reports.company-attendance.remove-email');
             Route::post('company-attendance/{report_id}/add-email-in-bulk', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'addEmailInBulk'])->name('reports.company-attendance.add-email-in-bulk');
             Route::post('company-attendance/{report_id}/add-email', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'addEmail'])->name('reports.company-attendance.add-email');
