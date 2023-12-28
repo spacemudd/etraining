@@ -186,8 +186,18 @@
                         </td>
                     </tr>
                     </tbody>
+                    <tfoot>
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <td colspan="3" class="text-xs text-gray-500 dark:text-gray-400">
+                                <add-new-trainee-to-report
+                                    class="my-2"
+                                    :report="report">
+                                </add-new-trainee-to-report>
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
-                <p class="text-xs">* {{ $t('words.to-update-the-table-after-adding-trainees-please-recreate-the-report') }}</p>
+                <p class="text-xs mt-2">* {{ $t('words.to-update-the-table-after-adding-trainees-please-recreate-the-report') }}</p>
             </div>
         </div>
     </app-layout>
@@ -208,6 +218,7 @@ import SelectCompany from "../../../../Components/SelectCompany";
 import DateRangePicker from 'vue2-daterange-picker'
 import 'vue2-daterange-picker/dist/vue2-daterange-picker.css'
 import CompanyAttendanceState from "./company-attendance-state";
+import AddNewTraineeToReport from "./AddNewTraineeToReport";
 
 export default {
     metaInfo() {
@@ -229,6 +240,7 @@ export default {
         BreadcrumbContainer,
         BtnLoadingIndicator,
         DateRangePicker,
+        AddNewTraineeToReport,
     },
     props: [
         'report',

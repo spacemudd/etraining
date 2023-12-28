@@ -645,4 +645,5 @@ return [
     'employment-status' => 'Employment Status',
     'updated-date' => 'Last updated',
     'view-gosi' => 'View GOSI',
+    'add-trainee' => 'Add trainee',
 ];

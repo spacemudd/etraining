@@ -659,4 +659,5 @@ return [
     'employment-status' => 'حالة التوظيف',
     'updated-date' => 'تاريخ التحديث',
     'view-gosi' => 'عرض بيانات التأمينات',
+    'add-trainee' => 'إضافة متدربة',
 ];
