@@ -58,7 +58,10 @@ class GosiService
         $service = new GosiService();
 
         try {
-            $response = $service->client->get(config('services.masdr.endpoint').'/mofeed/employment/v1/employee/employment-status/'.$gosiEmployee->getNinOrIqama());
+            $response = $service->client->get(config('services.masdr.endpoint').'/mofeed/employment/v1/employee/employment-status/'.$gosiEmployee->getNinOrIqama(), [
+                'cert' => storage_path('masdrcertificate/certificate.crt'),
+                'ssl_key' => storage_path('masdrcertificate/certificate.key'),
+            ]);
             return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         } catch (RequestException $e) {
             if ($e->hasResponse() && $e->getResponse()->getStatusCode() == '400') {
