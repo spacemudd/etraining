@@ -162,14 +162,14 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
                     // Checks
                     if ($company->trainees()->count() === 0) {
-                        $this->info('No trainees. Skipping: '.$company->name_ar);
+                        // $this->info('No trainees. Skipping: '.$company->name_ar);
                         continue;
                     }
                     $currentMonthReport = $company->company_attendance_reports()
                         ->whereBetween('date_to', [Carbon::parse('2023-12-01')->startOfDay(), Carbon::parse('2023-12-31')->endOfDay()])
                         ->first();
                     if ($currentMonthReport) {
-                        $this->info('Already created. Skipping: '.$company->name_ar);
+                        // $this->info('Already created. Skipping: '.$company->name_ar);
                         continue;
                     }
 
