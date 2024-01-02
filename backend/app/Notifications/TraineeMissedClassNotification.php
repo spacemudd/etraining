@@ -56,7 +56,7 @@ class TraineeMissedClassNotification extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         $dayName = $this->session->starts_at->locale('ar')->getTranslatedDayName();
-        $dayDate = $this->session->starts_at->now()->toDateString();
+        $dayDate = $this->session->starts_at->toDateString();
         return (new MailMessage)
             ->subject('انذار لعدم حضور البرنامج التدريبي')
             ->line('عزيزتي المتدربة \ '.$notifiable->name)

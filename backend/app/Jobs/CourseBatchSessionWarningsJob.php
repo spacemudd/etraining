@@ -95,7 +95,7 @@ class CourseBatchSessionWarningsJob implements ShouldQueue
                     $attendance->trainee->notify(new TraineeMissedClassNotification($this->courseBatchSession));
 
                     $dayName = $this->courseBatchSession->starts_at->locale('ar')->getTranslatedDayName();
-                    $dayDate = $this->courseBatchSession->starts_at->now()->toDateString();
+                    $dayDate = $this->courseBatchSession->starts_at->toDateString();
                     if ($attendance->trainee_user_id) {
                         $message = new InboxMessage();
                         $message->team_id = $this->courseBatchSession->team_id;
