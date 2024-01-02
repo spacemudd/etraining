@@ -48,6 +48,8 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
         return 1;
 
+        //-------------------------------------------------------------------
+
         $companies = Company::whereNotNull('is_ptc_net')
             ->get();
 
@@ -176,13 +178,15 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                         ->first();
 
                     if ($lastReport) {
-                        $this->makeNewReportFromLastReport($company, $lastReport);
+                        //$this->makeNewReportFromLastReport($company, $lastReport);
+                        $this->info('Making report for company: '.$company->name_ar);
                     } else {
                         if (! $company->email) {
                             $this->info('No email for company. Skipping: '.$company->name_ar);
                             continue;
                         }
-                        $this->makeNewReport($company);
+                        $this->info('Making report for company: '.$company->name_ar);
+                        //$this->makeNewReport($company);
                     }
                 }
             });
