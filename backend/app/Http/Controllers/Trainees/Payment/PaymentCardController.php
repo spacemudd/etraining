@@ -97,7 +97,10 @@ class PaymentCardController extends Controller
                     $q->withTrashed();
                 }])->find($invoice_id);
 
-            // TODO: If the invoice is deleted, update the invoice & notify the admins via email.
+            // TODO: If the invoice is deleted, notify the admins via email.
+            if ($invoice->deleted_at) {
+                $invoice->restore();
+            }
 
             $invoice->update([
                 'payment_method' => Invoice::PAYMENT_METHOD_CREDIT_CARD,
