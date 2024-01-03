@@ -410,6 +410,7 @@ return [
     'trainees-to-invoice' => 'Trainees to Invoice',
     'date-created' => 'Date Created',
     'date-period' => 'Date Period',
+    'change-date-period' => 'Change Date Period',
     'grand-total' => 'Grand Total',
     'initiated-by' => 'Initiated By',
     'unpaid' => 'Unpaid',

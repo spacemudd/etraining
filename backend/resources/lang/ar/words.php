@@ -418,6 +418,7 @@ return [
     'trainees-to-invoice' => 'المتدربين المستحقين',
     'date-created' => 'تاريخ الإنشاء',
     'date-period' => 'فترة الإستحقاق',
+    'change-date-period' => 'تغيير فترة الإستحقاق',
     'grand-total' => 'الإجمالي',
     'initiated-by' => 'تمت من',
     'unpaid' => 'غير مدفوع',
