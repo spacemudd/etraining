@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Back;
 use App\Http\Controllers\Controller;
 use App\Models\Back\AccountingLedgerBook;
 use App\Models\Back\Company;
+use App\Models\Back\Instructor;
 use App\Models\Back\Invoice;
 use App\Models\Back\InvoiceItem;
+use App\Models\Back\Region;
 use App\Models\Back\Trainee;
 use App\Notifications\NewInvoiceIssued;
 use Brick\Math\RoundingMode;
@@ -249,5 +251,53 @@ class CompanyInvoicesController extends Controller
 
 
         return $pdf->inline();
+    }
+
+    public function datePeriod(Request $request, string $company_id)
+    {
+        $company = Company::findOrFail($company_id);
+
+        $invoices = $company->invoices()
+            ->where('from_date', $request->input('from_date'))
+            ->where('to_date', $request->input('to_date'))
+            ->where('created_by_id', $request->input('created_by_id', auth()->id()))
+            ->whereDate('created_at', $request->input('created_at_date', now()->toDateString()))
+            ->with('created_by')
+            ->get();
+
+        return Inertia::render('Back/Finance/Invoices/ChangeDatePeriod', [
+            'company' => $company,
+            'invoices' => $invoices,
+            'old_from_date' => $request->input('from_date'),
+            'old_to_date' => $request->input('to_date'),
+            'created_at' => $request->input('created_at_date'),
+            'created_by_id' => $request->input('created_by_id'),
+        ])->table(function ($table) {
+            $table->disableGlobalSearch();
+        });
+    }
+
+    public function changeDatePeriod(Request $request, string $company_id)
+    {
+        $company = Company::findOrFail($company_id);
+
+        $invoices = $company->invoices()
+            ->where('from_date', Carbon::parse($request->input('old_from_date')))
+            ->where('to_date', Carbon::parse($request->input('old_to_date')))
+            ->where('created_by_id', $request->input('created_by_id'))
+            ->whereDate('created_at', Carbon::parse($request->input('created_at')))
+            ->with('created_by')
+            ->get();
+
+        foreach ($invoices as $invoice) {
+            $invoice->from_date = Carbon::parse($request->input('from_date'));
+            $invoice->to_date = Carbon::parse($request->input('to_date'));
+            $invoice->created_by_id = $request->input('created_by_id');
+
+            $invoice->save();
+        }
+
+
+        return redirect()->route('back.companies.show', $company->id);
     }
 }

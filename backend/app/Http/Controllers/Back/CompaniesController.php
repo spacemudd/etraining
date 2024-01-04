@@ -124,7 +124,7 @@ class CompaniesController extends Controller
 
         $company = $company->findOrFail($id);
 
-//        Gate::authorize('view-company', $company);
+        Gate::authorize('view-company', $company);
 
         $invoices = $company->invoices()
             ->select('*')

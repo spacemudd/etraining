@@ -479,11 +479,6 @@ class  FinancialInvoicesController extends Controller
         return redirect(\route('back.finance.invoices.index'));
     }
 
-    public function changeDatePeriod()
-    {
-        //
-    }
-
     public function destroy($invoice_id)
     {
         $this->authorize('can-delete-invoice-anytime');

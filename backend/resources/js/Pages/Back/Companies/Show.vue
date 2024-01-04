@@ -390,13 +390,22 @@
                             </td>
                             <td class="rtl:text-right text-black">
                                 <!--                                {{ invoice.id }}-->
-                                <button @click="ChangeDatePeriod(invoice)"
-                                        v-can="'can-delete-invoice-anytime'"
-                                        type="button"
-                                        v-if="invoice.status <= 4 && invoice.payment_method !=1"
-                                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-gray-700 hover:bg-gray-600 active:bg-red-700 foucs:bg-red-700">
+                                <a
+                                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-gray-700 hover:bg-gray-600 active:bg-red-700 foucs:bg-red-700"
+
+                                :href="route('back.companies.invoices.date-period', {company_id: company.id, from_date: invoice.from_date, to_date: invoice.to_date, created_by_id: invoice.created_by_id, created_at_date: invoice.created_at_date,})"
+                                    tabindex="-1"
+                                    target="_blank"
+                                >
                                     {{ $t('words.change-date-period') }}
-                                </button>
+                                </a>
+<!--                                <button @click="ChangeDatePeriod(invoice)"-->
+<!--                                        v-can="'can-delete-invoice-anytime'"-->
+<!--                                        type="button"-->
+<!--                                        v-if="invoice.status <= 4 && invoice.payment_method !=1"-->
+<!--                                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-gray-700 hover:bg-gray-600 active:bg-red-700 foucs:bg-red-700">-->
+<!--                                    {{ $t('words.change-date-period') }}-->
+<!--                                </button>-->
                             </td>
                         </tr>
 
@@ -684,18 +693,6 @@ export default {
                     invoice: invoiceCollection.id,
                     from_date: invoiceCollection.from_date,
                     to_date: invoiceCollection.to_date,
-                    created_at_date: invoiceCollection.created_at_date,
-                    created_by_id: invoiceCollection.created_by_id,
-                    company_id: invoiceCollection.company_id,
-                }));
-            }
-        },
-        ChangeDatePeriod(invoiceCollection) {
-            if (confirm(this.$t('words.are-you-sure'))) {
-                this.$inertia.delete(route('back.finance.invoices.change-date-period', {
-                    invoice: invoiceCollection.id,
-                    from_date: invoiceCollection.from_date,
-                        to_date: invoiceCollection.to_date,
                     created_at_date: invoiceCollection.created_at_date,
                     created_by_id: invoiceCollection.created_by_id,
                     company_id: invoiceCollection.company_id,

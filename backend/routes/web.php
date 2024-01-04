@@ -463,6 +463,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::resource('{company_id}/contracts', \App\Http\Controllers\Back\CompaniesContractsController::class);
             Route::get('{company_id}/invoices/bulk-pdf', [\App\Http\Controllers\Back\CompanyInvoicesController::class, 'bulkPdf'])->name('invoices.bulk-pdf');
             Route::get('{company_id}/invoices/pdf', [\App\Http\Controllers\Back\CompanyInvoicesController::class, 'pdf'])->name('invoices.pdf');
+            Route::get('{company_id}/invoices/change-date-period', [\App\Http\Controllers\Back\CompanyInvoicesController::class, 'datePeriod'])->name('invoices.date-period');
+            Route::post('{company_id}/invoices/change-date-period', [\App\Http\Controllers\Back\CompanyInvoicesController::class, 'changeDatePeriod'])->name('invoices.change-date-period');
+            Route::get('{company_id}/allowed-users', [CompanyAllowedUsersController::class, 'index'])->name('allowed-users.index');
             Route::get('{company_id}/allowed-users', [CompanyAllowedUsersController::class, 'index'])->name('allowed-users.index');
             Route::post('{company_id}/allowed-users', [CompanyAllowedUsersController::class, 'store'])->name('allowed-users.store');
             Route::delete('{company_id}/allowed-users/{id}', [CompanyAllowedUsersController::class, 'delete'])->name('allowed-users.delete');
@@ -490,6 +493,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('invoices/{id}/approve-payment-receipt', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'approvePaymentReceipt'])->name('invoices.approve-payment-receipt');
             Route::post('invoices/{id}/reject-payment-receipt', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'rejectPaymentReceipt'])->name('invoices.reject-payment-receipt');
             Route::get('invoices/{id}/pdf', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'pdf'])->name('invoices.pdf');
+            Route::get('invoices/{id}/change-date-period', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'changeDatePeriod'])->name('invoices.change-date-period');
             Route::put('invoices/{id}/update', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'update'])->name('invoices.update');
             Route::resource('invoices', \App\Http\Controllers\Back\FinancialInvoicesController::class);
             Route::post('expected-amount-per-invoice', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'expectedAmountPerInvoice']);
