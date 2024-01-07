@@ -392,7 +392,6 @@
                                 <!--                                {{ invoice.id }}-->
                                 <a
                                     class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-gray-700 hover:bg-gray-600 active:bg-red-700 foucs:bg-red-700"
-
                                 :href="route('back.companies.invoices.date-period', {company_id: company.id, from_date: invoice.from_date, to_date: invoice.to_date, created_by_id: invoice.created_by_id, created_at_date: invoice.created_at_date,})"
                                     tabindex="-1"
                                     target="_blank"

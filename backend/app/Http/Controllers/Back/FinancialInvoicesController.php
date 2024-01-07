@@ -479,6 +479,60 @@ class  FinancialInvoicesController extends Controller
         return redirect(\route('back.finance.invoices.index'));
     }
 
+    public function datePeriod(Request $request, string $invoice_id)
+    {
+
+        $invoice = Invoice::findOrFail($invoice_id);
+
+        $company = Company::query()->findOrFail($invoice->company_id);
+
+//        $invoice = $company->invoices()
+//            ->where('from_date', $request->input('from_date'))
+//            ->where('to_date', $request->input('to_date'))
+//            ->where('created_by_id', $request->input('created_by_id', auth()->id()))
+//            ->whereDate('created_at', $request->input('created_at_date', now()->toDateString()))
+//            ->with('created_by')
+//            ->get();
+
+        return Inertia::render('Back/Finance/Invoices/ChangeDatePeriod', [
+            'company' => $company,
+            'invoice' => $invoice,
+            'old_from_date' => $request->input('from_date'),
+            'old_to_date' => $request->input('to_date'),
+            'created_at' => $request->input('created_at_date'),
+            'created_by_id' => $request->input('created_by_id'),
+        ])->table(function ($table) {
+            $table->disableGlobalSearch();
+        });
+    }
+
+    public function changeDatePeriod(Request $request, string $invoice_id)
+    {
+        $invoice = Invoice::findOrFail($invoice_id);
+
+        $company = Company::query()->findOrFail($invoice->company_id);
+
+        DB::beginTransaction();
+
+//        $newDate = $company->invoices()
+//            ->where('from_date', Carbon::parse($request->input('old_from_date')))
+//            ->where('to_date', Carbon::parse($request->input('old_to_date')))
+//            ->where('created_by_id', $request->input('created_by_id'))
+//            ->whereDate('created_at', Carbon::parse($request->input('created_at')))
+//            ->where('company_id', request()->company_id)
+//            ->with('created_by')
+//            ->get();
+
+        $invoice->from_date = Carbon::parse($request->input('from_date'));
+        $invoice->to_date = Carbon::parse($request->input('to_date'));
+        $invoice->created_by_id = auth()->user()->id;
+        $invoice->save();
+
+        DB::commit();
+
+        return redirect(\route('back.finance.invoices.index'));
+    }
+
     public function destroy($invoice_id)
     {
         $this->authorize('can-delete-invoice-anytime');

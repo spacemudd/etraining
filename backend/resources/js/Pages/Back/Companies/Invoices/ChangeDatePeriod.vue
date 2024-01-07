@@ -7,27 +7,27 @@
             </breadcrumb-container>
 
             <div class="px-8">
-                <h1>{{ $t('words.change-date-period') }} (<span class="text-red-500">{{invoice.length}}</span>)</h1>
+                <h1>{{ $t('words.change-date-period') }} (<span class="text-red-500">{{invoices.length}}</span>)</h1>
                 <jet-form-section @submitted="ChangeDatePeriod">
                     <template #form>
                         <div class="col-span-2 sm:col-span-2">
-                            <jet-label
-                                for="from"
-                                :value="$t('words.from-date')"
-                            />
+                        <jet-label
+                            for="from"
+                            :value="$t('words.from-date')"
+                        />
 
-                            <jet-input
-                                id="from"
-                                type="date"
-                                class="mt-1 block w-full"
-                                v-model="form.from_date"
-                                autocomplete="off"
-                            />
+                        <jet-input
+                            id="from"
+                            type="date"
+                            class="mt-1 block w-full"
+                            v-model="form.from_date"
+                            autocomplete="off"
+                        />
 
-                            <jet-input-error
-                                :message="form.error('from_date')"
-                                class="mt-2"
-                            />
+                        <jet-input-error
+                            :message="form.error('from_date')"
+                            class="mt-2"
+                        />
                         </div>
                         <div class="col-span-2 sm:col-span-2">
                             <jet-label
@@ -73,6 +73,44 @@
                         </jet-button>
                     </template>
                 </jet-form-section>
+                <table class="w-full whitespace-no-wrap bg-white rounded-lg my-5 p-5 shadow text-sm">
+                    <tr class="text-left font-bold">
+                        <th class="p-4">{{ $t('words.date-created') }}</th>
+                        <th class="p-4">{{ $t('words.date-period') }}</th>
+                        <th class="p-4">{{ $t('words.trainees') }}</th>
+                        <th class="p-4">{{ $t('words.grand-total') }}</th>
+                        <th class="p-4">{{ $t('words.initiated-by') }}</th>
+                        <th class="p-4">{{ $t('words.actions') }}</th>
+                    </tr>
+                    <tr
+                        v-for="invoice in invoices"
+                        :key="invoice.id"
+                        class="border-t hover:bg-gray-100 focus-within:bg-gray-100"
+                    >
+                        <td class="px-4 py-4">
+                            {{ invoice.created_at_date }}
+                        </td>
+
+                        <td class="px-4 py-4">
+                            {{ invoice.from_date | formatDate }}
+                            <br />
+                            {{ invoice.to_date | formatDate }}
+                        </td>
+
+                        <td class="px-4 py-4">
+                            {{ invoice.trainee_count }}
+                        </td>
+
+                        <td class="px-4 py-4">
+                            {{ invoice.grand_total }}
+                        </td>
+
+                        <td class="px-4 py-4">
+                            {{ invoice.created_by ? invoice.created_by.name : 'Unknown' }}
+                        </td>
+                    </tr>
+
+                </table>
             </div>
         </div>
     </app-layout>
@@ -95,8 +133,8 @@ import { Skeleton } from 'vue-loading-skeleton';
 
 export default {
     props: [
-        'invoice',
         'company',
+        'invoices',
         'old_from_date',
         'old_to_date',
         'created_at',
@@ -187,7 +225,7 @@ export default {
         },
         ChangeDatePeriod() {
             if(this.form.from_date && this.form.to_date){
-                this.form.post(route('back.finance.invoices.change-date-period', {id: this.invoice.id}), {
+                this.form.post(route('back.companies.invoices.change-date-period', {company_id: this.company.id}), {
                     preserveScroll: true
                 }).catch(error => {
                     this.form.processing = false;

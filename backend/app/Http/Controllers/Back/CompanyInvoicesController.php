@@ -255,6 +255,7 @@ class CompanyInvoicesController extends Controller
 
     public function datePeriod(Request $request, string $company_id)
     {
+
         $company = Company::findOrFail($company_id);
 
         $invoices = $company->invoices()
@@ -265,7 +266,7 @@ class CompanyInvoicesController extends Controller
             ->with('created_by')
             ->get();
 
-        return Inertia::render('Back/Finance/Invoices/ChangeDatePeriod', [
+        return Inertia::render('Back/Companies/Invoices/ChangeDatePeriod', [
             'company' => $company,
             'invoices' => $invoices,
             'old_from_date' => $request->input('from_date'),
