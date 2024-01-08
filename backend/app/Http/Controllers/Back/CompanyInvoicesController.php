@@ -264,6 +264,7 @@ class CompanyInvoicesController extends Controller
             ->where('created_by_id', $request->input('created_by_id', auth()->id()))
             ->whereDate('created_at', $request->input('created_at_date', now()->toDateString()))
             ->with('created_by')
+            ->with('trainee')
             ->get();
 
         return Inertia::render('Back/Companies/Invoices/ChangeDatePeriod', [

@@ -80,7 +80,6 @@
                         <th class="p-4">{{ $t('words.trainees') }}</th>
                         <th class="p-4">{{ $t('words.grand-total') }}</th>
                         <th class="p-4">{{ $t('words.initiated-by') }}</th>
-                        <th class="p-4">{{ $t('words.actions') }}</th>
                     </tr>
                     <tr
                         v-for="invoice in invoices"
@@ -98,7 +97,7 @@
                         </td>
 
                         <td class="px-4 py-4">
-                            {{ invoice.trainee_count }}
+                            {{ invoice.trainee.name }}
                         </td>
 
                         <td class="px-4 py-4">

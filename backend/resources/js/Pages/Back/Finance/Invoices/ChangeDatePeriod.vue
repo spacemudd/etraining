@@ -7,7 +7,7 @@
             </breadcrumb-container>
 
             <div class="px-8">
-                <h1>{{ $t('words.change-date-period') }} (<span class="text-red-500">{{invoice.length}}</span>)</h1>
+                <h1>{{ $t('words.change-date-period') }}</h1>
                 <jet-form-section @submitted="ChangeDatePeriod">
                     <template #form>
                         <div class="col-span-2 sm:col-span-2">
