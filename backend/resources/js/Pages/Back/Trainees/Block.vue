@@ -14,10 +14,20 @@
 
                 <form @submit.prevent="saveForm">
                     <div class="col-span-6 sm:col-span-2">
-                        <jet-textarea id="description" type="text" class="block w-full bg-white" v-model="deleted_remark" autocomplete="off" required/>
+                        <select class="mt-1 block w-full bg-gray-100 appearance-none border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:border-gray-500"
+                                v-model="deleted_remark"
+                                id="reason">
+                            <option value="عدم سداد">عدم سداد</option>
+                            <option value="استبعاد من الشركة">استبعاد من الشركة</option>
+                            <option value="استقالة">استقالة</option>
+                            <option value="انسحاب">انسحاب</option>
+                            <option value="عمل مشاكل">عمل مشاكل</option>
+                            <option value="غير مسجلة في الشركة">غير مسجلة في الشركة</option>
+                            <option value="عدم الالتزام في شروط المعهد">عدم الالتزام في شروط المعهد</option>
+                        </select>
                         <button type="submit" class="mt-5 items-center justify-start float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400">
-                            {{ $t('words.block-trainee') }}
-                        </button>
+                        {{ $t('words.block-trainee') }}
+                    </button>
                     </div>
                 </form>
             </div>
