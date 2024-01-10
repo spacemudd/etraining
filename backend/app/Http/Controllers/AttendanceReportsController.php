@@ -32,7 +32,9 @@ class AttendanceReportsController extends Controller
             $report->save();
         }
 
-        if (!$report->is_ready_for_review) {
+        if (!$report->is_ready_for_review && !$report->job_started_at) {
+            $report->job_started_at = now();
+            $report->save();
             dispatch(new MakeAttendanceReportJob($course_batch_session_id, $report->id));
         }
 
