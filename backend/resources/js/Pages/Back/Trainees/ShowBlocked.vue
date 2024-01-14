@@ -25,6 +25,10 @@
 
                 </div>
 
+                <div class="col-span-6 items-center justify-end bg-gray-50 text-right flex gap-6" v-can="'view-gosi'">
+                    <gosi-container :nin-or-iqama="trainee.identity_number"></gosi-container>
+                </div>
+
                 <div class="col-span-6 sm:col-span-2">
                     <jet-label for="trainee_group_name" :value="$t('words.group-name')" />
                     <jet-input id="trainee_group_name"
@@ -314,9 +318,18 @@
     import ValidationErrors from "@/Components/ValidationErrors";
     import NProgress from 'nprogress'
     import TraineeAuditContainer from "@/Components/TraineeAuditContainer";
+    import GosiContainer from "@/Components/GosiContainer";
 
     export default {
-        props: ['sessions', 'trainee', 'cities', 'marital_statuses', 'educational_levels', 'trainee_groups', 'trainee_group_trainees'],
+        props: [
+            'sessions',
+            'trainee',
+            'cities',
+            'marital_statuses',
+            'educational_levels',
+            'trainee_groups',
+            'trainee_group_trainees',
+        ],
 
         components: {
             AppLayout,
@@ -336,6 +349,7 @@
             ValidationErrors,
             EmptySlate,
             TraineeAuditContainer,
+            GosiContainer,
         },
         data() {
             return {
