@@ -24,7 +24,7 @@
                         </tr>
                         <tr>
                             <td class="border font-bold bg-gray-100">{{ $t('words.identity_number') }}</td>
-                            <td class="border">{{ record.id }}</td>
+                            <td class="border">{{ ninOrIqama }}</td>
                             <td class="border font-bold bg-gray-100">{{ $t('words.full-name') }}</td>
                             <td class="border">{{ record.fullName }}</td>
                         </tr>
@@ -32,7 +32,7 @@
                             <td class="border font-bold bg-gray-100">{{ $t('words.full-wage') }}</td>
                             <td class="border">{{ record.fullWage }}</td>
                             <td class="border font-bold bg-gray-100">{{ $t('words.employer-name') }}</td>
-                            <td class="border">{{ record.employerName }}</td>
+                            <td class="border">{{ record.employerName }} ({{ record.commercialRegistrationNumber }})</td>
                         </tr>
                         <tr>
                             <td class="border font-bold bg-gray-100">{{ $t('words.salary-starting-date') }}</td>
