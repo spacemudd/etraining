@@ -166,6 +166,17 @@ class TraineesController extends Controller
 
     /**
      *
+     * @param $id
+     *
+     * @return \Inertia\Response
+     */
+    public function gosi()
+    {
+        return Inertia::render('Back/Trainees/gosi');
+    }
+
+    /**
+     *
      * @param \Illuminate\Http\Request $request
      * @param                          $trainee_id
      *

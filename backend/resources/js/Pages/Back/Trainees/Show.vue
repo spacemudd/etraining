@@ -191,7 +191,7 @@
                     </inertia-link>
                 </div>
 
-                <div class="col-span-6 items-center justify-end bg-gray-50 text-right flex gap-6" v-can="'view-gosi'">
+                <div class="col-span-6 items-center justify-end bg-gray-50 text-right flex gap-6">
                     <gosi-container :nin-or-iqama="trainee.identity_number"></gosi-container>
                 </div>
 
