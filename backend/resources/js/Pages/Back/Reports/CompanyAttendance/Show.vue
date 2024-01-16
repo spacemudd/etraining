@@ -152,11 +152,21 @@
         <!-- Trainees in the report -->
         <div class="mt-10 container px-6 mx-auto">
             <hr>
+            <h6 class="mt-4">{{ $t('words.add-trainee') }}</h6>
+            <tfoot>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td colspan="3" class="text-xs text-gray-500 dark:text-gray-400">
+                    <add-new-trainee-to-report
+                        class="my-2"
+                        :report="report">
+                    </add-new-trainee-to-report>
+                </td>
+            </tr>
+            </tfoot>
             <div class="flex justify-between">
                 <h2 class="mt-5 px-2 font-bold">{{ $t('words.trainees') }} ({{ report.trainees.length }})</h2>
                 <h2 class="mt-5 px-2 font-bold">{{ $t('words.selected') }} ({{ selectedCount }}) <inertia-link :href="route('back.reports.company-attendance.toggle-select', report.id)">اختيار الكل</inertia-link></h2>
             </div>
-
             <div class="overflow-x-auto relative">
                 <table class="mt-2 w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
@@ -186,16 +196,6 @@
                         </td>
                     </tr>
                     </tbody>
-                    <tfoot>
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            <td colspan="3" class="text-xs text-gray-500 dark:text-gray-400">
-                                <add-new-trainee-to-report
-                                    class="my-2"
-                                    :report="report">
-                                </add-new-trainee-to-report>
-                            </td>
-                        </tr>
-                    </tfoot>
                 </table>
                 <p class="text-xs mt-2">* {{ $t('words.to-update-the-table-after-adding-trainees-please-recreate-the-report') }}</p>
             </div>

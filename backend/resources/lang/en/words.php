@@ -647,4 +647,5 @@ return [
     'updated-date' => 'Last updated',
     'view-gosi' => 'View GOSI',
     'add-trainee' => 'Add trainee',
+
 ];
