@@ -4,19 +4,18 @@
             <breadcrumb-container
             :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
+                    {title: 'view-gosi', link: route('back.trainees.gosi')},
                 ]"
-        ></breadcrumb-container>
-
+            ></breadcrumb-container>
 
             <div class="col-span-6 sm:col-span-2">
                 <h6 class="my-2">{{ $t('words.identity_number')}}</h6>
                 <jet-input id="id" v-model="id_number" />
             </div>
-            <div class="my-5">
+            <div class="my-5" v-can="'view-gosi'">
                 <gosi-container :nin-or-iqama="id_number"></gosi-container>
             </div>
         </div>
-
     </app-layout>
 </template>
 <script>
