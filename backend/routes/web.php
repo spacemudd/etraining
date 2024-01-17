@@ -244,6 +244,8 @@ Route::get('s1s32', function() {
 });
 
 Route::get('all-trainees', function() {
+
+    set_time_limit(1000);
     $trainees = Trainee::all();
 
     $traineeData = [];
