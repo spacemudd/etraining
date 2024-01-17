@@ -254,6 +254,7 @@ Route::get('all-trainees', function() {
             'company' => optional($trainee->company)->name_ar,
             'email' => $trainee->email,
             'phone' => $trainee->clean_phone,
+            'city' => optional($trainee->city)->name_ar,
         ];
     }
 
