@@ -192,7 +192,7 @@
                 </div>
 
                 <div class="col-span-6 items-center justify-end bg-gray-50 text-right flex gap-6">
-                    <gosi-container :nin-or-iqama="trainee.identity_number"></gosi-container>
+                    <gosi-container :nin-or-iqama="trainee.clean_identity_number"></gosi-container>
                 </div>
 
                 <div
