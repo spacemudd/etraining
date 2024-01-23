@@ -63,6 +63,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'national_address',
         'bill_from_date',
         'linked_date',
+        'trainee_message',
     ];
 
     protected $dates = [

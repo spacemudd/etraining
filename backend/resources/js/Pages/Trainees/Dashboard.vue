@@ -1,6 +1,7 @@
 <template>
     <app-layout>
         <div class="container px-6 mx-auto grid">
+
             <div class="grid grid-cols-3 gap-4 place-items-center h-26"  v-if="!user.trainee.deleted_at">
                 <div></div>
                 <div>
@@ -16,7 +17,17 @@
                 <br/>
                 <br/>
             </div>
-
+            <div class="container mx-auto grid" v-if="user.trainee.trainee_message">
+                <div class="bg-red-100 rounded-lg p-10 border-red-500 border-2">
+                    <div style="width: 100%;">
+                        <p class="text-gray-500" style="text-align: center;
+                                font-size: 20px;
+                                color: #323232;
+                                letter-spacing: 1px;
+                            }">{{ user.trainee.trainee_message }}</p>
+                    </div>
+                </div>
+            </div>
             <div class="container mx-auto grid p-6" v-if="global_messages.length">
                 <div class="bg-red-100 rounded-lg p-10 border-red-500 border-2">
                     <div class="inline-flex items-center">

@@ -11,7 +11,6 @@
                 ]"
             ></breadcrumb-container>
 
-
             <div class="mt-4">
                 <jet-form-section @submitted="inviteUser">
                     <template #title>

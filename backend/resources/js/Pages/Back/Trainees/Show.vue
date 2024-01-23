@@ -597,6 +597,20 @@
                     />
                 </div>
 
+                <div class="col-span-6 sm:col-span-2">
+                    <jet-label
+                        for="trainee_message"
+                        :value="$t('words.message')"
+                    />
+                    <jet-input
+                        id="trainee_message"
+                        type="text"
+                        :class="editButton.inputClass"
+                        v-model="trainee.trainee_message"
+                        :disabled="!editButton.editOption"
+                    />
+                </div>
+
                 <div class="col-span-6 sm:col-span-1">
                     <jet-label
                         for="name"
@@ -1077,6 +1091,7 @@ export default {
                     children_count: this.trainee.children_count,
                     bill_from_date: this.trainee.bill_from_date_formatted,
                     linked_date: this.trainee.linked_date_formatted,
+                    trainee_message: this.trainee.trainee_message,
                 };
 
                 this.$wait.start('UPDATING_TRAINEE');
