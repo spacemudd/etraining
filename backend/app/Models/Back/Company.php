@@ -191,4 +191,14 @@ class Company extends Model implements SearchableLabels, Auditable
     {
         return $this->hasMany(CompanyMail::class)->latest();
     }
+
+    /**
+     * Different names for the company that matches with GOSI.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function aliases()
+    {
+        return $this->hasMany(CompanyAlias::class);
+    }
 }

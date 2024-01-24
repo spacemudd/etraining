@@ -1,6 +1,7 @@
 <?php
 
 use App\Classes\GosiEmployee;
+use App\Http\Controllers\Back\CompanyAliasesController;
 use App\Http\Controllers\Back\CompanyAttendanceReportController;
 use App\Http\Controllers\Back\CompanyResignationsController;
 use App\Http\Controllers\Back\TraineesGroupsController;
@@ -438,6 +439,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('/settings/trainees-applications/required-files', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'requiredFiles'])->name('settings.trainees-application.required-files');
         Route::post('/settings/trainees-applications/required-files', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'store'])->name('settings.trainees-application.required-files.store');
         Route::delete('/settings/trainees-applications/required-files/{id}', [\App\Http\Controllers\Back\SettingsTraineesApplication::class, 'delete'])->name('settings.trainees-application.required-files.delete');
+
+        Route::get('companies/{company_id}/aliases', [CompanyAliasesController::class, 'index'])->name('companies.aliases.index');
+        Route::post('companies/{company_id}/aliases', [CompanyAliasesController::class, 'store'])->name('companies.aliases.store');
+        Route::delete('companies/{company_id}/aliases/{id}', [CompanyAliasesController::class, 'delete'])->name('companies.aliases.delete');
 
         Route::post('companies/{company_id}/resignations/{id}/approve', [CompanyResignationsController::class, 'approve'])->name('resignations.approve');
         Route::post('companies/{company_id}/resignations/{id}/upload/store', [CompanyResignationsController::class, 'uploadStore'])->name('resignations.upload.store');

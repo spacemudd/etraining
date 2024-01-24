@@ -88,8 +88,12 @@
                             class="mt-1 block w-full bg-gray-200"
                             :value="company[fieldName]"
                             disabled
-
                         />
+                        <div v-if="fieldName === 'name_ar'">
+                            <div class="flex justify-between text-xs mt-2">
+                                <inertia-link class="text-blue-600" :href="route('back.companies.aliases.index', company.id)">{{ $t('words.name-aliases') }} ({{ company.aliases_count }})</inertia-link>
+                            </div>
+                        </div>
                     </div>
                 </template>
                 <div class="col-span-4 sm:col-span-1">
