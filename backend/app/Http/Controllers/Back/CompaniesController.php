@@ -115,6 +115,7 @@ class CompaniesController extends Controller
                 'trainees' => function($model) {
                     $model->where('posted_at', '=', null)->withTrashed();
                 },
+                'aliases',
             ])
             ->with('region');
 
