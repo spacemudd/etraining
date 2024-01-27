@@ -342,7 +342,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
         foreach ($trainee_ids as $trainee_id) {
             if (!$trainee = $company->trainees()->where('trainees.id', $trainee_id)->first()) {
-                $this->info('New report, not found - '.$company->name_ar . ',' . $trainee_ids->count() .',' .$company->trainees()->count().','.$trainee->name);
+                $this->info('New report, not found - '.$company->name_ar . ',' . $trainee_ids->count() .',' .$company->trainees()->count().','.Trainee::withTrashed()->find($trainee_id)->name);
             }
         }
 
