@@ -423,6 +423,7 @@ class  FinancialInvoicesController extends Controller
             'grand_total' => 'nullable|string|max:255',
             'sub_total' => 'nullable|string|max:255',
             'tax' => 'nullable|string|max:255',
+            'edit_amount_reason' => 'nullable|string|max:255',
         ]);
 
         $invoice = Invoice::findOrFail($invoice_id);
@@ -439,6 +440,7 @@ class  FinancialInvoicesController extends Controller
         $new->grand_total = $request->grand_total;
         $new->sub_total = $request->grand_total-($request->grand_total/1.15*0.15);
         $new->tax = (($request->grand_total-($request->grand_total/1.15*0.15))*0.15);
+        $new->edit_amount_reason = $request->edit_amount_reason;
         $new->save();
 
         $period = [
@@ -486,14 +488,6 @@ class  FinancialInvoicesController extends Controller
 
         $company = Company::query()->findOrFail($invoice->company_id);
 
-//        $invoice = $company->invoices()
-//            ->where('from_date', $request->input('from_date'))
-//            ->where('to_date', $request->input('to_date'))
-//            ->where('created_by_id', $request->input('created_by_id', auth()->id()))
-//            ->whereDate('created_at', $request->input('created_at_date', now()->toDateString()))
-//            ->with('created_by')
-//            ->get();
-
         return Inertia::render('Back/Finance/Invoices/ChangeDatePeriod', [
             'company' => $company,
             'invoice' => $invoice,
@@ -513,15 +507,6 @@ class  FinancialInvoicesController extends Controller
         $company = Company::query()->findOrFail($invoice->company_id);
 
         DB::beginTransaction();
-
-//        $newDate = $company->invoices()
-//            ->where('from_date', Carbon::parse($request->input('old_from_date')))
-//            ->where('to_date', Carbon::parse($request->input('old_to_date')))
-//            ->where('created_by_id', $request->input('created_by_id'))
-//            ->whereDate('created_at', Carbon::parse($request->input('created_at')))
-//            ->where('company_id', request()->company_id)
-//            ->with('created_by')
-//            ->get();
 
         $invoice->from_date = Carbon::parse($request->input('from_date'));
         $invoice->to_date = Carbon::parse($request->input('to_date'));

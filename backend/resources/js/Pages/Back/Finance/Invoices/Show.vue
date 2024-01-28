@@ -330,7 +330,7 @@
                     <div class="white-bg rounded bg-gray-50 rounded shadow-lg p-5">
                         <div class="col-span-6 sm:col-span-2 px-8">
                             <jet-label
-                                for="identity_number"
+                                for="grand_total"
                                 :value="$t('words.amount')"
                             />
                             <jet-input
@@ -340,75 +340,84 @@
                                 v-model="invoice.grand_total"
                                 :disabled="!editButton.editOption"
                             />
+                        </div> <br/>
+                        <div class="col-span-6 sm:col-span-2 px-8">
+                            <jet-label
+                                for="edit_amount_reason"
+                                :value="$t('words.reason')"
+                            />
+                            <jet-input
+                                id="edit_amount_reason"
+                                type="text"
+                                :class="editButton.inputClass"
+                                v-model="invoice.edit_amount_reason"
+                                :disabled="!editButton.editOption"
+                            />
                         </div>
                     </div>
                 </div>
             </div>
             <div class="mt-8 flex flex-col md:flex-row md:space-x-5 mt-8 mb-8">
-                <jet-form-section @submitted="ChangeDatePeriod">
-                    <template #form>
-                        <div class="col-span-2 sm:col-span-2">
-                            <jet-label
-                                for="from"
-                                :value="$t('words.from-date')"
-                            />
-
-                            <jet-input
-                                id="from"
-                                type="date"
-                                class="mt-1 block w-full"
-                                v-model="form.from_date"
-                                autocomplete="off"
-                            />
-
-                            <jet-input-error
+                <div class="w-full md:w-8/12">
+                    <jet-form-section @submitted="ChangeDatePeriod">
+                        <template #form>
+                            <div class="col-span-2 sm:col-span-2">
+                                <jet-label
+                                    for="from"
+                                    :value="$t('words.from-date')"
+                                />
+                                <jet-input
+                                    id="from"
+                                    type="date"
+                                    class="mt-1 block w-full"
+                                    v-model="form.from_date"
+                                    autocomplete="off"
+                                />
+                                <jet-input-error
                                 :message="form.error('from_date')"
                                 class="mt-2"
                             />
-                        </div>
-                        <div class="col-span-2 sm:col-span-2">
-                            <jet-label
-                                for="year"
-                                :value="$t('words.to-date')"
-                            />
-
-                            <jet-input
-                                id="to"
-                                type="date"
-                                class="mt-1 block w-full"
-                                v-model="form.to_date"
-                                autocomplete="off"
-                            />
-
-                            <jet-input-error
+                            </div>
+                            <div class="col-span-2 sm:col-span-2">
+                                <jet-label
+                                    for="year"
+                                    :value="$t('words.to-date')"
+                                />
+                                <jet-input
+                                    id="to"
+                                    type="date"
+                                    class="mt-1 block w-full"
+                                    v-model="form.to_date"
+                                    autocomplete="off"
+                                />
+                                <jet-input-error
                                 :message="form.error('to_date')"
                                 class="mt-2"
                             />
-                        </div>
-                    </template>
-                    <template #actions>
-                        <jet-action-message
-                            :on="form.recentlySuccessful"
-                            class="mr-3"
-                        >
-                            {{ $t('words.saved-successfully') }}
-                        </jet-action-message>
-
-                        <inertia-link
-                            :href="`/`"
-                            class="flex items-center justify-start rtl:ml-4 ltr:mr-4 rounded-md px-4 py-2 bg-white hover:bg-gray-300 text-right"
-                        >
-                            {{ $t('words.cancel') }}
-                        </inertia-link>
-
-                        <jet-button
-                            :class="{ 'opacity-25': form.processing }"
-                            :disabled="form.processing"
-                        >
-                            {{ $t('words.save') }}
-                        </jet-button>
-                    </template>
-                </jet-form-section>
+                            </div>
+                        </template>
+                        <template #actions>
+                            <jet-action-message
+                                :on="form.recentlySuccessful"
+                                class="mr-3"
+                            >
+                                {{ $t('words.saved-successfully') }}
+                            </jet-action-message>
+                            <inertia-link
+                                :href="`/`"
+                                class="flex items-center justify-start rtl:ml-4 ltr:mr-4 rounded-md px-4 py-2 bg-white hover:bg-gray-300 text-right"
+                            >
+                                {{ $t('words.cancel') }}
+                            </inertia-link>
+                            <jet-button
+                                    :class="{ 'opacity-25': form.processing }"
+                                    :disabled="form.processing"
+                                >
+                                    {{ $t('words.save') }}
+                                </jet-button>
+                        </template>
+                    </jet-form-section>
+                </div>
             </div>
         </div>
     </app-layout>
@@ -593,6 +602,7 @@ export default {
             } else {
                 let newForm = {
                     grand_total: this.invoice.grand_total,
+                    edit_amount_reason: this.invoice.edit_amount_reason,
                 };
                 if (confirm(this.$t('words.are-you-sure-to-delete'))) {
                     this.$wait.start('UPDATING_TRAINEE');
