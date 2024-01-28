@@ -104,6 +104,7 @@
             <th>الشركة</th>
             <th>المبلغ</th>
             <th>التاريخ</th>
+            <th>السبب</th>
             <th>بواسطة</th>
         </tr>
         <tr>
@@ -112,6 +113,7 @@
             <td>{{ $invoice->company->name_ar }}</td>
             <td>{{ $invoice->grand_total }}</td>
             <td>{{ $invoice->created_at }}</td>
+            <td>{{ $invoice->edit_amount_reason }}</td>
             <td>{{ $email }}</td>
         </tr>
     </table>
