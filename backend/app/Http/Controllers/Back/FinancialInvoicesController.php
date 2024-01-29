@@ -534,7 +534,7 @@ class  FinancialInvoicesController extends Controller
                 ->get();
 
             foreach ($invoices as $invoice) {
-                if($invoice->payment_method != Invoice::PAYMENT_METHOD_BANK_RECEIPT || $invoice->payment_method !=  Invoice::PAYMENT_METHOD_CREDIT_CARD){
+                if(!$invoice->paid_at){
                     AccountingLedgerBook::where('invoice_id', $invoice->id)->delete();
                     $invoice->delete();
                 }
