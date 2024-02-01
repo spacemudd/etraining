@@ -41,10 +41,8 @@ class GenerateCodesForCompaniesCommand extends Command
     public function handle()
     {
         // loop through all companies and give them a code if they don't have one
-        $id = User::where('email', 'info@ptc-ksa.net')
-            ->first()
-            ->id;
-        auth()->loginUsingId($id);
+        $user = User::where('email', 'info@ptc-ksa.net')->first();
+        auth()->login($user);
 
         $companies = Company::all();
         foreach ($companies as $company) {
