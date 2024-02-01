@@ -26,7 +26,7 @@ class CompaniesExport implements FromCollection, WithHeadings, WithMapping
     public function map($company): array
     {
         return [
-            $company->id,
+            $company->code,
             $company->created_at->format('Y-m-d'),
             $company->name_ar,
             optional($company->region)->name,

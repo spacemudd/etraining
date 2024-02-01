@@ -52,6 +52,7 @@ class SiteSearchController extends Controller
         if ($request->trainees) return $trainees;
 
         $companies = Company::where('name_ar', 'LIKE', '%'.$request->search.'%')
+            ->orWhere('code', $request->search)
             ->take(30);
 
         if (auth()->user()->can('view-deleted-companies')) {

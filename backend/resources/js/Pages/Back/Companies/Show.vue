@@ -6,6 +6,7 @@
                     {title: 'dashboard', link: route('dashboard')},
                     {title: 'companies', link: route('back.companies.index')},
                     {title_raw: company.name_ar},
+                    {title_raw: company.code}
                 ]"
             ></breadcrumb-container>
 
