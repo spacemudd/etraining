@@ -84,6 +84,7 @@ class Company extends Model implements SearchableLabels, Auditable
 
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string) Str::uuid();
+            $model->code = 'C'.MaxNumber::generateForPrefix('C', 1000);
             $model->is_ptc_net = now();
             if (auth()->user()) {
                 $model->team_id = $model->team_id = auth()->user()->currentTeam()->first()->id;
