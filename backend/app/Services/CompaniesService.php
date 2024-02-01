@@ -45,13 +45,13 @@ class CompaniesService
     {
         // TODO: Instead of getting users, get all users with specific permission and send them.
         $users = [
-            'sara@ptc-ksa.net',
-            'acc@ptc-ksa.net',
-            'collectionm@ptc-ksa.net',
-            'cfo@ptc-ksa.net',
             'ceo@ptc-ksa.net',
+            'sara@ptc-ksa.net',
+            'cfo@ptc-ksa.net',
+            'acc@ptc-ksa.net',
             'm_shehatah@ptc-ksa.net',
             'eslam@ptc-ksa.net',
+            'collectionm@ptc-ksa.net',
             'mashael.a@ptc-ksa.net',
         ];
         Mail::to($users)->send(new NewCompanyEmail($company->id));
@@ -61,13 +61,13 @@ class CompaniesService
     {
         // TODO: Instead of getting users, get all users with specific permission and send them.
         $users = [
-            'sara@ptc-ksa.net',
-            'acc@ptc-ksa.net',
-            'collectionm@ptc-ksa.net',
-            'cfo@ptc-ksa.net',
             'ceo@ptc-ksa.net',
+            'sara@ptc-ksa.net',
+            'cfo@ptc-ksa.net',
+            'acc@ptc-ksa.net',
             'm_shehatah@ptc-ksa.net',
             'eslam@ptc-ksa.net',
+            'collectionm@ptc-ksa.net',
             'mashael.a@ptc-ksa.net',
         ];
         Mail::to($users)->send(new DeleteCompanyEmail($company->id));
