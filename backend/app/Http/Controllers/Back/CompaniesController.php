@@ -10,10 +10,14 @@ use App\Models\Back\Instructor;
 use App\Models\Back\Region;
 use App\Models\Back\Trainee;
 use App\Models\User;
+use App\Notifications\DeleteCompanyNotification;
+use App\Notifications\NewCompanyNotification;
+use App\Services\CompaniesService;
 use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Notification;
 use Inertia\Inertia;
 
 class CompaniesController extends Controller
@@ -79,6 +83,8 @@ class CompaniesController extends Controller
         ]);
 
         $company = Company::create($validated);
+
+        app()->make(CompaniesService::class)->notifyUsersAboutNewCompany($company);
 
         return redirect()->route('back.companies.show', ['company' => $company])->with(
             'success',
@@ -205,6 +211,9 @@ class CompaniesController extends Controller
     public function destroy($id)
     {
         Company::findOrFail($id)->delete();
+
+        app()->make(CompaniesService::class)->notifyUsersAboutDeletedCompany(Company::withTrashed()->find($id));
+
         return redirect()->route('back.companies.index');
     }
 
@@ -256,7 +265,9 @@ class CompaniesController extends Controller
     public function restore($id)
     {
         $this->authorize('restore-deleted-companies');
-        $company = Company::onlyTrashed()->findOrFail($id)->restore();
+        $company = Company::onlyTrashed()->findOrFail($id);
+        $company->restore();
+        app()->make(CompaniesService::class)->notifyUsersAboutNewCompany($company);
         return redirect()->route('back.companies.show', $id);
     }
 }

@@ -2,8 +2,15 @@
 
 namespace App\Services;
 
+use App\Mail\DeleteCompanyEmail;
+use App\Mail\NewCompanyEmail;
 use App\Models\Back\Company;
 use App\Models\Back\CompanyAttendanceReport;
+use App\Models\User;
+use App\Notifications\DeleteCompanyNotification;
+use App\Notifications\NewCompanyNotification;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 
 class CompaniesService
 {
@@ -32,5 +39,37 @@ class CompaniesService
         $report = CompanyAttendanceReport::where('to_emails', 'LIKE', '%'.$domain.'%')->first();
 
         return optional($report)->company;
+    }
+
+    public function notifyUsersAboutNewCompany(Company $company)
+    {
+        // TODO: Instead of getting users, get all users with specific permission and send them.
+        $users = [
+            'sara@ptc-ksa.net',
+            'acc@ptc-ksa.net',
+            'collectionm@ptc-ksa.net',
+            'cfo@ptc-ksa.net',
+            'ceo@ptc-ksa.net',
+            'm_shehatah@ptc-ksa.net',
+            'eslam@ptc-ksa.net',
+            'mashael.a@ptc-ksa.net',
+        ];
+        Mail::to($users)->send(new NewCompanyEmail($company->id));
+    }
+
+    public function notifyUsersAboutDeletedCompany(Company $company)
+    {
+        // TODO: Instead of getting users, get all users with specific permission and send them.
+        $users = [
+            'sara@ptc-ksa.net',
+            'acc@ptc-ksa.net',
+            'collectionm@ptc-ksa.net',
+            'cfo@ptc-ksa.net',
+            'ceo@ptc-ksa.net',
+            'm_shehatah@ptc-ksa.net',
+            'eslam@ptc-ksa.net',
+            'mashael.a@ptc-ksa.net',
+        ];
+        Mail::to($users)->send(new DeleteCompanyEmail($company->id));
     }
 }

@@ -57,7 +57,6 @@ class TraineeRestoredNotification extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->subject('⚠ Notification: Trainee restored - '.$this->trainee_name)
-            ->bcc('sean.spilot@gmail.com')
             ->view('emails.trainee-restored', [
                 'trainee_name' => $this->trainee_name,
                 'trainee_phone' => $this->trainee_phone,
