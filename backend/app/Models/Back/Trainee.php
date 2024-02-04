@@ -141,7 +141,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
             }
         });
 
-        static::restored(function($model) {
+        static::restoring(function($model) {
             $model->posted_at = null;
         });
     }
