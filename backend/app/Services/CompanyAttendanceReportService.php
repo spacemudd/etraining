@@ -177,7 +177,7 @@ class CompanyAttendanceReportService
         return $pdf;
     }
 
-    public function makeIndividualPdf($report_id, $trainee_id, bool $with_attendance_times)
+    public static function makeIndividualPdf($report_id, $trainee_id, bool $with_attendance_times)
     {
         $record = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $report_id)
             ->where('trainee_id', $trainee_id)
