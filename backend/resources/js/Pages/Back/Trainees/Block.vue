@@ -29,6 +29,9 @@
                             <option value="حساب مكرر">حساب مكرر</option>
                             <option value="استبعاد لعدم الحضور">استبعاد لعدم الحضور</option>
                             <option value="عدم التقييد بشرح المعهد">عدم التقييد بشرح المعهد</option>
+                            <option value="لديها سجل التجاري">لديها سجل التجاري</option>
+                            <option value="مستنفذة للدعم">مستنفذة للدعم</option>
+                            <option value="عدم سداد مستحق مالي / غير نشط في التأمينات">عدم سداد مستحق مالي / غير نشط في التأمينات</option>
                         </select>
                         <button type="submit" class="mt-5 items-center justify-start float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400">
                             {{ $t('words.block-trainee') }}
