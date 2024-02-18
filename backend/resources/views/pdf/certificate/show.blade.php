@@ -65,7 +65,7 @@
             <p style="margin-top:2.5rem;">يشهد مركز احترافية المدرب للتدريب بأن المتدربة  "{{ $certificate->trainee->name }}"</p>
             <p style="margin-top:2.5rem;">وجنسيتها سعودية بموجب السجل المدني رقم "{{ $certificate->trainee->identity_number }}"</p>
             <p style="margin-top:2.5rem;">قـــد حضرت دورة ({{ $certificate->course->name_ar }}) </p>
-            <p style="margin-top:2.5rem;">التي اقيمت في شهر يناير 2024</p>
+            <p style="margin-top:2.5rem;"></p>
             <p style="margin-top:5rem;">والله الموفق،،،</p>
             <div class="col-7">
                 <p style="margin-bottom:0;padding-bottom: 0"><b>ختم المنشأة التدريبية</b></p>
@@ -74,8 +74,8 @@
             <div class="col-4" style="text-align: right;">
                 <p>توقيع المديرة: <img  id="page-stamp" src="{{ public_path('/img/signature.png') }}"></p>
                 <p class="small-text">
-                    <b>حررت بتاريخ:    06 / 07  /1445  هـ </b><br/>
-                    <b>الموافق:            18 /  01 /2024 م</b>
+                    <b></b><br/>
+                    <b></b>
                 </p>
                 <p class="small-text">ملاحظة: أي كشط او تعديل على الشهادة تعتبر لاغية</p>
             </div>
