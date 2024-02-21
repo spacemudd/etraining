@@ -52,6 +52,7 @@ class DashboardController extends Controller
         $class_timings = optional(auth()->user()->trainee->trainee_group)->class_timings;
 
         $global_messages = GlobalMessages::where('company_id', auth()->user()->trainee->company_id)
+            ->orWhere('company_id', null)
             ->available()
             ->latest()
             ->get();
