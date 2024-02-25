@@ -239,14 +239,14 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
     {
         $count = Company::with('invoices')
             ->whereHas('invoices', function ($query) {
-                $query->whereBetween('to_date', [Carbon::parse('2024-02-01')->startOfDay(), Carbon::parse('2024-02-29')->endOfDay()]);
+                $query->whereBetween('to_date', [Carbon::parse('2024-01-01')->startOfDay(), Carbon::parse('2024-01-31')->endOfDay()]);
             })->count();
         $this->info('Found companies with invoices: '.$count);
 
         // Companies that don't have invoices
          $companies_with_invoices = Company::with('invoices')
             ->whereHas('invoices', function ($query) {
-                $query->whereBetween('to_date', [Carbon::parse('2024-02-01')->startOfDay(), Carbon::parse('2024-02-29')->endOfDay()]);
+                $query->whereBetween('to_date', [Carbon::parse('2024-01-01')->startOfDay(), Carbon::parse('2024-01-31')->endOfDay()]);
             })->pluck('id');
          $companies_without_invoices = Company::whereNotIn('id', $companies_with_invoices)->pluck('name_ar');
          foreach ($companies_without_invoices as $name_ar) {
@@ -255,7 +255,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
         Company::with('invoices')
             ->whereHas('invoices', function ($query) {
-                $query->whereBetween('to_date', [Carbon::parse('2024-02-01')->startOfDay(), Carbon::parse('2024-02-29')->endOfDay()]);
+                $query->whereBetween('to_date', [Carbon::parse('2024-01-01')->startOfDay(), Carbon::parse('2024-01-31')->endOfDay()]);
             })->chunk(20, function($companies) {
                 foreach ($companies as $company) {
 
@@ -277,13 +277,13 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                         ->first();
 
                     if ($lastReport) {
-                        $this->makeNewReportFromLastReportBasedOnInvoices($company, $lastReport, '2024-02-01', '2024-02-29', '2024-02-01', '2024-02-29');
+                        $this->makeNewReportFromLastReportBasedOnInvoices($company, $lastReport, '2024-02-01', '2024-02-29', '2024-01-01', '2024-01-31');
                     } else {
                         if (! $company->email) {
                             $this->info('No email for company. Skipping: '.$company->name_ar);
                             continue;
                         }
-                        $this->makeNewReportBasedOnInvoices($company, '2024-02-01', '2024-02-29', '2024-02-01', '2024-02-29');
+                        $this->makeNewReportBasedOnInvoices($company, '2024-02-01', '2024-02-29', '2024-01-01', '2024-01-31');
                     }
                 }
             });
