@@ -546,4 +546,9 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
 
         return __('words.ownership-is-pending');
     }
+
+    public function resignations()
+    {
+        return $this->hasMany(Resignation::class);
+    }
 }
