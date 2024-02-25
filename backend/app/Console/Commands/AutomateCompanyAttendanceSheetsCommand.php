@@ -239,14 +239,14 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
     {
         $count = Company::with('invoices')
             ->whereHas('invoices', function ($query) {
-                $query->whereBetween('to_date', [Carbon::parse('2024-01-01')->startOfDay(), Carbon::parse('2024-01-31')->endOfDay()]);
+                $query->whereBetween('to_date', [Carbon::parse('2024-02-01')->startOfDay(), Carbon::parse('2024-02-29')->endOfDay()]);
             })->count();
         $this->info('Found companies with invoices: '.$count);
 
         // Companies that don't have invoices
          $companies_with_invoices = Company::with('invoices')
             ->whereHas('invoices', function ($query) {
-                $query->whereBetween('to_date', [Carbon::parse('2024-01-01')->startOfDay(), Carbon::parse('2024-01-31')->endOfDay()]);
+                $query->whereBetween('to_date', [Carbon::parse('2024-02-01')->startOfDay(), Carbon::parse('2024-02-29')->endOfDay()]);
             })->pluck('id');
          $companies_without_invoices = Company::whereNotIn('id', $companies_with_invoices)->pluck('name_ar');
          foreach ($companies_without_invoices as $name_ar) {
@@ -255,7 +255,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
         Company::with('invoices')
             ->whereHas('invoices', function ($query) {
-                $query->whereBetween('to_date', [Carbon::parse('2024-01-01')->startOfDay(), Carbon::parse('2024-01-31')->endOfDay()]);
+                $query->whereBetween('to_date', [Carbon::parse('2024-02-01')->startOfDay(), Carbon::parse('2024-02-29')->endOfDay()]);
             })->chunk(20, function($companies) {
                 foreach ($companies as $company) {
 
@@ -265,7 +265,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                         continue;
                     }
                     $currentMonthReport = $company->company_attendance_reports()
-                        ->whereBetween('date_to', [Carbon::parse('2024-02-01')->startOfDay(), Carbon::parse('2024-01-29')->endOfDay()])
+                        ->whereBetween('date_to', [Carbon::parse('2024-02-01')->startOfDay(), Carbon::parse('2024-02-29')->endOfDay()])
                         ->first();
                     if ($currentMonthReport) {
                         $this->info('Already created. Skipping: '.$company->name_ar);
@@ -277,13 +277,13 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                         ->first();
 
                     if ($lastReport) {
-                        $this->makeNewReportFromLastReportBasedOnInvoices($company, $lastReport, '2024-01-01', '2024-01-31', '2023-12-01', '2023-12-31');
+                        $this->makeNewReportFromLastReportBasedOnInvoices($company, $lastReport, '2024-02-01', '2024-02-29', '2024-02-01', '2024-02-29');
                     } else {
                         if (! $company->email) {
                             $this->info('No email for company. Skipping: '.$company->name_ar);
                             continue;
                         }
-                        $this->makeNewReportBasedOnInvoices($company, '2024-01-01', '2024-01-31', '2023-12-01', '2023-12-31');
+                        $this->makeNewReportBasedOnInvoices($company, '2024-02-01', '2024-02-29', '2024-02-01', '2024-02-29');
                     }
                 }
             });
@@ -313,7 +313,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
         foreach ($clone->trainees as $trainee) {
             if ($trainee->resignations()->whereBetween('created_at', [$clone->date_from, $clone->date_to])->count()) {
                 $clone->trainees()->detach($trainee->id);
-                $this->info('Trainee has resignations. Skipping: '.$trainee->name);
+                $this->info('Trainee has resignations. Removed: '.$trainee->name);
             }
         }
 
@@ -350,7 +350,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
         foreach ($report->trainees as $trainee) {
             if ($trainee->resignations()->whereBetween('created_at', [$report->date_from, $report->date_to])->count()) {
                 $report->trainees()->detach($trainee->id);
-                $this->info('Trainee has resignations. Skipping: '.$trainee->name);
+                $this->info('Trainee has resignations. Removed: '.$trainee->name);
             }
         }
 
