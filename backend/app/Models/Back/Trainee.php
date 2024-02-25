@@ -549,6 +549,6 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
 
     public function resignations()
     {
-        return $this->hasMany(Resignation::class);
+        return $this->hasMany(ResignationTrainee::class);
     }
 }

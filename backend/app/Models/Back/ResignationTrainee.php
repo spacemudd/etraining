@@ -27,7 +27,6 @@ class ResignationTrainee extends Model implements Auditable
         parent::boot();
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string) Str::uuid();
-            dd(123);
             if (auth()->user()) {
                 $model->team_id = auth()->user()->currentTeam()->first()->id;
             }
