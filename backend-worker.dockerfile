@@ -1,4 +1,4 @@
-FROM php:7.4-fpm
+FROM php:8.2-fpm-bullseye
 
 LABEL description="A supervisor configured to run with artisan horizon command"
 
@@ -40,7 +40,7 @@ RUN apt-get install -yq build-essential
 RUN apt-get install -yq xorg libssl-dev libxrender-dev wget gdebi
 
 # Install Windows fonts.
-RUN wget http://ftp.br.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.6_all.deb
+RUN wget http://ftp.nl.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.8.1_all.deb
 RUN apt-get -y install cabextract
 RUN dpkg -i ttf-mscorefonts-installer_3.6_all.deb
 RUN wget https://github.com/h4cc/wkhtmltopdf-amd64/blob/master/bin/wkhtmltopdf-amd64?raw=true -O /usr/local/bin/wkhtmltopdf2 \
