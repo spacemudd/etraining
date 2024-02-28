@@ -43,6 +43,7 @@
                             <th :style="{background: ['#f7f7f7'], position: ['sticky'], right: [0]}">{{ $t('words.account-name') }}</th>
                             <th :style="{background: ['#f7f7f7'], position: ['sticky'], right: ['90px']}" @click.prevent="sortBy('number')">{{ $t('words.invoice') }}</th>
                             <th @click.prevent="sortBy('from_date')">{{ $t('words.date-period') }}</th>
+                            <th>{{ $t('words.paid-at') }}</th>
                             <th>{{ $t('words.company') }}</th>
                             <th @click.prevent="sortBy('status')">{{ $t('words.status') }}</th>
                             <th>{{ $t('words.payment-method') }}</th>
@@ -79,6 +80,16 @@
                             <td class="rtl:text-right text-black">
                                 <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
                                     {{  invoice.from_date | formatDate  }}
+                                </inertia-link>
+                            </td>
+                            <td class="rtl:text-right text-black" v-if="invoice.paid_at">
+                                <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
+                                    {{ invoice.paid_at | formatDateTime }}
+                                </inertia-link>
+                            </td>
+                            <td class="rtl:text-right text-black" v-if="!invoice.paid_at">
+                                <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
+                                    --
                                 </inertia-link>
                             </td>
                             <td class="rtl:text-right text-black">
