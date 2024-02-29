@@ -244,6 +244,32 @@ Route::get('s1s32', function() {
     return $traineeData;
 });
 
+Route::get('all-trainees-in-dammam', function() {
+
+    set_time_limit(1000);
+    $cities = ['fdb24cfe-2096-4d22-903f-5d0106538200',
+        '7d1a159e-a9a9-4fa9-856d-f30a7a82ebad',
+        '9e72fafc-966a-443a-8bec-a9fcf0df5f22',
+        '8e089244-0763-47d4-9ddb-122bab61e0ee',
+        '24ae4690-3c0f-4627-a0c5-240daf4a9f2a',
+        ];
+    $trainees = Trainee::whereIn('city_id', $cities);
+
+    $traineeData = [];
+
+    foreach ($trainees as $trainee) {
+        $traineeData[] = [
+            'name' => $trainee->name,
+            'company' => optional($trainee->company)->name_ar,
+            'email' => $trainee->email,
+            'phone' => $trainee->clean_phone,
+            'city' => optional($trainee->city)->name_ar,
+        ];
+    }
+
+    return $traineeData;
+});
+
 Route::get('all-trainees', function() {
 
     set_time_limit(1000);
