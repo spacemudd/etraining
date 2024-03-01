@@ -80,6 +80,7 @@ class CompanyAttendanceReportController extends Controller
             'company_id' => $company->id,
             'date_from' => $date_from,
             'date_to' => $date_to,
+            'with_logo' => false,
         ]);
         $report->trainees()->attach($company->trainees()->pluck('id'));
 

@@ -23,6 +23,7 @@ class CompanyAttendanceReportService
         $report->status = CompanyAttendanceReport::STATUS_REVIEW;
         $report->date_from = Carbon::now()->startOfMonth();
         $report->date_to = Carbon::now()->endOfMonth();
+        $report->with_logo = false;
         $report->save();
         $report = $report->refresh();
 
@@ -41,6 +42,7 @@ class CompanyAttendanceReportService
         $clone = $original->replicate(['approved_by_id', 'approved_at']);
         $clone->status = CompanyAttendanceReport::STATUS_REVIEW;
         $clone->date_from = $original->date_from->clone()->addMonth();
+        $clone->with_logo = false;
         if ($clone->date_from->daysInMonth < $original->date_from->daysInMonth) {
             $clone->date_to = $original->date_from
                 ->clone()
