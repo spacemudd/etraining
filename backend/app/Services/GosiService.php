@@ -55,8 +55,6 @@ class GosiService
      */
     public static function getEmployeeData(GosiEmployee $gosiEmployee): array
     {
-        return [];
-
         $service = new GosiService();
 
         try {
