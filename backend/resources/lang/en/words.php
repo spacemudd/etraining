@@ -648,4 +648,5 @@ return [
     'view-gosi' => 'View GOSI',
     'add-trainee' => 'Add trainee',
     'name-aliases' => 'Name aliases',
+    'job-number' => 'Job number',
 ];

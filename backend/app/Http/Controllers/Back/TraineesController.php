@@ -106,6 +106,7 @@ class TraineesController extends Controller
             'bill_from_date' => ['nullable', 'date'],
             'linked_date' => ['nullable', 'date'],
             'trainee_message' => 'nullable|string|max:255',
+            'job_number' => 'nullable|string|max:255',
         ]);
 
         $trainee = $this->service->store($request->except('_token'));
@@ -579,6 +580,7 @@ class TraineesController extends Controller
             'linked_date' => ['nullable', 'date'],
             'trainee_group_name' => ['nullable', 'string', 'max:255', new TraineeGroupLimit],
             'trainee_message' => 'nullable|string|max:255',
+            'job_number' => 'nullable|string|max:255',
         ]);
 
         $request->validate([
