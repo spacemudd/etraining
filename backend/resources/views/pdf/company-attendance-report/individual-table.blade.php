@@ -114,7 +114,7 @@ tfoot { display:table-footer-group }
                             @endif
                             <tr>
                                 <td>{{ ++$counter }}</td>
-                                <td>مسجل</td>
+                                <td>{{ $record->trainee->job_number }}</td>
                                 <td>فعال</td>
                                 <td>{{ $record->trainee->name }}</td>
                                 <td>{{ $record->trainee->clean_identity_number }}</td>
