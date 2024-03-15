@@ -663,4 +663,5 @@ return [
     'add-trainee' => 'إضافة متدربة',
     'name-aliases' => 'الأسماء الإضافية',
     'job-number' => 'الرقم الوظيفي',
+    'download-all-files' => 'تحميل جميع الملفات',
 ];

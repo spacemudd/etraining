@@ -649,4 +649,5 @@ return [
     'add-trainee' => 'Add trainee',
     'name-aliases' => 'Name aliases',
     'job-number' => 'Job number',
+    'download-all-files' => 'Download all files',
 ];
