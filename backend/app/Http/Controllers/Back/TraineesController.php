@@ -39,6 +39,7 @@ use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Mail;
 use PDF;
+use Spatie\MediaLibrary\Support\MediaStream;
 
 class TraineesController extends Controller
 {
@@ -435,7 +436,8 @@ class TraineesController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      *
-     * @return mixed
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Throwable
      */
     public function assignInstructor(Request $request)
     {
@@ -1173,6 +1175,21 @@ class TraineesController extends Controller
 
     public function traineeMessage()
     {
+
+    }
+
+    public function downloadAllFiles($id)
+    {
+        $trainee = Trainee::withTrashed()->find($id);
+        $downloads = $trainee->getMediaCollection('identity')
+            ->merge($trainee->getMediaCollection('qualification'))
+            ->merge($trainee->getMediaCollection('bank-account'))
+            ->merge($trainee->getMediaCollection('national-address'))
+            ->merge($trainee->getMediaCollection('cv'))
+            ->merge($trainee->getMediaCollection('general_files'));
+
+        return MediaStream::create(str_slug($trainee->name) . '-files.zip')
+            ->addMedia($downloads);
 
     }
 }

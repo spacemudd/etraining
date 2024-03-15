@@ -687,6 +687,12 @@
                                 {{ $t('words.other-files') }} ({{ trainee.general_files_count }})
                             </inertia-link>
                         </div>
+
+                        <div class="mt-3">
+                            <inertia-link class="text-blue-600 border-2 border-blue-600 text-xs p-1" :href="route('back.trainees.download-all-files', trainee.id)">
+                                {{ $t('words.download-all-files') }}
+                            </inertia-link>
+                        </div>
                     </div>
                 </div>
 
