@@ -1181,12 +1181,12 @@ class TraineesController extends Controller
     public function downloadAllFiles($id)
     {
         $trainee = Trainee::withTrashed()->find($id);
-        $downloads = $trainee->getMediaCollection('identity')
-            ->merge($trainee->getMediaCollection('qualification'))
-            ->merge($trainee->getMediaCollection('bank-account'))
-            ->merge($trainee->getMediaCollection('national-address'))
-            ->merge($trainee->getMediaCollection('cv'))
-            ->merge($trainee->getMediaCollection('general_files'));
+        $downloads = $trainee->getMedia('identity')
+            ->merge($trainee->getMedia('qualification'))
+            ->merge($trainee->getMedia('bank-account'))
+            ->merge($trainee->getMedia('national-address'))
+            ->merge($trainee->getMedia('cv'))
+            ->merge($trainee->getMedia('general_files'));
 
         return MediaStream::create(str_slug($trainee->name) . '-files.zip')
             ->addMedia($downloads);
