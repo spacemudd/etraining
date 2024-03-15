@@ -34,7 +34,6 @@ class NewCompanyEmail extends Mailable implements ShouldQueue
         $company = Company::find($this->company_id);
 
         return $this->subject('🔗 شركة جديدة: '.$company->name_ar)
-            ->bcc('billing@ptc-ksa.net')
             ->view('emails.new-company', [
                 'company_name' => $company->name_ar,
                 'company_link' => $company->show_url,

@@ -34,7 +34,6 @@ class DeleteCompanyEmail extends Mailable implements ShouldQueue
         $company = Company::withTrashed()->find($this->company_id);
         return $this
             ->subject('⛔️ حذف الشركة: '.$company->name_ar)
-            ->bcc('billing@ptc-ksa.net')
             ->view('emails.delete-company', [
                 'company_name' => $company->name_ar,
                 'company_link' => $company->show_url,
