@@ -650,4 +650,6 @@ return [
     'name-aliases' => 'Name aliases',
     'job-number' => 'Job number',
     'download-all-files' => 'Download all files',
+    'company-logo' => 'Company logo',
+    'logo-help' => 'Here you can upload the company logo',
 ];

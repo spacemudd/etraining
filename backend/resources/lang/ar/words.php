@@ -664,4 +664,6 @@ return [
     'name-aliases' => 'الأسماء الإضافية',
     'job-number' => 'الرقم الوظيفي',
     'download-all-files' => 'تحميل جميع الملفات',
+    'company-logo' => 'شعار الشركة',
+    'logo-help' => 'هنا يمكنك رفع شعار الشركة',
 ];

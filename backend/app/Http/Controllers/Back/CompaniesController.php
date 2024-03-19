@@ -80,9 +80,14 @@ class CompaniesController extends Controller
             'shelf_number' => 'nullable|string|max:255',
             'salesperson_email' => 'nullable|email',
             'region_id' => 'nullable|exists:regions,id',
+            'company_logo' => 'nullable',
         ]);
 
         $company = Company::create($validated);
+
+        if ($file = $request->file('company_logo')) {
+            $company->uploadToFolder($file, 'company-logo');
+        }
 
         app()->make(CompaniesService::class)->notifyUsersAboutNewCompany($company);
 
@@ -270,4 +275,24 @@ class CompaniesController extends Controller
         app()->make(CompaniesService::class)->notifyUsersAboutNewCompany($company);
         return redirect()->route('back.companies.show', $id);
     }
+
+    /**
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param $company_id
+     * @return
+     */
+    public function storeCompanyLogo(Request $request, $company_id)
+    {
+        $request->validate([
+            'company_logo' => 'required_without_all:file',
+            'file' => 'required_without_all:company_logo',
+        ]);
+
+        $course = Company::findOrFail($company_id);
+        if ($request->company_logo) $file = $request->file('company_logo');
+        if ($request->file) $file = $request->file('file');
+        return $course->uploadToFolder($file, 'company-logo');
+    }
+
 }

@@ -187,4 +187,6 @@ class CoursesController extends Controller
         $course->save();
         return response()->redirectToRoute('back.courses.show', $course->id);
     }
+
+
 }

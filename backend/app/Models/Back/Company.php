@@ -6,6 +6,7 @@ use App\Models\Back\Region;
 use App\Models\CompanyAllowedUser;
 use App\Models\SearchableLabels;
 use App\Models\User;
+use App\Traits\HasUuid;
 use Gate;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,15 +14,19 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
 use OwenIt\Auditing\Contracts\Auditable;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Str;
 use Illuminate\Database\Eloquent\Builder;
 use Timezone;
 
-class Company extends Model implements SearchableLabels, Auditable
+class Company extends Model implements HasMedia, SearchableLabels, Auditable
 {
     use HasFactory;
     use SoftDeletes;
     use Searchable;
+    use InteractsWithMedia;
+    use HasUuid;
     use \OwenIt\Auditing\Auditable;
 
     public $incrementing = false;
@@ -51,6 +56,7 @@ class Company extends Model implements SearchableLabels, Auditable
         'resource_label',
         'resource_type',
         'created_at_timezone',
+        'company_logo_url',
     ];
 
     protected static function boot(): void
@@ -187,6 +193,30 @@ class Company extends Model implements SearchableLabels, Auditable
             return Timezone::convertToLocal($this->created_at, 'Y-m-d h:i A');
         }
     }
+
+    public function uploadToFolder($file, $folder)
+    {
+        return $this->addMedia($file)
+            ->withAttributes([
+                'team_id' => $this->team_id,
+            ])
+            ->toMediaCollection($folder);
+    }
+
+    public function getCompanyLogoUrlAttribute()
+    {
+        return $this->getCopyUrl('company-logo');
+    }
+
+    public function getCopyUrl($collection_name)
+    {
+        $media_id = optional($this->media()->where('collection_name', $collection_name)->first())->id;
+
+        if ($media_id) {
+            return route('back.media.download', ['media_id' => $media_id]);
+        }
+    }
+
 
     public function company_mails()
     {

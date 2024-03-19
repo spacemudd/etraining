@@ -127,6 +127,37 @@
                 </div>
             </div>
 
+
+            <jet-section-border></jet-section-border>
+
+            <div class="grid grid-cols-1 md:grid-cols-6 gap-6 my-2">
+                <div class="md:col-span-5 lg:col-span-5 sm:col-span-3">
+                    <div class="mt-5 sm:px-0">
+                        <h3 class="text-lg font-medium text-gray-900">
+                            {{ $t('words.company-logo') }}
+                        </h3>
+
+                        <p class="mt-1 text-sm text-gray-600">
+                            {{ $t('words.logo-help') }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="md:col-span-6 lg:col-span-1 sm:col-span-3">
+                    <jet-label :value="$t('words.company-logo')" class="mb-2" />
+
+                    <div class="bg-white border-2 rounder-lg flex flex-col justify-center items-center min-container-upload" v-if="company.comapny_logo_url">
+                        <a class="bg-gray-700 text-white font-semibold p-2 text-center w-1/2 rounded my-1" target="_blank" :href="company.company_logo_url">{{ $t('words.download') }}</a>
+                        <button class="bg-red-500 text-white font-semibold p-2 text-center w-1/2 rounded my-1" @click="deleteCompanyLogo">{{ $t('words.delete') }}</button>
+                    </div>
+                    <vue-dropzone v-else
+                                  id="dropzoneIdentity"
+                                  @vdropzone-sending="sendingCsrf"
+                                  :options="dropzoneOptionsCompanyLogo"
+                    ></vue-dropzone>
+                </div>
+            </div>
+
             <jet-section-border></jet-section-border>
 
             <div
@@ -593,6 +624,8 @@ import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
 import EmptySlate from "@/Components/EmptySlate";
 import PostTraineesButton from "@/Components/PostTraineesButton";
 import Input from "../../../Jetstream/Input";
+import VueDropzone from 'vue2-dropzone'
+import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
 export default {
     props: ['sessions', 'company', 'instructors', 'invoices', 'trainees_trashed_count', 'regions', 'trainees', 'company_mails'],
@@ -613,6 +646,7 @@ export default {
         CompanyContractsPagination,
         BreadcrumbContainer,
         EmptySlate,
+        VueDropzone,
     },
     data() {
         return {
@@ -637,7 +671,15 @@ export default {
                 region_id: '',
             }, {
                 bag: 'createCompany',
-            })
+            }),
+            dropzoneOptionsCompanyLogo: {
+                destroyDropzone: false,
+                url: route('back.companies.company-logo', {company_id: this.company.id}),
+                dictDefaultMessage: "<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> "+this.$t('words.upload-files-here'),
+                thumbnailWidth: 150,
+                maxFilesize: 50,
+                timeout: 0,
+            },
         }
     },
     watch: {
@@ -733,7 +775,15 @@ export default {
                     data: selected,
                 }));
             }
-        }
+        },
+        sendingCsrf(file, xhr, formData) {
+            xhr.setRequestHeader('X-CSRF-TOKEN', window.token ? window.token.content : '');
+        },
+        deleteCompanyLogo() {
+            if (confirm(this.$t('words.are-you-sure'))) {
+                this.$inertia.delete(route('back.companies.company-logo.delete', {company_id: this.company.id}));
+            }
+        },
     }
 }
 </script>

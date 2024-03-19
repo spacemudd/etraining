@@ -481,6 +481,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::resource('companies', \App\Http\Controllers\Back\CompaniesController::class);
         Route::resource('companies.invoices', \App\Http\Controllers\Back\CompanyInvoicesController::class)->only(['create', 'store']);
         Route::get('companies/{company_id}/mails/{id}', [App\Http\Controllers\Webhooks\MailController::class,'viewCompanyMails'])->name('companies.mail');
+        Route::post('companies/{company_id}/company-logo', [\App\Http\Controllers\Back\CompaniesController::class, 'storeCompanyLogo'])->name('companies.company-logo');
+        Route::delete('companies/{company_id}/company-logo', [\App\Http\Controllers\Back\CompaniesController::class, 'deleteCompanyLogo'])->name('companies.company-logo.destroy');
 
         //Route::put('user/{id}', [\App\Http\Controllers\Back\UserCompanyController::class, 'index'])->name('user.index');
         //Route::resource('user', \App\Http\Controllers\Back\UserCompanyController::class);
