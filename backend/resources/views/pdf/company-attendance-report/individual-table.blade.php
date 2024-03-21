@@ -91,7 +91,11 @@ tfoot { display:table-footer-group }
                     </tr>
                     <tr style="height:120px;background:#e0e0e0;">
                         <th class="vertical-text">م</th>
-                        <th class="vertical-text" style="white-space: nowrap">الرقم الوظيفي</th>
+                        @foreach ($active_trainees as $counter => $record)
+                            @if ($record->trainee->job_number)
+                                <th class="vertical-text" style="white-space: nowrap">الرقم الوظيفي</th>
+                            @endif
+                        @endforeach
                         <th class="vertical-text">الحالة</th>
                         <th class="vertical-text" style="width:500px;">اسم الموظف</th>
                         <th class="vertical-text">السجل المدني</th>
