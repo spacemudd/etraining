@@ -75,7 +75,11 @@
                     </tr>
                     <tr style="height:100px;background:#e0e0e0;">
                         <th dir="ltr" class="vertical-text" style="white-space: nowrap">SI #</th>
-                        <th dir="ltr" class="vertical-text">Emp. #</th>
+                        @foreach ($active_trainees as $counter => $record)
+                            @if ($record->trainee->job_number)
+                                <th dir="ltr" class="vertical-text">Emp. #</th>
+                            @endif
+                        @endforeach
                         <th class="vertical-text">Status</th>
                         <th class="vertical-text">Employee<br/> name</th>
                         <th class="vertical-text">ID</th>
