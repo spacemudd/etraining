@@ -116,7 +116,7 @@ tfoot { display:table-footer-group }
                     </tr>
                 </thead>
                 <tbody style="page-break-inside: avoid;">
-                @if($job_number_count = $active_trainees->filter(function($record) { return $record->job_number; })->count())
+                @if($job_number_count = $active_trainees->first(function($record) { return $record->job_number != NULL; }))
                 {{$job_number_count}}frfdss
                 @endif
                     @foreach ($active_trainees as $counter => $record)
