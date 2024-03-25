@@ -116,12 +116,12 @@
                     </tr>
                 </thead>
                 <tbody style="page-break-inside: avoid;">
+                @if(\App\Models\Back\Trainee::where('company_id', $report->company_id)->where('job_number', '!=', NULL)->count() > 0)
                     @foreach ($active_trainees as $counter => $record)
                         @if(! ($counter ===  (count($active_trainees) - 1) || $counter ===  (count($active_trainees) - 2)) )
                             @if ($record->status === 'temporary_stop')
                             @continue
                             @endif
-                            @if ($record->trainee->job_number)
                                 <tr>
                                     <td>{{ ++$counter }}</td>
                                     <td>{{ $record->trainee->job_number }}</td>
@@ -183,7 +183,14 @@
                                         @endif
                                     </td>
                                 </tr>
-                            @else
+                        @endif
+                    @endforeach
+                @else
+                    @foreach ($active_trainees as $counter => $record)
+                        @if(! ($counter ===  (count($active_trainees) - 1) || $counter ===  (count($active_trainees) - 2)) )
+                            @if ($record->status === 'temporary_stop')
+                                @continue
+                            @endif
                                 <tr>
                                     <td>{{ ++$counter }}</td>
                                     <td>فعال</td>
@@ -197,11 +204,11 @@
                                         @endif
                                         @if ($report->with_attendance_times)
                                             <span style="font-size:12px;">
-                                        <br/>
-                                        دخول:
-                                        <br/>
-                                        خروج:
-                                        </span>
+                                            <br/>
+                                            دخول:
+                                            <br/>
+                                            خروج:
+                                            </span>
                                         @endif
                                     </td>
                                     @for($i=0;$i<count($days);$i++)
@@ -244,9 +251,9 @@
                                         @endif
                                     </td>
                                 </tr>
-                            @endif
                         @endif
                     @endforeach
+                @endif
                 </tbody>
         </table>
         <div style="page-break-inside: avoid !important;display:block;">
@@ -260,9 +267,9 @@
                         <col style="width:110px">
                     </colgroup>
                     <tbody>
+                    @if(\App\Models\Back\Trainee::where('company_id', $report->company_id)->where('job_number', '!=', NULL)->count() > 0)
                         @foreach ($active_trainees as $counter => $record)
                             @if(($counter ===  (count($active_trainees) - 1) || $counter ===  (count($active_trainees) - 2)))
-                                @if ($record->trainee->job_number)
                                     <tr>
                                         <td>{{ ++$counter }}</td>
                                         <td>{{ $record->trainee->job_number }}</td>
@@ -324,7 +331,11 @@
                                             @endif
                                         </td>
                                     </tr>
-                                @else
+                            @endif
+                        @endforeach
+                    @else
+                        @foreach ($active_trainees as $counter => $record)
+                            @if(($counter ===  (count($active_trainees) - 1) || $counter ===  (count($active_trainees) - 2)))
                                     <tr>
                                         <td>{{ ++$counter }}</td>
                                         <td>فعال</td>
@@ -385,9 +396,9 @@
                                             @endif
                                         </td>
                                     </tr>
-                                @endif
                             @endif
                         @endforeach
+                    @endif
 {{--                        <tr>--}}
 {{--                            <td colspan="6" style="text-align: center;">الإجمالي العام</td>--}}
 {{--                            <td colspan="{{ count($days) }}"></td>--}}

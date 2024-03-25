@@ -116,11 +116,11 @@ tfoot { display:table-footer-group }
                     </tr>
                 </thead>
                 <tbody style="page-break-inside: avoid;">
+                @if(\App\Models\Back\Trainee::where('company_id', $report->company_id)->where('job_number', '!=', NULL)->count() > 0)
                     @foreach ($active_trainees as $counter => $record)
                             @if ($record->status === 'temporary_stop')
                             @continue
                             @endif
-                            @if ($record->trainee->job_number)
                                 <tr>
                                 <td>{{ ++$counter }}</td>
                                 <td>{{ $record->trainee->job_number }}</td>
@@ -196,56 +196,45 @@ tfoot { display:table-footer-group }
                                     @endif
                                 </td>
                             </tr>
-                            @else
-                                <tr>
-                                    <td>{{ ++$counter }}</td>
-                                    <td>فعال</td>
-                                    <td>{{ $record->trainee->name }}</td>
-                                    <td>{{ $record->trainee->clean_identity_number }}</td>
-                                    <td style="text-align: center;">
-                                        @if ($record->status === 'suspend_account')
-                                            0
+                    @endforeach
+                @else
+                    @foreach ($active_trainees as $counter => $record)
+                        @if ($record->status === 'temporary_stop')
+                            @continue
+                        @endif
+                            <tr>
+                                <td>{{ ++$counter }}</td>
+                                <td>فعال</td>
+                                <td>{{ $record->trainee->name }}</td>
+                                <td>{{ $record->trainee->clean_identity_number }}</td>
+                                <td style="text-align: center;">
+                                    @if ($record->status === 'suspend_account')
+                                        0
+                                    @else
+                                        @if ($record->start_date)
+                                            {{ $record->start_date->diffInDays($record->end_date) + 1 }}
                                         @else
-                                            @if ($record->start_date)
-                                                {{ $record->start_date->diffInDays($record->end_date) + 1 }}
-                                            @else
-                                                {{ count($days) }}
-                                            @endif
+                                            {{ count($days) }}
                                         @endif
-                                        @if ($with_attendance_times)
-                                            <span style="font-size:12px;">
+                                    @endif
+                                    @if ($with_attendance_times)
+                                        <span style="font-size:12px;">
                                         <br/>
                                         دخول:
                                         <br/>
                                         خروج:
                                     </span>
-                                        @endif
-                                    </td>
-                                    @for($i=0;$i<count($days);$i++)
-                                        <td style="{{ $days[$i]['vacation_day'] ? 'background:#e0e0e0;' : '' }}">
-                                            @if ($record->status === 'suspend_account')
-                                                &#120;
-                                            @elseif($days[$i]['vacation_day'])
-                                                X
-                                            @else
-                                                @if ($record->start_date)
-                                                    @if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date))
-                                                        &#10003;
-                                                        @if ($with_attendance_times)
-                                                            @if (!$days[$i]['vacation_day'])
-                                                                <br/>
-                                                                <span style="font-size:8px;text-align: center;">08:{{sprintf("%02d",rand(1,10))}}</span>
-                                                                <br/>
-                                                                <span style="font-size:8px;text-align: center;">16:{{sprintf("%02d",rand(0,5))}}</span>
-                                                            @endif
-                                                        @endif
-                                                    @else
-                                                        @if ($record->status === 'new_registration')
-                                                            {{-- Considered absent --}}
-                                                            &#120;
-                                                        @endif
-                                                    @endif
-                                                @else
+                                    @endif
+                                </td>
+                                @for($i=0;$i<count($days);$i++)
+                                    <td style="{{ $days[$i]['vacation_day'] ? 'background:#e0e0e0;' : '' }}">
+                                        @if ($record->status === 'suspend_account')
+                                            &#120;
+                                        @elseif($days[$i]['vacation_day'])
+                                            X
+                                        @else
+                                            @if ($record->start_date)
+                                                @if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date))
                                                     &#10003;
                                                     @if ($with_attendance_times)
                                                         @if (!$days[$i]['vacation_day'])
@@ -255,24 +244,40 @@ tfoot { display:table-footer-group }
                                                             <span style="font-size:8px;text-align: center;">16:{{sprintf("%02d",rand(0,5))}}</span>
                                                         @endif
                                                     @endif
+                                                @else
+                                                    @if ($record->status === 'new_registration')
+                                                        {{-- Considered absent --}}
+                                                        &#120;
+                                                    @endif
                                                 @endif
-                                            @endif
-                                        </td>
-                                    @endfor
-                                    <td>
-                                        @if ($record->status === 'suspend_account')
-                                            {{ count($days) }}
-                                        @else
-                                            @if ($record->start_date)
-                                                {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
                                             @else
-                                                0
+                                                &#10003;
+                                                @if ($with_attendance_times)
+                                                    @if (!$days[$i]['vacation_day'])
+                                                        <br/>
+                                                        <span style="font-size:8px;text-align: center;">08:{{sprintf("%02d",rand(1,10))}}</span>
+                                                        <br/>
+                                                        <span style="font-size:8px;text-align: center;">16:{{sprintf("%02d",rand(0,5))}}</span>
+                                                    @endif
+                                                @endif
                                             @endif
                                         @endif
                                     </td>
-                                </tr>
-                            @endif
+                                @endfor
+                                <td>
+                                    @if ($record->status === 'suspend_account')
+                                        {{ count($days) }}
+                                    @else
+                                        @if ($record->start_date)
+                                            {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
+                                        @else
+                                            0
+                                        @endif
+                                    @endif
+                                </td>
+                            </tr>
                     @endforeach
+                @endif
                 <tr>
                     @if ($report->with_logo)
                             @if ($report->falls_under_ptc_net)
