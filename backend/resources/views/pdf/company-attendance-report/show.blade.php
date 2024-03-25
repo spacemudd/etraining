@@ -123,7 +123,9 @@
                             @endif
                             <tr>
                                 <td>{{ ++$counter }}</td>
-                                <td>{{ $record->trainee->job_number }}</td>
+                                @if ($record->trainee->job_number)
+                                    <td>{{ $record->trainee->job_number }}</td>
+                                @endif
                                 <td>فعال</td>
                                 <td>{{ $record->trainee->name }}</td>
                                 <td>{{ $record->trainee->clean_identity_number }}</td>
@@ -201,7 +203,9 @@
                             @if(($counter ===  (count($active_trainees) - 1) || $counter ===  (count($active_trainees) - 2)))
                                 <tr>
                                     <td>{{ ++$counter }}</td>
-                                    <td>{{ $record->trainee->job_number }}</td>
+                                    @if ($record->trainee->job_number)
+                                        <td>{{ $record->trainee->job_number }}</td>
+                                    @endif
                                     <td>فعال</td>
                                     <td>{{ $record->trainee->name }}</td>
                                     <td>{{ $record->trainee->clean_identity_number }}</td>
