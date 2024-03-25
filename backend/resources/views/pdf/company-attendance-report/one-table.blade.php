@@ -116,6 +116,9 @@ tfoot { display:table-footer-group }
                     </tr>
                 </thead>
                 <tbody style="page-break-inside: avoid;">
+                @if($job_number_count = $active_trainees->filter(function($record) { return $record->job_number; })->count())
+                {{$job_number_count}}
+                @endif
                     @foreach ($active_trainees as $counter => $record)
                             @if ($record->status === 'temporary_stop')
                             @continue
