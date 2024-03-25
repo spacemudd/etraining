@@ -195,7 +195,6 @@ tfoot { display:table-footer-group }
                             @else
                                 <tr>
                                     <td>{{ ++$counter }}</td>
-                                    <td>{{ $record->trainee->job_number }}</td>
                                     <td>فعال</td>
                                     <td>{{ $record->trainee->name }}</td>
                                     <td>{{ $record->trainee->clean_identity_number }}</td>
