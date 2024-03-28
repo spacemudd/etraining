@@ -75,11 +75,9 @@
                     </tr>
                     <tr style="height:100px;background:#e0e0e0;">
                         <th dir="ltr" class="vertical-text" style="white-space: nowrap">SI #</th>
-                        @foreach ($active_trainees as $counter => $record)
-                            @if ($record->trainee->job_number)
-                                <th dir="ltr" class="vertical-text">Emp. #</th>
-                            @endif
-                        @endforeach
+                        @if ($report->trainees()->where('job_number', '!=', NULL)->count())
+                            <th dir="ltr" class="vertical-text">Emp. #</th>
+                        @endif
                         <th class="vertical-text">Status</th>
                         <th class="vertical-text">Employee<br/> name</th>
                         <th class="vertical-text">ID</th>
@@ -95,11 +93,9 @@
                     </tr>
                     <tr style="height:120px;background:#e0e0e0;">
                         <th class="vertical-text">م</th>
-                        @foreach ($active_trainees as $counter => $record)
-                            @if ($record->trainee->job_number)
-                                <th class="vertical-text" style="white-space: nowrap">الرقم الوظيفي</th>
-                            @endif
-                        @endforeach
+                        @if ($report->trainees()->where('job_number', '!=', NULL)->count())
+                        <th class="vertical-text" style="white-space: nowrap">الرقم الوظيفي</th>
+                        @endif
                         <th class="vertical-text">الحالة</th>
                         <th class="vertical-text" style="width:500px;">اسم الموظف</th>
                         <th class="vertical-text">السجل المدني</th>
@@ -116,7 +112,7 @@
                     </tr>
                 </thead>
                 <tbody style="page-break-inside: avoid;">
-                @if(\App\Models\Back\Trainee::where('company_id', $report->company_id)->where('job_number', '!=', NULL)->count() > 0)
+                @if ($report->trainees()->where('job_number', '!=', NULL)->count())
                     @foreach ($active_trainees as $counter => $record)
                         @if(! ($counter ===  (count($active_trainees) - 1) || $counter ===  (count($active_trainees) - 2)) )
                             @if ($record->status === 'temporary_stop')
