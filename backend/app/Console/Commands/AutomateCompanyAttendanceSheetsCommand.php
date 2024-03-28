@@ -40,213 +40,27 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
      * Execute the console command.
      *
      * @return int
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function handle()
     {
-        $this->createReportsBasedOnTraineedInvoiced();
-        return 1;
-
-        // ------------------------------------------------------------------
-
-        $this->handleReportsBasedOnInvoices();
-        return 1;
-
-        //-------------------------------------------------------------------
-
-        $companies = Company::whereNotNull('is_ptc_net')
-            ->get();
-
-        foreach ($companies as $company) {
-            if ($company->trainees()->count() === 0) {
-                continue;
-            }
-
-            if (Invoice::where('company_id', $company->id)->whereBetween('to_date', ['2023-11-01', '2023-11-30'])->count() === 0) {
-                $this->info('No invoices in 2023-11. Skipping: '.$company->name_ar);
-                continue;
-            }
-
-            // TODO: Has report for current month? Update for the current month
-            $currentMonthReport = $company->company_attendance_reports()
-                ->whereBetween('date_to', [Carbon::parse('2023-12-01')->startOfDay(), Carbon::parse('2023-12-31')->endOfDay()])
-                ->first();
-
-            if ($currentMonthReport) {
-                // $this->info('Current report already exists for the same period, skipping');
-                continue;
-            }
-
-            $lastReport = $company->company_attendance_reports()
-                ->orderBy('date_from', 'desc')
-                ->first();
-
-            if ($lastReport && $lastReport->emails()->count()) {
-                // Is the number of trainees equal to the number of trainees in the company?
-                if ($lastReport->trainees()->count() !== $company->trainees()->count()) {
-                    $traineesNotFound = $lastReport->trainees()->pluck('trainees.id')->diff($company->trainees()->pluck('trainees.id'));
-                    if ($traineesNotFound->count() > 0) {
-                        foreach ($traineesNotFound as $notFound) {
-                            $info = [
-                                'Count is not equal to last report',
-                                $company->name_ar,
-                                ($company->trainees()->count() - $lastReport->trainees()->count()),
-                                Trainee::withTrashed()->find($notFound)->name,
-                            ];
-                            $this->info(implode(' , ', $info));
-                        }
-                    }
-                    $this->info('Number of trainees in the last report is not equal to the number of trainees in the company. Skipping: '.$company->name_ar);
-                    continue;
-                }
-
-                // Are the trainees matching the IDs of the all the trainees in the company?
-                foreach ($lastReport->trainees as $trainee) {
-                    if (! $company->trainees()->where('id', $trainee->id)->first()) {
-                        $this->info('Trainee not found in the company. Skipping: '.$company->name_ar);
-                        continue 2;
-                    }
-                }
-
-                $clone = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
-                $clone->date_from = Carbon::parse('2023-12-01')->setTimezone('Asia/Riyadh')->startOfDay();
-                $clone->date_to = Carbon::parse('2023-12-31')->setTimezone('Asia/Riyadh')->endOfDay();
-                $clone->save();
-                $clone->emails()->createMany($lastReport->emails()->get()->map(function ($email) {
-                    return [
-                        'type' => $email->type,
-                        'email' => Str::replace(' ', '', $email->email),
-                    ];
-                })->toArray());
-                app()->make(CompanyAttendanceReportService::class)->approve($clone->id);
-                $this->info('Sent company: '.$company->name_ar);
-            } else {
-                if (!$company->email) {
-                    $this->info('No email for company. Skipping: '.$company->name_ar);
-                    continue;
-                }
-                $this->info('No last report. Creating new report - '.$company->name_ar);
-                $report = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
-                $report->date_from = Carbon::parse('2023-12-01')->setTimezone('Asia/Riyadh')->startOfDay();
-                $report->date_to = Carbon::parse('2023-12-31')->setTimezone('Asia/Riyadh')->endOfDay();
-                $report->save();
-
-                $emails = [
-                    ['type' => 'to', 'email' => $company->email],
-                    ['type' => 'cc',' email' => 'sara@ptc-ksa.net'],
-                    ['type' => 'cc', 'email' => 'm_shehatah@ptc-ksa.net'],
-                    ['type' => 'cc', 'email' => 'ceo@ptc-ksa.net'],
-                    ['type' => 'cc', 'email' => 'mashael.a@ptc-ksa.net'],
-                ];
-                if ($company->salesperson_email) {
-                    $emails[] = ['type' => 'to', 'email' => $company->salesperson_email];
-                }
-                $report->emails()->createMany($emails);
-
-                app()->make(CompanyAttendanceReportService::class)->approve($report->id);
-            }
-        }
-
+        $from_date = Carbon::parse('2024-02-01')->startOfDay();
+        $to_date = $from_date->endOfMonth()->endOfDay();
+        $this->createReportsBasedOnTraineedInvoiced($from_date, $to_date);
         return 1;
     }
 
-    public function handleReportsBasedOnInvoices()
+    public function createReportsBasedOnTraineedInvoiced(Carbon $from_date, Carbon $to_date)
     {
         $count = Company::with('invoices')
-            ->whereHas('invoices', function ($query) {
-                $query->whereBetween('to_date', [Carbon::parse('2023-11-01')->startOfDay(), Carbon::parse('2023-11-30')->endOfDay()]);
+            ->whereHas('invoices', function ($query) use ($from_date) {
+                $query->whereBetween('to_date', [$from_date->subMonth(), $from_date->subMonth()->endOfMonth()->endOfDay()]);
             })->count();
         $this->info('Found companies with invoices: '.$count);
 
-        Company::with('invoices')
-            ->whereHas('invoices', function ($query) {
-                $query->whereBetween('to_date', [Carbon::parse('2023-11-01')->startOfDay(), Carbon::parse('2023-11-30')->endOfDay()]);
-            })->chunk(20, function($companies) {
-                foreach ($companies as $company) {
-
-                    // Checks
-                    if ($company->trainees()->count() === 0) {
-                        // $this->info('No trainees. Skipping: '.$company->name_ar);
-                        continue;
-                    }
-                    $currentMonthReport = $company->company_attendance_reports()
-                        ->whereBetween('date_to', [Carbon::parse('2023-12-01')->startOfDay(), Carbon::parse('2023-12-31')->endOfDay()])
-                        ->first();
-                    if ($currentMonthReport) {
-                        // $this->info('Already created. Skipping: '.$company->name_ar);
-                        continue;
-                    }
-
-                    $lastReport = $company->company_attendance_reports()
-                        ->orderBy('date_from', 'desc')
-                        ->first();
-
-                    if ($lastReport) {
-                        //$this->makeNewReportFromLastReport($company, $lastReport);
-                        $this->info('Making report for company: '.$company->name_ar);
-                    } else {
-                        if (! $company->email) {
-                            $this->info('No email for company. Skipping: '.$company->name_ar);
-                            continue;
-                        }
-                        $this->info('Making report for company: '.$company->name_ar);
-                        //$this->makeNewReport($company);
-                    }
-                }
-            });
-    }
-
-    public function makeNewReportFromLastReport($company, $lastReport)
-    {
-        $this->info('New report from last report: '.$company->name_ar . ',' . $company->trainees()->count());
-        $clone = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
-        $clone->date_from = Carbon::parse('2023-12-01')->setTimezone('Asia/Riyadh')->startOfDay();
-        $clone->date_to = Carbon::parse('2023-12-31')->setTimezone('Asia/Riyadh')->endOfDay();
-        $clone->save();
-        $clone->emails()->createMany($lastReport->emails()->get()->map(function ($email) {
-            return [
-                'type' => $email->type,
-                'email' => Str::replace(' ', '', $email->email),
-            ];
-        })->toArray());
-        app()->make(CompanyAttendanceReportService::class)->approve($clone->id);
-    }
-
-    public function makeNewReport($company)
-    {
-        $this->info('No last report. Creating new report - '.$company->name_ar . ',' . $company->trainees()->count());
-        $report = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
-        $report->date_from = Carbon::parse('2023-12-01')->setTimezone('Asia/Riyadh')->startOfDay();
-        $report->date_to = Carbon::parse('2023-12-31')->setTimezone('Asia/Riyadh')->endOfDay();
-        $report->save();
-
-        $emails = [
-            ['type' => 'to', 'email' => $company->email],
-            ['type' => 'cc', 'email' => 'sara@ptc-ksa.net'],
-            ['type' => 'cc', 'email' => 'm_shehatah@ptc-ksa.net'],
-            ['type' => 'cc', 'email' => 'ceo@ptc-ksa.net'],
-            ['type' => 'cc', 'email' => 'mashael.a@ptc-ksa.net'],
-        ];
-        if ($company->salesperson_email) {
-            $emails[] = ['type' => 'to', 'email' => $company->salesperson_email];
-        }
-        $report->emails()->createMany($emails);
-
-        app()->make(CompanyAttendanceReportService::class)->approve($report->id);
-    }
-
-    public function createReportsBasedOnTraineedInvoiced()
-    {
-        $count = Company::with('invoices')
-            ->whereHas('invoices', function ($query) {
-                $query->whereBetween('to_date', [Carbon::parse('2024-02-01')->startOfDay(), Carbon::parse('2024-02-29')->endOfDay()]);
-            })->count();
-        $this->info('Found companies with invoices: '.$count);
-
-        // Companies that don't have invoices
+        // Companies that don't have invoices in the past month, to skip.
          $companies_with_invoices = Company::with('invoices')
-            ->whereHas('invoices', function ($query) {
-                $query->whereBetween('to_date',  [Carbon::parse('2024-02-01')->startOfDay(), Carbon::parse('2024-02-29')->endOfDay()]);
+            ->whereHas('invoices', function ($query) use ($from_date) {
+                $query->whereBetween('to_date',  [$from_date->subMonth(), $from_date->subMonth()->endOfMonth()->endOfDay()]);
             })->pluck('id');
          $companies_without_invoices = Company::whereNotIn('id', $companies_with_invoices)->pluck('name_ar');
          foreach ($companies_without_invoices as $name_ar) {
@@ -254,9 +68,9 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
          }
 
         Company::with('invoices')
-            ->whereHas('invoices', function ($query) {
-                $query->whereBetween('to_date', [Carbon::parse('2024-02-01')->startOfDay(), Carbon::parse('2024-02-29')->endOfDay()]);
-            })->chunk(20, function($companies) {
+            ->whereHas('invoices', function ($query) use ($from_date) {
+                $query->whereBetween('to_date', [$from_date->subMonth(), $from_date->subMonth()->endOfMonth()->endOfDay()]);
+            })->chunk(20, function($companies) use ($from_date, $to_date) {
                 foreach ($companies as $company) {
 
                     // Checks
@@ -265,7 +79,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                         continue;
                     }
                     $currentMonthReport = $company->company_attendance_reports()
-                        ->whereBetween('date_to', [Carbon::parse('2024-03-01')->startOfDay(), Carbon::parse('2024-03-31')->endOfDay()])
+                        ->whereBetween('date_to', [$from_date, $to_date])
                         ->first();
                     if ($currentMonthReport) {
                         $this->info('Already created. Skipping: '.$company->name_ar);
@@ -277,13 +91,13 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                         ->first();
 
                     if ($lastReport) {
-                        $this->makeNewReportFromLastReportBasedOnInvoices($company, $lastReport, '2024-03-01', '2024-03-31', '2024-02-01', '2024-02-29');
+                        $this->makeNewReportFromLastReportBasedOnInvoices($company, $lastReport, $from_date, $to_date, $from_date->subMonth(), $from_date->subMonth()->endOfMonth()->endOfDay())
                     } else {
                         if (! $company->email) {
                             $this->info('No email for company. Skipping: '.$company->name_ar);
                             continue;
                         }
-                        $this->makeNewReportBasedOnInvoices($company, '2024-03-01', '2024-03-31', '2024-02-01', '2024-02-29');
+                        $this->makeNewReportBasedOnInvoices($company, $from_date, $to_date, $from_date->subMonth(), $from_date->subMonth()->endOfMonth()->endOfDay());
                     }
                 }
             });
@@ -311,6 +125,13 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
             $clone->emails()->create([
                 'type' => 'to',
                 'email' => $email,
+            ]);
+        }
+        // Add sales rep email
+        if ($company->salesperson_email && !$clone->emails()->where('email', $company->salesperson_email)->count()) {
+            $clone->emails()->create([
+                'type' => 'cc',
+                'email' => $company->salesperson_email,
             ]);
         }
 
@@ -359,6 +180,13 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
             $report->emails()->create([
                 'type' => 'to',
                 'email' => $email,
+            ]);
+        }
+        // Add sales rep email
+        if ($company->salesperson_email && !$report->emails()->where('email', $company->salesperson_email)->count()) {
+            $report->emails()->create([
+                'type' => 'cc',
+                'email' => $company->salesperson_email,
             ]);
         }
 
