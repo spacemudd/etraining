@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Back\Company;
+use App\Services\CompanyMigrationHelper;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -22,6 +23,8 @@ class NewCompanyEmail extends Mailable implements ShouldQueue
     public function __construct($company_id)
     {
         $this->company_id = $company_id;
+        $domain = Company::find($company_id)->center->domain_name ?? 'jisr-ksa.com';
+        CompanyMigrationHelper::setMailgunConfigBasedOnDomain($domain);
     }
 
     /**

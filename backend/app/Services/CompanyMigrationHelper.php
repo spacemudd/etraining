@@ -47,12 +47,12 @@ class CompanyMigrationHelper
         (new MailServiceProvider(app()))->register();
     }
 
-    public function setMailgunConfigBasedOnDomain($domain)
+    static public function setMailgunConfigBasedOnDomain($domain)
     {
         if ($domain === 'ptc-ksa.net') {
             config([
                 'mail.from.address' => 'noreply@comms.ptc-ksa.net',
-                'mail.from.name' => config('mail.from.name'),
+                'mail.from.name' => 'PTC-KSA.NET',
                 'mail.mailers.mailgun.domain' => env('MAILGUN_DOMAIN_PTC_NET'),
                 'mail.mailers.mailgun.secret' => env('MAILGUN_SECRET_PTC_NET'),
                 'mail.mailers.mailgun.endpoint' => 'api.mailgun.net',
@@ -63,18 +63,19 @@ class CompanyMigrationHelper
         if ($domain === 'jisr-ksa.com') {
             config([
                 'mail.from.address' => 'noreply@jisr-ksa.com',
-                'mail.from.name' => config('mail.from.name'),
+                'mail.from.name' => 'Jisr KSA',
                 'mail.mailers.mailgun.domain' => env('MAILGUN_DOMAIN_JISR_DOMAIN'),
                 'mail.mailers.mailgun.secret' => env('MAILGUN_SECRET_JISR_DOMAIN'),
                 'mail.mailers.mailgun.endpoint' => 'api.mailgun.net',
             ]);
             (new MailServiceProvider(app()))->register();
+
         }
 
         if ($domain === 'jasarah-ksa.com') {
             config([
-                'mail.from.address' => 'noreply@comms.ptc-ksa.net',
-                'mail.from.name' => config('mail.from.name'),
+                'mail.from.address' => 'noreply@jasarah-ksa.com',
+                'mail.from.name' => 'Jasarah KSA',
                 'mail.mailers.mailgun.domain' => env('MAILGUN_DOMAIN_JASARAH_DOMAIN'),
                 'mail.mailers.mailgun.secret' => env('MAILGUN_SECRET_JASARAH_DOMAIN'),
                 'mail.mailers.mailgun.endpoint' => 'api.mailgun.net',
@@ -82,6 +83,6 @@ class CompanyMigrationHelper
             (new MailServiceProvider(app()))->register();
         }
 
-        return $this;
+        return null;
     }
 }
