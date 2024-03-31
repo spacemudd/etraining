@@ -53,7 +53,6 @@
         #customers {
             border-collapse: collapse;
             border-radius: 18px;
-            overflow: hidden;
             width: 100%;
         }
 
@@ -75,11 +74,6 @@
         @media only screen and (max-width: 600px) {
             div{
                 padding: 20px;
-                margin-top: 10px;
-                margin-left: 20px;
-                margin-right: 20px;
-                margin-bottom: 20px;
-                background-color: white;
                 border-radius: 5px;
             }
             img{
@@ -91,14 +85,13 @@
             #customers {
                 border-collapse: collapse;
                 border-radius: 15px;
-                width: 20%;
+                width: 30%;
             }
 
             #customers td, #customers th {
                 border: 2px solid white;
                 padding: 8px;
-                margin-bottom: 30px;
-                width: 20%;
+                width: 30%;
             }
 
             #customers tr:nth-child(even){background-color: #f2f2f2;}
