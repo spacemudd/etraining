@@ -133,7 +133,7 @@
             <p style="margin-top:2.5rem;">وجنسيتها سعودية بموجب السجل المدني رقم "{{ $certificate->trainee->identity_number }}"</p>
             <p style="margin-top:2.5rem;">قـــد أتمت حضور دورة ({{ $certificate->course->name_ar }}) </p>
             <p style="margin-top:2.5rem;">حسب البيانات الموضحة أدناه</p>
-            <div>
+            <center>
                 <table>
                     <tr>
                         <th>مسمى الدورة</th>
@@ -144,7 +144,7 @@
                         <td>100%</td>
                     </tr>
                 </table>
-            </div>
+            </center>
             <p style="margin-top:5rem;">والله الموفق،،،</p>
 {{--            <div class="col-7">--}}
 {{--                <p style="margin-bottom:0;padding-bottom: 0"><b> </b></p>--}}
