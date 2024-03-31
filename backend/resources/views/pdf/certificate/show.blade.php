@@ -60,12 +60,8 @@
         #customers td, #customers th {
             border: 2px solid white;
             padding: 8px;
-            margin-bottom: 100px;
+            margin-bottom: 60px;
         }
-
-        #customers tr:nth-child(even){background-color: #f2f2f2;}
-
-        #customers tr:hover {background-color: #ddd;}
 
         #customers th {
             padding-top: 12px;
@@ -79,10 +75,6 @@
             }
             div{
                 padding: 20px;
-                margin-top: 10px;
-                margin-left: 20px;
-                margin-right: 20px;
-                margin-bottom: 20px;
                 background-color: white;
                 border-radius: 5px;
             }
@@ -105,10 +97,6 @@
                 margin-bottom: 30px;
                 width: 20%;
             }
-
-            #customers tr:nth-child(even){background-color: #f2f2f2;}
-
-            #customers tr:hover {background-color: #ddd;}
 
             #customers th {
                 padding-top: 4px;
@@ -134,8 +122,8 @@
             <p style="margin-top:2.5rem;">قـــد أتمت حضور دورة ({{ $certificate->course->name_ar }}) </p>
             <p style="margin-top:2.5rem;">حسب البيانات الموضحة أدناه</p>
             <center>
-                <table>
-                    <tr>
+                <table id="customers">
+                    <tr style="background-color: #ec5b5b;">
                         <th>مسمى الدورة</th>
                         <th>نسبة الحضور</th>
                     </tr>
@@ -146,17 +134,13 @@
                 </table>
             </center>
             <p style="margin-top:5rem;">والله الموفق،،،</p>
-{{--            <div class="col-7">--}}
-{{--                <p style="margin-bottom:0;padding-bottom: 0"><b> </b></p>--}}
-{{--                <img style="padding-top: 20px" id="page-stamp" src="{{ public_path('/img/certificate-stamp-new.png') }}">--}}
-{{--            </div>--}}
-            <div class="col-4" style="text-align: right;">
+            <div class="col-7">
+                <div class="col-4" style="text-align: right;">
                 <p>الإدارة <img  id="page-stamp" src="{{ public_path('/img/signature.png') }}"></p>
                 <p class="small-text">
                     <b></b><br/>
                     <b></b>
                 </p>
-{{--                <p class="small-text">ملاحظة: أي كشط او تعديل على الشهادة تعتبر لاغية</p>--}}
             </div>
         </div>
     </div>
