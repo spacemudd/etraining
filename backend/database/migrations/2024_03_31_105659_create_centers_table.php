@@ -14,9 +14,10 @@ class CreateCentersTable extends Migration
     public function up()
     {
         Schema::create('centers', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->increments('id');
             $table->string('name')->unique();
             $table->string('name_ar')->nullable();
+            $table->string('domain_name')->unique();
             $table->timestamps();
         });
     }
