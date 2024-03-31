@@ -53,7 +53,6 @@
         #customers {
             border-collapse: collapse;
             border-radius: 18px;
-            overflow: hidden;
             width: 100%;
         }
 
@@ -70,12 +69,8 @@
             color: white;
         }
         @media only screen and (max-width: 600px) {
-            body{
-                background-color: #f0f0f0;
-            }
             div{
                 padding: 20px;
-                background-color: white;
                 border-radius: 5px;
             }
             img{
@@ -87,20 +82,21 @@
             #customers {
                 border-collapse: collapse;
                 border-radius: 15px;
-                overflow: hidden;
-                width: 20%;
+                width: 30%;
             }
 
             #customers td, #customers th {
                 border: 2px solid white;
                 padding: 8px;
                 margin-bottom: 30px;
-                width: 20%;
+                width: 30%;
             }
 
             #customers th {
                 padding-top: 4px;
                 padding-bottom: 4px;
+                padding-right: 15px;
+                padding-left: 15px;
                 text-align:right;
                 color: white;
             }
