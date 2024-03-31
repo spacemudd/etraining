@@ -53,14 +53,18 @@
         #customers {
             border-collapse: collapse;
             border-radius: 18px;
+            overflow: hidden;
             width: 100%;
         }
 
         #customers td, #customers th {
             border: 2px solid white;
             padding: 8px;
-            margin-bottom: 60px;
         }
+
+        #customers tr:nth-child(even){background-color: #f2f2f2;}
+
+        #customers tr:hover {background-color: #ddd;}
 
         #customers th {
             padding-top: 12px;
@@ -71,6 +75,11 @@
         @media only screen and (max-width: 600px) {
             div{
                 padding: 20px;
+                margin-top: 10px;
+                margin-left: 20px;
+                margin-right: 20px;
+                margin-bottom: 20px;
+                background-color: white;
                 border-radius: 5px;
             }
             img{
@@ -82,15 +91,19 @@
             #customers {
                 border-collapse: collapse;
                 border-radius: 15px;
-                width: 30%;
+                width: 20%;
             }
 
             #customers td, #customers th {
                 border: 2px solid white;
                 padding: 8px;
                 margin-bottom: 30px;
-                width: 30%;
+                width: 20%;
             }
+
+            #customers tr:nth-child(even){background-color: #f2f2f2;}
+
+            #customers tr:hover {background-color: #ddd;}
 
             #customers th {
                 padding-top: 4px;
@@ -129,15 +142,16 @@
                     </tr>
                 </table>
             </center>
-            <p style="margin-top:5rem;">والله الموفق،،،</p>
-            <div class="col-7">
-                <div class="col-4" style="text-align: right;">
-                <p>الإدارة <img  id="page-stamp" src="{{ public_path('/img/signature.png') }}"></p>
-                <p class="small-text">
-                    <b></b><br/>
-                    <b></b>
-                </p>
-            </div>
+            <center>
+                <div class="col-7">
+                    <div class="col-4" style="text-align: right;">
+                        <p>الإدارة <img  id="page-stamp" src="{{ public_path('/img/signature.png') }}"></p>
+                        <p class="small-text">
+                            <b></b><br/>
+                            <b></b>
+                        </p>
+                    </div>
+            </center>
         </div>
     </div>
 </div>
