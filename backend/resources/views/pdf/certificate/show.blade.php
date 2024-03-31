@@ -133,28 +133,30 @@
             <p style="margin-top:2.5rem;">وجنسيتها سعودية بموجب السجل المدني رقم "{{ $certificate->trainee->identity_number }}"</p>
             <p style="margin-top:2.5rem;">قـــد أتمت حضور دورة ({{ $certificate->course->name_ar }}) </p>
             <p style="margin-top:2.5rem;">حسب البيانات الموضحة أدناه</p>
-            <table id="customers">
-                <tr style="background-color: #ec5b5b;">
-                    <th>مسمى الدورة</th>
-                    <th>نسبة الحضور</th>
-                </tr>
-                <tr>
-                    <td>{{ $certificate->course->name_ar }}</td>
-                    <td>100%</td>
-                </tr>
-            </table>
-            <p style="margin-top:5rem;">والله الموفق،،،</p>
-            <div class="col-7">
-                <p style="margin-bottom:0;padding-bottom: 0"><b> </b></p>
-{{--                <img style="padding-top: 20px" id="page-stamp" src="{{ public_path('/img/certificate-stamp-new.png') }}">--}}
+            <div>
+                <table>
+                    <tr>
+                        <th>مسمى الدورة</th>
+                        <th>نسبة الحضور</th>
+                    </tr>
+                    <tr>
+                        <td>{{ $certificate->course->name_ar }}</td>
+                        <td>100%</td>
+                    </tr>
+                </table>
             </div>
+            <p style="margin-top:5rem;">والله الموفق،،،</p>
+{{--            <div class="col-7">--}}
+{{--                <p style="margin-bottom:0;padding-bottom: 0"><b> </b></p>--}}
+{{--                <img style="padding-top: 20px" id="page-stamp" src="{{ public_path('/img/certificate-stamp-new.png') }}">--}}
+{{--            </div>--}}
             <div class="col-4" style="text-align: right;">
                 <p>الإدارة <img  id="page-stamp" src="{{ public_path('/img/signature.png') }}"></p>
                 <p class="small-text">
                     <b></b><br/>
                     <b></b>
                 </p>
-                <p class="small-text">ملاحظة: أي كشط او تعديل على الشهادة تعتبر لاغية</p>
+{{--                <p class="small-text">ملاحظة: أي كشط او تعديل على الشهادة تعتبر لاغية</p>--}}
             </div>
         </div>
     </div>
