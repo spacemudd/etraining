@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Back\Resignation;
+use App\Services\CompanyMigrationHelper;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -23,6 +24,9 @@ class ResignationsMail extends Mailable
     public function __construct(Resignation $resignation)
     {
         $this->resignation = $resignation;
+
+        $center = $resignation->company->center;
+        CompanyMigrationHelper::setMailgunConfigBasedOnDomain($center->domain_name);
     }
 
     /**

@@ -23,8 +23,8 @@ class NewCompanyEmail extends Mailable implements ShouldQueue
     public function __construct($company_id)
     {
         $this->company_id = $company_id;
-        $domain = Company::find($company_id)->center->domain_name ?? 'jisr-ksa.com';
-        CompanyMigrationHelper::setMailgunConfigBasedOnDomain($domain);
+        $center = Company::find($company_id)->center;
+        CompanyMigrationHelper::setMailgunConfigBasedOnDomain($center->domain_name);
     }
 
     /**

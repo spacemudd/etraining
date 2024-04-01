@@ -4,6 +4,7 @@ namespace App\Mail;
 
 use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
+use App\Services\CompanyMigrationHelper;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -23,6 +24,9 @@ class EditAmountMail extends Mailable
     public function __construct($invoice)
     {
         $this->invoice = $invoice;
+
+        $center = $invoice->company->center;
+        CompanyMigrationHelper::setMailgunConfigBasedOnDomain($center->domain);
     }
 
     /**

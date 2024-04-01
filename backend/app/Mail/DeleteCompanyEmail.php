@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Back\Company;
+use App\Services\CompanyMigrationHelper;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -22,6 +23,8 @@ class DeleteCompanyEmail extends Mailable implements ShouldQueue
     public function __construct($company_id)
     {
         $this->company_id = $company_id;
+        $center = Company::withTrashed()->find($this->company_id)->center;
+        CompanyMigrationHelper::setMailgunConfigBasedOnDomain($center->domain);
     }
 
     /**
