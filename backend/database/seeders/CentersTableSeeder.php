@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Center;
+use App\Models\Back\Center;
 use Illuminate\Database\Seeder;
 
 class CentersTableSeeder extends Seeder
