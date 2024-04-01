@@ -44,6 +44,7 @@ class Company extends Model implements SearchableLabels, Auditable
         'is_ptc_net',
         'salesperson_email',
         'region_id',
+        'center_id',
     ];
 
     protected $appends = [
@@ -115,6 +116,11 @@ class Company extends Model implements SearchableLabels, Auditable
     public function region()
     {
         return $this->belongsTo(Region::class);
+    }
+
+    public function center()
+    {
+        return $this->belongsTo(Center::class);
     }
 
     /**

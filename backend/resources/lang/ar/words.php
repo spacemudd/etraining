@@ -664,4 +664,5 @@ return [
     'name-aliases' => 'الأسماء الإضافية',
     'job-number' => 'الرقم الوظيفي',
     'download-all-files' => 'تحميل جميع الملفات',
+    'center' => 'المركز',
 ];

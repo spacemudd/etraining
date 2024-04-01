@@ -63,6 +63,24 @@
                     </button>
                 </div>
 
+                <div class="col-span-4 sm:col-span-1">
+                    <jet-label for="center_id" :value="$t('words.center')" />
+                    <div class="relative mt-2">
+                        <select class="mt-1 block w-full bg-gray-100 appearance-none border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:border-gray-500"
+                                v-model="company.center_id"
+                                id="center_id"
+                                disabled
+                        >
+                            <option v-for="center in centers"
+                                    :key="center.id"
+                                    :value="center.id"
+                            >
+                                {{ center.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <jet-input-error :message="form.error('center_id')" class="mt-2" />
+                </div>
                 <template
                     v-for="fieldName in [
                             'name_ar',
@@ -595,7 +613,7 @@ import PostTraineesButton from "@/Components/PostTraineesButton";
 import Input from "../../../Jetstream/Input";
 
 export default {
-    props: ['sessions', 'company', 'instructors', 'invoices', 'trainees_trashed_count', 'regions', 'trainees', 'company_mails'],
+    props: ['sessions', 'company', 'instructors', 'invoices', 'trainees_trashed_count', 'regions', 'centers', 'trainees', 'company_mails'],
 
     components: {
         Input,
@@ -635,6 +653,7 @@ export default {
                 shelf_number: '',
                 salesperson_email: '',
                 region_id: '',
+                center_id: '',
             }, {
                 bag: 'createCompany',
             })

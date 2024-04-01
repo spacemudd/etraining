@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Back;
 use App\Exports\CompaniesExport;
 use App\Http\Controllers\Controller;
 use App\Models\Back\Audit;
+use App\Models\Back\Center;
 use App\Models\Back\Company;
 use App\Models\Back\Instructor;
 use App\Models\Back\Region;
@@ -53,6 +54,7 @@ class CompaniesController extends Controller
 
         return Inertia::render('Back/Companies/Create',[
             'regions' => Region::orderBy('name')->get(),
+            'centers' => Center::orderBy('name')->get(),
         ]);
     }
 
@@ -80,6 +82,7 @@ class CompaniesController extends Controller
             'shelf_number' => 'nullable|string|max:255',
             'salesperson_email' => 'nullable|email',
             'region_id' => 'nullable|exists:regions,id',
+            'center_id' => 'nullable|exists:centers,id',
         ]);
 
         $company = Company::create($validated);
@@ -114,6 +117,7 @@ class CompaniesController extends Controller
                     ]);
                 },
                 'region',
+                'center',
                 'resignations',
                 'company_mails',
             ])
@@ -123,7 +127,8 @@ class CompaniesController extends Controller
                 },
                 'aliases',
             ])
-            ->with('region');
+            ->with('region')
+            ->with('center');
 
         if (auth()->user()->can('view-deleted-companies')) {
             $company = $company->withTrashed();
@@ -150,6 +155,7 @@ class CompaniesController extends Controller
             'instructors' => Instructor::get(),
             'trainees_trashed_count' => Trainee::where('company_id', $company->id)->onlyTrashed()->count(),
             'regions' => Region::orderBy('name')->get(),
+            'centers' => Center::orderBy('name')->get(),
         ]);
     }
 
@@ -165,6 +171,7 @@ class CompaniesController extends Controller
         return Inertia::render('Back/Companies/Edit', [
             'company' => Company::findOrFail($id),
             'regions' => Region::orderBy('name')->get(),
+            'centers' => Center::orderBy('name')->get(),
         ]);
     }
 
@@ -190,12 +197,14 @@ class CompaniesController extends Controller
             'monthly_subscription_per_trainee' => 'nullable|numeric|min:0|max:100000',
             'shelf_number' => 'nullable|string|max:255',
             'region_id' => 'nullable|exists:regions,id',
+            'center_id' => 'nullable|exists:centers,id',
         ]);
 
         $company = Company::findOrFail($id);
         $region = Region::orderBy('name')->get();
+        $center = Center::orderBy('name')->get();
         $company->update($request->except('_token'));
-        return redirect()->route('back.companies.show', ['company' => $company, 'region' => $region])->with(
+        return redirect()->route('back.companies.show', ['company' => $company, 'region' => $region, 'center' => $center])->with(
             'success',
             __('words.updated-successfully')
         );

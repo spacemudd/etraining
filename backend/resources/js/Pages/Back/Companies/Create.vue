@@ -20,20 +20,19 @@
                     </template>
 
                     <template #form>
-                        <div class="col-span-4 sm:col-span-4">
-                            <jet-label for="region_id" :value="$t('words.region')" />
-                            <div class="relative mt-2">
+                        <div class="col-span-2 sm:col-span-2">
+                            <jet-label for="center_id" :value="$t('words.center')" />
+                            <div class="relative">
                                 <select class="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                         v-model="form.center_id"
-                                        id="region_id">
-                                    <option v-for="center in centers"
-                                            :key="center.id"
-                                            :value="center.id">
-                                        {{ center.name }}
-                                    </option>
+                                        id="educational_level_id">
+                                    <option v-for="center in centers" :key="center.id" :value="center.id">{{ center.name_ar }}</option>
                                 </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                                </div>
                             </div>
-                            <jet-input-error :message="form.error('region_id')" class="mt-2" />
+                            <jet-input-error :message="form.error('center_id')" class="mt-2" />
                         </div>
                         <template v-for="fieldName in [
                             'name_ar',
@@ -102,7 +101,7 @@
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
 
     export default {
-        props: ['sessions', 'regions'],
+        props: ['sessions', 'regions', 'centers'],
 
         components: {
             AppLayout,
@@ -130,6 +129,7 @@
                     monthly_subscription_per_trainee: '',
                     salesperson_email: '',
                     region_id: '',
+                    center_id: '',
                 }, {
                     bag: 'createCompany',
                 })
