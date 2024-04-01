@@ -23,6 +23,10 @@ class TraineeCertificateMail extends Mailable
     public function __construct($certificate_id)
     {
         $this->certificate_id = $certificate_id;
+
+        $certificate = TraineeCertificate::find($this->certificate_id);
+        $center = $certificate->trainee->company->center;
+        CompanyMigrationHelper::setMailgunConfigBasedOnDomain($center->domain_name);
     }
 
     /**
@@ -45,7 +49,7 @@ class TraineeCertificateMail extends Mailable
 
     public function attachReportFile($certificate)
     {
-        $filename = $certificate->id.'-ptc.pdf';
+        $filename = $certificate->id.'-cert.pdf';
         $this->attachData(CertificatesService::new($certificate->id)->pdf()->inline($filename), $filename);
         return $this;
     }

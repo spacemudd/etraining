@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Back\Invoice;
+use App\Services\CompanyMigrationHelper;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -20,12 +21,17 @@ class EditInvoiceMail extends Mailable
      * Create a new message instance.
      *
      * @param \App\Models\Back\Invoice $invoice
+     * @param \App\Models\Back\Invoice $t
+     * @param $email
      */
     public function __construct(Invoice $invoice, Invoice $t, $email)
     {
         $this->invoice = $invoice;
         $this->t = $t;
         $this->email = $email;
+
+        $center = $invoice->company->center;
+        CompanyMigrationHelper::setMailgunConfigBasedOnDomain($center->domain);
     }
 
     /**

@@ -26,9 +26,8 @@ class CompanyAttendanceReportMail extends Mailable
     {
         $this->report_id = $report_id;
 
-        if (CompanyAttendanceReport::find($report_id)->company->is_ptc_net) {
-            CompanyMigrationHelper::setMailgunConfigStatic();
-        }
+        $domain = CompanyAttendanceReport::find($this->report_id)->company->center->domain_name ?? 'ptc-ksa.net';
+        CompanyMigrationHelper::setMailgunConfigBasedOnDomain($domain);
     }
 
     /**
@@ -42,8 +41,11 @@ class CompanyAttendanceReportMail extends Mailable
 
         $this->attachReportFile($report);
 
+        // Use system@ email because when clients reply to that email, it should be received saved in the company.
+        $center = CompanyAttendanceReport::find($this->report_id)->company->center;
+
         return $this
-            ->from('system@comms.ptc-ksa.net', 'شركة مركز احترافية التدريب.')
+            ->from('system@comms'.$center->domain, $center->name_ar)
             ->subject('تقرير الحضور للمتدربات - '.$report->company->name_ar.' - '.$report->date_from->format('Y-m-d'). ' - '.$report->date_to->format('Y-m-d'))
             ->markdown('emails.company-attendance-report', [
                 'report' => $report,

@@ -22,6 +22,8 @@ class ComplaintMail extends Mailable
     public function __construct(Complaint $complaint)
     {
         $this->complaint = $complaint;
+        $center = $complaint->user->trainee->company->center;
+        CompanyMigrationHelper::setMailgunConfigBasedOnDomain($center->domain);
     }
 
     /**

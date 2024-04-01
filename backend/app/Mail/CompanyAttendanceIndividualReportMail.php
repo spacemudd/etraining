@@ -35,8 +35,8 @@ class CompanyAttendanceIndividualReportMail extends Mailable implements ShouldQu
 
         $this->with_attendance_times = $with_attendance_times;
 
-        $center = CompanyAttendanceReport::find($report_id)->company->center;
-        CompanyMigrationHelper::setMailgunConfigBasedOnDomain(optional($center)->domain_name);
+        $domain = CompanyAttendanceReport::find($this->report_id)->company->center->domain_name ?? 'ptc-ksa.net';
+        CompanyMigrationHelper::setMailgunConfigBasedOnDomain($domain);
     }
 
     /**

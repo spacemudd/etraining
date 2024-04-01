@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Back\CompanyAttendanceReportsEmail;
+use App\Services\CompanyMigrationHelper;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -22,6 +23,9 @@ class CompanyAttendanceFailureMail extends Mailable
     public function __construct(CompanyAttendanceReportsEmail $email)
     {
         $this->company_attendance_reports_email = $email;
+
+        $domain = $email->report->company->center->domain_name ?? 'ptc-ksa.net';
+        CompanyMigrationHelper::setMailgunConfigBasedOnDomain($domain);
     }
 
     /**
