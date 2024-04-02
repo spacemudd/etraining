@@ -57,7 +57,8 @@
                             <div class="relative mt-2">
                                 <select class="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                         v-model="form.region_id"
-                                        id="region_id">
+                                        id="region_id"
+                                        required>
                                     <option v-for="region in regions"
                                             :key="region.id"
                                             :value="region.id">
