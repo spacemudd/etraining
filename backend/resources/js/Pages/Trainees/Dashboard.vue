@@ -71,29 +71,29 @@
             <!-- Payment notice -->
             <div class="container px-6 mx-auto grid pt-10" v-if="user.trainee.deleted_at">
             <div class="container mx-auto grid">
-                <div class="bg-red-100 rounded-lg p-10 border-red-500 border-2">
-                    <div style="width: 100%;">
-                        <p class="mt-2 text-gray-500" style="text-align: center;
-                                font-size: 20px;
-                                color: #323232;
-                                letter-spacing: 1px;
-                            }">لا يمكنك حضور الدورات في الوقت الحالي، للتواصل معنا على الأرقام التالية.
-                            <br><br/>
-                            <span class="img {display:block} center-block inline-flex" style="text-align: center;">
-                                <svg width="40" height="40" class="mx-0.5 mt-1">
-                                    <image class="inline" xlink:href="https://i.ibb.co/CWK3g2s/whatsapp.png" src="https://i.ibb.co/CWK3g2s/whatsapp.png" width="15" height="15"/>
-                                </svg>
-                            <a class="center text-green-600 text-sm" style="text-align: center;" href="https://api.whatsapp.com/send?phone=966553139979"> &nbsp;  شؤون المتدربات </a>
-                            </span>
-                            <span class="img {display:block} center-block inline-flex" style="text-align: center;">
-                                <svg width="40" height="40" class="mx-0.5 mt-1">
-                                    <image class="inline" xlink:href="https://i.ibb.co/CWK3g2s/whatsapp.png" src="https://i.ibb.co/CWK3g2s/whatsapp.png" width="15" height="15"/>
-                                </svg>
-                            <a class="center text-green-600 text-sm" style="text-align: center;" href="https://api.whatsapp.com/send?phone=966553139979"> &nbsp;  إدارة المعهد </a>
-                            </span>
-                        </p>
-                    </div>
-                </div>
+<!--                <div class="bg-red-100 rounded-lg p-10 border-red-500 border-2">-->
+<!--                    <div style="width: 100%;">-->
+<!--                        <p class="mt-2 text-gray-500" style="text-align: center;-->
+<!--                                font-size: 20px;-->
+<!--                                color: #323232;-->
+<!--                                letter-spacing: 1px;-->
+<!--                            }">لا يمكنك حضور الدورات في الوقت الحالي، للتواصل معنا على الأرقام التالية.-->
+<!--                            <br><br/>-->
+<!--                            <span class="img {display:block} center-block inline-flex" style="text-align: center;">-->
+<!--                                <svg width="40" height="40" class="mx-0.5 mt-1">-->
+<!--                                    <image class="inline" xlink:href="https://i.ibb.co/CWK3g2s/whatsapp.png" src="https://i.ibb.co/CWK3g2s/whatsapp.png" width="15" height="15"/>-->
+<!--                                </svg>-->
+<!--                            <a class="center text-green-600 text-sm" style="text-align: center;" href="https://api.whatsapp.com/send?phone=966553139979"> &nbsp;  شؤون المتدربات </a>-->
+<!--                            </span>-->
+<!--                            <span class="img {display:block} center-block inline-flex" style="text-align: center;">-->
+<!--                                <svg width="40" height="40" class="mx-0.5 mt-1">-->
+<!--                                    <image class="inline" xlink:href="https://i.ibb.co/CWK3g2s/whatsapp.png" src="https://i.ibb.co/CWK3g2s/whatsapp.png" width="15" height="15"/>-->
+<!--                                </svg>-->
+<!--                            <a class="center text-green-600 text-sm" style="text-align: center;" href="https://api.whatsapp.com/send?phone=966553139979"> &nbsp;  إدارة المعهد </a>-->
+<!--                            </span>-->
+<!--                        </p>-->
+<!--                    </div>-->
+<!--                </div>-->
             </div>
         </div>
             <div class="container mx-auto grid p-6" v-if="user.trainee.has_outstanding_amount">
@@ -152,7 +152,14 @@
                     </div>
                 </div>
             </div>
-
+            <div class="bg-white rounded-lg p-10 flex gap-10">
+                <img src="/img/student.svg" alt="student" class="h-20">
+                <div>
+                    <h1 class="text-2xl font-heavy">{{ $t('words.welcome') }}!</h1>
+                    <p class="mt-2 text-gray-500">{{ user.email }}</p>
+                    <p class="mt-2 text-xs text-gray-500">{{ $t('words.last-login-at') }}: <span dir="ltr">{{ user.last_login_at_timezone }}</span></p>
+                </div>
+            </div>
             <div class="container mx-auto grid p-6" v-if="show_success_payment">
                 <div class="bg-white rounded-lg p-10 flex gap-10 border-1 border-emerald-500"
                      style="border-top: 20px solid rgb(32 161 2);background: #eff1ef;">
