@@ -50,63 +50,6 @@
             top: 0;
             left: 0;
         }
-        #customers {
-            border-collapse: collapse;
-            border-radius: 18px;
-            width: 100%;
-        }
-
-        #customers td, #customers th {
-            border: 2px solid white;
-            padding: 8px;
-        }
-
-        #customers tr:nth-child(even){background-color: #f2f2f2;}
-
-        #customers tr:hover {background-color: #ddd;}
-
-        #customers th {
-            padding-top: 12px;
-            padding-bottom: 12px;
-            text-align:right;
-            color: white;
-        }
-        @media only screen and (max-width: 600px) {
-            div{
-                padding: 20px;
-                border-radius: 5px;
-            }
-            img{
-                display: block;
-                margin-left: auto;
-                margin-right: auto;
-                width: 40%;
-            }
-            #customers {
-                border-collapse: collapse;
-                border-radius: 15px;
-                width: 30%;
-            }
-
-            #customers td, #customers th {
-                border: 2px solid white;
-                padding: 8px;
-                width: 30%;
-            }
-
-            #customers tr:nth-child(even){background-color: #f2f2f2;}
-
-            #customers tr:hover {background-color: #ddd;}
-
-            #customers th {
-                padding-top: 4px;
-                padding-bottom: 4px;
-                padding-right: 15px;
-                padding-left: 15px;
-                text-align:right;
-                color: white;
-            }
-        }
     </style>
 </head>
 
@@ -115,36 +58,27 @@
     <img id="page-cover" src="{{ public_path('/img/Certificate-new-bg.jpg') }}"/>
 
     <div class="text">
-{{--        <img class="page-logo" src="{{ public_path('/img/logo-lg.png') }}">--}}
+        <img class="page-logo" src="{{ public_path('/img/logo-lg.png') }}">
+
         <div class="row" style="margin-top: 2rem;">
-            <h1 style="margin-top:8rem;">حضور دورة تدريبية</h1>
+            <h1 style="margin-top:8rem;">سجل حضور دورة تطويرية</h1>
             <p style="margin-top:2.5rem;">بهذا نفيد أن المتدربة  "{{ $certificate->trainee->name }}"</p>
             <p style="margin-top:2.5rem;">وجنسيتها سعودية بموجب السجل المدني رقم "{{ $certificate->trainee->identity_number }}"</p>
-            <p style="margin-top:2.5rem;">قـــد أتمت حضور دورة ({{ $certificate->course->name_ar }}) </p>
-            <p style="margin-top:2.5rem;">حسب البيانات الموضحة أدناه</p>
-            <center>
-                <table id="customers">
-                    <tr style="background-color: #ec5b5b;">
-                        <th>مسمى الدورة</th>
-                        <th>نسبة الحضور</th>
-                    </tr>
-                    <tr>
-                        <td>{{ $certificate->course->name_ar }}</td>
-                        <td>100%</td>
-                    </tr>
-                </table>
-            </center>
-            <center>
-                <div class="col-7">
-                    <div class="col-4" style="text-align: right;">
-                        <p>الإدارة <img  id="page-stamp" src="{{ public_path('/img/signature.png') }}"></p>
-                        <p class="small-text">
-                            <b></b><br/>
-                            <b></b>
-                        </p>
-                    </div>
-                </div>
-            </center>
+            <p style="margin-top:2.5rem;">قـــد حضرت دورة ({{ $certificate->course->name_ar }}) </p>
+            <p style="margin-top:2.5rem;">نسبة الحضور: 100%</p>
+            <p style="margin-top:5rem;">والله الموفق،،،</p>
+            <div class="col-7">
+                <p style="margin-bottom:0;padding-bottom: 0"><b>ختم المنشأة التدريبية</b></p>
+                <img style="padding-top: 20px" id="page-stamp" src="{{ public_path('/img/certificate-stamp.png') }}">
+            </div>
+            <div class="col-4" style="text-align: right;">
+                <p>توقيع المديرة: <img  id="page-stamp" src="{{ public_path('/img/signature.png') }}"></p>
+                <p class="small-text">
+                    <b>تاريخ بداية البرنامج:    4 / 1 /2024 </b><br/>
+                    <b>تاريخ نهاية البرنامج:    3 / 2 /2024 </b>
+                </p>
+                <p class="small-text">ملاحظة: أي كشط او تعديل على الشهادة تعتبر لاغية</p>
+            </div>
         </div>
     </div>
 </div>
