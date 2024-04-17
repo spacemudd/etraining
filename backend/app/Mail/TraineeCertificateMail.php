@@ -4,6 +4,7 @@ namespace App\Mail;
 
 use App\Models\Back\TraineeCertificate;
 use App\Services\CertificatesService;
+use App\Services\CompanyMigrationHelper;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
