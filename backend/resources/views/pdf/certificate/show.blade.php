@@ -116,7 +116,6 @@
 
     <div class="text">
 {{--        <img class="page-logo" src="{{ public_path('/img/logo-lg.png') }}">--}}
-
         <div class="row" style="margin-top: 2rem;">
             <h1 style="margin-top:8rem;">حضور دورة تدريبية</h1>
             <p style="margin-top:2.5rem;">بهذا نفيد أن المتدربة  "{{ $certificate->trainee->name }}"</p>
@@ -144,6 +143,7 @@
                             <b></b>
                         </p>
                     </div>
+                </div>
             </center>
         </div>
     </div>
