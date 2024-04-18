@@ -840,7 +840,8 @@ export default {
             "name-aliases": "الأسماء الإضافية",
             "job-number": "الرقم الوظيفي",
             "download-all-files": "تحميل جميع الملفات",
-            "center": "المركز"
+            "center": "المركز",
+            "edit-date-period": "تعديل فترة الاستحقاق"
         }
     },
     "en": {
@@ -1628,7 +1629,8 @@ export default {
             "name-aliases": "Name aliases",
             "job-number": "Job number",
             "download-all-files": "Download all files",
-            "center": "Center"
+            "center": "Center",
+            "edit-date-period": "ُEdit Date Period"
         }
     }
 }

@@ -357,7 +357,7 @@
                     </div>
                 </div>
             </div>
-            <div class="mt-8 flex flex-col md:flex-row md:space-x-5 mt-8 mb-8">
+            <div class="mt-8 flex flex-col md:flex-row md:space-x-5 mt-8 mb-8" v-can="'edit-date-period'">
                 <div class="w-full md:w-8/12">
                     <jet-form-section @submitted="ChangeDatePeriod">
                         <template #form>

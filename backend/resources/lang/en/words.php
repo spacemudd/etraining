@@ -651,4 +651,5 @@ return [
     'job-number' => 'Job number',
     'download-all-files' => 'Download all files',
     'center' => 'Center',
+    'edit-date-period' => 'ُEdit Date Period',
 ];

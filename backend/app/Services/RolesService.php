@@ -65,6 +65,7 @@ class RolesService
         'restrict-user-companies-settings',
         'view-all-companies',
         'view-gosi',
+        'edit-date-period',
     ];
 
     public $instructorPermissions = [

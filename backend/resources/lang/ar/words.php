@@ -665,4 +665,5 @@ return [
     'job-number' => 'الرقم الوظيفي',
     'download-all-files' => 'تحميل جميع الملفات',
     'center' => 'المركز',
+    'edit-date-period' => 'تعديل فترة الاستحقاق',
 ];
