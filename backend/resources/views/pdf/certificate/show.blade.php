@@ -65,7 +65,6 @@
             <p style="margin-top:2.5rem;">بهذا نفيد أن المتدربة  "{{ $certificate->trainee->name }}"</p>
             <p style="margin-top:2.5rem;">وجنسيتها سعودية بموجب السجل المدني رقم "{{ $certificate->trainee->identity_number }}"</p>
             <p style="margin-top:2.5rem;">قـــد حضرت دورة ({{ $certificate->course->name_ar }}) </p>
-            <p style="margin-top:2.5rem;">نسبة الحضور: 100%</p>
             <p style="margin-top:5rem;">والله الموفق،،،</p>
             <div class="col-7">
                 <p style="margin-bottom:0;padding-bottom: 0"><b>ختم المنشأة التدريبية</b></p>
