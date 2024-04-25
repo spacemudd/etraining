@@ -51,8 +51,6 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
     public function createReportsBasedOnTraineedInvoiced(Carbon $from_date, Carbon $to_date)
     {
-
-
         $count = Company::with('invoices')
             ->whereHas('invoices', function ($query) use ($from_date) {
                 $query->whereBetween('to_date', ['2024-03-01', '2024-03-31']);
@@ -72,12 +70,10 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
              $this->info('No invoices for company: '.$name_ar);
          }
 
-         $reports = 1;
-
         Company::with('invoices')
             ->whereHas('invoices', function ($query) use ($from_date) {
                 $query->whereBetween('to_date', ['2024-03-01', '2024-03-31']);
-            })->chunk(20, function($companies) use ($from_date, $to_date, &$reports) {
+            })->chunk(20, function($companies) use ($from_date, $to_date) {
                 foreach ($companies as $company) {
 
                     $companies_to_execlude = [
@@ -112,23 +108,23 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                         ->first();
 
                     if ($lastReport) {
-                        if ($reports > 2) {
-                            continue;
-                        }
+                        //if ($reports > 2) {
+                        //    continue;
+                        //}
                         $this->info('New report from last report: '.$company->name_ar . ',' . $company->trainees()->count());
                         $this->makeNewReportFromLastReportBasedOnInvoices($company, $lastReport, '2024-04-01', '2024-04-30', '2024-03-01', '2024-03-31');
-                        ++$reports;
+                        //++$reports;
                     } else {
                         if (! $company->email) {
                             $this->info('No email for company. Skipping: '.$company->name_ar);
                             continue;
                         }
-                        if ($reports > 2) {
-                            continue;
-                        }
+                        //if ($reports > 2) {
+                        //    continue;
+                        //}
                         $this->info('No last report. Creating new report - '.$company->name_ar . ',' . $company->trainees()->count());
                         $this->makeNewReportBasedOnInvoices($company, '2024-04-01', '2024-04-30', '2024-03-01', '2024-03-31');
-                        ++$reports;
+                        //++$reports;
                     }
                 }
 
