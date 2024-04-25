@@ -115,8 +115,11 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                     if ($lastReport) {
                         $this->info('New report from last report: '.$company->name_ar . ',' . $company->trainees()->count());
                         $this->info('From date: '.$from_date->clone()->subMonth());
-                $this->info('To date: '.$from_date->clone()->subMonth()->endOfMonth()->endOfDay());
-                        //$this->makeNewReportFromLastReportBasedOnInvoices($company, $lastReport, $from_date, $to_date, $from_date->clone()->subMonth(), $from_date->clone()->subMonth()->endOfMonth()->endOfDay());
+                        $this->info('To date: '.$from_date->clone()->subMonth()->endOfMonth()->endOfDay());
+                        $this->info('1st: '.$from_date);
+                        $this->info('2nd: '.$to_date);
+                        //$this->makeNewReportFromLastReportBasedOnInvoices($company, $lastReport, $from_date,
+                        // $to_date, $from_date->clone()->subMonth(), $from_date->clone()->subMonth()->endOfMonth()->endOfDay());
                     } else {
                         if (! $company->email) {
                             $this->info('No email for company. Skipping: '.$company->name_ar);
@@ -124,7 +127,9 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                         }
                         $this->info('No last report. Creating new report - '.$company->name_ar . ',' . $company->trainees()->count());
                         $this->info('From date: '.$from_date->clone()->subMonth());
-                $this->info('To date: '.$from_date->clone()->subMonth()->endOfMonth()->endOfDay());
+                        $this->info('To date: '.$from_date->clone()->subMonth()->endOfMonth()->endOfDay());
+                        $this->info('1st: '.$from_date);
+                        $this->info('2nd: '.$to_date);
                         //$this->makeNewReportBasedOnInvoices($company, $from_date, $to_date, $from_date->clone()->subMonth(), $from_date->clone()->subMonth()->endOfMonth()->endOfDay());
                     }
                 }
