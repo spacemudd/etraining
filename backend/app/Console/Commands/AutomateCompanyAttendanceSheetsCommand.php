@@ -108,14 +108,14 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
                     if ($lastReport) {
                         $this->info('New report from last report: '.$company->name_ar . ',' . $company->trainees()->count());
-                        $this->makeNewReportFromLastReportBasedOnInvoices($company, $lastReport, $from_date, $to_date, $from_date->subMonth(), $from_date->subMonth()->endOfMonth()->endOfDay());
+                        $this->makeNewReportFromLastReportBasedOnInvoices($company, $lastReport, $from_date, $to_date, $from_date->clone()->subMonth(), $from_date->clone()->subMonth()->endOfMonth()->endOfDay());
                     } else {
                         if (! $company->email) {
                             $this->info('No email for company. Skipping: '.$company->name_ar);
                             continue;
                         }
                         $this->info('No last report. Creating new report - '.$company->name_ar . ',' . $company->trainees()->count());
-                        $this->makeNewReportBasedOnInvoices($company, $from_date, $to_date, $from_date->subMonth(), $from_date->subMonth()->endOfMonth()->endOfDay());
+                        $this->makeNewReportBasedOnInvoices($company, $from_date, $to_date, $from_date->clone()->subMonth(), $from_date->clone()->subMonth()->endOfMonth()->endOfDay());
                     }
                 }
             });
