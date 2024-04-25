@@ -44,7 +44,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
     public function handle()
     {
         $from_date = Carbon::parse('2024-04-01')->startOfDay();
-        $to_date = Carbon::parse('2024-04-30')->endOfDay()->setTimezone('Asia/Riyadh');
+        $to_date = Carbon::parse('2024-04-30');
         $this->createReportsBasedOnTraineedInvoiced($from_date, $to_date);
         return 1;
     }
@@ -55,20 +55,17 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
         $count = Company::with('invoices')
             ->whereHas('invoices', function ($query) use ($from_date) {
-                $this->info('From date: '.$from_date->clone()->subMonth());
-                $this->info('To date: '.$from_date->clone()->subMonth()->endOfMonth()->endOfDay()->setTimezone('Asia/Riyadh'));
-                $query->whereBetween('to_date', [$from_date->clone()->subMonth(), $from_date->clone()->subMonth()->endOfMonth()->endOfDay()->setTimezone('Asia/Riyadh')]);
+                $query->whereBetween('to_date', ['2024-03-01', '2024-03-31']);
             })->count();
         $this->info('Found companies with invoices: '.$count);
 
-        Company::with('invoices')->whereHas('invoices', function ($query) use ($from_date) {$query->whereBetween('to_date', ['2024-03-01', '2024-03-31']);})->count();
+        Company::with('invoices')->whereHas('invoices', function ($query) use ($from_date) {
+            $query->whereBetween('to_date', ['2024-03-01', '2024-03-31']);})->count();
 
         // Companies that don't have invoices in the past month, to skip.
          $companies_with_invoices = Company::with('invoices')
             ->whereHas('invoices', function ($query) use ($from_date) {
-                $this->info('From date: '.$from_date->clone()->subMonth());
-                $this->info('To date: '.$from_date->clone()->subMonth()->endOfMonth()->endOfDay()->setTimezone('Asia/Riyadh'));
-                $query->whereBetween('to_date',  [$from_date->clone()->subMonth(), $from_date->clone()->subMonth()->endOfMonth()->endOfDay()->setTimezone('Asia/Riyadh')]);
+                $query->whereBetween('to_date',  ['2024-03-01', '2024-03-31']);
             })->pluck('id');
          $companies_without_invoices = Company::whereNotIn('id', $companies_with_invoices)->pluck('name_ar');
          foreach ($companies_without_invoices as $name_ar) {
@@ -79,9 +76,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
         Company::with('invoices')
             ->whereHas('invoices', function ($query) use ($from_date) {
-                $this->info('From date: '.$from_date->clone()->subMonth());
-                $this->info('To date: '.$from_date->clone()->subMonth()->endOfMonth()->endOfDay()->setTimezone('Asia/Riyadh'));
-                $query->whereBetween('to_date', [$from_date->clone()->subMonth(), $from_date->clone()->subMonth()->endOfMonth()->endOfDay()->setTimezone('Asia/Riyadh')]);
+                $query->whereBetween('to_date', ['2024-03-01', '2024-03-31']);
             })->chunk(20, function($companies) use ($from_date, $to_date, &$reports) {
                 foreach ($companies as $company) {
 
@@ -121,7 +116,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                             continue;
                         }
                         $this->info('New report from last report: '.$company->name_ar . ',' . $company->trainees()->count());
-                        $this->makeNewReportFromLastReportBasedOnInvoices($company, $lastReport, $from_date, $to_date, $from_date->clone()->subMonth(), $from_date->clone()->subMonth()->endOfMonth()->setTimezone('Asia/Riyadh'));
+                        $this->makeNewReportFromLastReportBasedOnInvoices($company, $lastReport, '2024-04-01', '2024-04-30', '2024-03-01', '2024-03-31');
                         ++$reports;
                     } else {
                         if (! $company->email) {
@@ -132,7 +127,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                             continue;
                         }
                         $this->info('No last report. Creating new report - '.$company->name_ar . ',' . $company->trainees()->count());
-                        $this->makeNewReportBasedOnInvoices($company, $from_date, $to_date, $from_date->clone()->subMonth(), $from_date->clone()->subMonth()->endOfMonth()->setTimezone('Asia/Riyadh'));
+                        $this->makeNewReportBasedOnInvoices($company, '2024-04-01', '2024-04-30', '2024-03-01', '2024-03-31');
                         ++$reports;
                     }
                 }
