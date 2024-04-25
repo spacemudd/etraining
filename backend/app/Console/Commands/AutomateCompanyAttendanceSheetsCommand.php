@@ -75,6 +75,20 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
             })->chunk(20, function($companies) use ($from_date, $to_date) {
                 foreach ($companies as $company) {
 
+                    $companies_to_execlude = [
+                        '5829984b-1d85-427f-b3a1-ef0dbd6eb4c8',
+                        '8b169387-09f5-4cff-b443-41a14fd9c12e',
+                        'd31fcf66-1010-4d5f-83ff-10e92ca0f902',
+                        '3134cbb3-a1e5-41da-8f46-7eb8da78aad7',
+                        'da658306-41b2-4089-a8b2-ed540ef0dc7c',
+                        '9d6ad117-d2e5-4148-a8de-fc92fefffea7',
+                    ];
+
+                    if (in_array($company->id, $companies_to_execlude, true)) {
+                        $this->info('Excluded company: '.$company->name_ar);
+                        continue;
+                    }
+
                     // Checks
                     if ($company->trainees()->count() === 0) {
                         $this->info('No trainees. Skipping: '.$company->name_ar);
@@ -94,14 +108,14 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
                     if ($lastReport) {
                         $this->info('New report from last report: '.$company->name_ar . ',' . $company->trainees()->count());
-                        //$this->makeNewReportFromLastReportBasedOnInvoices($company, $lastReport, $from_date, $to_date, $from_date->subMonth(), $from_date->subMonth()->endOfMonth()->endOfDay());
+                        $this->makeNewReportFromLastReportBasedOnInvoices($company, $lastReport, $from_date, $to_date, $from_date->subMonth(), $from_date->subMonth()->endOfMonth()->endOfDay());
                     } else {
                         if (! $company->email) {
                             $this->info('No email for company. Skipping: '.$company->name_ar);
                             continue;
                         }
                         $this->info('No last report. Creating new report - '.$company->name_ar . ',' . $company->trainees()->count());
-                        //$this->makeNewReportBasedOnInvoices($company, $from_date, $to_date, $from_date->subMonth(), $from_date->subMonth()->endOfMonth()->endOfDay());
+                        $this->makeNewReportBasedOnInvoices($company, $from_date, $to_date, $from_date->subMonth(), $from_date->subMonth()->endOfMonth()->endOfDay());
                     }
                 }
             });
