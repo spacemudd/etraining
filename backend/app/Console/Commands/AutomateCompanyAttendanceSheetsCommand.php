@@ -53,14 +53,16 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
     {
         $count = Company::with('invoices')
             ->whereHas('invoices', function ($query) use ($from_date) {
-                $query->whereBetween('to_date', [$from_date->subMonth(), $from_date->subMonth()->endOfMonth()->endOfDay()]);
+                $query->whereBetween('to_date', [$from_date->clone()->subMonth(), $from_date->clone()->subMonth()->endOfMonth()->endOfDay()]);
             })->count();
         $this->info('Found companies with invoices: '.$count);
+
+        Company::with('invoices')->whereHas('invoices', function ($query) use ($from_date) {$query->whereBetween('to_date', ['2024-03-01', '2024-03-31']);})->count();
 
         // Companies that don't have invoices in the past month, to skip.
          $companies_with_invoices = Company::with('invoices')
             ->whereHas('invoices', function ($query) use ($from_date) {
-                $query->whereBetween('to_date',  [$from_date->subMonth(), $from_date->subMonth()->endOfMonth()->endOfDay()]);
+                $query->whereBetween('to_date',  [$from_date->clone()->subMonth(), $from_date->clone()->subMonth()->endOfMonth()->endOfDay()]);
             })->pluck('id');
          $companies_without_invoices = Company::whereNotIn('id', $companies_with_invoices)->pluck('name_ar');
          foreach ($companies_without_invoices as $name_ar) {
@@ -69,7 +71,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
         Company::with('invoices')
             ->whereHas('invoices', function ($query) use ($from_date) {
-                $query->whereBetween('to_date', [$from_date->subMonth(), $from_date->subMonth()->endOfMonth()->endOfDay()]);
+                $query->whereBetween('to_date', [$from_date->clone()->subMonth(), $from_date->clone()->subMonth()->endOfMonth()->endOfDay()]);
             })->chunk(20, function($companies) use ($from_date, $to_date) {
                 foreach ($companies as $company) {
 
