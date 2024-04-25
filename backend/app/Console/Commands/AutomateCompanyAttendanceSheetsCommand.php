@@ -43,7 +43,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
      */
     public function handle()
     {
-        $from_date = Carbon::parse('2024-02-01')->startOfDay();
+        $from_date = Carbon::parse('2024-04-01')->startOfDay();
         $to_date = $from_date->endOfMonth()->endOfDay();
         $this->createReportsBasedOnTraineedInvoiced($from_date, $to_date);
         return 1;
@@ -91,13 +91,15 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                         ->first();
 
                     if ($lastReport) {
-                        $this->makeNewReportFromLastReportBasedOnInvoices($company, $lastReport, $from_date, $to_date, $from_date->subMonth(), $from_date->subMonth()->endOfMonth()->endOfDay());
+                        $this->info('New report from last report: '.$company->name_ar . ',' . $company->trainees()->count());
+                        //$this->makeNewReportFromLastReportBasedOnInvoices($company, $lastReport, $from_date, $to_date, $from_date->subMonth(), $from_date->subMonth()->endOfMonth()->endOfDay());
                     } else {
                         if (! $company->email) {
                             $this->info('No email for company. Skipping: '.$company->name_ar);
                             continue;
                         }
-                        $this->makeNewReportBasedOnInvoices($company, $from_date, $to_date, $from_date->subMonth(), $from_date->subMonth()->endOfMonth()->endOfDay());
+                        $this->info('No last report. Creating new report - '.$company->name_ar . ',' . $company->trainees()->count());
+                        //$this->makeNewReportBasedOnInvoices($company, $from_date, $to_date, $from_date->subMonth(), $from_date->subMonth()->endOfMonth()->endOfDay());
                     }
                 }
             });
@@ -105,7 +107,6 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
     public function makeNewReportFromLastReportBasedOnInvoices($company, $lastReport, $dateFrom, $dateTo, $invoicesDateFrom, $invoicesDateTo)
     {
-        $this->info('New report from last report: '.$company->name_ar . ',' . $company->trainees()->count());
         $clone = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
         $clone->date_from = Carbon::parse($dateFrom)->setTimezone('Asia/Riyadh')->startOfDay();
         $clone->date_to = Carbon::parse($dateTo)->setTimezone('Asia/Riyadh')->endOfDay();
@@ -154,7 +155,6 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
     public function makeNewReportBasedOnInvoices($company, $dateFrom, $dateTo, $invoicesDateFrom, $invoicesDateTo)
     {
-        $this->info('No last report. Creating new report - '.$company->name_ar . ',' . $company->trainees()->count());
         $report = app()->make(CompanyAttendanceReportService::class)->newReport($company->id);
         $report->date_from = Carbon::parse($dateFrom)->setTimezone('Asia/Riyadh')->startOfDay();
         $report->date_to = Carbon::parse($dateTo)->setTimezone('Asia/Riyadh')->endOfDay();
