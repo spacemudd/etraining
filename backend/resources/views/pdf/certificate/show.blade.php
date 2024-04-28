@@ -73,8 +73,8 @@
             <div class="col-4" style="text-align: right;">
                 <p>توقيع المديرة: <img  id="page-stamp" src="{{ public_path('/img/signature.png') }}"></p>
                 <p class="small-text">
-                    <b>تاريخ بداية البرنامج:    4 / 1 /2024 </b><br/>
-                    <b>تاريخ نهاية البرنامج:    3 / 2 /2024 </b>
+                    <b>حررت بتاريخ:    09 / 10  /1445  هـ </b><br/>
+                    <b>الموافق:            18 /  04 /2024 م</b>
                 </p>
                 <p class="small-text">ملاحظة: أي كشط او تعديل على الشهادة تعتبر لاغية</p>
             </div>
