@@ -13,6 +13,8 @@
                     <div>
                         <div v-if="message.from" class="text-gray-500 text-xs font-bold">{{ $t('words.from') }}:</div>
                         <div v-if="message.from">{{ message.from.name }}</div>
+                        <div v-if="message.to" class="text-gray-500 text-xs font-bold">{{ $t('words.to') }}:</div>
+                        <div v-if="message.to">{{ message.to.name }}</div>
                     </div>
                     <div>
                         <p class="text-xs" dir="ltr">{{ message.created_at | timestampDate }}</p>
