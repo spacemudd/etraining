@@ -49,9 +49,9 @@ tfoot { display:table-footer-group }
             </div>
             <div class="col-2" style="text-align:right;">
                 @if ($report->falls_under_ptc_net)
-                    <img src="{{ public_path('/img/logo.png')}}" alt="logo" width="200"/>
+                    <!-- <img src="{{ public_path('/img/logo.png')}}" alt="logo" width="200"/> -->
                 @else
-                    <img src="{{ public_path('/img/ptc_invoice_logo.png')}}" alt="logo" width="200"/>
+                    <!-- <img src="{{ public_path('/img/ptc_invoice_logo.png')}}" alt="logo" width="200"/> -->
                 @endif
             </div>
         </div>

@@ -11,9 +11,9 @@
         },
         mounted() {
             if (window.location.href.includes('ptc-ksa.net')) {
-                this.link = '/img/logo.png';
+                // this.link = '/img/logo.png';
             } else {
-                this.link = '/img/logo-lg.png';
+                // this.link = '/img/logo-lg.png';
             }
         },
         methods: {

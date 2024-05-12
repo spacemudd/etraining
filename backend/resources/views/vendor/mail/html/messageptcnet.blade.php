@@ -3,7 +3,7 @@
 @slot('header')
 @component('mail::header', ['url' => 'https://app.ptc-ksa.net'])
 <a href="https://app.ptc-ksa.net" style="display: inline-block;">
-    <img src="{{ asset('/img/logo.png') }}" style="width:150px;" alt="PTC.NET Logo">
+    <!-- <img src="{{ asset('/img/logo.png') }}" style="width:150px;" alt="PTC.NET Logo"> -->
 </a>
 @endcomponent
 @endslot
