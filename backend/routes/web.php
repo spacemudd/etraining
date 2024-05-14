@@ -152,7 +152,7 @@ Route::get('deleted-invoices-x', function() {
             'from_date' => $invoice->from_date,
             'to_date' => $invoice->to_date,
             'deleted_at' => $invoice->deleted_at,
-            'reason' => ''
+            'link' => route('back.invoices.show', $invoice->id),
         ];
     }
 
