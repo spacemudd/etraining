@@ -134,6 +134,30 @@ Route::get('unpaid-invoices-x', function() {
 
     return $invoicesData;
 });
+Route::get('deleted-invoices-x', function() {
+    set_time_limit(1000);
+    $data = [
+        'from_date' => '2024-01-01',
+    ];
+    $invoices = Invoice::onlyTrashed()->where($data)->get();
+
+    $invoicesData = [];
+
+    foreach ($invoices as $invoice) {
+        $invoicesData[] = [
+            'trainee' => optional($invoice->trainee)->name,
+            'company' => optional($invoice->company)->name_ar,
+            'number' => $invoice->number,
+            'grand_total' => $invoice->grand_total,
+            'from_date' => $invoice->from_date,
+            'to_date' => $invoice->to_date,
+            'deleted_at' => $invoice->deleted_at,
+            'reason' => ''
+        ];
+    }
+
+    return $invoicesData;
+});
 Route::get('last-logged-at', function() {
     set_time_limit(1000);
     $users = User::all();
