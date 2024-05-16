@@ -14,12 +14,13 @@ use App\Models\User;
 use App\Notifications\DeleteCompanyNotification;
 use App\Notifications\NewCompanyNotification;
 use App\Services\CompaniesService;
-use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Notification;
 use Inertia\Inertia;
+use Excel;
+
 
 class CompaniesController extends Controller
 {

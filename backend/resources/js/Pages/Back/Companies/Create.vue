@@ -8,7 +8,6 @@
                     {title: 'new'},
                 ]"
             ></breadcrumb-container>
-
             <div class="mt-4">
                 <jet-form-section @submitted="createCompany">
                     <template #title>
@@ -83,6 +82,7 @@
                             {{ $t('words.save') }}
                         </jet-button>
                     </template>
+                    
                 </jet-form-section>
             </div>
         </div>

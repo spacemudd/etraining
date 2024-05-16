@@ -666,4 +666,11 @@ return [
     'download-all-files' => 'تحميل جميع الملفات',
     'center' => 'المركز',
     'edit-date-period' => 'تعديل فترة الاستحقاق',
+    'trainees-without-invoice' => 'متدربات لم تتم فوترتهم حسب الشهر',  
+    'select-month' => 'اختر الشهر',
+    'current-month' => 'الشهر الحالي',
+
+    
+
+  
 ];

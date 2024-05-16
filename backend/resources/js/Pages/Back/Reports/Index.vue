@@ -36,6 +36,19 @@
                     {{ $t('words.attendance-sheet-for-companies-report') }}
                 </inertia-link>
 
+
+                <inertia-link :href="route('back.reports.trainees-witout-invoices.index')"
+                              class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
+                    {{ $t('words.trainees-without-invoice') }}
+                </inertia-link>
+
+
+
+
+
+                
+                
+
             </div>
 
         </div>
