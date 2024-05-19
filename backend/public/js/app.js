@@ -8304,21 +8304,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     generateReport: function generateReport() {
-      var _this = this;
-
-      this.form.processing = true;
-      axios.post(route("back.reports.trainees-witout-invoices.export"), this.form).then(function (response) {
-        // this.job_tracker = response.data;
-        _this.report_status = "processing";
-        _this.form.processing = true; // let vm = this;
-        // setTimeout(function () {
-        //   vm.checkJobTracker();
-        // }, 2000);
-      })["catch"](function (error) {
-        // this.job_tracker = null;
-        _this.report_status = "new";
-        _this.form.processing = false;
-      });
+      window.location.href = route("back.reports.trainees-witout-invoices.export", this.form);
     }
   }
 });

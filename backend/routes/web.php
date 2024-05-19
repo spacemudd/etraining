@@ -15,6 +15,10 @@ use App\Models\User;
 use App\Services\GosiService;
 use Illuminate\Mail\Markdown;
 
+use App\Models\Back\TestExportController;
+
+
+
 Route::get('preview', function () {
  $markdown = new Markdown(view(), config('mail.markdown'));
  return $markdown->render("emails.resignations", [
@@ -684,7 +688,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
             Route::get('trainees-witout-invoices', [\App\Http\Controllers\Back\ReportsController::class, 'formTraineesWithoutInvoicesReport'])->name('reports.trainees-witout-invoices.index');
             //trainees without invoices export
-            Route::post('trainees-witout-invoices/export', [\App\Http\Controllers\Back\ReportsController::class, 'export'])->name('reports.trainees-witout-invoices.export');
+            Route::get('trainees-witout-invoices/export', [\App\Http\Controllers\Back\ReportsController::class, 'export'])->name('reports.trainees-witout-invoices.export');
 
 
 
@@ -796,3 +800,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
 
 // Some routes for nowyer
 Route::get('sm3', function() { return redirect()->to('https://linktr.ee/ptcksa'); }); // used for events, linktree account registered by billing@ptc-ksa.net
+
+
+
+

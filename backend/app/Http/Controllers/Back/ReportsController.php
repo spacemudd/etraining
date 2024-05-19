@@ -19,9 +19,11 @@ use App\Models\Back\Trainee;
 use App\Models\Back\Invoice;
 use Illuminate\Support\Facades\Log;
 use App\Models\Back\Audit;
-use Excel;
+
 use App\Models\User;
 use App\Exports\TraineesWithoutInvoicesExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 
 
@@ -130,8 +132,8 @@ class ReportsController extends Controller
             'auditable_type' => User::class,
             'new_values' => [],
         ]);
-        $response=Excel::download(new TraineesWithoutInvoicesExport($data),now()->format('Y-m-d').'-trainees.xlsx');
-        $filePath = $response->getFile()->getPathname();
+        
+        return Excel::download(new TraineesWithoutInvoicesExport($data), now()->format('Y-m-d').'-traineees-without-invoices.xlsx');
        
     }
 

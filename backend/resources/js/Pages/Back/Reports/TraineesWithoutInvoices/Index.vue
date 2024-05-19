@@ -116,22 +116,7 @@ export default {
   },
   methods: {
     generateReport() {
-      this.form.processing = true;
-         axios.post(route("back.reports.trainees-witout-invoices.export"), this.form)        
-        .then((response) => {
-          // this.job_tracker = response.data;
-          this.report_status = "processing";
-          this.form.processing = true;
-          // let vm = this;
-          // setTimeout(function () {
-          //   vm.checkJobTracker();
-          // }, 2000);
-        })
-        .catch((error) => {
-          // this.job_tracker = null;
-          this.report_status = "new";
-          this.form.processing = false;
-        });
+       window.location.href = route("back.reports.trainees-witout-invoices.export", this.form);
     },
    
   },
