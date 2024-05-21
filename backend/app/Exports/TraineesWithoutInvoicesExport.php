@@ -15,8 +15,9 @@ class TraineesWithoutInvoicesExport implements FromCollection, WithHeadings, Wit
     public $data;
 
 
-    function __construct($data) {
-       $this->data=$data;
+    function __construct($data)
+    {
+        $this->data = $data;
     }
 
     public function title(): string
@@ -30,7 +31,6 @@ class TraineesWithoutInvoicesExport implements FromCollection, WithHeadings, Wit
         return [
             'الاسم',
             'اسم الشركة',
-            'اسم الجروب',
             'الايميل',
             'رقم الهوية',
             'رقم الموبايل',
@@ -42,30 +42,28 @@ class TraineesWithoutInvoicesExport implements FromCollection, WithHeadings, Wit
     public function map($trainee): array
     {
         return [
-              $trainee->name,
-              optional($trainee->company)->name_ar,
-              optional($trainee->trainee_group)->name,
-              $trainee->email,
-              $trainee->identity_number,
-              $trainee->phone,
-              $trainee->created_at,
-              $trainee->updated_at
+            $trainee['name'],
+            optional($trainee['company'])['name_ar'],
+            $trainee['email'],
+            $trainee['identity_number'],
+            $trainee['phone'],
+            $trainee['created_at'],
+            $trainee['updated_at'],
         ];
     }
 
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     public function collection()
     {
-        $startDate=$this->data['date_from'];
-        $endDate=$this->data['date_to'];
+        $startDate = $this->data['date_from'];
+        $endDate = $this->data['date_to'];
 
-        $traineesWithoutInvoices= Trainee::WhereDoesntHave('invoices', function ($query) use ($startDate, $endDate) {
+        $traineesWithoutInvoices= Trainee::whereDoesntHave('invoices', function ($query) use ($startDate, $endDate) {
             $query->whereBetween('from_date', [$startDate, $endDate]);
-        })->get();
+        })->toBase();
 
-         return $traineesWithoutInvoices;
-        // dd($traineesWithoutInvoices);
+        return $traineesWithoutInvoices;
     }
 }
