@@ -63,7 +63,7 @@ class TraineesWithoutInvoicesExport implements FromArray, WithHeadings, WithMapp
 
         $traineesWithoutInvoices = Trainee::whereDoesntHave('invoices', function ($query) use ($startDate, $endDate) {
             $query->whereBetween('from_date', [$startDate, $endDate]);
-        })->toBase();
+        })->toBase()->get();
 
         return (array) $traineesWithoutInvoices;
     }
