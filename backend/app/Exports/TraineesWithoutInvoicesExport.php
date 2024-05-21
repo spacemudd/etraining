@@ -4,13 +4,14 @@ namespace App\Exports;
 
 use App\Models\Back\Trainee;
 use App\Models\Back\Invoice;
+use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithTitle;
 
-class TraineesWithoutInvoicesExport implements FromCollection, WithHeadings, WithMapping  ,WithTitle,ShouldAutoSize
+class TraineesWithoutInvoicesExport implements FromArray, WithHeadings, WithMapping  ,WithTitle,ShouldAutoSize
 {
     public $data;
 
@@ -55,15 +56,15 @@ class TraineesWithoutInvoicesExport implements FromCollection, WithHeadings, Wit
     /**
      * @return \Illuminate\Support\Collection
      */
-    public function collection()
+    public function array(): array
     {
         $startDate = $this->data['date_from'];
         $endDate = $this->data['date_to'];
 
-        $traineesWithoutInvoices= Trainee::whereDoesntHave('invoices', function ($query) use ($startDate, $endDate) {
+        $traineesWithoutInvoices = Trainee::whereDoesntHave('invoices', function ($query) use ($startDate, $endDate) {
             $query->whereBetween('from_date', [$startDate, $endDate]);
         })->toBase();
 
-        return $traineesWithoutInvoices;
+        return (array) $traineesWithoutInvoices;
     }
 }
