@@ -63,6 +63,7 @@ class TraineesWithoutInvoicesExport implements FromCollection, WithHeadings, Wit
 
         return Trainee::whereDoesntHave('invoices', function ($query) use ($startDate, $endDate) {
             $query->whereBetween('from_date', [$startDate, $endDate]);
-        })->get();
+        })->whereNotNull('company_id')
+            ->get();
     }
 }
