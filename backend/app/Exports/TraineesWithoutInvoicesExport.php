@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithTitle;
 
-class TraineesWithoutInvoicesExport implements FromArray, WithHeadings, WithMapping  ,WithTitle,ShouldAutoSize
+class TraineesWithoutInvoicesExport implements FromCollection, WithHeadings, WithMapping  ,WithTitle,ShouldAutoSize
 {
     public $data;
 
@@ -43,28 +43,26 @@ class TraineesWithoutInvoicesExport implements FromArray, WithHeadings, WithMapp
     public function map($trainee): array
     {
         return [
-            $trainee['name'],
-            optional($trainee['company'])['name_ar'],
-            $trainee['email'],
-            $trainee['identity_number'],
-            $trainee['phone'],
-            $trainee['created_at'],
-            $trainee['updated_at'],
+            $trainee->name,
+            optional($trainee->company)->name_ar,
+            $trainee->email,
+            $trainee->identity_number,
+            $trainee->phone,
+            $trainee->created_at,
+            $trainee->updated_at,
         ];
     }
 
     /**
      * @return \Illuminate\Support\Collection
      */
-    public function array(): array
+    public function collection()
     {
         $startDate = $this->data['date_from'];
         $endDate = $this->data['date_to'];
 
-        $traineesWithoutInvoices = Trainee::whereDoesntHave('invoices', function ($query) use ($startDate, $endDate) {
+        return Trainee::whereDoesntHave('invoices', function ($query) use ($startDate, $endDate) {
             $query->whereBetween('from_date', [$startDate, $endDate]);
-        })->toBase()->get();
-
-        return (array) $traineesWithoutInvoices;
+        })->get();
     }
 }
