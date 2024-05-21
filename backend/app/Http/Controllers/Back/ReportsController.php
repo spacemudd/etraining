@@ -15,6 +15,20 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
+use App\Models\Back\Trainee;
+use App\Models\Back\Invoice;
+use Illuminate\Support\Facades\Log;
+use App\Models\Back\Audit;
+
+use App\Models\User;
+use App\Exports\TraineesWithoutInvoicesExport;
+use Maatwebsite\Excel\Facades\Excel;
+
+
+
+
+
+
 class ReportsController extends Controller
 {
     public function index()
@@ -75,7 +89,6 @@ class ReportsController extends Controller
             'date_to' => 'required',
         ]);
 
-
         $tracker = new JobTracker();
         $tracker->user_id = auth()->user()->id;
         $tracker->metadata = $request->except('_token');
@@ -93,8 +106,36 @@ class ReportsController extends Controller
 
     public function formContractsReport()
     {
+        
         $this->authorize('view-backoffice-reports');
         return Inertia::render('Back/Reports/Contracts/Index');
     }
+
+
+    public function formTraineesWithoutInvoicesReport()
+    { 
+        $this->authorize('view-backoffice-reports');
+        return Inertia::render('Back/Reports/TraineesWithoutInvoices/Index');
+    }
+    public function export(Request $request)
+    {
+        $request->validate([
+            'date_from' => 'required',
+            'date_to' => 'required',
+        ]);
+        $data=$request->all();
+        
+
+        Audit::create([
+            'event' => 'traineesWithoutInvoices.export.excel',
+            'auditable_id' => auth()->user()->id,
+            'auditable_type' => User::class,
+            'new_values' => [],
+        ]);
+        
+        return Excel::download(new TraineesWithoutInvoicesExport($data), now()->format('Y-m-d').'-traineees-without-invoices.xlsx');
+       
+    }
+
 
 }

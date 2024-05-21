@@ -841,7 +841,10 @@ export default {
             "job-number": "الرقم الوظيفي",
             "download-all-files": "تحميل جميع الملفات",
             "center": "المركز",
-            "edit-date-period": "تعديل فترة الاستحقاق"
+            "edit-date-period": "تعديل فترة الاستحقاق",
+            "trainees-without-invoice": "متدربات لم تتم فوترتهم حسب الشهر",
+            "select-month": "اختر الشهر",
+            "current-month": "الشهر الحالي"
         }
     },
     "en": {
@@ -1630,7 +1633,10 @@ export default {
             "job-number": "Job number",
             "download-all-files": "Download all files",
             "center": "Center",
-            "edit-date-period": "ُEdit Date Period"
+            "edit-date-period": "ُEdit Date Period",
+            "trainees-without-invoice": "Trainees without invoices for the specified month",
+            "select-month": "Select Month",
+            "current-month": "Current Month"
         }
     }
 }
