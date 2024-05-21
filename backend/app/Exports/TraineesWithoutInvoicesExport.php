@@ -44,7 +44,7 @@ class TraineesWithoutInvoicesExport implements FromCollection, WithHeadings, Wit
         return [
               $trainee->name,
               optional($trainee->company)->name_ar,
-              $trainee->trainee_group->name,
+              optional($trainee->trainee_group)->name,
               $trainee->email,
               $trainee->identity_number,
               $trainee->phone,
