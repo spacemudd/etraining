@@ -13,7 +13,7 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 class TraineesWithoutInvoicesExport implements FromCollection, WithHeadings, WithMapping  ,WithTitle,ShouldAutoSize
 {
     public $data;
- 
+
 
     function __construct($data) {
        $this->data=$data;
@@ -43,7 +43,7 @@ class TraineesWithoutInvoicesExport implements FromCollection, WithHeadings, Wit
     {
         return [
               $trainee->name,
-              $trainee->company->name_ar,
+              optional($trainee->company)->name_ar,
               $trainee->trainee_group->name,
               $trainee->email,
               $trainee->identity_number,
@@ -64,7 +64,7 @@ class TraineesWithoutInvoicesExport implements FromCollection, WithHeadings, Wit
         $traineesWithoutInvoices= Trainee::WhereDoesntHave('invoices', function ($query) use ($startDate, $endDate) {
             $query->whereBetween('from_date', [$startDate, $endDate]);
         })->get();
-         
+
          return $traineesWithoutInvoices;
         // dd($traineesWithoutInvoices);
     }
