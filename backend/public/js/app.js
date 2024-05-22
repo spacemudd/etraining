@@ -31567,7 +31567,7 @@ var render = function render() {
       domProps: {
         value: company.id
       }
-    }, [_vm._v("\n                                  " + _vm._s(company.name_ar) + "\n                              ")]);
+    }, [_vm._v("\n                                  " + _vm._s(company.code) + " - " + _vm._s(company.name_en) + "\n                              ")]);
   }), 0), _vm._v(" "), _c("div", {
     staticClass: "pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
   }, [_c("svg", {

@@ -35,7 +35,7 @@
                                     name="company_id"
                                     id="company_id">
                                 <option v-for="company in companies" :key="company.id" :value="company.id">
-                                    {{ company.name_ar }}
+                                    {{ company.code }} - {{ company.name_en }}
                                 </option>
                             </select>
                             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
@@ -76,7 +76,6 @@
               />
             </div>
           </div>
-
           <button
             class="btn btn-gray mt-5"
             type="submit"
