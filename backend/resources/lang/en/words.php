@@ -653,6 +653,7 @@ return [
     'center' => 'Center',
     'edit-date-period' => 'ُEdit Date Period',
     'trainees-without-invoice' => 'Trainees without invoices for the specified month',
+    'trainees-invoices-for-specefic-period' => 'Trainees invoices for a specefic period',
     'select-month' => 'Select Month',
     'current-month' => 'Current Month',
 

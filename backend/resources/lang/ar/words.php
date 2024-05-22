@@ -667,6 +667,7 @@ return [
     'center' => 'المركز',
     'edit-date-period' => 'تعديل فترة الاستحقاق',
     'trainees-without-invoice' => 'متدربات لم تتم فوترتهم حسب الشهر',  
+    'trainees-invoices-for-specefic-period' => 'فواتير المتدربات خلال فترة زمنية',
     'select-month' => 'اختر الشهر',
     'current-month' => 'الشهر الحالي',
 

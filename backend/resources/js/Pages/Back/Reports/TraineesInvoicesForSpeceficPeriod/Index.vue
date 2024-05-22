@@ -1,0 +1,145 @@
+<!--
+  - Copyright (c) 2020 - Clarastars, LLC  - All Rights Reserved.
+  -
+  - Unauthorized copying of this file via any medium is strictly prohibited.
+  - This file is a proprietary of Clarastars LLC and is confidential / educational purpose only.
+  -
+  - https://clarastars.com - info@clarastars.com
+  - @author Shafiq al-Shaar <shafiqalshaar@gmail.com>
+  -->
+
+<template>
+  <app-layout>
+    <div class="container px-6 mx-auto grid pt-6">
+      <breadcrumb-container
+        :crumbs="[
+          { title: 'dashboard', link: route('dashboard') },
+          { title: 'reports', link: route('back.reports.index') },
+          {
+            title: 'trainees-invoices-for-specefic-period',
+            link: route('back.reports.contracts.index'),
+          },
+        ]"
+      ></breadcrumb-container>
+
+     
+
+      <template v-if="report_status === 'new'">
+        <form @submit.prevent="generateReport">
+
+              <div class="col-span-12 sm:col-span-6 mt-5">
+                        <jet-label class="mb-2" for="course_id" :value="$t('words.company')" />
+                        <div class="relative">
+                            <select class="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                    v-model="form.company_id"
+                                    name="company_id"
+                                    id="company_id">
+                                <option v-for="company in companies" :key="company.id" :value="company.id">
+                                    {{ company.name_ar }}
+                                </option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+
+          
+          <div class="grid grid-cols-12 gap-6">
+            <div class="col-span-12 sm:col-span-2 mt-5">
+              <jet-label
+                class="mb-2"
+                for="date_from"
+                :value="$t('words.date-from')"
+              />  
+              <input
+                name="date_from"
+                type="date"
+                v-model="form.date_from"
+                class="form-input rounded-md shadow-sm w-full"
+                required
+              />
+            </div>
+
+            <div class="col-span-12 sm:col-span-2 mt-5">
+              <jet-label
+                class="mb-2"
+                for="date_to"
+                :value="$t('words.date-to')"
+              />
+              <input
+                name="date_to"
+                type="date"
+                v-model="form.date_to"
+                class="form-input rounded-md shadow-sm w-full"
+                required
+              />
+            </div>
+          </div>
+
+          <button
+            class="btn btn-gray mt-5"
+            type="submit"
+            :disabled="form.processing"
+          >
+            {{ $t("words.export") }}
+          </button>
+        </form>
+      </template>
+    </div>
+  </app-layout>
+</template>
+
+<script>
+import JetLabel from "@/Jetstream/Label";
+import AppLayout from "@/Layouts/AppLayout";
+import IconNavigate from "vue-ionicons/dist/ios-arrow-dropright";
+import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
+import BtnLoadingIndicator from "../../../../Components/BtnLoadingIndicator";
+import { months } from "moment";
+
+export default {
+
+     props: [
+            'companies',
+        ],
+  
+  mounted() {
+  },
+
+  metaInfo() {
+    return {
+      title: this.$t("words.trainees-without-invoice"),
+    };
+  },
+  components: {
+    IconNavigate,
+    AppLayout,
+    JetLabel,
+    BreadcrumbContainer,
+    BtnLoadingIndicator,
+  },
+  computed: {
+    token() {
+      return document.head.querySelector('meta[name="csrf-token"]').content;
+    },
+  },
+  data() {
+    return {
+      report_status: "new",
+      job_tracker: null,
+      form: {
+        processing: false,
+        date_from: new Date().toISOString().substring(0, 10),
+        date_to: new Date().toISOString().substring(0, 10),
+      },
+    };
+  },
+  methods: {
+    generateReport() {
+       window.location.href = route("back.reports.trainees-invoices-for-specefic-period.export", this.form);
+    },
+   
+  },
+};
+</script>

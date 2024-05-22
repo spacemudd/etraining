@@ -685,10 +685,16 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
 
             Route::get('contracts', [\App\Http\Controllers\Back\ReportsController::class, 'formContractsReport'])->name('reports.contracts.index');
-
+             
+            
             Route::get('trainees-witout-invoices', [\App\Http\Controllers\Back\ReportsController::class, 'formTraineesWithoutInvoicesReport'])->name('reports.trainees-witout-invoices.index');
             //trainees without invoices export
             Route::get('trainees-witout-invoices/export', [\App\Http\Controllers\Back\ReportsController::class, 'export'])->name('reports.trainees-witout-invoices.export');
+
+            //trainees invoices for specefic period
+            Route::get('trainees-invoices-for-specefic-period', [\App\Http\Controllers\Back\ReportsController::class, 'formInvoicesForSpeceficPeriodReport'])->name('reports.trainees-invoices-for-specefic-period.index');
+            Route::get('trainees-invoices-for-specefic-period/export', [\App\Http\Controllers\Back\ReportsController::class, 'traineesInvoicesForSpeceficPeriodExport'])->name('reports.trainees-invoices-for-specefic-period.export');
+
 
 
 

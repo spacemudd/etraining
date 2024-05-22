@@ -8250,6 +8250,68 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Back/Reports/TraineesInvoicesForSpeceficPeriod/Index.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Pages/Back/Reports/TraineesInvoicesForSpeceficPeriod/Index.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Jetstream_Label__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Jetstream/Label */ "./resources/js/Jetstream/Label.vue");
+/* harmony import */ var _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Layouts/AppLayout */ "./resources/js/Layouts/AppLayout.vue");
+/* harmony import */ var vue_ionicons_dist_ios_arrow_dropright__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-ionicons/dist/ios-arrow-dropright */ "./node_modules/vue-ionicons/dist/ios-arrow-dropright.vue");
+/* harmony import */ var _Components_BreadcrumbContainer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Components/BreadcrumbContainer */ "./resources/js/Components/BreadcrumbContainer.vue");
+/* harmony import */ var _Components_BtnLoadingIndicator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../Components/BtnLoadingIndicator */ "./resources/js/Components/BtnLoadingIndicator.vue");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_5__);
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['companies'],
+  mounted: function mounted() {},
+  metaInfo: function metaInfo() {
+    return {
+      title: this.$t("words.trainees-without-invoice")
+    };
+  },
+  components: {
+    IconNavigate: vue_ionicons_dist_ios_arrow_dropright__WEBPACK_IMPORTED_MODULE_2__["default"],
+    AppLayout: _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_1__["default"],
+    JetLabel: _Jetstream_Label__WEBPACK_IMPORTED_MODULE_0__["default"],
+    BreadcrumbContainer: _Components_BreadcrumbContainer__WEBPACK_IMPORTED_MODULE_3__["default"],
+    BtnLoadingIndicator: _Components_BtnLoadingIndicator__WEBPACK_IMPORTED_MODULE_4__["default"]
+  },
+  computed: {
+    token: function token() {
+      return document.head.querySelector('meta[name="csrf-token"]').content;
+    }
+  },
+  data: function data() {
+    return {
+      report_status: "new",
+      job_tracker: null,
+      form: {
+        processing: false,
+        date_from: new Date().toISOString().substring(0, 10),
+        date_to: new Date().toISOString().substring(0, 10)
+      }
+    };
+  },
+  methods: {
+    generateReport: function generateReport() {
+      window.location.href = route("back.reports.trainees-invoices-for-specefic-period.export", this.form);
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Back/Reports/TraineesWithoutInvoices/Index.vue?vue&type=script&lang=js&":
 /*!************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Pages/Back/Reports/TraineesWithoutInvoices/Index.vue?vue&type=script&lang=js& ***!
@@ -31417,9 +31479,178 @@ var render = function render() {
   }, [_vm._v("\n                " + _vm._s(_vm.$t("words.attendance-sheet-for-companies-report")) + "\n            ")]), _vm._v(" "), _c("inertia-link", {
     staticClass: "col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center",
     attrs: {
-      href: _vm.route("back.reports.trainees-witout-invoices.index")
+      href: _vm.route("back.reports.trainees-invoices-for-specefic-period.index")
     }
-  }, [_vm._v("\n                " + _vm._s(_vm.$t("words.trainees-without-invoice")) + "\n            ")])], 1)], 1)]);
+  }, [_vm._v("\n                " + _vm._s(_vm.$t("words.trainees-invoices-for-specefic-period")) + "\n            ")])], 1)], 1)]);
+};
+
+var staticRenderFns = [];
+render._withStripped = true;
+
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Back/Reports/TraineesInvoicesForSpeceficPeriod/Index.vue?vue&type=template&id=4e5a7a83&":
+/*!********************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Pages/Back/Reports/TraineesInvoicesForSpeceficPeriod/Index.vue?vue&type=template&id=4e5a7a83& ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function render() {
+  var _vm = this,
+      _c = _vm._self._c;
+
+  return _c("app-layout", [_c("div", {
+    staticClass: "container px-6 mx-auto grid pt-6"
+  }, [_c("breadcrumb-container", {
+    attrs: {
+      crumbs: [{
+        title: "dashboard",
+        link: _vm.route("dashboard")
+      }, {
+        title: "reports",
+        link: _vm.route("back.reports.index")
+      }, {
+        title: "trainees-invoices-for-specefic-period",
+        link: _vm.route("back.reports.contracts.index")
+      }]
+    }
+  }), _vm._v(" "), _vm.report_status === "new" ? [_c("form", {
+    on: {
+      submit: function submit($event) {
+        $event.preventDefault();
+        return _vm.generateReport.apply(null, arguments);
+      }
+    }
+  }, [_c("div", {
+    staticClass: "col-span-12 sm:col-span-6 mt-5"
+  }, [_c("jet-label", {
+    staticClass: "mb-2",
+    attrs: {
+      "for": "course_id",
+      value: _vm.$t("words.company")
+    }
+  }), _vm._v(" "), _c("div", {
+    staticClass: "relative"
+  }, [_c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.form.company_id,
+      expression: "form.company_id"
+    }],
+    staticClass: "block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500",
+    attrs: {
+      name: "company_id",
+      id: "company_id"
+    },
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+
+        _vm.$set(_vm.form, "company_id", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, _vm._l(_vm.companies, function (company) {
+    return _c("option", {
+      key: company.id,
+      domProps: {
+        value: company.id
+      }
+    }, [_vm._v("\n                                  " + _vm._s(company.name_ar) + "\n                              ")]);
+  }), 0), _vm._v(" "), _c("div", {
+    staticClass: "pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
+  }, [_c("svg", {
+    staticClass: "fill-current h-4 w-4",
+    attrs: {
+      xmlns: "http://www.w3.org/2000/svg",
+      viewBox: "0 0 20 20"
+    }
+  }, [_c("path", {
+    attrs: {
+      d: "M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
+    }
+  })])])])], 1), _vm._v(" "), _c("div", {
+    staticClass: "grid grid-cols-12 gap-6"
+  }, [_c("div", {
+    staticClass: "col-span-12 sm:col-span-2 mt-5"
+  }, [_c("jet-label", {
+    staticClass: "mb-2",
+    attrs: {
+      "for": "date_from",
+      value: _vm.$t("words.date-from")
+    }
+  }), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.form.date_from,
+      expression: "form.date_from"
+    }],
+    staticClass: "form-input rounded-md shadow-sm w-full",
+    attrs: {
+      name: "date_from",
+      type: "date",
+      required: ""
+    },
+    domProps: {
+      value: _vm.form.date_from
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+
+        _vm.$set(_vm.form, "date_from", $event.target.value);
+      }
+    }
+  })], 1), _vm._v(" "), _c("div", {
+    staticClass: "col-span-12 sm:col-span-2 mt-5"
+  }, [_c("jet-label", {
+    staticClass: "mb-2",
+    attrs: {
+      "for": "date_to",
+      value: _vm.$t("words.date-to")
+    }
+  }), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.form.date_to,
+      expression: "form.date_to"
+    }],
+    staticClass: "form-input rounded-md shadow-sm w-full",
+    attrs: {
+      name: "date_to",
+      type: "date",
+      required: ""
+    },
+    domProps: {
+      value: _vm.form.date_to
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+
+        _vm.$set(_vm.form, "date_to", $event.target.value);
+      }
+    }
+  })], 1)]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-gray mt-5",
+    attrs: {
+      type: "submit",
+      disabled: _vm.form.processing
+    }
+  }, [_vm._v("\n          " + _vm._s(_vm.$t("words.export")) + "\n        ")])])] : _vm._e()], 2)]);
 };
 
 var staticRenderFns = [];
@@ -52609,6 +52840,8 @@ var map = {
 	"./Back/Reports/CourseAttendance/Index.vue": "./resources/js/Pages/Back/Reports/CourseAttendance/Index.vue",
 	"./Back/Reports/Index": "./resources/js/Pages/Back/Reports/Index.vue",
 	"./Back/Reports/Index.vue": "./resources/js/Pages/Back/Reports/Index.vue",
+	"./Back/Reports/TraineesInvoicesForSpeceficPeriod/Index": "./resources/js/Pages/Back/Reports/TraineesInvoicesForSpeceficPeriod/Index.vue",
+	"./Back/Reports/TraineesInvoicesForSpeceficPeriod/Index.vue": "./resources/js/Pages/Back/Reports/TraineesInvoicesForSpeceficPeriod/Index.vue",
 	"./Back/Reports/TraineesWithoutInvoices/Index": "./resources/js/Pages/Back/Reports/TraineesWithoutInvoices/Index.vue",
 	"./Back/Reports/TraineesWithoutInvoices/Index.vue": "./resources/js/Pages/Back/Reports/TraineesWithoutInvoices/Index.vue",
 	"./Back/Roles/Index": "./resources/js/Pages/Back/Roles/Index.vue",
@@ -56618,6 +56851,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ref_6_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_template_id_280d34fa___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ref_6_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_template_id_280d34fa___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/Pages/Back/Reports/TraineesInvoicesForSpeceficPeriod/Index.vue":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/Pages/Back/Reports/TraineesInvoicesForSpeceficPeriod/Index.vue ***!
+  \*************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Index_vue_vue_type_template_id_4e5a7a83___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Index.vue?vue&type=template&id=4e5a7a83& */ "./resources/js/Pages/Back/Reports/TraineesInvoicesForSpeceficPeriod/Index.vue?vue&type=template&id=4e5a7a83&");
+/* harmony import */ var _Index_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Index.vue?vue&type=script&lang=js& */ "./resources/js/Pages/Back/Reports/TraineesInvoicesForSpeceficPeriod/Index.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Index_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Index_vue_vue_type_template_id_4e5a7a83___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Index_vue_vue_type_template_id_4e5a7a83___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/Pages/Back/Reports/TraineesInvoicesForSpeceficPeriod/Index.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/Pages/Back/Reports/TraineesInvoicesForSpeceficPeriod/Index.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************************!*\
+  !*** ./resources/js/Pages/Back/Reports/TraineesInvoicesForSpeceficPeriod/Index.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./Index.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Back/Reports/TraineesInvoicesForSpeceficPeriod/Index.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/Pages/Back/Reports/TraineesInvoicesForSpeceficPeriod/Index.vue?vue&type=template&id=4e5a7a83&":
+/*!********************************************************************************************************************!*\
+  !*** ./resources/js/Pages/Back/Reports/TraineesInvoicesForSpeceficPeriod/Index.vue?vue&type=template&id=4e5a7a83& ***!
+  \********************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ref_6_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_template_id_4e5a7a83___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./Index.vue?vue&type=template&id=4e5a7a83& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Back/Reports/TraineesInvoicesForSpeceficPeriod/Index.vue?vue&type=template&id=4e5a7a83&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ref_6_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_template_id_4e5a7a83___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ref_6_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_template_id_4e5a7a83___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -64677,6 +64979,7 @@ __webpack_require__.r(__webpack_exports__);
       "center": "المركز",
       "edit-date-period": "تعديل فترة الاستحقاق",
       "trainees-without-invoice": "متدربات لم تتم فوترتهم حسب الشهر",
+      "trainees-invoices-for-specefic-period": "فواتير المتدربات خلال فترة زمنية",
       "select-month": "اختر الشهر",
       "current-month": "الشهر الحالي"
     }
@@ -65469,6 +65772,7 @@ __webpack_require__.r(__webpack_exports__);
       "center": "Center",
       "edit-date-period": "ُEdit Date Period",
       "trainees-without-invoice": "Trainees without invoices for the specified month",
+      "trainees-invoices-for-specefic-period": "Trainees invoices for a specefic period",
       "select-month": "Select Month",
       "current-month": "Current Month"
     }

@@ -37,9 +37,9 @@
                 </inertia-link>
 
 
-                <inertia-link :href="route('back.reports.trainees-witout-invoices.index')"
+                <inertia-link :href="route('back.reports.trainees-invoices-for-specefic-period.index')"
                               class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
-                    {{ $t('words.trainees-without-invoice') }}
+                    {{ $t('words.trainees-invoices-for-specefic-period') }}
                 </inertia-link>
 
 

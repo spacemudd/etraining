@@ -24,6 +24,9 @@ use App\Models\User;
 use App\Exports\TraineesWithoutInvoicesExport;
 use Maatwebsite\Excel\Facades\Excel;
 
+use App\Exports\TraineesInvoicesForSpeceficPeriodExport;
+
+
 
 
 
@@ -135,6 +138,34 @@ class ReportsController extends Controller
         
         return Excel::download(new TraineesWithoutInvoicesExport($data), now()->format('Y-m-d').'-traineees-without-invoices.xlsx');
        
+    }
+
+    public function formInvoicesForSpeceficPeriodReport()
+    {
+        $this->authorize('view-backoffice-reports');
+        return Inertia::render('Back/Reports/TraineesInvoicesForSpeceficPeriod/Index',[
+            'companies' => Company::get(),
+        ]);
+    }
+
+    public function traineesInvoicesForSpeceficPeriodExport(Request $request)
+    {
+        $request->validate([
+            'date_from' => 'required',
+            'date_to' => 'required',
+            'company_id'=>'required',
+        ]);
+        $data=$request->all();
+
+        Audit::create([
+            'event' => 'traineesInvoicesForSpeceficPeriod.export.excel',
+            'auditable_id' => auth()->user()->id,
+            'auditable_type' => User::class,
+            'new_values' => [],
+        ]);
+        
+        return Excel::download(new TraineesInvoicesForSpeceficPeriodExport($data), now()->format('Y-m-d').'-traineees-invoices-for-specefic-period.xlsx');
+        
     }
 
 
