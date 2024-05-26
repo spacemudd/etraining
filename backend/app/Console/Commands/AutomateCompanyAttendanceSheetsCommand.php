@@ -52,18 +52,21 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
     public function createReportsBasedOnTraineedInvoiced(Carbon $from_date, Carbon $to_date)
     {
         $count = Company::with('invoices')
+            ->where('center_id', 3)
             ->whereHas('invoices', function ($query) use ($from_date) {
-                $query->whereBetween('to_date', ['2024-03-01', '2024-03-31']);
+                $query->whereBetween('to_date', ['2024-04-01', '2024-04-30']);
             })->count();
         $this->info('Found companies with invoices: '.$count);
 
-        Company::with('invoices')->whereHas('invoices', function ($query) use ($from_date) {
-            $query->whereBetween('to_date', ['2024-03-01', '2024-03-31']);})->count();
+        Company::where('center_id', 3)
+            ->with('invoices')->whereHas('invoices', function ($query) use ($from_date) {
+            $query->whereBetween('to_date', ['2024-04-01', '2024-04-30']);})->count();
 
         // Companies that don't have invoices in the past month, to skip.
          $companies_with_invoices = Company::with('invoices')
+             ->where('center_id', 3)
             ->whereHas('invoices', function ($query) use ($from_date) {
-                $query->whereBetween('to_date',  ['2024-03-01', '2024-03-31']);
+                $query->whereBetween('to_date',  ['2024-04-01', '2024-04-30']);
             })->pluck('id');
          $companies_without_invoices = Company::whereNotIn('id', $companies_with_invoices)->pluck('name_ar');
          foreach ($companies_without_invoices as $name_ar) {
@@ -71,12 +74,14 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
          }
 
         Company::with('invoices')
+            ->where('center_id', 3)
             ->whereHas('invoices', function ($query) use ($from_date) {
-                $query->whereBetween('to_date', ['2024-03-01', '2024-03-31']);
+                $query->whereBetween('to_date', ['2024-04-01', '2024-04-30']);
             })->chunk(20, function($companies) use ($from_date, $to_date) {
                 foreach ($companies as $company) {
 
                     $companies_to_execlude = [
+                        '791f79d6-1868-4aa6-b905-796b6f9216d9',
                         '5829984b-1d85-427f-b3a1-ef0dbd6eb4c8',
                         '8b169387-09f5-4cff-b443-41a14fd9c12e',
                         'd31fcf66-1010-4d5f-83ff-10e92ca0f902',
@@ -109,14 +114,14 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
                     if ($lastReport) {
                         $this->info('New report from last report: '.$company->name_ar . ',' . $company->trainees()->count());
-                        //$this->makeNewReportFromLastReportBasedOnInvoices($company, $lastReport, '2024-04-01', '2024-04-30', '2024-03-01', '2024-03-31');
+                        $this->makeNewReportFromLastReportBasedOnInvoices($company, $lastReport, '2024-05-01', '2024-05-31', '2024-04-01', '2024-04-30');
                     } else {
                         if (! $company->email) {
                             $this->info('No email for company. Skipping: '.$company->name_ar);
                             continue;
                         }
                         $this->info('No last report. Creating new report - '.$company->name_ar . ',' . $company->trainees()->count());
-                        //$this->makeNewReportBasedOnInvoices($company, '2024-04-01', '2024-04-30', '2024-03-01', '2024-03-31');
+                        $this->makeNewReportBasedOnInvoices($company, '2024-05-01', '2024-05-31', '2024-04-01', '2024-04-30');
                     }
                 }
             });
