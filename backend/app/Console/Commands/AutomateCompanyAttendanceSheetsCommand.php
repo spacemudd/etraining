@@ -81,6 +81,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 foreach ($companies as $company) {
 
                     $companies_to_execlude = [
+                        '14bfd934-922f-4c5d-91f0-1f796ccac6a2',
                         '791f79d6-1868-4aa6-b905-796b6f9216d9',
                         '5829984b-1d85-427f-b3a1-ef0dbd6eb4c8',
                         '8b169387-09f5-4cff-b443-41a14fd9c12e',
