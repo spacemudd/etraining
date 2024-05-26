@@ -192,7 +192,7 @@ return [
     'url-problem' => "إذا كانت تواجهك صعوبة في الضغط على \":actionText\", انسخ الرابط التالي \n" .
         'في صفحة المتصفح الخاص بك: ',
     'all-rights-reserved' => 'كل الحقوق محفوظة',
-    'welcome-to-ptc' => 'اهلا بك في شركة مركز احترافية التدريب للتدريب',
+    'welcome-to-ptc' => 'اهلا بك في شركة معهد سجل للتدريب',
     'your-application-has-been-approved' => 'لقد تم قبولك في منصة التدريب ويمكن الدخول عليها من: ',
     'incomplete-application' => 'ملف غير مكتمل',
     'pending-approval' => 'جاري الموافقة',
@@ -666,11 +666,11 @@ return [
     'download-all-files' => 'تحميل جميع الملفات',
     'center' => 'المركز',
     'edit-date-period' => 'تعديل فترة الاستحقاق',
-    'trainees-without-invoice' => 'متدربات لم تتم فوترتهم حسب الشهر',  
+    'trainees-without-invoice' => 'متدربات لم تتم فوترتهم حسب الشهر',
     'select-month' => 'اختر الشهر',
     'current-month' => 'الشهر الحالي',
 
-    
 
-  
+
+
 ];

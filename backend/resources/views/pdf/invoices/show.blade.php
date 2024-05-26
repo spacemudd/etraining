@@ -28,7 +28,7 @@
             <tbody>
             <tr>
                 <td style="background-color:#dcdcdc;padding:0 10px;">{{ __('words.company') }}</td>
-                <td style="padding:0 10px;">شركة شركة مركز احترافية التدريب للتدريب</td>
+                <td style="padding:0 10px;">شركة شركة معهد سجل للتدريب</td>
                 <td style="background-color:#dcdcdc;padding:0 10px;">العميل</td>
                 <td style="padding:0 10px;">
                     {{ $invoice->trainee->name }} - ({{ $invoice->company->name_ar }})
@@ -104,7 +104,7 @@
                 <tbody>
                 <tr>
                     <td>اسم المستفيد:</td>
-                    <td style="text-align:center;">شركة مركز احترافية التدريب للتدريب للخدمات التجارية</td>
+                    <td style="text-align:center;">شركة معهد سجل للتدريب للخدمات التجارية</td>
                     <td style="text-align:left;direction:ltr;">Beneficiary name:</td>
                 </tr>
                 <tr>
