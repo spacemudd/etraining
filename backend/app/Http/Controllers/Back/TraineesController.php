@@ -1063,7 +1063,7 @@ class TraineesController extends Controller
                 ->orderBy('session_starts_at');
 
         if ($trainee->company_id === 'ca9709ac-6e7a-4de6-9d38-2e8b901a6f2a') {
-            $records = $records->where('session_starts_at', '>=', now()->subMonths(3)->firstOfMonth());
+            $records = $records->where('session_starts_at', '>=', now()->subMonths(2)->firstOfMonth());
         }
 
         $pdf = PDF::loadView('pdf.trainees.attendance-sheet', [
