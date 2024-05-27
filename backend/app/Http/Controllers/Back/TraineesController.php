@@ -1057,10 +1057,18 @@ class TraineesController extends Controller
 
     public function attendanceSheetPdf($id)
     {
+        $trainee = Trainee::withTrashed()->findOrFail($id);
+
+        $records = AttendanceReportRecord::where('trainee_id', $id)
+                ->orderBy('session_starts_at');
+
+        if ($trainee->company_id === 'ca9709ac-6e7a-4de6-9d38-2e8b901a6f2a') {
+            $records = $records->where('sessions_starts_at', '>=', now()->subMonths(3)->firstOfMonth());
+        }
+
         $pdf = PDF::loadView('pdf.trainees.attendance-sheet', [
-            'trainee' => Trainee::withTrashed()->findOrFail($id),
-            'records' => AttendanceReportRecord::where('trainee_id', $id)
-                ->orderBy('session_starts_at')
+            'trainee' => $trainee,
+            'records' => $records
                 ->with([
                     'course_batch_session' => function ($q) {
                         $q->with('course');
