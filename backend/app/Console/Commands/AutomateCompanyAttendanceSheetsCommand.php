@@ -169,7 +169,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
         foreach ($clone->trainees as $trainee) {
             if ($trainee->resignations()->whereBetween('created_at', [$clone->date_from, $clone->date_to])->count()) {
                 $clone->trainees()->detach($trainee->id);
-                $this->info('Trainee has resignations. Removed: '.$trainee->name);
+                $this->info('Trainee has resignations. Removed: '.$trainee->name. ' CompanyName: '.$company->name_ar);
             }
         }
 
