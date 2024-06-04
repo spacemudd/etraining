@@ -42,10 +42,10 @@ class CompanyAttendanceReportMail extends Mailable
         $this->attachReportFile($report);
 
         // Use system@ email because when clients reply to that email, it should be received saved in the company.
-        $center = CompanyAttendanceReport::find($this->report_id)->company->center;
+        // $center = CompanyAttendanceReport::find($this->report_id)->company->center;
 
         return $this
-            ->from('system@comms'.$center->domain, $center->name_ar)
+            ->from('system@mg.noreplycenter.com', 'Training Center')
             ->subject('تقرير الحضور للمتدربات - '.$report->company->name_ar.' - '.$report->date_from->format('Y-m-d'). ' - '.$report->date_to->format('Y-m-d'))
             ->markdown('emails.company-attendance-report', [
                 'report' => $report,
