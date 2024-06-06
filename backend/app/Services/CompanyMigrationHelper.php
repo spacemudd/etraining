@@ -49,6 +49,17 @@ class CompanyMigrationHelper
 
     static public function setMailgunConfigBasedOnDomain($domain)
     {
+        // Unify the sending.
+        config([
+            'mail.from.address' => 'noreply@mg.noreplycenter.com',
+            'mail.from.name' => 'PTC-KSA.NET',
+            'mail.mailers.mailgun.domain' => env('MAILGUN_DOMAIN'),
+            'mail.mailers.mailgun.secret' => env('MAILGUN_SECRET'),
+            'mail.mailers.mailgun.endpoint' => 'api.mailgun.net',
+        ]);
+        (new MailServiceProvider(app()))->register();
+        return 1;
+
         if ($domain === 'ptc-ksa.net') {
             config([
                 'mail.from.address' => 'noreply@comms.ptc-ksa.net',
