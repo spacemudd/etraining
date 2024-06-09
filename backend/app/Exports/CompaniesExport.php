@@ -44,6 +44,6 @@ class CompaniesExport implements FromCollection, WithHeadings, WithMapping
     */
     public function collection()
     {
-        return Company::with('center', 'region')->withCount('trainees')->all();
+        return Company::with('center', 'region')->withCount('trainees')->get();
     }
 }
