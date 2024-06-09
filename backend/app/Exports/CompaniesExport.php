@@ -14,6 +14,7 @@ class CompaniesExport implements FromCollection, WithHeadings, WithMapping
         return [
             'الرقم',
             'تاريخ الإنشاء',
+            'المركز',
             'الشركة',
             'المنطقة',
             'الايميل',
@@ -28,12 +29,13 @@ class CompaniesExport implements FromCollection, WithHeadings, WithMapping
         return [
             $company->code,
             $company->created_at->format('Y-m-d'),
+            optional($company->center)->name,
             $company->name_ar,
             optional($company->region)->name,
             $company->email,
             $company->salesperson_email,
             $company->cr_number,
-            $company->trainees()->count(),
+            $company->trainees_count,
         ];
     }
 
@@ -42,6 +44,6 @@ class CompaniesExport implements FromCollection, WithHeadings, WithMapping
     */
     public function collection()
     {
-        return Company::all();
+        return Company::with('center', 'region')->withCount('trainees')->all();
     }
 }
