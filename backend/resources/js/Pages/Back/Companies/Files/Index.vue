@@ -28,7 +28,7 @@
                 </tr>
                 </thead>
                 	<tbody>
-                			<tr v-for="file in company.general_files" class="hover:bg-gray-100 focus-within:bg-gray-100">
+                			<tr v-for="file in company.logo_files" class="hover:bg-gray-100 focus-within:bg-gray-100">
                 				<td class="border-t mt-2 p-1 px-2">
                                     <a target="_blank"
                                        :href="route('back.companies.files.show', {company_id: company.id, file: file.id})">
@@ -46,7 +46,7 @@
                 	</tbody>
                 </table>
             </div>
-            
+
 
             <!-- my comment -->
             <div class="bg-white rounded shadow overflow-x-auto my-5 p-5">
@@ -102,7 +102,7 @@
         methods: {
             importFileChanged(e, filename) {
                 this.attachedFile = e.target.files[0];
-                this.formData.append('attached_file', this.attachedFile);
+                this.formData.append('logo_files', this.attachedFile);
             },
             submitForm() {
                 this.$wait.start('SAVING_FILE');

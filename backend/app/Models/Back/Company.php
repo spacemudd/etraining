@@ -99,7 +99,7 @@ class Company extends Model implements SearchableLabels, Auditable, HasMedia
     }
 
 
-    
+
 
     /**
      * The business contracts under a company (client).
@@ -198,14 +198,10 @@ class Company extends Model implements SearchableLabels, Auditable, HasMedia
         return $this->media()->where('collection_name', $folder);
     }
 
-    public function general_files()
+    public function logo_files()
     {
-        return $this->media()->where('collection_name', 'general_files');
+        return $this->media()->where('collection_name', 'logo_files');
     }
-
-
-
-
 
     public function company_attendance_reports()
     {

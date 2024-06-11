@@ -13,21 +13,23 @@ class CompaniesFilesController extends Controller
 {
     public function index($company_id)
     {
-             $company = Company::withTrashed()->with('general_files')
+        $company = Company::withTrashed()->with('logo_files')
             ->findOrFail($company_id);
-             return Inertia::render('Back/Companies/Files/Index',[
+
+        return Inertia::render('Back/Companies/Files/Index',[
             'company' => $company,
         ]);
     }
 
-        public function store($company_id)
-        {
-               $company = Company::withTrashed()->findOrFail($company_id);
-                 $company->addMediaFromRequest('attached_file')
-                ->usingFileName(request()->file('attached_file')->hashName())
-                ->toMediaCollection('general_files');
-                return redirect()->route('back.companies.files.index', $company->id);
-        }
+    public function store($company_id)
+    {
+        $company = Company::withTrashed()->findOrFail($company_id);
+        $company->addMediaFromRequest('logo_files')
+            ->usingFileName(request()->file('logo_files')->hashName())
+            ->toMediaCollection('logo_files');
+
+        return redirect()->route('back.companies.files.index', $company->id);
+    }
 
     public function show($company_id, $file)
     {
