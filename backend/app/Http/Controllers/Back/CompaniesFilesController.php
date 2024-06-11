@@ -3,35 +3,33 @@
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
-use App\Models\Back\Trainee;
+use App\Models\Back\Company;
 use App\Models\Media;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Str;
 
-class TraineesFilesController extends Controller
+class CompaniesFilesController extends Controller
 {
-    public function index($trainee_id)
+    public function index($company_id)
     {
-       
-        $trainee = Trainee::withTrashed()->with('general_files')
-        ->findOrFail($trainee_id);
-        return Inertia::render('Back/Trainees/Files/Index', [
-            'trainee' => $trainee,
+             $company = Company::withTrashed()->with('general_files')
+            ->findOrFail($company_id);
+             return Inertia::render('Back/Companies/Files/Index',[
+            'company' => $company,
         ]);
     }
 
-        public function store($trainee_id)
+        public function store($company_id)
         {
-
-            $trainee = Trainee::withTrashed()->findOrFail($trainee_id);
-            $trainee->addMediaFromRequest('attached_file')
+               $company = Company::withTrashed()->findOrFail($company_id);
+                 $company->addMediaFromRequest('attached_file')
                 ->usingFileName(request()->file('attached_file')->hashName())
                 ->toMediaCollection('general_files');
-                return redirect()->route('back.trainees.files.index', $trainee->id);
+                return redirect()->route('back.companies.files.index', $company->id);
         }
 
-    public function show($trainee_id, $file)
+    public function show($company_id, $file)
     {
         $media = Media::findOrFail($file);
         if ($media->disk === 's3') {
@@ -43,10 +41,10 @@ class TraineesFilesController extends Controller
         }
     }
 
-    public function destroy($trainee_id, $file)
+    public function destroy($company_id, $file)
     {
         $media = Media::findOrFail($file);
         $media->delete();
-        return redirect()->route('back.trainees.files.index', $trainee_id);
+        return redirect()->route('back.companies.files.index', $company_id);
     }
 }

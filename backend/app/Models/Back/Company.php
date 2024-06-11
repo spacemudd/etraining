@@ -17,12 +17,17 @@ use Str;
 use Illuminate\Database\Eloquent\Builder;
 use Timezone;
 
-class Company extends Model implements SearchableLabels, Auditable
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+
+class Company extends Model implements SearchableLabels, Auditable, HasMedia
 {
     use HasFactory;
     use SoftDeletes;
     use Searchable;
     use \OwenIt\Auditing\Auditable;
+    use InteractsWithMedia;
+
 
     public $incrementing = false;
 
@@ -92,6 +97,9 @@ class Company extends Model implements SearchableLabels, Auditable
             }
         });
     }
+
+
+    
 
     /**
      * The business contracts under a company (client).
@@ -164,6 +172,40 @@ class Company extends Model implements SearchableLabels, Auditable
     {
         return $this->only(self::SEARCHABLE_FIELDS);
     }
+
+
+     /**
+     * Upload scan(s) of the documents.
+     *
+     * @param $file
+     * @param $folder
+     * @return \Spatie\MediaLibrary\MediaCollections\Models\Media
+     * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist
+     * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig
+     */
+    public function uploadToFolder($file, $folder)
+    {
+        return $this->addMedia($file)
+            ->usingFileName($file->hashName())
+            ->withAttributes([
+                'team_id' => $this->team_id,
+            ])
+            ->toMediaCollection($folder);
+    }
+
+    public function attachments($folder)
+    {
+        return $this->media()->where('collection_name', $folder);
+    }
+
+    public function general_files()
+    {
+        return $this->media()->where('collection_name', 'general_files');
+    }
+
+
+
+
 
     public function company_attendance_reports()
     {

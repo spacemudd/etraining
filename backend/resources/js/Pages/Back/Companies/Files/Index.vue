@@ -4,8 +4,8 @@
             <breadcrumb-container
                 :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
-                    {title: 'trainees', link: route('back.trainees.index')},
-                    {title_raw: trainee.name, link: route('back.trainees.show', trainee.id)},
+                    {title: 'companies', link: route('back.companies.index')},
+                    {title_raw: company.name_ar, link: route('back.companies.show', company.id)},
                     {title_raw: $t('words.files')},
                 ]"
             ></breadcrumb-container>
@@ -28,10 +28,10 @@
                 </tr>
                 </thead>
                 	<tbody>
-                			<tr v-for="file in trainee.general_files" class="hover:bg-gray-100 focus-within:bg-gray-100">
+                			<tr v-for="file in company.general_files" class="hover:bg-gray-100 focus-within:bg-gray-100">
                 				<td class="border-t mt-2 p-1 px-2">
                                     <a target="_blank"
-                                       :href="route('back.trainees.files.show', {trainee_id: trainee.id, file: file.id})">
+                                       :href="route('back.companies.files.show', {company_id: company.id, file: file.id})">
                                         {{ file.file_name }}
                                     </a>
                                 </td>
@@ -81,7 +81,7 @@
 
     export default {
         metaInfo: { title: 'Files' },
-        props: ['trainee'],
+        props: ['company'],
         components: {
             BreadcrumbContainer,
             IconNavigate,
@@ -106,16 +106,16 @@
             },
             submitForm() {
                 this.$wait.start('SAVING_FILE');
-                axios.post(route('back.trainees.files.store', this.trainee.id), this.formData)
+                axios.post(route('back.companies.files.store', this.company.id), this.formData)
                     .then(response => {
-                        this.$inertia.get(route('back.trainees.files.index', this.trainee.id));
+                        this.$inertia.get(route('back.companies.files.index', this.company.id));
                     }).catch(error => {
                         throw error;
                     });
             },
             deleteFile(file_id) {
-                this.$inertia.delete(route('back.trainees.files.destroy', {
-                    trainee_id: this.trainee.id,
+                this.$inertia.delete(route('back.companies.files.destroy', {
+                    company_id: this.company.id,
                     file: file_id,
                 }))
             },

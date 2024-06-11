@@ -3622,6 +3622,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Back/Companies/Files/Index.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Pages/Back/Companies/Files/Index.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Layouts/AppLayout */ "./resources/js/Layouts/AppLayout.vue");
+/* harmony import */ var vue_ionicons_dist_ios_arrow_dropright__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-ionicons/dist/ios-arrow-dropright */ "./node_modules/vue-ionicons/dist/ios-arrow-dropright.vue");
+/* harmony import */ var _Components_BreadcrumbContainer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Components/BreadcrumbContainer */ "./resources/js/Components/BreadcrumbContainer.vue");
+/* harmony import */ var _Jetstream_Label__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Jetstream/Label */ "./resources/js/Jetstream/Label.vue");
+/* harmony import */ var _Components_SelectTraineeGroup__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Components/SelectTraineeGroup */ "./resources/js/Components/SelectTraineeGroup.vue");
+/* harmony import */ var logrocket__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! logrocket */ "./node_modules/logrocket/dist/build.umd.js");
+/* harmony import */ var logrocket__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(logrocket__WEBPACK_IMPORTED_MODULE_5__);
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  metaInfo: {
+    title: 'Files'
+  },
+  props: ['company'],
+  components: {
+    BreadcrumbContainer: _Components_BreadcrumbContainer__WEBPACK_IMPORTED_MODULE_2__["default"],
+    IconNavigate: vue_ionicons_dist_ios_arrow_dropright__WEBPACK_IMPORTED_MODULE_1__["default"],
+    AppLayout: _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__["default"],
+    JetLabel: _Jetstream_Label__WEBPACK_IMPORTED_MODULE_3__["default"],
+    SelectTraineeGroup: _Components_SelectTraineeGroup__WEBPACK_IMPORTED_MODULE_4__["default"]
+  },
+  data: function data() {
+    return {
+      attachedFile: '',
+      formData: new FormData()
+    };
+  },
+  mounted: function mounted() {
+    this.$wait.end('SAVING_FILE');
+  },
+  methods: {
+    importFileChanged: function importFileChanged(e, filename) {
+      this.attachedFile = e.target.files[0];
+      this.formData.append('attached_file', this.attachedFile);
+    },
+    submitForm: function submitForm() {
+      var _this = this;
+
+      this.$wait.start('SAVING_FILE');
+      axios.post(route('back.companies.files.store', this.company.id), this.formData).then(function (response) {
+        _this.$inertia.get(route('back.companies.files.index', _this.company.id));
+      })["catch"](function (error) {
+        throw error;
+      });
+    },
+    deleteFile: function deleteFile(file_id) {
+      this.$inertia["delete"](route('back.companies.files.destroy', {
+        company_id: this.company.id,
+        file: file_id
+      }));
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Back/Companies/Index.vue?vue&type=script&lang=js&":
 /*!**************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Pages/Back/Companies/Index.vue?vue&type=script&lang=js& ***!
@@ -4059,7 +4128,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['sessions', 'company', 'instructors', 'invoices', 'trainees_trashed_count', 'regions', 'centers', 'trainees', 'company_mails'],
+  metaInfo: {
+    title: "Files"
+  },
+  props: ["sessions", "company", "generalFiles", "instructors", "invoices", "trainees_trashed_count", "regions", "centers", "trainees", "company_mails"],
   components: {
     Input: _Jetstream_Input__WEBPACK_IMPORTED_MODULE_4__["default"],
     PostTraineesButton: _Components_PostTraineesButton__WEBPACK_IMPORTED_MODULE_13__["default"],
@@ -4086,23 +4158,26 @@ __webpack_require__.r(__webpack_exports__);
       reportDateFrom: null,
       reportDateTo: null,
       form: this.$inertia.form({
-        name_ar: '',
-        name_en: '',
-        cr_number: '',
-        contact_number: '',
-        company_rep: '',
-        company_rep_mobile: '',
-        address: '',
-        email: '',
-        monthly_subscription_per_trainee: '',
-        shelf_number: '',
-        salesperson_email: '',
-        region_id: '',
-        center_id: ''
+        name_ar: "",
+        name_en: "",
+        cr_number: "",
+        contact_number: "",
+        company_rep: "",
+        company_rep_mobile: "",
+        address: "",
+        email: "",
+        monthly_subscription_per_trainee: "",
+        shelf_number: "",
+        salesperson_email: "",
+        region_id: "",
+        center_id: ""
       }, {
-        bag: 'createCompany'
+        bag: "createCompany"
       })
     };
+  },
+  mounted: function mounted() {
+    this.$wait.end("SAVING_FILE");
   },
   watch: {
     selected: function selected(_selected) {
@@ -4115,8 +4190,8 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       axios({
-        url: '/back/companies',
-        method: 'get'
+        url: "/back/companies",
+        method: "get"
       }).then(function (res) {
         _this.selectedTrainees = res.company.trainees.rows;
       })["catch"](function (err) {
@@ -4147,24 +4222,24 @@ __webpack_require__.r(__webpack_exports__);
     // }
     // },
     destroyResignation: function destroyResignation(resignation) {
-      if (confirm(this.$t('words.are-you-sure'))) {
-        this.$inertia["delete"](route('back.resignations.destroy', {
+      if (confirm(this.$t("words.are-you-sure"))) {
+        this.$inertia["delete"](route("back.resignations.destroy", {
           company_id: resignation.company_id,
           resignation: resignation.id
         }));
       }
     },
     approveResignation: function approveResignation(resignation) {
-      if (confirm(this.$t('words.are-you-sure'))) {
-        this.$inertia.post(route('back.resignations.approve', {
+      if (confirm(this.$t("words.are-you-sure"))) {
+        this.$inertia.post(route("back.resignations.approve", {
           company_id: resignation.company_id,
           id: resignation.id
         }));
       }
     },
     deleteInvoice: function deleteInvoice(invoiceCollection) {
-      if (confirm(this.$t('words.are-you-sure'))) {
-        this.$inertia["delete"](route('back.finance.invoices.destroy', {
+      if (confirm(this.$t("words.are-you-sure"))) {
+        this.$inertia["delete"](route("back.finance.invoices.destroy", {
           invoice: invoiceCollection.id,
           from_date: invoiceCollection.from_date,
           to_date: invoiceCollection.to_date,
@@ -4175,35 +4250,38 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     suspendTrainees: function suspendTrainees(traineeCollection) {
-      if (confirm(this.$t('words.are-you-sure'))) {
-        this.$inertia["delete"](route('back.trainees.suspend.all', {
+      if (confirm(this.$t("words.are-you-sure"))) {
+        this.$inertia["delete"](route("back.trainees.suspend.all", {
           trainees: traineeCollection
         }));
       }
     },
     createCompany: function createCompany() {
-      this.form.post('/back/companies', {
+      this.form.post("/back/companies", {
         preserveScroll: true
       });
     },
     deleteCompany: function deleteCompany() {
-      if (confirm(this.$t('words.are-you-sure'))) {
-        this.$inertia["delete"]('/back/companies/' + this.company.id);
+      if (confirm(this.$t("words.are-you-sure"))) {
+        this.$inertia["delete"]("/back/companies/" + this.company.id);
       }
     },
     deleteTrainees: function deleteTrainees(selected) {
-      if (confirm(this.$t('words.are-you-sure'))) {
-        this.$inertia.post(route('back.trainees.suspend.all', {
+      if (confirm(this.$t("words.are-you-sure"))) {
+        this.$inertia.post(route("back.trainees.suspend.all", {
           data: selected
         }));
       }
     },
     unBlockTrainees: function unBlockTrainees(selected) {
-      if (confirm(this.$t('words.are-you-sure'))) {
-        this.$inertia.post(route('back.trainees.unblock.all', {
+      if (confirm(this.$t("words.are-you-sure"))) {
+        this.$inertia.post(route("back.trainees.unblock.all", {
           data: selected
         }));
       }
+    },
+    handleFileUpload: function handleFileUpload(event) {
+      this.form.image = event.target.files[0];
     }
   }
 });
@@ -9698,6 +9776,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Components_BreadcrumbContainer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Components/BreadcrumbContainer */ "./resources/js/Components/BreadcrumbContainer.vue");
 /* harmony import */ var _Jetstream_Label__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Jetstream/Label */ "./resources/js/Jetstream/Label.vue");
 /* harmony import */ var _Components_SelectTraineeGroup__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Components/SelectTraineeGroup */ "./resources/js/Components/SelectTraineeGroup.vue");
+/* harmony import */ var logrocket__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! logrocket */ "./node_modules/logrocket/dist/build.umd.js");
+/* harmony import */ var logrocket__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(logrocket__WEBPACK_IMPORTED_MODULE_5__);
+
 
 
 
@@ -10435,7 +10516,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['sessions', 'in_block_list', 'trainee', 'cities', 'marital_statuses', 'educational_levels', 'trainee_groups', 'trainee_group_trainees', 'companies'],
+  props: ["sessions", "in_block_list", "trainee", "cities", "marital_statuses", "educational_levels", "trainee_groups", "trainee_group_trainees", "companies"],
   components: {
     GosiContainer: _Components_GosiContainer__WEBPACK_IMPORTED_MODULE_22__["default"],
     ValidationErrors: _Components_ValidationErrors__WEBPACK_IMPORTED_MODULE_21__["default"],
@@ -10461,62 +10542,63 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       new_trainee_group: {
-        name: '',
-        id: ''
+        name: "",
+        id: ""
       },
       cancelButton: {
-        text: this.$t('words.cancel')
+        text: this.$t("words.cancel")
       },
       validationErrors: null,
-      lang: this.$t('words.edit') == "Edit" ? 'en' : 'ar',
+      lang: this.$t("words.edit") == "Edit" ? "en" : "ar",
       editButton: {
-        text: this.$t('words.edit'),
+        text: this.$t("words.edit"),
         editOption: false,
         inputClass: "mt-1 block w-full bg-gray-200",
         selectInputClass: "mt-1 block w-full border border-gray-200 bg-gray-200 py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none"
       },
       dropzoneOptionsIdentity: {
         destroyDropzone: false,
-        url: route('back.trainees.attachments.identity', {
+        url: route("back.trainees.attachments.identity", {
           trainee_id: this.trainee.id
         }),
-        dictDefaultMessage: "<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> " + this.$t('words.upload-files-here'),
+        dictDefaultMessage: "<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> " + this.$t("words.upload-files-here"),
         thumbnailWidth: 150,
         maxFilesize: 20
       },
+      // my comment
       dropzoneOptionsQualification: {
         destroyDropzone: false,
-        url: route('back.trainees.attachments.qualification', {
+        url: route("back.trainees.attachments.qualification", {
           trainee_id: this.trainee.id
         }),
-        dictDefaultMessage: "<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> " + this.$t('words.upload-files-here'),
+        dictDefaultMessage: "<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> " + this.$t("words.upload-files-here"),
         thumbnailWidth: 150,
         maxFilesize: 20
       },
       dropzoneOptionsBankAccount: {
         destroyDropzone: false,
-        url: route('back.trainees.attachments.bank-account', {
+        url: route("back.trainees.attachments.bank-account", {
           trainee_id: this.trainee.id
         }),
-        dictDefaultMessage: "<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> " + this.$t('words.upload-files-here'),
+        dictDefaultMessage: "<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> " + this.$t("words.upload-files-here"),
         thumbnailWidth: 150,
         maxFilesize: 20
       },
       dropzoneOptionsNationalAddress: {
         destroyDropzone: false,
-        url: route('back.trainees.attachments.national-address', {
+        url: route("back.trainees.attachments.national-address", {
           trainee_id: this.trainee.id
         }),
-        dictDefaultMessage: "<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> " + this.$t('words.upload-files-here'),
+        dictDefaultMessage: "<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> " + this.$t("words.upload-files-here"),
         thumbnailWidth: 150,
         maxFilesize: 20
       },
       dropzoneOptionsCv: {
         destroyDropzone: false,
-        url: route('back.trainees.attachments.cv', {
+        url: route("back.trainees.attachments.cv", {
           trainee_id: this.trainee.id
         }),
-        dictDefaultMessage: "<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> " + this.$t('words.upload-files-here'),
+        dictDefaultMessage: "<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> " + this.$t("words.upload-files-here"),
         thumbnailWidth: 150,
         maxFilesize: 20
       },
@@ -10532,7 +10614,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     deleteFromBlockList: function deleteFromBlockList() {
-      this.$inertia["delete"](route('back.trainees.delete-from-block-list', {
+      this.$inertia["delete"](route("back.trainees.delete-from-block-list", {
         id: this.trainee.id
       }));
     },
@@ -10540,17 +10622,17 @@ __webpack_require__.r(__webpack_exports__);
       this.trainee.trainee_group = input;
     },
     blockTrainee: function blockTrainee() {
-      this.$inertia.get(route('back.trainees.block', {
+      this.$inertia.get(route("back.trainees.block", {
         trainee_id: this.trainee.id
       }));
     },
     cancelEdit: function cancelEdit() {
       this.editButton.editOption = false;
-      this.editButton.inputClass = 'mt-1 block w-full bg-gray-200';
-      this.editButton.selectInputClass = 'mt-1 block w-full border border-gray-200 bg-gray-200 py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none';
-      this.editButton.text = this.$t('words.edit');
+      this.editButton.inputClass = "mt-1 block w-full bg-gray-200";
+      this.editButton.selectInputClass = "mt-1 block w-full border border-gray-200 bg-gray-200 py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none";
+      this.editButton.text = this.$t("words.edit");
       $(document).ready(function () {
-        $('#company_id_selector').selectize()[0].selectize.destroy();
+        $("#company_id_selector").selectize()[0].selectize.destroy();
       });
       window.location.reload();
     },
@@ -10559,13 +10641,13 @@ __webpack_require__.r(__webpack_exports__);
 
       if (!this.editButton.editOption) {
         this.editButton.editOption = true;
-        this.editButton.inputClass = 'mt-1 block w-full bg-white';
+        this.editButton.inputClass = "mt-1 block w-full bg-white";
         this.editButton.selectInputClass = "mt-1 block w-full border border-gray-200 bg-white py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none";
-        this.editButton.text = this.$t('words.save');
+        this.editButton.text = this.$t("words.save");
         var vm = this;
         $(document).ready(function () {
-          vm.companySelector = $('#company_id_selector').selectize({
-            sortField: 'text',
+          vm.companySelector = $("#company_id_selector").selectize({
+            sortField: "text",
             onChange: function onChange(value) {
               vm.trainee.company_id = value;
               vm.trainee.company = null; // For better UX?
@@ -10574,10 +10656,10 @@ __webpack_require__.r(__webpack_exports__);
         });
       } else {
         $(document).ready(function () {
-          $('#company_id_selector').selectize()[0].selectize.destroy();
+          $("#company_id_selector").selectize()[0].selectize.destroy();
         });
         var newForm = {
-          trainee_group_name: this.trainee.trainee_group ? this.trainee.trainee_group.name : '',
+          trainee_group_name: this.trainee.trainee_group ? this.trainee.trainee_group.name : "",
           company_id: this.trainee.company_id,
           name: this.trainee.name,
           email: this.trainee.email,
@@ -10595,19 +10677,19 @@ __webpack_require__.r(__webpack_exports__);
           trainee_message: this.trainee.trainee_message,
           job_number: this.trainee.job_number
         };
-        this.$wait.start('UPDATING_TRAINEE');
+        this.$wait.start("UPDATING_TRAINEE");
         this.validationErrors = null;
-        axios.put(route('back.trainees.update', this.trainee.id), newForm).then(function (response) {
+        axios.put(route("back.trainees.update", this.trainee.id), newForm).then(function (response) {
           _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_20__["Inertia"].reload().then(function () {
             _this.editButton.editOption = false;
-            _this.editButton.inputClass = 'mt-1 block w-full bg-gray-200';
-            _this.editButton.selectInputClass = 'mt-1 block w-full border border-gray-200 bg-gray-200 py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none';
-            _this.editButton.text = _this.$t('words.edit');
+            _this.editButton.inputClass = "mt-1 block w-full bg-gray-200";
+            _this.editButton.selectInputClass = "mt-1 block w-full border border-gray-200 bg-gray-200 py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none";
+            _this.editButton.text = _this.$t("words.edit");
 
-            _this.$wait.end('UPDATING_TRAINEE');
+            _this.$wait.end("UPDATING_TRAINEE");
           });
         })["catch"](function (error) {
-          _this.$wait.end('UPDATING_TRAINEE');
+          _this.$wait.end("UPDATING_TRAINEE");
 
           if (error.response.status == 422) {
             _this.validationErrors = error.response.data.errors;
@@ -10623,55 +10705,56 @@ __webpack_require__.r(__webpack_exports__);
     approveTrainee: function approveTrainee() {
       var _this2 = this;
 
-      if (confirm(this.$t('words.are-you-sure'))) {
-        this.$inertia.post(route('back.trainees.approve-user', {
+      if (confirm(this.$t("words.are-you-sure"))) {
+        this.$inertia.post(route("back.trainees.approve-user", {
           trainee_id: this.trainee.id
         })).then(function (response) {
-          _this2.$inertia.get(route('back.trainees.show', _this2.trainee.id));
+          _this2.$inertia.get(route("back.trainees.show", _this2.trainee.id));
         });
       }
     },
+    // my comment
     sendingCsrf: function sendingCsrf(file, xhr, formData) {
-      xhr.setRequestHeader('X-CSRF-TOKEN', window.token ? window.token.content : '');
+      xhr.setRequestHeader("X-CSRF-TOKEN", window.token ? window.token.content : "");
     },
     deleteIdentity: function deleteIdentity() {
-      if (confirm(this.$t('words.are-you-sure'))) {
-        this.$inertia["delete"](route('back.trainees.attachments.identity.destroy', {
+      if (confirm(this.$t("words.are-you-sure"))) {
+        this.$inertia["delete"](route("back.trainees.attachments.identity.destroy", {
           trainee_id: this.trainee.id
         }));
       }
     },
     deleteQualification: function deleteQualification() {
-      if (confirm(this.$t('words.are-you-sure'))) {
-        this.$inertia["delete"](route('back.trainees.attachments.qualification.destroy', {
+      if (confirm(this.$t("words.are-you-sure"))) {
+        this.$inertia["delete"](route("back.trainees.attachments.qualification.destroy", {
           trainee_id: this.trainee.id
         }));
       }
     },
     deleteBankAccount: function deleteBankAccount() {
-      if (confirm(this.$t('words.are-you-sure'))) {
-        this.$inertia["delete"](route('back.trainees.attachments.bank-account.destroy', {
+      if (confirm(this.$t("words.are-you-sure"))) {
+        this.$inertia["delete"](route("back.trainees.attachments.bank-account.destroy", {
           trainee_id: this.trainee.id
         }));
       }
     },
     deleteNationalAddress: function deleteNationalAddress() {
-      if (confirm(this.$t('words.are-you-sure'))) {
-        this.$inertia["delete"](route('back.trainees.attachments.national-address.destroy', {
+      if (confirm(this.$t("words.are-you-sure"))) {
+        this.$inertia["delete"](route("back.trainees.attachments.national-address.destroy", {
           trainee_id: this.trainee.id
         }));
       }
     },
     deleteCv: function deleteCv() {
-      if (confirm(this.$t('words.are-you-sure'))) {
-        this.$inertia["delete"](route('back.trainees.attachments.cv.destroy', {
+      if (confirm(this.$t("words.are-you-sure"))) {
+        this.$inertia["delete"](route("back.trainees.attachments.cv.destroy", {
           trainee_id: this.trainee.id
         }));
       }
     },
     openTraineeAccount: function openTraineeAccount() {
-      if (confirm(this.$t('words.are-you-sure'))) {
-        this.$inertia.post(route('back.trainees.create-user', {
+      if (confirm(this.$t("words.are-you-sure"))) {
+        this.$inertia.post(route("back.trainees.create-user", {
           trainee_id: this.trainee.id
         }));
       }
@@ -10679,13 +10762,13 @@ __webpack_require__.r(__webpack_exports__);
     resendInvitation: function resendInvitation() {
       var _this3 = this;
 
-      this.$wait.start('SENDING_INVITATION');
-      this.$inertia.post(route('back.trainees.re-send-invitation', {
+      this.$wait.start("SENDING_INVITATION");
+      this.$inertia.post(route("back.trainees.re-send-invitation", {
         trainee_id: this.trainee.id
       })).then(function (response) {
-        alert(_this3.$t('words.done-successfully'));
+        alert(_this3.$t("words.done-successfully"));
       })["finally"](function (error) {
-        _this3.$wait.end('SENDING_INVITATION');
+        _this3.$wait.end("SENDING_INVITATION");
       });
     }
   }
@@ -22503,6 +22586,148 @@ render._withStripped = true;
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Back/Companies/Files/Index.vue?vue&type=template&id=1c5beee7&":
+/*!******************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Pages/Back/Companies/Files/Index.vue?vue&type=template&id=1c5beee7& ***!
+  \******************************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function render() {
+  var _vm = this,
+      _c = _vm._self._c;
+
+  return _c("app-layout", [_c("div", {
+    staticClass: "container px-6 mx-auto grid pt-6"
+  }, [_c("breadcrumb-container", {
+    attrs: {
+      crumbs: [{
+        title: "dashboard",
+        link: _vm.route("dashboard")
+      }, {
+        title: "companies",
+        link: _vm.route("back.companies.index")
+      }, {
+        title_raw: _vm.company.name_ar,
+        link: _vm.route("back.companies.show", _vm.company.id)
+      }, {
+        title_raw: _vm.$t("words.files")
+      }]
+    }
+  }), _vm._v(" "), _c("div", {
+    staticClass: "bg-white rounded shadow overflow-x-auto my-5 p-5"
+  }, [_c("table", {
+    staticClass: "w-full whitespace-no-wrap bg-white rounded-lg my-5 p-5 shadow text-sm"
+  }, [_c("colgroup", [_c("col"), _vm._v(" "), _c("col", {
+    staticStyle: {
+      width: "200px"
+    }
+  }), _vm._v(" "), _c("col", {
+    staticStyle: {
+      width: "200px"
+    }
+  }), _vm._v(" "), _c("col", {
+    staticStyle: {
+      width: "30px"
+    }
+  })]), _vm._v(" "), _c("thead", [_c("tr", [_c("th", {
+    staticClass: "text-right"
+  }, [_vm._v(_vm._s(_vm.$t("words.name")))]), _vm._v(" "), _c("th"), _vm._v(" "), _c("th"), _vm._v(" "), _c("th")])]), _vm._v(" "), _c("tbody", _vm._l(_vm.company.general_files, function (file) {
+    return _c("tr", {
+      staticClass: "hover:bg-gray-100 focus-within:bg-gray-100"
+    }, [_c("td", {
+      staticClass: "border-t mt-2 p-1 px-2"
+    }, [_c("a", {
+      attrs: {
+        target: "_blank",
+        href: _vm.route("back.companies.files.show", {
+          company_id: _vm.company.id,
+          file: file.id
+        })
+      }
+    }, [_vm._v("\n                                    " + _vm._s(file.file_name) + "\n                                ")])]), _vm._v(" "), _c("td", {
+      staticClass: "border-t mt-2 p-1 px-2",
+      attrs: {
+        dir: "ltr"
+      }
+    }, [_vm._v(_vm._s(file.created_at_timezone))]), _vm._v(" "), _c("td", {
+      staticClass: "border-t mt-2 p-1 px-2",
+      attrs: {
+        dir: "ltr"
+      }
+    }, [_vm._v(_vm._s(file.human_readable_size))]), _vm._v(" "), _c("td", {
+      staticClass: "border-t mt-2 p-1 px-2",
+      attrs: {
+        dir: "ltr"
+      }
+    }, [_c("span", {
+      staticClass: "cursor-pointer",
+      on: {
+        click: function click($event) {
+          return _vm.deleteFile(file.id);
+        }
+      }
+    }, [_c("svg", {
+      staticClass: "w-4 h-4",
+      attrs: {
+        xmlns: "http://www.w3.org/2000/svg",
+        fill: "none",
+        viewBox: "0 0 24 24",
+        "stroke-width": "1.5",
+        stroke: "currentColor"
+      }
+    }, [_c("path", {
+      attrs: {
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        d: "M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+      }
+    })])])])]);
+  }), 0)])]), _vm._v(" "), _c("div", {
+    staticClass: "bg-white rounded shadow overflow-x-auto my-5 p-5"
+  }, [_c("form", {
+    attrs: {
+      enctype: "multipart/form-data"
+    },
+    on: {
+      submit: function submit($event) {
+        $event.preventDefault();
+        return _vm.submitForm.apply(null, arguments);
+      }
+    }
+  }, [_c("div", {
+    staticClass: "importFile mt-10"
+  }, [_c("input", {
+    ref: "attached_file",
+    attrs: {
+      type: "file",
+      name: "attached_file",
+      required: ""
+    },
+    on: {
+      change: _vm.importFileChanged
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "flex mt-8"
+  }, [_c("button", {
+    staticClass: "inline-flex px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150 mx-4 tracking-normal",
+    attrs: {
+      type: "submit",
+      disabled: _vm.$wait.is("SAVING_FILE")
+    }
+  }, [_vm._v("\n                        " + _vm._s(_vm.$t("words.upload")) + "\n                    ")])])])])], 1)]);
+};
+
+var staticRenderFns = [];
+render._withStripped = true;
+
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Back/Companies/Index.vue?vue&type=template&id=03d27742&":
 /*!************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Pages/Back/Companies/Index.vue?vue&type=template&id=03d27742& ***!
@@ -23239,7 +23464,7 @@ var render = function render() {
       "stroke-linejoin": "round",
       d: "M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zm0 13.036h.008v.008H12v-.008z"
     }
-  })]), _vm._v("\n                        " + _vm._s(_vm.$t("words.company-is-deleted")) + "\n                    ")])]) : _vm._e()]), _vm._v(" "), _c("div", {
+  })]), _vm._v("\n          " + _vm._s(_vm.$t("words.company-is-deleted")) + "\n        ")])]) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "grid grid-cols-4 gap-6"
   }, [_c("div", {
     staticClass: "col-span-4 flex items-center justify-end bg-gray-50 text-right gap-6"
@@ -23256,12 +23481,12 @@ var render = function render() {
         company_id: _vm.company.id
       })
     }
-  }, [_vm._v("\n                        " + _vm._s(_vm.$t("words.open-permissions")) + "\n                    ")]), _vm._v(" "), _vm.$page.props.user.email === "shafiqalshaar@clarastars.com" ? _c("inertia-link", {
+  }, [_vm._v("\n          " + _vm._s(_vm.$t("words.open-permissions")) + "\n        ")]), _vm._v(" "), _vm.$page.props.user.email === "shafiqalshaar@clarastars.com" ? _c("inertia-link", {
     staticClass: "flex items-center justify-start rounded-md mx-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right",
     attrs: {
       href: "/back/companies/".concat(this.company.id, "/ptcnet")
     }
-  }, [_vm._v("\n                        Mark as PTCNet "), this.company.is_ptc_net ? _c("span", [_vm._v("T")]) : _vm._e()]) : _vm._e(), _vm._v(" "), _c("inertia-link", {
+  }, [_vm._v("\n          Mark as PTCNet "), this.company.is_ptc_net ? _c("span", [_vm._v("T")]) : _vm._e()]) : _vm._e(), _vm._v(" "), _c("inertia-link", {
     directives: [{
       name: "can",
       rawName: "v-can",
@@ -23272,12 +23497,12 @@ var render = function render() {
     attrs: {
       href: "/back/companies/".concat(this.company.id, "/restore")
     }
-  }, [_vm._v("\n                        " + _vm._s(_vm.$t("words.restore")) + "\n                    ")]), _vm._v(" "), !_vm.company.deleted_at ? _c("inertia-link", {
+  }, [_vm._v("\n          " + _vm._s(_vm.$t("words.restore")) + "\n        ")]), _vm._v(" "), !_vm.company.deleted_at ? _c("inertia-link", {
     staticClass: "flex items-center justify-start rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right",
     attrs: {
       href: "/back/companies/".concat(this.company.id, "/edit")
     }
-  }, [_vm._v("\n                        " + _vm._s(_vm.$t("words.edit")) + "\n                    ")]) : _vm._e(), _vm._v(" "), !_vm.company.deleted_at ? _c("button", {
+  }, [_vm._v("\n          " + _vm._s(_vm.$t("words.edit")) + "\n        ")]) : _vm._e(), _vm._v(" "), !_vm.company.deleted_at ? _c("button", {
     staticClass: "flex items-center justify-start rounded-md py-2 px-2 bg-red-600 text-white hover:bg-red-700 text-right",
     attrs: {
       tabindex: "-1",
@@ -23289,7 +23514,7 @@ var render = function render() {
         return _vm.deleteCompany();
       }
     }
-  }, [_vm._v("\n                        " + _vm._s(_vm.$t("words.archive")) + "\n                    ")]) : _vm._e()], 1), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n          " + _vm._s(_vm.$t("words.archive")) + "\n        ")]) : _vm._e()], 1), _vm._v(" "), _c("div", {
     staticClass: "col-span-4 sm:col-span-1"
   }, [_c("jet-label", {
     attrs: {
@@ -23328,7 +23553,7 @@ var render = function render() {
       domProps: {
         value: center.id
       }
-    }, [_vm._v("\n                                " + _vm._s(center.name) + "\n                            ")]);
+    }, [_vm._v("\n              " + _vm._s(center.name) + "\n            ")]);
   }), 0)]), _vm._v(" "), _c("jet-input-error", {
     staticClass: "mt-2",
     attrs: {
@@ -23397,19 +23622,26 @@ var render = function render() {
       domProps: {
         value: region.id
       }
-    }, [_vm._v("\n                                " + _vm._s(region.name) + "\n                            ")]);
+    }, [_vm._v("\n              " + _vm._s(region.name) + "\n            ")]);
   }), 0)]), _vm._v(" "), _c("jet-input-error", {
     staticClass: "mt-2",
     attrs: {
       message: _vm.form.error("region_id")
     }
   })], 1)], 2), _vm._v(" "), _c("div", {
+    staticClass: "mt-3"
+  }, [_c("inertia-link", {
+    staticClass: "text-blue-600 border-2 border-blue-600 text-xs p-1",
+    attrs: {
+      href: _vm.route("back.companies.files.index", _vm.company.id)
+    }
+  }, [_vm._v("\n              " + _vm._s(_vm.$t("words.upload-image")) + "\n            ")])], 1), _vm._v(" "), _c("div", {
     staticClass: "grid grid-cols-1 md:grid-cols-6 gap-6 mt-2"
   }, [_c("div", {
     staticClass: "md:col-span-2 sm:col-span-3"
   }, [_c("p", {
     staticClass: "text-xs"
-  }, [_vm._v(_vm._s(_vm.$t("words.created-at")) + ": "), _c("span", {
+  }, [_vm._v("\n          " + _vm._s(_vm.$t("words.created-at")) + ":\n          "), _c("span", {
     attrs: {
       dir: "ltr"
     }
@@ -23427,9 +23659,9 @@ var render = function render() {
     staticClass: "px-4 sm:px-0"
   }, [_c("h3", {
     staticClass: "text-lg font-medium text-gray-900"
-  }, [_vm._v("\n                            " + _vm._s(_vm.$t("words.contracts")) + "\n                        ")]), _vm._v(" "), _c("p", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("words.contracts")) + "\n          ")]), _vm._v(" "), _c("p", {
     staticClass: "mt-1 text-sm text-gray-600"
-  }, [_vm._v("\n                            " + _vm._s(_vm.$t("words.contracts-help")) + "\n                        ")])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("words.contracts-help")) + "\n          ")])])]), _vm._v(" "), _c("div", {
     staticClass: "md:col-span-4 sm:col-span-1"
   }, [_c("company-contracts-pagination", {
     attrs: {
@@ -23450,12 +23682,12 @@ var render = function render() {
     staticClass: "px-4 sm:px-0"
   }, [_c("h3", {
     staticClass: "text-lg font-medium text-gray-900"
-  }, [_vm._v("\n                            " + _vm._s(_vm.$t("words.trainees")) + "\n                            "), _vm.company.trainees_count ? _c("span", [_vm._v("(" + _vm._s(_vm.company.trainees_count) + ")")]) : _vm._e(), _vm._v(" "), _vm.trainees_trashed_count ? _c("span", [_vm._v("(" + _vm._s(_vm.trainees_trashed_count) + ")")]) : _vm._e()]), _vm._v(" "), _c("inertia-link", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("words.trainees")) + "\n            "), _vm.company.trainees_count ? _c("span", [_vm._v("(" + _vm._s(_vm.company.trainees_count) + ")")]) : _vm._e(), _vm._v(" "), _vm.trainees_trashed_count ? _c("span", [_vm._v("(" + _vm._s(_vm.trainees_trashed_count) + ")")]) : _vm._e()]), _vm._v(" "), _c("inertia-link", {
     staticClass: "text-sm mt-2 text-blue-500 hover:text-blue-700",
     attrs: {
       href: _vm.route("back.companies.trainees.activity-log", _vm.company.id)
     }
-  }, [_vm._v("\n                            " + _vm._s(_vm.$t("words.activity-log")) + "\n                        ")])], 1)]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("words.activity-log")) + "\n          ")])], 1)]), _vm._v(" "), _c("div", {
     staticClass: "md:col-span-4 sm:col-span-1"
   }, [_c("div", {
     staticClass: "flex justify-end items-center gap-4"
@@ -23470,7 +23702,7 @@ var render = function render() {
         return _vm.deleteTrainees(_vm.selected);
       }
     }
-  }, [_vm._v("\n                            " + _vm._s(_vm.$t("words.block")) + "\n                        ")]), _vm._v(" "), _c("button", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("words.block")) + "\n          ")]), _vm._v(" "), _c("button", {
     staticClass: "inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed bg-green-500 hover:bg-green-600 active:bg-green-700 foucs:bg-green-700",
     attrs: {
       type: "button",
@@ -23481,7 +23713,7 @@ var render = function render() {
         return _vm.unBlockTrainees(_vm.selected);
       }
     }
-  }, [_vm._v("\n                            " + _vm._s(_vm.$t("words.unblock")) + "\n                        ")]), _vm._v(" "), _c("post-trainees-button", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("words.unblock")) + "\n          ")]), _vm._v(" "), _c("post-trainees-button", {
     attrs: {
       "company-id": _vm.company.id
     }
@@ -23598,13 +23830,13 @@ var render = function render() {
       }
     }, [trainees.deleted_at ? _c("span", {
       staticClass: "inline-block mt-2 p-1 px-2 bg-red-600 text-white rounded-lg"
-    }, [_vm._v("\n                                            " + _vm._s(_vm.$t("words.blocked")) + "\n                                        ")]) : _vm._e(), _vm._v(" "), trainees.is_pending_uploading_files ? _c("span", {
+    }, [_vm._v("\n                    " + _vm._s(_vm.$t("words.blocked")) + "\n                  ")]) : _vm._e(), _vm._v(" "), trainees.is_pending_uploading_files ? _c("span", {
       staticClass: "inline-block mt-2 p-1 px-2 bg-blue-300 rounded-lg"
-    }, [_vm._v("\n                                            " + _vm._s(_vm.$t("words.incomplete-application")) + "\n                                        ")]) : _vm._e(), _vm._v(" "), trainees.is_pending_approval ? _c("span", {
+    }, [_vm._v("\n                    " + _vm._s(_vm.$t("words.incomplete-application")) + "\n                  ")]) : _vm._e(), _vm._v(" "), trainees.is_pending_approval ? _c("span", {
       staticClass: "inline-block mt-2 p-1 px-2 bg-yellow-200 rounded-lg"
-    }, [_vm._v("\n                                            " + _vm._s(_vm.$t("words.nominated-instructor")) + "\n                                        ")]) : _vm._e(), _vm._v(" "), trainees.is_approved ? _c("span", {
+    }, [_vm._v("\n                    " + _vm._s(_vm.$t("words.nominated-instructor")) + "\n                  ")]) : _vm._e(), _vm._v(" "), trainees.is_approved ? _c("span", {
       staticClass: "inline-block mt-2 p-1 px-2 bg-green-300 rounded-lg"
-    }, [_vm._v("\n                                            " + _vm._s(_vm.$t("words.approved")) + "\n                                        ")]) : _vm._e(), _vm._v("\n                                        " + _vm._s(trainees.name) + "\n                                    ")])], 1)]), _vm._v(" "), _c("td", {
+    }, [_vm._v("\n                    " + _vm._s(_vm.$t("words.approved")) + "\n                  ")]) : _vm._e(), _vm._v("\n                  " + _vm._s(trainees.name) + "\n                ")])], 1)]), _vm._v(" "), _c("td", {
       staticClass: "border-t"
     }, [_c("inertia-link", {
       staticClass: "px-4 py-2 flex items-center",
@@ -23621,7 +23853,7 @@ var render = function render() {
         href: _vm.route("back.trainees.show", trainees.id),
         tabindex: "-1"
       }
-    }, [trainees.phone ? _c("div", [_vm._v("\n                                        " + _vm._s(trainees.phone) + "\n                                    ")]) : _vm._e()])], 1), _vm._v(" "), _c("td", {
+    }, [trainees.phone ? _c("div", [_vm._v("\n                  " + _vm._s(trainees.phone) + "\n                ")]) : _vm._e()])], 1), _vm._v(" "), _c("td", {
       staticClass: "border-t w-px"
     }, [_c("inertia-link", {
       staticClass: "px-4 flex items-center",
@@ -23654,7 +23886,7 @@ var render = function render() {
     staticClass: "px-4 sm:px-0"
   }, [_c("h3", {
     staticClass: "text-lg font-medium text-gray-900"
-  }, [_vm._v("\n                            " + _vm._s(_vm.$t("words.invoices")) + "\n                        ")])]), _vm._v(" "), _c("inertia-link", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("words.invoices")) + "\n          ")])]), _vm._v(" "), _c("inertia-link", {
     staticClass: "inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150",
     attrs: {
       href: _vm.route("back.companies.invoices.create", {
@@ -23717,7 +23949,7 @@ var render = function render() {
       }),
       target: "_blank"
     }
-  }, [_vm._v("\n                            " + _vm._s(_vm.$t("words.print")) + "\n                        ")])]), _vm._v(" "), _c("table", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("words.print")) + "\n          ")])]), _vm._v(" "), _c("table", {
     staticClass: "w-full whitespace-no-wrap bg-white rounded-lg my-5 p-5 shadow text-sm"
   }, [_c("tr", {
     staticClass: "text-left font-bold"
@@ -23739,15 +23971,15 @@ var render = function render() {
       staticClass: "border-t hover:bg-gray-100 focus-within:bg-gray-100"
     }, [_c("td", {
       staticClass: "px-4 py-4"
-    }, [_vm._v("\n                                " + _vm._s(invoice.created_at_date) + "\n                            ")]), _vm._v(" "), _c("td", {
+    }, [_vm._v("\n              " + _vm._s(invoice.created_at_date) + "\n            ")]), _vm._v(" "), _c("td", {
       staticClass: "px-4 py-4"
-    }, [_vm._v("\n                                " + _vm._s(_vm._f("formatDate")(invoice.from_date)) + "\n                                "), _c("br"), _vm._v("\n                                " + _vm._s(_vm._f("formatDate")(invoice.to_date)) + "\n                            ")]), _vm._v(" "), _c("td", {
+    }, [_vm._v("\n              " + _vm._s(_vm._f("formatDate")(invoice.from_date)) + "\n              "), _c("br"), _vm._v("\n              " + _vm._s(_vm._f("formatDate")(invoice.to_date)) + "\n            ")]), _vm._v(" "), _c("td", {
       staticClass: "px-4 py-4"
-    }, [_vm._v("\n                                " + _vm._s(invoice.trainee_count) + "\n                            ")]), _vm._v(" "), _c("td", {
+    }, [_vm._v("\n              " + _vm._s(invoice.trainee_count) + "\n            ")]), _vm._v(" "), _c("td", {
       staticClass: "px-4 py-4"
-    }, [_vm._v("\n                                " + _vm._s(invoice.grand_total) + "\n                            ")]), _vm._v(" "), _c("td", {
+    }, [_vm._v("\n              " + _vm._s(invoice.grand_total) + "\n            ")]), _vm._v(" "), _c("td", {
       staticClass: "px-4 py-4"
-    }, [_vm._v("\n                                " + _vm._s(invoice.created_by ? invoice.created_by.name : "Unknown") + "\n                            ")]), _vm._v(" "), _c("td", {
+    }, [_vm._v("\n              " + _vm._s(invoice.created_by ? invoice.created_by.name : "Unknown") + "\n            ")]), _vm._v(" "), _c("td", {
       staticClass: "w-px"
     }, [_c("a", {
       staticClass: "px-4 flex items-center",
@@ -23762,7 +23994,7 @@ var render = function render() {
         tabindex: "-1",
         target: "_blank"
       }
-    }, [_vm._v("\n                                    " + _vm._s(_vm.$t("words.download")) + "\n                                    "), _c("ion-icon", {
+    }, [_vm._v("\n                " + _vm._s(_vm.$t("words.download")) + "\n                "), _c("ion-icon", {
       staticClass: "block w-6 h-6 fill-gray-400",
       attrs: {
         name: "arrow-forward-outline"
@@ -23785,7 +24017,7 @@ var render = function render() {
           return _vm.deleteInvoice(invoice);
         }
       }
-    }, [_vm._v("\n                                    " + _vm._s(_vm.$t("words.delete")) + "\n                                ")]) : _vm._e()]), _vm._v(" "), _c("td", {
+    }, [_vm._v("\n                " + _vm._s(_vm.$t("words.delete")) + "\n              ")]) : _vm._e()]), _vm._v(" "), _c("td", {
       staticClass: "rtl:text-right text-black"
     }, [_c("a", {
       staticClass: "inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-gray-700 hover:bg-gray-600 active:bg-red-700 foucs:bg-red-700",
@@ -23800,7 +24032,7 @@ var render = function render() {
         tabindex: "-1",
         target: "_blank"
       }
-    }, [_vm._v("\n                                    " + _vm._s(_vm.$t("words.change-date-period")) + "\n                                ")])])]);
+    }, [_vm._v("\n                " + _vm._s(_vm.$t("words.change-date-period")) + "\n              ")])])]);
   }), _vm._v(" "), _vm.invoices.length === 0 ? _c("tr", [_c("td", {
     staticClass: "border-t px-4 py-4",
     attrs: {
@@ -23820,7 +24052,7 @@ var render = function render() {
     staticClass: "px-4 sm:px-0"
   }, [_c("h3", {
     staticClass: "text-lg font-medium text-gray-900"
-  }, [_vm._v("\n                            " + _vm._s(_vm.$t("words.resignations")) + "\n                        ")])]), _vm._v(" "), _c("inertia-link", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("words.resignations")) + "\n          ")])]), _vm._v(" "), _c("inertia-link", {
     staticClass: "inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150",
     attrs: {
       href: _vm.route("back.resignations.create", {
@@ -23849,26 +24081,26 @@ var render = function render() {
       staticClass: "border-t"
     }, [_c("div", {
       staticClass: "px-4 py-2 focus:text-indigo-500"
-    }, [_vm._v("\n                                    " + _vm._s(resignation.number)), _c("br"), _vm._v("\n                                    " + _vm._s(resignation.created_by.email) + "\n                                    "), _c("br"), _vm._v(" "), _c("p", {
+    }, [_vm._v("\n                " + _vm._s(resignation.number)), _c("br"), _vm._v("\n                " + _vm._s(resignation.created_by.email) + "\n                "), _c("br"), _vm._v(" "), _c("p", {
       staticClass: "text-right text-gray-400 text-sm",
       attrs: {
         dir: "ltr"
       }
-    }, [_vm._v(_vm._s(resignation.created_at_timezone))])])]), _vm._v(" "), _c("td", {
+    }, [_vm._v("\n                  " + _vm._s(resignation.created_at_timezone) + "\n                ")])])]), _vm._v(" "), _c("td", {
       staticClass: "border-t"
     }, [_c("div", {
       staticClass: "px-4 py-2 focus:text-indigo-500"
-    }, [_vm._v("\n                                    " + _vm._s(resignation.emails_to) + "\n                                    "), resignation.emails_cc ? [_c("br"), _vm._v(_vm._s(resignation.emails_cc))] : _vm._e(), _vm._v(" "), resignation.emails_bcc ? [_c("br"), _vm._v(_vm._s(resignation.emails_bcc))] : _vm._e()], 2)]), _vm._v(" "), _c("td", {
+    }, [_vm._v("\n                " + _vm._s(resignation.emails_to) + "\n                "), resignation.emails_cc ? [_c("br"), _vm._v(_vm._s(resignation.emails_cc))] : _vm._e(), _vm._v(" "), resignation.emails_bcc ? [_c("br"), _vm._v(_vm._s(resignation.emails_bcc))] : _vm._e()], 2)]), _vm._v(" "), _c("td", {
       staticClass: "border-t w-px"
     }, [_c("div", {
       staticClass: "px-4 py-2 flex items-center focus:text-indigo-500"
-    }, [_vm._v("\n                                    " + _vm._s(resignation.trainees_count) + "\n                                ")])]), _vm._v(" "), _c("td", {
+    }, [_vm._v("\n                " + _vm._s(resignation.trainees_count) + "\n              ")])]), _vm._v(" "), _c("td", {
       staticClass: "border-t w-px"
     }, [_c("div", {
       staticClass: "px-4 py-2 flex items-center focus:text-indigo-500"
     }, [resignation.sent_at ? [_c("br"), _vm._v(" "), _c("p", {
       staticClass: "text-right text-sm"
-    }, [_vm._v(_vm._s(_vm.$t("words.sent")) + " "), _c("br"), _c("span", {
+    }, [_vm._v("\n                    " + _vm._s(_vm.$t("words.sent")) + " "), _c("br"), _c("span", {
       attrs: {
         dir: "ltr"
       }
@@ -23889,7 +24121,7 @@ var render = function render() {
           return _vm.destroyResignation(resignation);
         }
       }
-    }, [_vm._v("\n                                        " + _vm._s(_vm.$t("words.delete")) + "\n                                    ")]) : _vm._e(), _vm._v(" "), _c("inertia-link", {
+    }, [_vm._v("\n                  " + _vm._s(_vm.$t("words.delete")) + "\n                ")]) : _vm._e(), _vm._v(" "), _c("inertia-link", {
       staticClass: "bg-yellow-300 text-black px-2 py-1 rounded",
       attrs: {
         href: _vm.route("back.resignations.upload", {
@@ -23897,7 +24129,7 @@ var render = function render() {
           id: resignation.id
         })
       }
-    }, [_vm._v("\n                                        " + _vm._s(_vm.$t("words.resignation-file")) + "\n                                    ")]), _vm._v(" "), resignation.has_file && !resignation.sent_at ? _c("button", {
+    }, [_vm._v("\n                  " + _vm._s(_vm.$t("words.resignation-file")) + "\n                ")]), _vm._v(" "), resignation.has_file && !resignation.sent_at ? _c("button", {
       staticClass: "bg-yellow-300 text-black px-2 py-1 rounded disabled:bg-yellow-100",
       attrs: {
         href: _vm.route("back.resignations.approve", {
@@ -23910,7 +24142,7 @@ var render = function render() {
           return _vm.approveResignation(resignation);
         }
       }
-    }, [_vm._v("\n                                        " + _vm._s(_vm.$t("words.approve")) + "\n                                    ")]) : _vm._e()], 1)])]);
+    }, [_vm._v("\n                  " + _vm._s(_vm.$t("words.approve")) + "\n                ")]) : _vm._e()], 1)])]);
   }), _vm._v(" "), _vm.company.trainees.length === 0 ? _c("tr", [_c("td", {
     staticClass: "border-t px-4 py-4",
     attrs: {
@@ -23938,15 +24170,15 @@ var render = function render() {
       staticClass: "border-t"
     }, [_c("div", {
       staticClass: "px-4 py-2 focus:text-indigo-500"
-    }, [_vm._v("\n                                    " + _vm._s(company_mail.from)), _c("br"), _vm._v("\n                                    " + _vm._s(company_mail.sender) + "\n                                ")])]), _vm._v(" "), _c("td", {
+    }, [_vm._v("\n                " + _vm._s(company_mail.from)), _c("br"), _vm._v("\n                " + _vm._s(company_mail.sender) + "\n              ")])]), _vm._v(" "), _c("td", {
       staticClass: "border-t"
     }, [_c("div", {
       staticClass: "px-4 py-2 focus:text-indigo-500"
-    }, [_vm._v("\n                                    " + _vm._s(company_mail.subject) + "\n                                ")])]), _vm._v(" "), _c("td", {
+    }, [_vm._v("\n                " + _vm._s(company_mail.subject) + "\n              ")])]), _vm._v(" "), _c("td", {
       staticClass: "border-t w-px"
     }, [_c("div", {
       staticClass: "px-4 py-2 flex items-center focus:text-indigo-500"
-    }, [_vm._v("\n                                    " + _vm._s(company_mail.created_at) + "\n                                ")])]), _vm._v(" "), _c("td", {
+    }, [_vm._v("\n                " + _vm._s(company_mail.created_at) + "\n              ")])]), _vm._v(" "), _c("td", {
       staticClass: "border-t w-px"
     }, [_c("div", {
       staticClass: "px-4 py-2 flex items-center focus:text-indigo-500"
@@ -23958,8 +24190,8 @@ var render = function render() {
           id: company_mail.id
         })
       }
-    }, [_vm._v("\n                                        " + _vm._s(_vm.$t("words.view")) + "\n                                    ")])], 1)])]);
-  }), _vm.company.trainees.length === 0 ? _c("tr", [_c("td", {
+    }, [_vm._v("\n                  " + _vm._s(_vm.$t("words.view")) + "\n                ")])], 1)])]);
+  }), _vm._v(" "), _vm.company.trainees.length === 0 ? _c("tr", [_c("td", {
     staticClass: "border-t px-4 py-4",
     attrs: {
       colspan: "4"
@@ -36231,7 +36463,7 @@ var render = function render() {
       "stroke-linejoin": "round",
       d: "M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zm0 13.036h.008v.008H12v-.008z"
     }
-  })]), _vm._v("\n                    " + _vm._s(_vm.$t("words.caution-dont-take-action-against-this-account-without-admin-approval")) + "\n                ")])]) : _vm._e(), _vm._v(" "), _vm.in_block_list ? _c("div", {
+  })]), _vm._v("\n          " + _vm._s(_vm.$t("words.caution-dont-take-action-against-this-account-without-admin-approval")) + "\n        ")])]) : _vm._e(), _vm._v(" "), _vm.in_block_list ? _c("div", {
     staticClass: "col-span-6 items-center justify-end bg-gray-50 text-right flex gap-6"
   }, [_c("div", {
     staticClass: "bg-red-600 p-2"
@@ -36252,7 +36484,7 @@ var render = function render() {
       "stroke-linejoin": "round",
       d: "M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zm0 13.036h.008v.008H12v-.008z"
     }
-  })]), _vm._v("\n                        " + _vm._s(_vm.$t("words.trainee-in-block-directory")) + "\n                    ")]), _vm._v(" "), _c("div", {
+  })]), _vm._v("\n            " + _vm._s(_vm.$t("words.trainee-in-block-directory")) + "\n          ")]), _vm._v(" "), _c("div", {
     staticClass: "font-bold text-white p-2 rounded-sm flex gap-2"
   }, [_c("table", {
     staticClass: "table table-bordered table-hover text-xs w-full"
@@ -36270,9 +36502,9 @@ var render = function render() {
     staticClass: "border px-1"
   }, [_vm._v(_vm._s(_vm.in_block_list.email))])]) : _vm._e(), _vm._v(" "), _vm.in_block_list.identity_number ? _c("tr", [_c("td", {
     staticClass: "border px-1"
-  }, [_vm._v(_vm._s(_vm.$t("words.identity_number")))]), _vm._v(" "), _c("td", {
+  }, [_vm._v("\n                    " + _vm._s(_vm.$t("words.identity_number")) + "\n                  ")]), _vm._v(" "), _c("td", {
     staticClass: "border px-1"
-  }, [_vm._v(_vm._s(_vm.in_block_list.identity_number))])]) : _vm._e(), _vm._v(" "), _vm.in_block_list.reason ? _c("tr", [_c("td", {
+  }, [_vm._v("\n                    " + _vm._s(_vm.in_block_list.identity_number) + "\n                  ")])]) : _vm._e(), _vm._v(" "), _vm.in_block_list.reason ? _c("tr", [_c("td", {
     staticClass: "border px-1"
   }, [_vm._v(_vm._s(_vm.$t("words.reason")))]), _vm._v(" "), _c("td", {
     staticClass: "border px-1"
@@ -36288,14 +36520,14 @@ var render = function render() {
     on: {
       click: _vm.deleteFromBlockList
     }
-  }, [_vm._v(_vm._s(_vm.$t("words.delete")))])])])])])])])]) : _vm._e(), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                      " + _vm._s(_vm.$t("words.delete")) + "\n                    ")])])])])])])])]) : _vm._e(), _vm._v(" "), _c("div", {
     staticClass: "col-span-6 items-center justify-end bg-gray-50 text-right flex gap-6"
   }, [_c("inertia-link", {
     staticClass: "items-center justify-start text-left float-left rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right",
     attrs: {
       href: _vm.route("back.trainees.private-notifications.create", _vm.trainee.id)
     }
-  }, [_vm._v("\n                    " + _vm._s(_vm.$t("words.private-message")) + "\n                ")]), _vm._v(" "), _vm.trainee.user_id ? _c("a", {
+  }, [_vm._v("\n          " + _vm._s(_vm.$t("words.private-message")) + "\n        ")]), _vm._v(" "), _vm.trainee.user_id ? _c("a", {
     directives: [{
       name: "can",
       rawName: "v-can",
@@ -36306,18 +36538,18 @@ var render = function render() {
     attrs: {
       href: _vm.route("impersonate", _vm.trainee.user_id)
     }
-  }, [_vm._v("\n                    " + _vm._s(_vm.$t("words.login-as-user")) + "\n                ")]) : _vm._e(), _vm._v(" "), _c("a", {
+  }, [_vm._v("\n          " + _vm._s(_vm.$t("words.login-as-user")) + "\n        ")]) : _vm._e(), _vm._v(" "), _c("a", {
     staticClass: "items-center justify-start text-left float-left rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right",
     attrs: {
       href: _vm.route("back.trainees.admin.attendance-sheet.pdf", _vm.trainee.id),
       target: "_blank"
     }
-  }, [_vm._v("\n                    " + _vm._s(_vm.$t("words.attendance-sheet")) + "\n                ")]), _vm._v(" "), !_vm.editButton.editOption ? _c("button", {
+  }, [_vm._v("\n          " + _vm._s(_vm.$t("words.attendance-sheet")) + "\n        ")]), _vm._v(" "), !_vm.editButton.editOption ? _c("button", {
     staticClass: "items-center justify-end rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right",
     on: {
       click: _vm.editTrainee
     }
-  }, [_vm._v("\n                    " + _vm._s(_vm.editButton.text) + "\n                ")]) : _c("button", {
+  }, [_vm._v("\n          " + _vm._s(_vm.editButton.text) + "\n        ")]) : _c("button", {
     staticClass: "items-center justify-end rounded-md px-4 py-2 bg-green-300 hover:bg-green-400 text-right",
     "class": {
       "bg-green-200 cursor-wait": _vm.$wait.is("UPDATING_TRAINEE")
@@ -36346,12 +36578,12 @@ var render = function render() {
       d: "M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z",
       fill: "currentColor"
     }
-  })]) : _vm._e(), _vm._v("\n                    " + _vm._s(_vm.editButton.text) + "\n                ")]), _vm._v(" "), _vm.editButton.editOption ? _c("button", {
+  })]) : _vm._e(), _vm._v("\n          " + _vm._s(_vm.editButton.text) + "\n        ")]), _vm._v(" "), _vm.editButton.editOption ? _c("button", {
     staticClass: "items-center justify-end rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right",
     on: {
       click: _vm.cancelEdit
     }
-  }, [_vm._v("\n                    " + _vm._s(_vm.cancelButton.text) + "\n                ")]) : _vm._e(), _vm._v(" "), _vm.trainee.user ? [_c("change-trainee-password", {
+  }, [_vm._v("\n          " + _vm._s(_vm.cancelButton.text) + "\n        ")]) : _vm._e(), _vm._v(" "), _vm.trainee.user ? [_c("change-trainee-password", {
     attrs: {
       trainee: _vm.trainee
     }
@@ -36388,17 +36620,17 @@ var render = function render() {
       fill: "currentColor",
       d: "M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
     }
-  })]) : _vm._e(), _vm._v("\n\n                        " + _vm._s(_vm.$t("words.resend-invitation")) + "\n                    ")]) : _vm._e()] : _vm._e(), _vm._v(" "), !_vm.trainee.user_id ? _c("button", {
+  })]) : _vm._e(), _vm._v("\n\n            " + _vm._s(_vm.$t("words.resend-invitation")) + "\n          ")]) : _vm._e()] : _vm._e(), _vm._v(" "), !_vm.trainee.user_id ? _c("button", {
     staticClass: "items-center justify-end rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right",
     on: {
       click: _vm.openTraineeAccount
     }
-  }, [_vm._v("\n                    " + _vm._s(_vm.$t("words.open-an-account")) + "\n                ")]) : _vm._e(), _vm._v(" "), _vm.trainee.is_pending_approval ? _c("button", {
+  }, [_vm._v("\n          " + _vm._s(_vm.$t("words.open-an-account")) + "\n        ")]) : _vm._e(), _vm._v(" "), _vm.trainee.is_pending_approval ? _c("button", {
     staticClass: "items-center justify-end rounded-md px-4 py-2 bg-yellow-200 hover:bg-yellow-300 text-right",
     on: {
       click: _vm.approveTrainee
     }
-  }, [_vm._v("\n                    " + _vm._s(_vm.$t("words.approve-trainee")) + "\n                ")]) : _vm._e(), _vm._v(" "), _c("button", {
+  }, [_vm._v("\n          " + _vm._s(_vm.$t("words.approve-trainee")) + "\n        ")]) : _vm._e(), _vm._v(" "), _c("button", {
     directives: [{
       name: "can",
       rawName: "v-can",
@@ -36409,7 +36641,7 @@ var render = function render() {
     on: {
       click: _vm.blockTrainee
     }
-  }, [_vm._v("\n                    " + _vm._s(_vm.$t("words.block-trainee")) + "\n                ")]), _vm._v(" "), _c("inertia-link", {
+  }, [_vm._v("\n          " + _vm._s(_vm.$t("words.block-trainee")) + "\n        ")]), _vm._v(" "), _c("inertia-link", {
     directives: [{
       name: "can",
       rawName: "v-can",
@@ -36422,7 +36654,7 @@ var render = function render() {
         trainee_id: _vm.trainee.id
       })
     }
-  }, [_vm._v("\n                    " + _vm._s(_vm.$t("words.suspend")) + "\n                ")])], 2), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n          " + _vm._s(_vm.$t("words.suspend")) + "\n        ")])], 2), _vm._v(" "), _c("div", {
     staticClass: "col-span-6 items-center justify-end bg-gray-50 text-right flex gap-6"
   }, [_c("gosi-container", {
     attrs: {
@@ -36506,7 +36738,7 @@ var render = function render() {
       domProps: {
         value: group
       }
-    }, [_vm._v("\n                        " + _vm._s(group.name) + "\n                    ")]);
+    }, [_vm._v("\n            " + _vm._s(group.name) + "\n          ")]);
   })], 2)], 1), _vm._v(" "), !_vm.editButton.editOption ? _c("div", {
     staticClass: "col-span-6 sm:col-span-2"
   }, [_c("jet-label", {
@@ -36570,7 +36802,7 @@ var render = function render() {
       domProps: {
         value: company.id
       }
-    }, [_vm._v("\n                        " + _vm._s(company.name_ar) + "\n                    ")]);
+    }, [_vm._v("\n            " + _vm._s(company.name_ar) + "\n          ")]);
   })], 2)], 1), _vm._v(" "), _c("div", {
     staticClass: "col-span-6 sm:col-span-2"
   }, [_c("jet-label", {
@@ -36662,7 +36894,7 @@ var render = function render() {
       alt: "Absher",
       width: "9px"
     }
-  }), _vm._v("\n                        " + _vm._s(_vm.trainee.phone_ownership_status) + "\n                    ")])]), _vm._v(" "), _c("jet-input", {
+  }), _vm._v("\n            " + _vm._s(_vm.trainee.phone_ownership_status) + "\n          ")])]), _vm._v(" "), _c("jet-input", {
     "class": _vm.editButton.inputClass,
     attrs: {
       id: "phone",
@@ -36777,7 +37009,7 @@ var render = function render() {
       domProps: {
         value: educational_level.id
       }
-    }, [_vm._v(_vm._s(educational_level.name_ar) + "\n                    ")]);
+    }, [_vm._v("\n            " + _vm._s(educational_level.name_ar) + "\n          ")]);
   }), 0)], 1) : _c("div", {
     staticClass: "col-span-6 sm:col-span-2"
   }, [_c("jet-label", {
@@ -36815,7 +37047,7 @@ var render = function render() {
       domProps: {
         value: educational_level.id
       }
-    }, [_vm._v(_vm._s(educational_level.name_en) + "\n                    ")]);
+    }, [_vm._v("\n            " + _vm._s(educational_level.name_en) + "\n          ")]);
   }), 0)], 1), _vm._v(" "), _c("div", {
     staticClass: "col-span-6 sm:col-span-2"
   }, [_c("jet-label", {
@@ -36853,7 +37085,7 @@ var render = function render() {
       domProps: {
         value: city.id
       }
-    }, [_vm._v(_vm._s(city.name_ar) + "\n                    ")]);
+    }, [_vm._v("\n            " + _vm._s(city.name_ar) + "\n          ")]);
   }), 0)], 1), _vm._v(" "), this.lang == "ar" ? _c("div", {
     staticClass: "col-span-6 sm:col-span-1"
   }, [_c("jet-label", {
@@ -36891,7 +37123,7 @@ var render = function render() {
       domProps: {
         value: marital_status.id
       }
-    }, [_vm._v(_vm._s(marital_status.name_ar) + "\n                    ")]);
+    }, [_vm._v("\n            " + _vm._s(marital_status.name_ar) + "\n          ")]);
   }), 0)], 1) : _c("div", {
     staticClass: "col-span-6 sm:col-span-1"
   }, [_c("jet-label", {
@@ -36929,7 +37161,7 @@ var render = function render() {
       domProps: {
         value: marital_status.id
       }
-    }, [_vm._v(_vm._s(marital_status.name_en) + "\n                    ")]);
+    }, [_vm._v("\n            " + _vm._s(marital_status.name_en) + "\n          ")]);
   }), 0)], 1), _vm._v(" "), _c("div", {
     staticClass: "col-span-6 sm:col-span-1"
   }, [_c("jet-label", {
@@ -37074,11 +37306,11 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("p", [_vm.trainee.is_pending_uploading_files ? _c("span", {
     staticClass: "text-sm inline-block mt-2 p-1 px-2 bg-blue-300 rounded-lg"
-  }, [_vm._v("\n                        " + _vm._s(_vm.$t("words.incomplete-application")) + "\n                    ")]) : _vm._e(), _vm._v(" "), _vm.trainee.is_pending_approval ? _c("span", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("words.incomplete-application")) + "\n          ")]) : _vm._e(), _vm._v(" "), _vm.trainee.is_pending_approval ? _c("span", {
     staticClass: "text-sm inline-block mt-2 p-1 px-2 bg-yellow-200 rounded-lg"
-  }, [_vm._v("\n                        " + _vm._s(_vm.$t("words.nominated-instructor")) + "\n                    ")]) : _vm._e(), _vm._v(" "), _vm.trainee.is_approved ? _c("span", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("words.nominated-instructor")) + "\n          ")]) : _vm._e(), _vm._v(" "), _vm.trainee.is_approved ? _c("span", {
     staticClass: "text-sm inline-block mt-2 p-1 px-2 bg-green-300 rounded-lg"
-  }, [_vm._v("\n                        " + _vm._s(_vm.$t("words.approved")) + "\n                    ")]) : _vm._e()])], 1), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("words.approved")) + "\n          ")]) : _vm._e()])], 1), _vm._v(" "), _c("div", {
     directives: [{
       name: "can",
       rawName: "v-can",
@@ -37097,9 +37329,9 @@ var render = function render() {
     }
   }, [_vm.trainee.override_training_costs !== null ? _c("span", {
     staticClass: "text-sm inline-block mt-2 p-1 px-2 bg-gray-200 rounded-lg bg-red-600 text-white"
-  }, [_vm._v("\n                        " + _vm._s(_vm.trainee.override_training_costs) + " ر.س.\n                    ")]) : _c("span", {
+  }, [_vm._v("\n            " + _vm._s(_vm.trainee.override_training_costs) + " ر.س.\n          ")]) : _c("span", {
     staticClass: "text-sm inline-block mt-2 p-1 px-2 bg-gray-200 rounded-lg"
-  }, [_vm._v("\n                        " + _vm._s(_vm.$t("words.not-set")) + "\n                    ")])])], 1)]), _vm._v(" "), _c("jet-section-border"), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("words.not-set")) + "\n          ")])])], 1)]), _vm._v(" "), _c("jet-section-border"), _vm._v(" "), _c("div", {
     staticClass: "grid grid-cols-1 md:grid-cols-6 gap-6 my-2"
   }, [_c("div", {
     staticClass: "md:col-span-4 lg:col-span-1 sm:col-span-3"
@@ -37107,16 +37339,16 @@ var render = function render() {
     staticClass: "px-4 sm:px-0"
   }, [_c("h3", {
     staticClass: "text-lg font-medium text-gray-900"
-  }, [_vm._v("\n                        " + _vm._s(_vm.$t("words.documents")) + "\n                    ")]), _vm._v(" "), _c("p", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("words.documents")) + "\n          ")]), _vm._v(" "), _c("p", {
     staticClass: "mt-1 text-sm text-gray-600"
-  }, [_vm._v("\n                        " + _vm._s(_vm.$t("words.documents-help")) + "\n                    ")]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("words.documents-help")) + "\n          ")]), _vm._v(" "), _c("div", {
     staticClass: "mt-3"
   }, [_c("inertia-link", {
     staticClass: "text-blue-600 border-2 border-blue-600 text-xs p-1",
     attrs: {
       href: _vm.route("back.trainees.files.index", _vm.trainee.id)
     }
-  }, [_vm._v("\n                            " + _vm._s(_vm.$t("words.other-files")) + " (" + _vm._s(_vm.trainee.general_files_count) + ")\n                        ")])], 1), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n              " + _vm._s(_vm.$t("words.other-files")) + " (" + _vm._s(_vm.trainee.general_files_count) + ")\n            ")])], 1), _vm._v(" "), _c("div", {
     staticClass: "mt-3"
   }, [_c("a", {
     staticClass: "text-blue-600 border-2 border-blue-600 text-xs p-1",
@@ -37124,7 +37356,7 @@ var render = function render() {
       target: "_blank",
       href: _vm.route("back.trainees.download-all-files", _vm.trainee.id)
     }
-  }, [_vm._v("\n                            " + _vm._s(_vm.$t("words.download-all-files")) + "\n                        ")])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n              " + _vm._s(_vm.$t("words.download-all-files")) + "\n            ")])])])]), _vm._v(" "), _c("div", {
     staticClass: "md:col-span-3 lg:col-span-1 sm:col-span-3"
   }, [_c("jet-label", {
     staticClass: "mb-2",
@@ -37144,7 +37376,7 @@ var render = function render() {
     on: {
       click: _vm.deleteIdentity
     }
-  }, [_vm._v(_vm._s(_vm.$t("words.delete")) + "\n                    ")])]) : _c("vue-dropzone", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("words.delete")) + "\n          ")])]) : _c("vue-dropzone", {
     attrs: {
       id: "dropzoneIdentity",
       options: _vm.dropzoneOptionsIdentity
@@ -37172,7 +37404,7 @@ var render = function render() {
     on: {
       click: _vm.deleteQualification
     }
-  }, [_vm._v(_vm._s(_vm.$t("words.delete")) + "\n                    ")])]) : _c("vue-dropzone", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("words.delete")) + "\n          ")])]) : _c("vue-dropzone", {
     attrs: {
       id: "dropzoneQualification",
       options: _vm.dropzoneOptionsQualification
@@ -37200,7 +37432,7 @@ var render = function render() {
     on: {
       click: _vm.deleteBankAccount
     }
-  }, [_vm._v(_vm._s(_vm.$t("words.delete")) + "\n                    ")])]) : _c("vue-dropzone", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("words.delete")) + "\n          ")])]) : _c("vue-dropzone", {
     attrs: {
       id: "dropzoneBankAccount",
       options: _vm.dropzoneOptionsBankAccount
@@ -37228,7 +37460,7 @@ var render = function render() {
     on: {
       click: _vm.deleteNationalAddress
     }
-  }, [_vm._v(_vm._s(_vm.$t("words.delete")) + "\n                    ")])]) : _c("vue-dropzone", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("words.delete")) + "\n          ")])]) : _c("vue-dropzone", {
     attrs: {
       id: "dropzoneNationalAddress",
       options: _vm.dropzoneOptionsNationalAddress
@@ -37256,7 +37488,7 @@ var render = function render() {
     on: {
       click: _vm.deleteCv
     }
-  }, [_vm._v(_vm._s(_vm.$t("words.delete")) + "\n                    ")])]) : _c("vue-dropzone", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("words.delete")) + "\n          ")])]) : _c("vue-dropzone", {
     attrs: {
       id: "dropzoneCv",
       options: _vm.dropzoneOptionsCv
@@ -37272,7 +37504,7 @@ var render = function render() {
     staticClass: "px-4 sm:px-0"
   }, [_c("h3", {
     staticClass: "text-lg font-medium text-gray-900"
-  }, [_vm._v("\n                        " + _vm._s(_vm.$t("words.warnings-sheet")) + "\n                    ")])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("words.warnings-sheet")) + "\n          ")])])]), _vm._v(" "), _c("div", {
     staticClass: "md:col-span-3 lg:col-span-1 sm:col-span-3"
   }, [_c("attendance-sheet-management-for-trainee", {
     attrs: {
@@ -37292,9 +37524,9 @@ var render = function render() {
     staticClass: "px-4 sm:px-0"
   }, [_c("h3", {
     staticClass: "text-lg font-medium text-gray-900"
-  }, [_vm._v("\n                        " + _vm._s(_vm.$t("words.invoices")) + "\n                    ")]), _vm._v(" "), _c("p", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("words.invoices")) + "\n          ")]), _vm._v(" "), _c("p", {
     staticClass: "mt-1 text-sm text-gray-600"
-  }, [_vm._v("\n                        " + _vm._s(_vm.$t("words.invoices-help")) + "\n                    ")])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n            " + _vm._s(_vm.$t("words.invoices-help")) + "\n          ")])])]), _vm._v(" "), _c("div", {
     staticClass: "md:col-span-3 lg:col-span-1 sm:col-span-3"
   }, [_c("div", {
     staticClass: "flex w-full justify-end"
@@ -37306,13 +37538,13 @@ var render = function render() {
     attrs: {
       type: "button"
     }
-  }, [_vm._v("\n                            " + _vm._s(_vm.$t("words.issue-invoice")) + "\n                        ")])], 1)], 1), _vm._v(" "), _c("table", {
+  }, [_vm._v("\n              " + _vm._s(_vm.$t("words.issue-invoice")) + "\n            ")])], 1)], 1), _vm._v(" "), _c("table", {
     staticClass: "w-full whitespace-no-wrap bg-white rounded-lg my-5 p-5 shadow text-sm"
   }, [_c("tr", {
     staticClass: "text-left font-bold text-center"
   }, [_c("th", {
     staticClass: "px-6 pt-6 pb-4 text-left"
-  }, [_vm._v(_vm._s(_vm.$t("words.invoice-no")))]), _vm._v(" "), _c("th", {
+  }, [_vm._v("\n              " + _vm._s(_vm.$t("words.invoice-no")) + "\n            ")]), _vm._v(" "), _c("th", {
     staticClass: "px-6 pt-6 pb-4"
   }, [_vm._v(_vm._s(_vm.$t("words.amount")))]), _vm._v(" "), _c("th", {
     staticClass: "px-6 pt-6 pb-4"
@@ -37326,11 +37558,11 @@ var render = function render() {
       attrs: {
         href: _vm.route("back.finance.invoices.show", invoice.id)
       }
-    }, [_vm._v("\n                                " + _vm._s(invoice.number_formatted) + "\n                            ")])], 1), _vm._v(" "), _c("td", {
+    }, [_vm._v("\n                " + _vm._s(invoice.number_formatted) + "\n              ")])], 1), _vm._v(" "), _c("td", {
       staticClass: "px-4 py-4"
-    }, [_vm._v("\n                            " + _vm._s(invoice.grand_total) + "\n                        ")]), _vm._v(" "), _c("td", {
+    }, [_vm._v("\n              " + _vm._s(invoice.grand_total) + "\n            ")]), _vm._v(" "), _c("td", {
       staticClass: "px-4 py-4"
-    }, [_vm._v("\n                            " + _vm._s(invoice.status_formatted) + "\n                        ")])]);
+    }, [_vm._v("\n              " + _vm._s(invoice.status_formatted) + "\n            ")])]);
   }), _vm._v(" "), _vm.trainee.invoices.length === 0 ? _c("tr", [_c("td", {
     staticClass: "border-t px-4 py-4",
     attrs: {
@@ -52756,6 +52988,8 @@ var map = {
 	"./Back/Companies/Edit.vue": "./resources/js/Pages/Back/Companies/Edit.vue",
 	"./Back/Companies/Emails/Show": "./resources/js/Pages/Back/Companies/Emails/Show.vue",
 	"./Back/Companies/Emails/Show.vue": "./resources/js/Pages/Back/Companies/Emails/Show.vue",
+	"./Back/Companies/Files/Index": "./resources/js/Pages/Back/Companies/Files/Index.vue",
+	"./Back/Companies/Files/Index.vue": "./resources/js/Pages/Back/Companies/Files/Index.vue",
 	"./Back/Companies/Index": "./resources/js/Pages/Back/Companies/Index.vue",
 	"./Back/Companies/Index.vue": "./resources/js/Pages/Back/Companies/Index.vue",
 	"./Back/Companies/Invoices/ChangeDatePeriod": "./resources/js/Pages/Back/Companies/Invoices/ChangeDatePeriod.vue",
@@ -53737,6 +53971,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ref_6_node_modules_vue_loader_lib_index_js_vue_loader_options_Show_vue_vue_type_template_id_497327bc___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ref_6_node_modules_vue_loader_lib_index_js_vue_loader_options_Show_vue_vue_type_template_id_497327bc___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/Pages/Back/Companies/Files/Index.vue":
+/*!***********************************************************!*\
+  !*** ./resources/js/Pages/Back/Companies/Files/Index.vue ***!
+  \***********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Index_vue_vue_type_template_id_1c5beee7___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Index.vue?vue&type=template&id=1c5beee7& */ "./resources/js/Pages/Back/Companies/Files/Index.vue?vue&type=template&id=1c5beee7&");
+/* harmony import */ var _Index_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Index.vue?vue&type=script&lang=js& */ "./resources/js/Pages/Back/Companies/Files/Index.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Index_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Index_vue_vue_type_template_id_1c5beee7___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Index_vue_vue_type_template_id_1c5beee7___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/Pages/Back/Companies/Files/Index.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/Pages/Back/Companies/Files/Index.vue?vue&type=script&lang=js&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/Pages/Back/Companies/Files/Index.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./Index.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Back/Companies/Files/Index.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/Pages/Back/Companies/Files/Index.vue?vue&type=template&id=1c5beee7&":
+/*!******************************************************************************************!*\
+  !*** ./resources/js/Pages/Back/Companies/Files/Index.vue?vue&type=template&id=1c5beee7& ***!
+  \******************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ref_6_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_template_id_1c5beee7___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./Index.vue?vue&type=template&id=1c5beee7& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Pages/Back/Companies/Files/Index.vue?vue&type=template&id=1c5beee7&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ref_6_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_template_id_1c5beee7___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ref_6_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_template_id_1c5beee7___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -64981,7 +65284,8 @@ __webpack_require__.r(__webpack_exports__);
       "trainees-without-invoice": "متدربات لم تتم فوترتهم حسب الشهر",
       "trainees-invoices-for-specefic-period": "فواتير المتدربات خلال فترة زمنية",
       "select-month": "اختر الشهر",
-      "current-month": "الشهر الحالي"
+      "current-month": "الشهر الحالي",
+      "upload-image": "اضافة صورة"
     }
   },
   "en": {
@@ -65774,7 +66078,8 @@ __webpack_require__.r(__webpack_exports__);
       "trainees-without-invoice": "Trainees without invoices for the specified month",
       "trainees-invoices-for-specefic-period": "Trainees invoices for a specefic period",
       "select-month": "Select Month",
-      "current-month": "Current Month"
+      "current-month": "Current Month",
+      "upload-image": "Upload Image"
     }
   }
 });

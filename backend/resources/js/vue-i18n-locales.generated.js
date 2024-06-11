@@ -845,7 +845,8 @@ export default {
             "trainees-without-invoice": "متدربات لم تتم فوترتهم حسب الشهر",
             "trainees-invoices-for-specefic-period": "فواتير المتدربات خلال فترة زمنية",
             "select-month": "اختر الشهر",
-            "current-month": "الشهر الحالي"
+            "current-month": "الشهر الحالي",
+            "upload-image": "اضافة صورة"
         }
     },
     "en": {
@@ -1638,7 +1639,8 @@ export default {
             "trainees-without-invoice": "Trainees without invoices for the specified month",
             "trainees-invoices-for-specefic-period": "Trainees invoices for a specefic period",
             "select-month": "Select Month",
-            "current-month": "Current Month"
+            "current-month": "Current Month",
+            "upload-image": "Upload Image"
         }
     }
 }

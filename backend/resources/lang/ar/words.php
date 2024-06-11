@@ -670,6 +670,7 @@ return [
     'trainees-invoices-for-specefic-period' => 'فواتير المتدربات خلال فترة زمنية',
     'select-month' => 'اختر الشهر',
     'current-month' => 'الشهر الحالي',
+    'upload-image' => 'اضافة صورة',
 
     
 

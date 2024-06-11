@@ -150,7 +150,7 @@ class CompaniesController extends Controller
             ->latest()
             ->get();
 
-        return Inertia::render('Back/Companies/Show', [
+        return Inertia::render('Back/Companies/Show',[
             'company' => $company,
             'invoices' => $invoices,
             'instructors' => Instructor::get(),
@@ -280,4 +280,8 @@ class CompaniesController extends Controller
         app()->make(CompaniesService::class)->notifyUsersAboutNewCompany($company);
         return redirect()->route('back.companies.show', $id);
     }
+
+
+
+    
 }

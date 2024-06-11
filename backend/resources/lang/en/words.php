@@ -656,5 +656,5 @@ return [
     'trainees-invoices-for-specefic-period' => 'Trainees invoices for a specefic period',
     'select-month' => 'Select Month',
     'current-month' => 'Current Month',
-
+    'upload-image' => 'Upload Image',
 ];
