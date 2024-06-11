@@ -655,5 +655,5 @@ return [
     'trainees-without-invoice' => 'Trainees without invoices for the specified month',
     'select-month' => 'Select Month',
     'current-month' => 'Current Month',
-
+    'upload-image' => 'Upload Image',
 ];

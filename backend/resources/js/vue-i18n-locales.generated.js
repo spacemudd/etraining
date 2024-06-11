@@ -844,7 +844,8 @@ export default {
             "edit-date-period": "تعديل فترة الاستحقاق",
             "trainees-without-invoice": "متدربات لم تتم فوترتهم حسب الشهر",
             "select-month": "اختر الشهر",
-            "current-month": "الشهر الحالي"
+            "current-month": "الشهر الحالي",
+            "upload-image": "اضافة صورة"
         }
     },
     "en": {
@@ -1636,7 +1637,8 @@ export default {
             "edit-date-period": "ُEdit Date Period",
             "trainees-without-invoice": "Trainees without invoices for the specified month",
             "select-month": "Select Month",
-            "current-month": "Current Month"
+            "current-month": "Current Month",
+            "upload-image": "Upload Image"
         }
     }
 }
