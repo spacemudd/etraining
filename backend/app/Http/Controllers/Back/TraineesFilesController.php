@@ -13,29 +13,27 @@ class TraineesFilesController extends Controller
 {
     public function index($trainee_id)
     {
+       
         $trainee = Trainee::withTrashed()->with('general_files')
-            ->findOrFail($trainee_id);
-
+        ->findOrFail($trainee_id);
         return Inertia::render('Back/Trainees/Files/Index', [
             'trainee' => $trainee,
         ]);
     }
 
-    public function store($trainee_id)
-    {
-        $trainee = Trainee::withTrashed()->findOrFail($trainee_id);
+        public function store($trainee_id)
+        {
 
-        $trainee->addMediaFromRequest('attached_file')
-            ->usingFileName(request()->file('attached_file')->hashName())
-            ->toMediaCollection('general_files');
-
-        return redirect()->route('back.trainees.files.index', $trainee->id);
-    }
+            $trainee = Trainee::withTrashed()->findOrFail($trainee_id);
+            $trainee->addMediaFromRequest('attached_file')
+                ->usingFileName(request()->file('attached_file')->hashName())
+                ->toMediaCollection('general_files');
+                return redirect()->route('back.trainees.files.index', $trainee->id);
+        }
 
     public function show($trainee_id, $file)
     {
         $media = Media::findOrFail($file);
-
         if ($media->disk === 's3') {
             return redirect()->to($media->getTemporaryUrl(now()->addMinutes(5), '', [
                 //'ResponseContentType' => 'application/octet-stream',

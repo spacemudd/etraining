@@ -232,6 +232,7 @@ class TraineesController extends Controller
      */
     public function storeQualification(Request $request, $trainee_id)
     {
+
         $request->validate([
             'qualification_copy' => 'required_without:file',
             'file' => 'required_without:qualification_copy',

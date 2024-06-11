@@ -649,9 +649,15 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         // my comment
         Route::resource('trainees/{trainee_id}/files', \App\Http\Controllers\Back\TraineesFilesController::class, ['as' => 'trainees']);
         Route::resource('companies/{company_id}/files', \App\Http\Controllers\Back\CompaniesFilesController::class, ['as' => 'companies']);
+<<<<<<< HEAD
 
 
 
+=======
+        
+
+        
+>>>>>>> d11f8384 (Add option to upload image on cloud in company page)
         Route::get('trainees/block-list', [\App\Http\Controllers\Back\TraineesBlockListController::class, 'index'])->name('trainees.block-list.index');
         Route::get('trainees/block-list/create', [\App\Http\Controllers\Back\TraineesBlockListController::class, 'create'])->name('trainees.block-list.create');
         Route::post('trainees/block-list', [\App\Http\Controllers\Back\TraineesBlockListController::class, 'store'])->name('trainees.block-list.store');
@@ -671,7 +677,11 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
         // my comment
         Route::post('trainees/{trainee_id}/attachments/qualification', [\App\Http\Controllers\Back\TraineesController::class, 'storeQualification'])->name('trainees.attachments.qualification');
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> d11f8384 (Add option to upload image on cloud in company page)
 
         Route::delete('trainees/{trainee_id}/attachments/qualification', [\App\Http\Controllers\Back\TraineesController::class, 'deleteQualification'])->name('trainees.attachments.qualification.destroy');
         Route::post('trainees/{trainee_id}/attachments/bank-account', [\App\Http\Controllers\Back\TraineesController::class, 'storeBankAccount'])->name('trainees.attachments.bank-account');
@@ -855,6 +865,8 @@ Route::get('sm3', function() { return redirect()->to('https://linktr.ee/ptcksa')
 
 
 Route::get('/logo-files', [\App\Http\Controllers\LogoFilesController::class, 'index']);
+
+
 
 
 

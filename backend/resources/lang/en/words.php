@@ -656,5 +656,8 @@ return [
     'select-month' => 'Select Month',
     'current-month' => 'Current Month',
     'upload-image' => 'Upload Image',
+<<<<<<< HEAD
     'company-logo' =>'Company Logo',
+=======
+>>>>>>> d11f8384 (Add option to upload image on cloud in company page)
 ];

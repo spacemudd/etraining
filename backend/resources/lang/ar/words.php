@@ -670,6 +670,9 @@ return [
     'select-month' => 'اختر الشهر',
     'current-month' => 'الشهر الحالي',
     'upload-image' => 'اضافة صورة',
+<<<<<<< HEAD
     'company-logo' =>'شعار الشركه',
+=======
+>>>>>>> d11f8384 (Add option to upload image on cloud in company page)
 
 ];
