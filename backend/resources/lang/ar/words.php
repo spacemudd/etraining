@@ -669,6 +669,7 @@ return [
     'trainees-without-invoice' => 'متدربات لم تتم فوترتهم حسب الشهر',
     'select-month' => 'اختر الشهر',
     'current-month' => 'الشهر الحالي',
+    'upload-image' => 'اضافة صورة',
 
 
 

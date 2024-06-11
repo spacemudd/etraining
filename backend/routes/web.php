@@ -1,5 +1,4 @@
 <?php
-
 use App\Classes\GosiEmployee;
 use App\Http\Controllers\Back\CompanyAliasesController;
 use App\Http\Controllers\Back\CompanyAttendanceReportController;
@@ -10,12 +9,16 @@ use App\Http\Controllers\Webhooks\MailController;
 use App\Http\Controllers\ZoomAccountController;
 use App\Models\Back\Invoice;
 use App\Models\Back\Resignation;
+use App\Models\Back\TestExportController;
 use App\Models\Back\Trainee;
 use App\Models\User;
+
+
+
+
 use App\Services\GosiService;
 use Illuminate\Mail\Markdown;
 
-use App\Models\Back\TestExportController;
 
 
 
@@ -604,7 +607,14 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('trainees/fixed-training-costs', [\App\Http\Controllers\Back\TraineesController::class, 'indexFixedTrainingCosts'])->name('trainees.fixed-training-costs.index');
         Route::put('trainees/{trainee_id}/fixed-training-costs', [\App\Http\Controllers\Back\TraineeFixedTrainingCostsController::class, 'update'])->name('trainees.fixed-training-costs.update');
         Route::get('trainees/{trainee_id}/fixed-training-costs', [\App\Http\Controllers\Back\TraineeFixedTrainingCostsController::class, 'index'])->name('trainees.fixed-training-costs');
+
+
+        // my comment
         Route::resource('trainees/{trainee_id}/files', \App\Http\Controllers\Back\TraineesFilesController::class, ['as' => 'trainees']);
+        Route::resource('companies/{company_id}/files', \App\Http\Controllers\Back\CompaniesFilesController::class, ['as' => 'companies']);
+        
+
+        
         Route::get('trainees/block-list', [\App\Http\Controllers\Back\TraineesBlockListController::class, 'index'])->name('trainees.block-list.index');
         Route::get('trainees/block-list/create', [\App\Http\Controllers\Back\TraineesBlockListController::class, 'create'])->name('trainees.block-list.create');
         Route::post('trainees/block-list', [\App\Http\Controllers\Back\TraineesBlockListController::class, 'store'])->name('trainees.block-list.store');
@@ -620,7 +630,12 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('trainees/assign-instructor', [\App\Http\Controllers\Back\TraineesController::class, 'assignInstructor'])->name('trainees.assign-instructor');
         Route::post('trainees/{trainee_id}/attachments/identity', [\App\Http\Controllers\Back\TraineesController::class, 'storeIdentity'])->name('trainees.attachments.identity');
         Route::delete('trainees/{trainee_id}/attachments/identity', [\App\Http\Controllers\Back\TraineesController::class, 'deleteIdentity'])->name('trainees.attachments.identity.destroy');
+
+
+        // my comment
         Route::post('trainees/{trainee_id}/attachments/qualification', [\App\Http\Controllers\Back\TraineesController::class, 'storeQualification'])->name('trainees.attachments.qualification');
+        
+
         Route::delete('trainees/{trainee_id}/attachments/qualification', [\App\Http\Controllers\Back\TraineesController::class, 'deleteQualification'])->name('trainees.attachments.qualification.destroy');
         Route::post('trainees/{trainee_id}/attachments/bank-account', [\App\Http\Controllers\Back\TraineesController::class, 'storeBankAccount'])->name('trainees.attachments.bank-account');
         Route::delete('trainees/{trainee_id}/attachments/bank-account', [\App\Http\Controllers\Back\TraineesController::class, 'deleteBankAccount'])->name('trainees.attachments.bank-account.destroy');
@@ -800,6 +815,8 @@ Route::middleware(['auth:sanctum'])->group(function() {
 
 // Some routes for nowyer
 Route::get('sm3', function() { return redirect()->to('https://linktr.ee/ptcksa'); }); // used for events, linktree account registered by billing@ptc-ksa.net
+
+
 
 
 
