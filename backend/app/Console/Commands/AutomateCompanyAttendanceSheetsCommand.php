@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Back\Company;
+use App\Models\Back\CompanyAttendanceReport;
 use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
 use App\Services\CompanyAttendanceReportService;
@@ -43,8 +44,8 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
      */
     public function handle()
     {
-        $from_date = Carbon::parse('2024-05-01')->startOfDay();
-        $to_date = Carbon::parse('2024-05-31')->endOfDay();
+        $from_date = Carbon::parse('2024-06-01')->startOfDay();
+        $to_date = Carbon::parse('2024-06-31')->endOfDay();
         $this->createReportsBasedOnTraineedInvoiced($from_date, $to_date);
         return 1;
     }
@@ -54,19 +55,19 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
         $count = Company::with('invoices')
             ->where('center_id', 3)
             ->whereHas('invoices', function ($query) use ($from_date) {
-                $query->whereBetween('to_date', ['2024-04-01', '2024-04-30']);
+                $query->whereBetween('to_date', ['2024-05-01', '2024-05-31']);
             })->count();
         $this->info('Found companies with invoices: '.$count);
 
         Company::where('center_id', 3)
             ->with('invoices')->whereHas('invoices', function ($query) use ($from_date) {
-            $query->whereBetween('to_date', ['2024-04-01', '2024-04-30']);})->count();
+            $query->whereBetween('to_date', ['2024-05-01', '2024-05-31']);})->count();
 
         // Companies that don't have invoices in the past month, to skip.
          $companies_with_invoices = Company::with('invoices')
              ->where('center_id', 3)
             ->whereHas('invoices', function ($query) use ($from_date) {
-                $query->whereBetween('to_date',  ['2024-04-01', '2024-04-30']);
+                $query->whereBetween('to_date',  ['2024-05-01', '2024-05-31']);
             })->pluck('id');
          $companies_without_invoices = Company::whereNotIn('id', $companies_with_invoices)->pluck('name_ar');
          foreach ($companies_without_invoices as $name_ar) {
@@ -76,18 +77,13 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
         Company::with('invoices')
             ->where('center_id', 3)
             ->whereHas('invoices', function ($query) use ($from_date) {
-                $query->whereBetween('to_date', ['2024-04-01', '2024-04-30']);
+                $query->whereBetween('to_date', ['2024-05-01', '2024-05-31']);
             })->chunk(20, function($companies) use ($from_date, $to_date) {
                 foreach ($companies as $company) {
 
                     $companies_to_execlude = [
-                        '14bfd934-922f-4c5d-91f0-1f796ccac6a2',
-                        '791f79d6-1868-4aa6-b905-796b6f9216d9',
-                        '5829984b-1d85-427f-b3a1-ef0dbd6eb4c8',
-                        '8b169387-09f5-4cff-b443-41a14fd9c12e',
                         'd31fcf66-1010-4d5f-83ff-10e92ca0f902',
                         '3134cbb3-a1e5-41da-8f46-7eb8da78aad7',
-                        'da658306-41b2-4089-a8b2-ed540ef0dc7c',
                         '9d6ad117-d2e5-4148-a8de-fc92fefffea7',
                     ];
 
@@ -115,14 +111,14 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
                     if ($lastReport) {
                         $this->info('New report from last report: '.$company->name_ar . ',' . $company->trainees()->count());
-                        $this->makeNewReportFromLastReportBasedOnInvoices($company, $lastReport, '2024-05-01', '2024-05-31', '2024-04-01', '2024-04-30');
+                        $this->makeNewReportFromLastReportBasedOnInvoices($company, $lastReport, '2024-06-01', '2024-06-30', '2024-05-01', '2024-05-31');
                     } else {
                         if (! $company->email) {
                             $this->info('No email for company. Skipping: '.$company->name_ar);
                             continue;
                         }
                         $this->info('No last report. Creating new report - '.$company->name_ar . ',' . $company->trainees()->count());
-                        $this->makeNewReportBasedOnInvoices($company, '2024-05-01', '2024-05-31', '2024-04-01', '2024-04-30');
+                        $this->makeNewReportBasedOnInvoices($company, '2024-06-01', '2024-06-30', '2024-05-01', '2024-05-30');
                     }
                 }
             });
@@ -136,7 +132,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
         $clone->save();
         $clone->emails()->createMany($lastReport->emails()->get()->map(function ($email) {
             return [
-                'type' => $email->type,
+                'type' => Str::contains($email->email, 'ptc-ksa') ? 'bcc' : $email->type,
                 'email' => Str::replace(' ', '', $email->email),
             ];
         })->toArray());
@@ -154,10 +150,12 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
         // Add sales rep email
         if ($company->salesperson_email && !$clone->emails()->where('email', $company->salesperson_email)->count()) {
             $clone->emails()->create([
-                'type' => 'cc',
+                'type' => 'bcc',
                 'email' => $company->salesperson_email,
             ]);
         }
+
+        $this->updateReportEmailsPerToCenter($clone);
 
         $trainee_ids = Invoice::where('company_id', $company->id)
             ->whereBetween('to_date', [$invoicesDateFrom, $invoicesDateTo])
@@ -185,10 +183,10 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
         $emails = [
             ['type' => 'to', 'email' => $company->email],
-            ['type' => 'cc', 'email' => 'sara@ptc-ksa.net'],
-            ['type' => 'cc', 'email' => 'm_shehatah@ptc-ksa.net'],
-            ['type' => 'cc', 'email' => 'ceo@ptc-ksa.net'],
-            ['type' => 'cc', 'email' => 'mashael.a@ptc-ksa.net'],
+            ['type' => 'bcc', 'email' => 'sara@ptc-ksa.net'],
+            ['type' => 'bcc', 'email' => 'm_shehatah@ptc-ksa.net'],
+            ['type' => 'bcc', 'email' => 'ceo@ptc-ksa.net'],
+            ['type' => 'bcc', 'email' => 'mashael.a@ptc-ksa.net'],
         ];
         if ($company->salesperson_email) {
             $emails[] = ['type' => 'to', 'email' => $company->salesperson_email];
@@ -213,6 +211,8 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
             ]);
         }
 
+        $this->updateReportEmailsPerToCenter($report);
+
         $trainee_ids = Invoice::where('company_id', $company->id)
             ->whereBetween('to_date', [$invoicesDateFrom, $invoicesDateTo])
             ->pluck('trainee_id');
@@ -228,5 +228,25 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
         }
 
         app()->make(CompanyAttendanceReportService::class)->approve($report->id);
+    }
+
+    public function updateReportEmailsPerToCenter(CompanyAttendanceReport $report)
+    {
+        if (Str::contains($report->company->center->domain_name, 'jisr') || Str::contains($report->company->center->domain_name, 'jasarah')) {
+            $bccEmails = $report->emails()->where('type', 'bcc')->where('email', 'LIKE', '%ptc-ksa%')->get();
+            foreach ($bccEmails as $bccEmail) {
+                $bccEmail->update(['email' => Str::before($bccEmail->email, '@') . '@jisr-ksa.com']);
+            }
+        }
+
+        // To reduce confusion... all emails go to Jisr for now.
+        //if (Str::contains($report->company->center->domain_name, 'jasarah')) {
+        //    $bccEmails = $report->emails()->where('type', 'bcc')->where('email', 'LIKE', '%ptc-ksa%')->get();
+        //    foreach ($bccEmails as $bccEmail) {
+        //        $bccEmail->update(['email' => Str::before($bccEmail->email, '@') . '@jasarah-ksa.com']);
+        //    }
+        //}
+
+        return $report;
     }
 }
