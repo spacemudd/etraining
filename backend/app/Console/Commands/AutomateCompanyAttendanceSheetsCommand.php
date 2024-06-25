@@ -72,9 +72,9 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
          }
 
         Company::with('invoices')
-            //->whereHas('invoices', function ($query) use ($from_date) {
-            //    $query->whereBetween('to_date', ['2024-05-01', '2024-05-31']);
-            //})
+            ->whereHas('invoices', function ($query) use ($from_date) {
+                $query->whereBetween('to_date', ['2024-05-01', '2024-05-31']);
+            })
             ->chunk(20, function($companies) use ($from_date, $to_date) {
                 foreach ($companies as $company) {
 
