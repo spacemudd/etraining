@@ -56,8 +56,8 @@
     @endif
 
     <div class="row" style="text-align: center;">
-        @if ($report->company->logo_files->count() > 0)
-            <img style="margin:0 auto;border:none;" src="data:image/jpeg;base64,{{ base64_encode(@file_get_contents($report->company->logo_files->first()->download_url)) }}" alt="logo" width="200"/>
+        @if ($base64logo)
+            <img style="margin:0 auto;border:none;" src="{{ $base64logo }}" alt="logo" width="200"/>
         @endif
     </div>
 

@@ -173,6 +173,7 @@ class CompanyAttendanceReportService
             ->setOption('zoom', 0.78)
             ->setOption('footer-html', $report->with_logo ? resource_path('views/pdf/company-attendance-report/company-attendance-report-footer.html') : false)
             ->loadView($view, [
+                'base64logo' => $report->company->logo_files->count() ? 'data:image/jpeg;base64,'.base64_encode(@file_get_contents($report->company->logo_files->first()->download_url)) : null,
                 'report' => $report,
                 'active_trainees' => $report->getActiveTrainees(),
                 'days' => $days,
@@ -224,11 +225,11 @@ class CompanyAttendanceReportService
             ->setOption('margin-top', 10)
             ->setOption('margin-bottom', 30)
             ->setOption('disable-smart-shrinking', true)
-            ->setOption('wait-for-network-idle', true)
             ->setOption('viewport-size', '1024×768')
             ->setOption('zoom', 0.78)
             ->setOption('footer-html', resource_path('views/pdf/company-attendance-report/company-attendance-report-footer.html'))
             ->loadView($view, [
+                'base64logo' => $record->company->logo_files->count() ? 'data:image/jpeg;base64,'.base64_encode(@file_get_contents($record->report->company->logo_files->first()->download_url)) : null,
                 'report' => $record->report,
                 'active_trainees' => [$record],
                 'days' => $days,
