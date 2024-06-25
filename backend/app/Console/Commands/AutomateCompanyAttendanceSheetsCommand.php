@@ -53,19 +53,18 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
     public function createReportsBasedOnTraineedInvoiced(Carbon $from_date, Carbon $to_date)
     {
         $count = Company::with('invoices')
-            ->where('center_id', 3)
+            ->where('id', '2ea73041-e686-4093-b830-260b488eb014')
             ->whereHas('invoices', function ($query) use ($from_date) {
                 $query->whereBetween('to_date', ['2024-05-01', '2024-05-31']);
             })->count();
         $this->info('Found companies with invoices: '.$count);
 
-        Company::where('center_id', 3)
-            ->with('invoices')->whereHas('invoices', function ($query) use ($from_date) {
+        Company::where('id', '2ea73041-e686-4093-b830-260b488eb014')->with('invoices')->whereHas('invoices', function ($query) use ($from_date) {
             $query->whereBetween('to_date', ['2024-05-01', '2024-05-31']);})->count();
 
         // Companies that don't have invoices in the past month, to skip.
          $companies_with_invoices = Company::with('invoices')
-             ->where('center_id', 3)
+            ->where('id', '2ea73041-e686-4093-b830-260b488eb014')
             ->whereHas('invoices', function ($query) use ($from_date) {
                 $query->whereBetween('to_date',  ['2024-05-01', '2024-05-31']);
             })->pluck('id');
@@ -75,7 +74,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
          }
 
         Company::with('invoices')
-            ->where('center_id', 3)
+            ->where('id', '2ea73041-e686-4093-b830-260b488eb014')
             ->whereHas('invoices', function ($query) use ($from_date) {
                 $query->whereBetween('to_date', ['2024-05-01', '2024-05-31']);
             })->chunk(20, function($companies) use ($from_date, $to_date) {
