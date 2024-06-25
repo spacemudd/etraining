@@ -281,7 +281,7 @@ tfoot { display:table-footer-group }
                 <tr>
                     @if ($report->with_logo)
                             @if ($report->falls_under_ptc_net)
-                            <td colspan="100%" style="background:#e0e0e0;text-align: center;">** هذا الكشف صحيح مالم تشعر شركة مركز احترافية التدريب من قبل العميل ببريد إلكتروني يفيد بخلاف ذلك خلال ٥ ايام عمل من تاريخه.
+                            <td colspan="100%" style="background:#e0e0e0;text-align: center;">** هذا الكشف صحيح مالم تشعر الشركة من قبل العميل ببريد إلكتروني يفيد بخلاف ذلك خلال ٥ ايام عمل من تاريخه.
 في حال وجود اي استفسارات لا تترددوا بالتواصل معنا على البريد الإلكتروني.</td>
                             @else
                                 <td colspan="100%" style="background:#e0e0e0;text-align: center;">** يعتبر الكشف صحيح ما لم يردنا اي ملاحظات خلال الاسبوع من الارسال</td>

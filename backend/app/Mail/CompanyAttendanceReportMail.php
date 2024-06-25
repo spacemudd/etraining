@@ -60,7 +60,7 @@ class CompanyAttendanceReportMail extends Mailable
     {
         $filename = Str::slug($report->number).'.pdf';
 
-        $this->attachData(CompanyAttendanceReportService::makePdf($this->report_id)->inline($filename), $filename);
+        $this->attachData(CompanyAttendanceReportService::make§Pdf($this->report_id)->inline($filename), $filename);
 
         return $this;
     }

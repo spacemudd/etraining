@@ -428,6 +428,8 @@ Route::middleware(['auth:sanctum'])->get('/trainees/application', [\App\Http\Con
 
 Route::middleware(['auth:sanctum', 'verified', 'approved-application'])->get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
+Route::get('/back/media/{media_id}', [\App\Http\Controllers\MediaController::class, 'download'])->name('back.media.download');
+
 Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     // For everyone
     Route::get('inbox', [\App\Http\Controllers\InboxController::class, 'index'])->name('inbox.index');
@@ -440,7 +442,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::get('job-trackers/{id}', [\App\Http\Controllers\JobTrackersController::class, 'show'])->name('job-trackers.show');
     Route::get('job-trackers/{id}/download', [\App\Http\Controllers\JobTrackersController::class, 'download'])->name('job-trackers.download');
 
-    Route::get('/back/media/{media_id}', [\App\Http\Controllers\MediaController::class, 'download'])->name('back.media.download');
+
     Route::delete('/back/media/{media_id}', [\App\Http\Controllers\MediaController::class, 'delete'])->name('back.media.delete');
 
     // Orders
@@ -507,9 +509,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::resource('companies/{company_id}/resignations', CompanyResignationsController::class);
         Route::get('companies/deleted', [\App\Http\Controllers\Back\CompaniesController::class, 'deleted'])->name('companies.deleted');
         Route::get('companies/{id}/restore', [\App\Http\Controllers\Back\CompaniesController::class, 'restore'])->name('companies.restore');
-       
+
         Route::get('companies/export', [\App\Http\Controllers\Back\CompaniesController::class, 'export'])->name('companies.export');
-       
+
         Route::get('companies/{id}/ptcnet', [\App\Http\Controllers\Back\CompaniesController::class, 'markAsPtcNet']);
         Route::resource('companies', \App\Http\Controllers\Back\CompaniesController::class);
         Route::resource('companies.invoices', \App\Http\Controllers\Back\CompanyInvoicesController::class)->only(['create', 'store']);
@@ -612,9 +614,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         // my comment
         Route::resource('trainees/{trainee_id}/files', \App\Http\Controllers\Back\TraineesFilesController::class, ['as' => 'trainees']);
         Route::resource('companies/{company_id}/files', \App\Http\Controllers\Back\CompaniesFilesController::class, ['as' => 'companies']);
-        
 
-        
+
+
         Route::get('trainees/block-list', [\App\Http\Controllers\Back\TraineesBlockListController::class, 'index'])->name('trainees.block-list.index');
         Route::get('trainees/block-list/create', [\App\Http\Controllers\Back\TraineesBlockListController::class, 'create'])->name('trainees.block-list.create');
         Route::post('trainees/block-list', [\App\Http\Controllers\Back\TraineesBlockListController::class, 'store'])->name('trainees.block-list.store');
@@ -634,7 +636,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
         // my comment
         Route::post('trainees/{trainee_id}/attachments/qualification', [\App\Http\Controllers\Back\TraineesController::class, 'storeQualification'])->name('trainees.attachments.qualification');
-        
+
 
         Route::delete('trainees/{trainee_id}/attachments/qualification', [\App\Http\Controllers\Back\TraineesController::class, 'deleteQualification'])->name('trainees.attachments.qualification.destroy');
         Route::post('trainees/{trainee_id}/attachments/bank-account', [\App\Http\Controllers\Back\TraineesController::class, 'storeBankAccount'])->name('trainees.attachments.bank-account');

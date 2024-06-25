@@ -153,4 +153,9 @@ class CompanyAttendanceReport extends Model implements Auditable
     {
         return $this->emails()->where('type', 'cc');
     }
+
+    public function emails_bcc()
+    {
+        return $this->emails()->where('type', 'bcc');
+    }
 }
