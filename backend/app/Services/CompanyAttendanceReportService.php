@@ -84,23 +84,23 @@ class CompanyAttendanceReportService
         $report->save();
 
         // make sure to remove any spaces from emails
-        $contact_point = 'sara@ptc-ksa.net';
-        $contact_point_exists = false;
+        //$contact_point = 'sara@ptc-ksa.net';
+        //$contact_point_exists = false;
         foreach ($report->emails as $email) {
             $email->update([
                 'email' => Str::replace(' ', '', $email->email),
             ]);
-            if ($email->email == $contact_point) {
-                $contact_point_exists = true;
-            }
+            //if ($email->email == $contact_point) {
+            //    $contact_point_exists = true;
+            //}
         }
 
-        if (!$contact_point_exists) {
-            $report->emails()->create([
-                'type' => 'cc',
-                'email' => $contact_point,
-            ]);
-        }
+        //if (!$contact_point_exists) {
+        //    $report->emails()->create([
+        //        'type' => 'cc',
+        //        'email' => $contact_point,
+        //    ]);
+        //}
 
         // Fix emails
         foreach ($report->emails as $emailRecord) {
@@ -121,6 +121,7 @@ class CompanyAttendanceReportService
 
         Mail::to($report->emails_to()->pluck('email') ?: null)
             ->cc($report->emails_cc()->pluck('email') ?: null)
+            ->bcc($report->emails_bcc()->pluck('email') ?: null)
             ->send(new CompanyAttendanceReportMail($report->id));
 
         return $report;
