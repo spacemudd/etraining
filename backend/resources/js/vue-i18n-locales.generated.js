@@ -845,12 +845,16 @@ export default {
             "trainees-without-invoice": "متدربات لم تتم فوترتهم حسب الشهر",
             "select-month": "اختر الشهر",
             "current-month": "الشهر الحالي",
-<<<<<<< HEAD
+            "upload-image": "اضافة صورة",
+            "recruitment-company": "جهة التوظيف",
+            "recruitment_name_en": "جهة التوظيف(بالانجليزية)",
+            "recruitment_name_ar": "جهة التوظيف (بالعربية)",
+            "recruitment-companies": "جهات التوظيف",
+            "open-new-recruitment-company": "فتح جهة توظيف جديدة",
+            "open-new-recruitment-company-description": "فتح جهة توظيف جديدة والبدء بادارة البيانات",
+            "person-whose-add-recruitment": "اسم من اضاف الجهة"
             "upload-image": "اضافة صورة",
             "company-logo": "شعار الشركه"
-=======
-            "upload-image": "اضافة صورة"
->>>>>>> d11f8384 (Add option to upload image on cloud in company page)
         }
     },
     "en": {
@@ -1643,12 +1647,14 @@ export default {
             "trainees-without-invoice": "Trainees without invoices for the specified month",
             "select-month": "Select Month",
             "current-month": "Current Month",
-<<<<<<< HEAD
             "upload-image": "Upload Image",
-            "company-logo": "Company Logo"
-=======
-            "upload-image": "Upload Image"
->>>>>>> d11f8384 (Add option to upload image on cloud in company page)
+            "recruitment-company": "Recruitment Company",
+            "recruitment_name_en": "Recruitment Company(EN)",
+            "recruitment_name_ar": "Recruitment Company(AR)",
+            "recruitment-companies": "Recruitment Companies",
+            "open-new-recruitment-company": "Open New Recruitment Company",
+            "open-new-recruitment-company-description": "Open New Recruitment Company And Start Data Managment",
+            "person-whose-add-recruitment": "Person Whose Add Recruitment"
         }
     }
 }

@@ -104,6 +104,29 @@
           </div>
           <jet-input-error :message="form.error('center_id')" class="mt-2" />
         </div>
+        <div class="col-span-4 sm:col-span-1">
+          <jet-label for="recruitment_company_id" :value="$t('words.recruitment-company')" />
+          <div class="relative mt-2">
+            <select
+              class="mt-1 block w-full bg-gray-100 appearance-none border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:border-gray-500"
+              v-model="company.recruitment_company_id"
+              id="recruitment_company_id"
+              disabled
+            >
+              <option
+                v-for="recruitmentCompany in recruitmentCompanies"
+                :key="recruitmentCompany.id"
+                :value="recruitmentCompany.id"
+              >
+                {{ recruitmentCompany.name }}
+              </option>
+            </select>
+          </div>
+          <jet-input-error :message="form.error('recruitment_company_id')" class="mt-2" />
+        </div>
+
+      
+
         <template
           v-for="fieldName in [
             'name_ar',
@@ -161,23 +184,18 @@
           </div>
           <jet-input-error :message="form.error('region_id')" class="mt-2" />
         </div>
-
-       
       </div>
 
-       <!-- my comment -->
-         
-           <div class="mt-3">
-              <inertia-link
-                class="text-blue-600 border-2 border-blue-600 text-xs p-1"
-                :href="route('back.companies.files.index',company.id)"
-              >
-                {{ $t("words.upload-image") }}
-              </inertia-link>
-            </div> 
+      <!-- my comment -->
 
-        
-           
+      <div class="mt-3">
+        <inertia-link
+          class="text-blue-600 border-2 border-blue-600 text-xs p-1"
+          :href="route('back.companies.files.index', company.id)"
+        >
+          {{ $t("words.upload-image") }}
+        </inertia-link>
+      </div>
 
       <!--            <span v-if="this.company.is_ptc_net">&#45;&#45;</span>-->
 
@@ -761,7 +779,6 @@ import EmptySlate from "@/Components/EmptySlate";
 import PostTraineesButton from "@/Components/PostTraineesButton";
 import Input from "../../../Jetstream/Input";
 
-
 export default {
   metaInfo: { title: "Files" },
   props: [
@@ -775,8 +792,8 @@ export default {
     "centers",
     "trainees",
     "company_mails",
+    "recruitmentCompanies",
   ],
-
 
   components: {
     Input,
@@ -818,6 +835,8 @@ export default {
           salesperson_email: "",
           region_id: "",
           center_id: "",
+          recruitment_company_id: "",
+         
         },
         {
           bag: "createCompany",
@@ -828,7 +847,6 @@ export default {
   mounted() {
     this.$wait.end("SAVING_FILE");
   },
-
 
   watch: {
     selected: function (selected) {

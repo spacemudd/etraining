@@ -503,6 +503,14 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
         Route::get('/settings', [\App\Http\Controllers\Back\SettingsController::class, 'index'])->name('settings');
 
+
+        //recruitment
+        Route::get('/settings/recruitment-companies', [\App\Http\Controllers\Back\RecruitmentCompaniesController::class, 'index'])->name('settings.recruitment-companies.index');
+        Route::get('/settings/recruitment-companies/create', [\App\Http\Controllers\Back\RecruitmentCompaniesController::class, 'create'])->name('settings.recruitment-companies.create');
+        Route::post('/settings/recruitment-companies/store', [\App\Http\Controllers\Back\RecruitmentCompaniesController::class, 'store'])->name('settings.recruitment-companies.store');
+        Route::delete('/settings/recruitment-companies/{id}', [\App\Http\Controllers\Back\RecruitmentCompaniesController::class, 'destroy'])->name('settings.recruitment-companies.destroy');
+
+
         Route::get('/settings/global-messages', [\App\Http\Controllers\Back\GlobalMessagesController::class, 'index'])->name('settings.global-messages.index');
         Route::get('/settings/global-messages/create', [\App\Http\Controllers\Back\GlobalMessagesController::class, 'create'])->name('settings.global-messages.create');
         Route::post('/settings/global-messages', [\App\Http\Controllers\Back\GlobalMessagesController::class, 'store'])->name('settings.global-messages.store');
@@ -548,10 +556,16 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('companies/export', [\App\Http\Controllers\Back\CompaniesController::class, 'export'])->name('companies.export');
 
         Route::get('companies/{id}/ptcnet', [\App\Http\Controllers\Back\CompaniesController::class, 'markAsPtcNet']);
+
+
+        
         Route::resource('companies', \App\Http\Controllers\Back\CompaniesController::class);
+
+        
+
+
         Route::resource('companies.invoices', \App\Http\Controllers\Back\CompanyInvoicesController::class)->only(['create', 'store']);
         Route::get('companies/{company_id}/mails/{id}', [App\Http\Controllers\Webhooks\MailController::class,'viewCompanyMails'])->name('companies.mail');
-
         //Route::put('user/{id}', [\App\Http\Controllers\Back\UserCompanyController::class, 'index'])->name('user.index');
         //Route::resource('user', \App\Http\Controllers\Back\UserCompanyController::class);
         Route::prefix('companies')->name('companies.')->group(function() {
@@ -767,7 +781,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('company-attendance/{report_id}/edit', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'edit'])->name('reports.company-attendance.edit');
             Route::post('company-attendance/{id}/clone', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'clone'])->name('reports.company-attendance.clone');
             Route::post('company-attendance/{id}/approve', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'approve'])->name('reports.company-attendance.approve');
+          
             Route::get('company-attendance/{id}/preview', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'preview'])->name('reports.company-attendance.preview');
+
             Route::post('company-attendance/{id}/send', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'send'])->name('reports.company-attendance.send');
             Route::post('company-attendance/send-report/download', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'sendReportDownload'])->name('reports.company-attendance.send-report.download');
             Route::get('company-attendance/send-report', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'sendReport'])->name('reports.company-attendance.send-report');
@@ -778,7 +794,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::post('company-attendance', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'store'])->name('reports.company-attendance.store');
             Route::get('company-attendance/create', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'create'])->name('reports.company-attendance.create');
             Route::get('company-attendance', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'index'])->name('reports.company-attendance.index');
+            
             Route::get('company-attendance/{id}', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'show'])->name('reports.company-attendance.show');
+
+
             Route::get('company-attendance/{id}/trainee/{trainee_id}', [CompanyAttendanceReportController::class, 'individual'])->name('reports.company-attendance.individual');
             Route::get('company-attendance/{id}/trainee/{trainee_id}/pdf', [CompanyAttendanceReportController::class, 'individualPdf'])->name('reports.company-attendance.individual.pdf');
             Route::post('company-attendance/{id}/trainee/{trainee_id}/email', [CompanyAttendanceReportController::class, 'individualEmail'])->name('reports.company-attendance.individual.email');

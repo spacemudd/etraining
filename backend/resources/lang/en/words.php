@@ -656,8 +656,12 @@ return [
     'select-month' => 'Select Month',
     'current-month' => 'Current Month',
     'upload-image' => 'Upload Image',
-<<<<<<< HEAD
+    'recruitment-company' => "Recruitment Company",
+    'recruitment_name_en' => 'Recruitment Company(EN)',
+    'recruitment_name_ar' => 'Recruitment Company(AR)',
+    'recruitment-companies' => 'Recruitment Companies',
+    'open-new-recruitment-company' => 'Open New Recruitment Company',
+    'open-new-recruitment-company-description' => 'Open New Recruitment Company And Start Data Managment',
+    'person-whose-add-recruitment' => 'Person Whose Add Recruitment'
     'company-logo' =>'Company Logo',
-=======
->>>>>>> d11f8384 (Add option to upload image on cloud in company page)
 ];

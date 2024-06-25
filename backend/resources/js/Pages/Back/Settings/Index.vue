@@ -51,6 +51,13 @@
                               class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
                     {{ $t('words.global-messages') }}
                 </inertia-link>
+
+
+                <inertia-link :href="route('back.settings.recruitment-companies.index')"
+                              class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
+                    {{ $t('words.recruitment-companies') }}
+                </inertia-link>
+
             </div>
         </div>
     </app-layout>

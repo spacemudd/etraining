@@ -8,6 +8,7 @@ use App\Models\Back\Audit;
 use App\Models\Back\Center;
 use App\Models\Back\Company;
 use App\Models\Back\Instructor;
+use App\Models\Back\RecruitmentCompany;
 use App\Models\Back\Region;
 use App\Models\Back\Trainee;
 use App\Models\User;
@@ -56,6 +57,7 @@ class CompaniesController extends Controller
         return Inertia::render('Back/Companies/Create',[
             'regions' => Region::orderBy('name')->get(),
             'centers' => Center::orderBy('name')->get(),
+            'recruitmentCompanies' => RecruitmentCompany::orderBy('name')->get(),
         ]);
     }
 
@@ -67,34 +69,38 @@ class CompaniesController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $this->authorize('create-companies');
+{
+    $this->authorize('create-companies');
 
-        $validated = $request->validate([
-            'name_ar' => 'required|string|max:255',
-            'name_en' => 'nullable|string|max:255',
-            'cr_number' => 'nullable|max:255',
-            'contact_number' => 'nullable|string|max:255',
-            'company_rep' => 'nullable|string|max:255',
-            'company_rep_mobile' => 'nullable|string|max:255',
-            'email' => 'nullable|email|max:255',
-            'address' => 'nullable|string|max:255',
-            'monthly_subscription_per_trainee' => 'nullable|numeric|min:0|max:100000',
-            'shelf_number' => 'nullable|string|max:255',
-            'salesperson_email' => 'nullable|email',
-            'region_id' => 'nullable|exists:regions,id',
-            'center_id' => 'nullable|exists:centers,id',
-        ]);
+    $validated = $request->validate([
+        'name_ar' => 'required|string|max:255',
+        'name_en' => 'nullable|string|max:255',
+        'cr_number' => 'nullable|max:255',
+        'contact_number' => 'nullable|string|max:255',
+        'company_rep' => 'nullable|string|max:255',
+        'company_rep_mobile' => 'nullable|string|max:255',
+        'email' => 'nullable|email|max:255',
+        'address' => 'nullable|string|max:255',
+        'monthly_subscription_per_trainee' => 'nullable|numeric|min:0|max:100000',
+        'shelf_number' => 'nullable|string|max:255',
+        'salesperson_email' => 'nullable|email',
+        'region_id' => 'nullable|exists:regions,id',
+        'center_id' => 'nullable|exists:centers,id',
+        'recruitment_company_id' => 'nullable|exists:recruitment_companies,id',
+    ]);
 
-        $company = Company::create($validated);
+   
+    $company = Company::create($validated);
 
-        app()->make(CompaniesService::class)->notifyUsersAboutNewCompany($company);
+    app()->make(CompaniesService::class)->notifyUsersAboutNewCompany($company);
 
-        return redirect()->route('back.companies.show', ['company' => $company])->with(
-            'success',
-            __('words.created-successfully')
-        );
-    }
+    return redirect()->route('back.companies.show', ['company' => $company])->with(
+        'success',
+        __('words.created-successfully')
+    );
+}
+
+
 
     /**
      * Display the specified resource.
@@ -121,6 +127,7 @@ class CompaniesController extends Controller
                 'center',
                 'resignations',
                 'company_mails',
+                'recruitmentCompany',
             ])
             ->withCount([
                 'trainees' => function($model) {
@@ -157,6 +164,8 @@ class CompaniesController extends Controller
             'trainees_trashed_count' => Trainee::where('company_id', $company->id)->onlyTrashed()->count(),
             'regions' => Region::orderBy('name')->get(),
             'centers' => Center::orderBy('name')->get(),
+            'recruitmentCompanies' => RecruitmentCompany::orderBy('name')->get(),
+
         ]);
     }
 
@@ -169,12 +178,17 @@ class CompaniesController extends Controller
      */
     public function edit($id)
     {
+        $company = Company::with('recruitmentCompany')->findOrFail($id);
+    
         return Inertia::render('Back/Companies/Edit', [
-            'company' => Company::findOrFail($id),
+            'company' => $company,
             'regions' => Region::orderBy('name')->get(),
             'centers' => Center::orderBy('name')->get(),
+            'recruitmentCompanies' =>RecruitmentCompany::orderBy('name')->get(),
         ]);
     }
+    
+
 
     /**
      * Update the specified resource in storage.
@@ -199,17 +213,28 @@ class CompaniesController extends Controller
             'shelf_number' => 'nullable|string|max:255',
             'region_id' => 'nullable|exists:regions,id',
             'center_id' => 'nullable|exists:centers,id',
+            'recruitment_company_id' => 'nullable|exists:recruitment_companies,id',
         ]);
-
+    
+       
+    
         $company = Company::findOrFail($id);
+        $company->update($request->except(['_token']));
+
+    
+        // Get regions and centers for redirection
         $region = Region::orderBy('name')->get();
         $center = Center::orderBy('name')->get();
-        $company->update($request->except('_token'));
-        return redirect()->route('back.companies.show', ['company' => $company, 'region' => $region, 'center' => $center])->with(
+        $recruitmentCompanies =  RecruitmentCompany::orderBy('name')->get(); 
+
+    
+        return redirect()->route('back.companies.show', ['company' => $company, 'region' => $region, 'center' => $center ,'recruitmentCompanies' => $recruitmentCompanies ])->with(
             'success',
             __('words.updated-successfully')
         );
     }
+    
+    
 
     /**
      * Remove the specified resource from storage.
