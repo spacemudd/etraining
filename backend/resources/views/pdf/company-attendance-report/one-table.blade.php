@@ -48,14 +48,23 @@ tfoot { display:table-footer-group }
             <h1 style="text-align: center;">تقرير الحضور للمتدربات</h1>
         </div>
         <div class="col-2" style="text-align:right;">
-            @if ($report->falls_under_ptc_net)
-                <!-- <img src="{{ public_path('/img/logo.png')}}" alt="logo" width="200"/> -->
-            @else
-                <!-- <img src="{{ public_path('/img/ptc_invoice_logo.png')}}" alt="logo" width="200"/> -->
-            @endif
+{{--            @if ($report->falls_under_ptc_net)--}}
+{{--                <!-- <img src="{{ public_path('/img/logo.png')}}" alt="logo" width="200"/> -->--}}
+{{--            @else--}}
+{{--                <!-- <img src="{{ public_path('/img/ptc_invoice_logo.png')}}" alt="logo" width="200"/> -->--}}
+{{--            @endif--}}
+{{--            @if ($report->company->logo_files->count() > 0)--}}
+{{--                <img style="margin:0 auto;border:none;" src="{{ $report->company->logo_files->first()->download_url }}" alt="logo" width="200"/>--}}
+{{--            @endif--}}
         </div>
     </div>
     @endif
+
+    <div class="row" style="text-align: center;">
+        @if ($report->company->logo_files->count() > 0)
+            <img style="margin:0 auto;border:none;" src="data:image/jpeg;base64,{{ base64_encode(@file_get_contents($report->company->logo_files->first()->download_url)) }}" alt="logo" width="200"/>
+        @endif
+    </div>
 
     <div class="row" style="margin-top: 10px;">
         <table class="table">
@@ -269,7 +278,7 @@ tfoot { display:table-footer-group }
                     @if ($report->with_logo)
                 <tr>
                             @if ($report->falls_under_ptc_net)
-                            <td colspan="100%" style="background:#e0e0e0;text-align: center;">** هذا الكشف صحيح مالم تشعر شركة مركز احترافية التدريب من قبل العميل ببريد إلكتروني يفيد بخلاف ذلك خلال ٥ ايام عمل من تاريخه.
+                            <td colspan="100%" style="background:#e0e0e0;text-align: center;">** هذا الكشف صحيح مالم تشعر الشركة من قبل العميل ببريد إلكتروني يفيد بخلاف ذلك خلال ٥ ايام عمل من تاريخه.
 في حال وجود اي استفسارات لا تترددو بالتواصل معنا على البريد الإلكتروني.</td>
                             @else
                                 <td colspan="100%" style="background:#e0e0e0;text-align: center;">** يعتبر الكشف صحيح ما لم يردنا اي ملاحظات خلال الاسبوع من الارسال</td>
@@ -279,13 +288,13 @@ tfoot { display:table-footer-group }
                 </tbody>
         </table>
         <div class="row" style="text-align:center;">
-            @if ($report->with_logo)
-                @if ($report->falls_under_ptc_net)
-                    <img style="margin:0 auto;border:none;" src="{{ public_path('/img/ptc_stamp_2023.png')}}" alt="logo" width="200"/>
-                @else
-                    <img style="margin:0 auto;border:none;" src="{{ public_path('/img/ptc-signature.png')}}" alt="logo" width="200"/>
-                @endif
-            @endif
+{{--            @if ($report->with_logo)--}}
+{{--                @if ($report->falls_under_ptc_net)--}}
+{{--                    <img style="margin:0 auto;border:none;" src="{{ public_path('/img/ptc_stamp_2023.png')}}" alt="logo" width="200"/>--}}
+{{--                @else--}}
+{{--                    <img style="margin:0 auto;border:none;" src="{{ public_path('/img/ptc-signature.png')}}" alt="logo" width="200"/>--}}
+{{--                @endif--}}
+{{--            @endif--}}
         </div>
         </div>
     </div>
