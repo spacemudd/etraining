@@ -168,7 +168,6 @@ class CompanyAttendanceReportService
             ->setOption('margin-top', 10)
             ->setOption('margin-bottom', 30)
             ->setOption('disable-smart-shrinking', true)
-            ->setOption('wait-for-network-idle', true)
             ->setOption('viewport-size', '1024×768')
             ->setOption('zoom', 0.78)
             ->setOption('footer-html', $report->with_logo ? resource_path('views/pdf/company-attendance-report/company-attendance-report-footer.html') : false)
