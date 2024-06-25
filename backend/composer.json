@@ -51,7 +51,8 @@
         "spatie/laravel-query-builder": "^4.0",
         "spatie/laravel-searchable": "^1.7",
         "teamtnt/laravel-scout-tntsearch-driver": "^11.1",
-        "tightenco/ziggy": "^0.9.4"
+        "tightenco/ziggy": "^0.9.4",
+        "wemersonjanuario/wkhtmltopdf-windows": "0.12.2.3"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",

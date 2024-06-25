@@ -3,6 +3,7 @@
 namespace App\Models\Back;
 
 use App\Models\Back\Region;
+use App\Models\Back\RecruitmentCompany;
 use App\Models\CompanyAllowedUser;
 use App\Models\SearchableLabels;
 use App\Models\User;
@@ -16,6 +17,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 use Str;
 use Illuminate\Database\Eloquent\Builder;
 use Timezone;
+
 
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -50,6 +52,7 @@ class Company extends Model implements SearchableLabels, Auditable, HasMedia
         'salesperson_email',
         'region_id',
         'center_id',
+        'recruitment_company_id',
     ];
 
     protected $appends = [
@@ -130,6 +133,11 @@ class Company extends Model implements SearchableLabels, Auditable, HasMedia
     {
         return $this->belongsTo(Center::class);
     }
+public function recruitmentCompany()
+  {
+    return $this->belongsTo(RecruitmentCompany::class);
+  }
+
 
     /**
      *

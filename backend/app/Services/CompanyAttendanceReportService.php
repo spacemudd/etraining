@@ -149,7 +149,6 @@ class CompanyAttendanceReportService
 
         // To fix formatting issue on 2nd page when the table is split.
         $view = $report->activeTraineesCount() > 8 ? 'pdf.company-attendance-report.show' : 'pdf.company-attendance-report.one-table';
-
         $pdf = PDF::setOption('margin-bottom', 30)
             ->setOption('page-size', 'A4')
             ->setOption('orientation', 'landscape')

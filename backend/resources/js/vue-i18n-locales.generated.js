@@ -846,7 +846,14 @@ export default {
             "trainees-invoices-for-specefic-period": "فواتير المتدربات خلال فترة زمنية",
             "select-month": "اختر الشهر",
             "current-month": "الشهر الحالي",
-            "upload-image": "اضافة صورة"
+            "upload-image": "اضافة صورة",
+            "recruitment-company": "جهة التوظيف",
+            "recruitment_name_en": "جهة التوظيف(بالانجليزية)",
+            "recruitment_name_ar": "جهة التوظيف (بالعربية)",
+            "recruitment-companies": "جهات التوظيف",
+            "open-new-recruitment-company": "فتح جهة توظيف جديدة",
+            "open-new-recruitment-company-description": "فتح جهة توظيف جديدة والبدء بادارة البيانات",
+            "person-whose-add-recruitment": "اسم من اضاف الجهة"
         }
     },
     "en": {
@@ -1640,7 +1647,14 @@ export default {
             "trainees-invoices-for-specefic-period": "Trainees invoices for a specefic period",
             "select-month": "Select Month",
             "current-month": "Current Month",
-            "upload-image": "Upload Image"
+            "upload-image": "Upload Image",
+            "recruitment-company": "Recruitment Company",
+            "recruitment_name_en": "Recruitment Company(EN)",
+            "recruitment_name_ar": "Recruitment Company(AR)",
+            "recruitment-companies": "Recruitment Companies",
+            "open-new-recruitment-company": "Open New Recruitment Company",
+            "open-new-recruitment-company-description": "Open New Recruitment Company And Start Data Managment",
+            "person-whose-add-recruitment": "Person Whose Add Recruitment"
         }
     }
 }
