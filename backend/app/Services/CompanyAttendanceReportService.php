@@ -151,6 +151,13 @@ class CompanyAttendanceReportService
         // To fix formatting issue on 2nd page when the table is split.
         $view = $report->activeTraineesCount() > 8 ? 'pdf.company-attendance-report.show' : 'pdf.company-attendance-report.one-table';
 
+        //if ($report->company->logo_files->count()) {
+        //    $tmpfname = tempnam("/tmp", "UL_IMAGE");
+        //    $img = file_get_contents('https://prod.ptc-ksa.net/back/media/'.$report->company->logo_files->first()->id);
+        //    file_put_contents($tmpfname, $img);
+        //}
+
+
         $pdf = PDF::setOption('margin-bottom', 30)
             ->setOption('page-size', 'A4')
             ->setOption('orientation', 'landscape')
@@ -172,7 +179,7 @@ class CompanyAttendanceReportService
             ->setOption('zoom', 0.78)
             ->setOption('footer-html', $report->with_logo ? resource_path('views/pdf/company-attendance-report/company-attendance-report-footer.html') : false)
             ->loadView($view, [
-                'base64logo' => $report->company->logo_files->count() ? 'data:image/jpeg;base64,'.base64_encode(@file_get_contents($report->company->logo_files->first()->download_url)) : null,
+                'base64logo' => $report->company->logo_files->count() ? 'data:image/jpeg;base64,'.base64_encode(@file_get_contents('https://prod.ptc-ksa.net/back/media/'.$report->company->logo_files->first()->id)) : null,
                 'report' => $report,
                 'active_trainees' => $report->getActiveTrainees(),
                 'days' => $days,
@@ -228,7 +235,7 @@ class CompanyAttendanceReportService
             ->setOption('zoom', 0.78)
             ->setOption('footer-html', resource_path('views/pdf/company-attendance-report/company-attendance-report-footer.html'))
             ->loadView($view, [
-                'base64logo' => $record->company->logo_files->count() ? 'data:image/jpeg;base64,'.base64_encode(@file_get_contents($record->report->company->logo_files->first()->download_url)) : null,
+                'base64logo' => $record->company->logo_files->count() ? 'data:image/jpeg;base64,'.base64_encode(@file_get_contents('https://prod.ptc-ksa.net/back/media/'.$record->report->company->logo_files->first()->id)) : null,
                 'report' => $record->report,
                 'active_trainees' => [$record],
                 'days' => $days,
