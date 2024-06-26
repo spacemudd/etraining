@@ -65,8 +65,8 @@ class MailController extends Controller
             throw new \RuntimeException('No company found to save the mail under.');
         }
 
-        $sender = Str::between($request->input('message')['headers']['from'], '<', '>'); // mohammad@acme.com
-        $from = Str::before($request->input('from'), '<'); // Mohammad <mohammad@acme.com>
+        $sender = Str::between($request->input('event-data')['message']['headers']['from'], '<', '>'); // mohammad@acme.com
+        $from = Str::before($request->input('event-data')['message']['headers']['from'], '<'); // Mohammad <mohammad@acme.com>
         $subject = $request->input('subject');
 
         $bodyPlain = $request->input('body-plain');
