@@ -370,6 +370,21 @@ Route::get('ttreport', function() {
     return $traineeData;
 });
 
+Route::get('logged-in-times-for-specific-users', function() {
+    $list = ['Collection1@Ptc-ksa.net ', 'collection6@ptc-ksa.net', ' collection3+nowair@ptc-ksa.net ', 'rawabib@ptc-ksa.net', 'acc8@ptc-ksa.net', 'collection7@jisr-ksa.com', 'collection5@ptc-ksa.net', 'collection4@ptc-ksa.net', 'collection2@ptc-ksa.net', 'reem@ptc-ksa.net', 'acc5@ptc-ksa.net ', 'acc10@jisr-ksa.com', 'acc@ptc-ksa.net', 'acc10@ptc-ksa.net', 'acc-walaa@ptc-ksa.net', 'acc2@jisr-ksa.com', 'acc7@ptc-ksa.net', 'acc6@ptc-ksa.net', 'acc-samar@ptc-ksa.net', 'acc-ahmed@ptc-ksa.net', 'payments@ptc-ksa.net', 'collection7@ptc-ksa.net'];
+    $user_ids = User::whereIn('email', $list)->get()->pluck('id');
+    $audits = Audit::whereIn('user_ids', $user_ids)->with('auditable')->where('event', 'login')->where('created_at', ['2024-06-14', '2024-06-22'])->get();
+    $report = [];
+    foreach ($audits as $audit) {
+        $report[] = [
+            'name' => $audit->auditable->name,
+            'email' => $audit->auditable->email,
+            'Logged in' => $audit->created_at->setTimezone('Asia/Riyadh')->format('Y-m-d H:i'),
+        ];
+    }
+    return $report;
+});
+
 Route::impersonate();
 
 Route::get('/disabled', [\App\Http\Controllers\Back\DisableWebsiteController::class, 'showDisabledPage'])->name('disabled');
