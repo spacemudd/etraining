@@ -67,10 +67,14 @@ class MailController extends Controller
 
         $sender = Str::between($request->input('event-data')['message']['headers']['from'], '<', '>'); // mohammad@acme.com
         $from = Str::before($request->input('event-data')['message']['headers']['from'], '<'); // Mohammad <mohammad@acme.com>
-        $subject = $request->input('subject');
+        $subject = $request->input('event-data')['message']['headers']['subject'];
 
-        $bodyPlain = $request->input('body-plain');
-        $bodyHtml = $request->input('body-html');
+        $mailContents = Http::withBasicAuth(
+                    config('services.mailgun.domain'),
+                    config('services.mailgun.secret')
+                )->get($request->input('event-data')['storage']['url']);
+        $bodyPlain = $mailContents['Body-Plain'];
+        $bodyHtml = $mailContents['Body-HTML'];
 
         $companyMail = CompanyMail::create([
             'company_id' => $company->id,
@@ -82,7 +86,7 @@ class MailController extends Controller
         ]);
 
         if ($request->has('attachments')) {
-            $attachments = collect(json_decode($request->input('attachments'), true, 512, JSON_THROW_ON_ERROR));
+            $attachments = collect(json_decode($request->input('event-data')['message']['attachments'], true, 512, JSON_THROW_ON_ERROR));
 
             // loop through each attachment and save them on the local filesystem.
             $attachments->each(function ($attachment) use ($companyMail, $company) {
