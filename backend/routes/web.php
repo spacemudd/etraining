@@ -7,6 +7,7 @@ use App\Http\Controllers\Back\TraineesGroupsController;
 use App\Http\Controllers\CompanyAllowedUsersController;
 use App\Http\Controllers\Webhooks\MailController;
 use App\Http\Controllers\ZoomAccountController;
+use App\Models\Back\Audit;
 use App\Models\Back\Invoice;
 use App\Models\Back\Resignation;
 use App\Models\Back\TestExportController;
