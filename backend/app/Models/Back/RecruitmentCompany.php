@@ -17,7 +17,7 @@ class RecruitmentCompany extends Model
 {
     use HasFactory;
     use HasUuid;
-    // use SoftDeletes;
+    use SoftDeletes;
 
     public $incrementing = false;
 

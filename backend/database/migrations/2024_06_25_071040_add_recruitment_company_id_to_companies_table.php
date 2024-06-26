@@ -16,7 +16,10 @@ class AddRecruitmentCompanyIdToCompaniesTable extends Migration
             Schema::table('companies', function (Blueprint $table) {
             // $table->unsignedBigInteger('recruitment_company_id')->nullable();
             $table->uuid('recruitment_company_id')->nullable();
-            $table->foreign('recruitment_company_id')->references('id')->on('recruitment_companies')->onDelete('set null');
+            $table->foreign('recruitment_company_id')->references('id')->on('recruitment_companies')->nullOnDelete();
+
+            // $table->foreign('recruitment_company_id')->references('id')->on('recruitment_companies')->onDelete('set null');
+
         });
     }
 
@@ -28,10 +31,8 @@ class AddRecruitmentCompanyIdToCompaniesTable extends Migration
     public function down()
     {
     Schema::table('companies', function (Blueprint $table) {
-        $table->dropForeign(['recruitment_company_id']);
-
         $table->dropColumn(['recruitment_company_id']);
-
+        $table->dropForeign(['recruitment_company_id']);
     });
    }
 
