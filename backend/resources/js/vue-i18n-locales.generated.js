@@ -853,7 +853,8 @@ export default {
             "recruitment-companies": "جهات التوظيف",
             "open-new-recruitment-company": "فتح جهة توظيف جديدة",
             "open-new-recruitment-company-description": "فتح جهة توظيف جديدة والبدء بادارة البيانات",
-            "person-whose-add-recruitment": "اسم من اضاف الجهة"
+            "person-whose-add-recruitment": "اسم من اضاف الجهة",
+            "can-create-recruitment-companies": "اضافة جهة توظيف"
         }
     },
     "en": {
@@ -1654,7 +1655,8 @@ export default {
             "recruitment-companies": "Recruitment Companies",
             "open-new-recruitment-company": "Open New Recruitment Company",
             "open-new-recruitment-company-description": "Open New Recruitment Company And Start Data Managment",
-            "person-whose-add-recruitment": "Person Whose Add Recruitment"
+            "person-whose-add-recruitment": "Person Whose Add Recruitment",
+            "can-create-recruitment-companies": "Can Create Recruitment Companies"
         }
     }
 }

@@ -19,7 +19,7 @@
           </inertia-link>
         </div>
       </div>
-      <admin-searchbar />
+      <admin-searchbar/>
       <div class="bg-white rounded shadow overflow-x-auto">
         <table class="w-full whitespace-no-wrap">
           <tr class="text-left font-bold">
