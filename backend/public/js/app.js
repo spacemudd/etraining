@@ -22401,7 +22401,7 @@ var render = function render() {
           }],
           staticClass: "block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500",
           attrs: {
-            id: "educational_level_id"
+            id: "recruitment_company_id"
           },
           on: {
             change: function change($event) {
@@ -22689,14 +22689,18 @@ var render = function render() {
               _vm.$set(_vm.form, "recruitment_company_id", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
             }
           }
-        }, _vm._l(_vm.recruitmentCompanies, function (recruitmentCompany) {
+        }, [_c("option", {
+          attrs: {
+            value: ""
+          }
+        }), _vm._v(" "), _vm._l(_vm.recruitmentCompanies, function (recruitmentCompany) {
           return _c("option", {
             key: recruitmentCompany.id,
             domProps: {
               value: recruitmentCompany.id
             }
           }, [_vm._v("\n                  " + _vm._s(recruitmentCompany.name) + "\n                ")]);
-        }), 0), _vm._v(" "), _c("div", {
+        })], 2), _vm._v(" "), _c("div", {
           staticClass: "pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
         }, [_c("svg", {
           staticClass: "fill-current h-4 w-4",
