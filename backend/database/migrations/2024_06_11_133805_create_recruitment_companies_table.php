@@ -17,12 +17,10 @@ class CreateRecruitmentCompaniesTable extends Migration
             $table->uuid('id')->primary();
             $table->string('name');
             $table->string('name_en');
-
             $table->uuid('created_by_id');
             $table->foreign('created_by_id')->references('id')->on('users');
-
-
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
