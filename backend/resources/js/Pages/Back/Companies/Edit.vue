@@ -65,6 +65,7 @@
                   id="educational_level_id"
                   required
                 >
+                  <option value=""></option>
                   <option
                     v-for="recruitmentCompany in recruitmentCompanies"
                     :key="recruitmentCompany.id"
