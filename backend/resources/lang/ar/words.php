@@ -670,8 +670,6 @@ return [
     'select-month' => 'اختر الشهر',
     'current-month' => 'الشهر الحالي',
     'upload-image' => 'اضافة صورة',
-
-
-
+    'company-logo' =>'شعار الشركه',
 
 ];

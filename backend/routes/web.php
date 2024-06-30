@@ -835,6 +835,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
 Route::get('sm3', function() { return redirect()->to('https://linktr.ee/ptcksa'); }); // used for events, linktree account registered by billing@ptc-ksa.net
 
 
+Route::get('/logo-files', [\App\Http\Controllers\LogoFilesController::class, 'index']);
 
 
 

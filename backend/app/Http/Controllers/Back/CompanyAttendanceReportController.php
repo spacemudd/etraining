@@ -131,7 +131,7 @@ class CompanyAttendanceReportController extends Controller
             ->with('emails_cc')
             ->findOrFail($id);
 
-        return Inertia::render('Back/Reports/CompanyAttendance/Show', [
+        return Inertia::render('Back/Reports/CompanyAttendance/Show',[
             'report' => $report,
         ]);
     }
