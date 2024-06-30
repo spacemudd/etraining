@@ -81,7 +81,7 @@ class NewEmailController extends Controller
         $email->save();
         \DB::commit();
 
-        Mail::to(['samar.h@ptc-ksa.net', $email->personal_email])
+        Mail::to(['billing@ptc-ksa.net', $email->personal_email])
             ->cc(['ceo@ptc-ksa.net'])
             ->queue(new AcceptNewEmailMail($email));
 
@@ -95,7 +95,7 @@ class NewEmailController extends Controller
         $email->save();
         \DB::commit();
 
-        Mail::to(['samar.h@ptc-ksa.net', $email->personal_email] )
+        Mail::to(['billing@ptc-ksa.net', $email->personal_email] )
             ->cc(['ceo@ptc-ksa.net'])
             ->queue(new RejectNewEmailMail($email));
 

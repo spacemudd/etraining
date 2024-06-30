@@ -43,7 +43,7 @@ class MailController extends Controller
                         'failed_at' => now(),
                         'failed_reason' => $eventData['delivery-status']['message'],
                     ]);
-                    Mail::to(['sara@ptc-ksa.net', 'samar.h@ptc-ksa.net', 'ceo@ptc-ksa.net', 'billing@ptc-ksa.net'])
+                    Mail::to(['sara@ptc-ksa.net', 'ceo@ptc-ksa.net', 'billing@ptc-ksa.net'])
                         ->send(new CompanyAttendanceFailureMail($email));
                 }
 
