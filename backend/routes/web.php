@@ -185,9 +185,10 @@ Route::get('last-logged-at', function() {
 });
 
 Route::get('s1s1', function() {
-    $trainees = Trainee::candidates()->where('created_at', '>', now()->setDay(11))->get();
-
+    // $trainees = Trainee::candidates()->where('created_at', '>', now()->setDay(11))->get();
+    $trainees = Trainee::get();
     $traineeData = [];
+
 
     foreach ($trainees as $trainee) {
         $traineeData[] = [
@@ -384,6 +385,25 @@ Route::get('logged-in-times-for-specific-users', function() {
         ];
     }
     return $report;
+});
+
+Route::get('suspended-trainees', function() {
+    $trainees = Trainee::onlyTrashed()->orWhereNotNull('suspended_at')->get();
+
+    $traineeData = [];
+
+    foreach ($trainees as $trainee) {
+        $traineeData[] = [
+            'name' => $trainee->name,
+            'company' => optional($trainee->company)->name_ar,
+            'email' => $trainee->email,
+            'phone' => $trainee->phone,
+            'instructor' => optional($trainee->instructor)->name,
+            'group' => optional($trainee->trainee_group)->name,
+        ];
+    }
+
+    return $traineeData;
 });
 
 Route::impersonate();
