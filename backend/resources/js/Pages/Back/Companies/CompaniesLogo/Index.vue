@@ -41,7 +41,7 @@
         >
           <img
             v-if="company.logo_files.length"
-            :src="`http://127.0.0.1:8000/back/media/${company.logo_files[0].id}`"
+            :src="`https://prod.ptc-ksa.net/back/media/${company.logo_files[0].id}`"
             :alt="`${company.name} Logo`"
             class="company-logo w-32 h-auto"
           />
