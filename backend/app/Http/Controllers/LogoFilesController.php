@@ -12,7 +12,7 @@ class LogoFilesController extends Controller
     public function index(){
 
         return Inertia::render('Back/Companies/CompaniesLogo/Index', [
-            'companies' => Company::with('logo_files')->paginate(20),
+            'companies' => Company::with('logo_files')->paginate(500),
         ]);
     }
 
