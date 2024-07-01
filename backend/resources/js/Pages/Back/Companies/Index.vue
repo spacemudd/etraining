@@ -5,6 +5,7 @@
                 :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
                     {title: 'companies', link: route('back.companies.index')},
+                    {title: 'companies', link: route('back.companies.index')},
                 ]"
             ></breadcrumb-container>
             <div class="flex justify-between">

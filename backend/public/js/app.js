@@ -22847,6 +22847,9 @@ var render = function render() {
       }, {
         title: "companies",
         link: _vm.route("back.companies.index")
+      }, {
+        title: "companies",
+        link: _vm.route("back.companies.index")
       }]
     }
   }), _vm._v(" "), _c("div", {
