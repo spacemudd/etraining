@@ -46123,7 +46123,11 @@ exports = module.exports = __webpack_require__(/*! ../../../../../../node_module
 
 
 // module
+<<<<<<< HEAD
+exports.push([module.i, ".company-logo[data-v-71035254] {\n  width: 40%;\n  height: 40%;\n}\r\n", ""]);
+=======
 exports.push([module.i, ".company-logo[data-v-71035254] {\n  width: 60%;\n  height: 60%;\n}\r\n", ""]);
+>>>>>>> companies-paginator
 
 // exports
 
