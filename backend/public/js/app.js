@@ -22189,7 +22189,7 @@ var render = function render() {
     }, [company.logo_files.length ? _c("img", {
       staticClass: "company-logo w-32 h-auto",
       attrs: {
-        src: "http://127.0.0.1:8000/back/media/".concat(company.logo_files[0].id),
+        src: "https://prod.ptc-ksa.net/back/media/".concat(company.logo_files[0].id),
         alt: "".concat(company.name, " Logo")
       }
     }) : _vm._e()])], 1)]);

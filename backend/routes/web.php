@@ -185,8 +185,7 @@ Route::get('last-logged-at', function() {
 });
 
 Route::get('s1s1', function() {
-    // $trainees = Trainee::candidates()->where('created_at', '>', now()->setDay(11))->get();
-    $trainees = Trainee::get();
+    $trainees = Trainee::candidates()->where('created_at', '>', now()->setDay(11))->get();
     $traineeData = [];
 
 
