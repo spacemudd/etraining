@@ -125,8 +125,8 @@ export default {
 
 <style scoped>
 .company-logo {
-  width: 20%; 
-  height: 20%; 
+  width: 60%; 
+  height: 60%; 
 }
 </style>
 

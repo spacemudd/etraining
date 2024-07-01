@@ -46123,7 +46123,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../../node_module
 
 
 // module
-exports.push([module.i, ".company-logo[data-v-71035254] {\n  width: 20%;\n  height: 20%;\n}\r\n", ""]);
+exports.push([module.i, ".company-logo[data-v-71035254] {\n  width: 60%;\n  height: 60%;\n}\r\n", ""]);
 
 // exports
 
