@@ -656,4 +656,5 @@ return [
     'select-month' => 'Select Month',
     'current-month' => 'Current Month',
     'upload-image' => 'Upload Image',
+    'company-logo' =>'Company Logo',
 ];
