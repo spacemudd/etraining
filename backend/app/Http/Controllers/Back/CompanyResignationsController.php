@@ -118,9 +118,15 @@ class CompanyResignationsController extends Controller
             $trainee->delete();
         }
 
+        // explode emails to array with comma separated and then join both emails_cc and emails_cc
+        $emails_cc = $resignation->emails_cc ? explode(', ', $resignation->emails_cc) : null;
+        $emails_bcc = $resignation->emails_bcc ? explode(', ', $resignation->emails_bcc) : null;
+
+        // join emails_cc and emails_cc arrays
+        $emails = array_merge($emails_cc, $emails_bcc);
+
         Mail::to($resignation->emails_to ? explode(', ', $resignation->emails_to) : null)
-            ->cc($resignation->emails_cc ? explode(', ', $resignation->emails_cc) : null)
-            ->bcc($resignation->emails_bcc ? explode(', ', $resignation->emails_bcc) : null)
+            ->bcc($emails)
             ->send(new ResignationsMail($resignation));
 
         DB::commit();

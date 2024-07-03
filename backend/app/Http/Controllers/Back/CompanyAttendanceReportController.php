@@ -223,7 +223,7 @@ class CompanyAttendanceReportController extends Controller
         }
 
         Mail::to($report->emails_to()->pluck('email') ?: null)
-            ->cc($report->emails_cc()->pluck('email') ?: null)
+            ->bcc($report->emails_cc()->pluck('email') ?: null)
             ->send(new CompanyAttendanceReportMail($report->id));
 
         return redirect()->route('back.reports.company-attendance.show', $id);
@@ -299,7 +299,7 @@ class CompanyAttendanceReportController extends Controller
         $report = CompanyAttendanceReport::findOrFail($report_id);
 
         Mail::to($report->emails_to()->pluck('email') ?: null)
-            ->cc($report->emails_cc()->pluck('email') ?: null)
+            ->bcc($report->emails_cc()->pluck('email') ?: null)
             ->send(new CompanyAttendanceIndividualReportMail($report->id, $trainee_id, request()->boolean('with_attendance_times')));
 
         return redirect()->route('back.reports.company-attendance.show', $report->id);
