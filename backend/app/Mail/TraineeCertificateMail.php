@@ -25,9 +25,9 @@ class TraineeCertificateMail extends Mailable
     {
         $this->certificate_id = $certificate_id;
 
-        $certificate = TraineeCertificate::find($this->certificate_id);
-        $center = $certificate->trainee->company->center;
-        CompanyMigrationHelper::setMailgunConfigBasedOnDomain($center->domain_name);
+        //$certificate = TraineeCertificate::find($this->certificate_id);
+        //$center = $certificate->trainee->company->center;
+        CompanyMigrationHelper::setMailgunConfigBasedOnDomain('ptc-ksa.net');
     }
 
     /**
