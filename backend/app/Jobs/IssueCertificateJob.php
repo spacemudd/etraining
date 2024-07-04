@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Mail\TraineeCertificateMail;
 use App\Models\Back\CertificatesImport;
 use App\Models\Back\CertificatesImportsRow;
 use App\Models\Back\TraineeCertificate;
@@ -41,8 +42,11 @@ class IssueCertificateJob implements ShouldQueue
         foreach ($this->import->rows as $row) {
             $certificate = $this->issue_certificate($row);
             if (!$this->alreadySentTo($row)) {
-                Log::info('Sending certificate to '.$row->trainee->email);
-                $certificate->send_email();
+                //$certificate->send_email();
+
+                Mail::to($this->trainee->email)
+                    ->queue(new TraineeCertificateMail($certificate->id));
+
                 $row->sent_at = now();
                 $row->save();
             }
