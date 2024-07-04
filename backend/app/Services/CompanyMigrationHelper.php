@@ -55,7 +55,7 @@ class CompanyMigrationHelper
             'mail.from.name' => 'Training Center',
             'mail.mailers.mailgun.domain' => env('MAILGUN_DOMAIN'),
             'mail.mailers.mailgun.secret' => env('MAILGUN_SECRET'),
-            'mail.mailers.mailgun.endpoint' => 'api.mailgun.net',
+            'mail.mailers.mailgun.endpoint' => env('MAILGUN_ENDPOINT'),
         ]);
         (new MailServiceProvider(app()))->register();
         return 1;
