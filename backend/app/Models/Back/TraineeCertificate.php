@@ -28,13 +28,8 @@ class TraineeCertificate extends Model
 
     public function send_email()
     {
-        try {
-            Mail::to($this->trainee->email)
+        Mail::to($this->trainee->email)
             ->queue(new TraineeCertificateMail($this->id));
-        } catch (\Exception $e) {
-            dd($e->getCode().' - '.$e->getMessage());
-            return;
-        }
 
     }
 }
