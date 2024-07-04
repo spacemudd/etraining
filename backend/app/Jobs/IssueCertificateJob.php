@@ -13,6 +13,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class IssueCertificateJob implements ShouldQueue
 {
@@ -45,7 +46,7 @@ class IssueCertificateJob implements ShouldQueue
                 //$certificate->send_email();
 
                 Mail::to($this->trainee->email)
-                    ->queue(new TraineeCertificateMail($certificate->id));
+                    ->send(new TraineeCertificateMail($certificate->id));
 
                 $row->sent_at = now();
                 $row->save();
