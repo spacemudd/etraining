@@ -45,7 +45,7 @@ class IssueCertificateJob implements ShouldQueue
             if (!$this->alreadySentTo($row)) {
                 //$certificate->send_email();
 
-                Mail::to($this->trainee->email)
+                Mail::to($certificate->trainee->email)
                     ->queue(new TraineeCertificateMail($certificate->id));
 
                 $row->sent_at = now();
