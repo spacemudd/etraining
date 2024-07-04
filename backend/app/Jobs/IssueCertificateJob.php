@@ -14,6 +14,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Queue;
 
 class IssueCertificateJob implements ShouldQueue
 {
@@ -45,8 +46,9 @@ class IssueCertificateJob implements ShouldQueue
             if (!$this->alreadySentTo($row)) {
                 //$certificate->send_email();
 
-                Mail::to($certificate->trainee->email)
-                    ->queue(new TraineeCertificateMail($certificate->id));
+                Queue::push(Mail::to($certificate->trainee->email)
+                    ->send(new TraineeCertificateMail($certificate->id)));
+
 
                 $row->sent_at = now();
                 $row->save();
