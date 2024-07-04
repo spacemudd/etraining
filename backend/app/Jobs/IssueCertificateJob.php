@@ -69,7 +69,7 @@ class IssueCertificateJob implements ShouldQueue
     {
         return CertificatesImportsRow::where('trainee_id', $row->trainee_id)
             ->where('course_id', $this->import->course_id)
-            ->where('sent_at', '!=', null)
+            ->whereNotNull('sent_at')
             ->exists();
     }
 }
