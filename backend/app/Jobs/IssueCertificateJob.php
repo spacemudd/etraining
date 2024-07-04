@@ -11,6 +11,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class IssueCertificateJob implements ShouldQueue
 {
@@ -40,6 +41,7 @@ class IssueCertificateJob implements ShouldQueue
         foreach ($this->import->rows as $row) {
             $certificate = $this->issue_certificate($row);
             if (!$this->alreadySentTo($row)) {
+                Log::info('Sending certificate to '.$row->trainee->email);
                 $certificate->send_email();
                 $row->sent_at = now();
                 $row->save();
