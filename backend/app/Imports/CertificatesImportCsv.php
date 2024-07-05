@@ -26,24 +26,27 @@ class CertificatesImportCsv implements ToCollection
      */
     public function collection(Collection $rows)
     {
-        foreach ($rows as $row) {
-            if ($row[0] === 'رقم الهوية') {
-                continue;
+        $rows->chunk(100)->each(function ($rows) {
+            foreach ($rows as $row) {
+                if ($row[0] === 'رقم الهوية') {
+                    continue;
+                }
+
+                if (($trainee = Trainee::withTrashed()->where('identity_number', $row[0])->first()) || ($trainee = Trainee::withTrashed()->where('identity_number', $this->arabic_numbers($row[0]))->first())) {
+                    $imported_row = new CertificatesImportsRow([
+                        'trainee_id' => $trainee->id,
+                        'course_id' => $this->import->course_id,
+                    ]);
+                    $this->import->rows()->save($imported_row);
+                } else {
+                    $this->failed_rows[] = $row[0];
+                }
             }
 
-            if (($trainee = Trainee::withTrashed()->where('identity_number', $row[0])->first()) || ($trainee = Trainee::withTrashed()->where('identity_number', $this->arabic_numbers($row[0]))->first())) {
-                $imported_row = new CertificatesImportsRow([
-                    'trainee_id' => $trainee->id,
-                    'course_id' => $this->import->course_id,
-                ]);
-                $this->import->rows()->save($imported_row);
-            } else {
-                $this->failed_rows[] = $row[0];
-            }
-
-            $this->import->processed_count++;
+            $this->import->processed_count += 100;
             $this->import->save();
-        }
+        });
+
 
         $this->import->completed_at = now();
         $this->import->failed_rows = $this->failed_rows;
