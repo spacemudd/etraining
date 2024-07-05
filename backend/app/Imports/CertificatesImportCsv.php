@@ -43,8 +43,7 @@ class CertificatesImportCsv implements ToCollection
                 }
             }
 
-            $this->import->processed_count += 100;
-            $this->import->save();
+            CertificatesImport::find($this->import->id)->increment('processed_count', 100);
         });
 
 
