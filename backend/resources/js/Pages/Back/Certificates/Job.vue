@@ -79,12 +79,12 @@
             }
         },
         mounted() {
-            let vm = this;
-            if (!this.job.completed_at) {
-                setTimeout(function() {
-                    vm.pollJob();
-                }, 5000);
-            }
+            // let vm = this;
+            // if (!this.job.completed_at) {
+            //     setTimeout(function() {
+            //         vm.pollJob();
+            //     }, 5000);
+            // }
         },
         methods: {
             sendToAll() {
@@ -96,11 +96,11 @@
                 let vm = this;
                 this.$inertia.get(route('back.certificates.import.job', this.job.id))
                     .then(data => {
-                        if (!this.job.completed_at) {
-                            setTimeout(function() {
-                                vm.pollJob();
-                            }, 5000);
-                        }
+                        // if (!this.job.completed_at) {
+                        //     setTimeout(function() {
+                        //         vm.pollJob();
+                        //     }, 5000);
+                        // }
                     })
             }
         },
