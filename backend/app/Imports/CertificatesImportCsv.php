@@ -14,6 +14,8 @@ class CertificatesImportCsv implements ToCollection
 
     public $failed_rows;
 
+    public $tries = 1;
+
     public function __construct(CertificatesImport $import)
     {
         $this->import = $import;
