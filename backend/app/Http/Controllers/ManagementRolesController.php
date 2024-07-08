@@ -8,6 +8,6 @@ class ManagementRolesController extends Controller
 {
     public function index()
     {
-        return Inertia::render('ManagementRoles/Index');
+        //return Inertia::render('ManagementRoles/Index');
     }
 }
