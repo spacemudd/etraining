@@ -20,7 +20,7 @@
 </head>
 <body>
 <div class="container">
-    @if ($report->with_logo)
+    @if ($report->with_logo && !$base64logo)
     <div class="row">
         <div class="col-2">
             <table class="table" style="width:100%;">
@@ -48,18 +48,16 @@
             <h1 style="text-align: center;">تقرير الحضور للمتدربات</h1>
         </div>
         <div class="col-2" style="text-align:right;">
-{{--            @if ($report->company->logo_files->count() > 0)--}}
-{{--                <img style="margin:0 auto;border:none;" src="{{ $report->company->logo_files->first()->download_url }}" alt="logo" width="200"/>--}}
-{{--            @endif--}}
+            <img src="{{ public_path('/img/logo.png')}}" alt="logo" width="200"/>
         </div>
     </div>
     @endif
 
-    <div class="row" style="text-align: center;">
-        @if ($base64logo)
-            <img style="margin:0 auto;border:none;" src="{{ $base64logo }}" alt="logo" width="200"/>
-        @endif
-    </div>
+    @if ($base64logo)
+        <div class="row" style="text-align: center;">
+                <img style="margin:0 auto;border:none;" src="{{ $base64logo }}" alt="logo" width="200"/>
+        </div>
+    @endif
 
     <div class="row" style="margin-top: 10px;">
         <table class="table" style="width:100%;">

@@ -20,51 +20,44 @@ tfoot { display:table-footer-group }
 </head>
 <body>
 <div class="container">
-    @if ($report->with_logo)
-    <div class="row">
-        <div class="col-2">
-            <table class="table" style="width:100%;">
-            	<tbody>
-                    <tr>
-                        <td style="background:#e0e0e0;">رقم التقرير</td>
-                        <td>{{ $report->number }}</td>
-                    </tr>
-                    <tr>
-                        <td style="background:#e0e0e0;">من</td>
-                        <td>{{ $report->date_from->format('Y-m-d') }}</td>
-                    </tr>
-                    <tr>
-                        <td style="background:#e0e0e0;">الى</td>
-                        <td>{{ $report->date_to->format('Y-m-d') }}</td>
-                    </tr>
-                    <tr>
-                        <td style="background:#e0e0e0;">العدد</td>
-                        <td>{{ $report->activeTraineesCount() }}</td>
-                    </tr>
-            	</tbody>
-            </table>
+    @if ($report->with_logo && !$base64logo)
+        <div class="row">
+            <div class="col-2">
+                <table class="table" style="width:100%;">
+                    <tbody>
+                        <tr>
+                            <td style="background:#e0e0e0;">رقم التقرير</td>
+                            <td>{{ $report->number }}</td>
+                        </tr>
+                        <tr>
+                            <td style="background:#e0e0e0;">من</td>
+                            <td>{{ $report->date_from->format('Y-m-d') }}</td>
+                        </tr>
+                        <tr>
+                            <td style="background:#e0e0e0;">الى</td>
+                            <td>{{ $report->date_to->format('Y-m-d') }}</td>
+                        </tr>
+                        <tr>
+                            <td style="background:#e0e0e0;">العدد</td>
+                            <td>{{ $report->activeTraineesCount() }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-8">
+                <h1 style="text-align: center;">تقرير الحضور للمتدربات</h1>
+            </div>
+            <div class="col-2" style="text-align:right;">
+                    <img src="{{ public_path('/img/logo.png')}}" alt="logo" width="200"/>
+            </div>
         </div>
-        <div class="col-8">
-            <h1 style="text-align: center;">تقرير الحضور للمتدربات</h1>
-        </div>
-        <div class="col-2" style="text-align:right;">
-{{--            @if ($report->falls_under_ptc_net)--}}
-{{--                <!-- <img src="{{ public_path('/img/logo.png')}}" alt="logo" width="200"/> -->--}}
-{{--            @else--}}
-{{--                <!-- <img src="{{ public_path('/img/ptc_invoice_logo.png')}}" alt="logo" width="200"/> -->--}}
-{{--            @endif--}}
-{{--            @if ($report->company->logo_files->count() > 0)--}}
-{{--                <img style="margin:0 auto;border:none;" src="{{ $report->company->logo_files->first()->download_url }}" alt="logo" width="200"/>--}}
-{{--            @endif--}}
-        </div>
-    </div>
     @endif
 
-    <div class="row" style="text-align: center;">
-        @if ($base64logo)
-            <img style="margin:0 auto;border:none;" src="{{ $base64logo }}" alt="logo" width="200"/>
-        @endif
-    </div>
+    @if ($base64logo)
+        <div class="row" style="text-align: center;">
+                <img style="margin:0 auto;border:none;" src="{{ $base64logo }}" alt="logo" width="200"/>
+        </div>
+    @endif
 
     <div class="row" style="margin-top: 10px;">
         <table class="table">
