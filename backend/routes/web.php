@@ -855,7 +855,7 @@ Route::get('sm3', function() { return redirect()->to('https://linktr.ee/ptcksa')
 
 
 Route::get('/logo-files', [\App\Http\Controllers\LogoFilesController::class, 'index']);
-
+//comment from shafiq
 
 
 
