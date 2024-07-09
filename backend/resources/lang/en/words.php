@@ -662,6 +662,6 @@ return [
     'recruitment-companies' => 'Recruitment Companies',
     'open-new-recruitment-company' => 'Open New Recruitment Company',
     'open-new-recruitment-company-description' => 'Open New Recruitment Company And Start Data Managment',
-    'person-whose-add-recruitment' => 'Person Whose Add Recruitment'
+    'person-whose-add-recruitment' => 'Person Whose Add Recruitment',
     'company-logo' =>'Company Logo',
 ];
