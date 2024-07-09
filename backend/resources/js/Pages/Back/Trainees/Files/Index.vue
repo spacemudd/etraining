@@ -11,6 +11,7 @@
             ></breadcrumb-container>
 
             <div class="bg-white rounded shadow overflow-x-auto my-5 p-5">
+
                 <table class="w-full whitespace-no-wrap bg-white rounded-lg my-5 p-5 shadow text-sm">
                     <colgroup>
                         <col>
@@ -45,7 +46,9 @@
                 	</tbody>
                 </table>
             </div>
+            
 
+            <!-- my comment -->
             <div class="bg-white rounded shadow overflow-x-auto my-5 p-5">
                 <form @submit.prevent="submitForm" enctype="multipart/form-data">
                     <div class="importFile mt-10">
@@ -64,7 +67,6 @@
                     </div>
                 </form>
             </div>
-
         </div>
     </app-layout>
 </template>
@@ -75,6 +77,7 @@
     import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
     import JetLabel from '@/Jetstream/Label'
     import SelectTraineeGroup from "@/Components/SelectTraineeGroup";
+    import { log } from 'logrocket';
 
     export default {
         metaInfo: { title: 'Files' },
@@ -93,6 +96,7 @@
             }
         },
         mounted() {
+
             this.$wait.end('SAVING_FILE');
         },
         methods: {
