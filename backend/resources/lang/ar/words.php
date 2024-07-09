@@ -670,6 +670,17 @@ return [
     'select-month' => 'اختر الشهر',
     'current-month' => 'الشهر الحالي',
     'upload-image' => 'اضافة صورة',
+    'recruitment-company' => "جهة التوظيف",
+    'recruitment_name_en' => 'جهة التوظيف(بالانجليزية)',
+    'recruitment_name_ar' => 'جهة التوظيف (بالعربية)',
+    'recruitment-companies' => 'جهات التوظيف',
+    'open-new-recruitment-company' => 'فتح جهة توظيف جديدة',
+    'open-new-recruitment-company-description' => 'فتح جهة توظيف جديدة والبدء بادارة البيانات',
+    'person-whose-add-recruitment' => 'اسم من اضاف الجهة',
     'company-logo' =>'شعار الشركه',
 
 ];
+
+
+
+
