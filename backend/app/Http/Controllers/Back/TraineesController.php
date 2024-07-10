@@ -137,9 +137,9 @@ class TraineesController extends Controller
             'auditable_id' => auth()->user()->id,
             'auditable_type' => User::class,
             'new_values' => [
-                'company' => $trainee->company->name_ar ?? null,
-                'trainee' => $trainee->name,
-                'trainee_id' => $trainee->id,
+              'company' => $trainee->company->name_ar ?? null,
+              'trainee' => $trainee->name,
+              'trainee_id' => $trainee->id,
             ],
         ]);
 
