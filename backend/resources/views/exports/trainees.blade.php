@@ -42,6 +42,7 @@
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.group') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.blocked') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.reason') }}</strong></th>
+        <th style="border:1px solid red;background-color:red;width:50px; text-align:center"><strong>{{ __('words.caution') }}</strong></th>
     </tr>
     </thead>
 
@@ -84,6 +85,9 @@
             <td style="border:1px solid black;">{{ optional($trainee->trainee_group)->name }}</td>
             <td style="border:1px solid black;">{{ $trainee->deleted_at_timezone }}</td>
             <td style="border:1px solid black;">{{ $trainee->deleted_remark }}</td>
+            @if($trainee->dont_edit_notice)
+             <td style="border:1px solid red;color:red;">{{__('words.dont-take-action-against-this-account-without-admin-approval')}}</td>
+            @endif
         </tr>
     @endforeach
     </tbody>

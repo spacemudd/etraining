@@ -664,4 +664,7 @@ return [
     'open-new-recruitment-company-description' => 'Open New Recruitment Company And Start Data Managment',
     'person-whose-add-recruitment' => 'Person Whose Add Recruitment',
     'company-logo' =>'Company Logo',
+    'caution' => 'Caution', 
+    'dont-take-action-against-this-account-without-admin-approval'=>'please dont dont take any action against this account without consulting with administration',
+
 ];
