@@ -678,7 +678,7 @@ return [
     'open-new-recruitment-company-description' => 'فتح جهة توظيف جديدة والبدء بادارة البيانات',
     'person-whose-add-recruitment' => 'اسم من اضاف الجهة',
     'company-logo' =>'شعار الشركه',
-    'caution' => 'تحذير', 
+    'caution' => 'تنبيه', 
     'dont-take-action-against-this-account-without-admin-approval'=>'الرجاء عدم اتخاذ اي اجراء ضد هذا الحساب من دون موافقة الإدارة',
 ];
 
