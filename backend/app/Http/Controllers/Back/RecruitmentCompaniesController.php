@@ -33,9 +33,11 @@ class RecruitmentCompaniesController extends Controller
         //create
         $recruitmentCompany = RecruitmentCompany::create([
             'name' => $validatedRecruitment['recruitment_name_ar'],
-            'name_en' => $validatedRecruitment['recruitment_name_en'],
+            'name_en' => $validatedRecruitment['recruitment_name_en'] ?? '',
             'created_by_id' => auth()->user()->id,
         ]);
+ 
+        
 
         //redirect
         return redirect()->route('back.settings.recruitment-companies.index');
