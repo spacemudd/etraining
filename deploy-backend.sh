@@ -7,4 +7,3 @@ docker push 912413319130.dkr.ecr.eu-central-1.amazonaws.com/worker
 aws ecs update-service --cluster prod-ecs-cluster --service backend-service --force-new-deployment
 aws ecs update-service --cluster prod-ecs-cluster --service worker-service --force-new-deployment
 docker image prune --force
-l
