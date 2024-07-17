@@ -170,6 +170,11 @@
                                                         <td class="border-black border px-2">{{ trainee.name }}</td>
                                                         <td class="border-black border px-2">{{ trainee.identity_number }}</td>
                                                         <td class="border-black border px-2"><span v-if="trainee.company">{{ trainee.company.name_ar }}</span></td>
+                                                          <td class="text-center border-black border px-2">
+                                                                <button @click="removeFromTrainees(trainee)" class="bg-red-500 text-white px-2 py-1 rounded">
+                                                                    {{ $t('words.delete') }}
+                                                                </button>
+                                                          </td>
                                                     </tr>
                                                     <tr v-if="!form.trainees.length">
                                                         <td class="text-center border-black border px-2"
@@ -306,6 +311,12 @@ export default {
                 this.form.trainees.push(trainee);
             }
         },
+
+         removeFromTrainees(trainee) {
+            this.form.trainees = this.form.trainees.filter(t => t.id !== trainee.id);
+        },
+
+        
         submitForm() {
             if (this.form.trainees.length === 0) {
                 alert(this.$t('words.please-select'));

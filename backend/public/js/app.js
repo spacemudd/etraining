@@ -5028,6 +5028,11 @@ __webpack_require__.r(__webpack_exports__);
         this.form.trainees.push(trainee);
       }
     },
+    removeFromTrainees: function removeFromTrainees(trainee) {
+      this.form.trainees = this.form.trainees.filter(function (t) {
+        return t.id !== trainee.id;
+      });
+    },
     submitForm: function submitForm() {
       var _this2 = this;
 
@@ -25858,7 +25863,16 @@ var render = function render() {
       staticClass: "border-black border px-2"
     }, [_vm._v(_vm._s(trainee.identity_number))]), _vm._v(" "), _c("td", {
       staticClass: "border-black border px-2"
-    }, [trainee.company ? _c("span", [_vm._v(_vm._s(trainee.company.name_ar))]) : _vm._e()])]);
+    }, [trainee.company ? _c("span", [_vm._v(_vm._s(trainee.company.name_ar))]) : _vm._e()]), _vm._v(" "), _c("td", {
+      staticClass: "text-center border-black border px-2"
+    }, [_c("button", {
+      staticClass: "bg-red-500 text-white px-2 py-1 rounded",
+      on: {
+        click: function click($event) {
+          return _vm.removeFromTrainees(trainee);
+        }
+      }
+    }, [_vm._v("\n                                                                " + _vm._s(_vm.$t("words.delete")) + "\n                                                            ")])])]);
   }), _vm._v(" "), !_vm.form.trainees.length ? _c("tr", [_c("td", {
     staticClass: "text-center border-black border px-2",
     attrs: {
@@ -65985,7 +65999,7 @@ __webpack_require__.r(__webpack_exports__);
       "open-new-recruitment-company-description": "فتح جهة توظيف جديدة والبدء بادارة البيانات",
       "person-whose-add-recruitment": "اسم من اضاف الجهة",
       "company-logo": "شعار الشركه",
-      "caution": "تحذير",
+      "caution": "تنبيه",
       "dont-take-action-against-this-account-without-admin-approval": "الرجاء عدم اتخاذ اي اجراء ضد هذا الحساب من دون موافقة الإدارة"
     }
   },
