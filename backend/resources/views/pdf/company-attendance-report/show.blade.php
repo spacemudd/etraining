@@ -414,15 +414,12 @@
                         </tr>
                     </tbody>
                 </table>
-            @if ($report->with_logo)
-                <div class="row" style="text-align:center;">
-{{--                    @if ($report->falls_under_ptc_net)--}}
-{{--                        <img style="margin:0 auto;border:none;" src="{{ public_path('/img/ptc_stamp_2023.png')}}" alt="logo" width="200"/>--}}
-{{--                    @else--}}
-{{--                        <img style="margin:0 auto;border:none;" src="{{ public_path('/img/ptc-signature.png')}}" alt="logo" width="200"/>--}}
-{{--                    @endif--}}
-                </div>
-            @endif
+                @if ($report->with_logo && !$base64logo)
+                    <div class="row" style="text-align:center;">
+                         <img style="margin:0 auto;border:none;" src="{{ public_path('/img/ptc_stamp_2023.png')}}" alt="logo" width="200"/>
+                        @endif
+                    </div>
+                @endif
             </div>
         </div>
     </div>
