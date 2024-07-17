@@ -43,6 +43,7 @@ class CompanyResignationsController extends Controller
 
         DB::beginTransaction();
 
+
         $resignation = Resignation::create([
             'date' => Carbon::parse($request->date),
             'company_id' => $request->company_id,
@@ -51,6 +52,7 @@ class CompanyResignationsController extends Controller
             'emails_cc' => $request->emails_cc ?? [],
             'emails_bcc' => $request->emails_bcc ?? [],
         ]);
+
 
         foreach ($request->trainees as $trainee) {
             $resignation->trainees()->attach($trainee['id'], [

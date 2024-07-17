@@ -25594,7 +25594,11 @@ var render = function render() {
     attrs: {
       value: "حذف من قبل التأمينات"
     }
-  }, [_vm._v("حذف من قبل التأمينات")])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("حذف من قبل التأمينات")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "قائمة سوداء"
+    }
+  }, [_vm._v("قائمة سوداء")])]), _vm._v(" "), _c("div", {
     staticClass: "pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
   }, [_c("svg", {
     staticClass: "fill-current h-4 w-4",
