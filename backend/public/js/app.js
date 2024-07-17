@@ -34247,7 +34247,11 @@ var render = function render() {
     attrs: {
       value: "حذف من قبل التأمينات"
     }
-  }, [_vm._v("حذف من قبل التأمينات")])]), _vm._v(" "), _c("button", {
+  }, [_vm._v("حذف من قبل التأمينات")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "قائمة سوداء"
+    }
+  }, [_vm._v("قائمة سوداء")])]), _vm._v(" "), _c("button", {
     staticClass: "mt-5 items-center justify-start float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400",
     attrs: {
       type: "submit"
@@ -38879,7 +38883,11 @@ var render = function render() {
     attrs: {
       value: "حذف من قبل التأمينات"
     }
-  }, [_vm._v("حذف من قبل التأمينات")])]), _vm._v(" "), _c("button", {
+  }, [_vm._v("حذف من قبل التأمينات")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "قائمة سوداء"
+    }
+  }, [_vm._v("قائمة سوداء")])]), _vm._v(" "), _c("button", {
     staticClass: "mt-5 items-center justify-start float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400",
     on: {
       click: _vm.suspendTrainee
