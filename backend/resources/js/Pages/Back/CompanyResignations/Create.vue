@@ -58,6 +58,7 @@
                                                     <option value="عدم سداد مستحق مالي / غير نشط في التأمينات">عدم سداد مستحق مالي / غير نشط في التأمينات</option>
                                                     <option value="رفضت التوقيع على الاعتراض">رفضت التوقيع على الاعتراض</option>
                                                     <option value="حذف من قبل التأمينات">حذف من قبل التأمينات</option>
+                                                    <option value="قائمة سوداء">قائمة سوداء</option>
                                                 </select>
                                                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -262,7 +263,7 @@ export default {
             searchString: '',
             searchResults: [],
             searchBoxVisible: false,
-        }
+        }   
     },
     mounted() {
         if (this.company.id) {
@@ -316,7 +317,7 @@ export default {
             this.form.trainees = this.form.trainees.filter(t => t.id !== trainee.id);
         },
 
-        
+
         submitForm() {
             if (this.form.trainees.length === 0) {
                 alert(this.$t('words.please-select'));
