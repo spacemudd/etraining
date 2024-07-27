@@ -154,8 +154,6 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
             ]);
         }
 
-        $clone->emails()->createMany($emails);
-
         $this->updateReportEmailsPerToCenter($clone);
 
         $trainee_ids = Invoice::where('company_id', $company->id)
