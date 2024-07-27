@@ -268,7 +268,7 @@
                     </tr>
                 @endforeach
             @endif
-            @if ($report->with_logo)
+            @if ($report->with_logo && !$base64logo)
                 <tr>
                     @if ($report->falls_under_ptc_net)
                         <td colspan="100%" style="background:#e0e0e0;text-align: center;">** هذا الكشف صحيح مالم تشعر الشركة من قبل العميل ببريد إلكتروني يفيد بخلاف ذلك خلال ٥ ايام عمل من تاريخه.

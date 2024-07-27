@@ -403,7 +403,7 @@
                 {{--                            <td>0</td>--}}
                 {{--                        </tr>--}}
                 <tr>
-                    @if ($report->with_logo)
+                    @if ($report->with_logo && !$base64logo)
                         @if ($report->falls_under_ptc_net)
                             <td colspan="100%" style="background:#e0e0e0;text-align: center;">** هذا الكشف صحيح مالم تشعر الشركة من قبل العميل ببريد الكتروني يفيد بخلاف ذلك خلال ٥ ايام عمل من تاريخه.
                                 في حال وجود اي استفسارات لا تترددو بالتواصل معنا على البريد الاكتروني.</td>
