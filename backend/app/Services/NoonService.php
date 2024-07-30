@@ -23,7 +23,7 @@ class NoonService implements PaymentServiceInterface
     public function createPaymentUrlForInvoice(Invoice $invoice): string
     {
         // if testing, redirect to production site
-        if (config('noon_payment.mode') === 'test' && ! Str::contains(auth()->user()->email, 'info@')) {
+        if (config('noon_payment.mode') === 'Test' && ! Str::contains(auth()->user()->email, 'info@')) {
             return redirect()->route(config('app.url'));
         }
 
