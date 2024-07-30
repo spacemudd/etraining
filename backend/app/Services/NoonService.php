@@ -24,7 +24,7 @@ class NoonService implements PaymentServiceInterface
     {
         // if testing, redirect to production site
         if (config('noon_payment.mode') === 'Test' && ! Str::contains(auth()->user()->email, 'info@')) {
-            return redirect()->to(config('app.url'));
+            return config('app.url');
         }
 
         $url = NoonPayment::getInstance()->initiate([
