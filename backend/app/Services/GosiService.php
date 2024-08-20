@@ -57,6 +57,10 @@ class GosiService
     {
         $service = new GosiService();
 
+        if (auth()->user()->email != 'sara@ptc-ksa.net') {
+            return false;
+        }
+
         try {
             $response = $service->client->get(config('services.masdr.endpoint').'/mofeed/employment/v1/employee/employment-status/'.$gosiEmployee->getNinOrIqama(), [
                 'cert' => storage_path('masdrcertificate/certificate.crt'),
