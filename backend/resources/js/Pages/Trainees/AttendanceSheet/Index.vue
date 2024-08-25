@@ -23,26 +23,45 @@
                     <colgroup>
                         <col style="width:200px;">
                     </colgroup>
-                <thead>
-                <tr>
-                	<th class="text-right">{{ $t('words.date') }}</th>
-                    <th class="text-right">{{ $t('words.course') }}</th>
-                    <th>{{ $t('words.status') }}</th>
-                </tr>
-                </thead>
-                	<tbody>
-                			<tr v-for="record in records" class="hover:bg-gray-100 focus-within:bg-gray-100">
-                				<td class="border-t text-right" dir="ltr">{{ record.course_batch_session.starts_at_timezone }}</td>
-                                <td class="border-t">{{ record.course_batch_session.course.name_ar }}</td>
-                                <td class="border-t text-center">
-                                    {{ $t('words.'+record.status_name) }}
+                    <thead>
+                    <tr>
+                        <th class="text-right">{{ $t('words.date') }}</th>
+                        <th class="text-right">{{ $t('words.course') }}</th>
+                        <th>{{ $t('words.status') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="record in records" class="hover:bg-gray-100 focus-within:bg-gray-100">
+                        <td class="border-t text-right" dir="ltr">{{ record.course_batch_session.starts_at_timezone }}</td>
+                        <td class="border-t">{{ record.course_batch_session.course.name_ar }}</td>
+                        <td class="border-t text-center">
+                            {{ $t('words.'+record.status_name) }}
 
-                                    <div v-if="record.status_name === 'absent'">
-                                        <a :href="route('trainees.attendance-report-record.absence-notes.create', {'attendance_report_record_id': record.id})" class="btn btn-primary">{{ $t('words.upload-absence-reason') }}</a>
+                            <div v-if="record.status_name === 'absent' && !record.absence_notes.length">
+                                <a :href="route('trainees.attendance-report-record.absence-notes.create', {'attendance_report_record_id': record.id})" class="btn btn-primary">{{ $t('words.upload-absence-reason') }}</a>
+                            </div>
+                            <div v-if="record.status_name === 'absent' && record.absence_notes.length">
+                                <div class="text-center">
+                                    <div v-if="!record.absence_notes[0].approved_at && !record.absence_notes[0].rejected_at">
+                                        <div v-if="record.absence_notes[0].created_at" class="p-2 border-black border">
+                                            {{ $t('words.processing-absence-note') }}
+                                            <br/>
+                                            <span class="text-xs" dir="ltr">{{ record.absence_notes[0].created_at_timezone }}</span>
+                                        </div>
                                     </div>
-                                </td>
-                			</tr>
-                	</tbody>
+                                    <div v-else>
+                                        <div class="border border-black mt-2" v-if="record.absence_notes[0].approved_at">
+                                            {{ $t('words.approved') }}
+                                        </div>
+                                        <div class="border border-black mt-2" v-if="record.absence_notes[0].rejected_at">
+                                            {{ $t('words.rejected') }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
                 </table>
             </div>
         </div>

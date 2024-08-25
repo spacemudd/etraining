@@ -15,35 +15,32 @@
                 :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
                     {title: 'my-attendance', link: route('trainees.attendance-sheet.index')},
+                    {title: 'upload-absence-reason'}
                 ]"
             ></breadcrumb-container>
 
             <div class="bg-white rounded shadow overflow-x-auto my-5 p-5">
-                <table class="w-full whitespace-no-wrap">
-                    <colgroup>
-                        <col style="width:200px;">
-                    </colgroup>
-                <thead>
-                <tr>
-                	<th class="text-right">{{ $t('words.date') }}</th>
-                    <th class="text-right">{{ $t('words.course') }}</th>
-                    <th>{{ $t('words.status') }}</th>
-                </tr>
-                </thead>
-                	<tbody>
-                			<tr v-for="record in records" class="hover:bg-gray-100 focus-within:bg-gray-100">
-                				<td class="border-t text-right" dir="ltr">{{ record.course_batch_session.starts_at_timezone }}</td>
-                                <td class="border-t">{{ record.course_batch_session.course.name_ar }}</td>
-                                <td class="border-t text-center">
-                                    {{ $t('words.'+record.status_name) }}
+                <h1 class="text-2xl">{{ $t('words.upload-absence-reason') }}</h1>
 
-                                    <div v-if="record.status_name === 'absent'">
-                                        <a :href="route('trainees.attendance-report-record.absence-notes.create', {'attendance_report_record_id': record.id})" class="btn btn-primary">{{ $t('words.upload-absence-reason') }}</a>
-                                    </div>
-                                </td>
-                			</tr>
-                	</tbody>
-                </table>
+                <p>{{ $t('words.course') }}: {{ attendance_report_record.course_batch_session.course.name_ar }}</p>
+                <p>{{ $t('words.time') }}: <span dir="ltr">{{ attendance_report_record.course_batch_session.starts_at_timezone }}</span></p>
+
+                <form class="mt-5" @submit.prevent="saveForm" enctype="multipart/form-data">
+                    <div class="mt-3">
+                        <jet-label for="files" :value="$t('words.upload-absence-reason')"/>
+                        <div class="flex justify-center">
+                            <div class="mb-3 w-full">
+                                <input class="form-control block w-full mt-2 px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                                       @input="form.files = $event.target.files"
+                                       type="file"
+                                       id="formFileMultiple"
+                                       multiple>
+                            </div>
+                        </div>
+                        <jet-input-error :message="form.error('files')" class="mt-2" />
+                    </div>
+                    <button class="btn btn-primary">{{ $t('words.save') }}</button>
+                </form>
             </div>
         </div>
     </app-layout-trainee>
@@ -52,24 +49,37 @@
 <script>
 import AppLayoutTrainee from '@/Layouts/AppLayoutTrainee'
 import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
+import JetInputError from "@/Jetstream/InputError";
+import JetLabel from "@/Jetstream/Label";
+
 export default {
     components: {
         AppLayoutTrainee,
         BreadcrumbContainer,
+        JetInputError,
+        JetLabel,
     },
     props: [
-        'records',
+        'attendance_report_record',
     ],
     data() {
         return {
-            //
+            form: this.$inertia.form({
+                files: '',
+            }, {
+                bag: 'uploadNote',
+            })
         }
     },
     mounted() {
         //
     },
     methods: {
-        //
+        saveForm() {
+            this.form.post(route('trainees.attendance-report-record.absence-notes.store',
+                {'attendance_report_record_id': this.attendance_report_record.id}
+            ));
+        },
     }
 }
 </script>

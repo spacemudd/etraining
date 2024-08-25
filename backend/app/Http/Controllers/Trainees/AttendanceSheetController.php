@@ -13,6 +13,7 @@ class AttendanceSheetController extends Controller
     {
         return Inertia::render('Trainees/AttendanceSheet/Index', [
             'records' => AttendanceReportRecord::where('trainee_id', auth()->user()->trainee->id)
+                ->with(['absence_notes'])
                 ->with(['course_batch_session' => function($q) {
                     $q->with('course');
                 }])

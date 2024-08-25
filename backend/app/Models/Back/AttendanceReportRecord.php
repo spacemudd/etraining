@@ -64,6 +64,11 @@ class AttendanceReportRecord extends Model implements Auditable
         return $this->belongsTo(CourseBatchSession::class);
     }
 
+    public function absence_notes()
+    {
+        return $this->hasMany(AttendanceReportRecordAbsenceNote::class);
+    }
+
     /**
      *
      * @return string
