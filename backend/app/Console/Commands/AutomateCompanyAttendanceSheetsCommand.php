@@ -114,10 +114,10 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                     //    '3601d5b5-ebca-4c26-94f4-71b73395b2fb',
                     //];
 
-                    if (in_array($company->id, $companies_to_execlude, true)) {
-                        $this->info('Excluded company: '.$company->name_ar);
-                        continue;
-                    }
+                    //if (in_array($company->id, $companies_to_execlude, true)) {
+                    //    $this->info('Excluded company: '.$company->name_ar);
+                    //    continue;
+                    //}
 
                     // Checks
                     if ($company->trainees()->count() === 0) {
