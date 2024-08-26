@@ -232,10 +232,10 @@
                                 <ion-icon name="time-outline" class="inline-block w-4 h-4 fill-gray-500"></ion-icon>
                                 <span class="font-bold text-gray-500" dir="ltr">{{ session.ends_at_timezone | toHours }}</span>
                             </div>
-                            <p v-if="session.course_batch.course.instructor" class="text-sm">
+                            <!-- <p v-if="session.course_batch.course.instructor" class="text-sm">
                                 {{ $t('words.provided-by') }}:
                                 <span >{{ session.course_batch.course.instructor.name }}</span>
-                            </p>
+                            </p> -->
                             <div class="mt-5 flex gap-3 flex-col md:flex-row">
                                 <!-- Course options -->
                                 <a target="_blank"
