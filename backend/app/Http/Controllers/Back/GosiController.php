@@ -54,6 +54,7 @@ class GosiController extends Controller
         
         if (!$data) {
             //if no data found for this cashekey -> get it and increment counter
+            dd('hi');
             $data = GosiEmployee::new($request->ninOrIqama)->get()->toArray();
             
             Cache::put($cacheKey, $data, self::CACHE_DURATION);
