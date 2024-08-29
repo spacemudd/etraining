@@ -21,7 +21,6 @@ class GosiController extends Controller
      const MAX_REQUESTS = 650;  
      public function show(Request $request)
     {
-        dd("hi");
         $this->authorize('view-gosi');
 
         $request->validate([
@@ -55,7 +54,6 @@ class GosiController extends Controller
         
         if (!$data) {
             //if no data found for this cashekey -> get it and increment counter
-            dd('hi');
             $data = GosiEmployee::new($request->ninOrIqama)->get()->toArray();
             
             Cache::put($cacheKey, $data, self::CACHE_DURATION);
