@@ -671,4 +671,5 @@ return [
     'manage-absence-notes' => 'Manage Absence Notes',
     'approved' => 'Approved',
     'rejected' => 'Rejected',
+    'reject-reason'=> 'reject reason',
 ];

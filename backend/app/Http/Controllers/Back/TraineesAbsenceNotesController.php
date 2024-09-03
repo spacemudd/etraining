@@ -65,7 +65,7 @@ class TraineesAbsenceNotesController extends Controller
 
     $note = AttendanceReportRecordAbsenceNote::findOrFail($id);
     $note->rejected_at = now();
-    $note->reason = $request->input('reason'); 
+    $note->rejected_reason = $request->input('reason');
     $note->save();
 
     return redirect()->route('back.trainees.absence-notes.index');

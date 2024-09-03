@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddReasonToAttendanceReportRecordAbsenceNotesTable extends Migration
+class AddRejectedReasonToAttendanceReportRecordAbsenceNotesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,7 +15,7 @@ class AddReasonToAttendanceReportRecordAbsenceNotesTable extends Migration
     {
         Schema::table('attendance_report_record_absence_notes', function (Blueprint $table) {
             //
-            $table->text('reason')->after('rejected_at');
+            $table->text('rejected_reason')->after('rejected_at');
 
         });
     }
@@ -29,7 +29,8 @@ class AddReasonToAttendanceReportRecordAbsenceNotesTable extends Migration
     {
         Schema::table('attendance_report_record_absence_notes', function (Blueprint $table) {
             //
-            $table->dropColumn('reason');
+            $table->dropColumn('rejected_reason');
+
         });
     }
 }

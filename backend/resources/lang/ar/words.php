@@ -687,4 +687,6 @@ return [
     'manage-absence-notes' => 'إدارة اسباب الغياب',
     'approved' => 'معتمد',
     'rejected' => 'مرفوض',
+    'reject-reason'=> 'سبب الرفض',
+
 ];
