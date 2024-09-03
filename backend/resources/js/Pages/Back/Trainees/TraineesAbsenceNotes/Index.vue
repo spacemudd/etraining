@@ -26,9 +26,9 @@
                     {title: 'manage-absence-notes'},
                 ]"
             ></breadcrumb-container>
-            <!-- <div class="flex justify-between">
+            <div class="flex justify-between">
                 <h1 class="mb-8 font-bold text-3xl">{{ $t('words.manage-absence-notes') }}</h1>
-            </div> -->
+            </div>
             <div class="bg-white rounded shadow overflow-x-auto">
             <Table
                     class="mt-5 w-full whitespace-no-wrap"
