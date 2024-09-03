@@ -15,7 +15,7 @@ class AddRejectedReasonToAttendanceReportRecordAbsenceNotesTable extends Migrati
     {
         Schema::table('attendance_report_record_absence_notes', function (Blueprint $table) {
             //
-            $table->text('rejected_reason')->after('rejected_at');
+            $table->text('rejected_reason')->nullable()->after('rejected_at');
 
         });
     }
