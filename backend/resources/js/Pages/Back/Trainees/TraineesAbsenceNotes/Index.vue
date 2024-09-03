@@ -80,7 +80,12 @@
                                 <div class="flex flex-col gap-2 justify-center text-center p-5">
                                     <div v-if="!note.rejected_at && !note.approved_at">
                                         <button class="btn btn-primary text-center" @click="approve(note.id)">{{ $t('words.approve') }}</button>
-                                        <button class="btn btn-primary text-center" @click="reject(note.id)">{{ $t('words.reject') }}</button>
+                                        <!-- <button class="btn btn-primary text-center" @click="reject(note.id)">{{ $t('words.reject') }}</button> -->
+                                         <button class="btn btn-primary text-center" @click="showRejectInput(note.id)">{{ $t('words.reject') }}</button>
+                                         <div v-if="note.id === rejectInput.noteId" class="mt-2">
+                                           <input type="text" v-model="rejectInput.reason" :readonly="rejectInput.submitted" placeholder="أدخل سبب الرفض" class="border rounded px-2 py-1 w-full">
+                                           <button v-if="!rejectInput.submitted" class="btn btn-primary mt-2" @click="reject(note.id)">{{ $t('words.send') }}</button>
+                                         </div>
                                     </div>
                                     <div v-else>
                                         <div v-if="note.rejected_at">
@@ -103,7 +108,7 @@
                         </td>
                     </tr>
                     </template>
-                </Table>
+           </Table>
             </div>
             <pagination :links="absence_notes.links" />
         </div>
@@ -159,6 +164,11 @@ export default {
                 // search: this.filters.search,
                 // trashed: this.filters.trashed,
             },
+            rejectInput: {
+                noteId: null,
+                reason: '',
+                submitted: false
+            },
         }
     },
     watch: {
@@ -185,16 +195,27 @@ export default {
         reset() {
             this.form = mapValues(this.form, () => null)
         },
+        //method to show input when rejected
+        showRejectInput(noteId) {
+            this.rejectInput.noteId = noteId;
+            this.rejectInput.reason = '';
+            this.rejectInput.submitted = false;
+        },
         approve(id) {
             if (confirm(this.$t('words.are-you-sure'))) {
                 this.$inertia.post(route('back.trainees.absence-notes.approve', {id: id}));
             }
         },
-        reject(id) {
+        
+        reject(noteId) {
             if (confirm(this.$t('words.are-you-sure'))) {
-                this.$inertia.post(route('back.trainees.absence-notes.reject', {id: id}));
+                this.$inertia.post(route('back.trainees.absence-notes.reject', { id: noteId }), {
+                    reason: this.rejectInput.reason
+                }).then(() => {
+                    this.rejectInput.submitted = true;
+                });
             }
-        }
+        },
     },
 }
 </script>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Back;
 use App\Http\Controllers\Controller;
 use App\Models\Back\AttendanceReportRecord;
 use App\Models\Back\AttendanceReportRecordAbsenceNote;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -47,12 +48,27 @@ class TraineesAbsenceNotesController extends Controller
         return redirect()->route('back.trainees.absence-notes.index');
     }
 
-    public function reject($id)
-    {
-        $note = AttendanceReportRecordAbsenceNote::find($id);
-        $note->rejected_at = now();
-        $note->save();
+    // public function reject($id)
+    // {
+    //     $note = AttendanceReportRecordAbsenceNote::find($id);
+    //     $note->rejected_at = now();
+    //     $note->save();
 
-        return redirect()->route('back.trainees.absence-notes.index');
-    }
+    //     return redirect()->route('back.trainees.absence-notes.index');
+    // }
+
+    public function reject(Request $request, $id)
+{
+    $request->validate([
+        'reason' => 'required|string',
+    ]);
+
+    $note = AttendanceReportRecordAbsenceNote::findOrFail($id);
+    $note->rejected_at = now();
+    $note->reason = $request->input('reason'); 
+    $note->save();
+
+    return redirect()->route('back.trainees.absence-notes.index');
+}
+
 }
