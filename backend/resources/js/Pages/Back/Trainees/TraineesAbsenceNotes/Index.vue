@@ -91,8 +91,8 @@
                                         <div v-if="note.rejected_at">
                                             {{ $t('words.rejected') }}
                                             <span class="text-xs" dir="ltr">{{ note.rejected_at_timezone }}</span>
-                                             <div v-if="note.reject_reason" class="mt-2">
-                                                 <strong>{{ $t('words.reject-reason') }}:</strong> {{ note.reject_reason }}
+                                             <div v-if="note.rejected_reason" class="mt-2">
+                                                 <strong>{{ $t('words.reject-reason') }}:</strong> {{ note.rejected_reason }}
                                              </div>
                                         </div>
                                         <div v-if="note.approved_at">
