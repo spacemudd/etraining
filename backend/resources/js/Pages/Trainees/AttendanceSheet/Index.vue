@@ -55,6 +55,9 @@
                                         </div>
                                         <div class="border border-black mt-2" v-if="record.absence_notes[0].rejected_at">
                                             {{ $t('words.rejected') }}
+                                             <div v-if="record.absence_notes[0].rejected_reason" class="mt-2 text-red-500">
+                                                 <strong>{{ $t('words.reject-reason') }}:</strong> {{ record.absence_notes[0].rejected_reason }}
+                                             </div>
                                         </div>
                                     </div>
                                 </div>
