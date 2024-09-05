@@ -60,6 +60,7 @@ class AttendanceReportRecordAbsenceNotesController extends Controller
 
     public function update(Request $request, $id)
     {
+        dd("here");
         $request->validate([
             'files' => 'nullable',
         ]);
