@@ -688,5 +688,5 @@ return [
     'approved' => 'معتمد',
     'rejected' => 'مرفوض',
     'reject-reason'=> 'سبب الرفض',
-
+    'upload-absence-reason-for-last-time'=>'رفع سبب الغياب للمرة الأخيرة',
 ];

@@ -53,10 +53,15 @@
                                         <div class="border border-black mt-2" v-if="record.absence_notes[0].approved_at">
                                             {{ $t('words.approved') }}
                                         </div>
+
+
                                         <div class="border border-black mt-2" v-if="record.absence_notes[0].rejected_at">
                                             {{ $t('words.rejected') }}
                                              <div v-if="record.absence_notes[0].rejected_reason" class="mt-2 text-red-500">
-                                                 <strong>{{ $t('words.reject-reason') }}:</strong> {{ record.absence_notes[0].rejected_reason }}
+                                                 <strong>{{ $t('words.reject-reason') }}:</strong> {{ record.absence_notes[0].rejected_reason}}
+                                             </div>
+                                             <div v-if="record.absence_notes[0].upload_coount==0">
+                                                 <a :href="route('trainees.attendance-report-record.absence-notes.edit', {'attendance_report_record_id': record.id})" class="btn btn-primary">{{ $t('words.upload-absence-reason-for-last-time') }}</a>
                                              </div>
                                         </div>
                                     </div>

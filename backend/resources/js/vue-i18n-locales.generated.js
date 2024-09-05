@@ -861,7 +861,8 @@ export default {
             "rejected-at": "تاريخ الرفض",
             "processing-absence-note": "جاري معالجة سبب الغياب",
             "manage-absence-notes": "إدارة اسباب الغياب",
-            "reject-reason": "سبب الرفض"
+            "reject-reason": "سبب الرفض",
+            "upload-absence-reason-for-last-time": "رفع سبب الغياب للمرة الأخيرة"
         }
     },
     "en": {
@@ -1668,7 +1669,8 @@ export default {
             "upload-absence-reason": "Upload Absence Reason",
             "processing-absence-note": "Processing Absence Note",
             "manage-absence-notes": "Manage Absence Notes",
-            "reject-reason": "reject reason"
+            "reject-reason": "reject reason",
+            "upload-absence-reason-for-last-time": "upload absence reason for the last time"
         }
     }
 }

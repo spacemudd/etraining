@@ -672,4 +672,5 @@ return [
     'approved' => 'Approved',
     'rejected' => 'Rejected',
     'reject-reason'=> 'reject reason',
+    'upload-absence-reason-for-last-time'=>'upload absence reason for the last time'
 ];

@@ -15,6 +15,13 @@ class AttendanceReportRecordAbsenceNote extends Model implements HasMedia, Audit
     use InteractsWithMedia;
     use \OwenIt\Auditing\Auditable;
 
+    protected $fillable = [
+        'trainee_id',
+        'attendance_report_record_id',
+        'rejected_reason',
+        'upload_count',
+    ];
+
     public $appends = [
         'created_at_timezone',
         'approved_at_timezone',
