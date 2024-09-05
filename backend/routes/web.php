@@ -831,7 +831,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('attendance-report-record/{attendance_report_record_id}/absence-notes/create', [AttendanceReportRecordAbsenceNotesController::class, 'create'])->name('attendance-report-record.absence-notes.create');
         Route::get('attendance-report-record/{attendance_report_record_id}/absence-notes/edit', [AttendanceReportRecordAbsenceNotesController::class, 'edit'])->name('attendance-report-record.absence-notes.edit');
         Route::post('attendance-report-record/{attendance_report_record_id}/absence-notes/store', [AttendanceReportRecordAbsenceNotesController::class, 'store'])->name('attendance-report-record.absence-notes.store');
-        Route::post('attendance-report-record/{attendance_report_record_id}/absence-notes/update', [AttendanceReportRecordAbsenceNotesController::class, 'update'])->name('attendance-report-record.absence-notes.update');
+        Route::put('attendance-report-record/{attendance_report_record_id}/absence-notes/update', [AttendanceReportRecordAbsenceNotesController::class, 'update'])->name('attendance-report-record.absence-notes.update');
 
         Route::get('training-plan', [\App\Http\Controllers\Trainees\TrainingPlanController::class, 'index'])->name('training-plan.index');
 

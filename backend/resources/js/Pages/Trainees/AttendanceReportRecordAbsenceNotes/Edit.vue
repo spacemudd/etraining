@@ -76,7 +76,7 @@ export default {
     },
     methods: {
         saveForm() {
-            this.form.post(route('trainees.attendance-report-record.absence-notes.update',
+            this.form.put(route('trainees.attendance-report-record.absence-notes.update',
                 {'attendance_report_record_id': this.attendance_report_record.id}
             ));
         },
