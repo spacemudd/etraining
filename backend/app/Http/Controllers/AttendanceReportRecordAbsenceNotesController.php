@@ -58,14 +58,14 @@ class AttendanceReportRecordAbsenceNotesController extends Controller
         return redirect()->route('trainees.attendance-sheet.index');
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $attendance_report_record_id)
     {
         
         $request->validate([
             'files' => 'nullable',
         ]);
     
-        $attendance_report_record_absence_note = AttendanceReportRecordAbsenceNote::findOrFail($id);
+        $attendance_report_record_absence_note = AttendanceReportRecordAbsenceNote::findOrFail($attendance_report_record_id);
     
         //check if trainee updates 1 time before -> return error
         if ($attendance_report_record_absence_note->upload_count >= 1) {
@@ -76,7 +76,7 @@ class AttendanceReportRecordAbsenceNotesController extends Controller
         //if trainee updates for the first time -> should assign rejected_at to null
         $attendance_report_record_absence_note->rejected_at = null;
         $attendance_report_record_absence_note->trainee_id = auth()->user()->trainee->id;
-        $attendance_report_record_absence_note->attendance_report_record_id = $request->input('attendance_report_record_id'); 
+        $attendance_report_record_absence_note->attendance_report_record_id = $attendance_report_record_id; 
         
         $attendance_report_record_absence_note->upload_count += 1; // increse count of upload 
     
