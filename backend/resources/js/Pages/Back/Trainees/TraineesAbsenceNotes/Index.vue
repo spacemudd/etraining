@@ -24,6 +24,7 @@
                     {title: 'dashboard', link: route('dashboard')},
                     {title: 'trainees', link: route('back.trainees.index')},
                     {title: 'manage-absence-notes'},
+                    {title: 'manage-absence-notes'},
                 ]"
             ></breadcrumb-container>
             <div class="flex justify-between">
