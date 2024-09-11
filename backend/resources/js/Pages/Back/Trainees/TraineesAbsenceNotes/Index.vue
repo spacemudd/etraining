@@ -50,7 +50,7 @@
                         <tr v-for="note in absence_notes.data" :key="note.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
                             <td class="border-t">
                                 <div class="px-6 py-4 flex items-center focus:text-indigo-500">
-                                    <inertia-link :href="route('back.trainees.show', note.trainee.id)">
+                                    <inertia-link v-if="note.trainee" :href="route('back.trainees.show', note.trainee.id)">
                                         {{ note.trainee.name }}
                                         <br/>
                                     </inertia-link>
@@ -58,14 +58,14 @@
                             </td>
                             <td class="border-t">
                                 <inertia-link class="px-6 py-4 flex items-center" :href="route('back.trainees.show', note.trainee.id)" tabindex="-1">
-                                    <div v-if="note.trainee.phone">
+                                    <div v-if="note.trainee && note.trainee.phone">
                                         {{ note.trainee.phone }}
                                     </div>
                                 </inertia-link>
                             </td>
                             <td class="border-t">
                                 <inertia-link class="px-6 py-4 flex items-center" :href="route('back.companies.show', note.trainee.id)" tabindex="-1">
-                                    <span v-if="note.trainee.company">{{ note.trainee.company.name_ar }}</span>
+                                    <span v-if="note.trainee && note.trainee.company">{{ note.trainee.company.name_ar }}</span>
                                     <span v-else class="italic text-gray-500 text-xs">{{ $t('words.not-assigned-to-a-company') }}</span>
                                 </inertia-link>
                             </td>
