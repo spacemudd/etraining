@@ -29,13 +29,12 @@ class AttendanceReportRecordAbsenceNotesController extends Controller
             'attendance_report_record' => $attendance_report_record,
         ]);
     }
-    public function edit($attendance_report_record_id)
+    public function edit($absence_note_id)
     {
-        $attendance_report_record = AttendanceReportRecord::with('course_batch_session.course')
-            ->find($attendance_report_record_id);
+        $absence_note = AttendanceReportRecordAbsenceNote::find($absence_note_id);
 
         return Inertia::render('Trainees/AttendanceReportRecordAbsenceNotes/Edit', [
-            'attendance_report_record' => $attendance_report_record,
+            'absence_note' => $absence_note,
         ]);
     }
 
@@ -58,14 +57,14 @@ class AttendanceReportRecordAbsenceNotesController extends Controller
         return redirect()->route('trainees.attendance-sheet.index');
     }
 
-    public function update(Request $request, $attendance_report_record_id)
+    public function update(Request $request, $absence_note_id)
     {
         
         $request->validate([
             'files' => 'nullable',
         ]);
     
-        $attendance_report_record_absence_note = AttendanceReportRecordAbsenceNote::findOrFail($attendance_report_record_id);
+        $attendance_report_record_absence_note = AttendanceReportRecordAbsenceNote::find($absence_note_id);
     
         //check if trainee updates 1 time before -> return error
         if ($attendance_report_record_absence_note->upload_count >= 1) {
@@ -74,12 +73,8 @@ class AttendanceReportRecordAbsenceNotesController extends Controller
         }
         
         //if trainee updates for the first time -> should assign rejected_at to null
-        $attendance_report_record_absence_note->rejected_at = null;
-        $attendance_report_record_absence_note->trainee_id = auth()->user()->trainee->id;
-        $attendance_report_record_absence_note->attendance_report_record_id = $attendance_report_record_id; 
-        
+        $attendance_report_record_absence_note->rejected_at = null;        
         $attendance_report_record_absence_note->upload_count += 1; // increse count of upload 
-    
         $attendance_report_record_absence_note->save();
     
         if ($request->hasFile('files')) {

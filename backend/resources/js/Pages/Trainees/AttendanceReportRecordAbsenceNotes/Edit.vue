@@ -22,8 +22,8 @@
             <div class="bg-white rounded shadow overflow-x-auto my-5 p-5">
                 <h1 class="text-2xl">{{ $t('words.upload-absence-reason') }}</h1>
 
-                <p>{{ $t('words.course') }}: {{ attendance_report_record.course_batch_session.course.name_ar }}</p>
-                <p>{{ $t('words.time') }}: <span dir="ltr">{{ attendance_report_record.course_batch_session.starts_at_timezone }}</span></p>
+                <!-- <p>{{ $t('words.course') }}: {{ attendance_report_record.course_batch_session.course.name_ar }}</p> -->
+                <!-- <p>{{ $t('words.time') }}: <span dir="ltr">{{ attendance_report_record.course_batch_session.starts_at_timezone }}</span></p> -->
 
                 <form class="mt-5" @submit.prevent="saveForm" enctype="multipart/form-data">
                     <div class="mt-3">
@@ -60,7 +60,7 @@ export default {
         JetLabel,
     },
     props: [
-        'attendance_report_record',
+        'absence_note',
     ],
     data() {
         return {
@@ -77,7 +77,7 @@ export default {
     methods: {
         saveForm() {
             this.form.put(route('trainees.attendance-report-record.absence-notes.update',
-                {'attendance_report_record_id': this.attendance_report_record.id}
+                {'absence_note_id': this.absence_note.id}
             ));
         },
     }
