@@ -23,6 +23,9 @@ use Illuminate\Mail\Markdown;
 
 
 
+
+
+
 Route::get('preview', function () {
  $markdown = new Markdown(view(), config('mail.markdown'));
  return $markdown->render("emails.resignations", [
@@ -872,6 +875,11 @@ Route::get('sm3', function() { return redirect()->to('https://linktr.ee/ptcksa')
 
 Route::get('/logo-files', [\App\Http\Controllers\LogoFilesController::class, 'index']);
 //comment from shafiq
+
+
+
+Route::get('/export-trainees-with-companies', [\App\Http\Controllers\Back\TraineesController::class, 'exportTraineesWithCompanies']);
+
 
 
 

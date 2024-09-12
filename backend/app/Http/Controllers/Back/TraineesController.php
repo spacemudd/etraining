@@ -40,6 +40,11 @@ use Inertia\Inertia;
 use Mail;
 use PDF;
 use Spatie\MediaLibrary\Support\MediaStream;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\TraineesWithCompaniesExport;
+
+
+
 
 class TraineesController extends Controller
 {
@@ -1201,4 +1206,24 @@ class TraineesController extends Controller
             ->addMedia($downloads);
 
     }
+
+
+    //method to export excel sheet
+    public function exportTraineesWithCompanies()
+    {
+        $trainees = Trainee::with('company') 
+            ->whereNotNull('company_id')      
+            ->get()
+            ->map(function($trainee) {
+                return [
+                    'name' => $trainee->name,                      
+                    'company_name' => $trainee->company->name_ar,     
+                    'id_number' => $trainee->identity_number,             
+                ];
+            });
+    
+        return Excel::download(new TraineesWithCompaniesExport($trainees), 'trainees_with_companies.xlsx');
+    }
+
+
 }
