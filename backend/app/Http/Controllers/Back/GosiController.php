@@ -17,8 +17,8 @@ class GosiController extends Controller
      * @throws \JsonException|\Illuminate\Auth\Access\AuthorizationException
      */
 
-     const CACHE_DURATION = 60 * 24 * 30; 
-     const MAX_REQUESTS = 650;  
+     const CACHE_DURATION = 60 * 24 * 30;
+     const MAX_REQUESTS = 1500;   //8.60 SR per request
      public function show(Request $request)
     {
         $this->authorize('view-gosi');
@@ -27,7 +27,7 @@ class GosiController extends Controller
             'ninOrIqama' => 'required|numeric|digits:10',
         ]);
 
-        
+
         $cacheKey = 'gosi_' . $request->ninOrIqama;
         $counterKey = 'gosi_requests_counter';
         $lastResetKey = 'gosi_last_reset';
@@ -51,16 +51,16 @@ class GosiController extends Controller
 
         //check if data is already im cashe
         $data = Cache::get($cacheKey);
-        
+
         if (!$data) {
             //if no data found for this cashekey -> get it and increment counter
             $data = GosiEmployee::new($request->ninOrIqama)->get()->toArray();
-            
+
             Cache::put($cacheKey, $data, self::CACHE_DURATION);
-            Cache::increment($counterKey); 
+            Cache::increment($counterKey);
         }
 
-        
+
         return response()->json($data);
     }
 
