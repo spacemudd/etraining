@@ -15,6 +15,8 @@ class CreateTraineeAgreementsTable extends Migration
     {
         Schema::create('trainee_agreements', function (Blueprint $table) {
             $table->id();
+            $table->uuid('trainee_id');
+            $table->foreign('trainee_id')->references('id')->on('trainees');
             $table->timestamp('rejected_at')->nullable();
             $table->timestamp('accepted_at')->nullable();
             $table->timestamp('otp_verified_at')->nullable();
