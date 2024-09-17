@@ -261,7 +261,6 @@ export default {
                     {title_raw: course_batch_session.course.name_ar, link: route('teaching.courses.show', course_batch_session.course_id)},
                     {title_raw: course_batch_session.starts_at_timezone},
                     {title_raw: $t('words.attendance')},
-                    {title_raw: $t('words.attendance')},
                 ]"
             ></breadcrumb-container>
 
