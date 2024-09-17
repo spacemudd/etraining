@@ -50,7 +50,7 @@ class AttendTraineeCommand extends Command
         $trainee = Trainee::withTrashed()->findOrFail($trainee_id);
 
         $records = AttendanceReportRecord::where('trainee_id', $trainee->id)
-            ->whereBetween('session_ends_at', [$date_from, $date_to])
+            ->whereBetween('session_starts_at', [$date_from, $date_to])
             ->get();
 
         $this->info('Found: '.$records->count());
@@ -61,9 +61,9 @@ class AttendTraineeCommand extends Command
             $record->update([
                 'status' => AttendanceReportRecord::STATUS_PRESENT,
                 'absence_reason' => null,
-                'session_starts_at' => Carbon::parse($record->course_batch_session->starts_at),
-                'attended_at' => $record->course_batch_session->starts_at->addMinutes(rand(0, 8)),
-                'updated_at' => $record->created_at,
+                'session_starts_at' => Carbon::parse($record->session_starts_at),
+                'attended_at' => $record->session_starts_at->addMinutes(rand(0, 8)) ?? $record->course_batch_session->starts_at->addMinutes(rand(0, 8)),
+                'updated_at' => $record->session_starts_at,
             ]);
         }
         AttendanceReport::reguard();
