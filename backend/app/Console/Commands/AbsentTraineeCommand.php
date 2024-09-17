@@ -50,7 +50,7 @@ class AbsentTraineeCommand extends Command
         $trainee = Trainee::withTrashed()->findOrFail($trainee_id);
 
         $records = AttendanceReportRecord::where('trainee_id', $trainee->id)
-            ->whereBetween('session_ends_at', [$date_from, $date_to])
+            ->whereBetween('session_starts_at', [$date_from, $date_to])
             ->get();
 
         $this->info('Found: '.$records->count());
