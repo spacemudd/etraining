@@ -34,6 +34,7 @@ class AttendanceReportRecord extends Model implements Auditable
     ];
 
     protected $dates = [
+        'session_starts_at',
         'attended_at',
         'created_at',
         'updated_at',
