@@ -46,7 +46,7 @@
             <tr style="page-break-inside: avoid;">
                 <td style="text-align:right;border:1px solid black;" class="border-t">
                     {{ $record->course_batch_session->course->name_ar }}<br/>
-                    <span dir="ltr">{{ $record->course_batch_session->starts_at_timezone }}</span>
+                    <span dir="ltr">{{ $record->session_starts_at_timezone }}</span>
                     <br/>
                     <span style="font-size: 8px;color:gray">{{ $record->id }}</span>
                 </td>

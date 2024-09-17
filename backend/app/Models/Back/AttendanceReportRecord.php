@@ -123,6 +123,13 @@ class AttendanceReportRecord extends Model implements Auditable
         }
     }
 
+    public function getSessionStartsAtTimezoneAttribute()
+    {
+        if ($this->session_starts_at) {
+            return Timezone::convertToLocal($this->session_starts_at, 'Y-m-d h:i A');
+        }
+    }
+
     public function warnings()
     {
         return $this->hasMany(AttendanceReportRecordWarning::class);
