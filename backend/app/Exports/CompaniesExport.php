@@ -31,7 +31,7 @@ class CompaniesExport implements FromCollection, WithHeadings, WithMapping
             $company->code,
             $company->created_at->format('Y-m-d'),
             optional($company->center)->name,
-            optional($company->recruitment_company)->name,
+            optional($company->recruitmentCompany)->name,
             $company->name_ar,
             optional($company->region)->name,
             $company->email,
@@ -46,6 +46,6 @@ class CompaniesExport implements FromCollection, WithHeadings, WithMapping
     */
     public function collection()
     {
-        return Company::with('center', 'region', 'recruitment_company')->withCount('trainees')->get();
+        return Company::with('center', 'region', 'recruitmentCompany')->withCount('trainees')->get();
     }
 }
