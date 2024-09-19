@@ -2,14 +2,8 @@
 
 namespace App\Models\Back;
 
-use App\Models\Back\RecruitmentCompany;
-use App\Models\Back\Region;
-use App\Models\Back\RecruitmentCompany;
-use App\Models\Back\Region;
-use App\Models\CompanyAllowedUser;
 use App\Models\SearchableLabels;
 use App\Models\User;
-use Gate;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
