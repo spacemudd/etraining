@@ -6,7 +6,9 @@
           { title: 'dashboard', link: route('dashboard') },
           { title: 'trainees', link: route('back.trainees.index') },
           { title_raw: trainee.name },
-        ]"
+
+          { title_raw: trainee.name },
+          ]"
       ></breadcrumb-container>
 
       <validation-errors
@@ -73,6 +75,13 @@
                     <td class="border px-1">{{ $t("words.name") }}</td>
                     <td class="border px-1">{{ in_block_list.name }}</td>
                   </tr>
+
+                  <tr v-if="in_block_list.english_name">
+                    <td class="border px-1">{{ $t("words.name") }}</td>
+                    <td class="border px-1">{{ in_block_list.english_name }}</td>
+                  </tr>
+
+                  
                   <tr v-if="in_block_list.phone">
                     <td class="border px-1">{{ $t("words.phone") }}</td>
                     <td class="border px-1">{{ in_block_list.phone }}</td>
@@ -354,8 +363,26 @@
             autocomplete="off"
             :disabled="!editButton.editOption"
           />
+
+          
         </div>
 
+        <div class="col-span-6 sm:col-span-2">
+          <jet-label for="english_name" :value="$t('words.name_en')" />
+          <jet-input
+            id="english_name"
+            type="text"
+            :class="editButton.inputClass"
+            v-model="trainee.english_name"
+            autocomplete="off"
+            :disabled="!editButton.editOption"
+          />
+
+          
+        </div>
+
+
+        
         <div class="col-span-6 sm:col-span-2">
           <jet-label
             for="identity_number"

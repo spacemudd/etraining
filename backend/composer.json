@@ -41,7 +41,7 @@
         "milon/barcode": "^9.0",
         "moemengaballah/msegat": "dev-main",
         "owen-it/laravel-auditing": "^12.0",
-        "predis/predis": "^1.1",
+        "predis/predis": "^2.2",
         "protonemedia/inertiajs-tables-laravel-query-builder": "^1.4",
         "sentry/sentry-laravel": "^2.3",
         "skagarwal/google-places-api": "^1.7",

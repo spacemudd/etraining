@@ -49,6 +49,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'company_id',
         'email',
         'name',
+        'english_name',
         'identity_number',
         'birthday',
         'educational_level_id',

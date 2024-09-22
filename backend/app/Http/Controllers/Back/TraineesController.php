@@ -96,6 +96,7 @@ class TraineesController extends Controller
             'trainee_group_name' => 'nullable|string|max:255',
             'email' => 'string|max:255|unique:trainees,email',
             'name' => 'required|string|max:255',
+            'english_name' => 'required|string|max:255',
             'phone' => 'required|string|max:255|unique:trainees,phone',
             'phone_additional' => 'nullable|string|max:255|unique:trainees,phone_additional',
             'identity_number' => 'required|string|max:255|unique:trainees,identity_number',
@@ -128,6 +129,7 @@ class TraineesController extends Controller
             ->orWhere('identity_number', $trainee->identity_number)
             ->orWhere('email', $trainee->email)
             ->orWhere('name', $trainee->name)
+            ->orWhere('english_name', $trainee->english_name)
             ->first();
 
         Audit::create([
@@ -486,6 +488,7 @@ class TraineesController extends Controller
         $user = (new CreateNewTraineeUser())->create([
             'trainee_id' => $trainee->id,
             'name' => $trainee->name,
+            'english_name' => $trainee->english_name,
             'email' => $trainee->email,
             'phone' => $trainee->phone,
             'password' => 'password',
