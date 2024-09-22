@@ -20,6 +20,7 @@ class TraineeBlockList extends Model implements Auditable
     protected $fillable = [
         'team_id',
         'name',
+        'english_name',
         'trainee_id',
         'identity_number',
         'email',

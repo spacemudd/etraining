@@ -17,7 +17,7 @@ class UsersTableSeeder extends Seeder
     {
         $admin = (new CreateNewUser())->create([
             'name' => 'Admin',
-            'email' => 'admin@ptc-ksa.net',
+            'email' => 'admin@hadaf-hq.com',
             'password' => 'secret123',
             'password_confirmation' => 'secret123',
         ]);

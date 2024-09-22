@@ -2,8 +2,12 @@
 
 namespace App\Models\Back;
 
+use App\Models\Back\Region;
+use App\Models\Back\RecruitmentCompany;
+use App\Models\CompanyAllowedUser;
 use App\Models\SearchableLabels;
 use App\Models\User;
+use Gate;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -129,11 +133,11 @@ class Company extends Model implements SearchableLabels, Auditable, HasMedia
     {
         return $this->belongsTo(Center::class);
     }
+public function recruitmentCompany()
+  {
+    return $this->belongsTo(RecruitmentCompany::class);
+  }
 
-    public function recruitmentCompany()
-    {
-        return $this->belongsTo(RecruitmentCompany::class);
-    }
 
     /**
      *
@@ -178,7 +182,7 @@ class Company extends Model implements SearchableLabels, Auditable, HasMedia
     }
 
 
-    /**
+     /**
      * Upload scan(s) of the documents.
      *
      * @param $file

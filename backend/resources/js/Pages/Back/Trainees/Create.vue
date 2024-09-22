@@ -6,6 +6,8 @@
                     {title: 'dashboard', link: route('dashboard')},
                     {title: 'trainees', link: route('back.trainees.index')},
                     {title: 'new'},
+                    {title: 'new'},
+
                 ]"
             ></breadcrumb-container>
 
@@ -40,6 +42,8 @@
                             <jet-input-error :message="form.error('company_id')" class="mt-2" />
                         </div>
 
+                        
+
                         <div class="col-span-4 sm:col-span-4">
                             <jet-label for="trainee_group_name" :value="$t('words.group-name')" />
                             <select-trainee-group class="mt-2"
@@ -58,10 +62,19 @@
                         </div>
 
                         <div class="col-span-2 sm:col-span-2">
-                            <jet-label for="name" :value="$t('words.name')" />
+                            <jet-label for="name" :value="$t('words.name_ar')" />
                             <jet-input id="name" type="text" class="mt-1 block w-full" v-model="form.name" autocomplete="off" />
                             <jet-input-error :message="form.error('name')" class="mt-2" />
                         </div>
+
+                        <div class="col-span-2 sm:col-span-2">
+                            <jet-label for="english_name" :value="$t('words.name_en')" />
+                            <jet-input id="english_name" type="text" class="mt-1 block w-full" v-model="form.english_name" autocomplete="off" />
+                            <jet-input-error :message="form.error('name')" class="mt-2" />
+                        </div>
+
+                        
+                        
 
                         <div class="col-span-2 sm:col-span-2">
                             <jet-label for="identity_number" :value="$t('words.identity_number')" />
@@ -248,6 +261,7 @@
                     trainee_group_name: '',
                     email: '',
                     name: '',
+                    english_name: '',
                     identity_number: '',
                     birthday: '',
                     phone: '',
