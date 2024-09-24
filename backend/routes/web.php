@@ -1,7 +1,6 @@
 <?php
 use App\Classes\GosiEmployee;
 use App\Http\Controllers\Back\CompanyAliasesController;
-use App\Http\Controllers\Back\CompanyAttendanceReportController;
 use App\Http\Controllers\Back\CompanyResignationsController;
 use App\Http\Controllers\Back\TraineesGroupsController;
 use App\Http\Controllers\CompanyAllowedUsersController;
@@ -872,6 +871,11 @@ Route::get('sm3', function() { return redirect()->to('https://linktr.ee/ptcksa')
 
 Route::get('/logo-files', [\App\Http\Controllers\LogoFilesController::class, 'index']);
 //comment from shafiq
+
+//route to export attendance sheet for specefic group
+Route::get('/attendance/export-by-group/{courseBatch}', [\App\Http\Controllers\AttendanceReportsController::class, 'exportAttendanceReportByGroup'])
+    ->name('attendance.export-by-group');
+
 
 
 
