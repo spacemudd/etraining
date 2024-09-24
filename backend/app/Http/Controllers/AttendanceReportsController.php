@@ -163,9 +163,9 @@ class AttendanceReportsController extends Controller
 
     public function exportAttendanceReportByGroup($courseBatchId)
     {
-        dd("here");
+
         $trainees = CourseBatch::findOrFail($courseBatchId)
-            ->traineeGroup
+            ->trainee_group
             ->trainees
             ->map(function ($trainee) {
                 $attendanceRecords = $trainee->attendanceReportRecords;

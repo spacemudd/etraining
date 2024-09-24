@@ -184,6 +184,11 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         return $this->belongsTo(TraineeGroup::class);
     }
 
+    public function attendanceReportRecords()
+    {
+        return $this->hasMany(AttendanceReportRecord::class);
+    }
+
     public function instructor()
     {
         return $this->belongsTo(Instructor::class, 'instructor_id', 'id');
