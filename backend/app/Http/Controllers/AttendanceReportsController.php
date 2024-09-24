@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Exports\AttendanceSheetExport;
+use App\Exports\TraineeAttendanceExportByGroup;
 use App\Jobs\CourseBatchSessionWarningsJob;
 use App\Jobs\MakeAttendanceReportJob;
-use App\Models\Back\AttendanceReportRecord;
 use App\Models\Back\AttendanceReport;
+use App\Models\Back\AttendanceReportRecord;
+use App\Models\Back\CourseBatch;
 use App\Models\Back\CourseBatchSession;
 use App\Models\Back\CourseBatchSessionAttendance;
 use Excel;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+
+
 
 class AttendanceReportsController extends Controller
 {
@@ -155,5 +159,25 @@ class AttendanceReportsController extends Controller
         $courseName = $report->course_batch_session->course->name_ar;
         $sessionDate = $report->course_batch_session->starts_at->format('Y-m-d');
         return Excel::download(new AttendanceSheetExport($report), $sessionDate.'-'.$courseName.'-.xlsx');
+    }
+
+    public function exportAttendanceReportByGroup($courseBatchId)
+    {
+        $trainees = CourseBatch::findOrFail($courseBatchId)
+            ->traineeGroup
+            ->trainees
+            ->map(function ($trainee) {
+                $attendanceRecords = $trainee->attendanceReportRecords;
+                $presentCount = $attendanceRecords->where('status', 3)->count();
+                $absentCount = $attendanceRecords->where('status', 0)->count();
+
+                return [
+                    'trainee_name' => $trainee->name,
+                    'present_count' => $presentCount,
+                    'absent_count' => $absentCount,
+                ];
+            });
+
+        return Excel::download(new TraineeAttendanceExportByGroup($trainees), 'trainee_attendance_by_group.xlsx');
     }
 }
