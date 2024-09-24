@@ -160,29 +160,28 @@ class AttendanceReportsController extends Controller
         $sessionDate = $report->course_batch_session->starts_at->format('Y-m-d');
         return Excel::download(new AttendanceSheetExport($report), $sessionDate.'-'.$courseName.'-.xlsx');
     }
-
     public function exportAttendanceReportByGroup($courseBatchId)
     {
-        ini_set('memory_limit', '512M');
-        set_time_limit(300);
-    
-        $courseBatch = CourseBatch::findOrFail($courseBatchId);
-        $trainees = $courseBatch->trainee_group->trainees()->chunk(100, function ($traineesChunk) use (&$results) {
-            foreach ($traineesChunk as $trainee) {
-                $attendanceRecords = $trainee->attendanceReportRecords;
+        $trainees = CourseBatch::findOrFail($courseBatchId)
+            ->trainee_group
+            ->trainees
+            ->map(function ($trainee) {
+                $attendanceRecords = $trainee->attendanceReportRecords->unique(function ($record) {
+                    return $record['status'];
+                });
     
                 $presentCount = $attendanceRecords->where('status', 3)->count();
                 $absentCount = $attendanceRecords->where('status', 0)->count();
     
-                $results[] = [
+                return [
                     'trainee_name' => $trainee->name,
                     'present_count' => $presentCount,
                     'absent_count' => $absentCount,
                 ];
-            }
-        });
+            });
     
-        return Excel::download(new TraineeAttendanceExportByGroup($results), 'trainee_attendance_by_group.xlsx');
+        return Excel::download(new TraineeAttendanceExportByGroup($trainees), 'trainee_attendance_by_group.xlsx');
     }
+    
     
 }
