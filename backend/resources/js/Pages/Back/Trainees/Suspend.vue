@@ -36,12 +36,13 @@
                         <option value="عدم سداد مستحق مالي / غير نشط في التأمينات">عدم سداد مستحق مالي / غير نشط في التأمينات</option>
                         <option value="رفضت التوقيع على الاعتراض">رفضت التوقيع على الاعتراض</option>
                         <option value="حذف من قبل التأمينات">حذف من قبل التأمينات</option>
-                         <option value="قائمة سوداء">قائمة سوداء</option>
+                        <option value="قائمة سوداء">قائمة سوداء</option>
+                        <option value="المباشرة في مقر الشركة">المباشرة في مقر الشركة</option>
 
                     </select>
                     <button @click="suspendTrainee" class="mt-5 items-center justify-start float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400">
                         {{ $t('words.suspend') }}
-                </button>
+                    </button>
                 </div>
 
             </div>
@@ -53,45 +54,45 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout'
-    import JetSectionBorder from '@/Jetstream/SectionBorder'
-    import Breadcrumb from "@/Components/Breadcrumb";
-    import JetDialogModal from '@/Jetstream/DialogModal'
-    import JetInput from '@/Jetstream/Input'
-    import JetButton from '@/Jetstream/Button';
-    import JetFormSection from '@/Jetstream/FormSection';
-    import JetTextarea from '@/Jetstream/Textarea';
-    import JetLabel from '@/Jetstream/Label';
-    import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
+import AppLayout from '@/Layouts/AppLayout'
+import JetSectionBorder from '@/Jetstream/SectionBorder'
+import Breadcrumb from "@/Components/Breadcrumb";
+import JetDialogModal from '@/Jetstream/DialogModal'
+import JetInput from '@/Jetstream/Input'
+import JetButton from '@/Jetstream/Button';
+import JetFormSection from '@/Jetstream/FormSection';
+import JetTextarea from '@/Jetstream/Textarea';
+import JetLabel from '@/Jetstream/Label';
+import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
 
-    export default {
-        props: ['sessions', 'trainee'],
+export default {
+    props: ['sessions', 'trainee'],
 
-        components: {
-            AppLayout,
-            JetSectionBorder,
-            Breadcrumb,
-            JetDialogModal,
-            JetInput,
-            JetButton,
-            JetFormSection,
-            JetLabel,
-            BreadcrumbContainer,
-            JetTextarea,
-        },
-        data() {
-            return {
-                deleted_remark: null,
+    components: {
+        AppLayout,
+        JetSectionBorder,
+        Breadcrumb,
+        JetDialogModal,
+        JetInput,
+        JetButton,
+        JetFormSection,
+        JetLabel,
+        BreadcrumbContainer,
+        JetTextarea,
+    },
+    data() {
+        return {
+            deleted_remark: null,
+        }
+    },
+    methods: {
+        suspendTrainee() {
+            if (confirm(this.$t('words.are-you-sure'))) {
+                this.$inertia.post(route('back.trainees.suspend.store', {trainee_id: this.trainee.id}), {
+                    reason: this.deleted_remark,
+                });
             }
         },
-        methods: {
-            suspendTrainee() {
-                if (confirm(this.$t('words.are-you-sure'))) {
-                    this.$inertia.post(route('back.trainees.suspend.store', {trainee_id: this.trainee.id}), {
-                        reason: this.deleted_remark,
-                    });
-                }
-            },
-        }
     }
+}
 </script>
