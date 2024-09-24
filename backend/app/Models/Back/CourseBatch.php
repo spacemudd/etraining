@@ -67,6 +67,10 @@ class CourseBatch extends Model implements Auditable
         return $this->belongsTo(TraineeGroup::class);
     }
 
+    public function trainees(){
+        return $this->hasMany(Trainee::class);
+    }
+
     public function setStartsAtAttribute($value)
     {
         $this->attributes['starts_at'] = $value ? Carbon::parse($value, optional(auth()->user())->timezone ?: config('app.timezone'))->setTimezone('UTC') : null;
