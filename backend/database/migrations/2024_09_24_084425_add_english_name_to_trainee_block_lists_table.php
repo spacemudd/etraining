@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddEnglishNameToTraineesTable extends Migration
+class AddEnglishNameToTraineeBlockListsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddEnglishNameToTraineesTable extends Migration
     public function up()
     {
         Schema::table('trainee_block_lists', function (Blueprint $table) {
-            $table->string('english_name')->nullable(); // Change type and attribut as needed
+            $table->string('english_name')->nullable(); // Add the english_name column
         });
     }
 
@@ -26,7 +26,7 @@ class AddEnglishNameToTraineesTable extends Migration
     public function down()
     {
         Schema::table('trainee_block_lists', function (Blueprint $table) {
-            $table->dropColumn('english_name');
+            $table->dropColumn('english_name'); // Drop the english_name column
         });
     }
 }
