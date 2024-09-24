@@ -176,8 +176,8 @@ class AttendanceReportsController extends Controller
                         return $record->course_batch_session_id . $record->attended_at;
                     });
     
-                $presentCount = $attendanceRecords->where('status', 3)->count();
-                $absentCount = $attendanceRecords->where('status', 0)->count();
+                $presentCount = $attendanceRecords->where('status',3)->count();
+                $absentCount = $attendanceRecords->where('status',0)->count();
     
                 $results[] = [
                     'trainee_name' => $trainee->name,
