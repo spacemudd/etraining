@@ -59,6 +59,7 @@
                                                     <option value="رفضت التوقيع على الاعتراض">رفضت التوقيع على الاعتراض</option>
                                                     <option value="حذف من قبل التأمينات">حذف من قبل التأمينات</option>
                                                     <option value="قائمة سوداء">قائمة سوداء</option>
+                                                    <option value="المباشرة في مقر الشركة">المباشرة في مقر الشركة</option>
                                                 </select>
                                                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -158,31 +159,31 @@
                                                 <col style="width:100px;">
                                             </colgroup>
                                             <thead>
-                                                <tr>
-                                                    <th class="text-center border-black border bg-gray-300 px-2">#</th>
-                                                    <th class="text-right border-black border bg-gray-300 px-2">{{ $t('words.name') }}</th>
-                                                    <th class="text-right border-black border bg-gray-300 px-2">{{ $t('words.identity_number') }}</th>
-                                                    <th class="text-right border-black border bg-gray-300 px-2">{{ $t('words.current-company-as-of-today') }}</th>
-                                                </tr>
+                                            <tr>
+                                                <th class="text-center border-black border bg-gray-300 px-2">#</th>
+                                                <th class="text-right border-black border bg-gray-300 px-2">{{ $t('words.name') }}</th>
+                                                <th class="text-right border-black border bg-gray-300 px-2">{{ $t('words.identity_number') }}</th>
+                                                <th class="text-right border-black border bg-gray-300 px-2">{{ $t('words.current-company-as-of-today') }}</th>
+                                            </tr>
                                             </thead>
                                             <tbody>
-                                                    <tr v-for="(trainee, key) in form.trainees" :key="trainee.id">
-                                                        <td class="text-center border-black border px-2">{{ ++key }}</td>
-                                                        <td class="border-black border px-2">{{ trainee.name }}</td>
-                                                        <td class="border-black border px-2">{{ trainee.identity_number }}</td>
-                                                        <td class="border-black border px-2"><span v-if="trainee.company">{{ trainee.company.name_ar }}</span></td>
-                                                          <td class="text-center border-black border px-2">
-                                                                <button @click="removeFromTrainees(trainee)" class="bg-red-500 text-white px-2 py-1 rounded">
-                                                                    {{ $t('words.delete') }}
-                                                                </button>
-                                                          </td>
-                                                    </tr>
-                                                    <tr v-if="!form.trainees.length">
-                                                        <td class="text-center border-black border px-2"
-                                                            colspan="4">
-                                                            {{ $t('words.no-records-have-been-found') }}
-                                                        </td>
-                                                    </tr>
+                                            <tr v-for="(trainee, key) in form.trainees" :key="trainee.id">
+                                                <td class="text-center border-black border px-2">{{ ++key }}</td>
+                                                <td class="border-black border px-2">{{ trainee.name }}</td>
+                                                <td class="border-black border px-2">{{ trainee.identity_number }}</td>
+                                                <td class="border-black border px-2"><span v-if="trainee.company">{{ trainee.company.name_ar }}</span></td>
+                                                <td class="text-center border-black border px-2">
+                                                    <button @click="removeFromTrainees(trainee)" class="bg-red-500 text-white px-2 py-1 rounded">
+                                                        {{ $t('words.delete') }}
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr v-if="!form.trainees.length">
+                                                <td class="text-center border-black border px-2"
+                                                    colspan="4">
+                                                    {{ $t('words.no-records-have-been-found') }}
+                                                </td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -263,7 +264,7 @@ export default {
             searchString: '',
             searchResults: [],
             searchBoxVisible: false,
-        }   
+        }
     },
     mounted() {
         if (this.company.id) {
@@ -313,7 +314,7 @@ export default {
             }
         },
 
-         removeFromTrainees(trainee) {
+        removeFromTrainees(trainee) {
             this.form.trainees = this.form.trainees.filter(t => t.id !== trainee.id);
         },
 
