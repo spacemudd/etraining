@@ -171,7 +171,9 @@ class AttendanceReportsController extends Controller
         $courseBatch = CourseBatch::findOrFail($courseBatchId);
         $courseBatch->trainee_group->trainees()->chunk(100, function ($traineesChunk) use (&$results) {
             foreach ($traineesChunk as $trainee) {
-                $attendanceRecords = $trainee->attendanceReportRecords->unique('id');
+                $attendanceRecords = $trainee->attendanceReportRecords->unique(function ($record) {
+                    return $record->status . $record->created_at->format('Y-m-d');
+                });
     
                 $presentCount = $attendanceRecords->where('status', 3)->count();
                 $absentCount = $attendanceRecords->where('status', 0)->count();
@@ -186,6 +188,7 @@ class AttendanceReportsController extends Controller
     
         return Excel::download(new TraineeAttendanceExportByGroup($results), 'trainee_attendance_by_group.xlsx');
     }
+    
     
     
     
