@@ -163,7 +163,6 @@ class AttendanceReportsController extends Controller
 
     public function exportAttendanceReportByGroup($courseBatchId)
     {
-        dd("here");
 
         $trainees = CourseBatch::findOrFail($courseBatchId)
             ->trainee_group
