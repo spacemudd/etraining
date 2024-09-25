@@ -187,13 +187,14 @@ class AttendanceReportsController extends Controller
                     'trainee_name' => $trainee->name,
                     'present_count' => $presentCount,
                     'absent_count' => $absentCount,
-                    'attendance_percentage' => round($attendancePercentage, 2), 
+                    'attendance_percentage' => round($attendancePercentage, 2) . '%',
                 ];
             }
         });
     
         return Excel::download(new TraineeAttendanceExportByGroup($results), 'trainee_attendance_by_group.xlsx');
     }
+    
     
     
     
