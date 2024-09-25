@@ -169,7 +169,7 @@ class AttendanceReportsController extends Controller
         $courseBatch = CourseBatch::findOrFail($courseBatchId);
     
         $results = [];
-        $totalSessionsCount = $courseBatch->sessions()->count(); 
+        $totalSessionsCount = $courseBatch->course_batch_sessions()->count(); 
     
         $courseBatch->trainee_group->trainees()->chunk(100, function ($traineesChunk) use (&$results, $courseBatchId, $totalSessionsCount) {
             foreach ($traineesChunk as $trainee) {
