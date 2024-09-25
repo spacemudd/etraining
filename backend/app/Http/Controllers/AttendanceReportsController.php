@@ -169,7 +169,9 @@ class AttendanceReportsController extends Controller
         $courseBatch = CourseBatch::findOrFail($courseBatchId);
     
         $results = [];
-        $courseBatch->trainee_group->trainees()->chunk(100, function ($traineesChunk) use (&$results, $courseBatchId) {
+        $totalSessionsCount = $courseBatch->sessions()->count(); 
+    
+        $courseBatch->trainee_group->trainees()->chunk(100, function ($traineesChunk) use (&$results, $courseBatchId, $totalSessionsCount) {
             foreach ($traineesChunk as $trainee) {
                 $attendanceRecords = $trainee->attendanceReportRecords()
                     ->where('course_batch_id', $courseBatchId) 
@@ -179,16 +181,20 @@ class AttendanceReportsController extends Controller
                 $presentCount = $attendanceRecords->where('status', 3)->count();
                 $absentCount = $attendanceRecords->where('status', 0)->count();
     
+                $attendancePercentage = $totalSessionsCount > 0 ? ($presentCount / $totalSessionsCount) * 100 : 0;
+    
                 $results[] = [
                     'trainee_name' => $trainee->name,
                     'present_count' => $presentCount,
                     'absent_count' => $absentCount,
+                    'attendance_percentage' => round($attendancePercentage, 2), 
                 ];
             }
         });
     
         return Excel::download(new TraineeAttendanceExportByGroup($results), 'trainee_attendance_by_group.xlsx');
     }
+    
     
     
     
