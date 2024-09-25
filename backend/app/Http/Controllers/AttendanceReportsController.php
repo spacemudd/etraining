@@ -178,7 +178,8 @@ class AttendanceReportsController extends Controller
                     ->get()
                     ->unique('course_batch_session_id');
     
-                $presentCount = $attendanceRecords->where('status',[1,2,3])->count();
+                // تعديل هنا ليشمل status 3 أو 2 أو 1
+                $presentCount = $attendanceRecords->whereIn('status', [1, 2, 3])->count();
                 $absentCount = $attendanceRecords->where('status', 0)->count();
     
                 $attendancePercentage = $totalSessionsCount > 0 ? ($presentCount / $totalSessionsCount) * 100 : 0;
@@ -194,6 +195,7 @@ class AttendanceReportsController extends Controller
     
         return Excel::download(new TraineeAttendanceExportByGroup($results), 'trainee_attendance_by_group.xlsx');
     }
+    
     
     
     
