@@ -171,7 +171,7 @@ class AttendanceReportsController extends Controller
         $results = [];
         $courseBatch->trainee_group->trainees()->chunk(100, function ($traineesChunk) use (&$results) {
             foreach ($traineesChunk as $trainee) {
-                $attendanceRecords = $trainee->attendanceReportRecords
+                $attendanceRecords = $trainee->attendanceReportRecords->where('course_batch_id',$courseBatchId)
                     ->unique('course_batch_session_id');
     
                 $presentCount = $attendanceRecords->where('status', 3)->count();
