@@ -6,8 +6,6 @@
           { title: 'dashboard', link: route('dashboard') },
           { title: 'trainees', link: route('back.trainees.index') },
           { title_raw: trainee.name },
-
-          { title_raw: trainee.name },
           ]"
       ></breadcrumb-container>
 
@@ -363,8 +361,6 @@
             autocomplete="off"
             :disabled="!editButton.editOption"
           />
-
-          
         </div>
 
         <div class="col-span-6 sm:col-span-2">
@@ -1186,6 +1182,7 @@ export default {
             : "",
           company_id: this.trainee.company_id,
           name: this.trainee.name,
+          english_name: this.trainee.english_name,
           email: this.trainee.email,
           identity_number: this.trainee.identity_number,
           birthday: this.trainee.birthday,
