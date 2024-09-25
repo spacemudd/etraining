@@ -184,10 +184,10 @@ class AttendanceReportsController extends Controller
                 $attendancePercentage = $totalSessionsCount > 0 ? ($presentCount / $totalSessionsCount) * 100 : 0;
     
                 $results[] = [
-                    'trainee_name' => $trainee->name,
                     'present_count' => $presentCount,
                     'absent_count' => $absentCount,
                     'attendance_percentage' => round($attendancePercentage, 2) . ' %',
+                    'trainee_name' => $trainee->name,
                 ];
             }
         });
