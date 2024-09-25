@@ -178,7 +178,7 @@ class AttendanceReportsController extends Controller
                     ->get()
                     ->unique('course_batch_session_id');
     
-                $presentCount = $attendanceRecords->where('status', 3)->count();
+                $presentCount = $attendanceRecords->where('status',[1,2,3])->count();
                 $absentCount = $attendanceRecords->where('status', 0)->count();
     
                 $attendancePercentage = $totalSessionsCount > 0 ? ($presentCount / $totalSessionsCount) * 100 : 0;
