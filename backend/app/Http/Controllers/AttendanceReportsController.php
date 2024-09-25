@@ -161,57 +161,34 @@ class AttendanceReportsController extends Controller
         return Excel::download(new AttendanceSheetExport($report), $sessionDate.'-'.$courseName.'-.xlsx');
     }
 
-    <?php
-
-    namespace App\Exports;
-    
-    use App\Models\Back\Trainee;
-    use Maatwebsite\Excel\Concerns\FromCollection;
-    use Illuminate\Contracts\Support\Responsable;
-    use Maatwebsite\Excel\Concerns\WithHeadings;
-    use Maatwebsite\Excel\Concerns\WithStyles;
-    use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-    use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-    
-    class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, WithStyles, ShouldAutoSize
+    public function exportAttendanceReportByGroup($courseBatchId)
     {
-        protected $trainees;
+        ini_set('memory_limit', '512M');
+        set_time_limit(300);
     
-        public function __construct($trainees)
-        {
-            $this->trainees = $trainees;
-        }
+        $courseBatch = CourseBatch::findOrFail($courseBatchId);
     
-        /**
-        * @return \Illuminate\Support\Collection
-        */
-        public function collection()
-        {
-            return collect($this->trainees);
-        }
+        $results = [];
+        $courseBatch->trainee_group->trainees()->chunk(100, function ($traineesChunk) use (&$results, $courseBatchId) {
+            foreach ($traineesChunk as $trainee) {
+                $attendanceRecords = $trainee->attendanceReportRecords()
+                    ->where('course_batch_id', $courseBatchId) 
+                    ->get()
+                    ->unique('course_batch_session_id');
     
-        public function headings(): array
-        {
-            return ['Trainee Name', 'Present Count', 'Absent Count'];
-        }
+                $presentCount = $attendanceRecords->where('status', 3)->count();
+                $absentCount = $attendanceRecords->where('status', 0)->count();
     
-        /**
-         * Apply styles to the spreadsheet.
-         */
-        public function styles(Worksheet $sheet)
-        {
-            $sheet->getStyle('A1:C1')->getFont()->setBold(true);
-            
-            $sheet->getStyle('A1:C1')->getAlignment()->setHorizontal('center');
+                $results[] = [
+                    'trainee_name' => $trainee->name,
+                    'present_count' => $presentCount,
+                    'absent_count' => $absentCount,
+                ];
+            }
+        });
     
-            $sheet->getStyle('A1:C1')->getFill()
-                ->setFillType('solid')
-                ->getStartColor()->setARGB('FFFFE599'); 
-            
-            $sheet->getStyle('A:C')->getAlignment()->setHorizontal('center');
-        }
+        return Excel::download(new TraineeAttendanceExportByGroup($results), 'trainee_attendance_by_group.xlsx');
     }
-    
     
     
     
