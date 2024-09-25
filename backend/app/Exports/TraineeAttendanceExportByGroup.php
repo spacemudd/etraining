@@ -26,7 +26,7 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
 
     public function headings(): array
     {
-        return ['اسم المتدرب', 'عدد الحضور', 'عدد الغياب', 'نسبة الحضور'];
+        return ['نسبة الحضور', 'عدد الحضور', 'عدد الغياب', 'اسم المتدرب'];
     }
 
     public function styles(Worksheet $sheet)
@@ -42,6 +42,7 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
         $sheet->getStyle('A:D')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
     }
 }
+
 
 
 
