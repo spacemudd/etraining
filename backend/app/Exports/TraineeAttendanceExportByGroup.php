@@ -29,7 +29,7 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
 
     public function headings(): array
     {
-        return ['Trainee Name', 'Present Count', 'Absent Count'];
+        return ['Trainee Name', 'Present Count', 'Absent Count','Attendance Percentage'];
     }
 
     /**
