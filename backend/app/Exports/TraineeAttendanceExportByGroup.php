@@ -33,14 +33,14 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
     {
         $sheet->getStyle('A1:D1')->getFont()->setBold(true);
         
-        $sheet->getStyle('A1:D1')->getAlignment()->setHorizontal('center');
-        $sheet->getStyle('A1:D1')->getAlignment()->setReadingOrder(\PhpOffice\PhpSpreadsheet\Style\Alignment::READINGORDER_RTL);
+        $sheet->getStyle('A1:D1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
         
         $sheet->getStyle('A1:D1')->getFill()
             ->setFillType('solid')
             ->getStartColor()->setARGB('FFFFE599');
-       
-        $sheet->getStyle('A:D')->getAlignment()->setHorizontal('center');
+
+        $sheet->getStyle('A:D')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
     }
 }
+
 
