@@ -178,7 +178,6 @@ class AttendanceReportsController extends Controller
                     ->get()
                     ->unique('course_batch_session_id');
     
-                // تعديل هنا ليشمل status 3 أو 2 أو 1
                 $presentCount = $attendanceRecords->whereIn('status', [1, 2, 3])->count();
                 $absentCount = $attendanceRecords->where('status', 0)->count();
     
