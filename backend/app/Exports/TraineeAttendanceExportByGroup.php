@@ -44,3 +44,4 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
 }
 
 
+
