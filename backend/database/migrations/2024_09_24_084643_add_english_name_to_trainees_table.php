@@ -16,6 +16,10 @@ class AddEnglishNameToTraineesTable extends Migration
         Schema::table('trainees', function (Blueprint $table) {
             $table->string('english_name')->nullable(); 
         });
+
+        Schema::table('trainees', function (Blueprint $table) {
+            $table->string('english_name')->nullable(); // Add the new column
+        });
     }
 
     /**
@@ -27,6 +31,10 @@ class AddEnglishNameToTraineesTable extends Migration
     {
         Schema::table('trainees', function (Blueprint $table) {
             $table->dropColumn('english_name'); // Drop the english_name column
+        });
+
+        Schema::table('trainees', function (Blueprint $table) {
+            $table->dropColumn('english_name');
         });
     }
 }
