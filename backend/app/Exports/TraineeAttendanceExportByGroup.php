@@ -30,13 +30,18 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
     public function styles(Worksheet $sheet)
     {
         $sheet->getStyle('A1:E1')->getFont()->setBold(true);
-        $sheet->getStyle('A1:E1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+        $sheet->getStyle('A1:E1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        
         $sheet->getStyle('A1:E1')->getFill()
             ->setFillType('solid')
             ->getStartColor()->setARGB('FFFFE599');
 
         foreach ($this->trainees as $key => $trainee) {
-            $cell = 'A' . ($key + 2); // Cell for certificate eligibility
+            // Center the values in all columns
+            $rowIndex = $key + 2; // Adjusting for header row
+            $sheet->getStyle("A$rowIndex:E$rowIndex")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+            $cell = 'A' . $rowIndex; // Cell for certificate eligibility
             if ($trainee['attendance_percentage'] >= 70) {
                 $sheet->getCell($cell)->setValue('يستحق');
                 $sheet->getStyle($cell)->getFont()->getColor()->setARGB('FF00FF00'); // Green
@@ -46,24 +51,28 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
             }
 
             // Set the attendance percentage in column B
-            $percentageCell = 'B' . ($key + 2);
+            $percentageCell = 'B' . $rowIndex;
             $sheet->getCell($percentageCell)->setValue($trainee['attendance_percentage']);
-            $sheet->getStyle($percentageCell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+            // Center alignment for the percentage cell
+            $sheet->getStyle($percentageCell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
             // Set the present count in column C
-            $presentCountCell = 'C' . ($key + 2);
+            $presentCountCell = 'C' . $rowIndex;
             $sheet->getCell($presentCountCell)->setValue($trainee['present_count']);
-            $sheet->getStyle($presentCountCell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+            // Center alignment for the present count cell
+            $sheet->getStyle($presentCountCell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
             // Set the absent count in column D
-            $absentCountCell = 'D' . ($key + 2);
+            $absentCountCell = 'D' . $rowIndex;
             $sheet->getCell($absentCountCell)->setValue($trainee['absent_count']);
-            $sheet->getStyle($absentCountCell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+            // Center alignment for the absent count cell
+            $sheet->getStyle($absentCountCell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
             // Set the trainee name in column E
-            $nameCell = 'E' . ($key + 2);
+            $nameCell = 'E' . $rowIndex;
             $sheet->getCell($nameCell)->setValue($trainee['trainee_name']);
-            $sheet->getStyle($nameCell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+            // Center alignment for the trainee name cell
+            $sheet->getStyle($nameCell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
         }
     }
 }
