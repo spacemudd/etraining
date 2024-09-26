@@ -187,11 +187,11 @@ class AttendanceReportsController extends Controller
     
                 if (isset($trainee->name)) {
                     $results[] = [
-                        'certificate_eligibility' => $certificateEligibility,
                         'attendance_percentage' => round($attendancePercentage, 2) . ' %',
                         'present_count' => $presentCount,
                         'absent_count' => $absentCount,
                         'trainee_name' => $trainee->name,
+                        'certificate_eligibility' => $certificateEligibility,
                     ];
                 }
             }
@@ -200,7 +200,7 @@ class AttendanceReportsController extends Controller
         return Excel::download(new TraineeAttendanceExportByGroup($results), 'trainee_attendance_by_group.xlsx');
     }
     
-
+    
     
     
     
