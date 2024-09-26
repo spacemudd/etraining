@@ -47,7 +47,13 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
                 $sheet->getCell($cell)->setValue('لا يستحق');
                 $sheet->getStyle($cell)->getFont()->getColor()->setARGB('FFFF0000');
             }
+            
+            // Set the attendance percentage in column B
+            $percentageCell = 'B' . ($key + 2);
+            $sheet->getCell($percentageCell)->setValue($trainee['attendance_percentage']);
+            $sheet->getStyle($percentageCell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
         }
     }
 }
+
 
