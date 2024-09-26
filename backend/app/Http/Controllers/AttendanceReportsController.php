@@ -168,7 +168,7 @@ class AttendanceReportsController extends Controller
         set_time_limit(300);
     
         $courseBatch = CourseBatch::findOrFail($courseBatchId);
-        
+    
         $results = [];
         $totalSessionsCount = $courseBatch->course_batch_sessions()->count(); 
     
@@ -184,7 +184,8 @@ class AttendanceReportsController extends Controller
     
                 $attendancePercentage = $totalSessionsCount > 0 ? ($presentCount / $totalSessionsCount) * 100 : 0;
     
-                // Store the trainee's data in the results array
+                $certificateEligibility = $attendancePercentage >= 70 ? 'يستحق' : 'لا يستحق';
+    
                 if (isset($trainee->name)) {
                     $results[] = [
                         'attendance_percentage' => round($attendancePercentage, 2) . ' %',
@@ -195,7 +196,7 @@ class AttendanceReportsController extends Controller
                 }
             }
         });
-
+    
         return Excel::download(new TraineeAttendanceExportByGroup($results), 'trainee_attendance_by_group.xlsx');
     }
     
