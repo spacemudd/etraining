@@ -31,30 +31,28 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
     {
         $sheet->getStyle('A1:E1')->getFont()->setBold(true);
         $sheet->getStyle('A1:E1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-        
         $sheet->getStyle('A1:E1')->getFill()
             ->setFillType('solid')
             ->getStartColor()->setARGB('FFFFE599');
 
-            foreach ($this->trainees as $key => $trainee) {
-                $attendanceNumeric = floatval(str_replace(' %', '', $trainee['attendance_percentage']));
-                
-                $rowIndex = $key + 2;
-            
-                if ($attendanceNumeric >= 70) {
-                    $sheet->getCell("A$rowIndex")->setValue('يستحق');
-                    $sheet->getStyle("A$rowIndex")->getFont()->getColor()->setARGB('FF00FF00'); 
-                } else {
-                    $sheet->getCell("A$rowIndex")->setValue('لا يستحق');
-                    $sheet->getStyle("A$rowIndex")->getFont()->getColor()->setARGB('FFFF0000'); 
-                }
-            
-                $sheet->getCell("B$rowIndex")->setValue($trainee['attendance_percentage']);
-                $sheet->getCell("C$rowIndex")->setValue($trainee['present_count']);
-                $sheet->getCell("D$rowIndex")->setValue($trainee['absent_count']);
-                $sheet->getCell("E$rowIndex")->setValue($trainee['trainee_name']);
+        foreach ($this->trainees as $key => $trainee) {
+            $attendanceNumeric = floatval(str_replace(' %', '', $trainee['attendance_percentage']));
+            $rowIndex = $key + 2;
+
+            if ($attendanceNumeric >= 70) {
+                $sheet->getCell("A$rowIndex")->setValue('يستحق');
+                $sheet->getStyle("A$rowIndex")->getFont()->getColor()->setARGB('FF00FF00'); 
+            } else {
+                $sheet->getCell("A$rowIndex")->setValue('لا يستحق');
+                $sheet->getStyle("A$rowIndex")->getFont()->getColor()->setARGB('FFFF0000'); 
             }
-            
+
+            $sheet->getCell("B$rowIndex")->setValue($trainee['attendance_percentage']);
+            $sheet->getCell("C$rowIndex")->setValue($trainee['present_count']);
+            $sheet->getCell("D$rowIndex")->setValue($trainee['absent_count']);
+            $sheet->getCell("E$rowIndex")->setValue($trainee['trainee_name']);
+
+            $sheet->getStyle("A$rowIndex:E$rowIndex")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        }
     }
 }
-
