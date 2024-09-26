@@ -182,15 +182,15 @@ class AttendanceReportsController extends Controller
     
                 $attendancePercentage = $totalSessionsCount > 0 ? ($presentCount / $totalSessionsCount) * 100 : 0;
     
-                $certificateEligibility = $attendancePercentage >= 70 ? 'يستحق' : 'لا يستحق';
-    
+                // Store the trainee's data in the results array
                 if (isset($trainee->name)) {
                     $results[] = [
                         'attendance_percentage' => round($attendancePercentage, 2) . ' %',
                         'present_count' => $presentCount,
                         'absent_count' => $absentCount,
                         'trainee_name' => $trainee->name,
-                        'certificate_eligibility' => $certificateEligibility,
+                        // Remove this line as we'll set eligibility in the styles method
+                        //'certificate_eligibility' => $certificateEligibility,
                     ];
                 }
             }
