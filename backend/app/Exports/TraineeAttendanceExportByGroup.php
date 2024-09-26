@@ -3,7 +3,6 @@
 namespace App\Exports;
 
 use Maatwebsite\Excel\Concerns\FromCollection;
-use Illuminate\Contracts\Support\Responsable;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
@@ -25,12 +24,12 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
 
     public function headings(): array
     {
-        return [,'استحقاق الشهادة','نسبة الحضور', 'عدد الحضور', 'عدد الغياب', 'اسم المتدرب'];
+        return ['استحقاق الشهادة', 'نسبة الحضور', 'عدد الحضور', 'عدد الغياب', 'اسم المتدرب'];
     }
 
     public function styles(Worksheet $sheet)
     {
-        $sheet->getStyle('A1:E1')->getFont()->setBold(true); 
+        $sheet->getStyle('A1:E1')->getFont()->setBold(true);
 
         $sheet->getStyle('A1:E1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
 
@@ -38,10 +37,19 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
             ->setFillType('solid')
             ->getStartColor()->setARGB('FFFFE599');
 
-        $sheet->getStyle('A:E')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
-
+        $sheet->getStyle('A2:A' . (count($this->trainees) + 1))->applyFromArray([
+            'font' => [
+                'color' => ['argb' => \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK],
+            ],
+        ]);
+        
         foreach ($this->trainees as $key => $trainee) {
-            $rowIndex = $key + 2;
+            $cell = 'A' . ($key + 2); 
+            if ($trainee['attendance_percentage'] >= 70) {
+                $sheet->getStyle($cell)->getFont()->getColor()->setARGB('FF00FF00'); 
+            } else {
+                $sheet->getStyle($cell)->getFont()->getColor()->setARGB('FFFF0000'); 
+            }
         }
     }
 }
