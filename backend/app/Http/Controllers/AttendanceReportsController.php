@@ -162,44 +162,42 @@ class AttendanceReportsController extends Controller
     }
 
     public function exportAttendanceReportByGroup($courseBatchId)
-    {
-        ini_set('memory_limit', '512M');
-        set_time_limit(300);
-    
-        $courseBatch = CourseBatch::findOrFail($courseBatchId);
-    
-        $results = [];
-        $totalSessionsCount = $courseBatch->course_batch_sessions()->count(); 
-    
-        $courseBatch->trainee_group->trainees()->chunk(100, function ($traineesChunk) use (&$results, $courseBatchId, $totalSessionsCount) {
-            foreach ($traineesChunk as $trainee) {
-                $attendanceRecords = $trainee->attendanceReportRecords()
-                    ->where('course_batch_id', $courseBatchId) 
-                    ->get()
-                    ->unique('course_batch_session_id');
-    
-                $presentCount = $attendanceRecords->whereIn('status', [1, 2, 3])->count();
-                $absentCount = $attendanceRecords->where('status', 0)->count();
-    
-                $attendancePercentage = $totalSessionsCount > 0 ? ($presentCount / $totalSessionsCount) * 100 : 0;
-    
-                $certificateEligibility = $attendancePercentage >= 70 ? 'يستحق' : 'لا يستحق';
-                $certificateEligibilityColor = $attendancePercentage >= 70 ? '00FF00' : 'FF0000'; 
-    
-                $results[] = [
-                    'attendance_percentage' => round($attendancePercentage, 2) . ' %',
-                    'present_count' => $presentCount,
-                    'absent_count' => $absentCount,
-                    'trainee_name' => $trainee->name,
-                    'certificate_eligibility' => $certificateEligibility, 
-                    'certificate_color' => $certificateEligibilityColor,
-                ];
-            }
-        });
-    
-        return Excel::download(new TraineeAttendanceExportByGroup($results), 'trainee_attendance_by_group.xlsx');
-    }
-    
+{
+    ini_set('memory_limit', '512M');
+    set_time_limit(300);
+
+    $courseBatch = CourseBatch::findOrFail($courseBatchId);
+
+    $results = [];
+    $totalSessionsCount = $courseBatch->course_batch_sessions()->count(); 
+
+    $courseBatch->trainee_group->trainees()->chunk(100, function ($traineesChunk) use (&$results, $courseBatchId, $totalSessionsCount) {
+        foreach ($traineesChunk as $trainee) {
+            $attendanceRecords = $trainee->attendanceReportRecords()
+                ->where('course_batch_id', $courseBatchId) 
+                ->get()
+                ->unique('course_batch_session_id');
+
+            $presentCount = $attendanceRecords->whereIn('status', [1, 2, 3])->count();
+            $absentCount = $attendanceRecords->where('status', 0)->count();
+
+            $attendancePercentage = $totalSessionsCount > 0 ? ($presentCount / $totalSessionsCount) * 100 : 0;
+
+            $certificateEligibility = $attendancePercentage >= 70 ? 'يستحق' : 'لا يستحق';
+
+            $results[] = [
+                'certificate_eligibility' => $certificateEligibility, 
+                'attendance_percentage' => round($attendancePercentage, 2) . ' %',
+                'present_count' => $presentCount,
+                'absent_count' => $absentCount,
+                'trainee_name' => $trainee->name,
+            ];
+        }
+    });
+
+    return Excel::download(new TraineeAttendanceExportByGroup($results), 'trainee_attendance_by_group.xlsx');
+}
+
     
     
     
