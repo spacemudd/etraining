@@ -7,7 +7,6 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use Maatwebsite\Excel\Facades\Excel;
 
 class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, WithStyles, ShouldAutoSize
 {
@@ -32,26 +31,30 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
     {
         $sheet->getStyle('A1:E1')->getFont()->setBold(true);
         $sheet->getStyle('A1:E1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle('A1:E1')->getFill()->setFillType('solid')->getStartColor()->setARGB('FFFFE599');
+        
+        $sheet->getStyle('A1:E1')->getFill()
+            ->setFillType('solid')
+            ->getStartColor()->setARGB('FFFFE599');
 
-        $sheet->getStyle('A2:A' . (count($this->trainees) + 1))->applyFromArray([
-            'font' => [
-                'color' => ['argb' => \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK],
-            ],
-        ]);
-
-        foreach ($this->trainees as $key => $trainee) {
-            $cell = 'A' . ($key + 2); 
-            if ($trainee['attendance_percentage'] >= 70) {
-                $sheet->getStyle($cell)->getFont()->getColor()->setARGB('FF00FF00'); 
-            } else {
-                $sheet->getStyle($cell)->getFont()->getColor()->setARGB('FFFF0000');
+            foreach ($this->trainees as $key => $trainee) {
+                $attendanceNumeric = floatval(str_replace(' %', '', $trainee['attendance_percentage']));
+                
+                $rowIndex = $key + 2;
+            
+                if ($attendanceNumeric >= 70) {
+                    $sheet->getCell("A$rowIndex")->setValue('يستحق');
+                    $sheet->getStyle("A$rowIndex")->getFont()->getColor()->setARGB('FF00FF00'); 
+                } else {
+                    $sheet->getCell("A$rowIndex")->setValue('لا يستحق');
+                    $sheet->getStyle("A$rowIndex")->getFont()->getColor()->setARGB('FFFF0000'); 
+                }
+            
+                $sheet->getCell("B$rowIndex")->setValue($trainee['attendance_percentage']);
+                $sheet->getCell("C$rowIndex")->setValue($trainee['present_count']);
+                $sheet->getCell("D$rowIndex")->setValue($trainee['absent_count']);
+                $sheet->getCell("E$rowIndex")->setValue($trainee['trainee_name']);
             }
-        }
-
-        // إخفاء العمود غير المرغوب فيه (مثلاً، إذا كان في العمود F)
-        // $sheet->getColumnDimension('F')->setVisible(false); // استبدل 'F' بحرف العمود الذي ترغب في إخفائه
+            
     }
 }
-
 
