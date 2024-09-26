@@ -44,7 +44,7 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
         ]);
         
         foreach ($this->trainees as $key => $trainee) {
-            $cell = 'A' . ($key + 2); 
+            $cell = 'E' . ($key + 2); 
             if ($trainee['attendance_percentage'] >= 70) {
                 $sheet->getStyle($cell)->getFont()->getColor()->setARGB('FF00FF00'); 
             } else {
