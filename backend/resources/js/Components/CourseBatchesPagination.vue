@@ -62,7 +62,14 @@
                                 <td><button @click="deleteCourseBatch(batch)" class="hover:underline">{{ $t('words.delete') }}</button></td>
                             </tr>
                             </tbody>
+                            
                         </table>
+                          <button
+                                @click="checkCertificateEligibility(batch.id)"
+                                class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 mt-2"
+                                >
+                                استحقاق الشهادات
+                        </button>
                     </div>
                     <div class="col-span-1"></div>
                     <div class="col-span-3 border-2 p-2">
@@ -235,7 +242,13 @@
                         throw error;
                     });
                 }
-            }
+            },
+
+            checkCertificateEligibility(id){
+                    window.location.href=`/attendance/export-by-group/${id}`;
+            }   
+
+            
         }
     }
 </script>
