@@ -2,7 +2,6 @@
 
 namespace App\Exports;
 
-use App\Models\Back\Trainee;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Illuminate\Contracts\Support\Responsable;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -22,7 +21,7 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
     public function collection()
     {
         $collection = collect($this->trainees);
-    
+
         foreach ($collection as $key => $trainee) {
             $color = $trainee['certificate_color'];
             $collection[$key]['certificate_eligibility'] = [
@@ -30,7 +29,7 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
                 'color' => $color,
             ];
         }
-    
+
         return $collection;
     }
 
@@ -42,22 +41,23 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
     public function styles(Worksheet $sheet)
     {
         $sheet->getStyle('A1:E1')->getFont()->setBold(true);
-    
+
         $sheet->getStyle('A1:E1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
-    
+
         $sheet->getStyle('A1:E1')->getFill()
             ->setFillType('solid')
             ->getStartColor()->setARGB('FFFFE599');
-    
+
         $sheet->getStyle('A:E')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
-    
+
         foreach ($this->trainees as $key => $trainee) {
             $rowIndex = $key + 2; 
             $color = $trainee['certificate_color'];
-            $sheet->getStyle("E$rowIndex")->getFont()->getColor()->setARGB($color); 
+            $sheet->getStyle("E$rowIndex")->getFont()->getColor()->setARGB($color);
         }
     }
 }
+
 
 
 
