@@ -25,7 +25,7 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
 
     public function headings(): array
     {
-        return ['استحقاق الشهادة','نسبة الحضور', 'عدد الحضور', 'عدد الغياب', 'اسم المتدرب'];
+        return [,'استحقاق الشهادة','نسبة الحضور', 'عدد الحضور', 'عدد الغياب', 'اسم المتدرب'];
     }
 
     public function styles(Worksheet $sheet)
@@ -41,18 +41,7 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
         $sheet->getStyle('A:E')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
 
         foreach ($this->trainees as $key => $trainee) {
-            $rowIndex = $key + 2; 
-            $color = $trainee['certificate_color'];
-            $sheet->getStyle("E$rowIndex")->getFont()->getColor()->setARGB($color);
+            $rowIndex = $key + 2;
         }
     }
 }
-
-
-
-
-
-
-
-
-
