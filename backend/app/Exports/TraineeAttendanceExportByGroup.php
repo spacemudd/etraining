@@ -30,26 +30,20 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
     public function styles(Worksheet $sheet)
     {
         $sheet->getStyle('A1:E1')->getFont()->setBold(true);
-
         $sheet->getStyle('A1:E1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
-
         $sheet->getStyle('A1:E1')->getFill()
             ->setFillType('solid')
             ->getStartColor()->setARGB('FFFFE599');
 
-        $sheet->getStyle('A2:A' . (count($this->trainees) + 1))->applyFromArray([
-            'font' => [
-                'color' => ['argb' => \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK],
-            ],
-        ]);
-        
+        // Apply styles for the certificate eligibility column
         foreach ($this->trainees as $key => $trainee) {
-            $cell = 'E' . ($key + 2); 
+            $cell = 'A' . ($key + 2); // Cell for certificate eligibility
             if ($trainee['attendance_percentage'] >= 70) {
-                $sheet->getStyle($cell)->getFont()->getColor()->setARGB('FF00FF00'); 
+                $sheet->getStyle($cell)->getFont()->getColor()->setARGB('FF00FF00'); // Green for eligible
             } else {
-                $sheet->getStyle($cell)->getFont()->getColor()->setARGB('FFFF0000'); 
+                $sheet->getStyle($cell)->getFont()->getColor()->setARGB('FFFF0000'); // Red for not eligible
             }
         }
     }
 }
+

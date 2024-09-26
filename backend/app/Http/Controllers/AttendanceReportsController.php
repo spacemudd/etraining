@@ -160,14 +160,13 @@ class AttendanceReportsController extends Controller
         $sessionDate = $report->course_batch_session->starts_at->format('Y-m-d');
         return Excel::download(new AttendanceSheetExport($report), $sessionDate.'-'.$courseName.'-.xlsx');
     }
-
     public function exportAttendanceReportByGroup($courseBatchId)
     {
         ini_set('memory_limit', '512M');
         set_time_limit(300);
     
         $courseBatch = CourseBatch::findOrFail($courseBatchId);
-    
+        
         $results = [];
         $totalSessionsCount = $courseBatch->course_batch_sessions()->count(); 
     
