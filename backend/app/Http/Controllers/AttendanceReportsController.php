@@ -195,7 +195,8 @@ class AttendanceReportsController extends Controller
                 }
             }
         });
-    
+
+        dd($results);
         return Excel::download(new TraineeAttendanceExportByGroup($results), 'trainee_attendance_by_group.xlsx');
     }
     
