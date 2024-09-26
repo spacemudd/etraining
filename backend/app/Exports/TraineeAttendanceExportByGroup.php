@@ -37,7 +37,7 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
 
         foreach ($this->trainees as $key => $trainee) {
             $cell = 'A' . ($key + 2); // Cell for certificate eligibility
-            if ($trainee['attendance_percentage'] >= 70) {
+            if ($trainee['attendance_percentage'] >= 70 ||$trainee['attendance_percentage'] == 100 ) {
                 $sheet->getCell($cell)->setValue('يستحق');
                 $sheet->getStyle($cell)->getFont()->getColor()->setARGB('FF00FF00'); // Green
             } else {
