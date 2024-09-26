@@ -129,9 +129,7 @@ class TraineesController extends Controller
             ->orWhere('identity_number', $trainee->identity_number)
             ->orWhere('email', $trainee->email)
             ->orWhere('name', $trainee->name)
-            ->orWhere('english_name', $trainee->english_name)
             ->first();
-            dd($in_block_list);
 
         Audit::create([
             'event' => 'trainees.show',
