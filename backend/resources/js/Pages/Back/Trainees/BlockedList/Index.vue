@@ -62,6 +62,10 @@
                                     <inertia-link :href="route('back.trainees.show.blocked', trainees.trainee_id)">
                                         {{ trainees.name }}
                                         <br/>
+                                        <span v-if="trainees.english_name" class="text-sm inline-block text-gray-800">
+                                            {{ trainees.english_name }}
+                                        </span>
+                                        <br/>
                                         <span v-if="trainees.identity_number" class="text-sm inline-block text-gray-800">
                                             {{ trainees.identity_number }}
                                         </span>
@@ -73,6 +77,10 @@
                                 </div>
                                 <div v-else>
                                     {{ trainees.name }}
+                                    <br/>
+                                    <span v-if="trainees.english_name" class="text-sm inline-block text-gray-800">
+                                        {{ trainees.english_name }}
+                                    </span>
                                     <br/>
                                     <span v-if="trainees.identity_number" class="text-sm inline-block text-gray-800">
                                         {{ trainees.identity_number }}

@@ -36,6 +36,7 @@ class TraineesBlockListController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'english_name' => 'required|string|max:255',
             'identity_number' => 'required|string|max:255',
             'phone' => 'nullable|string|max:255',
             'phone_additional' => 'nullable|string|max:255',

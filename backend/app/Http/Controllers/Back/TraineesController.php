@@ -764,6 +764,7 @@ class TraineesController extends Controller
             'trainee_id' => $trainee->id,
             'identity_number' => $trainee->identity_number,
             'name' => $trainee->name,
+            'english_name' => $trainee->english_name,
             'email' => $trainee->email,
             'phone' => $trainee->phone,
             'phone_additional' => $trainee->phone_additional,

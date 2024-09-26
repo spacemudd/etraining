@@ -28,7 +28,11 @@
                             <jet-input id="name" type="text" class="mt-1 block w-full" v-model="form.name" autocomplete="off" />
                             <jet-input-error :message="form.error('name')" class="mt-2" />
                         </div>
-
+                        <div class="col-span-2 sm:col-span-2">
+                            <jet-label for="english_name" :value="$t('words.name_en')" />
+                            <jet-input id="english_name" type="text" class="mt-1 block w-full" v-model="form.english_name" autocomplete="off" />
+                            <jet-input-error :message="form.error('english_name')" class="mt-2" />
+                        </div>
                         <div class="col-span-2 sm:col-span-2">
                             <jet-label for="identity_number" :value="$t('words.identity_number')" />
                             <jet-input id="identity_number" type="text" class="mt-1 block w-full" v-model="form.identity_number" autocomplete="off" />
@@ -110,6 +114,7 @@
                 form: this.$inertia.form({
                     email: '',
                     name: '',
+                    english_name: '',
                     identity_number: '',
                     phone: '',
                     phone_additional: '',

@@ -6,7 +6,7 @@
                     {title: 'dashboard', link: route('dashboard')},
                     {title: 'trainees', link: route('back.trainees.index')},
                     {title: 'blocked-list'},
-                    {title: 'edit'},
+                    
                 ]"
             ></breadcrumb-container>
 
@@ -28,6 +28,12 @@
                             <jet-label for="name" :value="$t('words.name')" />
                             <jet-input id="name" type="text" class="mt-1 block w-full" v-model="form.name" autocomplete="off" />
                             <jet-input-error :message="form.error('name')" class="mt-2" />
+                        </div>
+
+                        <div class="col-span-2 sm:col-span-2">
+                            <jet-label for="english_name" :value="$t('words.name_en')" />
+                            <jet-input id="english_name" type="text" class="mt-1 block w-full" v-model="form.english_name" autocomplete="off" />
+                            <jet-input-error :message="form.error('english_name')" class="mt-2" />
                         </div>
 
                         <div class="col-span-2 sm:col-span-2">
@@ -111,6 +117,7 @@
                 form: this.$inertia.form({
                     email: '',
                     name: '',
+                    english_name: '',
                     identity_number: '',
                     phone: '',
                     phone_additional: '',
@@ -123,6 +130,7 @@
         mounted() {
             this.form.email = this.traineeBlockList.email;
             this.form.name = this.traineeBlockList.name;
+            this.form.english_name = this.traineeBlockList.english_name;
             this.form.identity_number = this.traineeBlockList.identity_number;
             this.form.phone = this.traineeBlockList.phone;
             this.form.phone_additional = this.traineeBlockList.phone_additional;

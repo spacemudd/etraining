@@ -9535,6 +9535,7 @@ __webpack_require__.r(__webpack_exports__);
       form: this.$inertia.form({
         email: '',
         name: '',
+        english_name: '',
         identity_number: '',
         phone: '',
         phone_additional: '',
@@ -9613,6 +9614,7 @@ __webpack_require__.r(__webpack_exports__);
       form: this.$inertia.form({
         email: '',
         name: '',
+        english_name: '',
         identity_number: '',
         phone: '',
         phone_additional: '',
@@ -9625,6 +9627,7 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     this.form.email = this.traineeBlockList.email;
     this.form.name = this.traineeBlockList.name;
+    this.form.english_name = this.traineeBlockList.english_name;
     this.form.identity_number = this.traineeBlockList.identity_number;
     this.form.phone = this.traineeBlockList.phone;
     this.form.phone_additional = this.traineeBlockList.phone_additional;
@@ -34369,6 +34372,32 @@ var render = function render() {
           staticClass: "col-span-2 sm:col-span-2"
         }, [_c("jet-label", {
           attrs: {
+            "for": "english_name",
+            value: _vm.$t("words.name_en")
+          }
+        }), _vm._v(" "), _c("jet-input", {
+          staticClass: "mt-1 block w-full",
+          attrs: {
+            id: "english_name",
+            type: "text",
+            autocomplete: "off"
+          },
+          model: {
+            value: _vm.form.english_name,
+            callback: function callback($$v) {
+              _vm.$set(_vm.form, "english_name", $$v);
+            },
+            expression: "form.english_name"
+          }
+        }), _vm._v(" "), _c("jet-input-error", {
+          staticClass: "mt-2",
+          attrs: {
+            message: _vm.form.error("english_name")
+          }
+        })], 1), _vm._v(" "), _c("div", {
+          staticClass: "col-span-2 sm:col-span-2"
+        }, [_c("jet-label", {
+          attrs: {
             "for": "identity_number",
             value: _vm.$t("words.identity_number")
           }
@@ -34535,8 +34564,6 @@ var render = function render() {
         link: _vm.route("back.trainees.index")
       }, {
         title: "blocked-list"
-      }, {
-        title: "edit"
       }]
     }
   }), _vm._v(" "), _c("div", {
@@ -34607,6 +34634,32 @@ var render = function render() {
           staticClass: "mt-2",
           attrs: {
             message: _vm.form.error("name")
+          }
+        })], 1), _vm._v(" "), _c("div", {
+          staticClass: "col-span-2 sm:col-span-2"
+        }, [_c("jet-label", {
+          attrs: {
+            "for": "english_name",
+            value: _vm.$t("words.name_en")
+          }
+        }), _vm._v(" "), _c("jet-input", {
+          staticClass: "mt-1 block w-full",
+          attrs: {
+            id: "english_name",
+            type: "text",
+            autocomplete: "off"
+          },
+          model: {
+            value: _vm.form.english_name,
+            callback: function callback($$v) {
+              _vm.$set(_vm.form, "english_name", $$v);
+            },
+            expression: "form.english_name"
+          }
+        }), _vm._v(" "), _c("jet-input-error", {
+          staticClass: "mt-2",
+          attrs: {
+            message: _vm.form.error("english_name")
           }
         })], 1), _vm._v(" "), _c("div", {
           staticClass: "col-span-2 sm:col-span-2"
@@ -34944,11 +34997,15 @@ var render = function render() {
       attrs: {
         href: _vm.route("back.trainees.show.blocked", trainees.trainee_id)
       }
-    }, [_vm._v("\n                                    " + _vm._s(trainees.name) + "\n                                    "), _c("br"), _vm._v(" "), trainees.identity_number ? _c("span", {
+    }, [_vm._v("\n                                    " + _vm._s(trainees.name) + "\n                                    "), _c("br"), _vm._v(" "), trainees.english_name ? _c("span", {
+      staticClass: "text-sm inline-block text-gray-800"
+    }, [_vm._v("\n                                        " + _vm._s(trainees.english_name) + "\n                                    ")]) : _vm._e(), _vm._v(" "), _c("br"), _vm._v(" "), trainees.identity_number ? _c("span", {
       staticClass: "text-sm inline-block text-gray-800"
     }, [_vm._v("\n                                        " + _vm._s(trainees.identity_number) + "\n                                    ")]) : _vm._e(), _vm._v(" "), _c("br"), _vm._v(" "), trainees.email ? _c("span", {
       staticClass: "text-sm inline-block text-gray-800"
-    }, [_vm._v("\n                                        " + _vm._s(trainees.email) + "\n                                    ")]) : _vm._e()])], 1) : _c("div", [_vm._v("\n                                " + _vm._s(trainees.name) + "\n                                "), _c("br"), _vm._v(" "), trainees.identity_number ? _c("span", {
+    }, [_vm._v("\n                                        " + _vm._s(trainees.email) + "\n                                    ")]) : _vm._e()])], 1) : _c("div", [_vm._v("\n                                " + _vm._s(trainees.name) + "\n                                "), _c("br"), _vm._v(" "), trainees.english_name ? _c("span", {
+      staticClass: "text-sm inline-block text-gray-800"
+    }, [_vm._v("\n                                    " + _vm._s(trainees.english_name) + "\n                                ")]) : _vm._e(), _vm._v(" "), _c("br"), _vm._v(" "), trainees.identity_number ? _c("span", {
       staticClass: "text-sm inline-block text-gray-800"
     }, [_vm._v("\n                                    " + _vm._s(trainees.identity_number) + "\n                                ")]) : _vm._e(), _vm._v(" "), _c("br"), _vm._v(" "), trainees.email ? _c("span", {
       staticClass: "text-sm inline-block text-gray-800"
@@ -37013,7 +37070,7 @@ var render = function render() {
       "stroke-width": "1.5",
       stroke: "currentColor"
     }
-  }, [_c("path", {
+  }, [_vm._v("bg-red-600 p-2\n              "), _c("path", {
     attrs: {
       "stroke-linecap": "round",
       "stroke-linejoin": "round",
@@ -37029,7 +37086,7 @@ var render = function render() {
     staticClass: "border px-1"
   }, [_vm._v(_vm._s(_vm.in_block_list.name))])]) : _vm._e(), _vm._v(" "), _vm.in_block_list.english_name ? _c("tr", [_c("td", {
     staticClass: "border px-1"
-  }, [_vm._v(_vm._s(_vm.$t("words.name")))]), _vm._v(" "), _c("td", {
+  }, [_vm._v(_vm._s(_vm.$t("words.name_en")))]), _vm._v(" "), _c("td", {
     staticClass: "border px-1"
   }, [_vm._v(_vm._s(_vm.in_block_list.english_name))])]) : _vm._e(), _vm._v(" "), _vm.in_block_list.phone ? _c("tr", [_c("td", {
     staticClass: "border px-1"
@@ -38251,6 +38308,28 @@ var render = function render() {
         _vm.$set(_vm.trainee, "name", $$v);
       },
       expression: "trainee.name"
+    }
+  })], 1), _vm._v(" "), _c("div", {
+    staticClass: "col-span-6 sm:col-span-2"
+  }, [_c("jet-label", {
+    attrs: {
+      "for": "english_name",
+      value: _vm.$t("words.name_en")
+    }
+  }), _vm._v(" "), _c("jet-input", {
+    "class": _vm.editButton.inputClass,
+    attrs: {
+      id: "english_name",
+      type: "text",
+      autocomplete: "off",
+      disabled: !_vm.editButton.editOption
+    },
+    model: {
+      value: _vm.trainee.english_name,
+      callback: function callback($$v) {
+        _vm.$set(_vm.trainee, "english_name", $$v);
+      },
+      expression: "trainee.english_name"
     }
   })], 1), _vm._v(" "), _c("div", {
     staticClass: "col-span-6 sm:col-span-2"
@@ -46644,7 +46723,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".lds-grid {\n  display: inline-block;\n  position: relative;\n  width: 80px;\n  height: 80px;\n}\n.lds-grid div {\n  position: absolute;\n  width: 16px;\n  height: 16px;\n  border-radius: 50%;\n  background: #ff0000;\n  -webkit-animation: lds-grid 1.2s linear infinite;\n          animation: lds-grid 1.2s linear infinite;\n}\n.lds-grid div:nth-child(1) {\n  top: 8px;\n  left: 8px;\n  -webkit-animation-delay: 0s;\n          animation-delay: 0s;\n}\n.lds-grid div:nth-child(2) {\n  top: 8px;\n  left: 32px;\n  -webkit-animation-delay: -0.4s;\n          animation-delay: -0.4s;\n}\n.lds-grid div:nth-child(3) {\n  top: 8px;\n  left: 56px;\n  -webkit-animation-delay: -0.8s;\n          animation-delay: -0.8s;\n}\n.lds-grid div:nth-child(4) {\n  top: 32px;\n  left: 8px;\n  -webkit-animation-delay: -0.4s;\n          animation-delay: -0.4s;\n}\n.lds-grid div:nth-child(5) {\n  top: 32px;\n  left: 32px;\n  -webkit-animation-delay: -0.8s;\n          animation-delay: -0.8s;\n}\n.lds-grid div:nth-child(6) {\n  top: 32px;\n  left: 56px;\n  -webkit-animation-delay: -1.2s;\n          animation-delay: -1.2s;\n}\n.lds-grid div:nth-child(7) {\n  top: 56px;\n  left: 8px;\n  -webkit-animation-delay: -0.8s;\n          animation-delay: -0.8s;\n}\n.lds-grid div:nth-child(8) {\n  top: 56px;\n  left: 32px;\n  -webkit-animation-delay: -1.2s;\n          animation-delay: -1.2s;\n}\n.lds-grid div:nth-child(9) {\n  top: 56px;\n  left: 56px;\n  -webkit-animation-delay: -1.6s;\n          animation-delay: -1.6s;\n}\n@-webkit-keyframes lds-grid {\n0%, 100% {\n    opacity: 1;\n}\n50% {\n    opacity: 0.5;\n}\n}\n@keyframes lds-grid {\n0%, 100% {\n    opacity: 1;\n}\n50% {\n    opacity: 0.5;\n}\n}\r\n\r\n", ""]);
+exports.push([module.i, ".lds-grid {\n  display: inline-block;\n  position: relative;\n  width: 80px;\n  height: 80px;\n}\n.lds-grid div {\n  position: absolute;\n  width: 16px;\n  height: 16px;\n  border-radius: 50%;\n  background: #ff0000;\n  -webkit-animation: lds-grid 1.2s linear infinite;\n          animation: lds-grid 1.2s linear infinite;\n}\n.lds-grid div:nth-child(1) {\n  top: 8px;\n  left: 8px;\n  -webkit-animation-delay: 0s;\n          animation-delay: 0s;\n}\n.lds-grid div:nth-child(2) {\n  top: 8px;\n  left: 32px;\n  -webkit-animation-delay: -0.4s;\n          animation-delay: -0.4s;\n}\n.lds-grid div:nth-child(3) {\n  top: 8px;\n  left: 56px;\n  -webkit-animation-delay: -0.8s;\n          animation-delay: -0.8s;\n}\n.lds-grid div:nth-child(4) {\n  top: 32px;\n  left: 8px;\n  -webkit-animation-delay: -0.4s;\n          animation-delay: -0.4s;\n}\n.lds-grid div:nth-child(5) {\n  top: 32px;\n  left: 32px;\n  -webkit-animation-delay: -0.8s;\n          animation-delay: -0.8s;\n}\n.lds-grid div:nth-child(6) {\n  top: 32px;\n  left: 56px;\n  -webkit-animation-delay: -1.2s;\n          animation-delay: -1.2s;\n}\n.lds-grid div:nth-child(7) {\n  top: 56px;\n  left: 8px;\n  -webkit-animation-delay: -0.8s;\n          animation-delay: -0.8s;\n}\n.lds-grid div:nth-child(8) {\n  top: 56px;\n  left: 32px;\n  -webkit-animation-delay: -1.2s;\n          animation-delay: -1.2s;\n}\n.lds-grid div:nth-child(9) {\n  top: 56px;\n  left: 56px;\n  -webkit-animation-delay: -1.6s;\n          animation-delay: -1.6s;\n}\n@-webkit-keyframes lds-grid {\n0%, 100% {\n    opacity: 1;\n}\n50% {\n    opacity: 0.5;\n}\n}\n@keyframes lds-grid {\n0%, 100% {\n    opacity: 1;\n}\n50% {\n    opacity: 0.5;\n}\n}\n\n", ""]);
 
 // exports
 
@@ -46663,7 +46742,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "/*\r\nTODO: Convert to @apply\r\n*/\ntable[data-v-5b49283e] th {\n  /*font-weight: 500;*/\n  font-size: 0.75rem;\n  line-height: 1rem;\n  padding-top: 0.75rem;\n  padding-bottom: 0.75rem;\n  padding-left: 1.5rem;\n  padding-right: 1.5rem;\n  text-align: left;\n  --tw-text-opacity: 1;\n  /*color: rgba(107, 114, 128, var(--tw-text-opacity));*/\n  text-transform: uppercase;\n  letter-spacing: 0.05em;\n}\ntable[data-v-5b49283e] td {\n  font-size: 0.875rem;\n  line-height: 1.25rem;\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  padding-left: 1.5rem;\n  padding-right: 1.5rem;\n  --tw-text-opacity: 1;\n  /*color: rgba(107, 114, 128, var(--tw-text-opacity));*/\n  white-space: nowrap;\n}\ntable[data-v-5b49283e] tr:hover td {\n  --tw-bg-opacity: 1;\n  background-color: rgba(249, 250, 251, var(--tw-bg-opacity));\n}\r\n", ""]);
+exports.push([module.i, "/*\nTODO: Convert to @apply\n*/\ntable[data-v-5b49283e] th {\n  /*font-weight: 500;*/\n  font-size: 0.75rem;\n  line-height: 1rem;\n  padding-top: 0.75rem;\n  padding-bottom: 0.75rem;\n  padding-left: 1.5rem;\n  padding-right: 1.5rem;\n  text-align: left;\n  --tw-text-opacity: 1;\n  /*color: rgba(107, 114, 128, var(--tw-text-opacity));*/\n  text-transform: uppercase;\n  letter-spacing: 0.05em;\n}\ntable[data-v-5b49283e] td {\n  font-size: 0.875rem;\n  line-height: 1.25rem;\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  padding-left: 1.5rem;\n  padding-right: 1.5rem;\n  --tw-text-opacity: 1;\n  /*color: rgba(107, 114, 128, var(--tw-text-opacity));*/\n  white-space: nowrap;\n}\ntable[data-v-5b49283e] tr:hover td {\n  --tw-bg-opacity: 1;\n  background-color: rgba(249, 250, 251, var(--tw-bg-opacity));\n}\n", ""]);
 
 // exports
 
@@ -46682,7 +46761,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".toggle__dot {\n  top: -.25rem;\n  left: -.25rem;\n  transition: all 0.3s ease-in-out;\n}\n[dir=rtl] .toggle__dot {\n  left: unset;\n  right: -.25rem;\n}\ninput:checked ~ .toggle__dot {\n  transform: translateX(100%);\n  background-color: #48bb78;\n  border: none;\n}\n[dir=rtl] input:checked ~ .toggle__dot {\n  transform: translateX(-100%);\n}\ninput:checked ~ .toggle__line {\n  background-color: #95e9b9;\n}\r\n", ""]);
+exports.push([module.i, ".toggle__dot {\n  top: -.25rem;\n  left: -.25rem;\n  transition: all 0.3s ease-in-out;\n}\n[dir=rtl] .toggle__dot {\n  left: unset;\n  right: -.25rem;\n}\ninput:checked ~ .toggle__dot {\n  transform: translateX(100%);\n  background-color: #48bb78;\n  border: none;\n}\n[dir=rtl] input:checked ~ .toggle__dot {\n  transform: translateX(-100%);\n}\ninput:checked ~ .toggle__line {\n  background-color: #95e9b9;\n}\n", ""]);
 
 // exports
 
@@ -46701,7 +46780,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".whatsapp-bubble-head {\n  position: fixed;\n  bottom: 20px;\n  left: 20px;\n}\r\n", ""]);
+exports.push([module.i, ".whatsapp-bubble-head {\n  position: fixed;\n  bottom: 20px;\n  left: 20px;\n}\n", ""]);
 
 // exports
 
@@ -46720,7 +46799,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".whatsapp-bubble-head {\n  position: fixed;\n  bottom: 20px;\n  left: 20px;\n}\r\n", ""]);
+exports.push([module.i, ".whatsapp-bubble-head {\n  position: fixed;\n  bottom: 20px;\n  left: 20px;\n}\n", ""]);
 
 // exports
 
@@ -46739,7 +46818,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".whatsapp-bubble-head {\n  position: fixed;\n  bottom: 20px;\n  left: 20px;\n}\r\n", ""]);
+exports.push([module.i, ".whatsapp-bubble-head {\n  position: fixed;\n  bottom: 20px;\n  left: 20px;\n}\n", ""]);
 
 // exports
 
@@ -46758,7 +46837,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../../node_module
 
 
 // module
-exports.push([module.i, ".company-logo[data-v-71035254] {\n  width: 60%;\n  height: 60%;\n}\r\n", ""]);
+exports.push([module.i, ".company-logo[data-v-71035254] {\n  width: 60%;\n  height: 60%;\n}\n", ""]);
 
 // exports
 
@@ -46777,7 +46856,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, ".search-results-box {\n  position: absolute;\n  width: 600px;\n  margin-top: -10px;\n}\r\n", ""]);
+exports.push([module.i, ".search-results-box {\n  position: absolute;\n  width: 600px;\n  margin-top: -10px;\n}\n", ""]);
 
 // exports
 
@@ -46796,7 +46875,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, ".search-results-box {\n  position: absolute;\n  width: 600px;\n  margin-top: -10px;\n}\r\n", ""]);
+exports.push([module.i, ".search-results-box {\n  position: absolute;\n  width: 600px;\n  margin-top: -10px;\n}\n", ""]);
 
 // exports
 
@@ -46891,7 +46970,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../../node_module
 
 
 // module
-exports.push([module.i, ".btn-action[data-v-3438a276] {\n  display: inline-flex;\n  align-items: center;\n  padding-left: 1rem;\n  padding-right: 1rem;\n  padding-top: 0.5rem;\n  padding-bottom: 0.5rem;\n  --bg-opacity: 1;\n  background-color: #e5e7eb;\n  background-color: rgba(229, 231, 235, var(--bg-opacity));\n  border-width: 1px;\n  border-color: transparent;\n  border-radius: 0.375rem;\n  font-weight: 600;\n  font-size: 0.75rem;\n  --text-opacity: 1;\n  color: #000000;\n  color: rgba(0, 0, 0, var(--text-opacity));\n  text-transform: uppercase;\n  letter-spacing: 0;\n  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 150ms\n}\n.btn-action-active[data-v-3438a276] {\n  --bg-opacity: 1;\n  background-color: #3f83f8;\n  background-color: rgba(63, 131, 248, var(--bg-opacity));\n  --text-opacity: 1;\n  color: #ffffff;\n  color: rgba(255, 255, 255, var(--text-opacity))\n}\n.vue-daterange-picker[data-v-3438a276] {\n  display: block !important;\n}\n.reportrange-text[data-v-3438a276] {\n  max-width: 400px !important;\n  margin-right: 8px !important;\n}\r\n", ""]);
+exports.push([module.i, ".btn-action[data-v-3438a276] {\n  display: inline-flex;\n  align-items: center;\n  padding-left: 1rem;\n  padding-right: 1rem;\n  padding-top: 0.5rem;\n  padding-bottom: 0.5rem;\n  --bg-opacity: 1;\n  background-color: #e5e7eb;\n  background-color: rgba(229, 231, 235, var(--bg-opacity));\n  border-width: 1px;\n  border-color: transparent;\n  border-radius: 0.375rem;\n  font-weight: 600;\n  font-size: 0.75rem;\n  --text-opacity: 1;\n  color: #000000;\n  color: rgba(0, 0, 0, var(--text-opacity));\n  text-transform: uppercase;\n  letter-spacing: 0;\n  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 150ms\n}\n.btn-action-active[data-v-3438a276] {\n  --bg-opacity: 1;\n  background-color: #3f83f8;\n  background-color: rgba(63, 131, 248, var(--bg-opacity));\n  --text-opacity: 1;\n  color: #ffffff;\n  color: rgba(255, 255, 255, var(--text-opacity))\n}\n.vue-daterange-picker[data-v-3438a276] {\n  display: block !important;\n}\n.reportrange-text[data-v-3438a276] {\n  max-width: 400px !important;\n  margin-right: 8px !important;\n}\n", ""]);
 
 // exports
 
@@ -46910,7 +46989,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../../node_module
 
 
 // module
-exports.push([module.i, ".v-dropdown-menu__container {\n  margin-top: 5px;\n  border-radius: 5px;\n  border-bottom: 1px solid red;\n}\n.dropdown-items {\n  border-radius: 5px;\n  padding: 10px;\n}\n.dropdown-items li {\n  margin: 10px 0;\n  border-bottom: 1px solid #e9e9e9;\n  padding-bottom: 10px;\n}\r\n", ""]);
+exports.push([module.i, ".v-dropdown-menu__container {\n  margin-top: 5px;\n  border-radius: 5px;\n  border-bottom: 1px solid red;\n}\n.dropdown-items {\n  border-radius: 5px;\n  padding: 10px;\n}\n.dropdown-items li {\n  margin: 10px 0;\n  border-bottom: 1px solid #e9e9e9;\n  padding-bottom: 10px;\n}\n", ""]);
 
 // exports
 
@@ -46929,7 +47008,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, ".v-dropdown-menu__container {\n  margin-top: 5px;\n  border-radius: 5px;\n  border-bottom: 1px solid red;\n}\n.dropdown-items {\n  border-radius: 5px;\n  padding: 10px;\n}\n.dropdown-items li {\n  margin: 10px 0;\n  border-bottom: 1px solid #e9e9e9;\n  padding-bottom: 10px;\n}\r\n", ""]);
+exports.push([module.i, ".v-dropdown-menu__container {\n  margin-top: 5px;\n  border-radius: 5px;\n  border-bottom: 1px solid red;\n}\n.dropdown-items {\n  border-radius: 5px;\n  padding: 10px;\n}\n.dropdown-items li {\n  margin: 10px 0;\n  border-bottom: 1px solid #e9e9e9;\n  padding-bottom: 10px;\n}\n", ""]);
 
 // exports
 
@@ -46948,7 +47027,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, ".v-dropdown-menu__container {\n  margin-top: 5px;\n  border-radius: 5px;\n  border-bottom: 1px solid red;\n}\n.dropdown-items {\n  border-radius: 5px;\n  padding: 10px;\n}\n.dropdown-items li {\n  margin: 10px 0;\n  border-bottom: 1px solid #e9e9e9;\n  padding-bottom: 10px;\n}\r\n", ""]);
+exports.push([module.i, ".v-dropdown-menu__container {\n  margin-top: 5px;\n  border-radius: 5px;\n  border-bottom: 1px solid red;\n}\n.dropdown-items {\n  border-radius: 5px;\n  padding: 10px;\n}\n.dropdown-items li {\n  margin: 10px 0;\n  border-bottom: 1px solid #e9e9e9;\n  padding-bottom: 10px;\n}\n", ""]);
 
 // exports
 
@@ -46967,7 +47046,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, ".v-dropdown-menu__container {\n  margin-top: 5px;\n  border-radius: 5px;\n  border-bottom: 1px solid red;\n}\n.dropdown-items {\n  border-radius: 5px;\n  padding: 10px;\n}\n.dropdown-items li {\n  margin: 10px 0;\n  border-bottom: 1px solid #e9e9e9;\n  padding-bottom: 10px;\n}\r\n", ""]);
+exports.push([module.i, ".v-dropdown-menu__container {\n  margin-top: 5px;\n  border-radius: 5px;\n  border-bottom: 1px solid red;\n}\n.dropdown-items {\n  border-radius: 5px;\n  padding: 10px;\n}\n.dropdown-items li {\n  margin: 10px 0;\n  border-bottom: 1px solid #e9e9e9;\n  padding-bottom: 10px;\n}\n", ""]);
 
 // exports
 
@@ -46986,7 +47065,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, ".min-container-upload {\n  min-height: 168px;\n}\r\n", ""]);
+exports.push([module.i, ".min-container-upload {\n  min-height: 168px;\n}\n", ""]);
 
 // exports
 
@@ -47062,7 +47141,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, ".min-container-upload {\n  min-height: 168px;\n}\r\n", ""]);
+exports.push([module.i, ".min-container-upload {\n  min-height: 168px;\n}\n", ""]);
 
 // exports
 
@@ -47119,7 +47198,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, ".min-container-upload {\n  min-height: 168px;\n}\r\n", ""]);
+exports.push([module.i, ".min-container-upload {\n  min-height: 168px;\n}\n", ""]);
 
 // exports
 
@@ -67395,8 +67474,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\xampp\htdocs\new-project\etraining\backend\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\new-project\etraining\backend\resources\css\app.css */"./resources/css/app.css");
+__webpack_require__(/*! /var/www/html/etraining/backend/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /var/www/html/etraining/backend/resources/css/app.css */"./resources/css/app.css");
 
 
 /***/ }),

@@ -55,6 +55,11 @@
                 </div>
 
                 <div class="col-span-6 sm:col-span-2">
+                    <jet-label for="english_name" :value="$t('words.name_en')" />
+                    <jet-input id="english_name" type="text" :class="editButton.inputClass" v-model="trainee.english_name" autocomplete="off" :disabled="!editButton.editOption" />
+                </div>
+
+                <div class="col-span-6 sm:col-span-2">
                     <jet-label for="identity_number" :value="$t('words.identity_number')" />
                     <jet-input id="identity_number" type="text" :class="editButton.inputClass" v-model="trainee.identity_number" :disabled="!editButton.editOption" />
                 </div>

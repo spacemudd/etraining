@@ -57,7 +57,7 @@
                 stroke-width="1.5"
                 stroke="currentColor"
                 class="w-6 h-6"
-              >
+              >bg-red-600 p-2
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -75,11 +75,10 @@
                   </tr>
 
                   <tr v-if="in_block_list.english_name">
-                    <td class="border px-1">{{ $t("words.name") }}</td>
+                    <td class="border px-1">{{ $t("words.name_en") }}</td>
                     <td class="border px-1">{{ in_block_list.english_name }}</td>
                   </tr>
 
-                  
                   <tr v-if="in_block_list.phone">
                     <td class="border px-1">{{ $t("words.phone") }}</td>
                     <td class="border px-1">{{ in_block_list.phone }}</td>
