@@ -20,17 +20,7 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
 
     public function collection()
     {
-        $collection = collect($this->trainees);
-
-        foreach ($collection as $key => $trainee) {
-            $color = $trainee['certificate_color'];
-            $collection[$key]['certificate_eligibility'] = [
-                'value' => $trainee['certificate_eligibility'],
-                'color' => $color,
-            ];
-        }
-
-        return $collection;
+        return collect($this->trainees);
     }
 
     public function headings(): array
@@ -40,7 +30,7 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
 
     public function styles(Worksheet $sheet)
     {
-        $sheet->getStyle('A1:E1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:E1')->getFont()->setBold(true); 
 
         $sheet->getStyle('A1:E1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
 
@@ -57,6 +47,7 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
         }
     }
 }
+
 
 
 
