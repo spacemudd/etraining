@@ -183,17 +183,23 @@ class AttendanceReportsController extends Controller
     
                 $attendancePercentage = $totalSessionsCount > 0 ? ($presentCount / $totalSessionsCount) * 100 : 0;
     
+                $certificateEligibility = $attendancePercentage >= 70 ? 'يستحق' : 'لا يستحق';
+                $certificateEligibilityColor = $attendancePercentage >= 70 ? '00FF00' : 'FF0000';
+    
                 $results[] = [
                     'attendance_percentage' => round($attendancePercentage, 2) . ' %',
                     'present_count' => $presentCount,
                     'absent_count' => $absentCount,
                     'trainee_name' => $trainee->name,
+                    'certificate_eligibility' => $certificateEligibility,
+                    'certificate_color' => $certificateEligibilityColor,
                 ];
             }
         });
     
         return Excel::download(new TraineeAttendanceExportByGroup($results), 'trainee_attendance_by_group.xlsx');
     }
+    
     
     
     
