@@ -125,12 +125,20 @@ class TraineesController extends Controller
     public function show($id)
     {
         $trainee = Trainee::withTrashed()->find($id);
-        $in_block_list = TraineeBlockList::where('phone', $trainee->phone)
-            ->orWhere('identity_number', $trainee->identity_number)
-            ->orWhere('email', $trainee->email)
-            ->orWhere('name', $trainee->name)
-            ->orWhere('english_name', $trainee->english_name)
-            ->first();
+
+        $attributes = [
+            'phone' => $trainee->phone,
+            'identity_number' => $trainee->identity_number,
+            'email' => $trainee->email,
+            'name' => $trainee->name,
+        ];
+
+        $in_block_list = TraineeBlockList::where(function ($query) use ($attributes) {
+            foreach ($attributes as $column => $value) {
+                $query->orWhere($column, $value);
+            }
+        })->first();
+
 
         Audit::create([
             'event' => 'trainees.show',
