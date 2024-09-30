@@ -1,5 +1,6 @@
 <?php
 use App\Classes\GosiEmployee;
+use App\Exports\TraineeExportRiyadh;
 use App\Http\Controllers\Back\CompanyAliasesController;
 use App\Http\Controllers\Back\CompanyAttendanceReportController;
 use App\Http\Controllers\Back\CompanyResignationsController;
@@ -12,13 +13,14 @@ use App\Models\Back\Invoice;
 use App\Models\Back\Resignation;
 use App\Models\Back\TestExportController;
 use App\Models\Back\Trainee;
+
+
+
+
 use App\Models\User;
-
-
-
-
 use App\Services\GosiService;
 use Illuminate\Mail\Markdown;
+
 
 
 
@@ -873,6 +875,11 @@ Route::get('sm3', function() { return redirect()->to('https://linktr.ee/ptcksa')
 Route::get('/logo-files', [\App\Http\Controllers\LogoFilesController::class, 'index']);
 //comment from shafiq
 
+
+
+Route::get('/export-trainees', function () {
+    return Excel::download(new TraineeExportRiyadh, 'trainees.xlsx');
+});
 
 
 
