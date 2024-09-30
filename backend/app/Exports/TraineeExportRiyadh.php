@@ -11,7 +11,7 @@ class TraineeExportRiyadh implements FromCollection, WithHeadings
     {
         return Trainee::where('city_id', 'd4fb0162-81ec-4b17-812a-06c7c4306cb5')
             ->candidates()
-            ->get(['identity_number', 'phone','name']);
+            ->get(['identity_number', 'phone','name'])->makeHidden(['show_url']);;
     }
 
     public function headings(): array
