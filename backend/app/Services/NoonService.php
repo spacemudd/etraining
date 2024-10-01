@@ -29,11 +29,13 @@ class NoonService implements PaymentServiceInterface
      */
     public function createPaymentUrlForInvoice(Invoice $invoice): string
     {
-        $this->validateCompany($invoice);  
-        $this->setNoonCredentials($invoice->company->center_id);
+        $this->validateCompany($invoice);
+
+        // Get Noon credentials based on center_id
+        $noonCredentials = $this->getNoonCredentials($invoice->company->center_id);
 
         // if testing, redirect to production site
-        if (config('noon_payment.mode') === 'Test' && !Str::contains(auth()->user()->email, 'info@')) {
+        if (config('noon_payment.mode') === 'Test' && !Str::contains(auth()->user()->email ?? '', 'info@')) {
             return config('app.url');
         }
 
@@ -59,7 +61,10 @@ class NoonService implements PaymentServiceInterface
                 'locale' => 'ar',
                 'webhookUrl' => route('webhooks.noon'),
                 'returnUrl' => route('trainees.payment.card.charge'),
-            ]
+                'businessId' => $noonCredentials['businessId'],  // Add credentials here
+                'appName' => $noonCredentials['appName'],
+                'appKey' => $noonCredentials['appKey'],
+            ],
         ]);
 
         if ($url->resultCode === 0) {
@@ -76,7 +81,7 @@ class NoonService implements PaymentServiceInterface
 
     public function isOrderSuccessful(string $order_id): bool
     {
-        return $this->isPaymentSuccess($order_id);
+        return $this->isPaymentSuccess($this->getOrder($order_id)); // Ensure to fetch the order first
     }
 
     public function isPaymentSuccess($order): bool
@@ -96,21 +101,24 @@ class NoonService implements PaymentServiceInterface
         }
     }
 
-    private function setNoonCredentials(int $centerId): void
+    private function getNoonCredentials(int $centerId): array
     {
-        // Use the integer IDs directly
-        if ($centerId === 5676) { // مركز جسارة
-            $this->noonPayment->setBusinessId(config('noon_payment.business_id_jasarah'));
-            $this->noonPayment->setAppName(config('noon_payment.app_name_jasarah'));
-            $this->noonPayment->setAppKey(config('noon_payment.app_key_jasarah'));
-            $this->noonPayment->setReturnUrl(config('noon_payment.return_url_jasarah'));
-        } elseif ($centerId === 5675 || $centerId === 3) { // مركز جسر or مركز احترافية التدريب
-            $this->noonPayment->setBusinessId(config('noon_payment.business_id_jisr'));
-            $this->noonPayment->setAppName(config('noon_payment.app_name_jisr'));
-            $this->noonPayment->setAppKey(config('noon_payment.app_key_jisr'));
-            $this->noonPayment->setReturnUrl(config('noon_payment.return_url_jisr'));
-        } else {
-            throw new RuntimeException('Invalid center_id. Unable to set Noon credentials.');
+        switch ($centerId) {
+            case 5676: // مركز جسارة
+                return [
+                    'businessId' => config('noon_payment.business_id_jasarah'),
+                    'appName' => config('noon_payment.app_name_jasarah'),
+                    'appKey' => config('noon_payment.app_key_jasarah'),
+                ];
+            case 5675: // مركز جسر
+            case 3: // مركز احترافية التدريب
+                return [
+                    'businessId' => config('noon_payment.business_id_jisr'),
+                    'appName' => config('noon_payment.app_name_jisr'),
+                    'appKey' => config('noon_payment.app_key_jisr'),
+                ];
+            default:
+                throw new RuntimeException('Invalid center_id. Unable to set Noon credentials.');
         }
     }
 }
