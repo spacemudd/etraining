@@ -104,11 +104,11 @@ class NoonService implements PaymentServiceInterface
     private function validateCompany(Invoice $invoice): void
     {
         $company = $invoice->company;
-
-        if (!$company || !in_array($company->center_id, ['مركز جسارة', 'مركز جسر'])) {
-            throw new RuntimeException('Invalid center_id. This service is only available for مركز جسارة and مركز جسر.');
+        if (!$company || !in_array($company->center_id, ['مركز جسارة', 'مركز جسر', 'مركز احترافية التدريب'])) {
+            throw new RuntimeException('Invalid center_id. This service is only available for مركز جسارة, مركز جسر, and مركز احترافية التدريب.');
         }
     }
+
 
 
     private function setNoonCredentials(string $centerId): void
