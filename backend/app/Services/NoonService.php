@@ -54,9 +54,9 @@ class NoonService implements PaymentServiceInterface
                     'phone' => $invoice->trainee->clean_phone,
                 ],
             ],
-            'deviceFingerPrint' => [
-                'sessionId' => request()->fingerprint(),
-            ],
+            // 'deviceFingerPrint' => [
+            //     'sessionId' => request()->fingerprint(),
+            // ],
             'configuration' => [
                 'locale' => 'ar',
                 'webhookUrl' => route('webhooks.noon'),
