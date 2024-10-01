@@ -20,6 +20,7 @@ class NoonService implements PaymentServiceInterface
         $this->noonPayment = NoonPayment::getInstance();
     }
 
+
     /**
      * Creates a payment url for a specific invoice.
      *
@@ -27,7 +28,11 @@ class NoonService implements PaymentServiceInterface
      * @return string URL of payment form
      * @throws \Exception
      */
-    public function createPaymentUrlForInvoice(Invoice $invoice): string
+
+
+    
+
+     public function createPaymentUrlForInvoice(Invoice $invoice): string
     {
         $this->validateCompany($invoice);  
         $this->setNoonCredentials($invoice->company->center_id);
@@ -37,19 +42,21 @@ class NoonService implements PaymentServiceInterface
             return config('app.url');
         }
 
-        $url = $this->noonPayment->initiate([
+        $url = NoonPayment::getInstance()->initiate([
             'order' => [
                 'reference' => $invoice->id,
                 'amount' => $invoice->grand_total,
                 'currency' => 'SAR',
                 'name' => Str::replace('  ', ' ', trim($invoice->trainee->name)),
-                'description' => 'Training fees for period - ' . $invoice->from_date . ' - ' . $invoice->to_date,
+                'description' => 'Training fees for period - '.$invoice->from_date.' - '.$invoice->to_date,
+                // 'ipAddress' => request()->ip(),
             ],
             'billing' => [
                 'contact' => [
                     'firstName' => Str::before($invoice->trainee->name, ' '),
                     'lastName' => Str::afterLast($invoice->trainee->name, ' '),
                     'phone' => $invoice->trainee->clean_phone,
+                    //'email' => $invoice->trainee->email,
                 ],
             ],
             'deviceFingerPrint' => [
@@ -59,6 +66,7 @@ class NoonService implements PaymentServiceInterface
                 'locale' => 'ar',
                 'webhookUrl' => route('webhooks.noon'),
                 'returnUrl' => route('trainees.payment.card.charge'),
+                // 'generateShortLink' => true, // TODO: When sharing the invoice with SMS.
             ]
         ]);
 
@@ -66,34 +74,22 @@ class NoonService implements PaymentServiceInterface
             return $url->result->checkoutData->postUrl;
         }
 
-        throw new RuntimeException('Noon payment fatal error: ' . $url->resultCode . ' - ' . $url->message);
+        throw new RuntimeException('Noon payment fatal error: '.$url->resultCode.' - '.$url->message);
     }
 
     /**
-     * Get the order details for the given order ID.
-     *
-     * @param string $order_id
+     * @param $order_id
      * @return mixed
-     * @throws RuntimeException
      */
     public function getOrder(string $order_id)
-    {
-        // Retrieve the invoice based on the order_id
-        $invoice = Invoice::find($order_id); // Assuming order_id is the invoice ID
+{
+   
+    return NoonPayment::getInstance()->getOrder($order_id);
+}
 
-        if ($invoice) {
-            $this->validateCompany($invoice);
-            $this->setNoonCredentials($invoice->company->center_id);
-        } else {
-            throw new RuntimeException('Invoice not found.');
-        }
-
-        return $this->noonPayment->getOrder($order_id);
-    }
 
     public function isOrderSuccessful(string $order_id): bool
     {
-        $order = $this->getOrder($order_id); // Get the order to check its status
         return $this->isPaymentSuccess($order);
     }
 
@@ -114,18 +110,21 @@ class NoonService implements PaymentServiceInterface
         }
     }
 
+
     private function setNoonCredentials(string $centerId): void
     {
         if ($centerId === 'مركز جسارة') {
-            $this->noonPayment->setBusinessId(config('noon_payment.business_id_jasarah'));
-            $this->noonPayment->setAppName(config('noon_payment.app_name_jasarah'));
-            $this->noonPayment->setAppKey(config('noon_payment.app_key_jasarah'));
-            $this->noonPayment->setReturnUrl(config('noon_payment.return_url_jasarah'));
+        $this->noonPayment->setBusinessId(config('noon_payment.business_id_jasarah'));
+        $this->noonPayment->setAppName(config('noon_payment.app_name_jasarah'));
+        $this->noonPayment->setAppKey(config('noon_payment.app_key_jasarah'));
+        $this->noonPayment->setReturnUrl(config('noon_payment.return_url_jasarah'));
+        
         } elseif ($centerId === 'مركز جسر' || $centerId === 'مركز احترافية التدريب') {
-            $this->noonPayment->setBusinessId(config('noon_payment.business_id_jisr'));
-            $this->noonPayment->setAppName(config('noon_payment.app_name_jisr'));
-            $this->noonPayment->setAppKey(config('noon_payment.app_key_jisr'));
-            $this->noonPayment->setReturnUrl(config('noon_payment.return_url_jisr'));
+        $this->noonPayment->setBusinessId(config('noon_payment.business_id_jisr'));
+        $this->noonPayment->setAppName(config('noon_payment.app_name_jisr'));
+        $this->noonPayment->setAppKey(config('noon_payment.app_key_jisr'));
+        $this->noonPayment->setReturnUrl(config('noon_payment.return_url_jisr'));
+        
         } else {
             throw new RuntimeException('Invalid center_id. Unable to set Noon credentials.');
         }
