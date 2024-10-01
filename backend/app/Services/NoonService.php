@@ -29,6 +29,7 @@ class NoonService implements PaymentServiceInterface
      */
     public function createPaymentUrlForInvoice(Invoice $invoice): string
     {
+        dd($invoice);
         $this->validateCompany($invoice);
 
         $noonCredentials = $this->getNoonCredentials($invoice->company->center_id);
@@ -62,12 +63,12 @@ class NoonService implements PaymentServiceInterface
                 'locale' => 'ar',
                 'webhookUrl' => route('webhooks.noon'),
                 'returnUrl' => route('trainees.payment.card.charge'),
-                // 'businessId' => $noonCredentials['businessId'],
-                // 'appName' => $noonCredentials['appName'],
-                // 'appKey' => $noonCredentials['appKey'],
+                'businessId' => $noonCredentials['businessId'],
+                'appName' => $noonCredentials['appName'],
+                'appKey' => $noonCredentials['appKey'],
             ],
         ]);
-        dd($url);
+        // dd($url);
 
         if ($url === null || !isset($url->resultCode)) {
             throw new RuntimeException('Noon Payment API returned null or an invalid response');
