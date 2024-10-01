@@ -62,9 +62,9 @@ class NoonService implements PaymentServiceInterface
                 'locale' => 'ar',
                 'webhookUrl' => route('webhooks.noon'),
                 'returnUrl' => route('trainees.payment.card.charge'),
-                'businessId' => $noonCredentials['businessId'],
-                'appName' => $noonCredentials['appName'],
-                'appKey' => $noonCredentials['appKey'],
+                // 'businessId' => $noonCredentials['businessId'],
+                // 'appName' => $noonCredentials['appName'],
+                // 'appKey' => $noonCredentials['appKey'],
             ],
         ]);
         dd($url);
