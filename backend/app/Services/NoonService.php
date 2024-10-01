@@ -35,8 +35,7 @@ class NoonService implements PaymentServiceInterface
      public function createPaymentUrlForInvoice(Invoice $invoice): string
     {
         $this->validateCompany($invoice);  
-        $this->setNoonCredentials();
-
+        $this->setNoonCredentials($invoice->company->center_id);
 
         // if testing, redirect to production site
         if (config('noon_payment.mode') === 'Test' && ! Str::contains(auth()->user()->email, 'info@')) {
@@ -82,14 +81,17 @@ class NoonService implements PaymentServiceInterface
      * @param $order_id
      * @return mixed
      */
-    public function getOrder($order_id)
+    public function getOrder($order_id, Invoice $invoice)
     {
+        $this->validateCompany($invoice);
+        $this->setNoonCredentials($invoice->company->center_id);
+
         return NoonPayment::getInstance()->getOrder($order_id);
     }
 
-    public function isOrderSuccessful(string $order_id): bool
+    public function isOrderSuccessful(string $order_id, Invoice $invoice): bool
     {
-        $order = $this->getOrder($order_id);
+        $order = $this->getOrder($order_id, $invoice);
         return $this->isPaymentSuccess($order);
     }
 
@@ -103,8 +105,7 @@ class NoonService implements PaymentServiceInterface
 
     private function validateCompany(Invoice $invoice): void
     {
-        $trainee = $invoice->trainee;
-        $company = $trainee->company;
+        $company = $invoice->company;
 
         if (!$company || !in_array($company->center_id, ['مركز جسارة', 'مركز جسر'])) {
             throw new RuntimeException('Invalid center_id. This service is only available for مركز جسارة and مركز جسر.');
@@ -115,18 +116,19 @@ class NoonService implements PaymentServiceInterface
     private function setNoonCredentials(string $centerId): void
     {
         if ($centerId === 'مركز جسارة') {
-            NoonPayment::getInstance()->setBusinessId(config('noon_payment.business_id_jasarah'));
-            NoonPayment::getInstance()->setAppName(config('noon_payment.app_name_jasarah'));
-            NoonPayment::getInstance()->setAppKey(config('noon_payment.app_key_jasarah'));
-            NoonPayment::getInstance()->setReturnUrl(config('noon_payment.return_url_jasarah'));
-        } elseif ($centerId === 'مركز جسر') {
-            NoonPayment::getInstance()->setBusinessId(config('noon_payment.business_id_jisr'));
-            NoonPayment::getInstance()->setAppName(config('noon_payment.app_name_jisr'));
-            NoonPayment::getInstance()->setAppKey(config('noon_payment.app_key_jisr'));
-            NoonPayment::getInstance()->setReturnUrl(config('noon_payment.return_url_jisr'));
+        $this->noonPayment->setBusinessId(config('noon_payment.business_id_jasarah'));
+        $this->noonPayment->setAppName(config('noon_payment.app_name_jasarah'));
+        $this->noonPayment->setAppKey(config('noon_payment.app_key_jasarah'));
+        $this->noonPayment->setReturnUrl(config('noon_payment.return_url_jasarah'));
+        
+        } elseif ($centerId === 'مركز جسر' || $centerId === 'مركز احترافية التدريب') {
+        $this->noonPayment->setBusinessId(config('noon_payment.business_id_jisr'));
+        $this->noonPayment->setAppName(config('noon_payment.app_name_jisr'));
+        $this->noonPayment->setAppKey(config('noon_payment.app_key_jisr'));
+        $this->noonPayment->setReturnUrl(config('noon_payment.return_url_jisr'));
+        
         } else {
             throw new RuntimeException('Invalid center_id. Unable to set Noon credentials.');
         }
     }
-
 }
