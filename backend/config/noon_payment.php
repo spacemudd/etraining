@@ -15,7 +15,7 @@ return [
     'app_key_jisr' => env('NOON_PAYMENT_APP_KEY_JISR'),
     'return_url_jisr' => env('NOON_PAYMENT_RETURN_URL_JISR'),
 
-    'mode' => env('NOON_PAYMENT_MODE', 'Test'),
+    'mode' => env('NOON_PAYMENT_MODE', 'Live'),
     'order_category' => env('NOON_PAYMENT_ORDER_CATEGORY', 'pay'),
     'channel' => env('NOON_PAYMENT_CHANNEL', 'web'),
     'payment_api' => env('NOON_PAYMENT_PAYMENT_API'),
