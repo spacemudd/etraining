@@ -33,6 +33,7 @@ class NoonService implements PaymentServiceInterface
 
         // Get Noon credentials based on center_id
         $noonCredentials = $this->getNoonCredentials($invoice->company->center_id);
+        dd($noonCredentials);
 
         // if testing, redirect to production site
         if (config('noon_payment.mode') === 'Test' && !Str::contains(auth()->user()->email ?? '', 'info@')) {
