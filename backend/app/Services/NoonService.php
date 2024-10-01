@@ -105,7 +105,7 @@ class NoonService implements PaymentServiceInterface
         }
     }
 
-    private function getNoonCredentials(int $centerId): array
+    public function getNoonCredentials(int $centerId): array
     {
         switch ($centerId) {
             case 5676: // مركز جسارة
