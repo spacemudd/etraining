@@ -31,8 +31,9 @@ class NoonService implements PaymentServiceInterface
     {
         $this->validateCompany($invoice);
 
-        // Get Noon credentials based on center_id
         $noonCredentials = $this->getNoonCredentials($invoice->company->center_id);
+
+        dd($noonCredentials);
 
         // if testing, redirect to production site
         if (config('noon_payment.mode') === 'Test' && !Str::contains(auth()->user()->email ?? '', 'info@')) {
@@ -61,7 +62,7 @@ class NoonService implements PaymentServiceInterface
                 'locale' => 'ar',
                 'webhookUrl' => route('webhooks.noon'),
                 'returnUrl' => route('trainees.payment.card.charge'),
-                'businessId' => $noonCredentials['businessId'],  // Add credentials here
+                'businessId' => $noonCredentials['businessId'],
                 'appName' => $noonCredentials['appName'],
                 'appKey' => $noonCredentials['appKey'],
             ],
@@ -85,7 +86,7 @@ class NoonService implements PaymentServiceInterface
 
     public function isOrderSuccessful(string $order_id): bool
     {
-        return $this->isPaymentSuccess($this->getOrder($order_id)); // Ensure to fetch the order first
+        return $this->isPaymentSuccess($this->getOrder($order_id));
     }
 
     public function isPaymentSuccess($order): bool
