@@ -33,42 +33,41 @@ class NoonService implements PaymentServiceInterface
 
         $noonCredentials = $this->getNoonCredentials($invoice->company->center_id);
 
-        dd($noonCredentials['businessId']);
 
         // if testing, redirect to production site
         if (config('noon_payment.mode') === 'Test' && !Str::contains(auth()->user()->email ?? '', 'info@')) {
             return config('app.url');
         }
 
-        $url = NoonPayment::getInstance()->initiate([
-            'order' => [
-                'reference' => $invoice->id,
-                'amount' => $invoice->grand_total,
-                'currency' => 'SAR',
-                'name' => Str::replace('  ', ' ', trim($invoice->trainee->name)),
-                'description' => 'Training fees for period - ' . $invoice->from_date . ' - ' . $invoice->to_date,
+         $url = $this->noonPayment->initiate([
+        'order' => [
+            'reference' => $invoice->id,
+            'amount' => $invoice->grand_total,
+            'currency' => 'SAR',
+            'name' => Str::replace('  ', ' ', trim($invoice->trainee->name)),
+            'description' => 'Training fees for period - ' . $invoice->from_date . ' - ' . $invoice->to_date,
+        ],
+        'billing' => [
+            'contact' => [
+                'firstName' => Str::before($invoice->trainee->name, ' '),
+                'lastName' => Str::afterLast($invoice->trainee->name, ' '),
+                'phone' => $invoice->trainee->clean_phone,
             ],
-            'billing' => [
-                'contact' => [
-                    'firstName' => Str::before($invoice->trainee->name, ' '),
-                    'lastName' => Str::afterLast($invoice->trainee->name, ' '),
-                    'phone' => $invoice->trainee->clean_phone,
-                ],
-            ],
-            // 'deviceFingerPrint' => [
-            //     'sessionId' => request()->fingerprint(),
-            // ],
-            'configuration' => [
-                'locale' => 'ar',
-                'webhookUrl' => route('webhooks.noon'),
-                'returnUrl' => route('trainees.payment.card.charge'),
-                // 'businessId' => $noonCredentials['businessId'],
-                // 'appName' => $noonCredentials['appName'],
-                // 'appKey' => $noonCredentials['appKey'],
-            ],
-        ]);
-        dd("here");
-        // dd($noonCredentials);
+        ],
+        // 'deviceFingerPrint' => [
+        //     'sessionId' => request()->fingerprint(),
+        // ],
+        'configuration' => [
+            'locale' => 'ar',
+            'webhookUrl' => route('webhooks.noon'),
+            'returnUrl' => route('trainees.payment.card.charge'),
+            'businessId' => $noonCredentials['businessId'],
+            'appName' => $noonCredentials['appName'],
+            'appKey' => $noonCredentials['appKey'],
+        ],
+    ]);
+
+    dd($noonCredentials);
 
         if ($url === null || !isset($url->resultCode)) {
             throw new RuntimeException('Noon Payment API returned null or an invalid response');
