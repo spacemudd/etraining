@@ -54,9 +54,9 @@ class NoonService implements PaymentServiceInterface
                 'phone' => $invoice->trainee->clean_phone,
             ],
         ],
-        // 'deviceFingerPrint' => [
-        //     'sessionId' => request()->fingerprint(),
-        // ],
+        'deviceFingerPrint' => [
+            'sessionId' => request()->fingerprint(),
+        ],
         'configuration' => [
             'locale' => 'ar',
             'webhookUrl' => route('webhooks.noon'),
@@ -66,11 +66,7 @@ class NoonService implements PaymentServiceInterface
             'appKey' => $noonCredentials['appKey'],
         ],
     ]);
-        dd($url);
 
-        if ($url === null || !isset($url->resultCode)) {
-            throw new RuntimeException('Noon Payment API returned null or an invalid response');
-        }
 
         if ($url->resultCode === 0) {
             return $url->result->checkoutData->postUrl;
