@@ -165,6 +165,7 @@ class TraineesController extends Controller
             'cities' => City::orderBy('name_ar')->get(),
             'marital_statuses' => MaritalStatus::orderBy('order')->get(),
             'educational_levels' => EducationalLevel::orderBy('order')->get(),
+            'user'=>auth()->user(),
         ]);
     }
 
@@ -1209,10 +1210,9 @@ class TraineesController extends Controller
     public function updateBlockedPassword(Request $request){
         $request->validate([
             'password' => 'required|min:8',
-            'trainee_id' => 'required|exists:trainees,id', 
         ]);
 
-        $trainee = Trainee::withTrashed()->find($request->trainee_id);
+        $trainee = Trainee::withTrashed()->find($request->traineeId);
 
         if (!$trainee || !$trainee->user_id) {
             return back()->with('error', 'user not found');

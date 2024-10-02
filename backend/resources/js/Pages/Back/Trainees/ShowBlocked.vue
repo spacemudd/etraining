@@ -305,7 +305,7 @@
             </span>
           </p>
           <button
-             v-if="!passwordUpdated && !showPasswordInput"
+             v-if="!passwordUpdated && !showPasswordInput&&user.email=='sara@ptc-ksa.net' "
             @click="showPasswordInput =true"
             class="ml-4 p-2 bg-blue-500 text-white rounded-lg my-2"
           >
@@ -325,10 +325,11 @@
             >
               إرسال
             </button>
-            <div v-if="passwordUpdated" class="mt-2 text-green-600">
-              تم التعديل بنجاح!
-            </div>      
+             
           </div>
+              <div v-if="passwordUpdated" class="mt-2 text-green-600">
+              تم التعديل بنجاح!
+            </div> 
         </div>
       </div>
 
@@ -546,6 +547,7 @@ export default {
     "educational_levels",
     "trainee_groups",
     "trainee_group_trainees",
+    "user"
   ],
 
   components: {
@@ -693,6 +695,16 @@ export default {
         this.$inertia.post("/back/trainees/update-blocked-password", {
           password: this.newPassword,
           traineeId: this.trainee.id,
+        },{
+            onSuccess: () => {
+                this.showPasswordInput = false;
+                this.passwordUpdated = true;
+                this.newPassword = '';
+        },
+         onError: () => {
+                alert('حدث خطأ أثناء تحديث كلمة المرور.');
+            }
+        
         });
       } else {
         alert("يرجى إدخال كلمة المرور الجديدة.");
