@@ -68,7 +68,7 @@ class NoonService implements PaymentServiceInterface
             ],
         ]);
         dd("here");
-        dd($noonCredentials['businessId']);
+        dd($noonCredentials);
 
         if ($url === null || !isset($url->resultCode)) {
             throw new RuntimeException('Noon Payment API returned null or an invalid response');
