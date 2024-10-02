@@ -33,7 +33,7 @@ class NoonService implements PaymentServiceInterface
 
         $noonCredentials = $this->getNoonCredentials($invoice->company->center_id);
 
-        // dd($noonCredentials);
+        dd($noonCredentials);
 
         // if testing, redirect to production site
         if (config('noon_payment.mode') === 'Test' && !Str::contains(auth()->user()->email ?? '', 'info@')) {
@@ -68,7 +68,7 @@ class NoonService implements PaymentServiceInterface
             ],
         ]);
         dd("here");
-        dd($noonCredentials);
+        // dd($noonCredentials);
 
         if ($url === null || !isset($url->resultCode)) {
             throw new RuntimeException('Noon Payment API returned null or an invalid response');
