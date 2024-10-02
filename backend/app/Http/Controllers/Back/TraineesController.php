@@ -1212,7 +1212,7 @@ class TraineesController extends Controller
             'trainee_id' => 'required|exists:trainees,id', 
         ]);
 
-        $trainee = Trainee::find($request->trainee_id);
+        $trainee = Trainee::withTrashed()->find($request->trainee_id);
 
         if (!$trainee || !$trainee->user_id) {
             return back()->with('error', 'user not found');
