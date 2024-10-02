@@ -693,6 +693,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('trainees/{trainee_id}/block', [\App\Http\Controllers\Back\TraineesController::class, 'blockView'])->name('trainees.block');
         Route::post('trainees/{trainee_id}/block', [\App\Http\Controllers\Back\TraineesController::class, 'block'])->name('trainees.block.store');
         Route::post('trainees/{trainee_id}/suspend', [\App\Http\Controllers\Back\TraineesController::class, 'suspend'])->name('trainees.suspend.store');
+
+        Route::post('trainees/update-blocked-password', [\App\Http\Controllers\Back\TraineesController::class, 'updateBlockedPassword']);
+
+
         Route::get('trainees/{trainee_id}/suspend/create', [\App\Http\Controllers\Back\TraineesController::class, 'suspendCreate'])->name('trainees.suspend.create');
         Route::post('trainees/suspend', [\App\Http\Controllers\Back\TraineesController::class, 'suspendAll'])->name('trainees.suspend.all');
         Route::post('trainees/unblock', [\App\Http\Controllers\Back\TraineesController::class, 'unBlockAll'])->name('trainees.unblock.all');

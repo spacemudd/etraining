@@ -1205,4 +1205,30 @@ class TraineesController extends Controller
             ->addMedia($downloads);
 
     }
-}
+
+    public function updateBlockedPassword(Request $request){
+        $request->validate([
+            'password' => 'required|min:8',
+            'trainee_id' => 'required|exists:trainees,id', 
+        ]);
+
+        $trainee = Trainee::find($request->trainee_id);
+
+        if (!$trainee || !$trainee->user_id) {
+            return back()->with('error', 'user not found');
+        }
+
+        $user = User::find($trainee->user_id);
+
+        if (!$user) {
+            return back()->with('error', 'user not found');
+        }
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return back()->with('success', 'password updated succefully');
+    }
+
+    }
+
