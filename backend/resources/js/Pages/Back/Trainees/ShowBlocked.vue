@@ -22,6 +22,8 @@
                     <button @click="unblock" class="items-center justify-end rounded-md px-4 py-2 bg-red-600 hover:bg-red-600 text-right text-white">
                         {{ $t('words.unblock') }}
                     </button>
+                    <change-trainee-password :trainee="trainee" />
+
 
                 </div>
 
@@ -324,6 +326,8 @@
     import NProgress from 'nprogress'
     import TraineeAuditContainer from "@/Components/TraineeAuditContainer";
     import GosiContainer from "@/Components/GosiContainer";
+    import ChangeTraineePassword from "@/Components/ChangeTraineePassword";
+
 
     export default {
         props: [
@@ -355,6 +359,8 @@
             EmptySlate,
             TraineeAuditContainer,
             GosiContainer,
+           ChangeTraineePassword,
+
         },
         data() {
             return {

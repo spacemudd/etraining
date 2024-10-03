@@ -905,12 +905,20 @@ class TraineesController extends Controller
             'new_trainee_password' => 'required|string|max:56',
         ]);
         \DB::beginTransaction();
-        $user = Trainee::findOrFail($trainee_id)->user;
+
+        $trainee = Trainee::withTrashed()->findOrFail($trainee_id);
+
+        $user = $trainee->user;
         $user->password = Hash::make($request->new_trainee_password);
         $user->save();
         \DB::Commit();
+         
+        if($trainee->trashed()){
+            return redirect()->route('back.trainees.show.blocked', $trainee_id);
+        }else{
+            return redirect()->route('back.trainees.show', $trainee_id);
+        }
 
-        return redirect()->route('back.trainees.show', $trainee_id);
     }
 
     public function sendNotificationForm()
