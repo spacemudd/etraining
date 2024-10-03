@@ -626,8 +626,14 @@ export default {
             }
         },
         deleteInvoice() {
+            let reason = prompt(this.$t('words.reason'));
+            if (reason === null || reason === '') {
+                alert('يجب وجود سبب لحذف الفاتورة');
+                return;
+            }
+
             if (confirm(this.$t('words.are-you-sure'))) {
-                this.$inertia.delete(route('back.finance.invoices.destroy', this.invoice.id));
+                this.$inertia.delete(route('back.finance.invoices.destroy', this.invoice.id), {data: {deleted_reason: reason}});
             }
         },
         rejectPaymentReceipt() {

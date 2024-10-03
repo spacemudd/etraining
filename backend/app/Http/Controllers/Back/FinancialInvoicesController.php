@@ -518,9 +518,13 @@ class  FinancialInvoicesController extends Controller
         return redirect(\route('back.finance.invoices.index'));
     }
 
-    public function destroy($invoice_id)
+    public function destroy($invoice_id, Request $request)
     {
         $this->authorize('can-delete-invoice-anytime');
+
+        $request->validate([
+            'deleted_reason' => 'required|string',
+        ]);
 
         DB::beginTransaction();
 
@@ -536,11 +540,15 @@ class  FinancialInvoicesController extends Controller
             foreach ($invoices as $invoice) {
                 if(!$invoice->paid_at){
                     AccountingLedgerBook::where('invoice_id', $invoice->id)->delete();
+                    $invoice->deleted_reason = $request->deleted_reason;
+                    $invoice->save();
                     $invoice->delete();
                 }
             }
         } else {
-            $invoice = Invoice::findOrFail($invoice_id);
+            $invoice = Invoice::notPaid()->findOrFail($invoice_id);
+            $invoice->deleted_reason = $request->deleted_reason;
+            $invoice->save();
             AccountingLedgerBook::where('invoice_id', $invoice->id)->delete();
             $invoice->delete();
         }

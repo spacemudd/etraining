@@ -125,7 +125,7 @@
           <jet-input-error :message="form.error('recruitment_company_id')" class="mt-2" />
         </div>
 
-      
+
 
         <template
           v-for="fieldName in [
@@ -836,7 +836,7 @@ export default {
           region_id: "",
           center_id: "",
           recruitment_company_id: "",
-         
+
         },
         {
           bag: "createCompany",
@@ -910,9 +910,16 @@ export default {
       }
     },
     deleteInvoice(invoiceCollection) {
+        let reason = prompt(this.$t('words.reason'));
+            if (reason === null || reason === '') {
+                alert('يجب وجود سبب لحذف الفاتورة');
+                return;
+            }
+
       if (confirm(this.$t("words.are-you-sure"))) {
         this.$inertia.delete(
           route("back.finance.invoices.destroy", {
+            deleted_reason: reason,
             invoice: invoiceCollection.id,
             from_date: invoiceCollection.from_date,
             to_date: invoiceCollection.to_date,
