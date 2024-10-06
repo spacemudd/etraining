@@ -1,5 +1,6 @@
 <?php
 use App\Classes\GosiEmployee;
+use App\Exports\TraineesExportBlocked;
 use App\Http\Controllers\Back\CompanyAliasesController;
 use App\Http\Controllers\Back\CompanyResignationsController;
 use App\Http\Controllers\Back\TraineesGroupsController;
@@ -879,7 +880,10 @@ Route::get('/attendance/export-by-group/{courseBatch}', [\App\Http\Controllers\A
     ->name('attendance.export-by-group');
 
 
-
+//route to export blocked and excluded trainees in gada 
+Route::get('/export-blocked',function(){
+    return Excel::download(new TraineesExportBlocked,'trainees.xlsx');
+});
 
 
 
