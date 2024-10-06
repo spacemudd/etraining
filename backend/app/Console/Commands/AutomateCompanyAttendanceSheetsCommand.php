@@ -54,10 +54,9 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
     {
         $companies = [
             '68b93694-272a-45a7-b539-ba3c011f9a71',
-            '23975a9a-cba4-42c2-b21c-3c2c1ea2db32',
         ];
 
-        $select_invoices_from = ['2024-08-01', '2024-08-31'];
+        $select_invoices_from = ['2024-09-01', '2024-09-30'];
 
         foreach ($companies as $company_id) {
             $count = Company::with('invoices')->where('id', $company_id)->whereHas('invoices', function ($query) use (
