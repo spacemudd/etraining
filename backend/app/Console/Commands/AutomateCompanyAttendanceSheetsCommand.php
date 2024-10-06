@@ -93,28 +93,28 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 })->chunk(20, function ($companies) use ($from_date, $to_date, $select_invoices_from) {
                     foreach ($companies as $company) {
 
-                        //$companies_to_execlude = [
-                        //    'dde0a82b-6197-4b60-a413-c5d208aa82f9',
-                        //];
+                        $companies_to_execlude = [
+                            'ed1bcd52-5fe0-488c-9dd6-2436d5f93ca8',
+                        ];
 
-                        //if (in_array($company->id, $companies_to_execlude, true)) {
-                        //    $this->info('Excluded company: '.$company->name_ar);
-                        //    continue;
-                        //}
+                        if (in_array($company->id, $companies_to_execlude, true)) {
+                            $this->info('Excluded company: '.$company->name_ar);
+                            continue;
+                        }
 
                         // Checks
                         if ($company->trainees()->count() === 0) {
                             $this->info('No trainees. Skipping: '.$company->name_ar);
                             continue;
                         }
-                        $currentMonthReport = $company->company_attendance_reports()->whereBetween('date_to', [
-                                $from_date,
-                                $to_date
-                            ])->first();
-                        if ($currentMonthReport) {
-                            $this->info('Already created. Skipping: '.$company->name_ar);
-                            continue;
-                        }
+                        //$currentMonthReport = $company->company_attendance_reports()->whereBetween('date_to', [
+                        //        $from_date,
+                        //        $to_date
+                        //    ])->first();
+                        //if ($currentMonthReport) {
+                        //    $this->info('Already created. Skipping: '.$company->name_ar);
+                        //    continue;
+                        //}
 
                         $lastReport = $company->company_attendance_reports()->orderBy('date_from', 'desc')->first();
 
