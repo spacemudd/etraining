@@ -53,7 +53,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
     public function createReportsBasedOnTraineedInvoiced(Carbon $from_date, Carbon $to_date)
     {
         $companies = [
-            '68b93694-272a-45a7-b539-ba3c011f9a71',
+            'ed1bcd52-5fe0-488c-9dd6-2436d5f93ca8',
         ];
 
         $select_invoices_from = ['2024-09-01', '2024-09-30'];
