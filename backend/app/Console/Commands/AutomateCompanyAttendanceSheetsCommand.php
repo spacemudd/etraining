@@ -53,10 +53,8 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
     public function createReportsBasedOnTraineedInvoiced(Carbon $from_date, Carbon $to_date)
     {
         $companies = [
-            '52941442-6730-4263-8150-d2ef824451a3',
-            'b04ea128-d17b-48bb-a244-f859c19096f3',
-            '40341901-76e7-4312-9ed8-1594e8123f83',
-            'fb9bc7dc-d4a1-405e-8c54-99132ad5f6da',
+            '68b93694-272a-45a7-b539-ba3c011f9a71',
+            '23975a9a-cba4-42c2-b21c-3c2c1ea2db32',
         ];
 
         $select_invoices_from = ['2024-08-01', '2024-08-31'];
@@ -185,7 +183,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
             }
         }
 
-        app()->make(CompanyAttendanceReportService::class)->approve($clone->id);
+        //app()->make(CompanyAttendanceReportService::class)->approve($clone->id);
     }
 
     public function makeNewReportBasedOnInvoices($company, $dateFrom, $dateTo, $invoicesDateFrom, $invoicesDateTo)
@@ -237,7 +235,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
             }
         }
 
-        app()->make(CompanyAttendanceReportService::class)->approve($report->id);
+        //app()->make(CompanyAttendanceReportService::class)->approve($report->id);
     }
 
     public function updateReportEmailsPerToCenter(CompanyAttendanceReport $report)
