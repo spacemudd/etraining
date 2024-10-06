@@ -93,14 +93,14 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 })->chunk(20, function ($companies) use ($from_date, $to_date, $select_invoices_from) {
                     foreach ($companies as $company) {
 
-                        $companies_to_execlude = [
-                            'ed1bcd52-5fe0-488c-9dd6-2436d5f93ca8',
-                        ];
+                        //$companies_to_execlude = [
+                        //    'ed1bcd52-5fe0-488c-9dd6-2436d5f93ca8',
+                        //];
 
-                        if (in_array($company->id, $companies_to_execlude, true)) {
-                            $this->info('Excluded company: '.$company->name_ar);
-                            continue;
-                        }
+                        //if (in_array($company->id, $companies_to_execlude, true)) {
+                        //    $this->info('Excluded company: '.$company->name_ar);
+                        //    continue;
+                        //}
 
                         // Checks
                         if ($company->trainees()->count() === 0) {
