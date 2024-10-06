@@ -14,7 +14,7 @@ class TraineesExportBlocked implements FromCollection , WithHeadings
     public function collection()
     {
         return Trainee::withTrashed()
-        ->select('name', 'identity_number', 'phone', 'deleted_at')
+        ->select('name', 'identity_number', 'phone','created_at','deleted_at')
         ->where('city_id', 'e5a4a741-302f-44fa-8c44-06df64e68b6d')
         ->whereBetween('created_at', ['2023-06-01', now()])
         ->where(function ($query) {
@@ -24,10 +24,13 @@ class TraineesExportBlocked implements FromCollection , WithHeadings
         ->get()
         ->map(function ($trainee) {
             return [
+                'deleted_at' =>$trainee->deleted_at,
+                'created_at' =>$trainee->created_at,
                 'status' => $trainee->deleted_at ? 'موقوف' : 'بدون شركة',
                 'phone' => $trainee->phone,
                 'identity_number' => $trainee->identity_number,
                 'name' => $trainee->name,
+                
             ];
         });
     }
@@ -35,6 +38,8 @@ class TraineesExportBlocked implements FromCollection , WithHeadings
     public function headings(): array
     {
         return [
+            'تاريخ الحذف',
+            'تاريخ التسجيل',
             'الحالة',
             'رقم الجوال',
             'رقم الهوية',
