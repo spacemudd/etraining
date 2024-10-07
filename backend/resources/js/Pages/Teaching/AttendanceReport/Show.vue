@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
     <app-layout>
         <div class="container px-6 mx-auto grid pt-6">
             <breadcrumb-container
@@ -249,9 +249,9 @@ export default {
         },
     },
 }
-</script> -->
+</script>
 
-<template>
+<!-- <template>
     <app-layout>
         <div class="container px-6 mx-auto grid pt-6" v-if="loaded">
             <breadcrumb-container
@@ -498,5 +498,5 @@ export default {
         }
     },
 }
-</script>
+</script> -->
 
