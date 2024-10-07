@@ -25,7 +25,6 @@ class NoonPaymentService
     {   
 
 
-        if($accountName == 'Jisr'){
 
 
             $paymentInfo['apiOperation'] = "INITIATE";
@@ -37,21 +36,20 @@ class NoonPaymentService
             // Options for payment action are (AUTHORIZE - SALE)
             $paymentInfo['configuration']['paymentAction'] = (!empty($paymentInfo['configuration']['paymentAction'])) ? $paymentInfo['configuration']['paymentAction'] : "SALE";
             return json_decode(CurlHelper::post(config("noon_payment.payment_api") . "order", $paymentInfo, $this->getHeaders()));
-        }
 
-        if($accountName == 'Jasarah'){
+        // if($accountName == 'Jasarah'){
 
-            $paymentInfo['apiOperation'] = "INITIATE";
-            $paymentInfo['order']['channel'] = config("noon_payment.jasarah.channel");
-            $paymentInfo['order']['category'] = config("noon_payment.jasarah.order_category");
-            // Options for tokenize cc are (true - false)
-            $paymentInfo['configuration']['tokenizeCc'] = (!empty($paymentInfo['configuration']['tokenizeCc'])) ? $paymentInfo['configuration']['tokenizeCc'] : "true";
-            $paymentInfo['configuration']['returnUrl'] = (!empty($paymentInfo['configuration']['returnUrl'])) ? $paymentInfo['configuration']['returnUrl'] : config('noon_payment.jasarah.return_url');
-            // Options for payment action are (AUTHORIZE - SALE)
-            $paymentInfo['configuration']['paymentAction'] = (!empty($paymentInfo['configuration']['paymentAction'])) ? $paymentInfo['configuration']['paymentAction'] : "SALE";
+        //     $paymentInfo['apiOperation'] = "INITIATE";
+        //     $paymentInfo['order']['channel'] = config("noon_payment.jasarah.channel");
+        //     $paymentInfo['order']['category'] = config("noon_payment.jasarah.order_category");
+        //     // Options for tokenize cc are (true - false)
+        //     $paymentInfo['configuration']['tokenizeCc'] = (!empty($paymentInfo['configuration']['tokenizeCc'])) ? $paymentInfo['configuration']['tokenizeCc'] : "true";
+        //     $paymentInfo['configuration']['returnUrl'] = (!empty($paymentInfo['configuration']['returnUrl'])) ? $paymentInfo['configuration']['returnUrl'] : config('noon_payment.jasarah.return_url');
+        //     // Options for payment action are (AUTHORIZE - SALE)
+        //     $paymentInfo['configuration']['paymentAction'] = (!empty($paymentInfo['configuration']['paymentAction'])) ? $paymentInfo['configuration']['paymentAction'] : "SALE";
 
-            return json_decode(CurlHelper::post(config("noon_payment.jasarah.payment_api") . "order", $paymentInfo, $this->getHeaders()));
-        }
+        //     return json_decode(CurlHelper::post(config("noon_payment.jasarah.payment_api") . "order", $paymentInfo, $this->getHeaders()));
+        // }
         
         
     }
