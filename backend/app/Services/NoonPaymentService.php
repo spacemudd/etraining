@@ -36,7 +36,7 @@ class NoonPaymentService
             $paymentInfo['configuration']['returnUrl'] = (!empty($paymentInfo['configuration']['returnUrl'])) ? $paymentInfo['configuration']['returnUrl'] : config('noon_payment.payment_api');
             // Options for payment action are (AUTHORIZE - SALE)
             $paymentInfo['configuration']['paymentAction'] = (!empty($paymentInfo['configuration']['paymentAction'])) ? $paymentInfo['configuration']['paymentAction'] : "SALE";
-            dd(config('noon_payment.payment_api'));
+            dd(config('noon_payment'));
             return json_decode(CurlHelper::post(config("noon_payment.payment_api") . "order", $paymentInfo, $this->getHeaders()));
         }
 
