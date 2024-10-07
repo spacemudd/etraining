@@ -21,7 +21,7 @@ class NoonPaymentService
         return self::$instance;
     }
 
-    public function initiate($accountName, $paymentInfo)
+    public function initiate($paymentInfo)
     {   
 
 
