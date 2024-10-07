@@ -24,9 +24,7 @@ class NoonService implements PaymentServiceInterface
     {
         
 
-        $url = NoonPaymentService::getInstance()->initiate(
-            'Jisr',
-            [
+        $url = NoonPaymentService::getInstance()->initiate([
             'order' => [
                 'reference' => $invoice->id,
                 'amount' => $invoice->grand_total,
