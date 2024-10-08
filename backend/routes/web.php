@@ -879,6 +879,11 @@ Route::get('/attendance/export-by-group/{courseBatch}', [\App\Http\Controllers\A
     ->name('attendance.export-by-group');
 
 
+Route::get('/test88',function(){
+    return view('traineeAgreement');
+});
+
+
 
 
 
