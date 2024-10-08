@@ -56,7 +56,7 @@ class NoonService implements PaymentServiceInterface
             ],
             'configuration' => [
                 'locale' => 'ar',
-                // 'webhookUrl' => route('webhooks.noon'),
+                'webhookUrl' => route('webhooks.noon'),
                 'returnUrl' => route('trainees.payment.card.charge'),
                 // 'generateShortLink' => true, // TODO: When sharing the invoice with SMS.
             ]
@@ -75,14 +75,14 @@ class NoonService implements PaymentServiceInterface
      * @param $order_id
      * @return mixed
      */
-    public function getOrder($order_id)
+    public function getOrder($order_id, $center_id)
     {
-        return NoonPaymentService::getInstance()->getOrder('Jisr',$order_id);
+        return NoonPaymentService::getInstance()->getOrder($order_id, $center_id);
     }
 
-    public function isOrderSuccessful(string $order_id): bool
+    public function isOrderSuccessful(string $order_id, $center_id): bool
     {
-        $order = $this->getOrder($order_id);
+        $order = $this->getOrder($order_id, $center_id);
         return $this->isPaymentSuccess($order);
     }
 
@@ -93,4 +93,6 @@ class NoonService implements PaymentServiceInterface
             $order->result->transactions[0]->type == "SALE" &&
             $order->result->transactions[0]->status == "SUCCESS";
     }
+
+    
 }

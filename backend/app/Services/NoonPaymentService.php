@@ -30,7 +30,7 @@ class NoonPaymentService
             $paymentInfo['order']['category'] = config("noon_payment.order_category");
             // Options for tokenize cc are (true - false)
             $paymentInfo['configuration']['tokenizeCc'] = (!empty($paymentInfo['configuration']['tokenizeCc'])) ? $paymentInfo['configuration']['tokenizeCc'] : "true";
-            $paymentInfo['configuration']['returnUrl'] = (!empty($paymentInfo['configuration']['returnUrl'])) ? $paymentInfo['configuration']['returnUrl'] : config('noon_payment.return_url');
+            $paymentInfo['configuration']['returnUrl'] = (!empty($paymentInfo['configuration']['returnUrl'])) ? $paymentInfo['configuration']['returnUrl'] : config('noon_payment.jasarah.return_url');
             // Options for payment action are (AUTHORIZE - SALE)
             $paymentInfo['configuration']['paymentAction'] = (!empty($paymentInfo['configuration']['paymentAction'])) ? $paymentInfo['configuration']['paymentAction'] : "SALE";
             return json_decode(CurlHelper::post(config("noon_payment.jasarah.payment_api") . "order", $paymentInfo, $this->getHeaders($centerId)));
@@ -42,7 +42,7 @@ class NoonPaymentService
             $paymentInfo['order']['category'] = config("noon_payment.order_category");
             // Options for tokenize cc are (true - false)
             $paymentInfo['configuration']['tokenizeCc'] = (!empty($paymentInfo['configuration']['tokenizeCc'])) ? $paymentInfo['configuration']['tokenizeCc'] : "true";
-            $paymentInfo['configuration']['returnUrl'] = (!empty($paymentInfo['configuration']['returnUrl'])) ? $paymentInfo['configuration']['returnUrl'] : config('noon_payment.return_url');
+            $paymentInfo['configuration']['returnUrl'] = (!empty($paymentInfo['configuration']['returnUrl'])) ? $paymentInfo['configuration']['returnUrl'] : config('noon_payment.jisr.return_url');
             // Options for payment action are (AUTHORIZE - SALE)
             $paymentInfo['configuration']['paymentAction'] = (!empty($paymentInfo['configuration']['paymentAction'])) ? $paymentInfo['configuration']['paymentAction'] : "SALE";
 
@@ -51,32 +51,18 @@ class NoonPaymentService
         }
     }
 
-    public function getOrder($centerId,$orderId)
+    public function getOrder($orderId, $center_id)
     {
-        if($centerId == 3717){
-       
-            return json_decode(CurlHelper::get(config("noon_payment.jasarah.payment_api") . "order/" . $orderId, $this->getHeaders($centerId)));
-        }else{
-            return json_decode(CurlHelper::get(config("noon_payment.jisr.payment_api") . "order/" . $orderId, $this->getHeaders($centerId)));
-
-        }
+        return json_decode(CurlHelper::get(config("noon_payment." . ($center_id == 3717 ? 'jasarah' : 'jisr') . ".payment_api") . "order/" . $orderId, $this->getHeaders($center_id)));
     }
 
     private function getHeaders($centerId)
     {
 
-        if($centerId == 3717) {
-           
-                return [
-                    "Content-type: application/json",
-                    "Authorization: Key_" . config("noon_payment.jasarah.mode") . " " . config("noon_payment.jasarah.auth_key"),
-                ];
-        }else{
-                return [
-                    "Content-type: application/json",
-                    "Authorization: Key_" . config("noon_payment.jisr.mode") . " " . config("noon_payment.jisr.auth_key"),
-                ];
-        }
+        return [
+            "Content-type: application/json",
+            "Authorization: Key_" . ($centerId == 3717 ? config("noon_payment.jasarah.mode") : config("noon_payment.jisr.mode")) . " " . ($centerId == 3717 ? config("noon_payment.jasarah.auth_key") : config("noon_payment.jisr.auth_key")),
+        ];
         
     }
 }
