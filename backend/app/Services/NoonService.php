@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\Back\Invoice;
-use CodeBugLab\NoonPayment\NoonPayment;
+use App\Services\NoonPaymentService;
 use Illuminate\Support\Str;
 use RuntimeException;
 
@@ -13,6 +13,8 @@ use RuntimeException;
  */
 class NoonService implements PaymentServiceInterface
 {
+
+    
     /**
      * Creates a payment url for a specific invoice.
      *
@@ -23,17 +25,22 @@ class NoonService implements PaymentServiceInterface
     public function createPaymentUrlForInvoice(Invoice $invoice): string
     {
         // if testing, redirect to production site
-        if (config('noon_payment.mode') === 'Test' && ! Str::contains(auth()->user()->email, 'info@')) {
-            return config('app.url');
-        }
+        // if (config('noon_payment.mode') === 'Test' && ! Str::contains(auth()->user()->email, 'info@')) {
+        //     return config('app.url');
+        // }
 
-        $url = NoonPayment::getInstance()->initiate([
+        $centerId = $invoice->trainee->company->center_id;
+
+        $url = NoonPaymentService::getInstance()->initiate(
+            $centerId,
+            [
             'order' => [
                 'reference' => $invoice->id,
                 'amount' => $invoice->grand_total,
                 'currency' => 'SAR',
                 'name' => Str::replace('  ', ' ', trim($invoice->trainee->name)),
                 'description' => 'Training fees for period - '.$invoice->from_date.' - '.$invoice->to_date,
+                // 'center' => $invoice->trainee->company->center->center_name,
                 // 'ipAddress' => request()->ip(),
             ],
             'billing' => [
@@ -49,7 +56,7 @@ class NoonService implements PaymentServiceInterface
             ],
             'configuration' => [
                 'locale' => 'ar',
-                'webhookUrl' => route('webhooks.noon'),
+                // 'webhookUrl' => route('webhooks.noon'),
                 'returnUrl' => route('trainees.payment.card.charge'),
                 // 'generateShortLink' => true, // TODO: When sharing the invoice with SMS.
             ]
@@ -68,7 +75,7 @@ class NoonService implements PaymentServiceInterface
      */
     public function getOrder($order_id)
     {
-        return NoonPayment::getInstance()->getOrder($order_id);
+        return NoonPaymentService::getInstance()->getOrder('Jisr',$order_id);
     }
 
     public function isOrderSuccessful(string $order_id): bool
