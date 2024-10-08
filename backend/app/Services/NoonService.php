@@ -31,6 +31,10 @@ class NoonService implements PaymentServiceInterface
 
         $centerId = $invoice->trainee->company->center_id;
 
+        $webhookUrl = $centerId == 3717 
+        ? 'https://app.jisr-ksa.comjasarah/webhooks/noon' 
+        : 'https://app.jasarah-ksa.com/jisr/webhooks/noon';
+
         $url = NoonPaymentService::getInstance()->initiate(
             $centerId,
             [
@@ -56,7 +60,7 @@ class NoonService implements PaymentServiceInterface
             ],
             'configuration' => [
                 'locale' => 'ar',
-                'webhookUrl' => route('webhooks.noon'),
+                'webhookUrl' => $webhookUrl,
                 'returnUrl' => route('trainees.payment.card.charge'),
                 // 'generateShortLink' => true, // TODO: When sharing the invoice with SMS.
             ]
