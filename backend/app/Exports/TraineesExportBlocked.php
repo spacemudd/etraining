@@ -15,7 +15,7 @@ class TraineesExportBlocked implements FromCollection , WithHeadings
     {
         return Trainee::withTrashed()
         ->select('name', 'identity_number', 'phone','created_at','deleted_at')
-        ->where('city_id', 'd4fb0162-81ec-4b17-812a-06c7c4306cb5')
+        ->where('city_id', '24ae4690-3c0f-4627-a0c5-240daf4a9f2a')
         ->whereBetween('created_at', ['2023-06-01', '2024-07-31'])
         ->where(function ($query) {
             $query->whereNotNull('deleted_at') ;
