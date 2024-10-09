@@ -52,14 +52,16 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
     public function createReportsBasedOnTraineedInvoiced(Carbon $from_date, Carbon $to_date)
     {
-        $companies = [
-            '23975a9a-cba4-42c2-b21c-3c2c1ea2db32',
-        ];
+        //$companies = [
+        //    'ed1bcd52-5fe0-488c-9dd6-2436d5f93ca8',
+        //];
 
         $select_invoices_from = ['2024-08-01', '2024-08-31'];
 
-        foreach ($companies as $company_id) {
-            $count = Company::with('invoices')->where('id', $company_id)->whereHas('invoices', function ($query) use (
+        //foreach ($companies as $company_id) {
+            $count = Company::with('invoices')
+                //->where('id', $company_id)
+                ->whereHas('invoices', function ($query) use (
                     $from_date,
                     $select_invoices_from
                 ) {
@@ -67,7 +69,9 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 })->count();
             $this->info('Found companies with invoices: '.$count);
 
-            Company::with('invoices')->where('id', $company_id)->whereHas('invoices', function ($query) use (
+            Company::with('invoices')
+                //->where('id', $company_id)
+                    ->whereHas('invoices', function ($query) use (
                     $from_date,
                     $select_invoices_from
                 ) {
@@ -75,7 +79,9 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 })->count();
 
             // Companies that don't have invoices in the past month, to skip.
-            $companies_with_invoices = Company::with('invoices')->where('id', $company_id)->whereHas('invoices', function (
+            $companies_with_invoices = Company::with('invoices')
+                //->where('id', $company_id)
+                ->whereHas('invoices', function (
                     $query
                 ) use ($from_date, $select_invoices_from) {
                     $query->whereBetween('to_date', $select_invoices_from);
@@ -85,7 +91,9 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                 $this->info('No invoices for company: '.$name_ar);
             }
 
-            Company::with('invoices')->where('id', $company_id)->whereHas('invoices', function ($query) use (
+            Company::with('invoices')
+                //->where('id', $company_id)
+                ->whereHas('invoices', function ($query) use (
                     $from_date,
                     $select_invoices_from
                 ) {
@@ -131,7 +139,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                         }
                     }
                 });
-        }
+        //}
     }
 
     public function makeNewReportFromLastReportBasedOnInvoices($company, $lastReport, $dateFrom, $dateTo, $invoicesDateFrom, $invoicesDateTo)
