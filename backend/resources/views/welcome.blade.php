@@ -37,7 +37,7 @@
                 </a>
             </div>
 
-            <a href="/GuideTrainee.pdf" target="_blank" class="mt-5 justify-center flex p-2 border border-gray-500 border-2 gap-2 rounded hover:text-gray-800 hover:border-red-500">
+            <a href="" target="_blank" class="mt-5 justify-center flex p-2 border border-gray-500 border-2 gap-2 rounded hover:text-gray-800 hover:border-red-500">
                 <svg style="color:black;margin-top:3px;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
                 </svg>
@@ -61,13 +61,13 @@
         <x-slot name="bottomCard">
             <div class="mt-5">
                 <ul class="list-disc">
-                    <li class="mt-2"><a href="https://app.ptc-ksa.net/requirements">{{ __('words.system-requirements') }}</a></li>
-                    <li class="mt-2"><a href="https://app.ptc-ksa.net/terms#support-policy">{{ __('words.support-policy') }}</a></li>
-                    <li class="mt-2"><a href="https://app.ptc-ksa.net/terms#attendance-policy">{{ __('words.attendance-policy') }}</a></li>
-                    <li class="mt-2"><a href="https://app.ptc-ksa.net/terms#academic-integrity-policy">{{ __('words.academic-integrity-policy') }}</a></li>
-                    <li class="mt-2"><a href="https://app.ptc-ksa.net/terms#privacy-policy">{{ __('words.privacy-policy') }}</a></li>
-                    <li class="mt-2"><a href="https://app.ptc-ksa.net/terms#intellectual-property-rights">{{ __('words.intellectual-property-rights') }}</a></li>
-                    <li class="mt-2"><a href="https://app.ptc-ksa.net/communication-policy">{{ __('words.contact-policy') }}</a></li>
+                    <li class="mt-2"><a href="">{{ __('words.system-requirements') }}</a></li>
+                    <li class="mt-2"><a href="">{{ __('words.support-policy') }}</a></li>
+                    <li class="mt-2"><a href="">{{ __('words.attendance-policy') }}</a></li>
+                    <li class="mt-2"><a href="">{{ __('words.academic-integrity-policy') }}</a></li>
+                    <li class="mt-2"><a href="">{{ __('words.privacy-policy') }}</a></li>
+                    <li class="mt-2"><a href="">{{ __('words.intellectual-property-rights') }}</a></li>
+                    <li class="mt-2"><a href="">{{ __('words.contact-policy') }}</a></li>
                 </ul>
                 <br>
                 <br>
