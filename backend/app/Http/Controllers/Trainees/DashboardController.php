@@ -7,6 +7,7 @@ use App\Models\Back\Course;
 use App\Models\Back\CourseBatch;
 use App\Models\Back\CourseBatchSession;
 use App\Models\Back\GlobalMessages;
+use App\Models\Back\TraineeAgreement;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -14,6 +15,14 @@ class DashboardController extends Controller
 {
     public function dashboard()
     {
+        $trainee = auth()->user()->trainee;
+
+        $agreement = TraineeAgreement::where('trainee_id', $trainee->id)->first();
+        if (!$agreement || is_null($agreement->accepted_at)) {
+            return redirect()->route('agreement.show');
+        }
+
+
         $instructor = optional(auth()->user()->trainee)->instructor;
         if ($instructor) {
             $coursesIds = Course::where('instructor_id', $instructor->id)->pluck('id');

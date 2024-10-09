@@ -460,7 +460,18 @@ Route::middleware(['auth:sanctum'])->group(function() {
 
 Route::middleware(['auth:sanctum'])->get('/trainees/application', [\App\Http\Controllers\TraineesApplicationController::class, 'index']);
 
+
+//ebrahim comment
 Route::middleware(['auth:sanctum', 'verified', 'approved-application'])->get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+Route::get('/agreement', [\App\Http\Controllers\Trainees\AgreementController::class, 'show'])->name('agreement.show');
+Route::post('/agreement/accept',[\App\Http\Controllers\Trainees\AgreementController::class ,'accept'])->name('agreement.accept');
+
+
+// Route::get('/test88',function(){
+//     return view('traineeAgreement');
+// });
+
+
 
 Route::get('/back/media/{media_id}', [\App\Http\Controllers\MediaController::class, 'download'])->name('back.media.download');
 
@@ -879,9 +890,7 @@ Route::get('/attendance/export-by-group/{courseBatch}', [\App\Http\Controllers\A
     ->name('attendance.export-by-group');
 
 
-Route::get('/test88',function(){
-    return view('traineeAgreement');
-});
+
 
 
 

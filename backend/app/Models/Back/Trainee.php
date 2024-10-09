@@ -4,23 +4,24 @@ namespace App\Models\Back;
 
 use App\Events\TraineeAttachedToCompany;
 use App\Jobs\VerifyPhoneOwnershipJob;
+use App\Models\Back\TraineeAgreement;
 use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\MaritalStatus;
 use App\Models\SearchableLabels;
 use App\Models\Team;
-use App\Services\TraineeCompanyMovementService;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Str;
-use JamesMills\LaravelTimezone\Facades\Timezone;
 use App\Models\User;
+use App\Services\TraineeCompanyMovementService;
 use App\Traits\HasUuid;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
+use JamesMills\LaravelTimezone\Facades\Timezone;
 use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -560,4 +561,10 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     {
         return $this->hasMany(ResignationTrainee::class);
     }
+
+    public function traineeAgreement()
+    {
+        return $this->belongsTo(TraineeAgreement::class, 'trainee_agreement_id');
+    }
+
 }
