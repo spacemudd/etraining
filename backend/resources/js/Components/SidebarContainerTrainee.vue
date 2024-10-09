@@ -62,14 +62,14 @@
         </sidebar-link>
 
 
-        <sidebar-link :link-value="route('agreement.show')" :active="$page.currentRouteName == 'agreement.show'">
+        <!-- <sidebar-link :link-value="route('agreement.show')" :active="$page.currentRouteName == 'agreement.show'">
             <template #icon>
                     <ion-icon name="document-outline" class="w-5 h-5"></ion-icon>
             </template>
             <template #title>
                 <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.my-agreement') }} <span v-if="$page.props.user.inbox_messages_count" class="bg-red-500 rounded p-1 text-white">{{ $page.props.user.inbox_messages_count }}</span></span>
             </template>
-        </sidebar-link>
+        </sidebar-link> -->
 
        <li class="pr-8 mt-2 text-xs"><inertia-link class="hover:text-blue-600" :href="route('survey.index')">الاستبيانات</inertia-link>
         <li class="pr-8 mt-2 text-xs"><inertia-link class="hover:text-blue-600" :href="route('training-schedule.index')">الخطة التدريبية والجدول الزمني</inertia-link>

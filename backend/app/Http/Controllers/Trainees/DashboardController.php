@@ -17,10 +17,10 @@ class DashboardController extends Controller
     {
         $trainee = auth()->user()->trainee;
 
-        $agreement = TraineeAgreement::where('trainee_id', $trainee->id)->first();
-        if (!$agreement || is_null($agreement->accepted_at)) {
-            return redirect()->route('agreement.show');
-        }
+        // $agreement = TraineeAgreement::where('trainee_id', $trainee->id)->first();
+        // if (!$agreement || is_null($agreement->accepted_at)) {
+        //     return redirect()->route('agreement.show');
+        // }
 
 
         $instructor = optional(auth()->user()->trainee)->instructor;
