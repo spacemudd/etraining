@@ -1215,26 +1215,24 @@ class TraineesController extends Controller
     }
 
     public function restore99(){
-        $trainees = Trainee::onlyTrashed()
-    ->where('deleted_remark', 'رجيع')
-    ->orWhere('deleted_remark', 'حذف من قبل التأمينات')
-    ->get();
+            $trainees = Trainee::onlyTrashed()
+        ->where('deleted_remark', 'رجيع')
+        ->orWhere('deleted_remark', 'حذف من قبل التأمينات')
+        ->get();
 
-foreach ($trainees as $trainee) {
-    // استرجاع المتدرب
-    $trainee->restore();
+            foreach ($trainees as $trainee) {
+        $trainee->restore();
 
-    // إرسال إشعار إلى المستخدم المعين
-    $user = User::where('email', 'sara@ptc-ksa.net')->first();
-    if ($user) {
-        $user->notify(new TraineeRestoredNotification(
-            $trainee->name,
-            $trainee->phone,
-            $trainee->email,
-            auth()->user(),
-            $trainee->deleted_remark
-        ));
+        $user = User::where('email', 'sara@ptc-ksa.net')->first();
+        if ($user) {
+            $user->notify(new TraineeRestoredNotification(
+                $trainee->name,
+                $trainee->phone,
+                $trainee->email,
+                auth()->user(),
+                $trainee->deleted_remark
+            ));
     }
-}
+        }
     }
 }
