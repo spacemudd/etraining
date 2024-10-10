@@ -23,7 +23,7 @@
                 <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.courses') }}</span>
             </template>
         </sidebar-link>
-
+<!-- 
         <sidebar-link :link-value="route('trainees.training-packages.index')" :active="$page.currentRouteName == 'trainees.training-packages.index'">
             <template #icon>
                 <ion-icon name="albums-outline" class="w-5 h-5"></ion-icon>
@@ -31,8 +31,8 @@
             <template #title>
                 <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.training-packages') }}</span>
             </template>
-        </sidebar-link>
-
+        </sidebar-link> -->
+<!-- 
         <sidebar-link :link-value="route('trainees.training-plan.index')" :active="$page.currentRouteName == 'trainees.training-plan.index'">
             <template #icon>
                 <ion-icon name="school-outline" class="w-5 h-5"></ion-icon>
@@ -40,7 +40,7 @@
             <template #title>
                 <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.training-plan') }}</span>
             </template>
-        </sidebar-link>
+        </sidebar-link> -->
 
         <sidebar-link :link-value="route('trainees.attendance-sheet.index')"
                       :active="$page.currentRouteName == 'trainees.attendance-sheet.index'">
