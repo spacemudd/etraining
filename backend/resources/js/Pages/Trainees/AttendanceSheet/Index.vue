@@ -31,13 +31,13 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="record in records" class="hover:bg-gray-100 focus-within:bg-gray-100">
+                    <tr v-for="record in records" class="hover:bg-gray-100 focus-within:bg-gray-100 py-4 ">
                         <td class="border-t text-right" dir="ltr">{{ record.course_batch_session.starts_at_timezone }}</td>
                         <td class="border-t">{{ record.course_batch_session.course.name_ar }}</td>
                         <td class="border-t text-center">
                             {{ $t('words.'+record.status_name) }}
 
-                            <div v-if="record.status_name === 'absent' && !record.absence_notes.length">
+                            <div class="py-2" v-if="record.status_name === 'absent' && !record.absence_notes.length">
                                 <a :href="route('trainees.attendance-report-record.absence-notes.create', {'attendance_report_record_id': record.id})" class="btn btn-primary">{{ $t('words.upload-absence-reason') }}</a>
                             </div>
                             <div v-if="record.status_name === 'absent' && record.absence_notes.length">
