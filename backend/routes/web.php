@@ -892,6 +892,12 @@ Route::get('/attendance/export-by-group/{courseBatch}', [\App\Http\Controllers\A
 
 
 
+    Route::post('/restore99', [\App\Http\Controllers\Back\TraineesController::class, 'restore99']);
+
+
+
+
+
 
 
 
