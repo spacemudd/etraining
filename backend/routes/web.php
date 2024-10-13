@@ -183,24 +183,27 @@ Route::get('last-logged-at', function() {
     return $usersData;
 });
 
+
 Route::get('s1s1', function() {
-    $trainees = Trainee::candidates()->where('created_at', '>', now()->setDay(11))->get();
+    $trainees = Trainee::candidates()->where('created_at', '>', now()->setDay(1))->get();
     $traineeData = [];
 
 
     foreach ($trainees as $trainee) {
         $traineeData[] = [
-            'name' => $trainee->name,
+            // 'name' => $trainee->name,
             'company' => optional($trainee->company)->name_ar,
-            'email' => $trainee->email,
-            'phone' => $trainee->phone,
-            'instructor' => optional($trainee->instructor)->name,
+            // 'email' => $trainee->email,
+            // 'phone' => $trainee->phone,
+            // 'instructor' => optional($trainee->instructor)->name,
             'group' => optional($trainee->trainee_group)->name,
         ];
     }
 
     return $traineeData;
 });
+
+
 
 Route::get('s1s2', function() {
     $ids = [];
