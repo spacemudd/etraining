@@ -19,6 +19,9 @@ class ExportSomeTraineesFromGada implements FromCollection,WithHeadings
              ->get(['name','phone','identity_number','company_id','created_at','deleted_at','deleted_remark'])
              ->map(function($trainee){
                 return [
+                    'deleted_remark'=>$trainee->deleted_remark,
+                    'deleted_at'=>$trainee->deleted_at,
+                    'created_at'=>$trainee->created_at,
                     'company'=> optional($trainee->company)->name_ar,
                     'phone'=> $trainee->phone,
                     'identity_number'=> $trainee->identity_number,
