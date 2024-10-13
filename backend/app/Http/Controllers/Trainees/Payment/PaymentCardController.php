@@ -53,7 +53,7 @@ class PaymentCardController extends Controller
     {
         sleep(2);
 
-        $success = $this->paymentService->isOrderSuccessful($request->orderId);
+        $success = $this->paymentService->isOrderSuccessful($request->orderId, $request->centerId);
 
         if ($success) {
             session()->put('success_payment', true);
@@ -75,7 +75,10 @@ class PaymentCardController extends Controller
      */
     public function storeNoonReceipt(Request $request)
     {
-        $order = $this->paymentService->getOrder($request->orderId);
+        $order = $this->paymentService->getOrder($request->orderId, 5676); // try finding the order in Jasarah
+        if ($order->resultCode === 5021) { // 5021 is bad request in Noon (not found in Jasarah)
+            $order = $this->paymentService->getOrder($request->orderId, 0); // try finding the order in Jisr
+        }
 
         // Confirm that Noon has the payment.
         throw_if(!$order, 'Invoice not found in payment gateway');
@@ -127,6 +130,8 @@ class PaymentCardController extends Controller
         } else {
             $this->recordFailure($request, $order);
         }
+
+        return 1;
     }
 
     public function recordFailure(Request $request, $order)

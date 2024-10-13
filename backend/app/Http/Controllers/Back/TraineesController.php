@@ -131,6 +131,20 @@ class TraineesController extends Controller
             ->orWhere('name', $trainee->name)
             ->first();
 
+        $attributes = [
+            'phone' => $trainee->phone,
+            'identity_number' => $trainee->identity_number,
+            'email' => $trainee->email,
+            'name' => $trainee->name,
+        ];
+
+        $in_block_list = TraineeBlockList::where(function ($query) use ($attributes) {
+            foreach ($attributes as $column => $value) {
+                $query->orWhere($column, $value);
+            }
+        })->first();
+
+
         Audit::create([
             'event' => 'trainees.show',
             'user_type' => User::class,
