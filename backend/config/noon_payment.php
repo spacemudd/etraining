@@ -24,17 +24,6 @@ return [
         'payment_api' => env('NOON_PAYMENT_PAYMENT_API'),
         'auth_key' => base64_encode(env('NOON_PAYMENT_BUSINESS_ID') . "." . env("NOON_PAYMENT_APP_NAME") . ":" . env("NOON_PAYMENT_APP_KEY")),
     ],
-];
-
-    'business_id_jisarah' => env('NOON_PAYMENT_BUSINESS_ID_JASARAH'),
-    'app_name_jisarah' => env('NOON_PAYMENT_APP_NAME_JASARAH'),
-    'app_key_jisarah' => env('NOON_PAYMENT_APP_KEY_JASARAH'),
-    'return_url_jisarah' => env('NOON_PAYMENT_RETURN_URL_JASARAH'),
-
-    'business_id_jisr' => env('NOON_PAYMENT_BUSINESS_ID_JISR'),
-    'app_name_jisr' => env('NOON_PAYMENT_APP_NAME_JISR'),
-    'app_key_jisr' => env('NOON_PAYMENT_APP_KEY_JISR'),
-    'return_url_jisr' => env('NOON_PAYMENT_RETURN_URL_JISR'),
 
     'mode' => env('NOON_PAYMENT_MODE', 'Live'),
     'order_category' => env('NOON_PAYMENT_ORDER_CATEGORY', 'pay'),

@@ -73,11 +73,12 @@ class PaymentCardController extends Controller
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Throwable
      */
-    public function storeNoonReceipt(Request $request, $center_id)
+    public function storeNoonReceipt(Request $request)
     {
-        
-        $order = $this->paymentService->getOrder($request->orderId, $center_id);        
-        
+        $order = $this->paymentService->getOrder($request->orderId, 5676); // try finding the order in Jasarah
+        if ($order->resultCode === 5021) { // 5021 is bad request in Noon (not found in Jasarah)
+            $order = $this->paymentService->getOrder($request->orderId, 0); // try finding the order in Jisr
+        }
 
         // Confirm that Noon has the payment.
         throw_if(!$order, 'Invoice not found in payment gateway');
@@ -89,7 +90,7 @@ class PaymentCardController extends Controller
                 'auditable_id' => $invoice_id,
                 'auditable_type' => Invoice::class,
                 'new_values' => $request->toArray(),
-            ]); 
+            ]);
 
             DB::beginTransaction();
 
@@ -129,6 +130,8 @@ class PaymentCardController extends Controller
         } else {
             $this->recordFailure($request, $order);
         }
+
+        return 1;
     }
 
     public function recordFailure(Request $request, $order)

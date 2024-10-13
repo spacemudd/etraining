@@ -22,13 +22,9 @@ class NoonService implements PaymentServiceInterface
      */
     public function createPaymentUrlForInvoice(Invoice $invoice): string
     {
-        
-
         $centerId = $invoice->trainee->company->center_id;
 
-        $webhookUrl = $centerId == 3717 
-        ? 'https://app.jisr-ksa.comjasarah/webhooks/noon' 
-        : 'https://app.jasarah-ksa.com/jisr/webhooks/noon';
+        $webhookUrl = ($centerId == 5676 ? 'https://app.jasarah-ksa.com/noon' : 'https://app.jisr-ksa.com/noon');
 
         $url = NoonPaymentService::getInstance()->initiate(
             $centerId,
@@ -60,8 +56,6 @@ class NoonService implements PaymentServiceInterface
             ]
         ]);
 
-        
-
         if ($url->resultCode === 0) {
             return $url->result->checkoutData->postUrl;
         }
@@ -91,6 +85,4 @@ class NoonService implements PaymentServiceInterface
             $order->result->transactions[0]->type == "SALE" &&
             $order->result->transactions[0]->status == "SUCCESS";
     }
-
-    
 }
