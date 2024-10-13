@@ -18,6 +18,7 @@ use App\Models\User;
 
 use App\Services\GosiService;
 use Illuminate\Mail\Markdown;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 
 
 
@@ -892,6 +893,13 @@ Route::get('/logo-files', [\App\Http\Controllers\LogoFilesController::class, 'in
 Route::get('/attendance/export-by-group/{courseBatch}', [\App\Http\Controllers\AttendanceReportsController::class, 'exportAttendanceReportByGroup'])
     ->name('attendance.export-by-group');
 
+
+
+
+
+Route::get('some-companies-export', function () {
+    return Excel::download(new \App\Exports\SomeCompaniesExport(), 'companies.xlsx'); 
+});
 
 
 
