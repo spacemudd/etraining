@@ -16,7 +16,7 @@ class ExportSomeTraineesFromGada implements FromCollection,WithHeadings
         return Trainee::onlyTrashed()->where('deleted_remark','غير مسجلة في الشركة')->where('city_id','e5a4a741-302f-44fa-8c44-06df64e68b6d')
              ->where('created_at', '>=', '2023-01-01')
              ->with('company')
-             ->get(['name','phone','identity_number','company_id'])
+             ->get(['name','phone','identity_number','company_id','created_at','deleted_at','deleted_remark'])
              ->map(function($trainee){
                 return [
                     'company'=> optional($trainee->company)->name_ar,
@@ -30,6 +30,9 @@ class ExportSomeTraineesFromGada implements FromCollection,WithHeadings
     public function headings(): array
     {
         return [
+            'سبب الإيقاف',
+            'تاريخ الإيقاف',
+            'تاريخ الإنشاء',
             'الشركة',
             'رقم الجوال',
             'رقم الهوية',
