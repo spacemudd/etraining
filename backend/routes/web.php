@@ -901,6 +901,10 @@ Route::get('some-companies-export', function () {
     return Excel::download(new \App\Exports\SomeCompaniesExport(), 'companies.xlsx'); 
 });
 
+Route::get('export-some-trainees',function(){
+    return Excel::download(new \App\Exports\ExportSomeTraineesFromGada(),'trainees.xlsx');
+});
+
 
 
 
