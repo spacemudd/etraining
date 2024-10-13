@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\Back\Invoice;
-use CodeBugLab\NoonPayment\NoonPayment;
+use App\Services\NoonPaymentService;
 use Illuminate\Support\Str;
 use RuntimeException;
 
@@ -22,12 +22,17 @@ class NoonService implements PaymentServiceInterface
      */
     public function createPaymentUrlForInvoice(Invoice $invoice): string
     {
-        // if testing, redirect to production site
-        if (config('noon_payment.mode') === 'Test' && ! Str::contains(auth()->user()->email, 'info@')) {
-            return config('app.url');
-        }
+        
 
-        $url = NoonPayment::getInstance()->initiate([
+        $centerId = $invoice->trainee->company->center_id;
+
+        $webhookUrl = $centerId == 3717 
+        ? 'https://app.jisr-ksa.comjasarah/webhooks/noon' 
+        : 'https://app.jasarah-ksa.com/jisr/webhooks/noon';
+
+        $url = NoonPaymentService::getInstance()->initiate(
+            $centerId,
+            [
             'order' => [
                 'reference' => $invoice->id,
                 'amount' => $invoice->grand_total,
@@ -49,11 +54,13 @@ class NoonService implements PaymentServiceInterface
             ],
             'configuration' => [
                 'locale' => 'ar',
-                'webhookUrl' => route('webhooks.noon'),
+                'webhookUrl' => $webhookUrl,
                 'returnUrl' => route('trainees.payment.card.charge'),
                 // 'generateShortLink' => true, // TODO: When sharing the invoice with SMS.
             ]
         ]);
+
+        
 
         if ($url->resultCode === 0) {
             return $url->result->checkoutData->postUrl;
@@ -66,14 +73,14 @@ class NoonService implements PaymentServiceInterface
      * @param $order_id
      * @return mixed
      */
-    public function getOrder($order_id)
+    public function getOrder($order_id, $center_id)
     {
-        return NoonPayment::getInstance()->getOrder($order_id);
+        return NoonPaymentService::getInstance()->getOrder($order_id, $center_id);
     }
 
-    public function isOrderSuccessful(string $order_id): bool
+    public function isOrderSuccessful(string $order_id, $center_id): bool
     {
-        $order = $this->getOrder($order_id);
+        $order = $this->getOrder($order_id, $center_id);
         return $this->isPaymentSuccess($order);
     }
 
@@ -84,4 +91,6 @@ class NoonService implements PaymentServiceInterface
             $order->result->transactions[0]->type == "SALE" &&
             $order->result->transactions[0]->status == "SUCCESS";
     }
+
+    
 }

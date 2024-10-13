@@ -8,7 +8,7 @@ interface PaymentServiceInterface
 {
     public function createPaymentUrlForInvoice(Invoice $invoice): string;
 
-    public function getOrder(string $order_id);
+    public function getOrder(string $order_id, $center_id);
 
-    public function isOrderSuccessful(string $order_id): bool;
+    public function isOrderSuccessful(string $order_id, $center_id): bool;
 }

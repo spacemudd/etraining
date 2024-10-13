@@ -53,7 +53,7 @@ class PaymentCardController extends Controller
     {
         sleep(2);
 
-        $success = $this->paymentService->isOrderSuccessful($request->orderId);
+        $success = $this->paymentService->isOrderSuccessful($request->orderId, $request->centerId);
 
         if ($success) {
             session()->put('success_payment', true);
@@ -73,9 +73,11 @@ class PaymentCardController extends Controller
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Throwable
      */
-    public function storeNoonReceipt(Request $request)
+    public function storeNoonReceipt(Request $request, $center_id)
     {
-        $order = $this->paymentService->getOrder($request->orderId);
+        
+        $order = $this->paymentService->getOrder($request->orderId, $center_id);        
+        
 
         // Confirm that Noon has the payment.
         throw_if(!$order, 'Invoice not found in payment gateway');
@@ -87,7 +89,7 @@ class PaymentCardController extends Controller
                 'auditable_id' => $invoice_id,
                 'auditable_type' => Invoice::class,
                 'new_values' => $request->toArray(),
-            ]);
+            ]); 
 
             DB::beginTransaction();
 
