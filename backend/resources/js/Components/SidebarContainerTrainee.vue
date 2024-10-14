@@ -15,14 +15,14 @@
             </template>
         </sidebar-link>
 
-        <sidebar-link :link-value="route('trainees.courses.index')" :active="$page.currentRouteName == 'trainees.courses.index'">
+        <!-- <sidebar-link :link-value="route('trainees.courses.index')" :active="$page.currentRouteName == 'trainees.courses.index'">
             <template #icon>
                 <ion-icon name="business-outline" class="w-5 h-5"></ion-icon>
             </template>
             <template #title>
                 <span class="ltr:ml-4 rtl:mr-4">{{ $t('words.courses') }}</span>
             </template>
-        </sidebar-link>
+        </sidebar-link> -->
 <!-- 
         <sidebar-link :link-value="route('trainees.training-packages.index')" :active="$page.currentRouteName == 'trainees.training-packages.index'">
             <template #icon>
