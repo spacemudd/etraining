@@ -13,7 +13,7 @@ class ExportSomeTraineesFromGada implements FromCollection,WithHeadings
     */
     public function collection()
     {
-        return Trainee::onlyTrashed()->where('deleted_remark','غير مسجلة في الشركة')->where('city_id','e5a4a741-302f-44fa-8c44-06df64e68b6d')
+        return Trainee::onlyTrashed()->where('deleted_remark','غير مسجلة في الشركة')->where('city_id','d4fb0162-81ec-4b17-812a-06c7c4306cb5')
              ->where('created_at', '>=', '2023-01-01')
              ->with('company')
              ->get(['name','phone','identity_number','company_id','created_at','deleted_at','deleted_remark'])
