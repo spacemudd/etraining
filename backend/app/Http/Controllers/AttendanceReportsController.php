@@ -190,6 +190,9 @@ class AttendanceReportsController extends Controller
                         'attendance_percentage' => round($attendancePercentage, 2) . ' %',
                         'present_count' => $presentCount,
                         'absent_count' => $absentCount,
+                        'email' => $trainee->email,
+                        'phone' => $trainee->phone,
+                        'identity_number' =>$trainee->identity_number,
                         'trainee_name' => $trainee->name,
                     ];
                 }

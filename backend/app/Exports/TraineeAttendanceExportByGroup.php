@@ -24,14 +24,14 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
 
     public function headings(): array
     {
-        return ['استحقاق الشهادة', 'نسبة الحضور', 'عدد الحضور', 'عدد الغياب', 'اسم المتدرب'];
+        return ['استحقاق الشهادة', 'نسبة الحضور', 'عدد الحضور', 'عدد الغياب','الإيميل',' الجوال','رقم الهوية','اسم المتدرب'];
     }
 
     public function styles(Worksheet $sheet)
     {
-        $sheet->getStyle('A1:E1')->getFont()->setBold(true);
-        $sheet->getStyle('A1:E1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle('A1:E1')->getFill()
+        $sheet->getStyle('A1:H1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:H1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A1:H1')->getFill()
             ->setFillType('solid')
             ->getStartColor()->setARGB('FFFFE599');
 
@@ -50,9 +50,14 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
             $sheet->getCell("B$rowIndex")->setValue($trainee['attendance_percentage']);
             $sheet->getCell("C$rowIndex")->setValue($trainee['present_count']);
             $sheet->getCell("D$rowIndex")->setValue($trainee['absent_count']);
-            $sheet->getCell("E$rowIndex")->setValue($trainee['trainee_name']);
 
-            $sheet->getStyle("A$rowIndex:E$rowIndex")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+            $sheet->getCell("E$rowIndex")->setValue($trainee['email']);
+            $sheet->getCell("F$rowIndex")->setValue($trainee['phone']);
+            $sheet->getCell("G$rowIndex")->setValue($trainee['identity_number']);
+            $sheet->getCell("H$rowIndex")->setValue($trainee['trainee_name']);
+
+            $sheet->getStyle("A$rowIndex:H$rowIndex")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
         }
     }
 }
