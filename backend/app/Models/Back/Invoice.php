@@ -52,6 +52,7 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
         'trainee_bank_payment_receipt_id',
         'payment_detail_brand',
         'payment_detail_method',
+        'center_id',
     ];
 
     protected $appends = [

@@ -182,13 +182,32 @@
                                         {{ $t('words.no') }}
                                     </span>
                                 </div>
+
+                                <hr v-if="invoice.center_id" class="my-3">
+                                <hr v-if="invoice.center_id" class="my-3">
+                                <div v-if="invoice.center_id" class="font-bold my-0.5">{{ $t('words.account') }}</div>
+                                <div v-if="invoice.center_id" class="my-0.5">
+                                    <span v-if="invoice.center_id==' 880'"
+                                          class="rounded px-4 py-1 my-1">
+                                        معهد جسر
+                                    </span>
+                                    <span v-if="invoice.center_id=='79249277'"
+                                          class=" rounded px-4 py-1 my-1">
+                                        مركز جسارة
+                                    </span>
+                                </div>
+                                
                                 <hr class="my-3" v-if="invoice.payment_method === 1">
                                 <hr class="my-3" v-if="invoice.payment_method === 1">
                                 <div v-if="invoice.payment_method === 1" class="font-bold my-0.5">{{ $t('words.payment-reference-id') }}</div>
                                 <a class="a-9" :href="invoice.noon_link"><div v-if="invoice.payment_method === 1" class="truncate my-0.5" >{{ invoice.payment_reference_id }}</div></a>
                                 <div v-if="invoice.payment_method === 1" class="font-bold my-0.5">{{ $t('words.paid-at') }}</div>
                                 <div v-if="invoice.payment_method === 1" class="truncate my-0.5">{{ invoice.paid_at_time }}</div>
+                             
+
                             </div>
+                            
+                                
                         </div>
                     </div>
                 </div>
