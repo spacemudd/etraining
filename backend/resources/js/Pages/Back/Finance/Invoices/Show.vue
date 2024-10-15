@@ -187,11 +187,11 @@
                                 <hr v-if="invoice.center_id" class="my-3">
                                 <div v-if="invoice.center_id" class="font-bold my-0.5">{{ $t('words.account') }}</div>
                                 <div v-if="invoice.center_id" class="my-0.5">
-                                    <span v-if="invoice.center_id==' 880'"
+                                    <span v-if="invoice.center_id==' 5675'"
                                           class="rounded px-4 py-1 my-1">
                                         معهد جسر
                                     </span>
-                                    <span v-if="invoice.center_id=='79249277'"
+                                    <span v-if="invoice.center_id=='5676'"
                                           class=" rounded px-4 py-1 my-1">
                                         مركز جسارة
                                     </span>
