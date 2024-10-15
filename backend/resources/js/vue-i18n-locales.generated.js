@@ -856,7 +856,8 @@ export default {
             "company-logo": "شعار الشركه",
             "caution": "تنبيه",
             "dont-take-action-against-this-account-without-admin-approval": "الرجاء عدم اتخاذ اي اجراء ضد هذا الحساب من دون موافقة الإدارة",
-            "my-agreement": "عقدي"
+            "my-agreement": "عقدي",
+            "account": "الحساب"
         }
     },
     "en": {
@@ -1660,7 +1661,8 @@ export default {
             "company-logo": "Company Logo",
             "caution": "Caution",
             "dont-take-action-against-this-account-without-admin-approval": "please dont dont take any action against this account without consulting with administration",
-            "my-agreement": "My Agreement"
+            "my-agreement": "My Agreement",
+            "account": "Account"
         }
     }
 }

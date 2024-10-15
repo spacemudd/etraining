@@ -44,10 +44,11 @@ class TraineeInvoicesController extends Controller
             ->with(['company'])
             ->withTrashed()
             ->findOrFail($trainee_id);
-
+        
+        $centerId = $trainee->company->center_id;
         $validatedData = $this->validateStoreRequest($request, $trainee->id);
 
-        DB::transaction(function () use ($trainee, $validatedData) {
+        DB::transaction(function () use ($trainee, $validatedData,$centerId) {
 
             $cost = $trainee->override_training_costs;
             if ($cost !== null) {
@@ -63,6 +64,8 @@ class TraineeInvoicesController extends Controller
                         'sub_total' => $sub_total->getAmount()->toFloat(),
                         'tax' => $tax->getAmount()->toFloat(),
                         'grand_total' => $grand_total->getAmount()->toFloat(),
+                        'center_id' => $centerId,
+
                     ], $validatedData)
                 );
             } else {
@@ -75,6 +78,8 @@ class TraineeInvoicesController extends Controller
                         'sub_total' => $sub_total->getAmount()->toFloat(),
                         'tax' => $tax->getAmount()->toFloat(),
                         'grand_total' => $grand_total->getAmount()->toFloat(),
+                        'center_id' => $centerId,
+
                     ], $validatedData)
                 );
             }
