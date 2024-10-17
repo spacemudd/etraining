@@ -5,6 +5,8 @@ namespace App\Exports;
 use App\Models\Back\Trainee;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Carbon\Carbon;
+
 
 class ExportSomeTraineesFromGada implements FromCollection,WithHeadings
 {
@@ -13,7 +15,8 @@ class ExportSomeTraineesFromGada implements FromCollection,WithHeadings
     */
     public function collection()
     {
-        return Trainee::onlyTrashed()->where('deleted_remark','غير مسجلة في الشركة')->where('city_id','d4fb0162-81ec-4b17-812a-06c7c4306cb5')
+        return Trainee::withTrashed()->where('deleted_remark','رجيع')->where('city_id','e5a4a741-302f-44fa-8c44-06df64e68b6d')
+             ->whereBetween('created_at', [Carbon::create(2023, 1, 1), now()])
              ->with('company')
              ->get(['name','phone','identity_number','company_id','created_at','deleted_at','deleted_remark'])
              ->map(function($trainee){
