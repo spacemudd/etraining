@@ -24,7 +24,7 @@
                         <p class="text-center mb-2 text-gray-500"><b>{{ $t('words.trainees-count') }}</b></p>
                         <p class="text-center mb-2"><span class="rounded-xl bg-gray-200 p-2">{{ group.trainees_count }}</span></p>
                         <p class="text-center" v-for="trainee in group.trainees">
-                            <inertia-link :href="trainee.show_url">
+                           <inertia-link  :href="trainee.show_url">
                                 {{ trainee.identity_number }}
                             </inertia-link>
                         </p>

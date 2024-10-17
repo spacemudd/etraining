@@ -15,14 +15,19 @@ class TraineesGroupsController extends Controller
             ->orderBy('name')
             ->get();
 
-        foreach ($traineeGroups as $traineeGroup) {
-            $traineeGroup->load(['trainees' => function($q) {
-                $q->limit(1);
-            }]);
-        }
-
+            foreach ($traineeGroups as $traineeGroup) {
+                $traineeGroup->load(['trainees' => function($q) {
+                    $q->whereHas('company', function($query) {
+                        $query->whereNull('deleted_at'); 
+                    })->limit(1);
+                }]);
+            }
         return Inertia::render('Back/TraineeGroups/Index', [
             'traineeGroups' => $traineeGroups,
         ]);
     }
+
+
+  
+    
 }
