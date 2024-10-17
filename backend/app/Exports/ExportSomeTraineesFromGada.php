@@ -36,7 +36,7 @@ class ExportSomeTraineesFromGada implements FromCollection,WithHeadings
     {
         return [
             'سبب الإيقاف',
-            'تاريخ الحذف'
+            'تاريخ الحذف',
             'تاريخ الإيقاف',
             'تاريخ الإنشاء',
             'الشركة',
