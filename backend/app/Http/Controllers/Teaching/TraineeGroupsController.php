@@ -17,7 +17,7 @@ class TraineeGroupsController extends Controller
 {
     public function index()
     {
-        $traineeGroups = TraineeGroup::
+        $traineeGroups = TraineeGroup:: 
             withCount('trainees')
             ->get();
 
