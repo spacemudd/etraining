@@ -2,7 +2,8 @@
 
 namespace App\Mail;
 
-use App\Models\Back\CompanyAttendanceReport;
+use App\Exports\CompanyAttendanceSheetExport;
+
 use App\Services\CompanyAttendanceReportService;
 use App\Services\CompanyMigrationHelper;
 use Illuminate\Bus\Queueable;
@@ -10,6 +11,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Str;
+use Excel;
+
+
 
 class CompanyAttendanceReportMail extends Mailable
 {
@@ -58,10 +62,15 @@ class CompanyAttendanceReportMail extends Mailable
 
     public function attachReportFile($report)
     {
-        $filename = Str::slug($report->number).'.pdf';
+        // $filename = Str::slug($report->number).'.pdf';
 
-        $this->attachData(CompanyAttendanceReportService::makePdf($this->report_id)->inline($filename), $filename);
+        // $this->attachData(CompanyAttendanceReportService::makePdf($this->report_id)->inline($filename), $filename);
 
+        // return $this;
+        $filename = Str::slug($report->number) . '.xlsx';
+
+        $this->attach(new CompanyAttendanceSheetExport($report), $filename);
+    
         return $this;
     }
 }
