@@ -4,14 +4,15 @@ namespace App\Mail;
 
 use App\Exports\CompanyAttendanceSheetExport;
 
+use App\Models\Back\CompanyAttendanceReport;
 use App\Services\CompanyAttendanceReportService;
 use App\Services\CompanyMigrationHelper;
+use Excel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Str;
-use Excel;
 
 
 
@@ -69,7 +70,7 @@ class CompanyAttendanceReportMail extends Mailable
         // return $this;
         $filename = Str::slug($report->number) . '.xlsx';
 
-        $this->attach(new CompanyAttendanceSheetExport($report), $filename);
+        $this->attach(new CompanyAttendanceSheetExport($report),$filename);
     
         return $this;
     }
