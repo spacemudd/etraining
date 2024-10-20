@@ -46,19 +46,34 @@ class CompanyAttendanceReportMail extends Mailable
 
         $this->attachReportFile($report);
 
-        // Use system@ email because when clients reply to that email, it should be received saved in the company.
-        // $center = CompanyAttendanceReport::find($this->report_id)->company->center;
-
         return $this
             ->from('system@mg.noreplycenter.com', 'Training Center')
-            ->subject('تقرير الحضور للمتدربات - '.$report->company->name_ar.' - '.$report->date_from->format('Y-m-d'). ' - '.$report->date_to->format('Y-m-d'))
+            ->subject('تقرير الحضور للمتدربات - ' . $report->company->name_ar . ' - ' . $report->date_from->format('Y-m-d') . ' - ' . $report->date_to->format('Y-m-d'))
             ->markdown('emails.company-attendance-report', [
                 'report' => $report,
             ])
             ->withSwiftMessage(function ($message) {
                 $message->getHeaders()
-                    ->addTextHeader('X-Mailgun-Variables', '{"company_attendance_report_id": "'.$this->report_id.'"}');
+                    ->addTextHeader('X-Mailgun-Variables', '{"company_attendance_report_id": "' . $this->report_id . '"}');
             });
+
+        // $report = CompanyAttendanceReport::find($this->report_id);
+
+        // $this->attachReportFile($report);
+
+        // // Use system@ email because when clients reply to that email, it should be received saved in the company.
+        // // $center = CompanyAttendanceReport::find($this->report_id)->company->center;
+
+        // return $this
+        //     ->from('system@mg.noreplycenter.com', 'Training Center')
+        //     ->subject('تقرير الحضور للمتدربات - '.$report->company->name_ar.' - '.$report->date_from->format('Y-m-d'). ' - '.$report->date_to->format('Y-m-d'))
+        //     ->markdown('emails.company-attendance-report', [
+        //         'report' => $report,
+        //     ])
+        //     ->withSwiftMessage(function ($message) {
+        //         $message->getHeaders()
+        //             ->addTextHeader('X-Mailgun-Variables', '{"company_attendance_report_id": "'.$this->report_id.'"}');
+        //     });
     }
 
     public function attachReportFile($report)
@@ -70,7 +85,10 @@ class CompanyAttendanceReportMail extends Mailable
         // return $this;
         $filename = Str::slug($report->number) . '.xlsx';
 
-        $this->attach(new CompanyAttendanceSheetExport($report),$filename);
+        $this->attach(new CompanyAttendanceSheetExport($report), [
+            'as' => $filename, 
+            'mime' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ]);
     
         return $this;
     }
