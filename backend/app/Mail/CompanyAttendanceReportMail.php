@@ -77,19 +77,19 @@ class CompanyAttendanceReportMail extends Mailable
     }
 
     public function attachReportFile($report)
-    {
-        // $filename = Str::slug($report->number).'.pdf';
+{
+    $filename = Str::slug($report->number) . '.xlsx';
 
-        // $this->attachData(CompanyAttendanceReportService::makePdf($this->report_id)->inline($filename), $filename);
-
-        // return $this;
-        $filename = Str::slug($report->number) . '.xlsx';
-
-        $this->attach(new CompanyAttendanceSheetExport($report), [
-            'as' => $filename, 
+    // Generate the Excel file and attach it to the email
+    $this->attachData(
+        Excel::raw(new CompanyAttendanceSheetExport($report), \Maatwebsite\Excel\Excel::XLSX), 
+        $filename, 
+        [
             'mime' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        ]);
-    
-        return $this;
-    }
+        ]
+    );
+
+    return $this;
+}
+
 }
