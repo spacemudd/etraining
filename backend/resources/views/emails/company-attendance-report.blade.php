@@ -7,4 +7,6 @@
 
 مع تحياتنا،
 
+<h1>{{$report->id}}</h1>
+
 @endcomponent
