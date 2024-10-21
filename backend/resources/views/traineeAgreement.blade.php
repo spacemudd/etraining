@@ -105,14 +105,24 @@
         background-color: #c82333;
     }
     .accepted-message {
-        font-size: 18px; 
+        font-size: 22px; 
         font-weight: bold; 
         color: #28a745; 
         margin-top: 10px; 
     }
+    .approved{
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+ 
+
+    
     </style>
 </head>
 <body>
+    @if(!$trainee->traineeAgreement)
     <div class="container">
         @php
             $centerName=$trainee->company->center->name;
@@ -122,11 +132,13 @@
             $traineeAdditionalPhone=$trainee->phone_additional;
             $traineeEmail=$trainee->email;
 
-            // //مصطلح معهد او مركز 
             if($trainee->company->center->name=='معهد جسر للتدريب'){
                 $centerOrInstitute='المعهد';
+                $commericalRegistrationNumber='1010973587';
             }elseif($trainee->company->center->name=='مركز جسارة'){
                 $centerOrInstitute='المركز';
+                $commericalRegistrationNumber='4030593971';
+
             }
         @endphp
     
@@ -140,7 +152,7 @@
             
                 {{ $centerName }}
 
-                ، سجل تجاري رقم ()</li>
+                ، سجل تجاري رقم ({{ $commericalRegistrationNumber }})</li>
             <li><strong>الطرف الثاني:</strong> « {{ $traineeName }} »، هوية وطنية رقم: «{{ $identityNumber }}»، جوال رقم: «{{ $traineePhone }}»</li>
             <li><strong>رقم الجوال البديل:</strong> «{{$traineeAdditionalPhone  }}»، البريد الالكتروني: «{{ $traineeEmail }}»</li>
         </ul>
@@ -153,23 +165,41 @@
                 <tr>
                     <th>م</th>
                     <th>الدورة التدريبية</th>
-                    <th>الشهر</th>
                 </tr>
             </thead>
+            @if ($trainee->company->center->name=='معهد جسر للتدريب')
+                
             <tbody>
-                <tr><td>1</td><td>أساسيات الأعمال المكتبية</td><td>أغسطس 2024</td></tr>
-                <tr><td>2</td><td>إدارة الأزمات</td><td>سبتمبر 2024</td></tr>
-                <tr><td>3</td><td>إدارة الموارد البشرية</td><td>أكتوبر 2024</td></tr>
-                <tr><td>4</td><td>تطوير مهارات أخصائي مبيعات</td><td>نوفمبر 2024</td></tr>
-                <tr><td>5</td><td>مهارات الإشراف الإداري</td><td>ديسمبر 2024</td></tr>
-                <tr><td>6</td><td>برنامج إكسل</td><td>يناير 2025</td></tr>
-                <tr><td>7</td><td>تدريب المدربين</td><td>فبراير 2025</td></tr>
-                <tr><td>8</td><td>مقدمة في الأمن السيبراني</td><td>مارس 2025</td></tr>
-                <tr><td>9</td><td>كيف أكون قدوة وأصنع التغيير</td><td>أبريل 2025</td></tr>
-                <tr><td>10</td><td>التسويق الإلكتروني</td><td>مايو 2025</td></tr>
-                <tr><td>11</td><td>المالية لغير الماليين</td><td>يونيو 2025</td></tr>
-                <tr><td>12</td><td>إدارة المشاريع الاحترافية</td><td>يوليو 2025</td></tr>
+                <tr><td>1</td><td>المالية لغير الماليين</td></tr>
+                <tr><td>2</td><td>إدارة مبيعات التجزئة</td></tr>
+                <tr><td>3</td><td>مهارات الإشراف الإداري</td></tr>
+                <tr><td>4</td><td>خدمة العملاء</td></tr>
+                <tr><td>5</td><td>إدارة الموارد البشرية</td></tr>
+                <tr><td>6</td><td>إدارة المشاريع الاحترافية</td></tr>
+                <tr><td>7</td><td>إدارة الأزمات</td></tr>
+                <tr><td>8</td><td>أساسيات الأعمال المكتبية</td></tr>
+                <tr><td>9</td><td>تطوير مهارات أخصائي مبيعات</td></tr>
+                <tr><td>10</td><td>القيادة الإدارية</td></tr>
+                <tr><td>11</td><td>المسؤولية الإدارية والفعالية بالعمل</td></tr>
             </tbody>
+            @elseif ($trainee->company->center->name=='مركز جسارة')
+            <tbody>
+                <tr><td>1</td><td>إدارة شؤون الموظفين والتطوير الإداري</td></tr>
+                <tr><td>2</td><td>إدارة سلاسل الإمداد والخدمات اللوجستية</td></tr>
+                <tr><td>3</td><td>Business English Skills</td></tr>
+                <tr><td>4</td><td>إدارة الموارد البشرية والعقود</td></tr>
+                <tr><td>5</td><td>إدارة وتخطيط العلاقات العامة</td></tr>
+                <tr><td>6</td><td>مهارات أخصائي العلاقات العامة</td></tr>
+                <tr><td>7</td><td>استراتيجيات الإدارة الحديثة</td></tr>
+                <tr><td>8</td><td>الأمن السيبراني</td></tr>
+                <tr><td>9</td><td>الإدارة الذكية للموارد البشرية</td></tr>
+                <tr><td>10</td><td>المساعد الإداري وبناء فريق العمل</td></tr>
+                <tr><td>11</td><td>تدريب مدربين</td></tr>
+                <tr><td>11</td><td>كتابة التقارير والخطابات الإدارية</td></tr>
+            </tbody>
+            @endif
+
+
         </table>
 
         <div class="section-title">التزامات الطرف الأول ({{ $centerName }})</div>
@@ -196,13 +226,12 @@
             </li>
             <li>10- الالتزام بالتعليمات الصادرة من {{ $centerOrInstitute }} بطرق التواصل المرفقة والتقيد بها.
             </li>
-            <li>11- الالتزام بحضور الجلسة التدريبية كاملة سواء كانت حضورية ام عن بعد مع العلم بأن الحد الأقصى للغيابات بعذر هو 15 جلسة تدريبية و 3 جلسات بدون عذر مع مراعاة التواصل قبل موعد جلسة التدريب في القنوات المحددة.    
+            <li>11- الالتزام بحضور الجلسة التدريبية كاملة سواء كانت حضورية ام عن بعد مع العلم بأن الحد الأقصى للغيابات بعذر هو 15 جلسة تدريبية و 3 جلسات بدون عذر مع مراعاة التواصل قبل موعد جلسة التدريب في القنوات المحددة والإشعار بعدم الحضور.    
             </li>
             <li>12- الالتزام باليوم التدريبي كامل وفي حال وجود خلل تقني لا يسمح بالخروج بعد مضي 30 دقيقة من جلسة التدريب علماً بأن تسجيل الدخول والحضور يتم إلكترونيا عبر النظام.
             </li>
             <li>13- الالتزام باحترام الأنظمة والقوانين المتبعة إلكترونياً وعدم الاستخدام السلبي للردود في القاعة التدريبية ويحق إلى {{ $centerOrInstitute }} مقاضاة المتجاوزين قانونيا.  
             </li>
-            <!-- استمر بإضافة الالتزامات كما في النص -->
         </ul>
 
         <div class="section-title">شروط العقد</div>
@@ -220,34 +249,31 @@
                 <div class="signature-line">« {{ $traineeName }} »</div>
             </div>
         </div>
-
-
-
-
-    {{-- <form action="{{ route('agreement.accept') }}" method="POST" style="display:inline;"> --}}
-
-
-    <div class="button-group">
-        @if ($trainee->traineeAgreement)
-         <p class="accepted-message">   تم قبول العقد في تاريخ : {{$trainee->traineeAgreement->accepted_at}} </p> 
-
-        @else
-        <form action="{{ route('agreement.accept') }}" method="POST"  style="display:inline;">
-            @csrf
-            <button type="submit" class="btn btn-success">قبول</button>
-        </form>
-    
-        <form  style="display:inline;">
-            @csrf
-            <button type="submit" class="btn btn-danger">رفض</button>
-        </form>
-        @endif
-      
         
+        <div class="button-group">
 
-    </div>
+            <form action="{{ route('agreement.accept') }}" method="POST"  style="display:inline;">
+                @csrf
+                <button type="submit" class="btn btn-success">قبول</button>
+            </form>
+        
+            <form  style="display:inline;">
+                @csrf
+                <button type="submit" class="btn btn-danger">رفض</button>
+            </form>
+        </div>
     </div>
 
+
+
+    @else
+    <div class="approved">
+        <div class="container ">
+            <p class="accepted-message">   تم توثيق العقد الكترونيا والإعتماد بطريقة إلكترونية من خلال أبشر بتاريخ : {{$trainee->traineeAgreement->accepted_at}} </p> 
+          </div>
+    </div>
+    
+    @endif
 
 </body>
 </html>
