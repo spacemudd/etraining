@@ -6,7 +6,7 @@
 
 مع تحياتنا،
 
-<a href="/company-attendance-reports/approve/{{ $report->id }}" style="display:inline-block; padding: 10px 15px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">
+<a href="{{ url('/company-attendance-reports/approve/' . $report->id) }}" style="display:inline-block; padding: 10px 15px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">
     الاعتماد الآن
 </a>
 
