@@ -15,9 +15,8 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 {
     /**
      * The name and signature of the console command.
-     *///
-     * @var string
-     */
+     *
+     **/
     protected $signature = 'company-attendance-sheets:start';
 
     /**
@@ -44,8 +43,8 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
      */
     public function handle()
     {
-        $from_date = Carbon::parse('2024-09-01')->startOfDay();
-        $to_date = Carbon::parse('2024-09-30')->endOfDay();
+        $from_date = Carbon::parse('2024-10-01')->startOfDay();
+        $to_date = Carbon::parse('2024-10-31')->endOfDay();
         $this->createReportsBasedOnTraineedInvoiced($from_date, $to_date);
         return 1;
     }
@@ -56,11 +55,13 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
         //    'ed1bcd52-5fe0-488c-9dd6-2436d5f93ca8',
         //];
 
-        $select_invoices_from = ['2024-08-01', '2024-08-31'];
+        $company_id = '157fe1eb-5556-45b3-8602-de6051bb6952';
+
+        $select_invoices_from = ['2024-09-01', '2024-09-30'];
 
         //foreach ($companies as $company_id) {
             $count = Company::with('invoices')
-                //->where('id', $company_id)
+                ->where('id', $company_id)
                 ->whereHas('invoices', function ($query) use (
                     $from_date,
                     $select_invoices_from
@@ -70,7 +71,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
             $this->info('Found companies with invoices: '.$count);
 
             Company::with('invoices')
-                //->where('id', $company_id)
+                ->where('id', $company_id)
                     ->whereHas('invoices', function ($query) use (
                     $from_date,
                     $select_invoices_from
@@ -80,7 +81,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
             // Companies that don't have invoices in the past month, to skip.
             $companies_with_invoices = Company::with('invoices')
-                //->where('id', $company_id)
+                ->where('id', $company_id)
                 ->whereHas('invoices', function (
                     $query
                 ) use ($from_date, $select_invoices_from) {
@@ -92,7 +93,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
             }
 
             Company::with('invoices')
-                //->where('id', $company_id)
+                ->where('id', $company_id)
                 ->whereHas('invoices', function ($query) use (
                     $from_date,
                     $select_invoices_from
