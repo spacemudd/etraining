@@ -55,7 +55,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
         //    'ed1bcd52-5fe0-488c-9dd6-2436d5f93ca8',
         //];
 
-        $company_id = '13ff11b3-6ffb-42e4-9c64-9663dc809cfc';
+        $company_id = '52941442-6730-4263-8150-d2ef824451a3';
 
         $select_invoices_from = ['2024-09-01', '2024-09-30'];
 
