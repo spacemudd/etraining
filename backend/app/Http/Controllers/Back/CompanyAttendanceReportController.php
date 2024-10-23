@@ -369,4 +369,20 @@ class CompanyAttendanceReportController extends Controller
 
         return redirect()->route('back.reports.company-attendance.show', $report_id);
     }
+
+    public function emailApprove($id)
+{
+    // Debugging
+    dd("here");
+
+    // Fetch the report by ID
+    $report = CompanyAttendanceReport::findOrFail($id);
+    
+    // Update the approved_at timestamp
+    $report->update(['approved_at' => now()]);
+    
+    // Redirect back to the report view with a success message
+    return redirect()->route('back.reports.company-attendance.show', $id)->with('success', 'تم اعتماد التقرير بنجاح.');
+}
+
 }
