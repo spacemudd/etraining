@@ -51,39 +51,82 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
     public function createReportsBasedOnTraineedInvoiced(Carbon $from_date, Carbon $to_date)
     {
+        //$companies = [
+        //    'ed1bcd52-5fe0-488c-9dd6-2436d5f93ca8',
+        //];
+
+        $company_id = '0dba9700-70d0-4064-b9d5-2d986c127236';
+
         $select_invoices_from = ['2024-09-01', '2024-09-30'];
-    
-        $companies = Company::all();
-    
-        foreach ($companies as $company) {
-            $count = $company->invoices()
-                ->whereBetween('to_date', $select_invoices_from)
-                ->count();
-            
+
+        //foreach ($companies as $company_id) {
+            $count = Company::with('invoices')
+                ->where('id', $company_id)
+                ->whereHas('invoices', function ($query) use (
+                    $from_date,
+                    $select_invoices_from
+                ) {
+                    $query->whereBetween('to_date', $select_invoices_from);
+                })->count();
             $this->info('Found companies with invoices: '.$count);
-    
-            $companies_with_invoices = Company::whereHas('invoices', function ($query) use ($select_invoices_from) {
-                $query->whereBetween('to_date', $select_invoices_from);
-            })->pluck('id');
-    
+
+            Company::with('invoices')
+                ->where('id', $company_id)
+                    ->whereHas('invoices', function ($query) use (
+                    $from_date,
+                    $select_invoices_from
+                ) {
+                    $query->whereBetween('to_date', $select_invoices_from);
+                })->count();
+
+            // Companies that don't have invoices in the past month, to skip.
+            $companies_with_invoices = Company::with('invoices')
+                ->where('id', $company_id)
+                ->whereHas('invoices', function (
+                    $query
+                ) use ($from_date, $select_invoices_from) {
+                    $query->whereBetween('to_date', $select_invoices_from);
+                })->pluck('id');
             $companies_without_invoices = Company::whereNotIn('id', $companies_with_invoices)->pluck('name_ar');
-            
             foreach ($companies_without_invoices as $name_ar) {
                 $this->info('No invoices for company: '.$name_ar);
             }
-    
+
             Company::with('invoices')
-                ->whereHas('invoices', function ($query) use ($select_invoices_from) {
+                ->where('id', $company_id)
+                ->whereHas('invoices', function ($query) use (
+                    $from_date,
+                    $select_invoices_from
+                ) {
                     $query->whereBetween('to_date', $select_invoices_from);
                 })->chunk(20, function ($companies) use ($from_date, $to_date, $select_invoices_from) {
                     foreach ($companies as $company) {
+
+                        //$companies_to_execlude = [
+                        //    'ed1bcd52-5fe0-488c-9dd6-2436d5f93ca8',
+                        //];
+
+                        //if (in_array($company->id, $companies_to_execlude, true)) {
+                        //    $this->info('Excluded company: '.$company->name_ar);
+                        //    continue;
+                        //}
+
+                        // Checks
                         if ($company->trainees()->count() === 0) {
                             $this->info('No trainees. Skipping: '.$company->name_ar);
                             continue;
                         }
-    
+                        //$currentMonthReport = $company->company_attendance_reports()->whereBetween('date_to', [
+                        //        $from_date,
+                        //        $to_date
+                        //    ])->first();
+                        //if ($currentMonthReport) {
+                        //    $this->info('Already created. Skipping: '.$company->name_ar);
+                        //    continue;
+                        //}
+
                         $lastReport = $company->company_attendance_reports()->orderBy('date_from', 'desc')->first();
-    
+
                         if ($lastReport) {
                             $this->info('New report from last report: '.$company->name_ar.','.$company->trainees()->count());
                             $this->makeNewReportFromLastReportBasedOnInvoices($company, $lastReport, $from_date, $to_date, $select_invoices_from[0], $select_invoices_from[1]);
@@ -97,9 +140,8 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
                         }
                     }
                 });
-        }
+        //}
     }
-    
 
     public function makeNewReportFromLastReportBasedOnInvoices($company, $lastReport, $dateFrom, $dateTo, $invoicesDateFrom, $invoicesDateTo)
     {
