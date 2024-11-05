@@ -480,8 +480,8 @@ Route::get('/back/media/{media_id}', [\App\Http\Controllers\MediaController::cla
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
-    Route::post('masdr', [\App\Http\Controllers\Back\GosiController::class, 'show'])->name('gosi.show');
-    Route::get('lookup/masdr', [\App\Http\Controllers\Back\TraineesController::class, 'gosi'])->name('trainees.gosi');
+    Route::post('masdr', [\App\Http\Controllers\Back\GosiController::class, 'show'])->name('back.gosi.show');
+    Route::get('lookup/masdr', [\App\Http\Controllers\Back\TraineesController::class, 'gosi'])->name('back.trainees.gosi');
 
     // For everyone
     Route::get('inbox', [\App\Http\Controllers\InboxController::class, 'index'])->name('inbox.index');
@@ -571,10 +571,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('companies/{id}/ptcnet', [\App\Http\Controllers\Back\CompaniesController::class, 'markAsPtcNet']);
 
 
-        
+
         Route::resource('companies', \App\Http\Controllers\Back\CompaniesController::class);
 
-        
+
 
 
         Route::resource('companies.invoices', \App\Http\Controllers\Back\CompanyInvoicesController::class)->only(['create', 'store']);
@@ -698,7 +698,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
         // my comment
         Route::post('trainees/{trainee_id}/attachments/qualification', [\App\Http\Controllers\Back\TraineesController::class, 'storeQualification'])->name('trainees.attachments.qualification');
-        
+
         Route::delete('trainees/{trainee_id}/attachments/qualification', [\App\Http\Controllers\Back\TraineesController::class, 'deleteQualification'])->name('trainees.attachments.qualification.destroy');
         Route::post('trainees/{trainee_id}/attachments/bank-account', [\App\Http\Controllers\Back\TraineesController::class, 'storeBankAccount'])->name('trainees.attachments.bank-account');
         Route::delete('trainees/{trainee_id}/attachments/bank-account', [\App\Http\Controllers\Back\TraineesController::class, 'deleteBankAccount'])->name('trainees.attachments.bank-account.destroy');
@@ -782,7 +782,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('company-attendance/{report_id}/edit', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'edit'])->name('reports.company-attendance.edit');
             Route::post('company-attendance/{id}/clone', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'clone'])->name('reports.company-attendance.clone');
             Route::post('company-attendance/{id}/approve', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'approve'])->name('reports.company-attendance.approve');
-          
+
             Route::get('company-attendance/{id}/preview', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'preview'])->name('reports.company-attendance.preview');
 
             Route::post('company-attendance/{id}/send', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'send'])->name('reports.company-attendance.send');
@@ -795,7 +795,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::post('company-attendance', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'store'])->name('reports.company-attendance.store');
             Route::get('company-attendance/create', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'create'])->name('reports.company-attendance.create');
             Route::get('company-attendance', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'index'])->name('reports.company-attendance.index');
-            
+
             Route::get('company-attendance/{id}', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'show'])->name('reports.company-attendance.show');
 
 
