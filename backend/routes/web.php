@@ -479,6 +479,10 @@ Route::post('/agreement/accept',[\App\Http\Controllers\Trainees\AgreementControl
 Route::get('/back/media/{media_id}', [\App\Http\Controllers\MediaController::class, 'download'])->name('back.media.download');
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function() {
+
+    Route::post('masdr', [\App\Http\Controllers\Back\GosiController::class, 'show'])->name('gosi.show');
+    Route::get('lookup/masdr', [\App\Http\Controllers\Back\TraineesController::class, 'gosi'])->name('trainees.gosi');
+
     // For everyone
     Route::get('inbox', [\App\Http\Controllers\InboxController::class, 'index'])->name('inbox.index');
     Route::post('back/zoom/signature', [\App\Http\Controllers\ZoomController::class, 'signature'])->name('back.zoom.signature');
@@ -511,11 +515,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
     // For admins
     Route::prefix('back')->middleware('redirect-trainees-to-dashboard')->name('back.')->group(function() {
-
-        Route::post('masdr', [\App\Http\Controllers\Back\GosiController::class, 'show'])->name('gosi.show');
-
         Route::get('/settings', [\App\Http\Controllers\Back\SettingsController::class, 'index'])->name('settings');
-
 
         //recruitment
         Route::get('/settings/recruitment-companies', [\App\Http\Controllers\Back\RecruitmentCompaniesController::class, 'index'])->name('settings.recruitment-companies.index');
@@ -717,7 +717,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('trainees/blocked/show/{trainee_id}', [\App\Http\Controllers\Back\TraineesController::class, 'showBlocked'])->name('trainees.show.blocked');
         Route::post('trainees/blocked/show/{trainee_id}', [\App\Http\Controllers\Back\TraineesController::class, 'unblock'])->name('trainees.unblock');
         Route::get('trainees/archived', [\App\Http\Controllers\Back\TraineesController::class, 'indexArchived'])->name('trainees.index.archived');
-        Route::get('trainees/masdr', [\App\Http\Controllers\Back\TraineesController::class, 'gosi'])->name('trainees.gosi');
         Route::resource('trainees', \App\Http\Controllers\Back\TraineesController::class);
         Route::resource('trainees.invoices', \App\Http\Controllers\Back\TraineeInvoicesController::class)->only(['create', 'store']);
         Route::get('candidates', [\App\Http\Controllers\Back\CandidatesController::class, 'index'])->name('candidates.index');
