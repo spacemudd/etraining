@@ -67,7 +67,7 @@ export default {
     methods: {
         fetch() {
             this.$wait.start('LOADING_GOSI')
-            axios.post('/back/gosi', {ninOrIqama: this.ninOrIqama})
+            axios.post(route('back.gosi.show'), {ninOrIqama: this.ninOrIqama})
                 .then(response => {
                     this.data = response.data;
                     this.$wait.end('LOADING_GOSI')
