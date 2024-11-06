@@ -24,7 +24,7 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
 
     public function headings(): array
     {
-        return ['حالة الدفع','استحقاق الشهادة', 'نسبة الحضور', 'عدد الحضور', 'عدد الغياب','الإيميل',' الجوال','رقم الهوية','اسم المتدرب'];
+        return ['استحقاق الشهادة', 'نسبة الحضور', 'عدد الحضور', 'عدد الغياب','الإيميل',' الجوال','رقم الهوية','اسم المتدرب','حالة الدفع'];
     }
 
     public function styles(Worksheet $sheet)
@@ -56,8 +56,10 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
             $sheet->getCell("F$rowIndex")->setValue($trainee['phone']);
             $sheet->getCell("G$rowIndex")->setValue($trainee['identity_number']);
             $sheet->getCell("H$rowIndex")->setValue($trainee['trainee_name']);
+            $sheet->getCell("I$rowIndex")->setValue($trainee['invoice_status']);
+            
 
-            $sheet->getStyle("A$rowIndex:H$rowIndex")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle("A$rowIndex:I$rowIndex")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
         }
     }
 }
