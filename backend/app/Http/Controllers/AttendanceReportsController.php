@@ -175,7 +175,7 @@ class AttendanceReportsController extends Controller
         $courseBatch->trainee_group->trainees()->chunk(100, function ($traineesChunk) use (&$results, $courseBatchId, $totalSessionsCount) {
             foreach ($traineesChunk as $trainee) {
                 $attendanceRecords = $trainee->attendanceReportRecords()
-                    ->where('course_batch_id', $courseBatchId) 
+                    ->where('course_batch_id', $courseBatchId)
                     ->get()
                     ->unique('course_batch_session_id');
     
@@ -183,10 +183,14 @@ class AttendanceReportsController extends Controller
                 $absentCount = $attendanceRecords->where('status', 0)->count();
     
                 $attendancePercentage = $totalSessionsCount > 0 ? ($presentCount / $totalSessionsCount) * 100 : 0;
+
+                $latestInvoice = $trainee->invoices()->orderBy('created_at','desc')->first();
+                $invoiceStatus = $latestInvoice->status_formatted;
     
                 // Store the trainee's data in the results array
                 if (isset($trainee->name)) {
                     $results[] = [
+                        'latest_invoice_status' => $invoiceStatus, 
                         'attendance_percentage' => round($attendancePercentage, 2) . ' %',
                         'present_count' => $presentCount,
                         'absent_count' => $absentCount,
@@ -201,16 +205,6 @@ class AttendanceReportsController extends Controller
 
         return Excel::download(new TraineeAttendanceExportByGroup($results), 'trainee_attendance_by_group.xlsx');
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
 }
