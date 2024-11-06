@@ -24,14 +24,14 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
 
     public function headings(): array
     {
-        return ['استحقاق الشهادة','تاريخ الدفع','حالة الدفع', 'نسبة الحضور', 'عدد الحضور', 'عدد الغياب','الإيميل',' الجوال','رقم الهوية','اسم المتدرب','حالة الدفع'];
+        return ['استحقاق الشهادة','تاريخ الدفع','حالة الدفع', 'نسبة الحضور', 'عدد الحضور', 'عدد الغياب','الإيميل',' الجوال','رقم الهوية','اسم المتدرب'];
     }
 
     public function styles(Worksheet $sheet)
     {
-        $sheet->getStyle('A1:H1')->getFont()->setBold(true);
-        $sheet->getStyle('A1:H1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle('A1:H1')->getFill()
+        $sheet->getStyle('A1:J1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:J1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A1:J1')->getFill()
             ->setFillType('solid')
             ->getStartColor()->setARGB('FFFFE599');
 
