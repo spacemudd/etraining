@@ -24,7 +24,7 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
 
     public function headings(): array
     {
-        return ['استحقاق الشهادة', 'نسبة الحضور', 'عدد الحضور', 'عدد الغياب','الإيميل',' الجوال','رقم الهوية','اسم المتدرب','حالة الدفع'];
+        return ['استحقاق الشهادة','حالة الدفع', 'نسبة الحضور', 'عدد الحضور', 'عدد الغياب','الإيميل',' الجوال','رقم الهوية','اسم المتدرب','حالة الدفع'];
     }
 
     public function styles(Worksheet $sheet)
@@ -47,16 +47,17 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
                 $sheet->getStyle("A$rowIndex")->getFont()->getColor()->setARGB('FFFF0000'); 
             }
 
-            $sheet->getCell("B$rowIndex")->setValue($trainee['attendance_percentage']);
-            $sheet->getCell("C$rowIndex")->setValue($trainee['present_count']);
-            $sheet->getCell("D$rowIndex")->setValue($trainee['absent_count']);
+
+            $sheet->getCell("B$rowIndex")->setValue($trainee['invoice_status']);
+            $sheet->getCell("C$rowIndex")->setValue($trainee['attendance_percentage']);
+            $sheet->getCell("D$rowIndex")->setValue($trainee['present_count']);
+            $sheet->getCell("E$rowIndex")->setValue($trainee['absent_count']);
 
 
-            $sheet->getCell("E$rowIndex")->setValue($trainee['email']);
-            $sheet->getCell("F$rowIndex")->setValue($trainee['phone']);
-            $sheet->getCell("G$rowIndex")->setValue($trainee['identity_number']);
-            $sheet->getCell("H$rowIndex")->setValue($trainee['trainee_name']);
-            $sheet->getCell("I$rowIndex")->setValue($trainee['invoice_status']);
+            $sheet->getCell("F$rowIndex")->setValue($trainee['email']);
+            $sheet->getCell("G$rowIndex")->setValue($trainee['phone']);
+            $sheet->getCell("H$rowIndex")->setValue($trainee['identity_number']);
+            $sheet->getCell("I$rowIndex")->setValue($trainee['trainee_name']);
             
 
             $sheet->getStyle("A$rowIndex:I$rowIndex")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
