@@ -186,10 +186,13 @@ class AttendanceReportsController extends Controller
 
                 $latestInvoice = $trainee->invoices()->orderBy('created_at', 'desc')->first();
                  $invoiceStatus = $latestInvoice ? $latestInvoice->status_formatted : 'لا توجد فاتورة';
+                 $paidDate= $latestInvoice ? $latestInvoice->paid_at : '';
+                 
     
                 // Store the trainee's data in the results array
                 if (isset($trainee->name)) {
                     $results[] = [
+                        'paid_date' => $paidDate,
                         'invoice_status' => $invoiceStatus, 
                         'attendance_percentage' => round($attendancePercentage, 2) . ' %',
                         'present_count' => $presentCount,
