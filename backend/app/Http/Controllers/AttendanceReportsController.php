@@ -190,6 +190,7 @@ class AttendanceReportsController extends Controller
                 // Store the trainee's data in the results array
                 if (isset($trainee->name)) {
                     $results[] = [
+                        'invoice_status' => $invoiceStatus, 
                         'attendance_percentage' => round($attendancePercentage, 2) . ' %',
                         'present_count' => $presentCount,
                         'absent_count' => $absentCount,
@@ -197,7 +198,6 @@ class AttendanceReportsController extends Controller
                         'phone' => $trainee->phone,
                         'identity_number' =>$trainee->identity_number,
                         'trainee_name' => $trainee->name,
-                        'invoice_status' => $invoiceStatus, 
 
                     ];
                 }
