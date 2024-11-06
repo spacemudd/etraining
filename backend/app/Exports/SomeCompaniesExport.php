@@ -11,7 +11,7 @@ class SomeCompaniesExport implements FromCollection, WithHeadings
     public function collection()
     {
         return Trainee::withTrashed()
-            ->where('city_id', 'd4fb0162-81ec-4b17-812a-06c7c4306cb5')
+            ->where('city_id', '24ae4690-3c0f-4627-a0c5-240daf4a9f2a')
             ->whereBetween('created_at', ['2021-01-01 00:00:00', '2023-12-31 23:59:59'])
             ->where(function($q) {
                 $q->whereNotNull('suspended_at')
