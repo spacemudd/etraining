@@ -69,8 +69,10 @@ export default {
             this.$wait.start('LOADING_GOSI')
             axios.post(route('back.gosi.show'), {ninOrIqama: this.ninOrIqama})
                 .then(response => {
+                    console.log(response.data);
                     this.data = response.data;
                     this.$wait.end('LOADING_GOSI')
+                    
                 })
                 .catch(error => {
                     this.$wait.end('LOADING_GOSI')
