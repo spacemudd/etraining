@@ -24,14 +24,14 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
 
     public function headings(): array
     {
-        return ['استحقاق الشهادة','تاريخ الدفع','حالة الدفع', 'نسبة الحضور', 'عدد الحضور', 'عدد الغياب','الإيميل',' الجوال','رقم الهوية','اسم المتدرب'];
+        return ['استحقاق الشهادة','تاريخ الدفع','استحقاق الى','استحقاق من ','حالة الدفع', 'نسبة الحضور', 'عدد الحضور', 'عدد الغياب','الإيميل',' الجوال','رقم الهوية','اسم المتدرب'];
     }
 
     public function styles(Worksheet $sheet)
     {
-        $sheet->getStyle('A1:J1')->getFont()->setBold(true);
-        $sheet->getStyle('A1:J1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle('A1:J1')->getFill()
+        $sheet->getStyle('A1:L1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:L1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A1:L1')->getFill()
             ->setFillType('solid')
             ->getStartColor()->setARGB('FFFFE599');
 
@@ -49,19 +49,23 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
 
 
             $sheet->getCell("B$rowIndex")->setValue($trainee['paid_date']);
-            $sheet->getCell("C$rowIndex")->setValue($trainee['invoice_status']);
-            $sheet->getCell("D$rowIndex")->setValue($trainee['attendance_percentage']);
-            $sheet->getCell("E$rowIndex")->setValue($trainee['present_count']);
-            $sheet->getCell("F$rowIndex")->setValue($trainee['absent_count']);
+
+            $sheet->getCell("C$rowIndex")->setValue($trainee['invoice_to_date']);
+            $sheet->getCell("D$rowIndex")->setValue($trainee['invoice_from_date']);
+
+            $sheet->getCell("E$rowIndex")->setValue($trainee['invoice_status']);
+            $sheet->getCell("F$rowIndex")->setValue($trainee['attendance_percentage']);
+            $sheet->getCell("G$rowIndex")->setValue($trainee['present_count']);
+            $sheet->getCell("H$rowIndex")->setValue($trainee['absent_count']);
 
 
-            $sheet->getCell("G$rowIndex")->setValue($trainee['email']);
-            $sheet->getCell("H$rowIndex")->setValue($trainee['phone']);
-            $sheet->getCell("I$rowIndex")->setValue($trainee['identity_number']);
-            $sheet->getCell("J$rowIndex")->setValue($trainee['trainee_name']);
+            $sheet->getCell("I$rowIndex")->setValue($trainee['email']);
+            $sheet->getCell("J$rowIndex")->setValue($trainee['phone']);
+            $sheet->getCell("K$rowIndex")->setValue($trainee['identity_number']);
+            $sheet->getCell("L$rowIndex")->setValue($trainee['trainee_name']);
             
 
-            $sheet->getStyle("A$rowIndex:I$rowIndex")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle("A$rowIndex:L$rowIndex")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
         }
     }
 }
