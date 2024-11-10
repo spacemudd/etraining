@@ -212,10 +212,15 @@ class AttendanceReportsController extends Controller
 
             $invoiceStatus = $invoice ? $invoice->status_formatted : 'لا توجد فاتورة';
             $paidDate = $invoice ? $invoice->paid_at : '';
+            $invoiceFromDate=$invoice ?$invoice->from_date : '' ;
+            $invoiceToDate=$invoice ?$invoice->to_date : '' ;
+
 
             if (isset($trainee->name)) {
                 $results[] = [
                     'paid_date' => $paidDate,
+                    'invoice_to_date' => $invoiceToDate,
+                    'invoice_from_date'=>$invoiceFromDate,
                     'invoice_status' => $invoiceStatus,
                     'attendance_percentage' => round($attendancePercentage, 2) . ' %',
                     'present_count' => $presentCount,
