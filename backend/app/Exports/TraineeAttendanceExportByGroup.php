@@ -39,7 +39,7 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
             $attendanceNumeric = floatval(str_replace(' %', '', $trainee['attendance_percentage']));
             $rowIndex = $key + 2;
 
-            if ($attendanceNumeric >= 50) {
+            if ($attendanceNumeric >= 50 && $trainee['invoice_status']=='مدفوع') {
                 $sheet->getCell("A$rowIndex")->setValue('يستحق');
                 $sheet->getStyle("A$rowIndex")->getFont()->getColor()->setARGB('FF00FF00'); 
             } else {
