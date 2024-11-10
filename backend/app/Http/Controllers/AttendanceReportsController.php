@@ -11,9 +11,12 @@ use App\Models\Back\AttendanceReportRecord;
 use App\Models\Back\CourseBatch;
 use App\Models\Back\CourseBatchSession;
 use App\Models\Back\CourseBatchSessionAttendance;
+use App\Models\Back\Invoice;
+use Carbon\Carbon;
 use Excel;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+
 
 
 
@@ -163,52 +166,72 @@ class AttendanceReportsController extends Controller
     
 
     public function exportAttendanceReportByGroup($courseBatchId)
-    {
-        ini_set('memory_limit', '512M');
-        set_time_limit(300);
-    
-        $courseBatch = CourseBatch::findOrFail($courseBatchId);
-        
-        $results = [];
-        $totalSessionsCount = $courseBatch->course_batch_sessions()->count(); 
-    
-        $courseBatch->trainee_group->trainees()->chunk(100, function ($traineesChunk) use (&$results, $courseBatchId, $totalSessionsCount) {
-            foreach ($traineesChunk as $trainee) {
-                $attendanceRecords = $trainee->attendanceReportRecords()
-                    ->where('course_batch_id', $courseBatchId)
-                    ->get()
-                    ->unique('course_batch_session_id');
-    
-                $presentCount = $attendanceRecords->whereIn('status', [1, 2, 3])->count();
-                $absentCount = $attendanceRecords->where('status', 0)->count();
-    
-                $attendancePercentage = $totalSessionsCount > 0 ? ($presentCount / $totalSessionsCount) * 100 : 0;
+{
+    ini_set('memory_limit', '512M');
+    set_time_limit(300);
 
-                $latestInvoice = $trainee->invoices()->orderBy('created_at', 'desc')->first();
-                 $invoiceStatus = $latestInvoice ? $latestInvoice->status_formatted : 'لا توجد فاتورة';
-                 $paidDate= $latestInvoice ? $latestInvoice->paid_at : '';
-                 
-    
-                // Store the trainee's data in the results array
-                if (isset($trainee->name)) {
-                    $results[] = [
-                        'paid_date' => $paidDate,
-                        'invoice_status' => $invoiceStatus, 
-                        'attendance_percentage' => round($attendancePercentage, 2) . ' %',
-                        'present_count' => $presentCount,
-                        'absent_count' => $absentCount,
-                        'email' => $trainee->email,
-                        'phone' => $trainee->phone,
-                        'identity_number' =>$trainee->identity_number,
-                        'trainee_name' => $trainee->name,
+    $courseBatch = CourseBatch::findOrFail($courseBatchId);
 
-                    ];
-                }
-            }
-        });
+    $courseEndDate = Carbon::parse($courseBatch->ends_at);
+    $startOfMonth = $courseEndDate->copy()->startOfMonth();
+    $daysDifference = $courseEndDate->diffInDays($startOfMonth);
 
-        return Excel::download(new TraineeAttendanceExportByGroup($results), 'trainee_attendance_by_group.xlsx');
+    if ($daysDifference >= 15) {
+        $targetMonth = $courseEndDate->month;
+        $targetYear = $courseEndDate->year;
+    } else {
+        $targetMonth = $courseEndDate->subMonth()->month;
+        $targetYear = $courseEndDate->year;
     }
+    $startOfTargetMonth = Carbon::createFromDate($targetYear, $targetMonth, 1)->startOfMonth();
+    $endOfTargetMonth = Carbon::createFromDate($targetYear, $targetMonth, 1)->endOfMonth();
+
+    $results = [];
+    $totalSessionsCount = $courseBatch->course_batch_sessions()->count();
+
+    $courseBatch->trainee_group->trainees()->chunk(100, function ($traineesChunk) use (&$results, $courseBatchId, $totalSessionsCount, $startOfTargetMonth, $endOfTargetMonth) {
+        foreach ($traineesChunk as $trainee) {
+            $attendanceRecords = $trainee->attendanceReportRecords()
+                ->where('course_batch_id', $courseBatchId)
+                ->get()
+                ->unique('course_batch_session_id');
+
+            $presentCount = $attendanceRecords->whereIn('status', [1, 2, 3])->count();
+            $absentCount = $attendanceRecords->where('status', 0)->count();
+
+            $attendancePercentage = $totalSessionsCount > 0 ? ($presentCount / $totalSessionsCount) * 100 : 0;
+
+            $invoice = Invoice::where('trainee_id', $trainee->id)->where(function ($query) use ($startOfTargetMonth, $endOfTargetMonth) {
+                $query->whereBetween('from_date', [$startOfTargetMonth, $endOfTargetMonth])
+                      ->orWhereBetween('to_date', [$startOfTargetMonth, $endOfTargetMonth])
+                      ->orWhere(function ($query) use ($startOfTargetMonth, $endOfTargetMonth) {
+                          $query->where('from_date', '<=', $startOfTargetMonth)
+                                ->where('to_date', '>=', $endOfTargetMonth);
+                      });
+            })->first();
+
+            $invoiceStatus = $invoice ? $invoice->status_formatted : 'لا توجد فاتورة';
+            $paidDate = $invoice ? $invoice->paid_at : '';
+
+            if (isset($trainee->name)) {
+                $results[] = [
+                    'paid_date' => $paidDate,
+                    'invoice_status' => $invoiceStatus,
+                    'attendance_percentage' => round($attendancePercentage, 2) . ' %',
+                    'present_count' => $presentCount,
+                    'absent_count' => $absentCount,
+                    'email' => $trainee->email,
+                    'phone' => $trainee->phone,
+                    'identity_number' => $trainee->identity_number,
+                    'trainee_name' => $trainee->name,
+                ];
+            }
+        }
+    });
+
+    return Excel::download(new TraineeAttendanceExportByGroup($results), 'trainee_attendance_by_group.xlsx');
+}
+
     
     
 }
