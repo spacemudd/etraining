@@ -19,11 +19,11 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
 
     public function collection()
     {
-        // return collect($this->trainees);
-        return collect($this->trainees)->sortByDesc(function ($trainee) {
-            $attendanceNumeric = floatval(str_replace(' %', '', $trainee['attendance_percentage']));
-            return ($attendanceNumeric >= 50 && $trainee['invoice_status'] == 'مدفوع') ? 1 : 0;
-        })->values();
+        return collect($this->trainees);
+        // return collect($this->trainees)->sortByDesc(function ($trainee) {
+        //     $attendanceNumeric = floatval(str_replace(' %', '', $trainee['attendance_percentage']));
+        //     return ($attendanceNumeric >= 50 && $trainee['invoice_status'] == 'مدفوع') ? 1 : 0;
+        // })->values();
     }
 
     public function headings(): array

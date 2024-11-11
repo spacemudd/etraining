@@ -234,6 +234,11 @@ class AttendanceReportsController extends Controller
         }
     });
 
+         $results = collect($results)->sortByDesc(function ($trainee) {
+        $attendanceNumeric = floatval(str_replace(' %', '', $trainee['attendance_percentage']));
+        return ($attendanceNumeric >= 50 && $trainee['invoice_status'] == 'مدفوع') ? 1 : 0;
+        })->values()->toArray();
+
     return Excel::download(new TraineeAttendanceExportByGroup($results), 'trainee_attendance_by_group.xlsx');
 }
 
