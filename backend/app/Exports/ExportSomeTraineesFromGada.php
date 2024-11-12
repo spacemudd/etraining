@@ -16,7 +16,7 @@ class ExportSomeTraineesFromGada implements FromCollection,WithHeadings
     public function collection()
     {
         return Trainee::
-              whereNull('deleted-at')
+              whereNull('deleted_at')
              ->whereNull('suspended_at')
              ->get(['name','phone'])
              ->map(function($trainee){
