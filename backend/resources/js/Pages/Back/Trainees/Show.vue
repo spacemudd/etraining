@@ -260,6 +260,7 @@
           >
             {{ $t("words.suspend") }}
           </inertia-link>
+          
         </div>
 
         <div

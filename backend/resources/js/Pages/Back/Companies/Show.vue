@@ -264,15 +264,73 @@
 
         <div class="md:col-span-4 sm:col-span-1">
           <div class="flex justify-end items-center gap-4">
-            <button
+
+
+
+            <!-- <button
               @click="deleteTrainees(selected)"
               type="button"
               :disabled="!isSelected"
               class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700"
             >
               {{ $t("words.block") }}
+            </button> -->
+   <div>
+    <!-- <h1>
+        {{ $t('words.reason') }}
+    </h1> -->
+
+    <div class="flex flex-row items-center justify-between">
+        <select class="mt-1 w-full max-w-xs bg-gray-100 appearance-none border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:border-gray-500"
+                v-if="showSelect"
+                v-model="deleted_remark"
+                id="reason">
+            <option value="عدم سداد">عدم سداد</option>
+            <option value="استبعاد من الشركة">استبعاد من الشركة</option>
+            <option value="استقالة">استقالة</option>
+            <option value="انسحاب">انسحاب</option>
+            <option value="عمل مشاكل">عمل مشاكل</option>
+            <option value="غير مسجلة في الشركة">غير مسجلة في الشركة</option>
+            <option value="عدم الالتزام في شروط المعهد">عدم الالتزام في شروط المعهد</option>
+            <option value="رجيع">رجيع</option>
+            <option value="غير مؤهل">غير مؤهل</option>
+            <option value="حساب مكرر">حساب مكرر</option>
+            <option value="استبعاد لعدم الحضور">استبعاد لعدم الحضور</option>
+            <option value="عدم التقييد بشرح المعهد">عدم التقييد بشرح المعهد</option>
+            <option value="لديها سجل التجاري">لديها سجل التجاري</option>
+            <option value="مستنفذة للدعم">مستنفذة للدعم</option>
+            <option value="عدم سداد مستحق مالي / غير نشط في التأمينات">عدم سداد مستحق مالي / غير نشط في التأمينات</option>
+            <option value="رفضت التوقيع على الاعتراض">رفضت التوقيع على الاعتراض</option>
+            <option value="حذف من قبل التأمينات">حذف من قبل التأمينات</option>
+            <option value="قائمة سوداء">قائمة سوداء</option>
+            <option value="المباشرة في مقر الشركة">المباشرة في مقر الشركة</option>
+        </select>
+
+        <button @click="showSelect = true"
+                 v-if="!showSelect"
+                class="inline-flex items-center px-8 mr-5  py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed bg-red-500 hover:bg-red-600 active:bg-red-700"
+                :disabled="!isSelected">
+            {{ $t('words.suspend') }}
+        </button>
+
+          <button
+              @click="deleteTrainees(selected)"
+               v-if="showSelect"
+              type="button"
+              :disabled="!isSelected"
+              class="inline-flex items-center px-8 mr-5  py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed bg-red-500 hover:bg-red-600 active:bg-red-700"
+            >
+              {{ $t("words.block") }}
             </button>
+    </div>
+</div>
+
+
+
+
+
             <button
+
               @click="unBlockTrainees(selected)"
               type="button"
               :disabled="!isSelected"
@@ -814,6 +872,8 @@ export default {
   },
   data() {
     return {
+      showSelect: false,
+      deleted_remark: null,
       select_all: false,
       isSelected: false,
       // selectedTrainees: [],
@@ -954,6 +1014,7 @@ export default {
         this.$inertia.post(
           route("back.trainees.suspend.all", {
             data: selected,
+            deleted_remark: this.deleted_remark,
           })
         );
       }

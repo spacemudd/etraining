@@ -1151,7 +1151,12 @@ class TraineesController extends Controller
     public function suspendAll(Request $request){
 
         DB::beginTransaction();
-        $reason = 'استبعاد من الشركة';
+        if($request->deleted_remark){
+            $reason=$request->deleted_remark;
+        }else{
+            $reason='استبعاد من الشركة';
+        }
+       
         $trainees = Trainee::findOrFail($request->data);
             foreach ($trainees as $trainee) {
                 DB::beginTransaction();
