@@ -40,6 +40,8 @@ use Inertia\Inertia;
 use Mail;
 use PDF;
 use Spatie\MediaLibrary\Support\MediaStream;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
 
 class TraineesController extends Controller
 {
@@ -1232,4 +1234,32 @@ class TraineesController extends Controller
             ->addMedia($downloads);
 
     }
+
+    
+    public function uploadExcel(Request $request)
+{
+    $file = $request->file('file');
+    $path = $file->storeAs('uploads', 'trainees.xlsx');
+
+    $data = Excel::toCollection(null, $path)->first();
+
+    $ids = $data->pluck(1); 
+
+    $results = $data->map(function ($row) {
+        $id = $row[1]; 
+        $exists = Trainee::where('identity_number', $id)->exists(); 
+
+        $row[] = $exists ? 'Exist' : 'Not Exist';
+        return $row;
+    });
+
+    $filename = 'trainees_results.xlsx';
+    Excel::store(new \App\Exports\ResultsExport($results), $filename);
+
+    return Storage::download($filename);
+}
+
+public function showUploadExcel(){
+    dd("hi");
+}
 }

@@ -708,7 +708,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::delete('trainees/{trainee_id}/attachments/cv', [\App\Http\Controllers\Back\TraineesController::class, 'deleteCv'])->name('trainees.attachments.cv.destroy');
         Route::get('trainees/{trainee_id}/block', [\App\Http\Controllers\Back\TraineesController::class, 'blockView'])->name('trainees.block');
         Route::post('trainees/{trainee_id}/block', [\App\Http\Controllers\Back\TraineesController::class, 'block'])->name('trainees.block.store');
-        Route::post('trainees/{trainee_id}/suspend', [\App\Http\Controllers\Back\TraineesController::class, 'suspend'])->name('trainees.suspend.store');
+        Route::post('trainees/{trainee_id}/suspend', [\App\Http\Controllers\Back\TraineesController::class, 'suspend'])->name('trainees.suspend.all');
         Route::get('trainees/{trainee_id}/suspend/create', [\App\Http\Controllers\Back\TraineesController::class, 'suspendCreate'])->name('trainees.suspend.create');
         Route::post('trainees/suspend', [\App\Http\Controllers\Back\TraineesController::class, 'suspendAll'])->name('trainees.suspend.all');
         Route::post('trainees/unblock', [\App\Http\Controllers\Back\TraineesController::class, 'unBlockAll'])->name('trainees.unblock.all');
@@ -894,6 +894,8 @@ Route::get('/attendance/export-by-group/{courseBatch}', [\App\Http\Controllers\A
 
 
  Route::get('/company-attendance-reports/approve/{id}', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'emailApprove']);
+ Route::get('/showUploadExcel', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'showUploadExcel']);
+
 
 
 

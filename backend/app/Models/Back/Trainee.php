@@ -26,6 +26,8 @@ use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
+
+
 class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
 {
     use HasFactory;
@@ -566,5 +568,8 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     {
         return $this->belongsTo(TraineeAgreement::class, 'trainee_agreement_id');
     }
+
+
+
 
 }
