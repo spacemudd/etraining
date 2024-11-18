@@ -71,7 +71,6 @@ export default {
                 .then(response => {
                     this.data = response.data;
                     this.$wait.end('LOADING_GOSI')
-                    console.log(this.data);
                 })
                 .catch(error => {
                     this.$wait.end('LOADING_GOSI')
