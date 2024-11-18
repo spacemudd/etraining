@@ -1244,15 +1244,15 @@ class TraineesController extends Controller
     $data = Excel::toCollection(null, $path)->first();
 
     $ids = $data->pluck(1); 
-
     $results = $data->map(function ($row) {
         $id = $row[1]; 
         $exists = Trainee::where('identity_number', $id)->exists(); 
 
         $row[] = $exists ? 'Exist' : 'Not Exist';
-        dd($row);
+        // dd($row);
         return $row;
     });
+    dd($results);
 
     $filename = 'trainees_results.xlsx';
     Excel::store(new \App\Exports\ResultsExport($results), $filename);
