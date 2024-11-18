@@ -894,7 +894,7 @@ Route::get('/attendance/export-by-group/{courseBatch}', [\App\Http\Controllers\A
 
 
  Route::get('/company-attendance-reports/approve/{id}', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'emailApprove']);
- Route::get('/showUploadExcel', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'showUploadExcel']);
+ Route::get('/showUploadExcel', [\App\Http\Controllers\Back\TraineesController::class, 'showUploadExcel']);
 
 
 
