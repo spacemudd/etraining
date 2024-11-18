@@ -1260,6 +1260,6 @@ class TraineesController extends Controller
 }
 
 public function showUploadExcel(){
-    dd("hi");
+    return Inertia::render('Back/Trainees/ShowUploadExcel');
 }
 }
