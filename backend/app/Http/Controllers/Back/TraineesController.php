@@ -1250,6 +1250,7 @@ class TraineesController extends Controller
         $exists = Trainee::where('identity_number', $id)->exists(); 
 
         $row[] = $exists ? 'Exist' : 'Not Exist';
+        dd($row);
         return $row;
     });
 
