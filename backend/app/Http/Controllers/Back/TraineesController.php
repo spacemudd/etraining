@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Back;
 
-use \Maatwebsite\Excel\ResultsExport;
 use App\Actions\Fortify\CreateNewTraineeUser;
 use App\Http\Controllers\Controller;
 use App\Jobs\ExportArchivedTraineesToExcelJob;
@@ -36,13 +35,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
-use Maatwebsite\Excel\Facades\Excel;
 use Mail;
 use PDF;
 use Spatie\MediaLibrary\Support\MediaStream;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
 
 class TraineesController extends Controller
 {
@@ -1240,28 +1239,24 @@ class TraineesController extends Controller
     public function uploadExcel(Request $request)
 {
     $file = $request->file('file');
-    // $path = $file->storeAs('uploads', 'trainees.xlsx');
+    $path = $file->storeAs('uploads', 'trainees.xlsx');
 
-    $data = Excel::toArray([], $file);
+    $data = Excel::toCollection(null, $path)->first();
 
-    // $ids = $data->pluck(1); 
-    $results = [];
+    $ids = $data->pluck(1); 
 
-    foreach ($data[0] as $row) {
-        $id = $row['id']; 
-        $exists = Trainee::where('identity_number', $id)->exists();
-        $results[] = [
-            'id' => $id,
-            'status' => $exists ? 'exist' : 'not exist',
-        ];
-    }
+    $results = $data->map(function ($row) {
+        $id = $row[1]; 
+        $exists = Trainee::where('identity_number', $id)->exists(); 
 
-    $export = new ResultsExport($results);
-    return Excel::download($export, 'results.xlsx');
+        $row[] = $exists ? 'Exist' : 'Not Exist';
+        return $row;
+    });
 
-    // Excel::store(new \App\Exports\ResultsExport($results), $filename);
+    $filename = 'trainees_results.xlsx';
+    Excel::store(new \App\Exports\ResultsExport($results), $filename);
 
-    // return Storage::download($filename);
+    return Storage::download($filename);
 }
 
 public function showUploadExcel(){
