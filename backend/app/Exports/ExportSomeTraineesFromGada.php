@@ -16,12 +16,12 @@ class ExportSomeTraineesFromGada implements FromCollection,WithHeadings
     public function collection()
     {
         return Trainee::
-              whereNull('deleted_at')
-             ->whereNull('suspended_at')
+              where('city_id','e5a4a741-302f-44fa-8c44-06df64e68b6d')
+             ->whereNull('company_id')
              ->get(['name','phone'])
              ->map(function($trainee){
                 return [
-             
+                    'identity_number' => $trainee->identity_number,
                     'phone'=> $trainee->phone,
                     'name' => $trainee->name,
                 ];
@@ -31,6 +31,7 @@ class ExportSomeTraineesFromGada implements FromCollection,WithHeadings
     public function headings(): array
     {
         return [
+            'رقم الهوية'
             'رقم الجوال',
             'الإسم'
         ];
