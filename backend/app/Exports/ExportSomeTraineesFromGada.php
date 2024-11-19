@@ -31,7 +31,7 @@ class ExportSomeTraineesFromGada implements FromCollection,WithHeadings
     public function headings(): array
     {
         return [
-            'رقم الهوية'
+            'رقم الهوية',
             'رقم الجوال',
             'الإسم'
         ];
