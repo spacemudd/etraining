@@ -16,7 +16,7 @@ class ExportSomeTraineesFromGada implements FromCollection,WithHeadings
     public function collection()
     {
         return Trainee::
-              where('city_id','e5a4a741-302f-44fa-8c44-06df64e68b6d')
+              where('city_id','24ae4690-3c0f-4627-a0c5-240daf4a9f2a')
              ->whereNull('company_id')
              ->get(['name','phone','identity_number'])
              ->map(function($trainee){
