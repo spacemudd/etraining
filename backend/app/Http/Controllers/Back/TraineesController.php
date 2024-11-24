@@ -1151,34 +1151,42 @@ class TraineesController extends Controller
 
     public function suspendAll(Request $request)
     {
-        DB::beginTransaction();
+        ini_set('max_execution_time', 300); 
+        ini_set('memory_limit', '512M'); 
     
         $reason = $request->deleted_remark ?: 'استبعاد من الشركة';
     
         collect($request->data)->chunk(10)->each(function ($chunk) use ($reason) {
-            $trainees = Trainee::whereIn('id', $chunk)->get();
+            DB::beginTransaction();
     
-            foreach ($trainees as $trainee) {
-                $trainee->deleted_remark = $reason;
-                $trainee->suspended_at = now()->setSecond(0);
-                $trainee->deleted_by_id = auth()->user()->id;
-                $trainee->save();
+            try {
+                $trainees = Trainee::whereIn('id', $chunk)->get();
     
-                TraineeBlockList::create([
-                    'trainee_id' => $trainee->id,
-                    'identity_number' => $trainee->identity_number,
-                    'name' => $trainee->name,
-                    'email' => $trainee->email,
-                    'phone' => $trainee->phone,
-                    'phone_additional' => $trainee->phone_additional,
-                    'reason' => $reason,
-                ]);
+                foreach ($trainees as $trainee) {
+                    $trainee->deleted_remark = $reason;
+                    $trainee->suspended_at = now()->setSecond(0);
+                    $trainee->deleted_by_id = auth()->user()->id;
+                    $trainee->save();
     
-                $trainee->delete(); 
+                    TraineeBlockList::create([
+                        'trainee_id' => $trainee->id,
+                        'identity_number' => $trainee->identity_number,
+                        'name' => $trainee->name,
+                        'email' => $trainee->email,
+                        'phone' => $trainee->phone,
+                        'phone_additional' => $trainee->phone_additional,
+                        'reason' => $reason,
+                    ]);
+    
+                    $trainee->delete(); 
+                }
+    
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                \Log::error('Error suspending trainees: ' . $e->getMessage());
             }
         });
-    
-        DB::commit(); 
     
         if (Str::contains(redirect()->back()->getTargetUrl(), 'companies')) {
             return redirect()->back()->with('success', 'تم استبعاد المتدربين بنجاح');
@@ -1186,6 +1194,7 @@ class TraineesController extends Controller
     
         return redirect()->route('back.trainees.block-list.index')->with('success', 'تم استبعاد المتدربين بنجاح');
     }
+    
     
     
     
