@@ -1011,7 +1011,7 @@ export default {
     },
     deleteTrainees: function (selected) {
       if (confirm(this.$t("words.are-you-sure"))) {
-        console.log(selected);
+        console.log("hii");
         this.$inertia.post(
           route("back.trainees.suspend.all", {
             data: selected,
