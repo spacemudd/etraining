@@ -1010,7 +1010,6 @@ export default {
       }
     },
     deleteTrainees: function (selected) {
-     console.log(selected);
       if (confirm(this.$t("words.are-you-sure"))) {
         this.$inertia.post(
           route("back.trainees.suspend.all", {
