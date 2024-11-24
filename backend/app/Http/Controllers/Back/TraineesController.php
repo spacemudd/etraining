@@ -1152,16 +1152,55 @@ class TraineesController extends Controller
 
     public function suspendAll(Request $request)
     {
-        $reason = $request->deleted_remark ?: 'استبعاد من الشركة';
-        $userId = auth()->user()->id;
-        $traineeIds = collect($request->data);
+        DB::beginTransaction();
     
-        $traineeIds->chunk(100)->each(function ($chunk) use ($reason, $userId) {
-            SuspendTraineesJob::dispatch($chunk->toArray(), $reason, $userId);
-        });
+        try {
+            $reason = $request->deleted_remark ?: 'استبعاد من الشركة';
+            $userId = auth()->user()->id;
+            $traineeIds = collect($request->data);
     
-        return redirect()->route('back.trainees.block-list.index')->with('success', 'تم إرسال العملية إلى الخلفية.');
+            $traineeIds->chunk(100)->each(function ($chunk) use ($reason, $userId) {
+                Trainee::whereIn('id', $chunk)->update([
+                    'deleted_remark' => $reason,
+                    'suspended_at' => now()->setSecond(0),
+                    'deleted_by_id' => $userId,
+                ]);
+    
+                $trainees = Trainee::whereIn('id', $chunk)->get();
+    
+                $blockListData = $trainees->map(function ($trainee) use ($reason) {
+                    return [
+                        'trainee_id' => $trainee->id,
+                        'identity_number' => $trainee->identity_number,
+                        'name' => $trainee->name,
+                        'email' => $trainee->email,
+                        'phone' => $trainee->phone,
+                        'phone_additional' => $trainee->phone_additional,
+                        'reason' => $reason,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                })->toArray();
+    
+                TraineeBlockList::insert($blockListData);
+    
+                Trainee::whereIn('id', $chunk)->delete();
+            });
+    
+            DB::commit();
+    
+            if (Str::contains(redirect()->back()->getTargetUrl(), 'companies')) {
+                return redirect()->back();
+            }
+    
+            return redirect()->route('back.trainees.block-list.index');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error suspending trainees: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['message' => 'حدث خطأ أثناء تنفيذ العملية.']);
+        }
     }
+    
     
     
     
