@@ -1151,78 +1151,11 @@ class TraineesController extends Controller
 
     public function suspendAll(Request $request)
     {
-        ini_set('max_execution_time', 600); 
-        ini_set('memory_limit', '1024M'); 
-    
         $reason = $request->deleted_remark ?: 'استبعاد من الشركة';
-    
-        collect($request->data)->chunk(20)->each(function ($chunk) use ($reason) {
-            DB::beginTransaction();
-    
-            try {
-                $trainees = Trainee::whereIn('id', $chunk)->get();
-    
-                foreach ($trainees as $trainee) {
-                    $trainee->deleted_remark = $reason;
-                    $trainee->suspended_at = now()->setSecond(0);
-                    $trainee->deleted_by_id = auth()->user()->id;
-                    $trainee->save();
-    
-                    TraineeBlockList::create([
-                        'trainee_id' => $trainee->id,
-                        'identity_number' => $trainee->identity_number,
-                        'name' => $trainee->name,
-                        'email' => $trainee->email,
-                        'phone' => $trainee->phone,
-                        'phone_additional' => $trainee->phone_additional,
-                        'reason' => $reason,
-                    ]);
-    
-                    $trainee->delete(); 
-                }
-    
-                DB::commit();
-            } catch (\Exception $e) {
-                DB::rollBack();
-                \Log::error('Error suspending trainees: ' . $e->getMessage());
-            }
-        });
-    
-        if (Str::contains(redirect()->back()->getTargetUrl(), 'companies')) {
-            return redirect()->back()->with('success', 'تم استبعاد المتدربين بنجاح');
-        }
-    
-        return redirect()->route('back.trainees.block-list.index')->with('success', 'تم استبعاد المتدربين بنجاح');
-    }
-    
-    
-    
-    
-    
-    
 
-    public function unBlockAll(Request $request){
+        SuspendTraineesJob::dispatch($request->data, $reason);
 
-        DB::beginTransaction();
-        $trainees = Trainee::onlyTrashed()->findOrFail($request->data);
-        foreach ($trainees as $trainee) {
-            $trainee->suspended_at = null;
-            $trainee->deleted_by_id = null;
-            $trainee->save();
-            $trainee->restore();
-            $blockList = TraineeBlockList::where('trainee_id', $trainee->id)->first();
-            if ($blockList) {
-                $blockList->delete();
-            }
-        }
-        DB::commit();
-
-        if (Str::contains(redirect()->back()->getTargetUrl(), 'companies')) {
-            return redirect()->back();
-        }
-
-        return redirect()->route('back.trainees.block-list.index');
-
+        return redirect()->route('back.trainees.block-list.index')->with('success', 'تم إرسال المتدربين للإيقاف');
     }
 
     public function traineeMessage()
