@@ -1151,8 +1151,8 @@ class TraineesController extends Controller
 
     public function suspendAll(Request $request)
     {
-        ini_set('max_execution_time', 300); 
-        ini_set('memory_limit', '512M'); 
+        ini_set('max_execution_time', 600); 
+        ini_set('memory_limit', '1024M'); 
     
         $reason = $request->deleted_remark ?: 'استبعاد من الشركة';
     
