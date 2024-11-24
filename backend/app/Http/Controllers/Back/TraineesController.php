@@ -1157,6 +1157,7 @@ class TraineesController extends Controller
         // }else{
         //     $reason='استبعاد من الشركة';
         // }
+        dd("here");
         $reason='استبعاد من الشركة';
 
        
