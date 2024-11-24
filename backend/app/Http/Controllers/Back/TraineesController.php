@@ -1156,7 +1156,7 @@ class TraineesController extends Controller
     
         $reason = $request->deleted_remark ?: 'استبعاد من الشركة';
     
-        collect($request->data)->chunk(10)->each(function ($chunk) use ($reason) {
+        collect($request->data)->chunk(3)->each(function ($chunk) use ($reason) {
             DB::beginTransaction();
     
             try {
