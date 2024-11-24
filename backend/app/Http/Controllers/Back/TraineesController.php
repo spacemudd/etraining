@@ -1149,57 +1149,44 @@ class TraineesController extends Controller
         return redirect()->route('back.trainees.show', $trainee->id);
     }
 
-
     public function suspendAll(Request $request)
     {
         DB::beginTransaction();
     
-        try {
-            $reason = $request->deleted_remark ?: 'استبعاد من الشركة';
-            $userId = auth()->user()->id;
-            $traineeIds = collect($request->data);
+        $reason = $request->deleted_remark ?: 'استبعاد من الشركة';
     
-            $traineeIds->chunk(100)->each(function ($chunk) use ($reason, $userId) {
-                Trainee::whereIn('id', $chunk)->update([
-                    'deleted_remark' => $reason,
-                    'suspended_at' => now()->setSecond(0),
-                    'deleted_by_id' => $userId,
+        collect($request->data)->chunk(10)->each(function ($chunk) use ($reason) {
+            $trainees = Trainee::whereIn('id', $chunk)->get();
+    
+            foreach ($trainees as $trainee) {
+                $trainee->deleted_remark = $reason;
+                $trainee->suspended_at = now()->setSecond(0);
+                $trainee->deleted_by_id = auth()->user()->id;
+                $trainee->save();
+    
+                TraineeBlockList::create([
+                    'trainee_id' => $trainee->id,
+                    'identity_number' => $trainee->identity_number,
+                    'name' => $trainee->name,
+                    'email' => $trainee->email,
+                    'phone' => $trainee->phone,
+                    'phone_additional' => $trainee->phone_additional,
+                    'reason' => $reason,
                 ]);
     
-                $trainees = Trainee::whereIn('id', $chunk)->get();
-    
-                $blockListData = $trainees->map(function ($trainee) use ($reason) {
-                    return [
-                        'trainee_id' => $trainee->id,
-                        'identity_number' => $trainee->identity_number,
-                        'name' => $trainee->name,
-                        'email' => $trainee->email,
-                        'phone' => $trainee->phone,
-                        'phone_additional' => $trainee->phone_additional,
-                        'reason' => $reason,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ];
-                })->toArray();
-    
-                TraineeBlockList::insert($blockListData);
-    
-                Trainee::whereIn('id', $chunk)->delete();
-            });
-    
-            DB::commit();
-    
-            if (Str::contains(redirect()->back()->getTargetUrl(), 'companies')) {
-                return redirect()->back();
+                $trainee->delete(); 
             }
+        });
     
-            return redirect()->route('back.trainees.block-list.index');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Error suspending trainees: ' . $e->getMessage());
-            return redirect()->back()->withErrors(['message' => 'حدث خطأ أثناء تنفيذ العملية.']);
+        DB::commit(); 
+    
+        if (Str::contains(redirect()->back()->getTargetUrl(), 'companies')) {
+            return redirect()->back()->with('success', 'تم استبعاد المتدربين بنجاح');
         }
+    
+        return redirect()->route('back.trainees.block-list.index')->with('success', 'تم استبعاد المتدربين بنجاح');
     }
+    
     
     
     
