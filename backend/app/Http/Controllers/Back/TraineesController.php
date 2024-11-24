@@ -1149,13 +1149,47 @@ class TraineesController extends Controller
         return redirect()->route('back.trainees.show', $trainee->id);
     }
 
-    public function suspendAll(Request $request)
-    {
-        $reason = $request->deleted_remark ?: 'استبعاد من الشركة';
+    public function suspendAll(Request $request){
 
-        SuspendTraineesJob::dispatch($request->data, $reason);
+        DB::beginTransaction();
+        // if($request->deleted_remark){
+        //     $reason=$request->deleted_remark;
+        // }else{
+        //     $reason='استبعاد من الشركة';
+        // }
+        $reason='استبعاد من الشركة';
 
-        return redirect()->route('back.trainees.block-list.index')->with('success', 'تم إرسال المتدربين للإيقاف');
+       
+        $trainees = Trainee::findOrFail($request->data);
+            foreach ($trainees as $trainee) {
+                DB::beginTransaction();
+                $trainee->deleted_remark = $reason;
+                $trainee->suspended_at = now()->setSecond(0);
+                $trainee->deleted_by_id = auth()->user()->id;
+                $trainee->save();
+                $block = TraineeBlockList::create([
+                    'trainee_id' => $trainee->id,
+                    'identity_number' => $trainee->identity_number,
+                    'name' => $trainee->name,
+                    'email' => $trainee->email,
+                    'phone' => $trainee->phone,
+                    'phone_additional' => $trainee->phone_additional,
+                    'reason' => $reason,
+                ]);
+                $trainee->delete();
+                DB::commit();
+                }
+
+         DB::commit();
+
+
+        if (Str::contains(redirect()->back()->getTargetUrl(), 'companies')) {
+            return redirect()->back();
+        }
+
+        return redirect()->route('back.trainees.block-list.index');
+
+
     }
 
     public function traineeMessage()
