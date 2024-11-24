@@ -1150,40 +1150,40 @@ class TraineesController extends Controller
 
     public function suspendAll(Request $request){
 
-        DB::beginTransaction();
+        DB::beginTransaction(); 
         if($request->deleted_remark){
             $reason=$request->deleted_remark;
         }else{
             $reason='استبعاد من الشركة';
         }
-       
+        
         $trainees = Trainee::findOrFail($request->data);
-            foreach ($trainees as $trainee) {
+        foreach ($trainees as $trainee) {
                 DB::beginTransaction();
-                $trainee->deleted_remark = $reason;
-                $trainee->suspended_at = now()->setSecond(0);
-                $trainee->deleted_by_id = auth()->user()->id;
-                $trainee->save();
+            $trainee->deleted_remark = $reason;
+            $trainee->suspended_at = now()->setSecond(0);
+            $trainee->deleted_by_id = auth()->user()->id;
+            $trainee->save();
                 $block = TraineeBlockList::create([
-                    'trainee_id' => $trainee->id,
-                    'identity_number' => $trainee->identity_number,
-                    'name' => $trainee->name,
-                    'email' => $trainee->email,
-                    'phone' => $trainee->phone,
-                    'phone_additional' => $trainee->phone_additional,
-                    'reason' => $reason,
-                ]);
-                $trainee->delete();
+                'trainee_id' => $trainee->id,
+                'identity_number' => $trainee->identity_number,
+                'name' => $trainee->name,
+                'email' => $trainee->email,
+                'phone' => $trainee->phone,
+                'phone_additional' => $trainee->phone_additional,
+                'reason' => $reason,
+            ]);
+            $trainee->delete(); 
                 DB::commit();
-                }
+        }
+    
+        DB::commit(); 
 
-        DB::commit();
-
-
+    
         if (Str::contains(redirect()->back()->getTargetUrl(), 'companies')) {
             return redirect()->back();
         }
-
+    
         return redirect()->route('back.trainees.block-list.index');
 
 
@@ -1232,4 +1232,34 @@ class TraineesController extends Controller
             ->addMedia($downloads);
 
     }
+
+    
+    public function uploadExcel(Request $request)
+{
+    $file = $request->file('file');
+    $path = $file->storeAs('uploads', 'trainees.xlsx');
+
+    $data = Excel::toCollection(null, $path)->first();
+
+    $ids = $data->pluck(1); 
+    $results = $data->map(function ($row) {
+        $id = $row[1]; 
+        $exists = Trainee::where('identity_number', $id)->exists(); 
+
+        $row[] = $exists ? 'Exist' : 'Not Exist';
+        // dd($row);
+        return $row;
+    });
+    dd($results);
+
+    $filename = 'trainees_results.xlsx';
+    Excel::store(new \App\Exports\ResultsExport($results), $filename);
+
+    return Storage::download($filename);
+}
+
+
+public function showUploadExcel(){
+    return Inertia::render('Back/Trainees/ShowUploadExcel');
+}
 }
