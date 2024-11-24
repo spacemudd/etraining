@@ -1149,7 +1149,6 @@ class TraineesController extends Controller
     }
 
     public function suspendAll(Request $request){
-        dd("heeere");
 
         DB::beginTransaction();
         if($request->deleted_remark){
