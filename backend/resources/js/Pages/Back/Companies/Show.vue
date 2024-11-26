@@ -1009,16 +1009,27 @@ export default {
         this.$inertia.delete("/back/companies/" + this.company.id);
       }
     },
-    deleteTrainees: function (selected) {
-      if (confirm(this.$t("words.are-you-sure"))) {
-        this.$inertia.post(
-          route("back.trainees.suspend.all", {
-            data: selected,
-            deleted_remark: this.deleted_remark,
-          })
-        );
-      }
-    },
+  deleteTrainees: function (selected) {
+  const batchSize = 50;  
+  const batches = [];
+
+  for (let i = 0; i < selected.length; i += batchSize) {
+    batches.push(selected.slice(i, i + batchSize));
+  }
+
+  batches.forEach((batch) => {
+    if (confirm(this.$t("words.are-you-sure"))) {
+      console.log(batch);
+      this.$inertia.post(
+        route("back.trainees.suspend.all", {
+          data: batch,
+          deleted_remark: this.deleted_remark,
+        })
+      );
+    }
+  });
+},
+
     unBlockTrainees: function (selected) {
       if (confirm(this.$t("words.are-you-sure"))) {
         this.$inertia.post(
