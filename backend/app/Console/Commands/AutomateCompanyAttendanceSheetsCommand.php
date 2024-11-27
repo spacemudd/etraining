@@ -61,7 +61,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
         //foreach ($companies as $company_id) {
             $count = Company::with('invoices')
-                ->where('id', $company_id)
+                // ->where('id', $company_id)
                 ->whereHas('invoices', function ($query) use (
                     $from_date,
                     $select_invoices_from
@@ -71,7 +71,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
             $this->info('Found companies with invoices: '.$count);
 
             Company::with('invoices')
-                ->where('id', $company_id)
+                // ->where('id', $company_id)
                     ->whereHas('invoices', function ($query) use (
                     $from_date,
                     $select_invoices_from
@@ -81,7 +81,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
             // Companies that don't have invoices in the past month, to skip.
             $companies_with_invoices = Company::with('invoices')
-                ->where('id', $company_id)
+                // ->where('id', $company_id)
                 ->whereHas('invoices', function (
                     $query
                 ) use ($from_date, $select_invoices_from) {
@@ -93,7 +93,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
             }
 
             Company::with('invoices')
-                ->where('id', $company_id)
+                // ->where('id', $company_id)
                 ->whereHas('invoices', function ($query) use (
                     $from_date,
                     $select_invoices_from
