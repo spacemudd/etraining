@@ -56,6 +56,8 @@ class NoonService implements PaymentServiceInterface
             ]
         ]);
 
+        dd($url);
+
         if ($url->resultCode === 0) {
             return $url->result->checkoutData->postUrl;
         }
