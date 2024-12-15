@@ -15,6 +15,7 @@ use App\Services\NoonService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Mail;
 
@@ -76,7 +77,7 @@ class PaymentCardController extends Controller
     public function storeNoonReceipt(Request $request)
     {
         $order = $this->paymentService->getOrder($request->orderId, 5676); // try finding the order in Jasarah
-        dd($order);
+        Log::info($order);
         if ($order->resultCode === 5021 || $order->resultCode === 19089) { // 5021 is bad request in Noon (not found in Jasarah)
             $order = $this->paymentService->getOrder($request->orderId, 0); // try finding the order in Jisr
         }
