@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\Back\Invoice;
 use App\Services\NoonPaymentService;
 use Illuminate\Support\Str;
-use Log;
 use RuntimeException;
 
 /**
@@ -25,7 +24,7 @@ class NoonService implements PaymentServiceInterface
     {
         $centerId = $invoice->trainee->company->center_id;
 
-        $webhookUrl = ($centerId == 5676 ? 'https://app.jasarah-ksa.com/noon' : 'https://webhook.site/df7e7e75-0820-4aa6-86e8-45ba4866e125');
+        $webhookUrl = ($centerId == 5676 ? 'https://app.jasarah-ksa.com/noon' : 'https://prod.jisr-ksa.com/noon');
 
         $url = NoonPaymentService::getInstance()->initiate(
             $centerId,
@@ -57,7 +56,6 @@ class NoonService implements PaymentServiceInterface
             ]
         ]);
 
-        Log::info($webhookUrl);
 
         if ($url->resultCode === 0) {
             return $url->result->checkoutData->postUrl;
