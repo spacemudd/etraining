@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Back\Invoice;
 use App\Services\NoonService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Http;
 
 class PullNoonInvoicePaymentDetails extends Command
 {
@@ -43,7 +44,7 @@ class PullNoonInvoicePaymentDetails extends Command
 
         $url = 'https://prod.jisr-ksa.com/noon';
         $response = Http::post($url, json_decode('{"orderId": 9682538925904559,"orderStatus": "CAPTURED","eventType": "Sale","eventId": "da42a2e9-397b-4d50-b339-53e9d751a9e0","timeStamp": "2024-12-15T08:56:38.5732066Z","signature": "ZDYoQ+punJ8llb6ZwkG3XW4KIfORIH0DPRyU1Nxip5q4s/Uy8aqU5FmvqTf0HNRtjeohp0sdQaBeO55FslcYUA=="}'));
-        
+
 
 
 
