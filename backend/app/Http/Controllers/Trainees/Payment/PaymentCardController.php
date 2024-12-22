@@ -76,6 +76,8 @@ class PaymentCardController extends Controller
      */
     public function storeNoonReceipt(Request $request)
     {
+        Log::info($request->orderId);
+
         $order = $this->paymentService->getOrder($request->orderId, 5676); // try finding the order in Jasarah
         Log::info(json_encode($order));
 
