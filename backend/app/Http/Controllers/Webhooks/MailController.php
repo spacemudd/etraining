@@ -59,6 +59,8 @@ class MailController extends Controller
             return true;
         }
 
+        return true;
+
         $company = CompaniesService::new()->findByDomainName(Str::after($request->input('sender'), '@'));
 
         if (!$company) {

@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Back\Invoice;
 use App\Services\NoonService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Http;
 
 class PullNoonInvoicePaymentDetails extends Command
 {
@@ -39,6 +40,27 @@ class PullNoonInvoicePaymentDetails extends Command
      */
     public function handle()
     {
+
+        $invoices = [
+            '9682222208772355',
+            '9682803122066833',
+            '9682831000464280',
+
+        ];
+
+
+
+        $url = 'https://prod.jisr-ksa.com/noon';
+
+        foreach ($invoices as $ok => $in) {
+            $response = Http::post($url, json_decode('{"orderId": '.$in.',"orderStatus": "CAPTURED","eventType": "Sale","eventId": "da42a2e9-397b-4d50-b339-53e9d751a9e0","timeStamp": "2024-12-15T08:56:38.5732066Z","signature": "ZDYoQ+punJ8llb6ZwkG3XW4KIfORIH0DPRyU1Nxip5q4s/Uy8aqU5FmvqTf0HNRtjeohp0sdQaBeO55FslcYUA=="}', true));
+            $this->info('Finish: '.$ok);
+        }
+
+
+        return 1;
+
+
         $q = Invoice::whereRaw('LENGTH(payment_reference_id) < 20')
             ->where('payment_detail_brand', null)
             ->paid();
