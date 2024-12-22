@@ -77,7 +77,7 @@ class PaymentCardController extends Controller
     public function storeNoonReceipt(Request $request)
     {
         $order = $this->paymentService->getOrder($request->orderId,5676); // try finding the order in Jasarah
-        if ($order->resultCode === 5021 || $order->resultCode === 19089 || $order->resultCode === 19001 || is_null($order)) { // 5021 is bad request in Noon (not found in Jasarah)
+        if (is_null($order) || $order->resultCode === 5021 || $order->resultCode === 19089 || $order->resultCode === 19001) { // 5021 is bad request in Noon (not found in Jasarah)
             $order = $this->paymentService->getOrder($request->orderId, 0); // try finding the order in Jisr
         }
 
