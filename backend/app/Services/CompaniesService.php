@@ -45,14 +45,14 @@ class CompaniesService
     {
         // TODO: Instead of getting users, get all users with specific permission and send them.
         $users = [
-            'ceo@ptc-ksa.net',
-            'sara@ptc-ksa.net',
-            'cfo@ptc-ksa.net',
-            'acc@ptc-ksa.net',
-            'm_shehatah@ptc-ksa.net',
-            'eslam@ptc-ksa.net',
-            'collectionm@ptc-ksa.net',
-            'mashael.a@ptc-ksa.net',
+            'ceo@jisr-ksa.com',
+            'sara@jisr-ksa.com',
+            'cfo@jisr-ksa.com',
+            'acc@jisr-ksa.com',
+            'm_shehatah@jisr-ksa.com',
+            'eslam@jisr-ksa.com',
+            'collection7@jisr-ksa.com',
+            'mashael.a@jisr-ksa.com',
         ];
         Mail::to($users)->send(new NewCompanyEmail($company->id));
     }
@@ -61,14 +61,14 @@ class CompaniesService
     {
         // TODO: Instead of getting users, get all users with specific permission and send them.
         $users = [
-            'ceo@ptc-ksa.net',
-            'sara@ptc-ksa.net',
-            'cfo@ptc-ksa.net',
-            'acc@ptc-ksa.net',
-            'm_shehatah@ptc-ksa.net',
-            'eslam@ptc-ksa.net',
-            'collectionm@ptc-ksa.net',
-            'mashael.a@ptc-ksa.net',
+            'ceo@jisr-ksa.com',
+            'sara@jisr-ksa.com',
+            'cfo@jisr-ksa.com',
+            'acc@jisr-ksa.com',
+            'm_shehatah@jisr-ksa.com',
+            'eslam@jisr-ksa.com',
+            'collection7@jisr-ksa.com',
+            'mashael.a@jisr-ksa.com',
         ];
         Mail::to($users)->send(new DeleteCompanyEmail($company->id));
     }
