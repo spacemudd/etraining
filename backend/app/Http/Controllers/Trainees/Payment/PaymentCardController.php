@@ -76,31 +76,18 @@ class PaymentCardController extends Controller
      */
     public function storeNoonReceipt(Request $request)
     {
-        $order = $this->paymentService->getOrder($request->orderId, 5676);
-        Log::info($order);
+      
 
-        if (!$order) {
-            \Log::error('Order not found in payment service.', ['orderId' => $request->orderId]);
-            throw new \Exception('Order not found in payment service.');
-        }
-        
-        if ($order->resultCode === 5021 || $order->resultCode === 19089) {
-            $order = $this->paymentService->getOrder($request->orderId, 0);
-        
-            if (!$order) {
-                \Log::error('Order not found in Jisr.', ['orderId' => $request->orderId]);
-                throw new \Exception('Order not found in Jisr.');
-            }
+   
+        $order = $this->paymentService->getOrder($request->orderId, 5676); // try finding the order in Jasarah
+        if ($order->resultCode === 5021 || $order->resultCode === 19089) { // 5021 is bad request in Noon (not found in Jasarah)
+            $order = $this->paymentService->getOrder($request->orderId, 0); // try finding the order in Jisr
         }
 
-        
-
-
-
-        // $order = $this->paymentService->getOrder($request->orderId, 5676); // try finding the order in Jasarah
-        // if ($order->resultCode === 5021 || $order->resultCode === 19089) { // 5021 is bad request in Noon (not found in Jasarah)
-        //     $order = $this->paymentService->getOrder($request->orderId, 0); // try finding the order in Jisr
-        // }
+        \Log::info('Order retrieved:', [
+            'orderId' => $request->orderId,
+            'result' => $order ? json_encode($order, JSON_PRETTY_PRINT) : 'Order not found'
+        ]);
 
         // Confirm that Noon has the payment.
         throw_if(!$order, 'Invoice not found in payment gateway');
