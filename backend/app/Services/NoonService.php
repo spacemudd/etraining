@@ -24,7 +24,9 @@ class NoonService implements PaymentServiceInterface
     {
         $centerId = $invoice->trainee->company->center_id;
 
-        $webhookUrl = ($centerId == 5676 ? 'https://app.jasarah-ksa.com/noon' : 'https://prod.jisr-ksa.com/noon');
+        $centerId = 5676; // As of 22-12-2024 - Change all payments to Jasarah.
+
+        $webhookUrl = ($centerId == 5676 ? 'https://app.jasarah-ksa.com/noon' : 'https://app.jisr-ksa.com/noon');
 
         $url = NoonPaymentService::getInstance()->initiate(
             $centerId,
