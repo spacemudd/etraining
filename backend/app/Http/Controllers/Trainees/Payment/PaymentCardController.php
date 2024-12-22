@@ -78,7 +78,7 @@ class PaymentCardController extends Controller
     {
         Log::info($request->orderId);
 
-        $order = $this->paymentService->getOrder($request->orderId,5675); // try finding the order in Jasarah
+        $order = $this->paymentService->getOrder($request->orderId,5676); // try finding the order in Jasarah
         Log::info(json_encode($order));
 
         if ($order->resultCode === 5021 || $order->resultCode === 19089 || $order->resultCode === 19001) { // 5021 is bad request in Noon (not found in Jasarah)
