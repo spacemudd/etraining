@@ -47,11 +47,8 @@ class CompaniesService
         $users = [
             'ceo@jisr-ksa.com',
             'sara@jisr-ksa.com',
-            'cfo@jisr-ksa.com',
-            'acc@jisr-ksa.com',
             'm_shehatah@jisr-ksa.com',
             'eslam@jisr-ksa.com',
-            'collection7@jisr-ksa.com',
             'mashael.a@jisr-ksa.com',
         ];
         Mail::to($users)->send(new NewCompanyEmail($company->id));
@@ -63,11 +60,8 @@ class CompaniesService
         $users = [
             'ceo@jisr-ksa.com',
             'sara@jisr-ksa.com',
-            'cfo@jisr-ksa.com',
-            'acc@jisr-ksa.com',
             'm_shehatah@jisr-ksa.com',
             'eslam@jisr-ksa.com',
-            'collection7@jisr-ksa.com',
             'mashael.a@jisr-ksa.com',
         ];
         Mail::to($users)->send(new DeleteCompanyEmail($company->id));
