@@ -179,7 +179,7 @@ class CompanyAttendanceReportService
             ->setOption('zoom', 0.78)
             ->setOption('footer-html', $report->with_logo ? resource_path('views/pdf/company-attendance-report/company-attendance-report-footer.html') : false)
             ->loadView($view, [
-                'base64logo' => $report->company->logo_files->count() ? 'data:image/jpeg;base64,'.base64_encode(@file_get_contents('https://prod.ptc-ksa.net/back/media/'.$report->company->logo_files->first()->id)) : null,
+                'base64logo' => $report->company->logo_files->count() ? 'data:image/jpeg;base64,'.base64_encode(@file_get_contents('https://prod.jisr-ksa.com/back/media/'.$report->company->logo_files->first()->id)) : null,
                 'report' => $report,
                 'active_trainees' => $report->getActiveTrainees(),
                 'days' => $days,
