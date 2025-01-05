@@ -891,6 +891,9 @@ Route::get('/logo-files', [\App\Http\Controllers\LogoFilesController::class, 'in
 Route::get('/attendance/export-by-group/{courseBatch}', [\App\Http\Controllers\AttendanceReportsController::class, 'exportAttendanceReportByGroup'])
     ->name('attendance.export-by-group');
 
+Route::get('/attendance/export-by-course/{courseId}', [\App\Http\Controllers\AttendanceReportsController::class, 'exportAttendanceReportByCourse'])
+    ->name('attendance.export-by-course');
+
 
 
  Route::get('/company-attendance-reports/approve/{id}', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'emailApprove']);

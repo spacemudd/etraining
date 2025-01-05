@@ -8,6 +8,7 @@ use App\Jobs\CourseBatchSessionWarningsJob;
 use App\Jobs\MakeAttendanceReportJob;
 use App\Models\Back\AttendanceReport;
 use App\Models\Back\AttendanceReportRecord;
+use App\Models\Back\Course;
 use App\Models\Back\CourseBatch;
 use App\Models\Back\CourseBatchSession;
 use App\Models\Back\CourseBatchSessionAttendance;
@@ -242,6 +243,85 @@ class AttendanceReportsController extends Controller
     return Excel::download(new TraineeAttendanceExportByGroup($results), 'trainee_attendance_by_group.xlsx');
 }
 
-    
-    
+public function exportAttendanceReportByCourse($courseId)
+{
+    ini_set('memory_limit', '512M');
+    set_time_limit(300);
+
+    $course = Course::findOrFail($courseId);
+    $results = [];
+
+    foreach ($course->batches as $courseBatch) {
+        $courseEndDate = Carbon::parse($courseBatch->ends_at);
+        $startOfMonth = $courseEndDate->copy()->startOfMonth();
+        $daysDifference = $courseEndDate->diffInDays($startOfMonth);
+
+        if ($daysDifference >= 15) {
+            $targetMonth = $courseEndDate->month;
+            $targetYear = $courseEndDate->year;
+        } else {
+            $targetMonth = $courseEndDate->subMonth()->month;
+            $targetYear = $courseEndDate->year;
+        }
+        $startOfTargetMonth = Carbon::createFromDate($targetYear, $targetMonth, 1)->startOfMonth();
+        $endOfTargetMonth = Carbon::createFromDate($targetYear, $targetMonth, 1)->endOfMonth();
+
+        $totalSessionsCount = $courseBatch->course_batch_sessions()->count();
+
+        $courseBatch->trainee_group->trainees()->chunk(100, function ($traineesChunk) use (&$results, $courseBatch, $totalSessionsCount, $startOfTargetMonth, $endOfTargetMonth) {
+            foreach ($traineesChunk as $trainee) {
+                $attendanceRecords = $trainee->attendanceReportRecords()
+                    ->where('course_batch_id', $courseBatch->id)
+                    ->get()
+                    ->unique('course_batch_session_id');
+
+                $presentCount = $attendanceRecords->whereIn('status', [1, 2, 3])->count();
+                $absentCount = $attendanceRecords->where('status', 0)->count();
+
+                $attendancePercentage = $totalSessionsCount > 0 ? ($presentCount / $totalSessionsCount) * 100 : 0;
+
+                $invoice = Invoice::where('trainee_id', $trainee->id)->where(function ($query) use ($startOfTargetMonth, $endOfTargetMonth) {
+                    $query->whereBetween('from_date', [$startOfTargetMonth, $endOfTargetMonth])
+                          ->orWhereBetween('to_date', [$startOfTargetMonth, $endOfTargetMonth])
+                          ->orWhere(function ($query) use ($startOfTargetMonth, $endOfTargetMonth) {
+                              $query->where('from_date', '<=', $startOfTargetMonth)
+                                    ->where('to_date', '>=', $endOfTargetMonth);
+                          });
+                })->first();
+
+                $invoiceStatus = $invoice ? $invoice->status_formatted : 'لا توجد فاتورة';
+                $paidDate = $invoice ? $invoice->paid_at : '';
+                $invoiceFromDate = $invoice ? $invoice->from_date : '';
+                $invoiceToDate = $invoice ? $invoice->to_date : '';
+
+                if (isset($trainee->name)) {
+                    $results[] = [
+                        'paid_date' => $paidDate,
+                        'invoice_to_date' => $invoiceToDate,
+                        'invoice_from_date' => $invoiceFromDate,
+                        'invoice_status' => $invoiceStatus,
+                        'attendance_percentage' => round($attendancePercentage, 2) . ' %',
+                        'present_count' => $presentCount,
+                        'absent_count' => $absentCount,
+                        'email' => $trainee->email,
+                        'phone' => $trainee->phone,
+                        'identity_number' => $trainee->identity_number,
+                        'trainee_name' => $trainee->name,
+                        'batch_name' => $courseBatch->name, // لإظهار اسم الـ Batch في التقرير
+                    ];
+                }
+            }
+        });
+    }
+
+    $results = collect($results)->sortByDesc(function ($trainee) {
+        $attendanceNumeric = floatval(str_replace(' %', '', $trainee['attendance_percentage']));
+        return ($attendanceNumeric >= 50 && $trainee['invoice_status'] == 'مدفوع') ? 1 : 0;
+    })->values()->toArray();
+
+    return Excel::download(new TraineeAttendanceExportByGroup($results), 'trainee_attendance_by_course.xlsx');
+}
+
+
+
 }

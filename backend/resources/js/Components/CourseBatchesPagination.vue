@@ -36,7 +36,7 @@
                         <table class="table text-sm w-full">
                             <colgroup>
                                 <col style="width:50%;">
-                                <col style="width:50%;">
+                                <col style="width:50%;">    
                             </colgroup>
                             <tbody>
                             <tr v-if="batch.trainee_group">
@@ -69,6 +69,12 @@
                                 class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 mt-2"
                                 >
                                 استحقاق الشهادات بعد إنتهاء الدورة
+                        </button>
+                          <button
+                                @click="checkCertificateEligibilityByCourse(batch.course_id)"
+                                class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 mt-2"
+                                >
+                                الغيابات
                         </button>
                     </div>
                     <div class="col-span-1"></div>
@@ -246,7 +252,10 @@
 
             checkCertificateEligibility(id){
                     window.location.href=`/attendance/export-by-group/${id}`;
-            }   
+            },  
+            checkCertificateEligibilityByCourse(id){
+                    window.location.href=`/attendance/export-by-course/${id}`;
+            },  
 
             
         }
