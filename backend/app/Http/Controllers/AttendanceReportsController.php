@@ -243,7 +243,7 @@ class AttendanceReportsController extends Controller
     return Excel::download(new TraineeAttendanceExportByGroup($results), 'trainee_attendance_by_group.xlsx');
 }
 
-public function exportAttendanceReportByCourseName($courseId)
+public function exportAttendanceReportByCourse($courseId)
 {
     ini_set('memory_limit', '512M');
     set_time_limit(300);
