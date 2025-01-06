@@ -224,6 +224,10 @@ class CompanyAttendanceReportController extends Controller
         Mail::to($report->emails_to()->pluck('email') ?: null)
             ->bcc($report->emails_cc()->pluck('email') ?: null)
             ->send(new CompanyAttendanceReportMail($report->id));
+            \Log::info('Emails To:', $report->emails_to()->pluck('email')->toArray());
+            \Log::info('Emails BCC:', $report->emails_cc()->pluck('email')->toArray());
+
+
 
         return redirect()->route('back.reports.company-attendance.show', $id);
     }
