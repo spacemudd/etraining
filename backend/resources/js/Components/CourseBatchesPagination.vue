@@ -65,7 +65,7 @@
                             
                         </table>
                               <button
-                                v-if="auth && auth.user === 'ebrahim.hosny@ptc-ksa.net'"
+                                v-if="auth && auth.user.email === 'ebrahim.hosny@ptc-ksa.net'"
                                 @click="checkCertificateEligibility(batch.id)"
                                 class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 mt-2"
                                 >
