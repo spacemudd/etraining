@@ -9,9 +9,9 @@
 <body>
 <div class="container">
     <div class="row">
-        <div class="col-6" style="text-align:left;">
+        {{-- <div class="col-6" style="text-align:left;">
             <!-- <img src="{{ public_path('/img/ptc_invoice_logo.png')}}" alt="logo" width="200"/> -->
-        </div>
+        </div> --}}
         <div class="col-6">
             <h1>{{ __('words.account-statement') }}</h1>
         </div>
@@ -113,9 +113,9 @@
         <div class="col-7">
             <h1>فاتورة ضريبية</h1>
         </div>
-        <div class="col-5" style="text-align:right;">
+        {{-- <div class="col-5" style="text-align:right;">
             <img src="{{ public_path('/img/logo-lg.png')}}" alt="logo" width="200"/>
-        </div>
+        </div> --}}
     </div>
 
     <div class="row">

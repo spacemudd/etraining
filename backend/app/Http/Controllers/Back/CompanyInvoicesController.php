@@ -181,8 +181,7 @@ class CompanyInvoicesController extends Controller
             ->whereDate('created_at', $request->input('created_at_date', now()->toDateString()))
             ->get();
 
-        $pdf = PDF::setOption('footer-html', resource_path('views/pdf/invoices/client-invoice-footer.html'))
-            ->setOption('margin-bottom', 30)
+        $pdf = PDF::setOption('margin-bottom', 30)
             ->setOption('page-size', 'A4')
             ->setOption('orientation', 'portrait')
             ->setOption('encoding','utf-8')
@@ -222,8 +221,7 @@ class CompanyInvoicesController extends Controller
             ->whereBetween('from_date', [$from_date, $to_date])
             ->get();
 
-        $pdf = PDF::setOption('footer-html', resource_path('views/pdf/invoices/client-invoice-footer.html'))
-            ->setOption('margin-bottom', 30)
+        $pdf = PDF::setOption('margin-bottom', 30)
             ->setOption('page-size', 'A4')
             ->setOption('orientation', 'portrait')
             ->setOption('encoding','utf-8')
