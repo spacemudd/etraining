@@ -189,7 +189,7 @@ class AttendanceReportsController extends Controller
     $results = [];
     $totalSessionsCount = $courseBatch->course_batch_sessions()->count();
 
-    $courseBatch->trainee_group->trainees()->chunk(100, function ($traineesChunk) use (&$results, $courseBatchId, $totalSessionsCount, $startOfTargetMonth, $endOfTargetMonth) {
+    $courseBatch->trainee_group->trainees()->withTrashed()->chunk(100, function ($traineesChunk) use (&$results, $courseBatchId, $totalSessionsCount, $startOfTargetMonth, $endOfTargetMonth) {
         foreach ($traineesChunk as $trainee) {
             $attendanceRecords = $trainee->attendanceReportRecords()
                 ->where('course_batch_id', $courseBatchId)
