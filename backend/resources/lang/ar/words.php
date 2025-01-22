@@ -682,6 +682,8 @@ return [
     'dont-take-action-against-this-account-without-admin-approval'=>'الرجاء عدم اتخاذ اي اجراء ضد هذا الحساب من دون موافقة الإدارة',
     'my-agreement'=>'عقدي',
     'account'=>'الحساب',
+    'companies-certificates' => 'استحقاق الشهادات حسب الشركة' ,
+
 ];
 
 
