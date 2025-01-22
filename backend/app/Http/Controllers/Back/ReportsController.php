@@ -51,6 +51,14 @@ class ReportsController extends Controller
             'courses' => Course::with('instructor')->get(),
         ]);
     }
+    public function formCompanyCertificateseReport()
+    {
+        $this->authorize('view-backoffice-reports');
+        return Inertia::render('Back/Reports/Certificates/CompanyCertificates', [
+            'companies' => Company::get(),
+            'courses' => Course::with('instructor')->get(),
+        ]);
+    }
 
     /**
      *
