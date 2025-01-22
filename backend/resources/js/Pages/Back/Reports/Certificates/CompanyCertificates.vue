@@ -33,7 +33,7 @@
                                     required
                                     id="course_id">
                                 <option v-for="course in courses" :key="course.id" :value="course.id">
-                                    {{ course.name_ar }} <template v-if="course.instructor">- {{ course.instructor.name }}</template>
+                                    {{ course }}
                                 </option>
                             </select>
                             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
