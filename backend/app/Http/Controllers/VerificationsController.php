@@ -120,7 +120,7 @@ class VerificationsController extends Controller
         $user = User::where('email', $request->email)->firstOrFail();
         $found = Verification::where('user_id', $user->id)->where('code', $request->code)->first();
 
-        if ($found || $request->code === '1234') {
+        if ($found) {
             auth()->login($user);
             return redirect()->route('dashboard');
         }
