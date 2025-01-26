@@ -56,7 +56,7 @@ class ReportsController extends Controller
         $this->authorize('view-backoffice-reports');
         return Inertia::render('Back/Reports/Certificates/CompanyCertificates', [
             'companies' => Company::get(),
-            'courses' => Course::select('name_ar')->distinct()->orderBy('created_at','desc')->limit(20)->pluck('name_ar'),
+            'courses' => Course::distinct('name_ar')->orderBy('created_at','desc')->limit(20)->get(),
         ]);
     }
 
