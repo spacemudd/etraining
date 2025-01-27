@@ -898,6 +898,8 @@ Route::get('/attendance/export-by-group/{courseBatch}', [\App\Http\Controllers\A
 
 
 
-
+ Route::get('export-some-trainees',function(){
+    return Excel::download(new \App\Exports\ExportSomeTraineesFromGada(),'trainees.xlsx');
+});
 
 
