@@ -27,9 +27,6 @@ use Excel;
 
 
 
-
-
-
 class ReportsController extends Controller
 {
     public function index()
@@ -163,7 +160,8 @@ class ReportsController extends Controller
     $results = [];
     ini_set('memory_limit', '512M');
     set_time_limit(300);
-
+    $companyId=$request->companyId;
+    
     foreach ($courses as $course) {
         $batches = $course->batches;
 
@@ -185,12 +183,13 @@ class ReportsController extends Controller
 
             $totalSessionsCount = $batch->course_batch_sessions()->count();
 
-            $batch->trainee_group->trainees()->chunk(100, function ($traineesChunk) use (
+            $batch->trainee_group->trainees()->where('company_id',$companyId)->chunk(100, function ($traineesChunk) use (
                 &$results,
                 $batch,
                 $totalSessionsCount,
                 $startOfTargetMonth,
-                $endOfTargetMonth
+                $endOfTargetMonth,
+                $companyId
             ) {
                 foreach ($traineesChunk as $trainee) {
                     $attendanceRecords = $trainee->attendanceReportRecords()
@@ -204,6 +203,7 @@ class ReportsController extends Controller
                     $attendancePercentage = $totalSessionsCount > 0 ? ($presentCount / $totalSessionsCount) * 100 : 0;
 
                     $invoice = Invoice::where('trainee_id', $trainee->id)
+                        ->where('company_id', $companyId)
                         ->where(function ($query) use ($startOfTargetMonth, $endOfTargetMonth) {
                             $query->whereBetween('from_date', [$startOfTargetMonth, $endOfTargetMonth])
                                 ->orWhereBetween('to_date', [$startOfTargetMonth, $endOfTargetMonth])
@@ -244,11 +244,11 @@ class ReportsController extends Controller
         return ($attendanceNumeric >= 50 && $trainee['invoice_status'] == 'مدفوع') ? 1 : 0;
     })->values()->toArray();
 
+
     return Excel::download(new TraineeAttendanceExportByGroup($results), 'trainee_attendance_by_course.xlsx');
+    
 }
 
     
-    
-
 
 }
