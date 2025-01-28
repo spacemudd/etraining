@@ -104,20 +104,28 @@ export default {
         }
     },
     methods: {
-    generateReport() {
-       axios.post(route('reports.company-certificates.generate'), this.form, {
-    // headers: {
-    //     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-    // }
-        })
-        .then(response => {
-            console.log(response.data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+generateReport() {
+    axios.post(route('reports.company-certificates.generate'), this.form, {
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        },
+        responseType: 'blob' // تأكد من أن نوع الاستجابة هو blob لتحميل الملف
+    })
+    .then(response => {
+        // إنشاء رابط لتحميل الملف
+        const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'trainee_attendance_by_course.xlsx';
+        link.click();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
 
-            },
+
         },
 }
 </script>
