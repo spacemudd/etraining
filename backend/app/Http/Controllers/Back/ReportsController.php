@@ -154,7 +154,8 @@ class ReportsController extends Controller
 
     public function formCompanyCertificateseGenerateReport(Request $request)
 {
-    $course = Course::find($request->courseId);
+    // dd($request->input('courseId.id'));
+    $course = Course::find($request->input('courseId.id'));
 
     if (!$course) {
         return response()->json(['error' => 'Course not found'], 404);
@@ -167,7 +168,7 @@ class ReportsController extends Controller
     $results = [];
     ini_set('memory_limit', '512M');
     set_time_limit(300);
-    $companyId=$request->companyId;
+    $companyId=$request->input('companyId.id');
     
     foreach ($courses as $course) {
         $batches = $course->batches;
