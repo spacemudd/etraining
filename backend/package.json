@@ -53,6 +53,7 @@
         "vue-loading-skeleton": "1.1.9",
         "vue-meta": "^2.4.0",
         "vue-pull-refresh": "^0.2.7",
+        "vue-select": "^3.20.3",
         "vue-wait": "^1.4.8",
         "vue2-daterange-picker": "^0.6.8",
         "vue2-dropzone": "^3.6.0",

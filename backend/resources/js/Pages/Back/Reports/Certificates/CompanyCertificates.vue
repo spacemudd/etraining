@@ -18,41 +18,31 @@
                     <!-- Courses Select -->
                     <div>
                         <label for="courseId" class="block text-sm font-medium text-gray-700 mb-1">Select Course</label>
-                        <select 
+                        <v-select 
                             id="courseId" 
                             v-model="form.courseId" 
+                            :options="courses"
+                            label="name_ar" 
+                            placeholder="Select a course"
                             required
-                            class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        >
-                            <option value="" disabled>Select a course</option>
-                            <option 
-                                v-for="course in courses" 
-                                :key="course.id" 
-                                :value="course.id"
-                            >
-                                {{ course.name_ar }}
-                            </option>
-                        </select>
+                            searchable
+                            class="block w-full mt-1"
+                        />
                     </div>
 
                     <!-- Companies Select -->
                     <div>
                         <label for="companyId" class="block text-sm font-medium text-gray-700 mb-1">Select Company</label>
-                        <select 
+                        <v-select 
                             id="companyId" 
                             v-model="form.companyId" 
+                            :options="companies"
+                            label="name_ar" 
+                            placeholder="Select a company"
                             required
-                            class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        >
-                            <option value="" disabled>Select a company</option>
-                            <option 
-                                v-for="company in companies" 
-                                :key="company.id" 
-                                :value="company.id"
-                            >
-                                {{ company.name_ar }}
-                            </option>
-                        </select>
+                            searchable
+                            class="block w-full mt-1"
+                        />
                     </div>
 
                     <!-- Submit Button -->
@@ -81,11 +71,14 @@ import AppLayout from '@/Layouts/AppLayout'
 import IconNavigate from 'vue-ionicons/dist/ios-arrow-dropright'
 import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
 import BtnLoadingIndicator from "../../../../Components/BtnLoadingIndicator";
+import vSelect from 'vue-select'; // استيراد v-select
+import 'vue-select/dist/vue-select.css'; // استيراد الأنماط الخاصة بـ v-select
+
 
 export default {
     props: [
-        'courses',
-        'companies',
+        'courses', // بيانات الكورسات من الخادم
+        'companies', // بيانات الشركات من الخادم
     ],
     components: {
         IconNavigate,
@@ -93,6 +86,7 @@ export default {
         JetLabel,
         BreadcrumbContainer,
         BtnLoadingIndicator,
+        vSelect, // تسجيل v-select
     },
     data() {
         return {
@@ -104,31 +98,31 @@ export default {
         }
     },
     methods: {
-generateReport() {
-    axios.post(route('reports.company-certificates.generate'), this.form, {
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        },
-        responseType: 'blob' // تأكد من أن نوع الاستجابة هو blob لتحميل الملف
-    })
-    .then(response => {
-        const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'trainee_attendance_by_course.xlsx';
-        link.click();
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
-
-
-        },
+        generateReport() {
+            // إرسال البيانات إلى السيرفر لإنشاء التقرير
+            axios.post(route('reports.company-certificates.generate'), this.form, {
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                },
+                responseType: 'blob' 
+            })
+            .then(response => {
+                const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'trainee_attendance_by_course.xlsx';
+                link.click();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    }
 }
 </script>
 
 <style scoped>
-/* Custom styles (if needed) */
+/* الأنماط الخاصة بـ v-select */
+@import 'vue-select/dist/vue-select.css';
 </style>
