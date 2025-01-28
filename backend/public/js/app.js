@@ -7564,44 +7564,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     generateReport: function generateReport() {
-      var _this = this;
-
-      this.form.processing = true;
-      axios.post(route('back.reports.course-attendances.generate'), this.form).then(function (response) {
-        _this.job_tracker = response.data;
-        _this.report_status = 'processing';
-        _this.form.processing = true;
-        var vm = _this;
-        setTimeout(function () {
-          vm.checkJobTracker();
-        }, 2000);
-      });
-    },
-    checkJobTracker: function checkJobTracker() {
-      var _this2 = this;
-
-      axios.get(route('job-trackers.show', {
-        id: this.job_tracker.id
-      })).then(function (response) {
-        if (response.data.finished_at) {
-          _this2.report_status = 'finished';
-          _this2.job_tracker = response.data;
-          return;
-        }
-
-        if (response.data.failure_reason) {
-          _this2.report_status = 'error';
-          alert('An error occurred');
-          return;
-        }
-
-        if (!response.data.completed_at) {
-          var vm = _this2;
-          setTimeout(function () {
-            vm.checkJobTracker();
-          }, 5000);
-        }
-      });
+      console.log(form);
     }
   }
 });
@@ -30613,8 +30576,8 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.form.course.name_ar,
-      expression: "form.course.name_ar"
+      value: _vm.form.courseName,
+      expression: "form.courseName"
     }],
     staticClass: "block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500",
     attrs: {
@@ -30631,7 +30594,7 @@ var render = function render() {
           return val;
         });
 
-        _vm.$set(_vm.form.course, "name_ar", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+        _vm.$set(_vm.form, "courseName", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
       }
     }
   }, _vm._l(_vm.courses, function (course) {

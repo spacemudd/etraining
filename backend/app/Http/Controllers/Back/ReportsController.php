@@ -90,6 +90,8 @@ class ReportsController extends Controller
         return $tracker;
     }
 
+    
+
     public function generateContractsReport(Request $request)
     {
         $request->validate([
@@ -143,6 +145,12 @@ class ReportsController extends Controller
         
         return Excel::download(new TraineesWithoutInvoicesExport($data), now()->format('Y-m-d').'-traineees-without-invoices.xlsx');
        
+    }
+
+
+    public function generateCompanyCertificatesReport(Request $request)
+    {
+        dd("here");
     }
 
 
