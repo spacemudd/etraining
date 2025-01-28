@@ -113,7 +113,6 @@ generateReport() {
         responseType: 'blob' // تأكد من أن نوع الاستجابة هو blob لتحميل الملف
     })
     .then(response => {
-        // إنشاء رابط لتحميل الملف
         const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
