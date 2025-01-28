@@ -28,7 +28,7 @@
                         <jet-label class="mb-2" for="course_id" :value="$t('words.course')" />
                         <div class="relative">
                             <select class="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                    v-model="form.course.name_ar"
+                                    v-model="form.courseName"
                                     name="courseName"
                                     required
                                     id="course_id">
@@ -152,42 +152,10 @@
             }
         },
         methods: {
-            generateReport() {
-                this.form.processing = true;
-                axios.post(route('back.reports.course-attendances.generate'), this.form)
-                    .then(response => {
-                        this.job_tracker = response.data;
-                        this.report_status = 'processing';
-                        this.form.processing = true;
-                        let vm = this;
-                        setTimeout(function() {
-                            vm.checkJobTracker();
-                        }, 2000);
-                    })
-            },
-            checkJobTracker() {
-                axios.get(route('job-trackers.show', {id: this.job_tracker.id}))
-                    .then(response => {
-                        if (response.data.finished_at) {
-                            this.report_status = 'finished';
-                            this.job_tracker = response.data;
-                            return;
-                        }
+    generateReport() {
+            console.log(form);
+    }
+}
 
-                        if (response.data.failure_reason) {
-                            this.report_status = 'error';
-                            alert('An error occurred');
-                            return;
-                        }
-
-                        if (!response.data.completed_at) {
-                            let vm = this;
-                            setTimeout(function() {
-                                vm.checkJobTracker();
-                            }, 5000);
-                        }
-                    })
-            },
-        },
     }
 </script>
