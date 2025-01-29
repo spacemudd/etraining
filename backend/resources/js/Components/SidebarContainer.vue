@@ -98,6 +98,8 @@
             </template>
         </sidebar-link>
 
+  
+
         <li class="pr-8 text-xs"><a class="hover:text-blue-600" href="/terms">السياسات</a></li>
     </ul>
 </template>

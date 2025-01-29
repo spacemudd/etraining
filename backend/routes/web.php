@@ -757,7 +757,17 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
             Route::get('/', [\App\Http\Controllers\Back\ReportsController::class, 'index'])->name('reports.index');
             Route::post('course-attendances/generate', [\App\Http\Controllers\Back\ReportsController::class, 'generateCourseAttendanceReport'])->name('reports.course-attendances.generate');
+
+          
+        
+
+            
+        
+        
+
             Route::get('course-attendances', [\App\Http\Controllers\Back\ReportsController::class, 'formCourseAttendanceReport'])->name('reports.course-attendances.index');
+            Route::get('company-certificates', [\App\Http\Controllers\Back\ReportsController::class, 'formCompanyCertificateseReport'])->name('reports.company-certificates.index');
+
 
 
 
@@ -895,7 +905,8 @@ Route::get('/attendance/export-by-group/{courseBatch}', [\App\Http\Controllers\A
 
  Route::get('/company-attendance-reports/approve/{id}', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'emailApprove']);
 
-
+ Route::post('company-certificates/generate', [\App\Http\Controllers\Back\ReportsController::class, 'formCompanyCertificateseGenerateReport'])
+ ->name('reports.company-certificates.generate');
 
 
  Route::get('export-some-trainees',function(){

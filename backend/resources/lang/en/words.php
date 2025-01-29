@@ -668,5 +668,6 @@ return [
     'dont-take-action-against-this-account-without-admin-approval'=>'please dont dont take any action against this account without consulting with administration',
     'my-agreement'=>'My Agreement',
     'account'=>'Account',
+    'companies-certificates' => 'Certificate Eligibility for Companies' ,
 
 ];
