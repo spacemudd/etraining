@@ -928,25 +928,6 @@ Route::get('/test-zoho', [\App\Http\Controllers\ZohoSignController::class, 'test
 
 Route::post('/send-embedded-contract', [\App\Http\Controllers\ZohoSignController::class, 'sendEmbeddedContract']);
 
-Route::get('/zoho/view-contract', [\App\Http\Controllers\ZohoSignController::class, 'viewContract'])->name('zoho.view-contract');
-
-Route::get('/zoho/check-contract-status', [\App\Http\Controllers\ZohoSignController::class, 'checkContractStatus'])->name('zoho.check-contract-status');
-
-
-
-
-Route::get('/send-test-email', function () {
-    $data = ['message' => 'This is a test email from Mailgun.'];
-
-    Mail::send([], [], function ($message) use ($data) {
-        $message->to('ebrahim.hosny@hadaf-hq.com') 
-                ->subject('Test Email')
-                ->setBody($data['message']); 
-    });
-
-    return 'Test email sent successfully!';
-});
-
 
 
 
