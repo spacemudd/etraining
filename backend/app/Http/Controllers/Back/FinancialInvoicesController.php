@@ -25,6 +25,7 @@ use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Mail;
 use PDF;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class  FinancialInvoicesController extends Controller
@@ -41,7 +42,7 @@ class  FinancialInvoicesController extends Controller
             ->with('trainee_bank_payment_receipt')
             ->defaultSort('-created_at')
             ->allowedSorts(['from_date','created_at', 'number', 'status', 'payment_method', 'grand_total', 'is_verified', 'created_at'])
-            ->allowedFilters(['payment_method','trainee_bank_payment_receipt.bank_to','trainee_bank_payment_receipt.bank_from','from_date','created_at', 'trainee.name', 'number', 'company.name_ar', 'status', 'trainee_bank_payment_receipt.sender_name', 'trainee_bank_payment_receipt.created_at'])
+            ->allowedFilters(['payment_method','trainee_bank_payment_receipt.bank_to','trainee_bank_payment_receipt.bank_from','from_date','created_at', 'trainee.name', 'number', 'company.name_ar', AllowedFilter::exact('status'), 'trainee_bank_payment_receipt.sender_name', 'trainee_bank_payment_receipt.created_at'])
             ->allowedFields(['payment_method','trainee_bank_payment_receipt.bank_to','trainee_bank_payment_receipt.bank_from','trainee.id', 'trainee.name', 'company.id', 'company.name_ar', 'trainee_bank_payment_receipt.sender_name', 'trainee_bank_payment_receipt.created_at'])
             ->allowedIncludes(['company', 'trainee', 'trainee_bank_payment_receipt'])
             ->paginate()
@@ -119,6 +120,8 @@ class  FinancialInvoicesController extends Controller
             ]);
 
             $table->addFilter('status', __('words.status'), [
+                Invoice::STATUS_PENDING_CHECK => __('words.under-review'),
+                Invoice::STATUS_ARCHIVED => __('words.archived'),
                 Invoice::STATUS_UNPAID => __('words.unpaid'),
                 Invoice::STATUS_PAYMENT_RECEIPT_REJECTED => __('words.reject-payment-receipt'),
                 Invoice::STATUS_AUDIT_REQUIRED => __('words.audit-required'),
@@ -565,10 +568,12 @@ class  FinancialInvoicesController extends Controller
         return redirect(\route('back.finance.invoices.index'));
     }
 
-    function markUnderReview($invoice_id)
+    function markUnderReview($invoice_id, Request $request)
     {
         $invoice = Invoice::findOrFail($invoice_id);
         $invoice->status = Invoice::STATUS_PENDING_CHECK;
+        $invoice->under_review_reason = now()->setTimezone('Asia/Riyadh')->toDateString().' - '.$request->under_review_reason;
+        $invoice->chased_by_id = auth()->user()->id;
         $invoice->save();
         return redirect()->route('back.finance.invoices.show', $invoice->id);
     }

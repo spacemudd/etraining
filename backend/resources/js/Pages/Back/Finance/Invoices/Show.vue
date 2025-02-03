@@ -187,7 +187,7 @@
                                 <hr class="my-3" v-if="invoice.trainee_bank_payment_receipt">
                                 <hr class="my-3" v-if="invoice.trainee_bank_payment_receipt">
                                 <div class="font-bold my-0.5">{{ $t('words.chase') }}</div>
-                                <div class="my-0.5">{{ invoice.chase_status }}</div>
+                                <div class="my-0.5" dir="rtl">{{ invoice.chase_status }} <span v-if="invoice.under_review_reason">- {{ invoice.under_review_reason }}</span></div>
                                 <div class="font-bold my-0.5">{{ $t('words.chased-by') }}</div>
                                 <div class="my-0.5"><span v-if="invoice.chased_by">{{ invoice.chased_by.name }}</span></div>
                                 <div class="font-bold my-0.5" v-if="invoice.verified_by">{{ $t('words.approved-by') }}</div>
@@ -682,8 +682,14 @@ export default {
             }
         },
         markUnderReview(invoice) {
+            let reason = prompt(this.$t('words.reason'));
+            if (reason === null || reason === '') {
+                alert('يجب وجود سبب 😔');
+                return;
+            }
+
             if (confirm(this.$t('words.are-you-sure'))) {
-                this.$inertia.post(route('back.finance.invoices.mark-under-review', invoice.id));
+                this.$inertia.post(route('back.finance.invoices.mark-under-review', invoice.id), {under_review_reason: reason});
                 this.$confetti.start();
                 setTimeout(() => {
                     this.$confetti.stop();
