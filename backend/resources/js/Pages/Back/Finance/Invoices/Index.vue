@@ -99,6 +99,11 @@
                             </td>
                             <td class="rtl:text-right text-black">
                                 <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
+                                    <div v-if="invoice.status < 0">
+                                        <span class="text-white bg-purple-500 rounded-lg px-3 py-1 font-bold border-solid border-2 border-purple-600">
+                                            {{ invoice.status_formatted }}
+                                        </span>
+                                    </div>
                                     <div v-if="invoice.status === 0">
                                         <span class="text-white bg-red-500 rounded-lg px-3 py-1 font-bold border-solid border-2 border-red-500">
                                             {{ invoice.status_formatted }}

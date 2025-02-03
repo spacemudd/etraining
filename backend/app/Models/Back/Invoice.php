@@ -24,6 +24,8 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
     const STATUS_AUDIT_REQUIRED = 2; // Done by the chasers.
     const STATUS_PAYMENT_RECEIPT_REJECTED = 3;
     const STATUS_FINANCIAL_AUDIT_REQUIRED = 4; // Done by the Financial team.
+    const STATUS_PENDING_CHECK = -1;
+    const STATUS_ARCHIVED = -2;
 
     const PAYMENT_METHOD_BANK_RECEIPT = 0;
     const PAYMENT_METHOD_CREDIT_CARD = 1;
@@ -195,6 +197,10 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
                 return __('words.reject-payment-receipt');
             case self::STATUS_FINANCIAL_AUDIT_REQUIRED:
                 return __('words.finance-audit-required');
+            case self::STATUS_PENDING_CHECK:
+                return __('words.under-review');
+            case self::STATUS_ARCHIVED:
+                return __('words.archived');
             default:
                 return "Unknown";
         }
@@ -203,6 +209,10 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
     public function getChaseStatusAttribute(): string
     {
         switch ($this->status) {
+            case self::STATUS_ARCHIVED:
+                return __('words.archived');
+            case self::STATUS_PENDING_CHECK:
+                return __('words.under-review');
             case self::STATUS_UNPAID:
                 return __("words.unpaid");
             case self::STATUS_PAID:

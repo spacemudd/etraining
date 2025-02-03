@@ -66,6 +66,8 @@ class  FinancialInvoicesController extends Controller
             ]);
 
             $table->addFilter('status', __('words.status'), [
+                Invoice::STATUS_PENDING_CHECK => __('words.under-review'),
+                Invoice::STATUS_ARCHIVED => __('words.archived'),
                 Invoice::STATUS_UNPAID => __('words.unpaid'),
                 Invoice::STATUS_PAYMENT_RECEIPT_REJECTED => __('words.reject-payment-receipt'),
                 Invoice::STATUS_AUDIT_REQUIRED => __('words.audit-required'),
@@ -561,6 +563,30 @@ class  FinancialInvoicesController extends Controller
         }
 
         return redirect(\route('back.finance.invoices.index'));
+    }
+
+    function markUnderReview($invoice_id)
+    {
+        $invoice = Invoice::findOrFail($invoice_id);
+        $invoice->status = Invoice::STATUS_PENDING_CHECK;
+        $invoice->save();
+        return redirect()->route('back.finance.invoices.show', $invoice->id);
+    }
+
+    function markArchived($invoice_id)
+    {
+        $invoice = Invoice::findOrFail($invoice_id);
+        $invoice->status = Invoice::STATUS_ARCHIVED;
+        $invoice->save();
+        return redirect()->route('back.finance.invoices.show', $invoice->id);
+    }
+
+    function resetStatus($invoice_id)
+    {
+        $invoice = Invoice::findOrFail($invoice_id);
+        $invoice->status = Invoice::STATUS_UNPAID;
+        $invoice->save();
+        return redirect()->route('back.finance.invoices.show', $invoice->id);
     }
 }
 

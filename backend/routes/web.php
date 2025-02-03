@@ -627,6 +627,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::put('invoices/{id}/update', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'update'])->name('invoices.update');
             Route::get('invoices/{id}/change-date-period', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'datePeriod'])->name('invoices.date-period');
             Route::post('invoices/{id}/change-date-period', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'changeDatePeriod'])->name('invoices.change-date-period');
+            Route::post('invoices/{id}/mark-under-review', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'markUnderReview'])->name('invoices.mark-under-review');
+            Route::post('invoices/{id}/mark-archived', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'markArchived'])->name('invoices.mark-as-archived');
+            Route::post('invoices/{id}/reset-status', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'resetStatus'])->name('invoices.reset-status');
             Route::resource('invoices', \App\Http\Controllers\Back\FinancialInvoicesController::class);
             Route::post('expected-amount-per-invoice', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'expectedAmountPerInvoice']);
 
@@ -758,12 +761,12 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('/', [\App\Http\Controllers\Back\ReportsController::class, 'index'])->name('reports.index');
             Route::post('course-attendances/generate', [\App\Http\Controllers\Back\ReportsController::class, 'generateCourseAttendanceReport'])->name('reports.course-attendances.generate');
 
-          
-        
 
-            
-        
-        
+
+
+
+
+
 
             Route::get('course-attendances', [\App\Http\Controllers\Back\ReportsController::class, 'formCourseAttendanceReport'])->name('reports.course-attendances.index');
             Route::get('company-certificates', [\App\Http\Controllers\Back\ReportsController::class, 'formCompanyCertificateseReport'])->name('reports.company-certificates.index');

@@ -19,6 +19,14 @@
                         </h1>
                         <div class="mb-6 flex justify-end items-center">
                             <div>
+                                <div v-if="invoice.status === -2"
+                                     class="text-red-600 rounded-lg mx-8 px-4 py-1 font-bold border-solid border-2 border-red-600">
+                                    {{ $t('words.archived') }}
+                                </div>
+                                <div v-if="invoice.status === -1"
+                                     class="text-red-600 rounded-lg mx-8 px-4 py-1 font-bold border-solid border-2 border-red-600">
+                                    {{ $t('words.under-review') }}
+                                </div>
                                 <div v-if="invoice.status === 0"
                                      class="text-red-600 rounded-lg mx-8 px-4 py-1 font-bold border-solid border-2 border-red-600">
                                     {{ $t('words.unpaid') }}
@@ -53,11 +61,36 @@
                                 {{ $t('words.print') }}
                             </a>
 
+                            <button @click="resetStatus(invoice)"
+                                    v-can="'can-delete-invoice-anytime'"
+                                    type="button"
+                                    v-if="invoice.status == -2"
+                                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-700 disabled:cursor-not-allowed mx-2 bg-purple-400 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700 mb-0 hover:mb-2">
+                                {{ $t('words.mark-unpaid') }}
+                            </button>
+
+                            <button @click="markUnderReview(invoice)"
+                                    v-can="'can-delete-invoice-anytime'"
+                                    type="button"
+                                    v-if="invoice.status <= 4 && invoice.status != -1 && invoice.status != -2"
+                                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-700 disabled:cursor-not-allowed mx-2 bg-purple-400 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700 mb-0 hover:mb-2">
+                                {{ $t('words.mark-under-review') }}
+                            </button>
+
+                            <button @click="markAsArchived(invoice)"
+                                    v-can="'can-delete-invoice-anytime'"
+                                    type="button"
+                                    v-if="invoice.status == -1"
+                                    class="hoverme inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-700 disabled:cursor-not-allowed mx-2 bg-purple-400 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700 mb-0 hover:mb-2">
+                                {{ $t('words.mark-archived') }}
+                            </button>
+
                             <inertia-link v-if="invoice.can_upload_receipt"
                                           :href="route('back.finance.invoices.upload-receipt-form', invoice.id)"
                                           class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-2 bg-red-500 hover:bg-red-600 active:bg-red-700 foucs:bg-red-700">
                                 {{ $t('words.upload-receipt') }}
                             </inertia-link>
+
                             <button @click="deleteInvoice(invoice)"
                                     v-can="'can-delete-invoice-anytime'"
                                     type="button"
@@ -196,18 +229,18 @@
                                         مركز جسارة
                                     </span>
                                 </div>
-                                
+
                                 <hr class="my-3" v-if="invoice.payment_method === 1">
                                 <hr class="my-3" v-if="invoice.payment_method === 1">
                                 <div v-if="invoice.payment_method === 1" class="font-bold my-0.5">{{ $t('words.payment-reference-id') }}</div>
                                 <a class="a-9" :href="invoice.noon_link"><div v-if="invoice.payment_method === 1" class="truncate my-0.5" >{{ invoice.payment_reference_id }}</div></a>
                                 <div v-if="invoice.payment_method === 1" class="font-bold my-0.5">{{ $t('words.paid-at') }}</div>
                                 <div v-if="invoice.payment_method === 1" class="truncate my-0.5">{{ invoice.paid_at_time }}</div>
-                             
+
 
                             </div>
-                            
-                                
+
+
                         </div>
                     </div>
                 </div>
@@ -467,6 +500,10 @@ import ValidationErrors from "@/Components/ValidationErrors";
 import {Inertia} from "@inertiajs/inertia";
 import moment from "moment";
 import _ from "lodash";
+import VueConfetti from 'vue-confetti';
+import Vue from 'vue';
+
+Vue.use(VueConfetti);
 
 export default {
     props: [
@@ -644,6 +681,15 @@ export default {
 
             }
         },
+        markUnderReview(invoice) {
+            if (confirm(this.$t('words.are-you-sure'))) {
+                this.$inertia.post(route('back.finance.invoices.mark-under-review', invoice.id));
+                this.$confetti.start();
+                setTimeout(() => {
+                    this.$confetti.stop();
+                }, 2000);
+            }
+        },
         deleteInvoice() {
             let reason = prompt(this.$t('words.reason'));
             if (reason === null || reason === '') {
@@ -673,15 +719,32 @@ export default {
                 chased_note: reason,
             });
         },
+        resetStatus() {
+            if (confirm(this.$t('words.are-you-sure'))) {
+                this.$inertia.post(route('back.finance.invoices.reset-status', this.invoice.id));
+                this.$confetti.start();
+                setTimeout(() => {
+                    this.$confetti.stop();
+                }, 2000);
+            }
+        },
         markAsPaid() {
             if (confirm(this.$t('words.are-you-sure'))) {
                 this.$inertia.post(route('back.finance.invoices.mark-as-paid-from-chaser', this.invoice.id));
+            }
+        },
+        markAsArchived() {
+            if (confirm(this.$t('words.are-you-sure'))) {
+                this.$inertia.post(route('back.finance.invoices.mark-as-archived', this.invoice.id));
+                this.$confetti.start();
+                setTimeout(() => {
+                    this.$confetti.stop();
+                }, 2000);
             }
         },
     }
 }
 </script>
 
-<style>
-
+<style lang="css">
 </style>

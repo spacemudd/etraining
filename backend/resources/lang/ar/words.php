@@ -678,14 +678,14 @@ return [
     'open-new-recruitment-company-description' => 'فتح جهة توظيف جديدة والبدء بادارة البيانات',
     'person-whose-add-recruitment' => 'اسم من اضاف الجهة',
     'company-logo' =>'شعار الشركه',
-    'caution' => 'تنبيه', 
+    'caution' => 'تنبيه',
     'dont-take-action-against-this-account-without-admin-approval'=>'الرجاء عدم اتخاذ اي اجراء ضد هذا الحساب من دون موافقة الإدارة',
     'my-agreement'=>'عقدي',
     'account'=>'الحساب',
     'companies-certificates' => 'استحقاق الشهادات حسب الشركة' ,
-
+    'mark-under-review' => 'تحت المراجعة',
+    'mark-archived' => 'ارشف الفاتورة',
+    'archived' => 'مؤرشف',
+    'under-review' => 'تحت المراجعة',
+    'mark-unpaid' => 'اعادة الفاتورة الى غير مدفوعة',
 ];
-
-
-
-

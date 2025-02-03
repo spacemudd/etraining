@@ -664,10 +664,14 @@ return [
     'open-new-recruitment-company-description' => 'Open New Recruitment Company And Start Data Managment',
     'person-whose-add-recruitment' => 'Person Whose Add Recruitment',
     'company-logo' =>'Company Logo',
-    'caution' => 'Caution', 
+    'caution' => 'Caution',
     'dont-take-action-against-this-account-without-admin-approval'=>'please dont dont take any action against this account without consulting with administration',
     'my-agreement'=>'My Agreement',
     'account'=>'Account',
     'companies-certificates' => 'Certificate Eligibility for Companies' ,
-
+    'mark-under-review' => 'Mark under review',
+    'mark-archived' => 'Mark archived',
+    'archived' => 'Archived',
+    'under-review' => 'Under review',
+    'mark-unpaid' => 'Mark unpaid',
 ];
