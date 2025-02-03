@@ -11,13 +11,15 @@ use App\Models\Back\Invoice;
 use App\Models\Back\Resignation;
 use App\Models\Back\TestExportController;
 use App\Models\Back\Trainee;
+
+
+
+
 use App\Models\User;
-
-
-
-
 use App\Services\GosiService;
 use Illuminate\Mail\Markdown;
+
+
 
 
 
@@ -912,5 +914,15 @@ Route::get('/attendance/export-by-group/{courseBatch}', [\App\Http\Controllers\A
  Route::get('export-some-trainees',function(){
     return Excel::download(new \App\Exports\ExportSomeTraineesFromGada(),'trainees.xlsx');
 });
+
+
+
+Route::post('/send-contract', [\App\Http\Controllers\ZohoSignController::class, 'sendContract']);
+
+Route::get('/test-zoho', [\App\Http\Controllers\ZohoSignController::class, 'test']);
+
+Route::post('/send-embedded-contract', [\App\Http\Controllers\ZohoSignController::class, 'sendEmbeddedContract']);
+
+
 
 
