@@ -11,7 +11,7 @@
                 {{ session('status') }}
             </div>
         @endif
-        
+
         <form id="loginForm" method="POST" action="{{ route('login') }}">
             @csrf
 
@@ -61,7 +61,7 @@
                     document.getElementById('hideFor2Fa').style.display = 'block';
                     document.getElementById('password').required = true;
                 }
-                else if (document.getElementById('email').value.includes('ptc-ksa.net')) {
+                else if (document.getElementById('email').value.includes('ptc-ksa.net') || document.getElementById('email').value.includes('hadaf-hq.com')) {
                     document.getElementById('hideFor2Fa').style.display = 'none';
                     document.getElementById('password').required = false;
                 } else {
@@ -86,7 +86,7 @@
                     form.action = '/login';
                     form.submit();
                 }
-                else if (emailField.value.includes('ptc-ksa.net')) {
+                else if (emailField.value.includes('ptc-ksa.net') || emailField.value.includes('hadaf-hq.com')) {
                     form.action = '/login/2fa-code';
                     form.submit();
                 } else {
