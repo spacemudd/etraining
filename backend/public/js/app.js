@@ -1624,8 +1624,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 3:
                 response = _context3.sent;
                 _this2.contractStatus = response.data.status;
-                console.log("hiiii");
-                console.log(response.data);
+                console.log("hi");
+                console.log(_this2.contractStatus);
                 _this2.errorMessage = null;
                 _context3.next = 13;
                 break;
@@ -18049,7 +18049,7 @@ var render = function render() {
       },
       proxy: true
     }])
-  }), _vm._v(" "), _c("sidebar-link", {
+  }), _vm._v(" "), _vm.contractStatus !== "completed" ? _c("sidebar-link", {
     scopedSlots: _vm._u([{
       key: "icon",
       fn: function fn() {
@@ -18067,15 +18067,15 @@ var render = function render() {
         }, [_vm._v(_vm._s(_vm.$t("words.sign-contract")))])])];
       },
       proxy: true
-    }])
-  }), _vm._v(" "), [_c("span", {
+    }], null, false, 2626117432)
+  }) : _vm._e(), _vm._v(" "), _vm.contractStatus === "completed" ? [_c("span", {
     staticClass: "ltr:ml-4 rtl:mr-4"
   }, [_c("button", {
     staticClass: "px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50",
     on: {
       click: _vm.viewContract
     }
-  }, [_vm._v("\n                    " + _vm._s(_vm.$t("words.view-contract")) + "\n                ")])])]], 2);
+  }, [_vm._v("\n                    " + _vm._s(_vm.$t("words.view-contract")) + "\n                ")])])] : _vm._e()], 2);
 };
 
 var staticRenderFns = [];

@@ -61,7 +61,7 @@
             </template>
         </sidebar-link>
 
-        <sidebar-link>
+        <sidebar-link v-if="contractStatus !== 'completed'">
             <template #icon>
                 <!-- <ion-icon name="document-text-outline" class="w-5 h-5"></ion-icon> -->
             </template>
@@ -76,8 +76,8 @@
 
 
 
-
-        <template class="bg-red-500">
+     
+        <template v-if="contractStatus === 'completed'">
                 <!-- <ion-icon name="document-text-outline" class="w-5 h-5 mx-2"></ion-icon> -->
         
                 <span class="ltr:ml-4 rtl:mr-4">
@@ -87,6 +87,8 @@
                     {{ $t('words.view-contract') }}
                 </button> </span>
         </template>
+   
+
 
 
 
@@ -190,9 +192,8 @@
                             try {
                                 const response = await axios.get(route('zoho.check-contract-status'));
                                 this.contractStatus = response.data.status;
-                                 console.log("hiiii");
-
-                                console.log(response.data);
+                                console.log("hi");
+                                console.log(this.contractStatus);
                                 this.errorMessage = null;
                             }    catch (error) {
                                 this.errorMessage = error.response?.data?.error || "حدث خطأ أثناء جلب حالة العقد.";

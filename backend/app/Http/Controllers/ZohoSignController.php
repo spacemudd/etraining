@@ -156,6 +156,7 @@ public function sendEmbeddedContract(Request $request)
         // $trainee->update(['zoho_contract_id' => $responseData['requests']['request_id']]);
 
         if (!empty($responseData['requests']) && isset($responseData['requests']['request_id'])) {
+         
             $requestId = $responseData['requests']['request_id'];
 
             if (!empty($responseData['requests']['actions']) && isset($responseData['requests']['actions'][0]['action_id'])) {
@@ -248,7 +249,7 @@ public function checkContractStatus(){
 
     $response = Http::withHeaders([
         "Authorization" => "Zoho-oauthtoken " . $accessToken,
-    ])->get("https://sign.zoho.sa/api/v1/requests/1094000000045237");
+    ])->get("https://sign.zoho.sa/api/v1/requests/{$contractId}");
 
     if ($response->failed()) {
         Log::error("Failed to fetch contract status from Zoho: " . $response->body());
@@ -257,11 +258,12 @@ public function checkContractStatus(){
 
     }
     
-    $response=$response->json();
+    // $response=$response->json();
+    // dd($response);
   
-    $status = $responseData['requests']['request_status'] ?? null;
+    $status = $response['requests']['request_status'] ?? null;
 
-    dd($status);
+    
 
     return response()->json(["status" => $status]);
 
