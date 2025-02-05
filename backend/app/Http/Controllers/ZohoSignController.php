@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Back\Trainee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
+
 
 class ZohoSignController extends Controller
 {
@@ -90,6 +95,9 @@ public function sendEmbeddedContract(Request $request)
     $recipientName = $request->recipient_name;
     $recipientEmail = $request->recipient_email;
 
+    //get trainee details
+    $trainee=Trainee::where('user_id',$request->user_id)->first();
+
     $accessToken = $this->getAccessToken();
     if (!$accessToken) {
         Log::error("error while getting access token");
@@ -104,7 +112,11 @@ public function sendEmbeddedContract(Request $request)
         "templates" => [
             "default_fields" => [
                 "trainee_name" => $recipientName,  
-                "trainee_address" => $recipientEmail,
+                "trainee_email" => $recipientEmail,
+                 "trainee_phone" => $trainee->phone,
+                 "trainee_second_phone" =>$trainee->phone,
+                 "trainee_identity" => $trainee->identity_number,
+
             ],
             "notes" => "",
             "actions" => [
@@ -122,7 +134,6 @@ public function sendEmbeddedContract(Request $request)
         ],
     ];
 
-    $action_id=1094000000035472;
 
     $response = Http::withOptions(['verify' => false]) // for test
         ->withHeaders([
@@ -133,20 +144,22 @@ public function sendEmbeddedContract(Request $request)
 
         $responseData = $response->json();
         Log::info($responseData['requests']['request_id']);
+        Log::info($responseData['requests']['actions'][0]['action_id']);
 
-        
+
 
 
 
 
     if ($response->successful()) {
         $responseData = $response->json();
+        // $trainee->update(['zoho_contract_id' => $responseData['requests']['request_id']]);
 
         if (!empty($responseData['requests']) && isset($responseData['requests']['request_id'])) {
             $requestId = $responseData['requests']['request_id'];
 
-            if (!empty($responseData['requests']['actions']) && isset($responseData['requests']['actions']['action_id'])) {
-                $actionId = $responseData['requests']['actions']['action_id'];
+            if (!empty($responseData['requests']['actions']) && isset($responseData['requests']['actions'][0]['action_id'])) {
+                $actionId = $responseData['requests']['actions'][0]['action_id'];
 
                 $embedTokenResponse = Http::withHeaders([
                     "Authorization" => "Zoho-oauthtoken " . $accessToken,
@@ -156,6 +169,7 @@ public function sendEmbeddedContract(Request $request)
                 ]);
 
                 if ($embedTokenResponse->successful()) {
+                    $trainee->update(['zoho_contract_id' => $responseData['requests']['request_id']]);
                     $signingUrl = $embedTokenResponse->json()['sign_url'];
                     return response()->json(['sign_url' => $signingUrl]);
                 } else {
@@ -181,13 +195,80 @@ public function sendEmbeddedContract(Request $request)
     }
 }
 
+public function viewContract()
+{
+    $user = Auth::user();
+    $trainee = Trainee::where('user_id', $user->id)->first();
 
-
-
-
-
-
-    public function test(){
-        return Inertia::render('TestZoho');
+    if (!$trainee || !$trainee->zoho_contract_id) {
+        return abort(404, 'Contract not found.');
     }
+
+    $contractId = $trainee->zoho_contract_id;
+    Log::info($contractId);
+
+    $accessToken = $this->getAccessToken();
+    if (!$accessToken) {
+        Log::error("Error while getting access token");
+        return response()->json(["error" => "Error while getting access token"], 401);
+    }
+
+    $response = Http::withHeaders([
+        "Authorization" => "Zoho-oauthtoken " . $accessToken,
+    ])->get("https://sign.zoho.sa/api/v1/requests/{$contractId}/pdf");
+
+    if ($response->failed()) {
+        Log::error("Failed to fetch contract from Zoho: " . $response->body());
+        return abort(500, 'Failed to fetch contract.');
+
+
+    }
+
+    return response()->json([
+        'pdf_url' => 'data:application/pdf;base64,' . base64_encode($response->body())
+    ]);
 }
+
+
+public function checkContractStatus(){
+    $user = Auth::user();
+    $trainee = Trainee::where('user_id', $user->id)->first();
+
+    if (!$trainee || !$trainee->zoho_contract_id) {
+        return abort(404, 'Contract not found.');
+    }
+
+    $contractId = $trainee->zoho_contract_id;
+
+    $accessToken = $this->getAccessToken();
+    if (!$accessToken) {
+        Log::error("Error while getting access token");
+        return response()->json(["error" => "Error while getting access token"], 401);
+    }
+
+    $response = Http::withHeaders([
+        "Authorization" => "Zoho-oauthtoken " . $accessToken,
+    ])->get("https://sign.zoho.sa/api/v1/requests/1094000000045237");
+
+    if ($response->failed()) {
+        Log::error("Failed to fetch contract status from Zoho: " . $response->body());
+        return abort(500, 'Failed to fetch contract status');
+
+
+    }
+    
+    $response=$response->json();
+  
+    $status = $responseData['requests']['request_status'] ?? null;
+
+    dd($status);
+
+    return response()->json(["status" => $status]);
+
+}
+
+
+}
+
+
+

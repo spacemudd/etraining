@@ -1232,4 +1232,13 @@ class TraineesController extends Controller
             ->addMedia($downloads);
 
     }
+
+
+    public function getTraineeContract()
+{
+    $trainee = auth()->user();
+    return response()->json([
+        'zoho_contract_id' => $trainee->zoho_contract_id
+    ]);
+}
 }

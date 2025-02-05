@@ -675,4 +675,7 @@ return [
     'under-review' => 'Under review',
     'mark-unpaid' => 'Mark unpaid',
     'export-deleted' => 'Export Archeived',
+    'sign-contract' => 'Sign Contract',
+    'view-contract' => 'View Contract'
+
 ];

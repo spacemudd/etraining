@@ -689,5 +689,9 @@ return [
     'under-review' => 'تحت المراجعة',
     'mark-unpaid' => 'اعادة الفاتورة الى غير مدفوعة',
     'export-deleted' => 'إصدار المؤرشف',
+    'sign-contract' => 'توثيق العقد',
+    'view-contract' => 'عرض العقد',
+
+
 
 ];
