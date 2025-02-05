@@ -923,6 +923,10 @@ Route::get('/test-zoho', [\App\Http\Controllers\ZohoSignController::class, 'test
 
 Route::post('/send-embedded-contract', [\App\Http\Controllers\ZohoSignController::class, 'sendEmbeddedContract']);
 
+Route::get('/zoho/view-contract', [\App\Http\Controllers\ZohoSignController::class, 'viewContract'])->name('zoho.view-contract');
+
+Route::get('/zoho/check-contract-status', [\App\Http\Controllers\ZohoSignController::class, 'checkContractStatus'])->name('zoho.check-contract-status');
+
 
 
 

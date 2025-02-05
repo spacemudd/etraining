@@ -669,5 +669,7 @@ return [
     'my-agreement'=>'My Agreement',
     'account'=>'Account',
     'companies-certificates' => 'Certificate Eligibility for Companies' ,
+    'sign-contract' => 'Sign Contract',
+    'view-contract' => 'View Contract'
 
 ];

@@ -683,6 +683,10 @@ return [
     'my-agreement'=>'عقدي',
     'account'=>'الحساب',
     'companies-certificates' => 'استحقاق الشهادات حسب الشركة' ,
+    'sign-contract' => 'توثيق العقد',
+    'view-contract' => 'عرض العقد',
+
+
 
 ];
 

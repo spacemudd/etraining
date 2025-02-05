@@ -858,7 +858,9 @@ export default {
             "dont-take-action-against-this-account-without-admin-approval": "الرجاء عدم اتخاذ اي اجراء ضد هذا الحساب من دون موافقة الإدارة",
             "my-agreement": "عقدي",
             "account": "الحساب",
-            "companies-certificates": "استحقاق الشهادات حسب الشركة"
+            "companies-certificates": "استحقاق الشهادات حسب الشركة",
+            "sign-contract": "توثيق العقد",
+            "view-contract": "عرض العقد"
         }
     },
     "en": {
@@ -1664,7 +1666,9 @@ export default {
             "dont-take-action-against-this-account-without-admin-approval": "please dont dont take any action against this account without consulting with administration",
             "my-agreement": "My Agreement",
             "account": "Account",
-            "companies-certificates": "Certificate Eligibility for Companies"
+            "companies-certificates": "Certificate Eligibility for Companies",
+            "sign-contract": "Sign Contract",
+            "view-contract": "View Contract"
         }
     }
 }
