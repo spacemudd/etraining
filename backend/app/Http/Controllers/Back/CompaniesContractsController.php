@@ -314,7 +314,7 @@ class CompaniesContractsController extends Controller
      */
     public function excel($company_id)
     {
-        $company = Company::findOrFail($company_id);
+        $company = Company::withTrashed()->findOrFail($company_id);
         Audit::create([
             'event' => 'companies.trainees.export.excel',
             'auditable_id' => auth()->user()->id,
