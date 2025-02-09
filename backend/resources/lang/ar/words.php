@@ -688,4 +688,6 @@ return [
     'archived' => 'مؤرشف',
     'under-review' => 'تحت المراجعة',
     'mark-unpaid' => 'اعادة الفاتورة الى غير مدفوعة',
+    'export-deleted' => 'إصدار المؤرشف',
+
 ];

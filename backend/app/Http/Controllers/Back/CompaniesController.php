@@ -272,6 +272,11 @@ class CompaniesController extends Controller
         return Excel::download(new CompaniesExport, now()->format('Y-m-d').'-companies.xlsx');
     }
 
+
+    public function exportArchived(){
+        return Excel::download(new \App\Exports\ExportArchivedCompanies(),'archived-companies.xlsx');
+    }
+
     public function markAsPtcNet($id)
     {
         $company = Company::findOrFail($id);

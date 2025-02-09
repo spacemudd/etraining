@@ -674,4 +674,5 @@ return [
     'archived' => 'Archived',
     'under-review' => 'Under review',
     'mark-unpaid' => 'Mark unpaid',
+    'export-deleted' => 'Export Archeived',
 ];
