@@ -53,7 +53,7 @@ class ExportArchivedCompanies implements FromCollection, WithHeadings, WithStyle
     public function columnWidths(): array
     {
         return [
-            'A' => 30, 
+            'A' => 50, 
         ];
     }
 
