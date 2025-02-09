@@ -568,6 +568,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
         Route::get('companies/export', [\App\Http\Controllers\Back\CompaniesController::class, 'export'])->name('companies.export');
 
+        Route::get('companies/exportArchived', [\App\Http\Controllers\Back\CompaniesController::class, 'exportArchived'])->name('companies.export-archived');
+
         Route::get('companies/{id}/ptcnet', [\App\Http\Controllers\Back\CompaniesController::class, 'markAsPtcNet']);
 
 

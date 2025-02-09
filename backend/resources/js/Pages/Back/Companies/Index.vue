@@ -20,7 +20,15 @@
                     <inertia-link class="btn-gray" :href="route('back.companies.create')">
                         <span>{{ $t('words.new') }}</span>
                     </inertia-link>
+
+
+                     <a class="btn-gray" :href="route('back.companies.export-archived')">
+                        <span>{{ $t('words.export-deleted') }}</span>
+                    </a>
                 </div>
+
+
+                
             </div>
             <admin-searchbar/>
             <div class="bg-white rounded shadow overflow-x-auto">
