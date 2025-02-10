@@ -1,6 +1,13 @@
 {
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
     "/js/manifest.js": "/js/manifest.js",
     "/js/vendor.js": "/js/vendor.js"
+=======
+    "/js/app.js": "/js/app.js?id=e175f5959e1985f84ba8",
+    "/css/app.css": "/css/app.css?id=ea6343e14424365e05f5",
+    "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
+    "/js/vendor.js": "/js/vendor.js?id=44018cbc30ee4945615f"
+>>>>>>> origin/certificates-per-company
 }
