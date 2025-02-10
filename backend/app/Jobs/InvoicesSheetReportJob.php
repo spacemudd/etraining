@@ -4,7 +4,6 @@ namespace App\Jobs;
 
 use App\Exports\CourseAttendanceReportExport;
 use App\Models\JobTracker;
-use App\Reports\CourseAttendanceReportFactory;
 use App\Reports\InvoicesReportFactory;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
@@ -19,7 +18,8 @@ class InvoicesSheetReportJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $timeout = 3600;
+    public $tries = 5;
+    public $timeout = 7200; 
 
     public $tracker;
 
@@ -43,29 +43,46 @@ class InvoicesSheetReportJob implements ShouldQueue
     public function handle()
     {
         Log::info('[InvoicesSheetJob] Started. Tracker ID: '.$this->tracker->id);
-
         $this->tracker->update(['started_at' => now()]);
 
-        $fileName = InvoicesReportFactory::new()
-            ->setStartDate(Carbon::parse($this->tracker->metadata['date_from'])->startOfDay())
-            ->setEndDate(Carbon::parse($this->tracker->metadata['date_to'])->endOfDay())
-            ->setCompanyId($this->tracker->metadata['company_id'] ?? null)
-            ->toExcel();
+        $startTime = microtime(true); 
 
-        $this->tracker->addMedia(storage_path('app/'.$fileName))
-            ->withAttributes([
-                'team_id' => $this->tracker->team_id,
-            ])->toMediaCollection('excel');
+        try {
+            $fileName = InvoicesReportFactory::new()
+                ->setStartDate(Carbon::parse($this->tracker->metadata['date_from'])->startOfDay())
+                ->setEndDate(Carbon::parse($this->tracker->metadata['date_to'])->endOfDay())
+                ->setCompanyId($this->tracker->metadata['company_id'] ?? null)
+                ->toExcel();
 
-        $this->tracker->update(['finished_at' => now()]);
+            $executionTime = microtime(true) - $startTime;
+            Log::info('[InvoicesSheetJob] Report generated in ' . $executionTime . ' seconds');
 
-        Log::info('[InvoicesSheetJob] Completed. Tracker ID: '.$this->tracker->id);
+            $this->tracker->addMedia(storage_path('app/'.$fileName))
+                ->withAttributes([
+                    'team_id' => $this->tracker->team_id,
+                ])->toMediaCollection('excel');
+
+            $this->tracker->update(['finished_at' => now()]);
+
+            Log::info('[InvoicesSheetJob] Completed. Tracker ID: '.$this->tracker->id);
+        } catch (Throwable $e) {
+            $this->failed($e); 
+        }
     }
 
+    /**
+     * Handle job failure.
+     *
+     * @param Throwable $e
+     */
     public function failed(Throwable $e)
     {
-        Log::info('[InvoicesSheetJob] Failed. Tracker ID: '.$this->tracker->id);
-        $this->tracker->failure_reason = $e->getMessage();
-        $this->tracker->save();
+        Log::error('[InvoicesSheetJob] Failed. Tracker ID: ' . $this->tracker->id . ' | Error: ' . $e->getMessage());
+        Log::error($e->getTraceAsString()); 
+
+        $this->tracker->update([
+            'failure_reason' => $e->getMessage(),
+            'finished_at' => now(),
+        ]);
     }
 }
