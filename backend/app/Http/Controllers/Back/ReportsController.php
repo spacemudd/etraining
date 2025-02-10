@@ -151,6 +151,8 @@ class ReportsController extends Controller
         return Excel::download(new TraineesWithoutInvoicesExport($data), now()->format('Y-m-d').'-traineees-without-invoices.xlsx');
        
     }
+
+
     public function formCompanyCertificateseGenerateReport(Request $request)
     {
         $course = Course::find($request->input('courseId.id'));
@@ -261,9 +263,10 @@ class ReportsController extends Controller
     
         return Excel::download(new TraineeAttendanceExportByGroup($results), 'trainee_attendance_by_course.xlsx');
     }
+  
 
 
-    
+
     
 
 }
