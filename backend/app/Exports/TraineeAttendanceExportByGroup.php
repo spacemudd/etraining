@@ -8,6 +8,7 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
+
 class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, WithStyles, ShouldAutoSize
 {
     protected $trainees;
@@ -29,14 +30,14 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
 
     public function headings(): array
     {
-        return ['استحقاق الشهادة','تاريخ الدفع','استحقاق الى','استحقاق من ','حالة الدفع', 'نسبة الحضور', 'عدد الحضور', 'عدد الغياب','الإيميل',' الجوال','رقم الهوية','اسم المتدرب'];
+        return ['استحقاق الشهادة','تاريخ الدفع','استحقاق الى','استحقاق من ','حالة الدفع', 'نسبة الحضور', 'عدد الحضور', 'عدد الغياب','الدورة',' الشركة','الإيميل',' الجوال','رقم الهوية','اسم المتدرب'];
     }
 
     public function styles(Worksheet $sheet)
     {
-        $sheet->getStyle('A1:L1')->getFont()->setBold(true);
-        $sheet->getStyle('A1:L1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle('A1:L1')->getFill()
+        $sheet->getStyle('A1:N1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:N1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A1:N1')->getFill()
             ->setFillType('solid')
             ->getStartColor()->setARGB('FFFFE599');
 
@@ -62,15 +63,17 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
             $sheet->getCell("F$rowIndex")->setValue($trainee['attendance_percentage']);
             $sheet->getCell("G$rowIndex")->setValue($trainee['present_count']);
             $sheet->getCell("H$rowIndex")->setValue($trainee['absent_count']);
+            $sheet->getCell("I$rowIndex")->setValue($trainee['course_name']);
 
+            $sheet->getCell("J$rowIndex")->setValue($trainee['company_name']);
 
-            $sheet->getCell("I$rowIndex")->setValue($trainee['email']);
-            $sheet->getCell("J$rowIndex")->setValue($trainee['phone']);
-            $sheet->getCell("K$rowIndex")->setValue($trainee['identity_number']);
-            $sheet->getCell("L$rowIndex")->setValue($trainee['trainee_name']);
+            $sheet->getCell("K$rowIndex")->setValue($trainee['email']);
+            $sheet->getCell("L$rowIndex")->setValue($trainee['phone']);
+            $sheet->getCell("M$rowIndex")->setValue($trainee['identity_number']);
+            $sheet->getCell("N$rowIndex")->setValue($trainee['trainee_name']);
             
 
-            $sheet->getStyle("A$rowIndex:L$rowIndex")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle("A$rowIndex:N$rowIndex")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
         }
     }
 }

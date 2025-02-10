@@ -169,7 +169,9 @@ class ReportsController extends Controller
         set_time_limit(300);
     
         $companyId = $request->input('companyId.id'); 
-        
+    
+        $companyName = '';
+    
         foreach ($courses as $course) {
             $batches = $course->batches;
     
@@ -193,9 +195,12 @@ class ReportsController extends Controller
     
                 $traineesQuery = $batch->trainee_group->trainees();
     
-            
                 if ($companyId) {
                     $traineesQuery->where('company_id', $companyId);
+                    $company = Company::find($companyId);
+                    if ($company) {
+                        $companyName = $company->name_ar;
+                    }
                 }
     
                 $traineesQuery->chunk(100, function ($traineesChunk) use (
@@ -204,6 +209,8 @@ class ReportsController extends Controller
                     $totalSessionsCount,
                     $startOfTargetMonth,
                     $endOfTargetMonth,
+                    $courseName,
+                    $companyName, 
                     $companyId
                 ) {
                     foreach ($traineesChunk as $trainee) {
@@ -219,7 +226,6 @@ class ReportsController extends Controller
     
                         $invoiceQuery = Invoice::where('trainee_id', $trainee->id);
     
-                       
                         if ($companyId) {
                             $invoiceQuery->where('company_id', $companyId);
                         }
@@ -238,6 +244,8 @@ class ReportsController extends Controller
                         $invoiceFromDate = $invoice ? $invoice->from_date : '';
                         $invoiceToDate = $invoice ? $invoice->to_date : '';
     
+                        $traineeCompanyName = $trainee->company ? $trainee->company->name_ar : 'غير مربوط بشركة';
+    
                         if (isset($trainee->name)) {
                             $results[] = [
                                 'paid_date' => $paidDate,
@@ -247,6 +255,9 @@ class ReportsController extends Controller
                                 'attendance_percentage' => round($attendancePercentage, 2) . ' %',
                                 'present_count' => $presentCount,
                                 'absent_count' => $absentCount,
+                                'course_name' => $courseName,
+                                'company_name' => $traineeCompanyName,
+    
                                 'email' => $trainee->email,
                                 'phone' => $trainee->phone,
                                 'identity_number' => $trainee->identity_number,
@@ -263,8 +274,16 @@ class ReportsController extends Controller
             return ($attendanceNumeric >= 50 && $trainee['invoice_status'] == 'مدفوع') ? 1 : 0;
         })->values()->toArray();
     
-        return Excel::download(new TraineeAttendanceExportByGroup($results), 'trainee_attendance_by_course.xlsx');
+        $fileName = $companyName ? $companyName . '_attendance_report.xlsx' : 'trainee_attendance_by_course.xlsx';
+        // dd($fileName);
+        
+    
+        return Excel::download(new TraineeAttendanceExportByGroup($results), $fileName);
+
+        
     }
+    
+    
     
   
 
