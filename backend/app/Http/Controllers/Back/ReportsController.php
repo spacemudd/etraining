@@ -193,6 +193,7 @@ class ReportsController extends Controller
     
                 $traineesQuery = $batch->trainee_group->trainees();
     
+            
                 if ($companyId) {
                     $traineesQuery->where('company_id', $companyId);
                 }
@@ -218,6 +219,7 @@ class ReportsController extends Controller
     
                         $invoiceQuery = Invoice::where('trainee_id', $trainee->id);
     
+                       
                         if ($companyId) {
                             $invoiceQuery->where('company_id', $companyId);
                         }
@@ -263,6 +265,7 @@ class ReportsController extends Controller
     
         return Excel::download(new TraineeAttendanceExportByGroup($results), 'trainee_attendance_by_course.xlsx');
     }
+    
   
 
 
