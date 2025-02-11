@@ -930,3 +930,18 @@ Route::get('/zoho/check-contract-status', [\App\Http\Controllers\ZohoSignControl
 
 
 
+Route::get('/send-test-email', function () {
+    $data = ['message' => 'This is a test email from Mailgun.'];
+
+    Mail::send([], [], function ($message) use ($data) {
+        $message->to('ebrahim.hosny@hadaf-hq.com') 
+                ->subject('Test Email')
+                ->setBody($data['message']); 
+    });
+
+    return 'Test email sent successfully!';
+});
+
+
+
+
