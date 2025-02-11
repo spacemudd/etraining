@@ -24,7 +24,7 @@ class ExportSomeTraineesFromGada implements FromCollection,WithHeadings
              ->get(['name','phone','identity_number','email'])
              ->map(function($trainee){
                 return [
-                    'city' =>$trainee->city ? $trainee->city->name_ar : 'لا يوجد',
+                    'city' => $trainee->city->name_ar ?? 'لا يوجد',
                     'email' => $trainee->email,
                     'identity_number' => $trainee->identity_number,
                     'phone' => $trainee->clean_phone,
