@@ -68285,3 +68285,4 @@ module.exports = __webpack_require__(/*! C:\xampp\htdocs\new-project\etraining\b
 /***/ })
 
 },[[0,"/js/manifest","/js/vendor"]]]);
+  \********************************/
