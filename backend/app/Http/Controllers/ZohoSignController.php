@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ContractSigned;
 use App\Models\Back\Trainee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 
@@ -232,6 +234,7 @@ public function viewContract()
 
 
 public function checkContractStatus(){
+    Log::info('hereeeeeeeeeeeeeeeeee');
     $user = Auth::user();
     $trainee = Trainee::where('user_id', $user->id)->first();
 
@@ -264,6 +267,19 @@ public function checkContractStatus(){
     $status = $response['requests']['request_status'] ?? null;
 
     
+
+    if ($status == 'completed' && !$trainee->contract_signed_notification_sent) {
+
+        Log::info('we are here');
+
+
+        Mail::to($trainee->email)->send(new ContractSigned($trainee));
+
+        $trainee->contract_signed_notification_sent = true;
+        $trainee->save();
+
+        Log::info("Contract signed successfully. Email sent to: " . $trainee->email);
+    }
 
     return response()->json(["status" => $status]);
 
