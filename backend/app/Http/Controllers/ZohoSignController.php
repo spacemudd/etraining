@@ -47,7 +47,7 @@ class ZohoSignController extends Controller
     }
     Log::info($accessToken);
 
-    $templateId = "1094000000035451"; 
+    $templateId = "1094000000056767"; 
 
     $payload = [
         "templates" => [
@@ -60,7 +60,7 @@ class ZohoSignController extends Controller
                 [
                     "recipient_name" => $request->recipient_name,
                     "recipient_email" => $request->recipient_email,
-                    "action_id" => "1094000000040028",
+                    "action_id" => "1094000000056788",
                     "signing_order" => 1,
                     "role" => "",
                     "verify_recipient" => false,
@@ -108,7 +108,7 @@ public function sendEmbeddedContract(Request $request)
 
     Log::info("access token successfully generated");
 
-    $templateId = "1094000000035451"; 
+    $templateId = "1094000000056985"; 
     
     $payload = [
         "templates" => [
@@ -129,7 +129,7 @@ public function sendEmbeddedContract(Request $request)
                     "role"=> "",
                     "verify_recipient"=> false,
                     "is_embedded" => true,
-                    "action_id"=> "1094000000035472",
+                    "action_id"=> "1094000000057006",
                     "private_notes" => "",
                 ],
             ],
