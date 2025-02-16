@@ -50,6 +50,7 @@ class Company extends Model implements SearchableLabels, Auditable, HasMedia
         'shelf_number',
         'is_ptc_net',
         'salesperson_email',
+        'salesperson_name',
         'region_id',
         'center_id',
         'recruitment_company_id',

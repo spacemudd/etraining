@@ -84,6 +84,7 @@ class CompaniesController extends Controller
         'monthly_subscription_per_trainee' => 'nullable|numeric|min:0|max:100000',
         'shelf_number' => 'nullable|string|max:255',
         'salesperson_email' => 'nullable|email',
+        'salesperson_name' => 'nullable',
         'region_id' => 'nullable|exists:regions,id',
         'center_id' => 'nullable|exists:centers,id',
         'recruitment_company_id' => 'nullable|exists:recruitment_companies,id',
