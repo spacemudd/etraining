@@ -589,6 +589,7 @@ return [
     'view-dashboard-counters' =>'عرض اجمالي عدد المتدربات والشركات',
     'company-register-date' => 'تاريخ الربط مع الشركة',
     'salesperson_email' => 'ايميل المندوب',
+    'salesperson_name' => 'اسم المندوب',
     'restore' => 'استرجاع',
     'restore-deleted-companies' => 'استرجاع الشركات المحذوفة',
     'view-deleted-companies' => 'عرض الشركات المحذوفة',

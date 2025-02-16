@@ -140,6 +140,8 @@
             'monthly_subscription_per_trainee',
             'shelf_number',
             'salesperson_email',
+            'salesperson_name',
+          
           ]"
         >
           <div class="col-span-4 sm:col-span-1">
@@ -893,6 +895,7 @@ export default {
           monthly_subscription_per_trainee: "",
           shelf_number: "",
           salesperson_email: "",
+          salesperson_name: "",
           region_id: "",
           center_id: "",
           recruitment_company_id: "",

@@ -105,6 +105,7 @@
                 'monthly_subscription_per_trainee',
                 'shelf_number',
                 'salesperson_email',
+                'salesperson_name',
               ]"
             >
               <div class="col-span-2 sm:col-span-2">
@@ -217,6 +218,7 @@ export default {
     this.form.center_id = this.company.center_id;
     this.form.recruitment_company_id = this.company.recruitment_company_id;
     this.form.salesperson_email = this.company.salesperson_email;
+    this.form.salesperson_name = this.company.salesperson_name;
    
   },
   data() {
@@ -234,6 +236,7 @@ export default {
           monthly_subscription_per_trainee: "",
           shelf_number: "",
           salesperson_email: "",
+          salesperson_name: "",
           region_id: "",
           center_id: "",
           recruitment_company_id: "",
