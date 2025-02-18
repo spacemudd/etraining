@@ -9,7 +9,7 @@
         <h3>الدخول للعقد</h3>
       </div>
       <p class="mt-2">
-        انقر على زر <strong>"توثيق العقد"</strong> الموجود بصفحتك الشخصية
+        انقر على زر <strong>"توثيق العقد الآن "</strong> الموجود بأسفل هذه الصفحة
       </p>
         <!-- <img src="/img/Contract/start.png" alt="تسجيل الدخول"> -->
     </div>
@@ -78,18 +78,86 @@
         لا تغلق الصفحة وانتظر حتى يتم التوثيق، قد تصل المدة إلى 40 ثانية، حتى تظهر الصورة المرفقة بأنه تم التوثيق
       </p>
       <img src="/img/contract/done.png" alt="إرسال العقد">
+     <p class="py-2">الان بعد اتمام التوثيق ، انقر على زر <strong>العودة الى صفحتك الرئيسية الموجود بأسفل الصفحة</strong></p>
+
     </div>
 
     <!-- نهاية الإرشادات -->
-    <div class="text-center mt-4">
-      <p class="footer-text mt-3">إذا واجهتك أي مشكلة، يرجى التواصل مع الدعم الفني على الرقم: <strong>3268 133 055</strong></p>
+   <div class="text-center mt-4">
+      <button v-if="contractStatus !== 'completed'" @click="sendEmbeddedContract" class="btn-custom">توثيق العقد الآن</button>
+            <div class="my-3">   
+                <button @click="redirectToHome"  class="btn-custom">العودة الى الصفحة الرئيسية</button>
+            </div>
+
+        <p class="footer-text mt-3">إذا واجهتك أي مشكلة، يرجى التواصل معنا: <strong>3268 133 055</strong></p>
     </div>
   </div>
+
+
+  
 </template>
 
 <script>
+import Swal from 'sweetalert2';
+
 export default {
   name: "ContractGuides",
+
+    mounted() {
+        this.fetchContractStatus();
+    },
+
+     data() {
+        return {
+         
+            contractStatus: null,
+        };
+    },
+
+
+methods: {
+     async sendEmbeddedContract() {
+            try {
+                const recipientName = this.$page.props.user.name;
+                const recipientEmail = this.$page.props.user.email;
+                const userId = this.$page.props.user.id;
+
+                const response = await axios.post('/send-embedded-contract', {
+                    recipient_name: recipientName,
+                    recipient_email: recipientEmail,
+                    user_id: userId,
+                });
+
+                if (response.data && response.data.sign_url) {
+                    // window.location.href = response.data.sign_url; 
+                    window.open(response.data.sign_url, '_blank');
+
+                } else {
+                    Swal.fire('خطأ', 'حدث خطأ أثناء معالجة الطلب.', 'error');
+                }
+            } catch (error) {
+                console.error("خطأ في الاتصال: ", error);
+                Swal.fire('خطأ', 'حدث خطأ أثناء إرسال العقد.', 'error');
+            }
+        },
+
+    async fetchContractStatus() {
+    try {
+        console.log("heeeereeeeeee");
+        const response = await axios.get(route('zoho.check-contract-status'));
+        this.contractStatus = response.data.status;
+        console.log(this.contractStatus);
+        this.errorMessage = null;
+
+    } catch (error) {
+        this.errorMessage = error.response?.data?.error || "حدث خطأ أثناء جلب حالة العقد.";
+    }
+},
+ redirectToHome() {
+      window.location.href = "https://app.jisr-ksa.com"; 
+    },
+},
+
 };
 </script>
 
