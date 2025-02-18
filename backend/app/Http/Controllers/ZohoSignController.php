@@ -142,7 +142,7 @@ public function sendEmbeddedContract(Request $request)
             "Authorization" => "Zoho-oauthtoken " . $accessToken,
             "Content-Type" => "application/json",
         ])
-        ->post("https://sign.zoho.sa/api/v1/templates/{$templateId}/createdocument?testing=true", $payload);
+        ->post("https://sign.zoho.sa/api/v1/templates/{$templateId}/createdocument", $payload);
 
         $responseData = $response->json();
         Log::info("Response from Zoho: " . json_encode($response->json()));

@@ -166,7 +166,8 @@ export default {
                 },
             }).then((result) => {
                 if (result.isConfirmed) {
-                    this.sendEmbeddedContract();
+                    // this.sendEmbeddedContract();
+                    window.location.href=route("contract-guides");
                 }
             });
         },
