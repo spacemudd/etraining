@@ -1241,4 +1241,8 @@ class TraineesController extends Controller
         'zoho_contract_id' => $trainee->zoho_contract_id
     ]);
 }
+    public function contractGuides()
+    {
+        return Inertia::render('Contract/ContractGuides');
+    }
 }
