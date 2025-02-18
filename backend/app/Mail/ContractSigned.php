@@ -31,7 +31,7 @@ class ContractSigned extends Mailable
      */
     public function build()
     {
-        return $this->subject('Your Contract Has Been Signed')
+        return $this->subject('تم توثيق العقد الالكتروني')
         ->view('emails.contract_signed')
         ->with([
             'name' => $this->trainee->name,

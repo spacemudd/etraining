@@ -950,3 +950,8 @@ Route::get('/send-test-email', function () {
 
 
 
+
+
+Route::middleware(['auth:sanctum'])->group(function() {
+    Route::get('/contract-guides',[\App\Http\Controllers\Back\TraineesController::class,'contractGuides'])->name('contract-guides');
+});

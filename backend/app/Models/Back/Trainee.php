@@ -67,7 +67,8 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'linked_date',
         'trainee_message',
         'job_number',
-        'zoho_contract_id'
+        'zoho_contract_id',
+        'zoho_contract_status'
     ];
 
     protected $dates = [

@@ -145,11 +145,10 @@ public function sendEmbeddedContract(Request $request)
         ->post("https://sign.zoho.sa/api/v1/templates/{$templateId}/createdocument?testing=true", $payload);
 
         $responseData = $response->json();
+        Log::info("Response from Zoho: " . json_encode($response->json()));
+
         Log::info($responseData['requests']['request_id']);
         Log::info($responseData['requests']['actions'][0]['action_id']);
-
-
-
 
 
 
@@ -233,21 +232,29 @@ public function viewContract()
 }
 
 
-public function checkContractStatus(){
-    Log::info('hereeeeeeeeeeeeeeeeee');
+public function checkContractStatus()
+{
+    Log::info('Checking contract status...');
+
     $user = Auth::user();
     $trainee = Trainee::where('user_id', $user->id)->first();
 
     if (!$trainee || !$trainee->zoho_contract_id) {
-        return abort(404, 'Contract not found.');
+        Log::info("No contract found for user {$user->id}. Contract has not been sent yet.");
+        return response()->json(["status" => "contract_not_sent"]);
+    }
+
+    if ($trainee->zoho_contract_status === 'completed') {
+        Log::info("Contract for user {$user->id} is already completed.");
+        return response()->json(["status" => "completed"]);
     }
 
     $contractId = $trainee->zoho_contract_id;
-
     $accessToken = $this->getAccessToken();
+
     if (!$accessToken) {
-        Log::error("Error while getting access token");
-        return response()->json(["error" => "Error while getting access token"], 401);
+        Log::error("Failed to get access token for user {$user->id}");
+        return response()->json(["error" => "Failed to get access token"], 401);
     }
 
     $response = Http::withHeaders([
@@ -255,35 +262,39 @@ public function checkContractStatus(){
     ])->get("https://sign.zoho.sa/api/v1/requests/{$contractId}");
 
     if ($response->failed()) {
-        Log::error("Failed to fetch contract status from Zoho: " . $response->body());
-        return abort(500, 'Failed to fetch contract status');
-
-
+        Log::error("Failed to fetch contract status from Zoho for contract ID {$contractId}. Response: " . $response->body());
+        return response()->json(["error" => "Failed to fetch contract status"], 500);
     }
-    
-    // $response=$response->json();
-    // dd($response);
-  
-    $status = $response['requests']['request_status'] ?? null;
 
-    
+    $status = $response->json()['requests']['request_status'] ?? null;
 
-    if ($status == 'completed' && !$trainee->contract_signed_notification_sent) {
+    if (!$status) {
+        Log::error("Invalid response from Zoho for contract ID {$contractId}: Missing request_status.");
+        return response()->json(["error" => "Invalid contract status response"], 500);
+    }
 
-        Log::info('we are here');
-
-
-        Mail::to($trainee->email)->send(new ContractSigned($trainee));
-
-        $trainee->contract_signed_notification_sent = true;
+    if ($trainee->zoho_contract_status !== $status) {
+        $trainee->zoho_contract_status = $status;
         $trainee->save();
+        Log::info("Updated contract status for user {$user->id} to: {$status}");
+    }
 
-        Log::info("Contract signed successfully. Email sent to: " . $trainee->email);
+    if ($status === 'completed' && !$trainee->contract_signed_notification_sent) {
+        try {
+            Mail::to($trainee->email)->send(new ContractSigned($trainee));
+            $trainee->contract_signed_notification_sent = true;
+            $trainee->save();
+            Log::info("Contract signed notification sent to: {$trainee->email}");
+        } catch (\Exception $e) {
+            Log::error("Failed to send contract signed email to {$trainee->email}: " . $e->getMessage());
+        }
     }
 
     return response()->json(["status" => $status]);
-
 }
+
+
+
 
 
 }
