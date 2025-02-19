@@ -30,6 +30,9 @@ class ZohoSignController extends Controller
             "redirect_uri" => $this->redirect_uri,
             "grant_type" => "refresh_token",
         ]);
+
+        Log::info("Zoho Access Token Response: ", $response->json());
+
         
         //  dd($response->json()['access_token'] ?? null) ; 
 
@@ -43,6 +46,7 @@ class ZohoSignController extends Controller
     $accessToken = $this->getAccessToken();
     if (!$accessToken) {
         Log::error("error while getting access token");
+
         return response()->json(["error" => "Failed to get access token"], 401);
     }
     Log::info($accessToken);
