@@ -88,7 +88,7 @@
 
     <!-- نهاية الإرشادات -->
    <div class="text-center mt-4">
-      <button v-if="contractStatus !== 'completed'" @click="sendEmbeddedContract" class="btn-custom">توثيق العقد الآن</button>
+      <button v-if="contractStatus !== 'completed'" @click="sendEmbeddedContract" class="btn-custom">توثيق العقد الآن (برجاء التوثيق من خلال جهاز اللاب توب)</button>
             <div class="my-3">   
                 <button @click="redirectToHome"  class="btn-custom">العودة الى الصفحة الرئيسية</button>
             </div>
