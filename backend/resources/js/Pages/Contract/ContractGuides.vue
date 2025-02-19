@@ -107,6 +107,7 @@ export default {
         this.fetchContractStatus();
     },
 
+
      data() {
         return {
          

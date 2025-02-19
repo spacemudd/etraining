@@ -281,9 +281,11 @@
     import Welcome from '@/Jetstream/Welcome'
     import LanguageSelector from "@/Shared/LanguageSelector";
     import HeaderCard from "@/Components/HeaderCard";
+    import Swal from 'sweetalert2'; 
+
 
     export default {
-        props: ['sessions', 'user', 'show_success_payment', 'show_failed_payment', 'class_timings', 'global_messages'],
+        props: ['sessions', 'user', 'show_success_payment', 'show_failed_payment', 'class_timings', 'global_messages','trainee'],
         components: {
             AppLayout,
             Welcome,
@@ -293,6 +295,9 @@
         data() {
             return {
                 checkCoursesEnabledInterval: null,
+                  pdfUrl: null,
+                    contractStatus: null,
+                    errorMessage: null,
             }
         },
         filters: {
@@ -304,6 +309,10 @@
             }
         },
         mounted() {
+            // alert('hello');
+            console.log(this.trainee.must_sign)
+        
+            this.fetchContractStatus();
             let vm = this;
             this.checkCoursesEnabledInterval = setInterval(function() {
                 vm.updateCoursesEnabled();
@@ -324,7 +333,77 @@
                         this.$set(this.sessions.data[index], 'can_join', false);
                     }
                 })
-            },
+            },  
+             showContractPopup() {
+            Swal.fire({
+                title: 'توثيق العقد',
+                text: 'يرجى توثيق العقد للمتابعة.',
+                icon: 'info',
+                confirmButtonText: 'توثيق العقد',
+                allowOutsideClick: false,  
+                allowEscapeKey: false,    
+                showCancelButton: false,  
+                customClass: {
+                    confirmButton: 'bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded',
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // this.sendEmbeddedContract();
+                    window.location.href=route("contract-guides");
+                }
+            });
+        },
+
+        async sendEmbeddedContract() {
+            try {
+                const recipientName = this.$page.props.user.name;
+                const recipientEmail = this.$page.props.user.email;
+                const userId = this.$page.props.user.id;
+
+                const response = await axios.post('/send-embedded-contract', {
+                    recipient_name: recipientName,
+                    recipient_email: recipientEmail,
+                    user_id: userId,
+                });
+
+                if (response.data && response.data.sign_url) {
+                    window.location.href = response.data.sign_url; 
+                } else {
+                    Swal.fire('خطأ', 'حدث خطأ أثناء معالجة الطلب.', 'error');
+                }
+            } catch (error) {
+                console.error("خطأ في الاتصال: ", error);
+                Swal.fire('خطأ', 'حدث خطأ أثناء إرسال العقد.', 'error');
+            }
+        },
+
+        async viewContract() {
+            try {
+                const response = await axios.get('/zoho/view-contract');
+                const pdfUrl = response.data.pdf_url;
+                window.open(pdfUrl, '_blank');
+            } catch (error) {
+                console.error("خطأ أثناء تحميل العقد:", error);
+            }
+        },
+
+     async fetchContractStatus() {
+    try {
+        console.log("heeeereeeeeee");
+        console.log(this.trainee.name);
+        const response = await axios.get(route('zoho.check-contract-status'));
+        this.contractStatus = response.data.status;
+                        console.log(this.contractStatus);
+
+        this.errorMessage = null;
+
+        if (this.contractStatus !== 'completed' && this.trainee.must_sign) {
+            this.showContractPopup();
+        }
+    } catch (error) {
+        this.errorMessage = error.response?.data?.error || "حدث خطأ أثناء جلب حالة العقد.";
+    }
+}
         },
         beforeDestroy() {
             clearInterval(this.checkCoursesEnabledInterval);

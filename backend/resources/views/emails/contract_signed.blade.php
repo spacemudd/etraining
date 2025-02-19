@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Your Contract Has Been Signed</title>
+    <title>إشعار بتوثيق العقد الالكتروني</title>
 </head>
 <body>
-    <h1>Dear {{ $name }},</h1>
-    <p>Your contract has been successfully signed and completed. The contract ID is: {{ $contract_id }}</p>
-    <p>Thank you!</p>
+    <h1>المتدربة / {{ $name }}</h1>
+    <p>نشكر لك اختيارك مركز جساره للتدريب ونشعركم انه قد تم توثيق عقدكم بنجاح</p>
 </body>
 </html>
