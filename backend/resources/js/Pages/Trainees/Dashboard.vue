@@ -393,7 +393,7 @@
         console.log(this.trainee.name);
         const response = await axios.get(route('zoho.check-contract-status'));
         this.contractStatus = response.data.status;
-                        console.log(this.contractStatus);
+         console.log(this.contractStatus);
 
         this.errorMessage = null;
 
@@ -403,7 +403,7 @@
     } catch (error) {
         this.errorMessage = error.response?.data?.error || "حدث خطأ أثناء جلب حالة العقد.";
     }
-}
+    }
         },
         beforeDestroy() {
             clearInterval(this.checkCoursesEnabledInterval);
