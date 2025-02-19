@@ -149,7 +149,7 @@ export default {
         };
     },
     mounted() {
-        // this.fetchContractStatus();
+        this.fetchContractStatus();
     },
     methods: {
         showContractPopup() {
@@ -215,7 +215,7 @@ export default {
         this.errorMessage = null;
 
         if (this.contractStatus !== 'completed') {
-            this.showContractPopup();
+            // this.showContractPopup();
         }
     } catch (error) {
         this.errorMessage = error.response?.data?.error || "حدث خطأ أثناء جلب حالة العقد.";
