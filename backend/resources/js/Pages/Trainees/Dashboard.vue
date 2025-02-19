@@ -337,7 +337,7 @@
              showContractPopup() {
             Swal.fire({
                 title: 'توثيق العقد',
-                text: 'يرجى توثيق العقد للمتابعة.',
+                text: 'يرجي توثيق العقد للمتابعة (برجاء التوثيق من خلال جهاز اللاب توب)',
                 icon: 'info',
                 confirmButtonText: 'توثيق العقد',
                 allowOutsideClick: false,  
