@@ -134,8 +134,8 @@ methods: {
                 });
 
                 if (response.data && response.data.sign_url) {
-                    // window.location.href = response.data.sign_url; 
-                    window.open(response.data.sign_url, '_blank');
+                    window.location.href = response.data.sign_url; 
+                    // window.open(response.data.sign_url, '_blank');
 
                 } else {
                     Swal.fire('خطأ', 'حدث خطأ أثناء معالجة الطلب.', 'error');
