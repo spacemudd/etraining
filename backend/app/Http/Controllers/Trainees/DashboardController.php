@@ -7,15 +7,19 @@ use App\Models\Back\Course;
 use App\Models\Back\CourseBatch;
 use App\Models\Back\CourseBatchSession;
 use App\Models\Back\GlobalMessages;
+use App\Models\Back\Trainee;
 use App\Models\Back\TraineeAgreement;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
     public function dashboard()
     {
-        $trainee = auth()->user()->trainee;
+        $user=Auth::user();
+        $trainee=Trainee::where('user_id',$user->id)->first();
+        
 
         // $agreement = TraineeAgreement::where('trainee_id', $trainee->id)->first();
         // if (!$agreement || is_null($agreement->accepted_at)) {
@@ -73,6 +77,7 @@ class DashboardController extends Controller
             'show_failed_payment' => $show_failed_payment,
             'class_timings' => $class_timings,
             'global_messages' => $global_messages,
+            'trainee' => $trainee
         ]);
     }
 }
