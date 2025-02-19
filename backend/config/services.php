@@ -14,6 +14,8 @@ return [
     |
     */
 
+
+
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),
@@ -34,6 +36,10 @@ return [
         'endpoint' => env('MASDR_ENDPOINT'),
         'client_id' => env('MASDR_CLIENT_ID'),
         'client_secret' => env('MASDR_CLIENT_SECRET'),
+    ],
+
+    'http' => [
+        'verify' => 'C:\xampp\php\extras\ssl\cacert.pem',
     ],
 
 ];

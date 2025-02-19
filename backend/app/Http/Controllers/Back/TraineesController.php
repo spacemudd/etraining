@@ -31,6 +31,7 @@ use App\Notifications\TraineeWelcomeNotification;
 use App\Rules\TraineeGroupLimit;
 use App\Services\TraineesServices;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -1231,5 +1232,19 @@ class TraineesController extends Controller
         return MediaStream::create(str_slug($trainee->name) . '-files.zip')
             ->addMedia($downloads);
 
+    }
+
+
+    public function getTraineeContract()
+{
+    $trainee = auth()->user();
+    return response()->json([
+        'zoho_contract_id' => $trainee->zoho_contract_id
+    ]);
+}
+    public function contractGuides()
+    {
+
+        return Inertia::render('Contract/ContractGuides');
     }
 }

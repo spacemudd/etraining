@@ -11,13 +11,15 @@ use App\Models\Back\Invoice;
 use App\Models\Back\Resignation;
 use App\Models\Back\TestExportController;
 use App\Models\Back\Trainee;
+
+
+
+
 use App\Models\User;
-
-
-
-
 use App\Services\GosiService;
 use Illuminate\Mail\Markdown;
+
+
 
 
 
@@ -919,3 +921,37 @@ Route::get('/attendance/export-by-group/{courseBatch}', [\App\Http\Controllers\A
 });
 
 
+
+Route::post('/send-contract', [\App\Http\Controllers\ZohoSignController::class, 'sendContract']);
+
+Route::get('/test-zoho', [\App\Http\Controllers\ZohoSignController::class, 'test']);
+
+Route::post('/send-embedded-contract', [\App\Http\Controllers\ZohoSignController::class, 'sendEmbeddedContract']);
+
+Route::get('/zoho/view-contract', [\App\Http\Controllers\ZohoSignController::class, 'viewContract'])->name('zoho.view-contract');
+
+Route::get('/zoho/check-contract-status', [\App\Http\Controllers\ZohoSignController::class, 'checkContractStatus'])->name('zoho.check-contract-status');
+
+
+
+
+Route::get('/send-test-email', function () {
+    $data = ['message' => 'This is a test email from Mailgun.'];
+
+    Mail::send([], [], function ($message) use ($data) {
+        $message->to('ebrahim.hosny@hadaf-hq.com') 
+                ->subject('Test Email')
+                ->setBody($data['message']); 
+    });
+
+    return 'Test email sent successfully!';
+});
+
+
+
+
+
+
+Route::middleware(['auth:sanctum'])->group(function() {
+    Route::get('/contract-guides',[\App\Http\Controllers\Back\TraineesController::class,'contractGuides'])->name('contract-guides');
+});
