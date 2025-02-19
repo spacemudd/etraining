@@ -93,7 +93,7 @@
                 <button @click="redirectToHome"  class="btn-custom">العودة الى الصفحة الرئيسية</button>
             </div>
 
-        <p class="footer-text mt-3">إذا واجهتك أي مشكلة، يرجى التواصل معنا: <strong>3268 133 055</strong></p>
+        <p class="footer-text mt-3">إذا واجهك أي مشكلة، يرجى التواصل معنا على الرقم المسؤول عن هذا العقد: <strong>3268 133 055</strong></p>
     </div>
   </div>
 
