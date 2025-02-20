@@ -154,7 +154,19 @@ methods: {
 
                 if (response.data && response.data.sign_url) {
                     // window.location.href = response.data.sign_url; 
-                    window.open(response.data.sign_url, '_blank');
+                    // window.open(response.data.sign_url, '_blank');
+
+
+                    const url = response.data.sign_url;
+
+                    if (url) {
+                        const newTab = window.open(url, '_blank');
+
+                        if (!newTab || newTab.closed || typeof newTab.closed === "undefined") {
+                            window.location.href = url;
+                        }
+                    }
+
 
                 } else {
                     Swal.fire('خطأ', 'حدث خطأ أثناء معالجة الطلب.', 'error');
