@@ -31,7 +31,7 @@ class TraineesMustSign extends Command
             '1090804301'
         ];
 
-        $updatedCount = Trainee::whereIn('identity_id', $identityIds)
+        $updatedCount = Trainee::whereIn('identity_number', $identityIds)
                               ->update(['must_sign' => true]);
 
 
