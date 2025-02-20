@@ -88,7 +88,22 @@
 
     <!-- نهاية الإرشادات -->
    <div class="text-center mt-4">
-      <button v-if="contractStatus !== 'completed'" @click="sendEmbeddedContract" class="btn-custom">توثيق العقد الآن (برجاء التوثيق من خلال جهاز اللاب توب)</button>
+
+             <button 
+                v-if="contractStatus !== 'completed'" 
+                @click="sendEmbeddedContract" 
+                class="btn-custom"
+                :disabled="isLoading"
+            >
+                <span v-if="isLoading">
+                    <i class="fas fa-spinner fa-spin"></i> جاري تحويلك الى العقد ...
+                </span>
+                <span v-else>
+                    توثيق العقد الآن (برجاء التوثيق من خلال جهاز اللاب توب)
+                </span>
+            </button>
+
+
             <div class="my-3">   
                 <button @click="redirectToHome"  class="btn-custom">العودة الى الصفحة الرئيسية</button>
             </div>
@@ -116,12 +131,16 @@ export default {
         return {
          
             contractStatus: null,
+            isLoading:false,
         };
     },
 
 
 methods: {
      async sendEmbeddedContract() {
+                if (this.isLoading) return; 
+                this.isLoading = true;
+                
             try {
                 const recipientName = this.$page.props.user.name;
                 const recipientEmail = this.$page.props.user.email;
@@ -179,6 +198,11 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.btn-custom[disabled] {
+    background-color: #ccc;
+    cursor: not-allowed;
 }
 
 .container {
