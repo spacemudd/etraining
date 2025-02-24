@@ -131,6 +131,9 @@ public function sendEmbeddedContract(Request $request)
                     "is_embedded" => true,
                     "action_id"=> "1094000000057006",
                     "private_notes" => "",
+                    "allowed_cloud_provider_ids" =>  [130],
+                    "language" => "ar",
+
                 ],
             ],
         ],

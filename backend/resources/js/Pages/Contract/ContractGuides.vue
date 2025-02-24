@@ -15,7 +15,7 @@
     </div>
 
     <!-- الخطوة 2 -->
-    <div class="guide-section">
+    <!-- <div class="guide-section">
       <div class="d-flex align-items-center">
         <span class="step-number">2</span>
         <h3>تعديل اللغة الى العربية</h3>
@@ -25,12 +25,12 @@
       </p>
       <img src="/img/contract/change-language.png" alt="إنشاء عقد جديد">
 
-    </div>
+    </div> -->
 
     <!-- الخطوة 3 -->
     <div class="guide-section">
       <div class="d-flex align-items-center">
-        <span class="step-number">3</span>
+        <span class="step-number">2</span>
         <h3>الموافقة والمتابعة</h3>
       </div>
       <p class="mt-2">
@@ -42,11 +42,11 @@
     <!-- الخطوة 4 -->
     <div class="guide-section">
       <div class="d-flex align-items-center">
-        <span class="step-number">4</span>
+        <span class="step-number">3</span>
         <h3>التوقيع الإلكتروني</h3>
       </div>
       <p class="mt-2">
-        اختر التوقيع بواسطة Emdaa ثم قم بالتوقيع كما هو موضح بالصور
+        انقر على التوقيع بواسطة Emdaa ثم قم بالتوقيع كما هو موضح بالصور
       </p>
       <img src="img/contract/sign.png" alt="التوقيع الإلكتروني">
       <img src="img/contract/sign2.png" alt="التوقيع الإلكتروني">
@@ -55,7 +55,7 @@
     <!-- الخطوة 5 -->
     <div class="guide-section">
       <div class="d-flex align-items-center">
-        <span class="step-number">5</span>
+        <span class="step-number">4</span>
         <h3>التحقق بواسطة نفاذ</h3>
       </div>
       <p class="mt-2 text-end">
@@ -75,7 +75,7 @@
     <!-- الخطوة 6 -->
     <div class="guide-section">
       <div class="d-flex align-items-center">
-        <span class="step-number">6</span>
+        <span class="step-number">5</span>
         <h3>انتظار التوثيق</h3>
       </div>
       <p class="mt-2">
