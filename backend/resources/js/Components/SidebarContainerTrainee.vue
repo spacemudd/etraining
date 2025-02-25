@@ -71,7 +71,7 @@
         </sidebar-link> -->
 
         
-        <template v-if="contractStatus === 'completed'">
+        <template v-if="$page.props.user.trainee.zoho_contract_status === 'completed'">
                 <!-- <ion-icon name="document-text-outline" class="w-5 h-5 mx-2"></ion-icon> -->
         
                 <span class="ltr:ml-4 rtl:mr-4">
@@ -150,7 +150,7 @@ export default {
         };
     },
     mounted() {
-        this.fetchContractStatus();
+        // this.fetchContractStatus();
     },
     methods: {
         showContractPopup() {
