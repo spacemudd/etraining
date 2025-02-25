@@ -81,7 +81,8 @@
                     {{ $t('words.view-contract') }}
                 </button>  -->
                 
-                 <p class="text-red-500 mx-4 px-4"> تم توثيق العقد</p>
+                 <p class="text-red-500 mx-4 px-4"> عقــد مــوثـق بتــاريخ </p> 
+                 <p class="text-red-500 mx-4 px-4">{{$page.props.user.trainee.zoho_sign_date}}</p>
                 </span>
         </template>
 
@@ -210,7 +211,7 @@ export default {
         console.log("heeeereeeeeee");
         const response = await axios.get(route('zoho.check-contract-status'));
         this.contractStatus = response.data.status;
-                        console.log(this.contractStatus);
+        console.log(this.contractStatus);
 
         this.errorMessage = null;
 
