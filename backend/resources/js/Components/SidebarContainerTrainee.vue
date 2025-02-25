@@ -81,7 +81,7 @@
                     {{ $t('words.view-contract') }}
                 </button>  -->
                 
-                 <p class="text-red-500 mx-4 px-4"> عقــد مــوثـق بتــاريخ </p> 
+                 <p class="text-red-500 mx-4 px-4"> عقــد مــوثـق </p> 
                  <p class="text-red-500 mx-4 px-4">{{$page.props.user.trainee.zoho_sign_date}}</p>
                 </span>
         </template>
