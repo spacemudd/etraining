@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\ContractSigned;
 use App\Models\Back\Trainee;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -247,7 +248,7 @@ public function checkContractStatus()
         return response()->json(["status" => "contract_not_sent"]);
     }
 
-    if ($trainee->zoho_contract_status === 'completed') {
+    if ($trainee->zoho_contract_status === 'completed' && $trainee->zoho_sign_date) {
         Log::info("Contract for user {$user->id} is already completed.");
         return response()->json(["status" => "completed"]);
     }
@@ -270,6 +271,10 @@ public function checkContractStatus()
     }
 
     $status = $response->json()['requests']['request_status'] ?? null;
+    $timestamp = $response->json()['requests']['sign_submitted_time'] ?? null;
+    if($timestamp){
+        $signDate = Carbon::createFromTimestampMs($timestamp)->toDateTimeString();
+    }
 
     if (!$status) {
         Log::error("Invalid response from Zoho for contract ID {$contractId}: Missing request_status.");
@@ -282,8 +287,9 @@ public function checkContractStatus()
         Log::info("Updated contract status for user {$user->id} to: {$status}");
     }
 
-    if ($status === 'completed' && !$trainee->contract_signed_notification_sent) {
+    if ($status === 'completed' && !$trainee->contract_signed_notification_sent && !$trainee->zoho_sign_date ) {
         try {
+            $trainee->zoho_sign_date=$signDate;
             Mail::to($trainee->email)->send(new ContractSigned($trainee));
             $trainee->contract_signed_notification_sent = true;
             $trainee->save();
