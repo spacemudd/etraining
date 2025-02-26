@@ -38,6 +38,7 @@
                         <option value="حذف من قبل التأمينات">حذف من قبل التأمينات</option>
                         <option value="قائمة سوداء">قائمة سوداء</option>
                         <option value="المباشرة في مقر الشركة">المباشرة في مقر الشركة</option>
+                        <option value="الوفاة">الوفاة</option>
 
                     </select>
                     <button @click="suspendTrainee" class="mt-5 items-center justify-start float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400">
