@@ -59,9 +59,9 @@ class GosiController extends Controller
             Cache::put($cacheKey, $data, self::CACHE_DURATION);
             Cache::increment($counterKey);
         }
+        return dd($data);
 
-
-        return response()->json($data);
+        // return response()->json($data);
     }
 
     // public function show(Request $request)
