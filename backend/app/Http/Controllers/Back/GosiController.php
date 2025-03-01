@@ -61,7 +61,6 @@ class GosiController extends Controller
             Cache::increment($counterKey);
         }
 
-        dd($data);
         return response()->json($data);
     }
 
