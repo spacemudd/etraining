@@ -21,6 +21,7 @@ class GosiController extends Controller
      const MAX_REQUESTS = 1500;   //8.60 SR per request
      public function show(Request $request)
     {
+        dd("here");
         $this->authorize('view-gosi');
 
         $request->validate([
@@ -59,9 +60,9 @@ class GosiController extends Controller
             Cache::put($cacheKey, $data, self::CACHE_DURATION);
             Cache::increment($counterKey);
         }
-        return dd($data);
 
-        // return response()->json($data);
+        dd($data);
+        return response()->json($data);
     }
 
     // public function show(Request $request)
