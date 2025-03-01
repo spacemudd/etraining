@@ -53,24 +53,55 @@ class GosiService
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \JsonException
      */
+    // public static function getEmployeeData(GosiEmployee $gosiEmployee): array
+    // {
+    //     $service = new GosiService();
+
+    //     if (auth()->user()->email != 'sara@ptc-ksa.net') {
+    //         return false;
+    //     }
+
+    //     try {
+    //         $response = $service->client->get(config('services.masdr.endpoint').'/mofeed/employment/v1/employee/employment-status/'.$gosiEmployee->getNinOrIqama(), [
+    //             'cert' => storage_path('masdrcertificate/certificate.crt'),
+    //             'ssl_key' => storage_path('masdrcertificate/certificate.key'),
+    //         ]);
+    //         return dd($response->getBody()->getContents());
+
+    //         return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+    //     } catch (RequestException $e) {
+    //         if ($e->hasResponse() && $e->getResponse()->getStatusCode() == '400') {
+    //             return json_decode($e->getResponse()->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+    //         }
+    //     }
+    // }
+
     public static function getEmployeeData(GosiEmployee $gosiEmployee): array
-    {
-        $service = new GosiService();
+{
+    $service = new GosiService();
 
-        if (auth()->user()->email != 'sara@ptc-ksa.net') {
-            return false;
-        }
+    if (auth()->user()->email != 'sara@ptc-ksa.net') {
+        dd('Unauthorized user');
+    }
 
-        try {
-            $response = $service->client->get(config('services.masdr.endpoint').'/mofeed/employment/v1/employee/employment-status/'.$gosiEmployee->getNinOrIqama(), [
-                'cert' => storage_path('masdrcertificate/certificate.crt'),
-                'ssl_key' => storage_path('masdrcertificate/certificate.key'),
-            ]);
-            return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        } catch (RequestException $e) {
-            if ($e->hasResponse() && $e->getResponse()->getStatusCode() == '400') {
-                return json_decode($e->getResponse()->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-            }
+    try {
+        $response = $service->client->get(config('services.masdr.endpoint') . '/mofeed/employment/v1/employee/employment-status/' . $gosiEmployee->getNinOrIqama(), [
+            'cert' => storage_path('masdrcertificate/certificate.crt'),
+            'ssl_key' => storage_path('masdrcertificate/certificate.key'),
+        ]);
+
+        $responseBody = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+        dd($responseBody);
+
+    } catch (RequestException $e) {
+        if ($e->hasResponse()) {
+            $errorResponse = $e->getResponse()->getBody()->getContents();
+
+            dd('API Error:', json_decode($errorResponse, true, 512, JSON_THROW_ON_ERROR));
+        } else {
+            dd('Request Failed:', $e->getMessage());
         }
     }
+}
 }
