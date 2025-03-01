@@ -66,10 +66,14 @@ class GosiService
                 'cert' => storage_path('masdrcertificate/certificate.crt'),
                 'ssl_key' => storage_path('masdrcertificate/certificate.key'),
             ]);
-            return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+            // return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+            $data= json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+            dd($data);
         } catch (RequestException $e) {
             if ($e->hasResponse() && $e->getResponse()->getStatusCode() == '400') {
-                return json_decode($e->getResponse()->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+                // return json_decode($e->getResponse()->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+                $data= json_decode($e->getResponse()->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+                dd($data);
             }
         }
     }
