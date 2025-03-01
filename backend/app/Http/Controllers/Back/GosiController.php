@@ -21,7 +21,7 @@ class GosiController extends Controller
      const MAX_REQUESTS = 1500;   //8.60 SR per request
      public function show(Request $request)
     {
-        dd("here");
+        // dd("here");
         $this->authorize('view-gosi');
 
         $request->validate([
