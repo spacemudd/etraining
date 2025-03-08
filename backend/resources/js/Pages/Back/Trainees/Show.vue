@@ -282,12 +282,14 @@
                 </div>
 
 
-                <div
-                v-if="trainee.zoho_contract_status=='completed'"
-                class="bg-green-200 text-green-800 px-4 py-2 rounded-md shadow-md">
-                    ✅ {{ $t("words.contract-verified") }} 
-                    <span class="font-bold">{{ trainee.zoho_sign_date }}</span>
-                </div>
+             <div
+                v-if="trainee.zoho_contract_status === 'completed'"
+                class="bg-green-200 text-green-800 px-4 py-2 rounded-md shadow-md"
+              >
+                ✅ {{ $t("words.contract-verified") }} <br />
+                <span class="font-bold">{{ trainee.zoho_sign_date }}</span>
+              </div>
+
 
                   
           </div>
