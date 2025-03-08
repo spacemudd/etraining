@@ -250,6 +250,7 @@
           >
             {{ $t("words.block-trainee") }}
           </button>
+         
 
           <inertia-link
             v-can="'block-trainee'"
@@ -260,6 +261,40 @@
           >
             {{ $t("words.suspend") }}
           </inertia-link>
+
+          <div>
+                <inertia-link
+                    v-if="!trainee.must_sign"
+                    v-can="'block-trainee'"
+                    :href="
+                      route('contract-must-sign', { trainee_id: trainee.id })
+                    "
+                    class="items-center justify-start text-left float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right"
+                  >
+                    {{ $t("words.send-contract") }}
+              </inertia-link>
+
+                 <div
+                    v-if="trainee.must_sign && (trainee.zoho_contract_status !== 'completed')"
+                    class="bg-yellow-200 text-yellow-800 px-4 py-2 rounded-md shadow-md mt-2"
+                  >
+                    📩 {{ $t("words.contract-sent") }}
+                </div>
+
+
+                <div
+                v-if="trainee.zoho_contract_status=='completed'"
+                class="bg-green-200 text-green-800 px-4 py-2 rounded-md shadow-md">
+                    ✅ {{ $t("words.contract-verified") }} 
+                    <span class="font-bold">{{ trainee.zoho_sign_date }}</span>
+                </div>
+
+                  
+          </div>
+
+          
+
+         
           
         </div>
 

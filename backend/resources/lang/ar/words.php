@@ -692,6 +692,12 @@ return [
     'export-deleted' => 'إصدار المؤرشف',
     'sign-contract' => 'توثيق العقد',
     'view-contract' => 'عرض العقد',
+    'send-contract' => 'إرسال العقد',
+    'contract-verified' => 'عقد موثق',
+    'contract-sent' => 'تم إرسال العقد',
+
+
+
 
 
 

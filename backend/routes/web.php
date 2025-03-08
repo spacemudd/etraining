@@ -932,6 +932,8 @@ Route::get('/zoho/view-contract', [\App\Http\Controllers\ZohoSignController::cla
 
 Route::get('/zoho/check-contract-status', [\App\Http\Controllers\ZohoSignController::class, 'checkContractStatus'])->name('zoho.check-contract-status');
 
+Route::get('/contract-must-sign', [\App\Http\Controllers\ZohoSignController::class, 'contractMustSign'])->name('contract-must-sign');
+
 
 
 

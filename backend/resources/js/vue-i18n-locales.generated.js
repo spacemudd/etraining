@@ -866,9 +866,11 @@ export default {
             "under-review": "تحت المراجعة",
             "mark-unpaid": "اعادة الفاتورة الى غير مدفوعة",
             "export-deleted": "إصدار المؤرشف",
-            "companies-certificates": "استحقاق الشهادات حسب الشركة",
             "sign-contract": "توثيق العقد",
-            "view-contract": "عرض العقد"
+            "view-contract": "عرض العقد",
+            "send-contract": "إرسال العقد",
+            "contract-verified": "عقد موثق",
+            "contract-sent": "تم إرسال العقد"
         }
     },
     "en": {
@@ -1682,9 +1684,11 @@ export default {
             "under-review": "Under review",
             "mark-unpaid": "Mark unpaid",
             "export-deleted": "Export Archeived",
-            "companies-certificates": "Certificate Eligibility for Companies",
             "sign-contract": "Sign Contract",
-            "view-contract": "View Contract"
+            "view-contract": "View Contract",
+            "send-contract": "Send Contract",
+            "contract-verified": "Contract Verified",
+            "contract-sent": "Contract Sent"
         }
     }
 }

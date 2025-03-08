@@ -303,6 +303,17 @@ public function checkContractStatus()
 }
 
 
+public function contractMustSign(Request $request){
+    $trainee=Trainee::find($request->trainee_id);
+    $trainee->must_sign=true;
+    $trainee->save();
+
+   Log::info("contract sent succefully");
+
+   return redirect()->back()->with('success','contract sent succefully');
+}
+
+
 
 
 
