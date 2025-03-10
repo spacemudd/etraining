@@ -19,13 +19,9 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
             ->get(); 
     
         return $trainees->map(function ($trainee) {
-            $monthlySubscription = $trainee->company?->monthly_subscription_per_trainee;
+            $monthlySubscription = $trainee->override_training_costs ?? 2300;
     
-            if (is_null($monthlySubscription)) {
-                $highestInvoice = $trainee->invoices()->orderByDesc('grand_total')->first();
-                $monthlySubscription = $highestInvoice?->grand_total ?? 0;
-            }
-    
+         
             return [
                 'subscription_or_invoice' => $monthlySubscription,
                 'email' => $trainee->email,
