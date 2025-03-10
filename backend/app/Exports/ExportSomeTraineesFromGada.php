@@ -20,6 +20,7 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
                      ->whereRaw('invoices.grand_total = (SELECT MAX(grand_total) FROM invoices WHERE invoices.trainee_id = trainees.id)');
             })
             ->where('trainees.zoho_contract_status', 'completed')
+            ->whereNotNull('trainees.zoho_contract_id') // ✅ التأكد من أن المتدرب لديه عقد
             ->select([
                 'trainees.name',
                 'trainees.phone',
