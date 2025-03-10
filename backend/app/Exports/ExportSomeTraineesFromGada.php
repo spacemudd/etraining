@@ -6,6 +6,8 @@ use App\Models\Back\Trainee;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+
 
 
 class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
