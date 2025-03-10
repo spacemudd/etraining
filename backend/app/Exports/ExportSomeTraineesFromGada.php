@@ -16,10 +16,12 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
     {
         $trainees = Trainee::where('zoho_contract_status', 'completed')
             ->whereNotNull('zoho_contract_id')
+            ->where('override_training_costs','!=',null)
+            ->where('override_training_costs','!=','2300')
             ->get(); 
     
         return $trainees->map(function ($trainee) {
-            $monthlySubscription = $trainee->override_training_costs ?? 2300;
+            $monthlySubscription = $trainee->override_training_costs;
     
          
             return [
