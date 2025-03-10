@@ -12,26 +12,26 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
 {
     public function collection()
     {
-        return Trainee::with([
-                'company', 
-                'invoices' => function ($query) {
-                    $query->orderBy('grand_total', 'desc')->limit(1); // ✅ جلب أعلى فاتورة فقط
-                }
+        return Trainee::leftJoin('companies', 'trainees.company_id', '=', 'companies.id')
+            ->leftJoin('invoices', function ($join) {
+                $join->on('trainees.id', '=', 'invoices.trainee_id')
+                     ->whereRaw('invoices.grand_total = (SELECT MAX(grand_total) FROM invoices WHERE invoices.trainee_id = trainees.id)');
+            })
+            ->where('trainees.zoho_contract_status', 'completed')
+            ->select([
+                'trainees.name',
+                'trainees.phone',
+                'trainees.identity_number',
+                'trainees.email',
+                DB::raw('COALESCE(companies.monthly_subscription_per_trainee, invoices.grand_total, 0) as subscription_or_invoice')
             ])
-            ->where('zoho_contract_status', 'completed')
-            ->get(['name', 'phone', 'identity_number', 'email', 'company_id'])
+            ->get()
             ->map(function ($trainee) {
-                $monthlySubscription = $trainee->company?->monthly_subscription_per_trainee;
-                $highestInvoice = $trainee->invoices->first()?->grand_total; // ✅ أعلى فاتورة
-    
-                // ✅ استخدام أعلى فاتورة إذا لم يكن هناك اشتراك شهري
-                $value = $monthlySubscription ?? $highestInvoice ?? 0;
-    
                 return [
-                    'subscription_or_invoice' => $value, // ✅ الآن يتم تحديد القيمة بشكل صحيح
+                    'subscription_or_invoice' => $trainee->subscription_or_invoice,
                     'email' => $trainee->email,
                     'identity_number' => $trainee->identity_number,
-                    'phone' => $trainee->clean_phone,
+                    'phone' => $trainee->phone,
                     'name' => $trainee->name,
                 ];
             });
