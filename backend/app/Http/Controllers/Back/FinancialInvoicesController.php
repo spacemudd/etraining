@@ -491,7 +491,7 @@ class  FinancialInvoicesController extends Controller
 
         $invoice = Invoice::findOrFail($invoice_id);
 
-        $company = Company::query()->findOrFail($invoice->company_id);
+        $company = Company::query()->withTrashed()->findOrFail($invoice->company_id);
 
         return Inertia::render('Back/Finance/Invoices/ChangeDatePeriod', [
             'company' => $company,
@@ -509,7 +509,7 @@ class  FinancialInvoicesController extends Controller
     {
         $invoice = Invoice::findOrFail($invoice_id);
 
-        $company = Company::query()->findOrFail($invoice->company_id);
+        $company = Company::query()->withTrashed()->findOrFail($invoice->company_id);
 
         DB::beginTransaction();
 

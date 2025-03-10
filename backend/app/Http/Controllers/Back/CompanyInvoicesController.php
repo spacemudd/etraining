@@ -210,7 +210,7 @@ class CompanyInvoicesController extends Controller
 
     public function bulkPdf(Request $request, string $company_id)
     {
-        $company = Company::findOrFail($company_id);
+        $company = Company::withTrashed()->findOrFail($company_id);
 
         $invoices = Invoice::query();
 
@@ -254,7 +254,7 @@ class CompanyInvoicesController extends Controller
     public function datePeriod(Request $request, string $company_id)
     {
 
-        $company = Company::findOrFail($company_id);
+        $company = Company::withTrashed()->findOrFail($company_id);
 
         $invoices = $company->invoices()
             ->where('from_date', $request->input('from_date'))
