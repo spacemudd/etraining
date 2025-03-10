@@ -14,16 +14,13 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
 {
     public function collection()
     {
-        // ✅ جلب المتدربين الذين عقودهم مكتملة فقط
         $trainees = Trainee::where('zoho_contract_status', 'completed')
             ->whereNotNull('zoho_contract_id')
-            ->get(); // نحصل فقط على المتدربين الذين نحتاجهم
+            ->get(); 
     
         return $trainees->map(function ($trainee) {
-            // ✅ الحصول على قيمة الاشتراك الشهري إن وجدت
             $monthlySubscription = $trainee->company?->monthly_subscription_per_trainee;
     
-            // ✅ إذا لم يكن هناك اشتراك شهري، نحصل على أعلى فاتورة
             if (is_null($monthlySubscription)) {
                 $highestInvoice = $trainee->invoices()->orderByDesc('grand_total')->first();
                 $monthlySubscription = $highestInvoice?->grand_total ?? 0;
@@ -33,6 +30,7 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
                 'subscription_or_invoice' => $monthlySubscription,
                 'email' => $trainee->email,
                 'identity_number' => $trainee->identity_number,
+                'company_name' =>$trainee->company->name_ar,
                 'phone' => $trainee->phone,
                 'name' => $trainee->name,
             ];
@@ -48,6 +46,7 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
             'قيمة الاشتراك',
             'الإيميل',
             'رقم الهوية',
+            'الشركة',
             'رقم الجوال',
             'الإسم'
         ];
