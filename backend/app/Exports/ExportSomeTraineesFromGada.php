@@ -14,30 +14,29 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
 {
     public function collection()
     {
-        return Trainee::where('trainees.zoho_contract_status', 'completed') // ✅ تصفية المتدربين بعقود مكتملة
-            ->whereNotNull('trainees.zoho_contract_id') // ✅ التأكد من وجود عقد
-            ->leftJoin('companies', 'trainees.company_id', '=', 'companies.id')
-            ->leftJoin('invoices', function ($join) {
-                $join->on('trainees.id', '=', 'invoices.trainee_id')
-                     ->whereRaw('invoices.grand_total = (SELECT MAX(grand_total) FROM invoices WHERE invoices.trainee_id = trainees.id)');
-            })
-            ->select([
-                'trainees.name',
-                'trainees.phone',
-                'trainees.identity_number',
-                'trainees.email',
-                DB::raw('COALESCE(companies.monthly_subscription_per_trainee, invoices.grand_total, 0) as subscription_or_invoice')
-            ])
-            ->get()
-            ->map(function ($trainee) {
-                return [
-                    'subscription_or_invoice' => $trainee->subscription_or_invoice,
-                    'email' => $trainee->email,
-                    'identity_number' => $trainee->identity_number,
-                    'phone' => $trainee->phone,
-                    'name' => $trainee->name,
-                ];
-            });
+        // ✅ جلب المتدربين الذين عقودهم مكتملة فقط
+        $trainees = Trainee::where('zoho_contract_status', 'completed')
+            ->whereNotNull('zoho_contract_id')
+            ->get(); // نحصل فقط على المتدربين الذين نحتاجهم
+    
+        return $trainees->map(function ($trainee) {
+            // ✅ الحصول على قيمة الاشتراك الشهري إن وجدت
+            $monthlySubscription = $trainee->company?->monthly_subscription_per_trainee;
+    
+            // ✅ إذا لم يكن هناك اشتراك شهري، نحصل على أعلى فاتورة
+            if (is_null($monthlySubscription)) {
+                $highestInvoice = $trainee->invoices()->orderByDesc('grand_total')->first();
+                $monthlySubscription = $highestInvoice?->grand_total ?? 0;
+            }
+    
+            return [
+                'subscription_or_invoice' => $monthlySubscription,
+                'email' => $trainee->email,
+                'identity_number' => $trainee->identity_number,
+                'phone' => $trainee->phone,
+                'name' => $trainee->name,
+            ];
+        });
     }
 
     
