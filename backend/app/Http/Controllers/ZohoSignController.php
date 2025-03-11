@@ -100,6 +100,23 @@ public function sendEmbeddedContract(Request $request)
 
     //get trainee details
     $trainee=Trainee::where('user_id',$request->user_id)->first();
+    $contractValue = $trainee->override_training_costs ?? 2300;
+
+    $numbersInArabic = [
+        2300 => 'ألفان وثلاثمائة',
+        2700 => 'ألفان وسبعمائة',
+        2900 => 'ألفان وتسعمائة',
+        3300 => 'ثلاثة آلاف وثلاثمائة',
+        3750 => 'ثلاثة آلاف وسبعمائة وخمسون',
+        3800 => 'ثلاثة آلاف وثمانمائة',
+        4300 => 'أربعة آلاف وثلاثمائة'
+    ];
+
+    $contractValueArabic = $numbersInArabic[$contractValue];
+
+
+
+
 
     $accessToken = $this->getAccessToken();
     if (!$accessToken) {
@@ -109,7 +126,7 @@ public function sendEmbeddedContract(Request $request)
 
     Log::info("access token successfully generated");
 
-    $templateId = "1094000000056985"; 
+    $templateId = "1094000000175325"; 
     
     $payload = [
         "templates" => [
@@ -117,8 +134,9 @@ public function sendEmbeddedContract(Request $request)
                 "trainee_name" => $recipientName,  
                 "trainee_email" => $recipientEmail,
                  "trainee_phone" => $trainee->phone,
-                 "trainee_second_phone" =>$trainee->phone,
+                 "trainee_second_phone" =>$trainee->phone_additional,
                  "trainee_identity" => $trainee->identity_number,
+                 'contract_value' =>$contractValue,
 
             ],
             "notes" => "",
@@ -130,7 +148,7 @@ public function sendEmbeddedContract(Request $request)
                     "role"=> "",
                     "verify_recipient"=> false,
                     "is_embedded" => true,
-                    "action_id"=> "1094000000057006",
+                    "action_id"=> "1094000000175346",
                     "private_notes" => "",
                     "allowed_cloud_provider_ids" =>  [130],
                     "language" => "ar",
