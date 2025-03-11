@@ -112,7 +112,7 @@ public function sendEmbeddedContract(Request $request)
         4300 => 'أربعة آلاف وثلاثمائة'
     ];
 
-    $contractValueArabic = $numbersInArabic[$contractValue];
+    // $contractValueArabic = $numbersInArabic[$contractValue];
 
 
 
