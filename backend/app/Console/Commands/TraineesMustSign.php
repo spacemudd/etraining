@@ -26,15 +26,46 @@ class TraineesMustSign extends Command
      */
     public function handle()
     {
-        // $identityIds = [
-         
-        // ];
+        $identityIds = [
+            '1023747544',
+            '1091320158',
+            '1088695273',
+            '1044259743',
+            '1100832623',
+            '1090804301',
+            '1115757823',
+            '1078213129',
+            '1107583856',
+            '1087024350',
+            '1089853475',
+            '1097723553',
+            '1108866771',
+            '1093083572',
+            '1100345683',
+            '1123105510',
+            '1098963703',
+            '1057469437',
+            '1092522877',
+            '1087440713',
+            '1090497064',
+            '1127361853',
+            '1121444630',
+            '1072445602',
+            '1090065994',
+            '1079026850',
+            '1102044169',
+            '1128236898',
+            '1068732500',
+            '1091898567',
+        ];
 
         $updatedCount = Trainee::whereIn('identity_number', $identityIds)
-                              ->update(['must_sign' => true]);
+                              ->update(['zoho_contract_id' => null , 'zoho_contract_status' => null , 'zoho_sign_date' => null , 'contract_signed_notification_sent' => null ]);
 
 
         $this->info("succefully updated {$updatedCount} trainees");
+
+
 
     }
 }
