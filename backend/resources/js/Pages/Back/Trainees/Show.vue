@@ -1082,6 +1082,10 @@ export default {
   },
   data() {
     return {
+       contractStatus: null,
+       errorMessage: null,
+
+
       new_trainee_group: {
         name: "",
         id: "",
@@ -1160,12 +1164,30 @@ export default {
     };
   },
   mounted() {
+
+   if (this.trainee?.id) {
+      this.fetchContractStatus(this.trainee.id);
+    }
+    
     if (this.trainee.trainee_group) {
       this.trainee.trainee_group_object = this.trainee_group;
     } else {
       this.trainee.trainee_group_object = this.new_trainee_group;
     }
   },
+
+  watch: {
+    trainee: {
+      handler(newTrainee) {
+        if (newTrainee?.id) {
+          this.fetchContractStatus(newTrainee.id);
+        }
+      },
+      deep: true,
+      immediate: true,
+    },
+  },
+
   methods: {
     deleteFromBlockList() {
       this.$inertia.delete(
@@ -1351,6 +1373,23 @@ export default {
           this.$wait.end("SENDING_INVITATION");
         });
     },
+
+
+    async fetchContractStatus(traineeId) {
+    try {
+        const response = await axios.get(route('zoho.admin-check-contract-status'), {
+            params: {
+                id: traineeId
+            }
+        });
+        this.contractStatus = response.data.status;
+        console.log(this.contractStatus);
+        this.errorMessage = null;
+    } catch (error) {
+        this.errorMessage = error.response?.data?.error || "حدث خطأ أثناء جلب حالة العقد.";
+    }
+}
+
   },
 };
 </script>

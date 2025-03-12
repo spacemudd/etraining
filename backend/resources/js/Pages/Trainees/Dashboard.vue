@@ -388,21 +388,21 @@
         },
 
      async fetchContractStatus() {
-    try {
-        console.log("heeeereeeeeee");
-        console.log(this.trainee.name);
-        const response = await axios.get(route('zoho.check-contract-status'));
-        this.contractStatus = response.data.status;
-         console.log(this.contractStatus);
+            try {
+                console.log("heeeereeeeeee");
+                console.log(this.trainee.name);
+                const response = await axios.get(route('zoho.check-contract-status'));
+                this.contractStatus = response.data.status;
+                console.log(this.contractStatus);
 
-        this.errorMessage = null;
+                this.errorMessage = null;
 
-        if (this.contractStatus !== 'completed' && this.trainee.must_sign) {
-            this.showContractPopup();
-        }
-    } catch (error) {
-        this.errorMessage = error.response?.data?.error || "حدث خطأ أثناء جلب حالة العقد.";
-    }
+                if (this.contractStatus !== 'completed' && this.trainee.must_sign) {
+                    this.showContractPopup();
+                }
+            } catch (error) {
+                this.errorMessage = error.response?.data?.error || "حدث خطأ أثناء جلب حالة العقد.";
+            }
     }
         },
         beforeDestroy() {
