@@ -411,11 +411,11 @@
             :disabled="!editButton.editOption"
           />
 
-          
+
         </div>
 
 
-        
+
         <div class="col-span-6 sm:col-span-2">
           <jet-label
             for="identity_number"
@@ -738,6 +738,26 @@
             </span>
           </inertia-link>
         </div>
+
+          <div class="col-span-6 sm:col-span-1" v-can="'override-training-costs'">
+              <jet-label for="name" :value="$t('words.gosi-deleted')" />
+              <inertia-link
+                  :href="route('back.trainees.toggle-gosi-deleted', trainee.id)"
+              >
+            <span
+                v-if="trainee.gosi_deleted_at"
+                class="text-sm inline-block mt-2 p-1 px-2 bg-gray-200 rounded-lg bg-red-600 text-white"
+            >
+                {{ $t("words.yes") }}
+            </span>
+                  <span
+                      v-else
+                      class="text-sm inline-block mt-2 p-1 px-2 bg-gray-200 rounded-lg"
+                  >
+              {{ $t("words.no") }}
+            </span>
+              </inertia-link>
+          </div>
       </div>
 
       <jet-section-border></jet-section-border>

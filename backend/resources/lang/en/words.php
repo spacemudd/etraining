@@ -681,5 +681,6 @@ return [
     'send-contract' => 'Send Contract',
     'contract-verified' => 'Contract Verified',
     'contract-sent' => 'Contract Sent',
-
+    'view-contract' => 'View Contract',
+    'gosi-deleted' => 'GOSI deleted',
 ];
