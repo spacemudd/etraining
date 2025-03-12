@@ -24,6 +24,13 @@ class ZohoSignController extends Controller
 
     private function getAccessToken()
     {
+        $accessToken = \Cache::get('zoho_access_token');
+    
+        if ($accessToken) {
+            Log::info("access token is {$accessToken}");
+            return $accessToken;
+        }
+    
         $response = Http::asForm()->post("https://accounts.zoho.sa/oauth/v2/token", [
             "refresh_token" => $this->refresh_token,
             "client_id" => $this->client_id,
@@ -31,11 +38,26 @@ class ZohoSignController extends Controller
             "redirect_uri" => $this->redirect_uri,
             "grant_type" => "refresh_token",
         ]);
-        
-        //  dd($response->json()['access_token'] ?? null) ; 
+    
+        if ($response->failed()) {
+            Log::error("Failed to get access token: " . $response->body());
+            return null; 
+        }
+    
+        $accessToken = $response->json()['access_token'] ?? null;
+    
+        if (!$accessToken) {
+            Log::error("Access token not found in Zoho response.");
+            return null; 
+        }
+    
+        \Cache::put('zoho_access_token', $accessToken, now()->addMinutes(55));
 
-        return $response->json()['access_token'] ?? null;
+
+        Log::info("access token is {$accessToken}");
+        return $accessToken;
     }
+    
 
     public function sendContract(Request $request)
 {
@@ -150,7 +172,7 @@ public function sendEmbeddedContract(Request $request)
                     "is_embedded" => true,
                     "action_id"=> "1094000000175346",
                     "private_notes" => "",
-                    "allowed_cloud_provider_ids" =>  [130],
+                    // "allowed_cloud_provider_ids" =>  [130],
                     "language" => "ar",
 
                 ],
