@@ -642,6 +642,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('trainees/import', [\App\Http\Controllers\Back\TraineesImportController::class, 'index'])->name('trainees.import');
         Route::post('trainees/import', [\App\Http\Controllers\Back\TraineesImportController::class, 'store'])->name('trainees.import.store');
 
+        Route::get('/trainees/{id}/gosi-deleted', [\App\Http\Controllers\Back\TraineesController::class, 'toggleGosiDeleted'])->name('trainees.toggle-gosi-deleted');
+
         Route::delete('/trainees/{id}/block-list', [\App\Http\Controllers\Back\TraineesController::class, 'deleteFromBlockList'])->name('trainees.delete-from-block-list');
         Route::get('/trainees/{id}/audit', [\App\Http\Controllers\Back\TraineesController::class, 'audit'])->name('trainees.audit');
         Route::get('/trainees/{id}/attendance-sheet', [\App\Http\Controllers\Back\TraineesController::class, 'attendanceSheetPdf'])->name('trainees.admin.attendance-sheet.pdf');
@@ -941,9 +943,9 @@ Route::get('/send-test-email', function () {
     $data = ['message' => 'This is a test email from Mailgun.'];
 
     Mail::send([], [], function ($message) use ($data) {
-        $message->to('ebrahim.hosny@hadaf-hq.com') 
+        $message->to('ebrahim.hosny@hadaf-hq.com')
                 ->subject('Test Email')
-                ->setBody($data['message']); 
+                ->setBody($data['message']);
     });
 
     return 'Test email sent successfully!';

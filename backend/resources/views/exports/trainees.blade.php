@@ -38,6 +38,7 @@
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.marital_status') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.children_count') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.created-at') }}</strong></th>
+        <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.gosi-deleted') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.instructor') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.group') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.blocked') }}</strong></th>
@@ -81,6 +82,7 @@
             <td style="border:1px solid black;">{{ optional($trainee->marital_status)->name_ar }}</td>
             <td style="border:1px solid black;">{{ $trainee->children_count ?: '' }}</td>
             <td style="border:1px solid black;">{{ $trainee->created_at_timezone }}</td>
+            <td style="border:1px solid black;">{{ $trainee->gosi_deleted_at }}</td>
             <td style="border:1px solid black;">{{ optional($trainee->instructor)->name }}</td>
             <td style="border:1px solid black;">{{ optional($trainee->trainee_group)->name }}</td>
             <td style="border:1px solid black;">{{ $trainee->deleted_at_timezone }}</td>

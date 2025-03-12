@@ -937,7 +937,7 @@ class TraineesController extends Controller
         $user->password = Hash::make($request->new_trainee_password);
         $user->save();
         \DB::Commit();
-         
+
         if($trainee->trashed()){
             return redirect()->route('back.trainees.show.blocked', $trainee_id);
         }else{
@@ -1167,7 +1167,7 @@ class TraineesController extends Controller
         }else{
             $reason='استبعاد من الشركة';
         }
-       
+
         $trainees = Trainee::findOrFail($request->data);
             foreach ($trainees as $trainee) {
                 DB::beginTransaction();
@@ -1256,5 +1256,18 @@ class TraineesController extends Controller
     {
 
         return Inertia::render('Contract/ContractGuides');
+    }
+
+    function toggleGosiDeleted($trainee_id)
+    {
+        $trainee = Trainee::findOrFail($trainee_id);
+        if ($trainee->gosi_deleted_at) {
+            $trainee->gosi_deleted_at = null;
+        } else {
+            $trainee->gosi_deleted_at = now();
+        }
+        $trainee->save();
+        return redirect()->back();
+
     }
 }
