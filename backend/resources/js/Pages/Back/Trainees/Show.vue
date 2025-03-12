@@ -1175,17 +1175,17 @@ export default {
     }
   },
 
-  watch: {
-    trainee: {
-      handler(newTrainee) {
-        if (newTrainee?.id) {
-          this.fetchContractStatus(newTrainee.id);
-        }
-      },
-      deep: true,
-      immediate: true,
-    },
-  },
+  // watch: {
+  //   trainee: {
+  //     handler(newTrainee) {
+  //       if (newTrainee?.id) {
+  //         this.fetchContractStatus(newTrainee.id);
+  //       }
+  //     },
+  //     deep: true,
+  //     immediate: true,
+  //   },
+  // },
 
   methods: {
     deleteFromBlockList() {
