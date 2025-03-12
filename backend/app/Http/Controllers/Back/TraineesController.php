@@ -41,6 +41,7 @@ use Inertia\Inertia;
 use Mail;
 use PDF;
 use Spatie\MediaLibrary\Support\MediaStream;
+use App\Http\Controllers\ZohoSignController;
 
 class TraineesController extends Controller
 {
@@ -126,6 +127,15 @@ class TraineesController extends Controller
     public function show($id)
     {
         $trainee = Trainee::withTrashed()->find($id);
+
+
+        //zoho check contarct status
+        $zohoController = new ZohoSignController();
+        $response = $zohoController->adminCheckContractStatusForTrainee($trainee);
+        
+
+
+
         $in_block_list = TraineeBlockList::where('phone', $trainee->phone)
             ->orWhere('identity_number', $trainee->identity_number)
             ->orWhere('email', $trainee->email)
