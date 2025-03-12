@@ -677,7 +677,6 @@ return [
     'mark-unpaid' => 'Mark unpaid',
     'export-deleted' => 'Export Archeived',
     'sign-contract' => 'Sign Contract',
-    'view-contract' => 'View Contract',
     'send-contract' => 'Send Contract',
     'contract-verified' => 'Contract Verified',
     'contract-sent' => 'Contract Sent',

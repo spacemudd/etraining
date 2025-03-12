@@ -1261,11 +1261,13 @@ class TraineesController extends Controller
     function toggleGosiDeleted($trainee_id)
     {
         $trainee = Trainee::findOrFail($trainee_id);
-        $trainee->gosi_deleted = !$trainee->gosi_deleted;
+        if ($trainee->gosi_deleted_at) {
+            $trainee->gosi_deleted_at = null;
+        } else {
+            $trainee->gosi_deleted_at = now();
+        }
         $trainee->save();
-        return response()->json([
-            'success' => true,
-        ]);
+        return redirect()->back();
 
     }
 }
