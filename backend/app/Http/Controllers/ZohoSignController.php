@@ -172,7 +172,7 @@ public function sendEmbeddedContract(Request $request)
                     "is_embedded" => true,
                     "action_id"=> "1094000000175346",
                     "private_notes" => "",
-                    // "allowed_cloud_provider_ids" =>  [130],
+                    "allowed_cloud_provider_ids" =>  [130],
                     "language" => "ar",
 
                 ],
@@ -416,9 +416,6 @@ public function contractMustSign(Request $request){
 
    return redirect()->back()->with('success','contract sent succefully');
 }
-
-
-
 
 
 }
