@@ -19,7 +19,9 @@ class CheckTraineesContractStatus extends Command
 
         foreach ($trainees as $trainee) {
             $result = $zohoController->adminCheckContractStatusForTrainee($trainee);
-            Log::info("Checked contract for trainee {$trainee->id}: " . json_encode($result));
+            $this::info("checked contract for trainee {$trainee->id}" . json_encode($result));
+            // Log::info("Checked contract for trainee {$trainee->id}: " . json_encode($result));
+            
         }
 
         $this->info('تم التحقق من جميع عقود المتدربين.');
