@@ -32,7 +32,7 @@
                 <div class="bg-red-100 rounded-lg p-10 border-red-500 border-2">
                     <div class="inline-flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-red-600 w-6 h-6">
-                          <path fill-rule="evenodd" d="M11.484 2.17a.75.75 0 011.032 0 11.209 11.209 0 007.877 3.08.75.75 0 01.722.515 12.74 12.74 0 01.635 3.985c0 5.942-4.064 10.933-9.563 12.348a.749.749 0 01-.374 0C6.314 20.683 2.25 15.692 2.25 9.75c0-1.39.223-2.73.635-3.985a.75.75 0 01.722-.516l.143.001c2.996 0 5.718-1.17 7.734-3.08zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zM12 15a.75.75 0 00-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 00.75-.75v-.008a.75.75 0 00-.75-.75H12z" clip-rule="evenodd" />
+                            <path fill-rule="evenodd" d="M11.484 2.17a.75.75 0 011.032 0 11.209 11.209 0 007.877 3.08.75.75 0 01.722.515 12.74 12.74 0 01.635 3.985c0 5.942-4.064 10.933-9.563 12.348a.749.749 0 01-.374 0C6.314 20.683 2.25 15.692 2.25 9.75c0-1.39.223-2.73.635-3.985a.75.75 0 01.722-.516l.143.001c2.996 0 5.718-1.17 7.734-3.08zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zM12 15a.75.75 0 00-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 00.75-.75v-.008a.75.75 0 00-.75-.75H12z" clip-rule="evenodd" />
                         </svg>
                         <h1 class="text-2xl text-red-600 font-bold mx-3">{{ $t('words.global-message') }}</h1>
                     </div>
@@ -45,55 +45,55 @@
                 </div>
             </div>
 
-<!--            <div class="container mx-auto grid p-6">-->
-<!--                <div class="bg-red-100 rounded-lg p-10 border-red-500 border-2">-->
+            <!--            <div class="container mx-auto grid p-6">-->
+            <!--                <div class="bg-red-100 rounded-lg p-10 border-red-500 border-2">-->
 
-<!--                    <div class="grid grid-cols-1 gap-6 mt-12">-->
-<!--                        <div>-->
-<!--                            <dev class="inline-flex items-center">-->
-<!--                                <svg width="40" height="40" class="pt-1 mx-0.5">-->
-<!--                                    <image class="inline flex  mt-3" xlink:href="https://cdn-icons-png.flaticon.com/512/3389/3389152.png" src="https://cdn-icons-png.flaticon.com/512/3389/3389152.png" width="35" height="35"/>-->
-<!--                                </svg>-->
-<!--                                <h1 class="text-2xl text-red-600 font-bold">   &nbsp; نعتذر منكم يوجد عطل في المنصة، نرجو منكم الإنتظار  &nbsp;</h1>-->
-<!--                            </dev>-->
-<!--                        </div>-->
+            <!--                    <div class="grid grid-cols-1 gap-6 mt-12">-->
+            <!--                        <div>-->
+            <!--                            <dev class="inline-flex items-center">-->
+            <!--                                <svg width="40" height="40" class="pt-1 mx-0.5">-->
+            <!--                                    <image class="inline flex  mt-3" xlink:href="https://cdn-icons-png.flaticon.com/512/3389/3389152.png" src="https://cdn-icons-png.flaticon.com/512/3389/3389152.png" width="35" height="35"/>-->
+            <!--                                </svg>-->
+            <!--                                <h1 class="text-2xl text-red-600 font-bold">   &nbsp; نعتذر منكم يوجد عطل في المنصة، نرجو منكم الإنتظار  &nbsp;</h1>-->
+            <!--                            </dev>-->
+            <!--                        </div>-->
 
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="container mx-auto grid pt-6 text-center">-->
-<!--                <div class="mx-auto">-->
-<!--                    <img width="250" height="350" src="https://i.ibb.co/QXNnGrh/Red-Modern-Job-Vacancy-Your-Story-1.png" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>-->
-<!--                </div>-->
-<!--            </div>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
+            <!--            <div class="container mx-auto grid pt-6 text-center">-->
+            <!--                <div class="mx-auto">-->
+            <!--                    <img width="250" height="350" src="https://i.ibb.co/QXNnGrh/Red-Modern-Job-Vacancy-Your-Story-1.png" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>-->
+            <!--                </div>-->
+            <!--            </div>-->
 
 
             <!-- Payment notice -->
             <div class="container px-6 mx-auto grid pt-10" v-if="user.trainee.deleted_at">
                 <div class="container mx-auto grid">
-<!--                <div class="bg-red-100 rounded-lg p-10 border-red-500 border-2">-->
-<!--                    <div style="width: 100%;">-->
-<!--                        <p class="mt-2 text-gray-500" style="text-align: center;-->
-<!--                                font-size: 20px;-->
-<!--                                color: #323232;-->
-<!--                                letter-spacing: 1px;-->
-<!--                            }">لا يمكنك حضور الدورات في الوقت الحالي، للتواصل معنا على الأرقام التالية.-->
-<!--                            <br><br/>-->
-<!--                            <span class="img {display:block} center-block inline-flex" style="text-align: center;">-->
-<!--                                <svg width="40" height="40" class="mx-0.5 mt-1">-->
-<!--                                    <image class="inline" xlink:href="https://i.ibb.co/CWK3g2s/whatsapp.png" src="https://i.ibb.co/CWK3g2s/whatsapp.png" width="15" height="15"/>-->
-<!--                                </svg>-->
-<!--                            <a class="center text-green-600 text-sm" style="text-align: center;" href="https://api.whatsapp.com/send?phone=966553139979"> &nbsp;  شؤون المتدربات </a>-->
-<!--                            </span>-->
-<!--                            <span class="img {display:block} center-block inline-flex" style="text-align: center;">-->
-<!--                                <svg width="40" height="40" class="mx-0.5 mt-1">-->
-<!--                                    <image class="inline" xlink:href="https://i.ibb.co/CWK3g2s/whatsapp.png" src="https://i.ibb.co/CWK3g2s/whatsapp.png" width="15" height="15"/>-->
-<!--                                </svg>-->
-<!--                            <a class="center text-green-600 text-sm" style="text-align: center;" href="https://api.whatsapp.com/send?phone=966553139979"> &nbsp;  إدارة المعهد </a>-->
-<!--                            </span>-->
-<!--                        </p>-->
-<!--                    </div>-->
-<!--                </div>-->
+                    <!--                <div class="bg-red-100 rounded-lg p-10 border-red-500 border-2">-->
+                    <!--                    <div style="width: 100%;">-->
+                    <!--                        <p class="mt-2 text-gray-500" style="text-align: center;-->
+                    <!--                                font-size: 20px;-->
+                    <!--                                color: #323232;-->
+                    <!--                                letter-spacing: 1px;-->
+                    <!--                            }">لا يمكنك حضور الدورات في الوقت الحالي، للتواصل معنا على الأرقام التالية.-->
+                    <!--                            <br><br/>-->
+                    <!--                            <span class="img {display:block} center-block inline-flex" style="text-align: center;">-->
+                    <!--                                <svg width="40" height="40" class="mx-0.5 mt-1">-->
+                    <!--                                    <image class="inline" xlink:href="https://i.ibb.co/CWK3g2s/whatsapp.png" src="https://i.ibb.co/CWK3g2s/whatsapp.png" width="15" height="15"/>-->
+                    <!--                                </svg>-->
+                    <!--                            <a class="center text-green-600 text-sm" style="text-align: center;" href="https://api.whatsapp.com/send?phone=966553139979"> &nbsp;  شؤون المتدربات </a>-->
+                    <!--                            </span>-->
+                    <!--                            <span class="img {display:block} center-block inline-flex" style="text-align: center;">-->
+                    <!--                                <svg width="40" height="40" class="mx-0.5 mt-1">-->
+                    <!--                                    <image class="inline" xlink:href="https://i.ibb.co/CWK3g2s/whatsapp.png" src="https://i.ibb.co/CWK3g2s/whatsapp.png" width="15" height="15"/>-->
+                    <!--                                </svg>-->
+                    <!--                            <a class="center text-green-600 text-sm" style="text-align: center;" href="https://api.whatsapp.com/send?phone=966553139979"> &nbsp;  إدارة المعهد </a>-->
+                    <!--                            </span>-->
+                    <!--                        </p>-->
+                    <!--                    </div>-->
+                    <!--                </div>-->
                 </div>
                 <div class="bg-white rounded-lg p-10 flex gap-10">
                     <img src="/img/student.svg" alt="student" class="h-20">
@@ -277,64 +277,63 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayoutTrainee'
-    import Welcome from '@/Jetstream/Welcome'
-    import LanguageSelector from "@/Shared/LanguageSelector";
-    import HeaderCard from "@/Components/HeaderCard";
-    import Swal from 'sweetalert2';
+import AppLayout from '@/Layouts/AppLayoutTrainee'
+import Welcome from '@/Jetstream/Welcome'
+import LanguageSelector from "@/Shared/LanguageSelector";
+import HeaderCard from "@/Components/HeaderCard";
+import Swal from 'sweetalert2';
 
 
-    export default {
-        props: ['sessions', 'user', 'show_success_payment', 'show_failed_payment', 'class_timings', 'global_messages','trainee'],
-        components: {
-            AppLayout,
-            Welcome,
-            LanguageSelector,
-            HeaderCard,
+export default {
+    props: ['sessions', 'user', 'show_success_payment', 'show_failed_payment', 'class_timings', 'global_messages','trainee'],
+    components: {
+        AppLayout,
+        Welcome,
+        LanguageSelector,
+        HeaderCard,
+    },
+    data() {
+        return {
+            checkCoursesEnabledInterval: null,
+            pdfUrl: null,
+            contractStatus: null,
+            errorMessage: null,
+        }
+    },
+    filters: {
+        toDate(timestamp) {
+            return moment(timestamp, 'YYYY-MM-DD LT').format('DD-MM-YYYY');
         },
-        data() {
-            return {
-                checkCoursesEnabledInterval: null,
-                  pdfUrl: null,
-                    contractStatus: null,
-                    errorMessage: null,
-            }
+        toHours(timestamp) {
+            return moment(timestamp, 'YYYY-MM-DD LT').format('hh:mm A');
+        }
+    },
+    mounted() {
+        // Disable the pop up for the time being.
+        // this.fetchContractStatus();
+
+        let vm = this;
+        this.checkCoursesEnabledInterval = setInterval(function() {
+            vm.updateCoursesEnabled();
+        }, 2000)
+    },
+    methods: {
+        updateCoursesEnabled() {
+            this.sessions.data.forEach((session, index) => {
+
+                let accessibleAt = moment(session.starts_at);
+                let disableAccess = moment(session.ends_at);
+
+                let canTheUserJoin = moment().isBetween(accessibleAt, disableAccess);
+
+                if (canTheUserJoin) {
+                    this.$set(this.sessions.data[index], 'can_join', true);
+                } else {
+                    this.$set(this.sessions.data[index], 'can_join', false);
+                }
+            })
         },
-        filters: {
-            toDate(timestamp) {
-                return moment(timestamp, 'YYYY-MM-DD LT').format('DD-MM-YYYY');
-            },
-            toHours(timestamp) {
-                return moment(timestamp, 'YYYY-MM-DD LT').format('hh:mm A');
-            }
-        },
-        mounted() {
-            // alert('hello');
-            console.log(this.trainee.must_sign)
-
-            this.fetchContractStatus();
-            let vm = this;
-            this.checkCoursesEnabledInterval = setInterval(function() {
-                vm.updateCoursesEnabled();
-            }, 2000)
-        },
-        methods: {
-            updateCoursesEnabled() {
-                this.sessions.data.forEach((session, index) => {
-
-                    let accessibleAt = moment(session.starts_at);
-                    let disableAccess = moment(session.ends_at);
-
-                    let canTheUserJoin = moment().isBetween(accessibleAt, disableAccess);
-
-                    if (canTheUserJoin) {
-                        this.$set(this.sessions.data[index], 'can_join', true);
-                    } else {
-                        this.$set(this.sessions.data[index], 'can_join', false);
-                    }
-                })
-            },
-             showContractPopup() {
+        showContractPopup() {
             Swal.fire({
                 title: 'توثيق العقد',
                 text: 'يرجي توثيق العقد للمتابعة (برجاء التوثيق من خلال جهاز اللاب توب)',
@@ -349,7 +348,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     // this.sendEmbeddedContract();
-                    window.location.href=route("contract-guides");
+                    window.location.href = route("contract-guides");
                 }
             });
         },
@@ -387,27 +386,27 @@
             }
         },
 
-     async fetchContractStatus() {
-    try {
-        console.log("heeeereeeeeee");
-        console.log(this.trainee.name);
-        const response = await axios.get(route('zoho.check-contract-status'));
-        this.contractStatus = response.data.status;
-         console.log(this.contractStatus);
+        async fetchContractStatus() {
+            try {
+                console.log("heeeereeeeeee");
+                console.log(this.trainee.name);
+                const response = await axios.get(route('zoho.check-contract-status'));
+                this.contractStatus = response.data.status;
+                console.log(this.contractStatus);
 
-        this.errorMessage = null;
+                this.errorMessage = null;
 
-        // Shafiq: Disable the pop up for the time being.
-        // if (this.contractStatus !== 'completed' && this.trainee.must_sign) {
-        //     this.showContractPopup();
-        // }
-    } catch (error) {
-        this.errorMessage = error.response?.data?.error || "حدث خطأ أثناء جلب حالة العقد.";
-    }
-    }
-        },
-        beforeDestroy() {
-            clearInterval(this.checkCoursesEnabledInterval);
+                // Shafiq: Disable the pop up for the time being.
+                // if (this.contractStatus !== 'completed' && this.trainee.must_sign) {
+                //     this.showContractPopup();
+                // }
+            } catch (error) {
+                this.errorMessage = error.response?.data?.error || "حدث خطأ أثناء جلب حالة العقد.";
+            }
         }
+    },
+    beforeDestroy() {
+        clearInterval(this.checkCoursesEnabledInterval);
     }
+}
 </script>
