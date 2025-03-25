@@ -17,6 +17,32 @@
                 <br/>
                 <br/>
             </div>
+
+            <div class="container mx-auto grid p-6" v-if="this.contractStatus !== 'completed' && this.trainee.must_sign">
+                <div class="bg-blue-100 rounded-lg p-10 border-blue-500 border-2 text-center md:text-right">
+                    <div style="width: 100%;">
+                        <p class="flex">
+                            <svg style="margin-left:10px;" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <b>حسابك لديه عقد للتوثيق:</b>
+                        </p>
+                        <inertia-link class="text-center mt-4 inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
+                           :href="route('contract-guides')">ابدأ الآن</inertia-link>
+                        <p class="text-gray-500" style="text-align: center;
+                                font-size: 20px;
+                                color: #323232;
+                                letter-spacing: 1px;
+                            }"></p>
+                        <p class="text-xs mt-4">** لعرض طريقة التوثيق،
+                            <inertia-link class="underline" :href="route('contract-guides')" target="_blank">
+                                يرجى الضغط هنا.
+                            </inertia-link>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
             <div class="container mx-auto grid" v-if="user.trainee.trainee_message">
                 <div class="bg-red-100 rounded-lg p-10 border-red-500 border-2">
                     <div style="width: 100%;">
