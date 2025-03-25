@@ -281,7 +281,7 @@
     import Welcome from '@/Jetstream/Welcome'
     import LanguageSelector from "@/Shared/LanguageSelector";
     import HeaderCard from "@/Components/HeaderCard";
-    import Swal from 'sweetalert2'; 
+    import Swal from 'sweetalert2';
 
 
     export default {
@@ -311,7 +311,7 @@
         mounted() {
             // alert('hello');
             console.log(this.trainee.must_sign)
-        
+
             this.fetchContractStatus();
             let vm = this;
             this.checkCoursesEnabledInterval = setInterval(function() {
@@ -333,16 +333,16 @@
                         this.$set(this.sessions.data[index], 'can_join', false);
                     }
                 })
-            },  
+            },
              showContractPopup() {
             Swal.fire({
                 title: 'توثيق العقد',
                 text: 'يرجي توثيق العقد للمتابعة (برجاء التوثيق من خلال جهاز اللاب توب)',
                 icon: 'info',
                 confirmButtonText: 'توثيق العقد',
-                allowOutsideClick: false,  
-                allowEscapeKey: false,    
-                showCancelButton: false,  
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showCancelButton: false,
                 customClass: {
                     confirmButton: 'bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded',
                 },
@@ -367,7 +367,7 @@
                 });
 
                 if (response.data && response.data.sign_url) {
-                    window.location.href = response.data.sign_url; 
+                    window.location.href = response.data.sign_url;
                 } else {
                     Swal.fire('خطأ', 'حدث خطأ أثناء معالجة الطلب.', 'error');
                 }
@@ -397,9 +397,10 @@
 
         this.errorMessage = null;
 
-        if (this.contractStatus !== 'completed' && this.trainee.must_sign) {
-            this.showContractPopup();
-        }
+        // Shafiq: Disable the pop up for the time being.
+        // if (this.contractStatus !== 'completed' && this.trainee.must_sign) {
+        //     this.showContractPopup();
+        // }
     } catch (error) {
         this.errorMessage = error.response?.data?.error || "حدث خطأ أثناء جلب حالة العقد.";
     }
