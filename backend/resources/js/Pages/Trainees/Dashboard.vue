@@ -18,6 +18,7 @@
                 <br/>
             </div>
 
+            <template v-if="this.trainee">
             <div class="container mx-auto grid p-6" v-if="this.contractStatus !== 'completed' && this.trainee.must_sign">
                 <div class="bg-blue-100 rounded-lg p-10 border-blue-500 border-2 text-center md:text-right">
                     <div style="width: 100%;">
@@ -42,6 +43,7 @@
                     </div>
                 </div>
             </div>
+            </template>
 
             <div class="container mx-auto grid" v-if="user.trainee.trainee_message">
                 <div class="bg-red-100 rounded-lg p-10 border-red-500 border-2">
@@ -414,8 +416,6 @@ export default {
 
         async fetchContractStatus() {
             try {
-                console.log("heeeereeeeeee");
-                console.log(this.trainee.name);
                 const response = await axios.get(route('zoho.check-contract-status'));
                 this.contractStatus = response.data.status;
                 console.log(this.contractStatus);
