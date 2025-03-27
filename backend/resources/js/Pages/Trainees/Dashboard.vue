@@ -19,7 +19,7 @@
             </div>
 
             <template v-if="this.trainee">
-            <div class="container mx-auto grid p-6" v-if="this.contractStatus !== 'completed' && this.trainee.must_sign">
+            <div class="container mx-auto grid p-6" v-if="this.trainee.zoho_contract_status !== 'completed' && this.trainee.must_sign">
                 <div class="bg-blue-100 rounded-lg p-10 border-blue-500 border-2 text-center md:text-right">
                     <div style="width: 100%;">
                         <p class="flex">
