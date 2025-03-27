@@ -43,8 +43,8 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
      */
     public function handle()
     {
-        $from_date = Carbon::parse('2025-02-01')->startOfDay();
-        $to_date = Carbon::parse('2025-02-27')->endOfDay();
+        $from_date = Carbon::parse('2025-03-01')->startOfDay();
+        $to_date = Carbon::parse('2025-03-31')->endOfDay();
         $this->createReportsBasedOnTraineedInvoiced($from_date, $to_date);
         return 1;
     }
@@ -57,7 +57,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
         $company_id = 'beff7800-b94b-4831-8044-8cdcb152087a';
 
-        $select_invoices_from = ['2025-01-01', '2025-01-31'];
+        $select_invoices_from = ['2025-02-01', '2025-02-28'];
 
         //foreach ($companies as $company_id) {
             $count = Company::with('invoices')
@@ -151,10 +151,10 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
         $clone->save();
 
         $emails = [
-            ['type' => 'bcc', 'email' => 'sara@ptc-ksa.net'],
-            ['type' => 'bcc', 'email' => 'm_shehatah@ptc-ksa.net'],
-            ['type' => 'bcc', 'email' => 'ceo@ptc-ksa.net'],
-            ['type' => 'bcc', 'email' => 'mashael.a@ptc-ksa.net'],
+            ['type' => 'bcc', 'email' => 'sara@hadaf-hq.com'],
+            ['type' => 'bcc', 'email' => 'm_shehatah@hadaf-hq.com'],
+            ['type' => 'bcc', 'email' => 'ceo@hadaf-hq.com'],
+            ['type' => 'bcc', 'email' => 'mashael.a@hadaf-hq.com'],
         ];
         if ($company->salesperson_email) {
             $repEmails = explode(', ', $company->salesperson_email);
@@ -202,10 +202,10 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
         $report->save();
 
         $emails = [
-            ['type' => 'bcc', 'email' => 'sara@ptc-ksa.net'],
-            ['type' => 'bcc', 'email' => 'm_shehatah@ptc-ksa.net'],
-            ['type' => 'bcc', 'email' => 'ceo@ptc-ksa.net'],
-            ['type' => 'bcc', 'email' => 'mashael.a@ptc-ksa.net'],
+            ['type' => 'bcc', 'email' => 'sara@hadaf-hq.com'],
+            ['type' => 'bcc', 'email' => 'm_shehatah@hadaf-hq.com'],
+            ['type' => 'bcc', 'email' => 'ceo@hadaf-hq.com'],
+            ['type' => 'bcc', 'email' => 'mashael.a@hadaf-hq.com'],
         ];
 
         if ($company->salesperson_email) {
@@ -251,7 +251,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
         if (Str::contains($report->company->center->domain_name, 'jisr') || Str::contains($report->company->center->domain_name, 'jasarah')) {
             $bccEmails = $report->emails()->where('type', 'bcc')->where('email', 'LIKE', '%ptc-ksa%')->get();
             foreach ($bccEmails as $bccEmail) {
-                $bccEmail->update(['email' => Str::before($bccEmail->email, '@') . '@jisr-ksa.com']);
+                $bccEmail->update(['email' => Str::before($bccEmail->email, '@') . '@hadaf-hq.com']);
             }
         }
 
