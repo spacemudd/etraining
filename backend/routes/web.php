@@ -143,12 +143,12 @@ Route::get('unpaid-invoices-x', function() {
 
     return $invoicesData;
 });
-Route::get('deleted-invoices-x', function() {
+Route::get('deleted-unpaid-invoices-x', function() {
     set_time_limit(1000);
     $data = [
-        'from_date' => '2024-03-01',
+        'from_date' => '2025-03-01',
     ];
-    $invoices = Invoice::onlyTrashed()->where($data)->get();
+    $invoices = Invoice::onlyTrashed()->where($data)->notPaid()->get();
 
     $invoicesData = [];
 
