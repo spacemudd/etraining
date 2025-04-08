@@ -38,9 +38,9 @@ class TraineeApplicationApprovedNotification extends Notification implements Sho
             $notify_via[] = 'mail';
         }
 
-        if ($notifiable->routeNotificationForClickSend()) {
-            $notify_via[] = ClickSendChannel::class;
-        }
+//        if ($notifiable->routeNotificationForClickSend()) {
+//            $notify_via[] = ClickSendChannel::class;
+//        }
 
         return $notify_via;
     }
