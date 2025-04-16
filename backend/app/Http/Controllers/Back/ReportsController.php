@@ -262,6 +262,7 @@ class ReportsController extends Controller
                                 'phone' => $trainee->phone,
                                 'identity_number' => $trainee->identity_number,
                                 'trainee_name' => $trainee->name,
+                                'deleted_at' => $trainee->deleted_at,
                             ];
                         }
                     }
