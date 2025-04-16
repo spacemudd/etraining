@@ -95,7 +95,7 @@ class ReportsController extends Controller
         return $tracker;
     }
 
-    
+
 
     public function generateContractsReport(Request $request)
     {
@@ -121,14 +121,14 @@ class ReportsController extends Controller
 
     public function formContractsReport()
     {
-        
+
         $this->authorize('view-backoffice-reports');
         return Inertia::render('Back/Reports/Contracts/Index');
     }
 
 
     public function formTraineesWithoutInvoicesReport()
-    { 
+    {
         $this->authorize('view-backoffice-reports');
         return Inertia::render('Back/Reports/TraineesWithoutInvoices/Index');
     }
@@ -139,7 +139,7 @@ class ReportsController extends Controller
             'date_to' => 'required',
         ]);
         $data=$request->all();
-        
+
 
         Audit::create([
             'event' => 'traineesWithoutInvoices.export.excel',
@@ -147,39 +147,39 @@ class ReportsController extends Controller
             'auditable_type' => User::class,
             'new_values' => [],
         ]);
-        
+
         return Excel::download(new TraineesWithoutInvoicesExport($data), now()->format('Y-m-d').'-traineees-without-invoices.xlsx');
-       
+
     }
 
 
     public function formCompanyCertificateseGenerateReport(Request $request)
     {
         $course = Course::find($request->input('courseId.id'));
-    
+
         if (!$course) {
             return response()->json(['error' => 'Course not found'], 404);
         }
-    
+
         $courseName = $course->name_ar;
         $courses = Course::where('name_ar', $courseName)->get();
-    
+
         $results = [];
         ini_set('memory_limit', '512M');
         set_time_limit(300);
-    
-        $companyId = $request->input('companyId.id'); 
-    
+
+        $companyId = $request->input('companyId.id');
+
         $companyName = '';
-    
+
         foreach ($courses as $course) {
             $batches = $course->batches;
-    
+
             foreach ($batches as $batch) {
                 $courseEndDate = Carbon::parse($batch->ends_at);
                 $startOfMonth = $courseEndDate->copy()->startOfMonth();
                 $daysDifference = $courseEndDate->diffInDays($startOfMonth);
-    
+
                 if ($daysDifference >= 15) {
                     $targetMonth = $courseEndDate->month;
                     $targetYear = $courseEndDate->year;
@@ -187,14 +187,14 @@ class ReportsController extends Controller
                     $targetMonth = $courseEndDate->subMonth()->month;
                     $targetYear = $courseEndDate->year;
                 }
-    
+
                 $startOfTargetMonth = Carbon::createFromDate($targetYear, $targetMonth, 1)->startOfMonth();
                 $endOfTargetMonth = Carbon::createFromDate($targetYear, $targetMonth, 1)->endOfMonth();
-    
+
                 $totalSessionsCount = $batch->course_batch_sessions()->count();
-    
-                $traineesQuery = $batch->trainee_group->trainees();
-    
+
+                $traineesQuery = $batch->trainee_group->traineesWithTrashed();
+
                 if ($companyId) {
                     $traineesQuery->where('company_id', $companyId);
                     $company = Company::find($companyId);
@@ -202,7 +202,7 @@ class ReportsController extends Controller
                         $companyName = $company->name_ar;
                     }
                 }
-    
+
                 $traineesQuery->chunk(100, function ($traineesChunk) use (
                     &$results,
                     $batch,
@@ -210,7 +210,7 @@ class ReportsController extends Controller
                     $startOfTargetMonth,
                     $endOfTargetMonth,
                     $courseName,
-                    $companyName, 
+                    $companyName,
                     $companyId
                 ) {
                     foreach ($traineesChunk as $trainee) {
@@ -218,18 +218,18 @@ class ReportsController extends Controller
                             ->where('course_batch_id', $batch->id)
                             ->get()
                             ->unique('course_batch_session_id');
-    
+
                         $presentCount = $attendanceRecords->whereIn('status', [1, 2, 3])->count();
                         $absentCount = $attendanceRecords->where('status', 0)->count();
-    
+
                         $attendancePercentage = $totalSessionsCount > 0 ? ($presentCount / $totalSessionsCount) * 100 : 0;
-    
+
                         $invoiceQuery = Invoice::where('trainee_id', $trainee->id);
-    
+
                         if ($companyId) {
                             $invoiceQuery->where('company_id', $companyId);
                         }
-    
+
                         $invoice = $invoiceQuery->where(function ($query) use ($startOfTargetMonth, $endOfTargetMonth) {
                             $query->whereBetween('from_date', [$startOfTargetMonth, $endOfTargetMonth])
                                 ->orWhereBetween('to_date', [$startOfTargetMonth, $endOfTargetMonth])
@@ -238,14 +238,14 @@ class ReportsController extends Controller
                                         ->where('to_date', '>=', $endOfTargetMonth);
                                 });
                         })->first();
-    
+
                         $invoiceStatus = $invoice ? $invoice->status_formatted : 'لا توجد فاتورة';
                         $paidDate = $invoice ? $invoice->paid_at : '';
                         $invoiceFromDate = $invoice ? $invoice->from_date : '';
                         $invoiceToDate = $invoice ? $invoice->to_date : '';
-    
+
                         $traineeCompanyName = $trainee->company ? $trainee->company->name_ar : 'غير مربوط بشركة';
-    
+
                         if (isset($trainee->name)) {
                             $results[] = [
                                 'paid_date' => $paidDate,
@@ -257,7 +257,7 @@ class ReportsController extends Controller
                                 'absent_count' => $absentCount,
                                 'course_name' => $courseName,
                                 'company_name' => $traineeCompanyName,
-    
+
                                 'email' => $trainee->email,
                                 'phone' => $trainee->phone,
                                 'identity_number' => $trainee->identity_number,
@@ -268,31 +268,31 @@ class ReportsController extends Controller
                 });
             }
         }
-    
+
         $results = collect($results)->sortByDesc(function ($trainee) {
             $attendanceNumeric = floatval(str_replace(' %', '', $trainee['attendance_percentage']));
             return ($attendanceNumeric >= 50 && $trainee['invoice_status'] == 'مدفوع') ? 1 : 0;
         })->values()->toArray();
-    
+
         $fileName = $companyName ? $companyName . '_attendance_report.xlsx' : 'trainee_attendance_by_course.xlsx';
         // dd($fileName);
-        
-    
+
+
         return Excel::download(new TraineeAttendanceExportByGroup($results), $fileName);
 
-        
+
     }
-    
-    
-    
-  
 
 
 
-    
+
+
+
+
+
 
 }
 
-    
+
 
 

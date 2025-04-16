@@ -61,6 +61,11 @@ class TraineeGroup extends Model implements Auditable
         return $this->hasMany(Trainee::class);
     }
 
+    public function traineesWithTrashed()
+    {
+        return $this->hasMany(Trainee::class)->withTrashed();
+    }
+
     public function getNameSelectableAttribute()
     {
         return $this->name;
