@@ -30,7 +30,23 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
 
     public function headings(): array
     {
-        return ['استحقاق الشهادة','تاريخ الدفع','استحقاق الى','استحقاق من ','حالة الدفع', 'نسبة الحضور', 'عدد الحضور', 'عدد الغياب','الدورة',' الشركة','الإيميل',' الجوال','رقم الهوية','اسم المتدرب'];
+        return [
+            'استحقاق الشهادة',
+            'تاريخ الدفع',
+            'استحقاق الى',
+            'استحقاق من ',
+            'حالة الدفع',
+            'نسبة الحضور',
+            'عدد الحضور',
+            'عدد الغياب',
+            'الدورة',
+            ' الشركة',
+            'الإيميل',
+            ' الجوال',
+            'رقم الهوية',
+            'اسم المتدرب',
+            'تاريخ الحذف',
+        ];
     }
 
     public function styles(Worksheet $sheet)
@@ -47,10 +63,10 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
 
             if ($attendanceNumeric >= 50 && $trainee['invoice_status']=='مدفوع') {
                 $sheet->getCell("A$rowIndex")->setValue('يستحق');
-                $sheet->getStyle("A$rowIndex")->getFont()->getColor()->setARGB('FF00FF00'); 
+                $sheet->getStyle("A$rowIndex")->getFont()->getColor()->setARGB('FF00FF00');
             } else {
                 $sheet->getCell("A$rowIndex")->setValue('لا يستحق');
-                $sheet->getStyle("A$rowIndex")->getFont()->getColor()->setARGB('FFFF0000'); 
+                $sheet->getStyle("A$rowIndex")->getFont()->getColor()->setARGB('FFFF0000');
             }
 
 
@@ -71,7 +87,10 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
             $sheet->getCell("L$rowIndex")->setValue($trainee['phone']);
             $sheet->getCell("M$rowIndex")->setValue($trainee['identity_number']);
             $sheet->getCell("N$rowIndex")->setValue($trainee['trainee_name']);
-            
+
+            if ($trainee['deleted_at']) {
+                $sheet->getCell("O$rowIndex")->setValue($trainee['deleted_at']);
+            }
 
             $sheet->getStyle("A$rowIndex:N$rowIndex")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
         }
