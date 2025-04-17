@@ -2,10 +2,15 @@
 
 namespace App\Jobs;
 
+use App\Models\Back\Company;
+use App\Models\Back\Course;
+use App\Models\Back\Invoice;
 use App\Models\Course;
 use App\Models\Company;
 use App\Models\Invoice;
 use App\Exports\TraineeAttendanceExportByGroup;
+use App\Models\User;
+use App\Notifications\ReportReadyNotification;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
