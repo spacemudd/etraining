@@ -152,12 +152,13 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
 
         $fileName = $companyName ? $companyName . '_attendance_report.xlsx' : 'trainee_attendance_by_course.xlsx';
 
-        Excel::store(new TraineeAttendanceExportByGroup($results), $fileName, 'local');
+        $filePath = 'reports/' . $fileName;
+        Excel::store(new TraineeAttendanceExportByGroup($results), $filePath, 's3');
 
         // Notify the user
         $user = User::find($this->userId);
         if ($user) {
-            $user->notify(new ReportReadyNotification($fileName));
+            $user->notify(new ReportReadyNotification($filePath));
         }
     }
 }

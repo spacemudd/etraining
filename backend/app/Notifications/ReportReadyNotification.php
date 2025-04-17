@@ -20,7 +20,7 @@ class ReportReadyNotification extends Notification implements ShouldQueue
 
     public function via($notifiable)
     {
-        return ['mail', 'database']; // Email + database notifications
+        return ['mail']; // Email + database notifications
     }
 
     public function toMail($notifiable)
