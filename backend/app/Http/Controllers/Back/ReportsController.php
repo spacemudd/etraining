@@ -156,9 +156,9 @@ class ReportsController extends Controller
 
     public function formCompanyCertificateseGenerateReport(Request $request)
     {
-        GenerateCompanyCertificatesReportJob::dispatch($request, auth()->id());
+        GenerateCompanyCertificatesReportJob::dispatch($request->all(), auth()->id());
         return response()->json(['message' => 'Report generation started.']);
-        
+
         $course = Course::find($request->input('courseId.id'));
 
         if (!$course) {
