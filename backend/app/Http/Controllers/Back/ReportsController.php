@@ -196,14 +196,18 @@ class ReportsController extends Controller
                 $traineesQuery = $batch->trainee_group->traineesWithTrashed();
 
                 if ($companyId) {
-                    $traineesQuery->where('company_id', $companyId);
+                    $traineesQuery
+                        ->where('company_id', $companyId);
                     $company = Company::find($companyId);
                     if ($company) {
                         $companyName = $company->name_ar;
                     }
                 }
 
-                $traineesQuery->chunk(100, function ($traineesChunk) use (
+                $traineesQuery
+                    ->with('user')
+                    ->with('company')
+                    ->chunk(100, function ($traineesChunk) use (
                     &$results,
                     $batch,
                     $totalSessionsCount,
@@ -279,20 +283,8 @@ class ReportsController extends Controller
         $fileName = $companyName ? $companyName . '_attendance_report.xlsx' : 'trainee_attendance_by_course.xlsx';
         // dd($fileName);
 
-
         return Excel::download(new TraineeAttendanceExportByGroup($results), $fileName);
-
-
     }
-
-
-
-
-
-
-
-
-
 }
 
 
