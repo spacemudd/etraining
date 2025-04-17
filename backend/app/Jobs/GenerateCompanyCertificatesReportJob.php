@@ -21,6 +21,9 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $timeout = 3600;
+    public $tries = 1;
+
     protected $requestData;
     protected $userId;
 

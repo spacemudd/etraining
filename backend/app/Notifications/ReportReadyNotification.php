@@ -27,10 +27,11 @@ class ReportReadyNotification extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('Your Report is Ready')
-            ->line('Your attendance report has been generated.')
-            ->action('Download Report', $this->filePath)
-            ->line('Thank you for using our system!');
+            ->subject('تقرير الحضور جاهز')
+            ->line('تم إنشاء تقرير الحضور الخاص بك بنجاح.')
+            ->action('تحميل التقرير', $this->filePath)
+            ->line('شكرًا لاستخدامك لنظامنا.')
+            ->salutation('تحياتنا');
     }
 
     public function toArray($notifiable)
