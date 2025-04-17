@@ -144,7 +144,7 @@ class BulkCourseAttendanceReportFactory
             $q->whereIn('course_id', $this->coursesIds);
         }
 
-        $q->whereBetween('starts_at', [$this->startDate, $this->endDate]);
+        $q->orderBy('starts_at', 'desc')->whereBetween('starts_at', [$this->startDate, $this->endDate]);
 
         $q->whereHas('attendance_report');
 
