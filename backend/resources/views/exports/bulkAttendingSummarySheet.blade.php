@@ -36,7 +36,7 @@
     @foreach ($attendanceRecords as $attendance)
         @if ($attendance->trainee)
             <tr>
-                <th style="width:50px;border:1px solid black;">{{ optional($attendance->trainee)->name }}</th>
+                <th style="width:50px;border:1px solid black;">{{ optional($attendance->course)->name_ar }}</th>
                 <th style="width:50px;border:1px solid black;">{{ optional($attendance->trainee)->name }}</th>
                 <th style="width:50px; text-align:left;border:1px solid black;">{{ optional($attendance->trainee)->email }}</th>
                 <th style="width:50px; text-align:left;border:1px solid black;">{{ optional($attendance->trainee)->identity_number }}</th>

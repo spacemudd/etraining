@@ -228,7 +228,7 @@ return [
     'results' => 'النتائج',
     'trainee' => 'متدرب',
     'instructor-singular' => 'مدرب',
-    'course' => 'دورة',
+    'course' => 'الدورة',
     'no-records-have-been-found' => 'لا توجد نتائج بحث',
     'block-trainee' => 'إيقاف المتدرب',
     'block-instructor' => 'إيقاف المدرب',
