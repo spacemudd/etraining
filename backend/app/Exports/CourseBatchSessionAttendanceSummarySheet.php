@@ -119,7 +119,7 @@ class CourseBatchSessionAttendanceSummarySheet implements FromView, WithEvents, 
                 ->count();
         }
 
-        return view('exports.attendingSummarySheet', [
+        return view('exports.bulkAttendingSummarySheet', [
             'courseName' => optional(optional(optional($this->courseBatchSessions)->first())->course)->name_ar ?: optional(optional(optional($this->courseBatchSessions)->first())->course)->name_en,
             'courseBatchSessions' => $this->courseBatchSessions,
             'attendanceRecords' => $attendanceRecords,

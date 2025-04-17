@@ -42,18 +42,16 @@
                     {{ $t('words.trainees-without-invoice') }}
                 </inertia-link>
 
-            
-                   <inertia-link :href="route('back.reports.company-certificates.index')"
+
+                <inertia-link :href="route('back.reports.company-certificates.index')"
                               class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
-                           {{ $t('words.companies-certificates') }}
+                    {{ $t('words.companies-certificates') }}
                 </inertia-link>
 
-
-
-
-
-                
-                
+                <inertia-link :href="route('back.reports.bulk-course-attendances.index')"
+                              class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
+                    {{ $t('words.attendance-bulk-courses') }}
+                </inertia-link>
 
             </div>
 
@@ -62,30 +60,30 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout'
-    import IconNavigate from 'vue-ionicons/dist/ios-arrow-dropright'
-    import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
+import AppLayout from '@/Layouts/AppLayout'
+import IconNavigate from 'vue-ionicons/dist/ios-arrow-dropright'
+import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
 
-    export default {
-        metaInfo() {
-            return {
-                title: this.$t('words.reports')
-            }
-        },
-        components: {
-            IconNavigate,
-            AppLayout,
-            BreadcrumbContainer,
-        },
-        computed: {
-        },
-        data() {
-            return {
-                //
-            }
-        },
-        methods: {
+export default {
+    metaInfo() {
+        return {
+            title: this.$t('words.reports')
+        }
+    },
+    components: {
+        IconNavigate,
+        AppLayout,
+        BreadcrumbContainer,
+    },
+    computed: {
+    },
+    data() {
+        return {
             //
-        },
-    }
+        }
+    },
+    methods: {
+        //
+    },
+}
 </script>

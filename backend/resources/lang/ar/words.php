@@ -696,4 +696,5 @@ return [
     'contract-verified' => 'عقد موثق',
     'contract-sent' => 'تم إرسال العقد',
     'gosi-deleted' => 'محذوف من التأمينات',
+    'attendance-bulk-courses' => 'تقرير الحضور (مجموعة)',
 ];

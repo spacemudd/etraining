@@ -41,7 +41,7 @@ class CourseSessionsAttendanceSummarySheetExport implements WithMultipleSheets
         $reportsIds = [];
 
         foreach ($this->courseBatchSessions as $session) {
-            $sheets[] = new CourseBatchSessionAttendanceSheet($session->id, $this->companyId);
+            $sheets[] = new BulkCourseBatchSessionAttendanceSheet($session->id, $this->companyId);
             $reportsIds[] = optional($session->attendance_report)->id;
         }
 

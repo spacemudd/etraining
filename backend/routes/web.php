@@ -765,20 +765,14 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::prefix('reports')->group(function() {
 
             Route::get('/', [\App\Http\Controllers\Back\ReportsController::class, 'index'])->name('reports.index');
+
             Route::post('course-attendances/generate', [\App\Http\Controllers\Back\ReportsController::class, 'generateCourseAttendanceReport'])->name('reports.course-attendances.generate');
-
-
-
-
-
-
-
-
             Route::get('course-attendances', [\App\Http\Controllers\Back\ReportsController::class, 'formCourseAttendanceReport'])->name('reports.course-attendances.index');
+
+            Route::post('bulk-course-attendances/generate', [\App\Http\Controllers\Back\ReportsController::class, 'generateBulkCourseAttendanceReport'])->name('reports.bulk-course-attendances.generate');
+            Route::get('bulk-course-attendances', [\App\Http\Controllers\Back\ReportsController::class, 'formBulkCourseAttendanceReport'])->name('reports.bulk-course-attendances.index');
+
             Route::get('company-certificates', [\App\Http\Controllers\Back\ReportsController::class, 'formCompanyCertificateseReport'])->name('reports.company-certificates.index');
-
-
-
 
             Route::get('contracts', [\App\Http\Controllers\Back\ReportsController::class, 'formContractsReport'])->name('reports.contracts.index');
 

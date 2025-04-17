@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Back;
 
-use App\Exports\CourseSessionsAttendanceSummarySheetExport;
 use App\Exports\TraineeAttendanceExportByGroup;
 use App\Exports\TraineesWithoutInvoicesExport;
 use App\Http\Controllers\Controller;
+use App\Jobs\BulkCourseAttendanceReportJob;
 use App\Jobs\ContractsReportJob;
 use App\Jobs\CourseAttendanceReportJob;
 use App\Jobs\GenerateCompanyCertificatesReportJob;
@@ -13,20 +13,15 @@ use App\Models\Back\Audit;
 use App\Models\Back\Company;
 use App\Models\Back\Course;
 use App\Models\Back\Invoice;
-use App\Models\Back\Trainee;
 use App\Models\JobTracker;
-
 use App\Models\User;
+use App\Reports\BulkCourseAttendanceReportFactory;
 use App\Reports\ContractsReportFactory;
 use App\Reports\CourseAttendanceReportFactory;
 use Carbon\Carbon;
-
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Excel;
-
-
 
 class ReportsController extends Controller
 {
@@ -69,7 +64,7 @@ class ReportsController extends Controller
     /**
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return JobTracker
      * @throws \Throwable
      */
     public function generateCourseAttendanceReport(Request $request)
@@ -288,6 +283,45 @@ class ReportsController extends Controller
         // dd($fileName);
 
         return Excel::download(new TraineeAttendanceExportByGroup($results), $fileName);
+    }
+
+    public function formBulkCourseAttendanceReport()
+    {
+        $this->authorize('view-backoffice-reports');
+        return Inertia::render('Back/Reports/BulkCourseAttendance/Index', [
+            'companies' => Company::get(),
+            'courses' => Course::with('instructor')->get(),
+        ]);
+    }
+
+    /**
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return JobTracker
+     * @throws \Throwable
+     */
+    public function generateBulkCourseAttendanceReport(Request $request)
+    {
+        $request->validate([
+            'courses_ids.*' => 'required|exists:courses,id',
+            'company_id' => 'nullable|exists:companies,id',
+            'date_from' => 'required',
+            'date_to' => 'required',
+        ]);
+
+        $tracker = new JobTracker();
+        $tracker->user_id = auth()->user()->id;
+        $tracker->metadata = $request->except('_token');
+        $tracker->reportable_id = null;
+        $tracker->reportable_type = BulkCourseAttendanceReportFactory::class;
+        $tracker->queued_at = now();
+        $tracker->save();
+
+        $tracker = $tracker->refresh();
+
+        BulkCourseAttendanceReportJob::dispatch($tracker);
+
+        return $tracker;
     }
 }
 

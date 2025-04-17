@@ -217,7 +217,7 @@ export default {
             "with-regards": "مع تحياتنا",
             "url-problem": "إذا كانت تواجهك صعوبة في الضغط على \"{actionText}\", انسخ الرابط التالي \nفي صفحة المتصفح الخاص بك: ",
             "all-rights-reserved": "كل الحقوق محفوظة",
-            "welcome-to-ptc": "اهلا بك في شركة معهد سجل للتدريب",
+            "welcome-to-ptc": "اهلا بك في المنصة",
             "your-application-has-been-approved": "لقد تم قبولك في منصة التدريب ويمكن الدخول عليها من: ",
             "incomplete-application": "ملف غير مكتمل",
             "pending-approval": "جاري الموافقة",
@@ -507,7 +507,7 @@ export default {
             "transaction-date": "تاريخ العملية",
             "training-fees": "رسوم التدريب",
             "please-login-to-your-account-pay-the-costs": "الرجاء الدخول على حسابك لعرض الرسوم التدريبية المستحقة",
-            "training-fees-have-been-issued-for-your-account-ptc": "تم إصدار رسوم التدريب لحسابك - شركة مركز احترافية التدريب",
+            "training-fees-have-been-issued-for-your-account-ptc": "تم إصدار رسوم التدريب لحسابك - ",
             "mark-as-unpaid": "لم يتم الدفع",
             "chase": "التحصيل",
             "finance-audit-required": "مطلوب موافقة المالية",
@@ -719,7 +719,8 @@ export default {
             "send-contract": "إرسال العقد",
             "contract-verified": "عقد موثق",
             "contract-sent": "تم إرسال العقد",
-            "gosi-deleted": "محذوف من التأمينات"
+            "gosi-deleted": "محذوف من التأمينات",
+            "attendance-bulk-courses": "تقرير الحضور (مجموعة)"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1092,8 +1093,8 @@ export default {
             "with-regards": "Kind regards",
             "url-problem": "If you’re having trouble clicking the \"{actionText}\" button, copy and paste the URL below\ninto your web browser:",
             "all-rights-reserved": "All rights reserved",
-            "welcome-to-ptc": "Welcome to PTC",
-            "your-application-has-been-approved": "Your application has been approved to PTC. You can access via: ",
+            "welcome-to-ptc": "Welcome to training portal",
+            "your-application-has-been-approved": "Your application has been approved. You can access via: ",
             "incomplete-application": "Incomplete application",
             "pending-approval": "Pending approval",
             "nominated-instructor": "Pending approval",
@@ -1284,7 +1285,7 @@ export default {
             "complaints-settings": "Complaints settings",
             "emails": "Emails",
             "enabled": "Enabled",
-            "your-instructor-application-has-been-approved": "Your instructor application has been approved to PTC. You can access via: ",
+            "your-instructor-application-has-been-approved": "Your instructor application has been approved. You can access via: ",
             "trainee-groups": "Trainee groups",
             "monthly_subscription_per_trainee": "Monthly Subscription Per Trainee",
             "issue-monthly-invoices": "Issue Monthly Invoices",
@@ -1370,7 +1371,7 @@ export default {
             "transaction-date": "Transaction date",
             "training-fees": "Training fees",
             "please-login-to-your-account-pay-the-costs": "Please login to your account to pay the costs",
-            "training-fees-have-been-issued-for-your-account-ptc": "Training fees have been issued for your account - PTC",
+            "training-fees-have-been-issued-for-your-account-ptc": "Training fees have been issued for your account - ",
             "mark-as-unpaid": "Mark as unpaid",
             "chase": "Chase",
             "finance-audit-required": "Finance audit required",
@@ -1576,7 +1577,8 @@ export default {
             "contract-verified": "Contract Verified",
             "contract-sent": "Contract Sent",
             "view-contract": "View Contract",
-            "gosi-deleted": "GOSI deleted"
+            "gosi-deleted": "GOSI deleted",
+            "attendance-bulk-courses": "Attendance report (bulk)"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

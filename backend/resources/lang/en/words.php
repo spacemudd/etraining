@@ -682,4 +682,5 @@ return [
     'contract-sent' => 'Contract Sent',
     'view-contract' => 'View Contract',
     'gosi-deleted' => 'GOSI deleted',
+    'attendance-bulk-courses' => 'Attendance report (bulk)',
 ];
