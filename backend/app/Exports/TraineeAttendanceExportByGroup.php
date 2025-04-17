@@ -46,6 +46,7 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
             'رقم الهوية',
             'اسم المتدرب',
             'تاريخ الحذف',
+            'تاريخ اخر دخول',
         ];
     }
 
@@ -90,6 +91,10 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
 
             if ($trainee['deleted_at']) {
                 $sheet->getCell("O$rowIndex")->setValue($trainee['deleted_at']);
+            }
+
+            if ($trainee['last_login_at']) {
+                $sheet->getCell("O$rowIndex")->setValue($trainee['last_login_at']);
             }
 
             $sheet->getStyle("A$rowIndex:N$rowIndex")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
