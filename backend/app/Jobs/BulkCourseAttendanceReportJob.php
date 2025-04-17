@@ -61,13 +61,13 @@ class BulkCourseAttendanceReportJob implements ShouldQueue
         $this->tracker->update(['finished_at' => now()]);
 
         $user = User::find($this->tracker->user_id);
-        if ($user) {
+//        if ($user) {
             $temporaryUrl = $this->tracker->getFirstMedia('excel')->getTemporaryUrl(
                 now()->addDays(3),
                 config('filesystems.disks.s3.url').'/'.$this->tracker->getFirstMedia('excel')->getPath()
             );
             $user->notify(new ReportReadyNotification($temporaryUrl));
-        }
+  //      }
 
         Log::info('[BulkCourseAttendanceReportJob] Completed. Tracker ID: '.$this->tracker->id);
     }
