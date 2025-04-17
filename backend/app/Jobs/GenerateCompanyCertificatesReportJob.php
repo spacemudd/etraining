@@ -1,168 +1,38 @@
 <?php
 
-namespace App\Http\Controllers\Back;
+namespace App\Jobs;
 
-use App\Exports\CourseSessionsAttendanceSummarySheetExport;
+use App\Models\Course;
+use App\Models\Company;
+use App\Models\Invoice;
 use App\Exports\TraineeAttendanceExportByGroup;
-use App\Exports\TraineesWithoutInvoicesExport;
-use App\Http\Controllers\Controller;
-use App\Jobs\ContractsReportJob;
-use App\Jobs\CourseAttendanceReportJob;
-use App\Jobs\GenerateCompanyCertificatesReportJob;
-use App\Models\Back\Audit;
-use App\Models\Back\Company;
-use App\Models\Back\Course;
-use App\Models\Back\Invoice;
-use App\Models\Back\Trainee;
-use App\Models\JobTracker;
-
-use App\Models\User;
-use App\Reports\ContractsReportFactory;
-use App\Reports\CourseAttendanceReportFactory;
 use Carbon\Carbon;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Maatwebsite\Excel\Facades\Excel;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Inertia\Inertia;
-use Excel;
-
-
-
-class ReportsController extends Controller
+class GenerateCompanyCertificatesReportJob implements ShouldQueue
 {
-    public function index()
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    protected $requestData;
+    protected $userId;
+
+    public function __construct(array $requestData, $userId)
     {
-        $this->authorize('view-backoffice-reports');
-        return Inertia::render('Back/Reports/Index');
+        $this->requestData = $requestData;
+        $this->userId = $userId;
     }
 
-    /**
-     * View form for course attendance report.
-     *
-     * @return \Inertia\Response
-     * @throws \Illuminate\Auth\Access\AuthorizationException
-     */
-    public function formCourseAttendanceReport()
+    public function handle()
     {
-        $this->authorize('view-backoffice-reports');
-        return Inertia::render('Back/Reports/CourseAttendance/Index', [
-            'companies' => Company::get(),
-            'courses' => Course::with('instructor')->get(),
-        ]);
-    }
-    public function formCompanyCertificateseReport()
-    {
-        $this->authorize('view-backoffice-reports');
-        return Inertia::render('Back/Reports/Certificates/CompanyCertificates', [
-            'companies' => Company::get(),
-            'courses' =>Course::whereIn('id', function($query) {
-                $query->selectRaw('max(id)')
-                      ->from('courses')
-                      ->groupBy('name_ar');
-            })
-            ->orderBy('created_at', 'desc')
-            ->limit(20)
-            ->get()
-        ]);
-    }
-
-    /**
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\BinaryFileResponse
-     * @throws \Throwable
-     */
-    public function generateCourseAttendanceReport(Request $request)
-    {
-        $request->validate([
-            'course_id' => 'required|exists:courses,id',
-            'company_id' => 'nullable|exists:companies,id',
-            'date_from' => 'required',
-            'date_to' => 'required',
-        ]);
-
-        $tracker = new JobTracker();
-        $tracker->user_id = auth()->user()->id;
-        $tracker->metadata = $request->except('_token');
-        $tracker->reportable_id = null;
-        $tracker->reportable_type = CourseAttendanceReportFactory::class;
-        $tracker->queued_at = now();
-        $tracker->save();
-
-        $tracker = $tracker->refresh();
-
-        CourseAttendanceReportJob::dispatch($tracker);
-
-        return $tracker;
-    }
-
-
-
-    public function generateContractsReport(Request $request)
-    {
-        $request->validate([
-            'date_from' => 'required',
-            'date_to' => 'required',
-        ]);
-
-        $tracker = new JobTracker();
-        $tracker->user_id = auth()->user()->id;
-        $tracker->metadata = $request->except('_token');
-        $tracker->reportable_id = null;
-        $tracker->reportable_type = ContractsReportFactory::class;
-        $tracker->queued_at = now();
-        $tracker->save();
-
-        $tracker = $tracker->refresh();
-
-        ContractsReportJob::dispatch($tracker);
-
-        return $tracker;
-    }
-
-    public function formContractsReport()
-    {
-
-        $this->authorize('view-backoffice-reports');
-        return Inertia::render('Back/Reports/Contracts/Index');
-    }
-
-
-    public function formTraineesWithoutInvoicesReport()
-    {
-        $this->authorize('view-backoffice-reports');
-        return Inertia::render('Back/Reports/TraineesWithoutInvoices/Index');
-    }
-    public function export(Request $request)
-    {
-        $request->validate([
-            'date_from' => 'required',
-            'date_to' => 'required',
-        ]);
-        $data=$request->all();
-
-
-        Audit::create([
-            'event' => 'traineesWithoutInvoices.export.excel',
-            'auditable_id' => auth()->user()->id,
-            'auditable_type' => User::class,
-            'new_values' => [],
-        ]);
-
-        return Excel::download(new TraineesWithoutInvoicesExport($data), now()->format('Y-m-d').'-traineees-without-invoices.xlsx');
-
-    }
-
-
-    public function formCompanyCertificateseGenerateReport(Request $request)
-    {
-        GenerateCompanyCertificatesReportJob::dispatch($request, auth()->id());
-        return response()->json(['message' => 'Report generation started.']);
-        
-        $course = Course::find($request->input('courseId.id'));
+        $course = Course::find($this->requestData['courseId']['id']);
 
         if (!$course) {
-            return response()->json(['error' => 'Course not found'], 404);
+            return;
         }
 
         $courseName = $course->name_ar;
@@ -172,8 +42,7 @@ class ReportsController extends Controller
         ini_set('memory_limit', '512M');
         set_time_limit(300);
 
-        $companyId = $request->input('companyId.id');
-
+        $companyId = $this->requestData['companyId']['id'] ?? null;
         $companyName = '';
 
         foreach ($courses as $course) {
@@ -200,18 +69,14 @@ class ReportsController extends Controller
                 $traineesQuery = $batch->trainee_group->traineesWithTrashed();
 
                 if ($companyId) {
-                    $traineesQuery
-                        ->where('company_id', $companyId);
+                    $traineesQuery->where('company_id', $companyId);
                     $company = Company::find($companyId);
                     if ($company) {
                         $companyName = $company->name_ar;
                     }
                 }
 
-                $traineesQuery
-                    ->with('user')
-                    ->with('company')
-                    ->chunk(100, function ($traineesChunk) use (
+                $traineesQuery->with('user')->with('company')->chunk(100, function ($traineesChunk) use (
                     &$results,
                     $batch,
                     $totalSessionsCount,
@@ -265,7 +130,6 @@ class ReportsController extends Controller
                                 'absent_count' => $absentCount,
                                 'course_name' => $courseName,
                                 'company_name' => $traineeCompanyName,
-
                                 'email' => $trainee->email,
                                 'phone' => $trainee->phone,
                                 'identity_number' => $trainee->identity_number,
@@ -285,12 +149,13 @@ class ReportsController extends Controller
         })->values()->toArray();
 
         $fileName = $companyName ? $companyName . '_attendance_report.xlsx' : 'trainee_attendance_by_course.xlsx';
-        // dd($fileName);
 
-        return Excel::download(new TraineeAttendanceExportByGroup($results), $fileName);
+        Excel::store(new TraineeAttendanceExportByGroup($results), $fileName, 'local');
+
+        // Notify the user
+        $user = User::find($this->userId);
+        if ($user) {
+            $user->notify(new ReportReadyNotification($fileName));
+        }
     }
 }
-
-
-
-
