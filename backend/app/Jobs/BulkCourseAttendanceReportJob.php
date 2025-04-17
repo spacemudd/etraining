@@ -3,6 +3,8 @@
 namespace App\Jobs;
 
 use App\Models\JobTracker;
+use App\Models\User;
+use App\Notifications\ReportReadyNotification;
 use App\Reports\BulkCourseAttendanceReportFactory;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
@@ -57,6 +59,15 @@ class BulkCourseAttendanceReportJob implements ShouldQueue
             ])->toMediaCollection('excel');
 
         $this->tracker->update(['finished_at' => now()]);
+
+        $user = User::find($this->tracker->user_id);
+        if ($user) {
+            $temporaryUrl = $this->tracker->getFirstMedia('excel')->getTemporaryUrl(
+                now()->addDays(3),
+                config('filesystems.disks.s3.url').'/'.$this->tracker->getFirstMedia('excel')->getPath()
+            );
+            $user->notify(new ReportReadyNotification($temporaryUrl));
+        }
 
         Log::info('[BulkCourseAttendanceReportJob] Completed. Tracker ID: '.$this->tracker->id);
     }
