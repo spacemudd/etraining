@@ -15,6 +15,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
 
 class GenerateCompanyCertificatesReportJob implements ShouldQueue
 {
@@ -155,10 +156,12 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
         $filePath = 'reports/' . $fileName;
         Excel::store(new TraineeAttendanceExportByGroup($results), $filePath, 's3');
 
+        $temporaryUrl = Storage::disk('s3')->temporaryUrl($filePath, now()->addMinutes(30));
+
         // Notify the user
         $user = User::find($this->userId);
         if ($user) {
-            $user->notify(new ReportReadyNotification($filePath));
+            $user->notify(new ReportReadyNotification($temporaryUrl));
         }
     }
 }
