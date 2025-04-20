@@ -100,13 +100,15 @@ class CourseBatchSessionAttendanceSheet implements FromView, WithEvents, WithSty
 
         $attendances = AttendanceReportRecord::where('attendance_report_id', $report->id)
             ->whereHas('trainee', function($q) {
-                $q->withTrashed();
+                $q->where('company_id', '!=', NULL);
+                //$q->withTrashed();
                 if ($this->companyId) {
                     $q->where('company_id', $this->companyId);
                 }
             })
             ->with(['trainee' => function($q) {
-                $q->withTrashed();
+                $q->where('company_id', '!=', NULL);
+                //$q->withTrashed();
                 if ($this->companyId) {
                     $q->where('company_id', $this->companyId);
                 }
@@ -115,13 +117,15 @@ class CourseBatchSessionAttendanceSheet implements FromView, WithEvents, WithSty
 
         $absentees = AttendanceReportRecord::where('attendance_report_id', $report->id)
             ->whereHas('trainee', function($q) {
-                $q->withTrashed();
-                if ($this->companyId) {
-                    $q->where('company_id', $this->companyId);
-                }
+                $q->where('company_id', '!=', NULL);
+//                $q->withTrashed();
+//                if ($this->companyId) {
+//                    $q->where('company_id', $this->companyId);
+//                }
             })
             ->with(['trainee' => function($q) {
-                $q->withTrashed();
+                $q->where('company_id', '!=', NULL);
+                //$q->withTrashed();
                 if ($this->companyId) {
                     $q->where('company_id', $this->companyId);
                 }
