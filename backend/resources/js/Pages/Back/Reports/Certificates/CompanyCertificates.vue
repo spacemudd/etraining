@@ -71,14 +71,14 @@ import AppLayout from '@/Layouts/AppLayout'
 import IconNavigate from 'vue-ionicons/dist/ios-arrow-dropright'
 import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
 import BtnLoadingIndicator from "../../../../Components/BtnLoadingIndicator";
-import vSelect from 'vue-select'; // استيراد v-select
-import 'vue-select/dist/vue-select.css'; // استيراد الأنماط الخاصة بـ v-select
+import vSelect from 'vue-select'; 
+import 'vue-select/dist/vue-select.css'; 
 
 
 export default {
     props: [
-        'courses', // بيانات الكورسات من الخادم
-        'companies', // بيانات الشركات من الخادم
+        'courses', 
+        'companies',
     ],
     components: {
         IconNavigate,
@@ -86,7 +86,7 @@ export default {
         JetLabel,
         BreadcrumbContainer,
         BtnLoadingIndicator,
-        vSelect, // تسجيل v-select
+        vSelect, 
     },
     data() {
         return {
@@ -99,30 +99,31 @@ export default {
     },
     methods: {
         generateReport() {
-            // إرسال البيانات إلى السيرفر لإنشاء التقرير
-            axios.post(route('reports.company-certificates.generate'), this.form, {
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                    'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                },
-                responseType: 'blob' 
-            })
-            .then(response => {
-                const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = 'trainee_attendance_by_course.xlsx';
-                link.click();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
+                this.form.processing = true;
+
+                axios.post(route('reports.company-certificates.generate'), this.form)
+                    .then(() => {
+                        this.form.processing = false;
+                        this.$notify({
+                            type: 'success',
+                            title: 'تم إرسال الطلب',
+                            text: 'سيتم تجهيز التقرير وإرساله إليك عند الانتهاء.'
+                        });
+                    })
+                    .catch(error => {
+                        this.form.processing = false;
+                        console.error('Error:', error);
+                        this.$notify({
+                            type: 'error',
+                            title: 'خطأ',
+                            text: 'حدث خطأ أثناء إرسال الطلب. الرجاء المحاولة لاحقًا.'
+                        });
+                    });
+            }
     }
 }
 </script>
 
 <style scoped>
-/* الأنماط الخاصة بـ v-select */
 @import 'vue-select/dist/vue-select.css';
 </style>
