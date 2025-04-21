@@ -154,135 +154,135 @@ class ReportsController extends Controller
         GenerateCompanyCertificatesReportJob::dispatch($request->all(), auth()->id());
         return response()->json(['message' => 'Report generation started.']);
 
-        $course = Course::find($request->input('courseId.id'));
+        // $course = Course::find($request->input('courseId.id'));
 
-        if (!$course) {
-            return response()->json(['error' => 'Course not found'], 404);
-        }
+        // if (!$course) {
+        //     return response()->json(['error' => 'Course not found'], 404);
+        // }
 
-        $courseName = $course->name_ar;
-        $courses = Course::where('name_ar', $courseName)->get();
+        // $courseName = $course->name_ar;
+        // $courses = Course::where('name_ar', $courseName)->get();
 
-        $results = [];
-        ini_set('memory_limit', '512M');
-        set_time_limit(300);
+        // $results = [];
+        // ini_set('memory_limit', '512M');
+        // set_time_limit(300);
 
-        $companyId = $request->input('companyId.id');
+        // $companyId = $request->input('companyId.id');
 
-        $companyName = '';
+        // $companyName = '';
 
-        foreach ($courses as $course) {
-            $batches = $course->batches;
+        // foreach ($courses as $course) {
+        //     $batches = $course->batches;
 
-            foreach ($batches as $batch) {
-                $courseEndDate = Carbon::parse($batch->ends_at);
-                $startOfMonth = $courseEndDate->copy()->startOfMonth();
-                $daysDifference = $courseEndDate->diffInDays($startOfMonth);
+        //     foreach ($batches as $batch) {
+        //         $courseEndDate = Carbon::parse($batch->ends_at);
+        //         $startOfMonth = $courseEndDate->copy()->startOfMonth();
+        //         $daysDifference = $courseEndDate->diffInDays($startOfMonth);
 
-                if ($daysDifference >= 15) {
-                    $targetMonth = $courseEndDate->month;
-                    $targetYear = $courseEndDate->year;
-                } else {
-                    $targetMonth = $courseEndDate->subMonth()->month;
-                    $targetYear = $courseEndDate->year;
-                }
+        //         if ($daysDifference >= 15) {
+        //             $targetMonth = $courseEndDate->month;
+        //             $targetYear = $courseEndDate->year;
+        //         } else {
+        //             $targetMonth = $courseEndDate->subMonth()->month;
+        //             $targetYear = $courseEndDate->year;
+        //         }
 
-                $startOfTargetMonth = Carbon::createFromDate($targetYear, $targetMonth, 1)->startOfMonth();
-                $endOfTargetMonth = Carbon::createFromDate($targetYear, $targetMonth, 1)->endOfMonth();
+        //         $startOfTargetMonth = Carbon::createFromDate($targetYear, $targetMonth, 1)->startOfMonth();
+        //         $endOfTargetMonth = Carbon::createFromDate($targetYear, $targetMonth, 1)->endOfMonth();
 
-                $totalSessionsCount = $batch->course_batch_sessions()->count();
+        //         $totalSessionsCount = $batch->course_batch_sessions()->count();
 
-                $traineesQuery = $batch->trainee_group->traineesWithTrashed();
+        //         $traineesQuery = $batch->trainee_group->traineesWithTrashed();
 
-                if ($companyId) {
-                    $traineesQuery
-                        ->where('company_id', $companyId);
-                    $company = Company::find($companyId);
-                    if ($company) {
-                        $companyName = $company->name_ar;
-                    }
-                }
+        //         if ($companyId) {
+        //             $traineesQuery
+        //                 ->where('company_id', $companyId);
+        //             $company = Company::find($companyId);
+        //             if ($company) {
+        //                 $companyName = $company->name_ar;
+        //             }
+        //         }
 
-                $traineesQuery
-                    ->with('user')
-                    ->with('company')
-                    ->chunk(100, function ($traineesChunk) use (
-                    &$results,
-                    $batch,
-                    $totalSessionsCount,
-                    $startOfTargetMonth,
-                    $endOfTargetMonth,
-                    $courseName,
-                    $companyName,
-                    $companyId
-                ) {
-                    foreach ($traineesChunk as $trainee) {
-                        $attendanceRecords = $trainee->attendanceReportRecords()
-                            ->where('course_batch_id', $batch->id)
-                            ->get()
-                            ->unique('course_batch_session_id');
+        //         $traineesQuery
+        //             ->with('user')
+        //             ->with('company')
+        //             ->chunk(100, function ($traineesChunk) use (
+        //             &$results,
+        //             $batch,
+        //             $totalSessionsCount,
+        //             $startOfTargetMonth,
+        //             $endOfTargetMonth,
+        //             $courseName,
+        //             $companyName,
+        //             $companyId
+        //         ) {
+        //             foreach ($traineesChunk as $trainee) {
+        //                 $attendanceRecords = $trainee->attendanceReportRecords()
+        //                     ->where('course_batch_id', $batch->id)
+        //                     ->get()
+        //                     ->unique('course_batch_session_id');
 
-                        $presentCount = $attendanceRecords->whereIn('status', [1, 2, 3])->count();
-                        $absentCount = $attendanceRecords->where('status', 0)->count();
+        //                 $presentCount = $attendanceRecords->whereIn('status', [1, 2, 3])->count();
+        //                 $absentCount = $attendanceRecords->where('status', 0)->count();
 
-                        $attendancePercentage = $totalSessionsCount > 0 ? ($presentCount / $totalSessionsCount) * 100 : 0;
+        //                 $attendancePercentage = $totalSessionsCount > 0 ? ($presentCount / $totalSessionsCount) * 100 : 0;
 
-                        $invoiceQuery = Invoice::where('trainee_id', $trainee->id);
+        //                 $invoiceQuery = Invoice::where('trainee_id', $trainee->id);
 
-                        if ($companyId) {
-                            $invoiceQuery->where('company_id', $companyId);
-                        }
+        //                 if ($companyId) {
+        //                     $invoiceQuery->where('company_id', $companyId);
+        //                 }
 
-                        $invoice = $invoiceQuery->where(function ($query) use ($startOfTargetMonth, $endOfTargetMonth) {
-                            $query->whereBetween('from_date', [$startOfTargetMonth, $endOfTargetMonth])
-                                ->orWhereBetween('to_date', [$startOfTargetMonth, $endOfTargetMonth])
-                                ->orWhere(function ($query) use ($startOfTargetMonth, $endOfTargetMonth) {
-                                    $query->where('from_date', '<=', $startOfTargetMonth)
-                                        ->where('to_date', '>=', $endOfTargetMonth);
-                                });
-                        })->first();
+        //                 $invoice = $invoiceQuery->where(function ($query) use ($startOfTargetMonth, $endOfTargetMonth) {
+        //                     $query->whereBetween('from_date', [$startOfTargetMonth, $endOfTargetMonth])
+        //                         ->orWhereBetween('to_date', [$startOfTargetMonth, $endOfTargetMonth])
+        //                         ->orWhere(function ($query) use ($startOfTargetMonth, $endOfTargetMonth) {
+        //                             $query->where('from_date', '<=', $startOfTargetMonth)
+        //                                 ->where('to_date', '>=', $endOfTargetMonth);
+        //                         });
+        //                 })->first();
 
-                        $invoiceStatus = $invoice ? $invoice->status_formatted : 'لا توجد فاتورة';
-                        $paidDate = $invoice ? $invoice->paid_at : '';
-                        $invoiceFromDate = $invoice ? $invoice->from_date : '';
-                        $invoiceToDate = $invoice ? $invoice->to_date : '';
+        //                 $invoiceStatus = $invoice ? $invoice->status_formatted : 'لا توجد فاتورة';
+        //                 $paidDate = $invoice ? $invoice->paid_at : '';
+        //                 $invoiceFromDate = $invoice ? $invoice->from_date : '';
+        //                 $invoiceToDate = $invoice ? $invoice->to_date : '';
 
-                        $traineeCompanyName = $trainee->company ? $trainee->company->name_ar : 'غير مربوط بشركة';
+        //                 $traineeCompanyName = $trainee->company ? $trainee->company->name_ar : 'غير مربوط بشركة';
 
-                        if (isset($trainee->name)) {
-                            $results[] = [
-                                'paid_date' => $paidDate,
-                                'invoice_to_date' => $invoiceToDate,
-                                'invoice_from_date' => $invoiceFromDate,
-                                'invoice_status' => $invoiceStatus,
-                                'attendance_percentage' => round($attendancePercentage, 2) . ' %',
-                                'present_count' => $presentCount,
-                                'absent_count' => $absentCount,
-                                'course_name' => $courseName,
-                                'company_name' => $traineeCompanyName,
+        //                 if (isset($trainee->name)) {
+        //                     $results[] = [
+        //                         'paid_date' => $paidDate,
+        //                         'invoice_to_date' => $invoiceToDate,
+        //                         'invoice_from_date' => $invoiceFromDate,
+        //                         'invoice_status' => $invoiceStatus,
+        //                         'attendance_percentage' => round($attendancePercentage, 2) . ' %',
+        //                         'present_count' => $presentCount,
+        //                         'absent_count' => $absentCount,
+        //                         'course_name' => $courseName,
+        //                         'company_name' => $traineeCompanyName,
 
-                                'email' => $trainee->email,
-                                'phone' => $trainee->phone,
-                                'identity_number' => $trainee->identity_number,
-                                'trainee_name' => $trainee->name,
-                                'deleted_at' => $trainee->deleted_at,
-                                'last_login_at' => optional($trainee->user)->last_login_at,
-                            ];
-                        }
-                    }
-                });
-            }
-        }
+        //                         'email' => $trainee->email,
+        //                         'phone' => $trainee->phone,
+        //                         'identity_number' => $trainee->identity_number,
+        //                         'trainee_name' => $trainee->name,
+        //                         'deleted_at' => $trainee->deleted_at,
+        //                         'last_login_at' => optional($trainee->user)->last_login_at,
+        //                     ];
+        //                 }
+        //             }
+        //         });
+        //     }
+        // }
 
-        $results = collect($results)->sortByDesc(function ($trainee) {
-            $attendanceNumeric = floatval(str_replace(' %', '', $trainee['attendance_percentage']));
-            return ($attendanceNumeric >= 50 && $trainee['invoice_status'] == 'مدفوع') ? 1 : 0;
-        })->values()->toArray();
+        // $results = collect($results)->sortByDesc(function ($trainee) {
+        //     $attendanceNumeric = floatval(str_replace(' %', '', $trainee['attendance_percentage']));
+        //     return ($attendanceNumeric >= 50 && $trainee['invoice_status'] == 'مدفوع') ? 1 : 0;
+        // })->values()->toArray();
 
-        $fileName = $companyName ? $companyName . '_attendance_report.xlsx' : 'trainee_attendance_by_course.xlsx';
-        // dd($fileName);
+        // $fileName = $companyName ? $companyName . '_attendance_report.xlsx' : 'trainee_attendance_by_course.xlsx';
+        // // dd($fileName);
 
-        return Excel::download(new TraineeAttendanceExportByGroup($results), $fileName);
+        // return Excel::download(new TraineeAttendanceExportByGroup($results), $fileName);
     }
 
     public function formBulkCourseAttendanceReport()
