@@ -32,6 +32,7 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
                 'email'=> $trainee->email,
                 'phone' => $trainee->phone,
                 'company' => optional($trainee->company)->name_ar,
+                'last_login_at'=>$trainee->user->last_login_at,
             ];
         });
    
@@ -44,11 +45,13 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
-            'الشركة',
-            'الجوال',
-            'الإيميل',
-            'الهوية',
             'الإسم',
+            'الهوية',
+            'الإيميل',
+            'الجوال',
+            'الشركة',
+            'تاريخ آخر دخول',
+
         ];
     }
 }
