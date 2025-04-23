@@ -56,31 +56,21 @@ class GosiService
     public static function getEmployeeData(GosiEmployee $gosiEmployee): array
     {
         $service = new GosiService();
-    
+
         if (auth()->user()->email != 'sara@hadaf-hq.com') {
             return false;
         }
-    
+
         try {
             $response = $service->client->get(config('services.masdr.endpoint').'/mofeed/employment/v1/employee/employment-status/'.$gosiEmployee->getNinOrIqama(), [
                 'cert' => storage_path('masdrcertificate/certificate.crt'),
                 'ssl_key' => storage_path('masdrcertificate/certificate.key'),
             ]);
-    
-            $data = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-    
-            dd($data); 
-    
-            return $data;
+            return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         } catch (RequestException $e) {
             if ($e->hasResponse() && $e->getResponse()->getStatusCode() == '400') {
-                $error = json_decode($e->getResponse()->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-                dd($error); 
-                return $error;
+                return json_decode($e->getResponse()->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
             }
-    
-            dd($e->getMessage());
         }
     }
-    
 }
