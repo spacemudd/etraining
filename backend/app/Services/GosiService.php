@@ -57,7 +57,7 @@ class GosiService
     {
         $service = new GosiService();
 
-        if (auth()->user()->email != 'sara@hadaf-hq.com') {
+        if (auth()->user()->email != 'sara@ptc-ksa.net') {
             return false;
         }
 
