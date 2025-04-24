@@ -56,6 +56,7 @@ class GosiService
     public static function getEmployeeData(GosiEmployee $gosiEmployee): array
     {
         $service = new GosiService();
+        return 'false';
 
         if (auth()->user()->email != 'sara@ptc-ksa.net') {
             return false;
