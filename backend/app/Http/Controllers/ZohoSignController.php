@@ -25,12 +25,12 @@ class ZohoSignController extends Controller
     private function getAccessToken()
     {
         $accessToken = \Cache::get('zoho_access_token');
-    
+
         if ($accessToken) {
             Log::info("access token is {$accessToken}");
             return $accessToken;
         }
-    
+
         $response = Http::asForm()->post("https://accounts.zoho.sa/oauth/v2/token", [
             "refresh_token" => $this->refresh_token,
             "client_id" => $this->client_id,
@@ -38,31 +38,31 @@ class ZohoSignController extends Controller
             "redirect_uri" => $this->redirect_uri,
             "grant_type" => "refresh_token",
         ]);
-    
+
         if ($response->failed()) {
             Log::error("Failed to get access token: " . $response->body());
-            return null; 
+            return null;
         }
-    
+
         $accessToken = $response->json()['access_token'] ?? null;
-    
+
         if (!$accessToken) {
             Log::error("Access token not found in Zoho response.");
-            return null; 
+            return null;
         }
-    
+
         \Cache::put('zoho_access_token', $accessToken, now()->addMinutes(55));
 
 
         Log::info("access token is {$accessToken}");
         return $accessToken;
     }
-    
+
 
     public function sendContract(Request $request)
 {
     Log::info("start sending document");
-    
+
     $accessToken = $this->getAccessToken();
     if (!$accessToken) {
         Log::error("error while getting access token");
@@ -70,12 +70,12 @@ class ZohoSignController extends Controller
     }
     Log::info($accessToken);
 
-    $templateId = "1094000000056767"; 
+    $templateId = "1094000000056767";
 
     $payload = [
         "templates" => [
            "default_fields" => [
-                "trainee_name" =>$request->recipient_name,  
+                "trainee_name" =>$request->recipient_name,
                 "trainee_address" =>  $request->recipient_email,
             ],
             "notes" => "",
@@ -148,12 +148,12 @@ public function sendEmbeddedContract(Request $request)
 
     Log::info("access token successfully generated");
 
-    $templateId = "1094000000175325"; 
-    
+    $templateId = "1094000000175325";
+
     $payload = [
         "templates" => [
             "default_fields" => [
-                "trainee_name" => $recipientName,  
+                "trainee_name" => $recipientName,
                 "trainee_email" => $recipientEmail,
                  "trainee_phone" => $trainee->phone,
                  "trainee_second_phone" =>$trainee->phone_additional,
@@ -201,7 +201,7 @@ public function sendEmbeddedContract(Request $request)
         // $trainee->update(['zoho_contract_id' => $responseData['requests']['request_id']]);
 
         if (!empty($responseData['requests']) && isset($responseData['requests']['request_id'])) {
-         
+
             $requestId = $responseData['requests']['request_id'];
 
             if (!empty($responseData['requests']['actions']) && isset($responseData['requests']['actions'][0]['action_id'])) {
@@ -210,13 +210,14 @@ public function sendEmbeddedContract(Request $request)
                 $embedTokenResponse = Http::withHeaders([
                     "Authorization" => "Zoho-oauthtoken " . $accessToken,
                 ])->post("https://sign.zoho.sa/api/v1/requests/{$requestId}/actions/{$actionId}/embedtoken", [
-        
+
                     'host' => 'http://127.0.0.1:8000'
                 ]);
 
                 if ($embedTokenResponse->successful()) {
                     $trainee->update(['zoho_contract_id' => $responseData['requests']['request_id']]);
                     $signingUrl = $embedTokenResponse->json()['sign_url'];
+                    Log::info("Embed token successfully generated", ['response' => $response->json()]);
                     return response()->json(['sign_url' => $signingUrl]);
                 } else {
                     Log::error("error while getting embedded document URL", [
