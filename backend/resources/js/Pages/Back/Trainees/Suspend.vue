@@ -39,7 +39,7 @@
                         <option value="قائمة سوداء">قائمة سوداء</option>
                         <option value="المباشرة في مقر الشركة">المباشرة في مقر الشركة</option>
                         <option value="الوفاة">الوفاة</option>
-                        <option value="الوفاة">مصدر لها شهادة</option>
+                        <option value="مصدر لها شهادة">مصدر لها شهادة</option>
 
                     </select>
                     <button @click="suspendTrainee" class="mt-5 items-center justify-start float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400">
