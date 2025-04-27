@@ -70,11 +70,16 @@ export default {
             axios.post(route('back.gosi.show'), {ninOrIqama: this.ninOrIqama})
                 .then(response => {
                     this.data = response.data;
+                    this.$emit('fetch-success');
                     this.$wait.end('LOADING_GOSI')
                 })
                 .catch(error => {
-                    this.$wait.end('LOADING_GOSI')
-                    console.log(error);
+                    this.$wait.end('LOADING_GOSI');
+                    if (error.response && error.response.data && error.response.data.message === 'Monthly request limit reached.') {
+                        alert('Monthly request limit reached.');
+                    } else {
+                        console.log(error);
+                    }
                 })
         }
     },

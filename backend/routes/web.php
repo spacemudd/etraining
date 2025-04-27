@@ -13,8 +13,7 @@ use App\Models\Back\TestExportController;
 use App\Models\Back\Trainee;
 
 
-
-
+use App\Models\RequestCounter;
 use App\Models\User;
 use App\Services\GosiService;
 use Illuminate\Mail\Markdown;
@@ -482,6 +481,10 @@ Route::get('/back/media/{media_id}', [\App\Http\Controllers\MediaController::cla
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
+    Route::get('/lookup/masdr/request-counter', function () {
+        $requestCounter = optional(RequestCounter::where('month', now()->format('Y-m')))->first();
+        return response()->json(['requestCounter' => $requestCounter]);
+    })->name('back.gosi.request-counter');
     Route::post('masdr', [\App\Http\Controllers\Back\GosiController::class, 'show'])->name('back.gosi.show');
     Route::get('lookup/masdr', [\App\Http\Controllers\Back\TraineesController::class, 'gosi'])->name('back.trainees.gosi');
 
