@@ -21,6 +21,7 @@ use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\InboxMessage;
 use App\Models\MaritalStatus;
+use App\Models\RequestCounter;
 use App\Models\User;
 use App\Notifications\CustomTraineeNotification;
 use App\Notifications\TraineeApplicationApprovedNotification;
@@ -132,7 +133,7 @@ class TraineesController extends Controller
         //zoho check contarct status
         $zohoController = new ZohoSignController();
         $response = $zohoController->adminCheckContractStatusForTrainee($trainee);
-        
+
 
 
 
@@ -201,7 +202,8 @@ class TraineesController extends Controller
      */
     public function gosi()
     {
-        return Inertia::render('Back/Trainees/gosi');
+        $requestCounter = optional(RequestCounter::where('month', now()->format('Y-m')))->first();
+        return Inertia::render('Back/Trainees/gosi', compact('requestCounter'));
     }
 
     /**

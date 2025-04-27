@@ -3,9 +3,12 @@
 namespace App\Services;
 
 use App\Classes\GosiEmployee;
+use App\Models\GosiEmployeeData;
+use App\Models\RequestCounter;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\HandlerStack;
+use Illuminate\Support\Facades\DB;
 use kamermans\OAuth2\GrantType\ClientCredentials;
 use kamermans\OAuth2\OAuth2Middleware;
 
@@ -55,23 +58,49 @@ class GosiService
      */
     public static function getEmployeeData(GosiEmployee $gosiEmployee): array
     {
-        $service = new GosiService();
-        return 'false';
+        $ninOrIqama = $gosiEmployee->getNinOrIqama();
 
-        if (auth()->user()->email != 'sara@ptc-ksa.net') {
-            return false;
+        $existingData = GosiEmployeeData::where('nin_or_iqama', $ninOrIqama)->first();
+
+        if ($existingData && $existingData->updated_at->gt(now()->subDays(30))) {
+            return json_decode($existingData->data, true);
         }
 
+        $currentMonth = now()->format('Y-m');
+        $requestCount = RequestCounter::firstOrCreate(
+            ['month' => $currentMonth],
+            ['count' => 0]
+        );
+
+        if ($requestCount->count >= 600) {
+            throw new \Exception('Monthly request limit reached.');
+        }
+
+        $service = new GosiService();
+
         try {
-            $response = $service->client->get(config('services.masdr.endpoint').'/mofeed/employment/v1/employee/employment-status/'.$gosiEmployee->getNinOrIqama(), [
-                'cert' => storage_path('masdrcertificate/certificate.crt'),
-                'ssl_key' => storage_path('masdrcertificate/certificate.key'),
-            ]);
-            return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+//            $response = $service->client->get(config('services.masdr.endpoint').'/mofeed/employment/v1/employee/employment-status/'.$ninOrIqama, [
+//                'cert' => storage_path('masdrcertificate/certificate.crt'),
+//                'ssl_key' => storage_path('masdrcertificate/certificate.key'),
+//            ]);
+
+            //$data = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+            $data = ['msg' => 'hello'];
+            GosiEmployeeData::updateOrCreate(
+                ['nin_or_iqama' => $ninOrIqama],
+                ['data' => json_encode($data, JSON_THROW_ON_ERROR)]
+            );
+
+
+            $requestCount->increment('count');
+
+            return $data;
         } catch (RequestException $e) {
             if ($e->hasResponse() && $e->getResponse()->getStatusCode() == '400') {
                 return json_decode($e->getResponse()->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
             }
+            throw $e;
         }
     }
 }
