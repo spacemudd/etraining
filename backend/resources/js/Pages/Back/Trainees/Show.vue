@@ -263,7 +263,7 @@
           </inertia-link>
 
           <div>
-                <!-- <inertia-link
+                <inertia-link
                     v-if="!trainee.must_sign"
                     v-can="'block-trainee'"
                     :href="
@@ -272,7 +272,7 @@
                     class="items-center justify-start text-left float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right"
                   >
                     {{ $t("words.send-contract") }}
-              </inertia-link> -->
+              </inertia-link>
 
                  <div
                     v-if="trainee.must_sign && (trainee.zoho_contract_status !== 'completed')"
