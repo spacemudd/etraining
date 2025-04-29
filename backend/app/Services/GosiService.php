@@ -72,7 +72,7 @@ class GosiService
             ['count' => 0]
         );
 
-        if ($requestCount->count >= 600) {
+        if ($requestCount->count >= 610) {
             throw new \Exception('Monthly request limit reached.');
         }
 
