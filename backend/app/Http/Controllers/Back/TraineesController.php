@@ -202,7 +202,7 @@ class TraineesController extends Controller
      */
     public function gosi()
     {
-        $requestCounter = optional(RequestCounter::where('month', now()->format('Y-m')))->first();
+        $requestCounter = optional(RequestCounter::where('month', now()->format('Y-m')))->first() ?? 0;
         return Inertia::render('Back/Trainees/gosi', compact('requestCounter'));
     }
 

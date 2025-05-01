@@ -49,6 +49,7 @@ class Kernel extends ConsoleKernel
             $schedule->command('backup:run')->daily()->at('01:30')->onOneServer();
             $schedule->command('etrianing:coursereminder')->daily()->at('05:00')->onOneServer();
             $schedule->command('etraining:company-trainee-snapshot')->daily()->at('23:00')->onOneServer();
+            $schedule->command('masdr:gosi-usage-report')->weekly()->sundays()->at('08:00')->onOneServer();
         }
     }
 

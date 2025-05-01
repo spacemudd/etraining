@@ -523,6 +523,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::prefix('back')->middleware('redirect-trainees-to-dashboard')->name('back.')->group(function() {
         Route::get('/settings', [\App\Http\Controllers\Back\SettingsController::class, 'index'])->name('settings');
 
+        // settings
+        Route::put('/settings/app', [\App\Http\Controllers\Back\AppSettingsController::class, 'update'])->name('settings.app.update');
+        Route::get('/settings/app', [\App\Http\Controllers\Back\AppSettingsController::class, 'index'])->name('settings.app.index');
+
         //recruitment
         Route::get('/settings/recruitment-companies', [\App\Http\Controllers\Back\RecruitmentCompaniesController::class, 'index'])->name('settings.recruitment-companies.index');
         Route::get('/settings/recruitment-companies/create', [\App\Http\Controllers\Back\RecruitmentCompaniesController::class, 'create'])->name('settings.recruitment-companies.create');

@@ -687,4 +687,6 @@ return [
     'log' => 'Log',
     'masdr' => 'Masdr',
     'logs' => 'Logs',
+    'system' => 'System',
+    'app-settings' => 'App settings',
 ];

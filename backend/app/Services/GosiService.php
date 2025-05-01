@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Classes\GosiEmployee;
 use App\Models\GosiEmployeeData;
+use App\Models\AppSetting;
 use App\Models\RequestCounter;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
@@ -72,7 +73,10 @@ class GosiService
             ['count' => 0]
         );
 
-        if ($requestCount->count >= 600) {
+        $maxMonthlyLimit = cache()->remember('gosi_monthly_requests_limit', 600, function () {
+            return (int) (AppSetting::where('name', 'gosi_monthly_requests')->value('value') ?? 600);
+        });
+        if ($requestCount->count >= $maxMonthlyLimit) {
             throw new \Exception('Monthly request limit reached.');
         }
 

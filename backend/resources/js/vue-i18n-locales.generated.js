@@ -724,7 +724,9 @@ export default {
             "current_month_requests": "طلبات الشهر الحالي",
             "log": "سجل",
             "masdr": "مصدر",
-            "logs": "السجل"
+            "logs": "السجل",
+            "system": "النظام",
+            "app-settings": "اعدادات النظام"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1586,7 +1588,9 @@ export default {
             "current_month_requests": "Current month requests",
             "log": "Log",
             "masdr": "Masdr",
-            "logs": "Logs"
+            "logs": "Logs",
+            "system": "System",
+            "app-settings": "App settings"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",
