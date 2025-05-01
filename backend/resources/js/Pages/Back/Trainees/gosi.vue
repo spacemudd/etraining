@@ -14,6 +14,12 @@
                     <p :class="['text-gray-700 rtl:text-right', { 'bg-green-100 p-2 rounded': counterUpdated }]" dir="ltr">
                         {{ requestCounter ? requestCounter.count : 0 }} / 600
                     </p>
+                    <inertia-link
+                        :href="route('back.trainees.gosi.log')"
+                        class="mt-2 inline-block px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition"
+                    >
+                        {{ $t('words.log') }}
+                    </inertia-link>
                 </div>
             </div>
 

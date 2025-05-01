@@ -1270,6 +1270,15 @@ class TraineesController extends Controller
         }
         $trainee->save();
         return redirect()->back();
+    }
 
+    public function gosiLog()
+    {
+        $logs = \App\Models\GosiEmployeeData::orderBy('updated_at', 'desc')
+            ->paginate(5);
+
+        return Inertia::render('Back/Trainees/GosiLog/Index', [
+            'logs' => $logs,
+        ]);
     }
 }

@@ -684,4 +684,7 @@ return [
     'gosi-deleted' => 'GOSI deleted',
     'attendance-bulk-courses' => 'Attendance report (bulk)',
     'current_month_requests' => 'Current month requests',
+    'log' => 'Log',
+    'masdr' => 'Masdr',
+    'logs' => 'Logs',
 ];

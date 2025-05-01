@@ -721,7 +721,10 @@ export default {
             "contract-sent": "تم إرسال العقد",
             "gosi-deleted": "محذوف من التأمينات",
             "attendance-bulk-courses": "تقرير الحضور (مجموعة)",
-            "current_month_requests": "طلبات الشهر الحالي"
+            "current_month_requests": "طلبات الشهر الحالي",
+            "log": "سجل",
+            "masdr": "مصدر",
+            "logs": "السجل"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1580,7 +1583,10 @@ export default {
             "view-contract": "View Contract",
             "gosi-deleted": "GOSI deleted",
             "attendance-bulk-courses": "Attendance report (bulk)",
-            "current_month_requests": "Current month requests"
+            "current_month_requests": "Current month requests",
+            "log": "Log",
+            "masdr": "Masdr",
+            "logs": "Logs"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

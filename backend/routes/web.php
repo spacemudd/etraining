@@ -486,6 +486,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         return response()->json(['requestCounter' => $requestCounter]);
     })->name('back.gosi.request-counter');
     Route::post('masdr', [\App\Http\Controllers\Back\GosiController::class, 'show'])->name('back.gosi.show');
+    Route::get('masdr/log', [\App\Http\Controllers\Back\TraineesController::class, 'gosiLog'])->name('back.trainees.gosi.log');
     Route::get('lookup/masdr', [\App\Http\Controllers\Back\TraineesController::class, 'gosi'])->name('back.trainees.gosi');
 
     // For everyone

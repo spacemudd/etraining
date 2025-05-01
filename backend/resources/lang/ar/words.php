@@ -698,4 +698,7 @@ return [
     'gosi-deleted' => 'محذوف من التأمينات',
     'attendance-bulk-courses' => 'تقرير الحضور (مجموعة)',
     'current_month_requests' => 'طلبات الشهر الحالي',
+    'log' => 'سجل',
+    'masdr' => 'مصدر',
+    'logs' => 'السجل',
 ];
