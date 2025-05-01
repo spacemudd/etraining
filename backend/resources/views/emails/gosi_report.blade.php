@@ -21,7 +21,7 @@
 
     <div class="section">
         <p style="text-align: right"><strong>عدد الطلبات هذا الشهر ({{ $currentMonth }}):</strong> {{ $requestsUsed }} طلب</p>
-        <p style="text-align: right"><strong>التكلفة حتى الآن:</strong> SAR {{ $costSoFarFormatted }}</p>
+        <p style="text-align: right"><strong>التكلفة حتى الآن:</strong> ر.س {{ $costSoFarFormatted }}</p>
         <p style="text-align: right"><strong>المتبقي لهذا الشهر:</strong> {{ $requestsRemaining }} طلب</p>
     </div>
 
