@@ -57,7 +57,7 @@ export default {
         BtnLoadingIndicator
     },
     name: "GosiContainer",
-    props: ['ninOrIqama'],
+    props: ['ninOrIqama', 'reasons'],
     data() {
         return {
             loading: false,
@@ -67,7 +67,10 @@ export default {
     methods: {
         fetch() {
             this.$wait.start('LOADING_GOSI')
-            axios.post(route('back.gosi.show'), {ninOrIqama: this.ninOrIqama})
+            axios.post(route('back.gosi.show'), {
+                ninOrIqama: this.ninOrIqama,
+                ...this.reasons,
+            })
                 .then(response => {
                     this.data = response.data;
                     this.$emit('fetch-success');
@@ -83,6 +86,15 @@ export default {
                 })
         }
     },
+    watch: {
+        reasons: {
+            handler(newVal) {
+                // Optionally, you can re-fetch or update internal state
+                // this.fetch(); // Uncomment if needed
+            },
+            deep: true,
+        }
+    }
 }
 </script>
 

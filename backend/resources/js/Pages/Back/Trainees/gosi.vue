@@ -2,7 +2,7 @@
     <app-layout>
         <div class="container px-6 mx-auto grid pt-6">
             <breadcrumb-container
-            :crumbs="[
+                :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
                     {title: 'view-gosi', link: route('back.trainees.gosi')},
                 ]"
@@ -34,11 +34,53 @@
             </div>
 
             <div class="col-span-6 sm:col-span-2">
-                <h6 class="my-2">{{ $t('words.identity_number')}}</h6>
-                <jet-input id="id" v-model="id_number" />
+                <div class="flex gap-5">
+                    <div>
+                        <h6 class="my-2">{{ $t('words.identity_number')}}</h6>
+                        <jet-input id="id" v-model="id_number" />
+                    </div>
+
+                    <div>
+                        <h6 class="my-2">أسباب التحقق</h6>
+                        <div class="space-y-2">
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" v-model="reasons.reason_employment_office" class="form-checkbox mx-2">
+                                <span>مكتب التوظيف</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" v-model="reasons.reason_collection" class="form-checkbox mx-2">
+                                <span>التحصيل</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" v-model="reasons.reason_trainee_affairs" class="form-checkbox mx-2">
+                                <span>شؤون المتدربات</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" v-model="reasons.reason_sales" class="form-checkbox mx-2">
+                                <span>المبيعات</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" v-model="reasons.reason_other" class="form-checkbox mx-2">
+                                <span>أخرى</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-span-6 sm:col-span-2 mt-4">
+
             </div>
             <div class="my-5" v-can="'view-gosi'">
-                <gosi-container :nin-or-iqama="id_number" @fetch-success="refreshCounter"></gosi-container>
+                <div>
+                    <p v-if="!isReasonSelected" class="text-red-600 text-sm mb-2">يرجى اختيار سبب واحد على الأقل للتحقق</p>
+                    <gosi-container
+                        v-if="isReasonSelected"
+                        :nin-or-iqama="id_number"
+                        :reasons="reasons"
+                        @fetch-success="refreshCounter"
+                    ></gosi-container>
+                </div>
             </div>
         </div>
     </app-layout>
@@ -65,10 +107,22 @@ export default {
             requestCounter: null,
             counterUpdated: false,
             calcRequests: 0,
+            reasons: {
+                reason_employment_office: false,
+                reason_collection: false,
+                reason_trainee_affairs: false,
+                reason_sales: false,
+                reason_other: false,
+            },
         }
     },
     created() {
         this.requestCounter = this.$page.props.requestCounter ?? null;
+    },
+    computed: {
+        isReasonSelected() {
+            return Object.values(this.reasons).some(v => v);
+        },
     },
     methods: {
         async refreshCounter() {

@@ -1277,8 +1277,27 @@ class TraineesController extends Controller
         $logs = \App\Models\GosiEmployeeData::orderBy('updated_at', 'desc')
             ->paginate(5);
 
+        $startOfWeek = now()->startOfWeek();
+        $endOfWeek = now()->endOfWeek();
+
+        $weeklyReasonStats = \App\Models\GosiEmployeeData::whereBetween('updated_at', [$startOfWeek, $endOfWeek])->get()->reduce(function ($carry, $item) {
+            $carry['مكتب التوظيف'] += $item->reason_employment_office ? 1 : 0;
+            $carry['التحصيل'] += $item->reason_collection ? 1 : 0;
+            $carry['شؤون المتدربات'] += $item->reason_trainee_affairs ? 1 : 0;
+            $carry['المبيعات'] += $item->reason_sales ? 1 : 0;
+            $carry['أخرى'] += $item->reason_other ? 1 : 0;
+            return $carry;
+        }, [
+            'مكتب التوظيف' => 0,
+            'التحصيل' => 0,
+            'شؤون المتدربات' => 0,
+            'المبيعات' => 0,
+            'أخرى' => 0,
+        ]);
+
         return Inertia::render('Back/Trainees/GosiLog/Index', [
             'logs' => $logs,
+            'weekly_reason_stats' => $weeklyReasonStats,
         ]);
     }
 }

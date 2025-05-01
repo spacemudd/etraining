@@ -83,16 +83,19 @@ class GosiService
         $service = new GosiService();
 
         try {
-            $response = $service->client->get(config('services.masdr.endpoint').'/mofeed/employment/v1/employee/employment-status/'.$ninOrIqama, [
-                'cert' => storage_path('masdrcertificate/certificate.crt'),
-                'ssl_key' => storage_path('masdrcertificate/certificate.key'),
-            ]);
+//            $response = $service->client->get(config('services.masdr.endpoint').'/mofeed/employment/v1/employee/employment-status/'.$ninOrIqama, [
+//                'cert' => storage_path('masdrcertificate/certificate.crt'),
+//                'ssl_key' => storage_path('masdrcertificate/certificate.key'),
+//            ]);
 
-            $data = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+            //$data = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+            $data = ["hello" => "world"];
 
             GosiEmployeeData::updateOrCreate(
                 ['nin_or_iqama' => $ninOrIqama],
-                ['data' => json_encode($data, JSON_THROW_ON_ERROR)]
+                array_merge([
+                    'data' => json_encode($data, JSON_THROW_ON_ERROR)
+                ], $gosiEmployee->getReasons())
             );
 
             $requestCount->increment('count');

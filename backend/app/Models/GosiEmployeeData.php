@@ -16,6 +16,11 @@ class GosiEmployeeData extends Model implements \OwenIt\Auditing\Contracts\Audit
     protected $fillable = [
         'nin_or_iqama',
         'data',
+        'reason_employment_office',
+        'reason_collection',
+        'reason_trainee_affairs',
+        'reason_sales',
+        'reason_other',
     ];
 
     protected $casts = [

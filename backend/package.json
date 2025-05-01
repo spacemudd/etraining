@@ -36,6 +36,7 @@
         "@riophae/vue-treeselect": "^0.4.0",
         "@syncfusion/ej2-vue-calendars": "^18.4.31",
         "@zoomus/websdk": "^2.5.0",
+        "chart.js": "^3.9.1",
         "cldr-data": "^36.0.0",
         "font-awesome": "^4.7.0",
         "intl-tel-input": "^17.0.12",

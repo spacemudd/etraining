@@ -14,14 +14,17 @@ class GosiEmployee
 
     private array $error = [];
 
-    public function __construct(string $ninOrIqama)
+    private array $reasons = [];
+
+    public function __construct(string $ninOrIqama, array $reasons = [])
     {
         $this->ninOrIqama = $ninOrIqama;
+        $this->reasons = $reasons;
     }
 
-    public static function new(string $ninOrIqama)
+    public static function new(string $ninOrIqama, array $reasons = [])
     {
-        return new GosiEmployee($ninOrIqama);
+        return new GosiEmployee($ninOrIqama, $reasons);
     }
 
     /**
@@ -41,6 +44,7 @@ class GosiEmployee
             'url' => url()->current(),
             'new_values' => [
                 'ninOrIqama' => $this->ninOrIqama,
+                'reasons' => $this->reasons,
             ],
         ]);
 
@@ -58,6 +62,11 @@ class GosiEmployee
     public function getNinOrIqama()
     {
         return $this->ninOrIqama;
+    }
+
+    function getReasons()
+    {
+        return $this->reasons;
     }
 
     public function toArray()
