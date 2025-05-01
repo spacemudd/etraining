@@ -20,6 +20,16 @@
                     >
                         {{ $t('words.log') }}
                     </inertia-link>
+                    <div class="mt-4">
+                        <label class="text-sm font-medium text-gray-700">حاسبة التكلفة (بناءً على 7.36 ريال لكل طلب)</label>
+                        <input
+                            type="number"
+                            v-model.number="calcRequests"
+                            min="0"
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50"
+                        />
+                        <p class="mt-1 text-sm text-gray-800">التكلفة الإجمالية: {{ (calcRequests * 7.36).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }} ريال</p>
+                    </div>
                 </div>
             </div>
 
@@ -54,6 +64,7 @@ export default {
             id_number: '',
             requestCounter: null,
             counterUpdated: false,
+            calcRequests: 0,
         }
     },
     created() {

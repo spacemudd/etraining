@@ -48,7 +48,7 @@ class MasdrCostNotification extends Command
             'currentWeekRequests' => $currentWeekRequests,
             'previousWeekRequests' => $previousWeekRequests,
         ], function ($mail) use ($weekNumber, $currentMonth) {
-            $mail->to('cfo@hadaf-hq.com')
+            $mail->to(['sara@hadaf-hq.com'])
                  ->bcc('shafiqalshaar@adv-line.com')
                  ->subject("📊 تقرير مصدر - {$currentMonth} - الأسبوع رقم {$weekNumber}");
         });
