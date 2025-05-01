@@ -17,17 +17,17 @@
     </style>
 </head>
 <body>
-    <h2>📊 تقرير استخدام واجهة GOSI</h2>
+    <h2 style="text-align: right">📊 تقرير استخدام واجهة GOSI</h2>
 
     <div class="section">
-        <p><strong>عدد الطلبات هذا الشهر ({{ $currentMonth }}):</strong> {{ $requestsUsed }} طلب</p>
-        <p><strong>التكلفة حتى الآن:</strong> SAR {{ $costSoFarFormatted }}</p>
-        <p><strong>المتبقي لهذا الشهر:</strong> {{ $requestsRemaining }} طلب</p>
+        <p style="text-align: right"><strong>عدد الطلبات هذا الشهر ({{ $currentMonth }}):</strong> {{ $requestsUsed }} طلب</p>
+        <p style="text-align: right"><strong>التكلفة حتى الآن:</strong> SAR {{ $costSoFarFormatted }}</p>
+        <p style="text-align: right"><strong>المتبقي لهذا الشهر:</strong> {{ $requestsRemaining }} طلب</p>
     </div>
 
     <div class="section">
-        <p><strong>عدد الطلبات هذا الأسبوع:</strong> {{ $currentWeekRequests }} طلب</p>
-        <p><strong>عدد الطلبات الأسبوع الماضي:</strong> {{ $previousWeekRequests }} طلب</p>
+        <p style="text-align: right"><strong>عدد الطلبات هذا الأسبوع:</strong> {{ $currentWeekRequests }} طلب</p>
+        <p style="text-align: right"><strong>عدد الطلبات الأسبوع الماضي:</strong> {{ $previousWeekRequests }} طلب</p>
     </div>
 </body>
 </html>
