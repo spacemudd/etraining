@@ -17,7 +17,7 @@
     </style>
 </head>
 <body>
-    <h2 style="text-align: right">📊 تقرير استخدام واجهة GOSI</h2>
+    <h2 style="text-align: right">📊 تقرير استخدام مصدر</h2>
 
     <div class="section">
         <p style="text-align: right"><strong>عدد الطلبات هذا الشهر ({{ $currentMonth }}):</strong> {{ $requestsUsed }} طلب</p>

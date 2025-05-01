@@ -38,6 +38,8 @@ class MasdrCostNotification extends Command
 
         $costSoFarFormatted = number_format($costSoFar, 2);
 
+        $weekNumber = (int) ceil($now->day / 7);
+
         Mail::send('emails.gosi_report', [
             'currentMonth' => $currentMonth,
             'requestsUsed' => $requestsUsed,
@@ -45,10 +47,10 @@ class MasdrCostNotification extends Command
             'requestsRemaining' => $requestsRemaining,
             'currentWeekRequests' => $currentWeekRequests,
             'previousWeekRequests' => $previousWeekRequests,
-        ], function ($mail) {
+        ], function ($mail) use ($weekNumber, $currentMonth) {
             $mail->to('cfo@hadaf-hq.com')
                  ->bcc('shafiqalshaar@adv-line.com')
-                 ->subject('📊 تقرير استخدام واجهة الاسبوعي GOSI');
+                 ->subject("📊 تقرير مصدر - {$currentMonth} - الأسبوع رقم {$weekNumber}");
         });
 
         return 1;
