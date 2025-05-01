@@ -27,13 +27,14 @@ class GosiController extends Controller
             'ninOrIqama' => 'required|numeric|digits:10',
         ]);
 
+        $forceFresh = $request->boolean('force');
         $data = GosiEmployee::new($request->ninOrIqama, $request->only([
             'reason_employment_office',
             'reason_collection',
             'reason_trainee_affairs',
             'reason_sales',
             'reason_other',
-        ]))->get()->toArray();
+        ]))->get($forceFresh)->toArray();
 
         return response()->json($data);
     }

@@ -53,18 +53,22 @@ class GosiService
     /**
      *
      * @param \App\Classes\GosiEmployee $gosiEmployee
+     * @param bool $forceFresh
      * @return array
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \JsonException
      */
-    public static function getEmployeeData(GosiEmployee $gosiEmployee): array
+    public static function getEmployeeData(GosiEmployee $gosiEmployee, bool $forceFresh = false): array
     {
         $ninOrIqama = $gosiEmployee->getNinOrIqama();
 
         $existingData = GosiEmployeeData::where('nin_or_iqama', $ninOrIqama)->first();
 
-        if ($existingData && $existingData->updated_at->gt(now()->subDays(30))) {
-            return json_decode($existingData->data, true);
+        if (!$forceFresh && $existingData) {
+            return array_merge(
+                json_decode($existingData->data, true),
+                ['updated_at' => $existingData->updated_at->toIso8601String()]
+            );
         }
 
         $currentMonth = now()->format('Y-m');
@@ -83,13 +87,12 @@ class GosiService
         $service = new GosiService();
 
         try {
-//            $response = $service->client->get(config('services.masdr.endpoint').'/mofeed/employment/v1/employee/employment-status/'.$ninOrIqama, [
-//                'cert' => storage_path('masdrcertificate/certificate.crt'),
-//                'ssl_key' => storage_path('masdrcertificate/certificate.key'),
-//            ]);
+            $response = $service->client->get(config('services.masdr.endpoint').'/mofeed/employment/v1/employee/employment-status/'.$ninOrIqama, [
+                'cert' => storage_path('masdrcertificate/certificate.crt'),
+                'ssl_key' => storage_path('masdrcertificate/certificate.key'),
+            ]);
 
-            //$data = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-            $data = ["hello" => "world"];
+            $data = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
             GosiEmployeeData::updateOrCreate(
                 ['nin_or_iqama' => $ninOrIqama],

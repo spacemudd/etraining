@@ -20,7 +20,13 @@
                         <tbody>
                         <tr>
                             <td class="border font-bold bg-gray-100">{{ $t('words.updated-date') }}</td>
-                            <td class="border">{{ new Date().getDay() + '-' + new Date().getMonth() + '-' + new Date().getFullYear() }}</td>
+                            <td class="border">
+                                <span :class="{
+                                    'font-bold text-red-600': isOlderThan30Days(data.updated_at)
+                                }">
+                                    {{ data.updated_at ? new Date(data.updated_at).toLocaleDateString('en-GB') : '—' }}
+                                </span>
+                            </td>
                         </tr>
                         <tr>
                             <td class="border font-bold bg-gray-100">{{ $t('words.identity_number') }}</td>
@@ -44,7 +50,12 @@
                     </table>
                 </template>
             </div>
-            <button class="btn-primary self-center mx-2 mt-2" @click="fetch">{{ $t('words.refresh') }}</button>
+            <button class="btn-primary self-center mx-2 mt-2" @click="fetch(false)">
+                {{ $t('words.refresh') }}
+            </button>
+            <button class="btn-secondary self-center mx-2 mt-2" @click="fetchFresh">
+                طلب بيانات جديدة من مصدر
+            </button>
         </div>
 
     </div>
@@ -65,25 +76,36 @@ export default {
         }
     },
     methods: {
-        fetch() {
-            this.$wait.start('LOADING_GOSI')
+        fetch(force = true) {
+            this.$wait.start('LOADING_GOSI');
             axios.post(route('back.gosi.show'), {
                 ninOrIqama: this.ninOrIqama,
                 ...this.reasons,
+                force: force,
             })
-                .then(response => {
-                    this.data = response.data;
-                    this.$emit('fetch-success');
-                    this.$wait.end('LOADING_GOSI')
-                })
-                .catch(error => {
-                    this.$wait.end('LOADING_GOSI');
-                    if (error.response && error.response.data && error.response.data.message === 'Monthly request limit reached.') {
-                        alert('Monthly request limit reached.');
-                    } else {
-                        console.log(error);
-                    }
-                })
+            .then(response => {
+                this.data = response.data;
+                this.$emit('fetch-success');
+                this.$wait.end('LOADING_GOSI');
+            })
+            .catch(error => {
+                this.$wait.end('LOADING_GOSI');
+                if (error.response && error.response.data && error.response.data.message === 'Monthly request limit reached.') {
+                    alert('Monthly request limit reached.');
+                } else {
+                    console.log(error);
+                }
+            });
+        },
+        fetchFresh() {
+            this.fetch(true);
+        },
+        isOlderThan30Days(date) {
+            if (!date) return false;
+            const updatedDate = new Date(date);
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            return updatedDate < thirtyDaysAgo;
         }
     },
     watch: {

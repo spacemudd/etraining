@@ -31,7 +31,7 @@ class GosiEmployee
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \JsonException
      */
-    public function get()
+    public function get(bool $forceFresh = false)
     {
         Audit::create([
             'event' => 'gosi.query',
@@ -48,7 +48,7 @@ class GosiEmployee
             ],
         ]);
 
-        $data = GosiService::getEmployeeData($this);
+        $data = GosiService::getEmployeeData($this, $forceFresh);
 
         if (array_key_exists('errorCode', $data)) {
             $this->error = $data;
