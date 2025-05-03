@@ -17,16 +17,11 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
     {
         set_time_limit(300);
     
-        $date = Carbon::parse('2025-01-01');
+        // $date = Carbon::parse('2025-01-01');
     
-        $trainees = Trainee::whereHas('user', function ($q) use ($date) {
-                $q->where('last_login_at', '<', $date);
-            })
-            ->where(function ($q) {
-                $q->whereNotNull('company_id')
-                  ->orWhereNotNull('trainee_group_id');
-            })
-            ->lazy();
+        $trainees = Trainee::whereNull('company_id')  // بدون شركة
+        ->whereNotNull('trainee_group_id')       // مربوط بشعبة
+        ->lazy();
     
         return $trainees->map(function($trainee){
             return [
