@@ -12,25 +12,22 @@ use Illuminate\Support\Facades\DB;
 
 class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
 {
+
     public function collection()
     {
-
-        $date=Carbon::parse('2025-01-01');
-        
-        
-        
+        set_time_limit(300);
+    
+        $date = Carbon::parse('2025-01-01');
+    
         $trainees = Trainee::whereHas('user', function ($q) use ($date) {
-            $q->where('last_login_at', '<', $date);
-        })
-        ->where(function ($q) {
-            $q->whereNotNull('company_id')
-              ->orWhereNotNull('trainee_group_id');
-        })
-        ->get();
-        
-
-
-
+                $q->where('last_login_at', '<', $date);
+            })
+            ->where(function ($q) {
+                $q->whereNotNull('company_id')
+                  ->orWhereNotNull('trainee_group_id');
+            })
+            ->lazy();
+    
         return $trainees->map(function($trainee){
             return [
                 'name' => $trainee->name,
@@ -42,9 +39,8 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
                 'last_login_at'=>$trainee->user->last_login_at,
             ];
         });
-   
-
     }
+    
 
     
 
