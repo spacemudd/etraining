@@ -128,7 +128,6 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
           '1136776331',
           '1086288022',
           '1060080767',
-          'ترغب بتقديم', استقاله
           '1123372409',
           '1102634456',
           '1137522106',
