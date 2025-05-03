@@ -31,7 +31,7 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
                 'phone' => $trainee->phone,
                 'company' => optional($trainee->company)->name_ar,
                 'trainee_group' => optional($trainee->trainee_group)->name,
-                'last_login_at'=>$trainee->user->last_login_at,
+                // 'last_login_at'=>$trainee->user->last_login_at,
             ];
         });
     }
@@ -49,7 +49,7 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
             'الجوال',
             'الشركة',
             'الشعبة',
-            'تاريخ آخر دخول',
+            // 'تاريخ آخر دخول',
 
         ];
     }
