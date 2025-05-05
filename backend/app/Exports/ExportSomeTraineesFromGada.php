@@ -25,7 +25,7 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
             '1059909844',
             '1116953181',
             '1118393949',
-            '1109513422',s
+            '1109513422',
             '1105087322',
             '1118199551',
             '1108804095',
