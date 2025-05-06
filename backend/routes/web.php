@@ -31,7 +31,7 @@ Route::get('reports/attendance/download/{filename}', [\App\Http\Controllers\Back
         );
     })->name('reports.attendance-due-dates.latest');
 
-    Route::get('attendance-due-dates', [\App\Http\Controllers\Back\ReportsController::class, 'attendanceDueDates'])->name('reports.attendance-due-dates.index');
+    Route::get('attendance-due-dates', [\App\Http\Controllers\Back\ReportsController::class, 'attendanceDueDates'])->name('attendance-due-dates.index');
 
     
 
