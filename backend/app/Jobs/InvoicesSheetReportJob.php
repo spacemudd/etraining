@@ -1,6 +1,8 @@
 <?php
 
+
 namespace App\Jobs;
+use App\Notifications\ReportCompletedNotification;
 
 use App\Exports\CourseAttendanceReportExport;
 use App\Models\JobTracker;
@@ -19,7 +21,7 @@ class InvoicesSheetReportJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $tries = 5;
-    public $timeout = 7200; 
+    public $timeout = 7200;
 
     public $tracker;
 
@@ -45,7 +47,7 @@ class InvoicesSheetReportJob implements ShouldQueue
         Log::info('[InvoicesSheetJob] Started. Tracker ID: '.$this->tracker->id);
         $this->tracker->update(['started_at' => now()]);
 
-        $startTime = microtime(true); 
+        $startTime = microtime(true);
 
         try {
             $fileName = InvoicesReportFactory::new()
@@ -63,10 +65,13 @@ class InvoicesSheetReportJob implements ShouldQueue
                 ])->toMediaCollection('excel');
 
             $this->tracker->update(['finished_at' => now()]);
+            if ($this->tracker->user_id && $user = \App\Models\User::find($this->tracker->user_id)) {
+                $user->notify(new ReportCompletedNotification($this->tracker));
+            }
 
             Log::info('[InvoicesSheetJob] Completed. Tracker ID: '.$this->tracker->id);
         } catch (Throwable $e) {
-            $this->failed($e); 
+            $this->failed($e);
         }
     }
 
@@ -78,7 +83,7 @@ class InvoicesSheetReportJob implements ShouldQueue
     public function failed(Throwable $e)
     {
         Log::error('[InvoicesSheetJob] Failed. Tracker ID: ' . $this->tracker->id . ' | Error: ' . $e->getMessage());
-        Log::error($e->getTraceAsString()); 
+        Log::error($e->getTraceAsString());
 
         $this->tracker->update([
             'failure_reason' => $e->getMessage(),

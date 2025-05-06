@@ -1,13 +1,3 @@
-<!--
-  - Copyright (c) 2020 - Clarastars, LLC  - All Rights Reserved.
-  -
-  - Unauthorized copying of this file via any medium is strictly prohibited.
-  - This file is a proprietary of Clarastars LLC and is confidential / educational purpose only.
-  -
-  - https://clarastars.com - info@clarastars.com
-  - @author Shafiq al-Shaar <shafiqalshaar@gmail.com>
-  -->
-
 <template>
     <app-layout>
         <div class="container px-6 mx-auto grid pt-6">
@@ -54,6 +44,12 @@
                 <div class="mt-10">
                     <h1 class="text-center">{{ $t('words.report-work-on-progress') }}</h1>
                     <p class="text-center text-gray-500 mt-2">{{ $t('words.please-dont-close-the-window') }}</p>
+                    <p class="text-center text-sm text-gray-400 mt-2" v-if="job_tracker?.started_at">
+                        {{ $t('words.started-at') }}: {{ formattedStartTime }}
+                    </p>
+                    <p class="text-center text-sm text-gray-400 mt-1" v-if="job_tracker?.started_at">
+                        {{ $t('words.elapsed-time') }}: {{ durationSinceStart }}
+                    </p>
                     <div class="flex justify-center mt-5">
                         <btn-loading-indicator />
                     </div>
@@ -107,6 +103,17 @@
         computed: {
             token() {
                 return document.head.querySelector('meta[name="csrf-token"]').content;
+            },
+            formattedStartTime() {
+                return new Date(this.job_tracker?.started_at).toLocaleString('ar-EG');
+            },
+            durationSinceStart() {
+                if (!this.job_tracker?.started_at) return '';
+                const start = new Date(this.job_tracker.started_at);
+                const diffMs = this.now - start;
+                const minutes = Math.floor(diffMs / 60000);
+                const seconds = Math.floor((diffMs % 60000) / 1000);
+                return `${minutes} دقيقة ${seconds} ثانية`;
             }
         },
         mounted() {
@@ -120,6 +127,9 @@
                     }
                 })
             });
+            setInterval(() => {
+                this.now = new Date();
+            }, 1000);
         },
         data() {
             return {
@@ -131,6 +141,7 @@
                     date_from: new Date().toISOString().substring(0, 10),
                     date_to: new Date().toISOString().substring(0, 10),
                 },
+                now: new Date(),
             }
         },
         methods: {
@@ -150,6 +161,7 @@
             checkJobTracker() {
                 axios.get(route('job-trackers.show', {id: this.job_tracker.id}))
                     .then(response => {
+                        this.job_tracker = response.data;
                         if (response.data.finished_at) {
                             this.report_status = 'finished';
                             this.job_tracker = response.data;
