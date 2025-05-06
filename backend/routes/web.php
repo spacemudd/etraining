@@ -526,6 +526,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         // settings
         Route::put('/settings/app', [\App\Http\Controllers\Back\AppSettingsController::class, 'update'])->name('settings.app.update');
         Route::get('/settings/app', [\App\Http\Controllers\Back\AppSettingsController::class, 'index'])->name('settings.app.index');
+        Route::delete('/settings/app/delete-json-key', [\App\Http\Controllers\Back\AppSettingsController::class, 'deleteJsonKey'])->name('settings.app.deleteJsonKey');
 
         //recruitment
         Route::get('/settings/recruitment-companies', [\App\Http\Controllers\Back\RecruitmentCompaniesController::class, 'index'])->name('settings.recruitment-companies.index');

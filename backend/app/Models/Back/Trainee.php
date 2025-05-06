@@ -12,6 +12,8 @@ use App\Models\SearchableLabels;
 use App\Models\Team;
 use App\Models\User;
 use App\Services\TraineeCompanyMovementService;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -131,6 +133,24 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         });
 
         static::updating(function ($model) {
+            // Fetch list of locked identity numbers from Google Sheet (example using public CSV export URL)
+            $sheetUrl = 'https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/export?format=csv&id=YOUR_SHEET_ID&gid=0';
+            $response = Http::get($sheetUrl);
+            if ($response->ok()) {
+                $lines = explode("\n", $response->body());
+                $lockedIds = array_map('trim', $lines);
+                if (in_array($model->identity_number, $lockedIds)) {
+                    // Email alert
+                    Mail::raw(
+                        "Blocked update attempt to Trainee ID {$model->identity_number} by user " . optional(auth()->user())->email,
+                        function ($msg) {
+                            $msg->to(['sara@hadaf-hq.com', 'shafiqalshaar@adv-line.com'])
+                                ->subject('Blocked Update Attempt on Locked Trainee');
+                        }
+                    );
+                    return false; // cancel the update
+                }
+            }
 
             if ($model->isDirty('company_id')) {
                 TraineeAttachedToCompany::dispatch($model->id, $model->company_id);
