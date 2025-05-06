@@ -8,7 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Jobs\BulkCourseAttendanceReportJob;
 use App\Jobs\ContractsReportJob;
 use App\Jobs\CourseAttendanceReportJob;
+use App\Jobs\GenerateAttendanceReportJob;
 use App\Jobs\GenerateCompanyCertificatesReportJob;
+use App\Models\AttendanceReportDueDates;
 use App\Models\Back\Audit;
 use App\Models\Back\Company;
 use App\Models\Back\Course;
@@ -19,9 +21,11 @@ use App\Reports\BulkCourseAttendanceReportFactory;
 use App\Reports\ContractsReportFactory;
 use App\Reports\CourseAttendanceReportFactory;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Excel;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
+
 
 class ReportsController extends Controller
 {
@@ -326,19 +330,52 @@ class ReportsController extends Controller
     }
 
 
-    public function attendanceDueDates(){
-        $companies=Company::get();
-        $coursesNames = Course::select('name_ar')->distinct()->get();
+    public function attendanceDueDates()
+{
+    $companies = Company::get();
+    $coursesNames = Course::select('name_ar')->distinct()->get();
+    $report = AttendanceReportDueDates::where('user_id', auth()->id())->latest()->first();
 
+    return Inertia::render('Back/Reports/AttendanceDueDates/Show', [
+        'companies' => $companies,
+        'coursesNames' => $coursesNames,
+        'latestReport' => $report,
+    ]);
+}
 
-
-        return Inertia::render('Back/Reports/AttendanceDueDates/Show',[
-            'companies'=>$companies,
-            'coursesNames'=>$coursesNames
+    public function attendanceDueDatesReport(Request $request)
+    {
+        $report = AttendanceReportDueDates::create([
+            'user_id' => auth()->id(),
+            'filename' => '', // مؤقتاً
+            'course_name' => $request->course_name,
+            'company_id' => $request->company_id,
+            'status' => 'generating',
         ]);
-
-
+    
+        GenerateAttendanceReportJob::dispatch(
+            $request->course_name,
+            $request->start_date,
+            $request->end_date,
+            $request->company_id,
+            $report->id // نمرر ID التقرير للـ Job
+        );
+    
+        return redirect()->route('reports.attendance-due-dates.index')
+            ->with('report_id', $report->id);
     }
+
+    public function downloadAttendanceReport($filename)
+{
+    $path = 'reports/' . $filename;
+
+    if (!Storage::disk('public')->exists($path)) {
+        abort(404, 'الملف غير موجود');
+    }
+
+    return Storage::disk('public')->download($path);
+}
+
 }
 
 
