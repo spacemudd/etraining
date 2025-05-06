@@ -689,4 +689,5 @@ return [
     'logs' => 'Logs',
     'system' => 'System',
     'app-settings' => 'App settings',
+    'attendance-due-dates' => 'Attendance Due Dates',
 ];

@@ -324,6 +324,21 @@ class ReportsController extends Controller
 
         return $tracker;
     }
+
+
+    public function attendanceDueDates(){
+        $companies=Company::get();
+        $coursesNames = Course::select('name_ar')->distinct()->get();
+
+
+
+        return Inertia::render('Back/Reports/AttendanceDueDates/Show',[
+            'companies'=>$companies,
+            'coursesNames'=>$coursesNames
+        ]);
+
+
+    }
 }
 
 
