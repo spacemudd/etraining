@@ -22,6 +22,9 @@ class GenerateAttendanceReportJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $timeout = 300; // 5 دقائق
+    public $tries = 3;
+
     protected $courseName, $startDate, $endDate, $companyId;
     protected $reportId;
 
