@@ -361,7 +361,7 @@ class ReportsController extends Controller
             $report->id // نمرر ID التقرير للـ Job
         );
     
-        return redirect()->route('reports.attendance-due-dates.index')
+        return redirect()->route('attendance-due-dates.index')
             ->with('report_id', $report->id);
     }
 
