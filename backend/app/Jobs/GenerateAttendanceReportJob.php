@@ -57,7 +57,8 @@ class GenerateAttendanceReportJob implements ShouldQueue
         $data = $trainees->map(function ($trainee) use ($courses) {
             $records = $trainee->attendanceReportRecords()
                 ->whereIn('course_id', $courses)
-                ->whereBetween('session_starts_at', [$this->startDate, $this->endDate])
+                ->whereDate('session_starts_at', '>=', $this->startDate)
+                ->whereDate('session_starts_at', '<=', $this->endDate)
                 ->get();
     
             $presentCount = $records->whereIn('status', [1, 2, 3])->count();
@@ -71,8 +72,8 @@ class GenerateAttendanceReportJob implements ShouldQueue
                 'اسم الكورس' => $this->courseName,
                 'تاريخ البداية' => $this->startDate,
                 'تاريخ النهاية' => $this->endDate,
-                'عدد الحضور' => $presentCount,
-                'عدد الغياب' => $absentCount,
+                'عدد الحضور' =>(int) $presentCount,
+                'عدد الغياب' =>(int) $absentCount,
             ];
         });
     
