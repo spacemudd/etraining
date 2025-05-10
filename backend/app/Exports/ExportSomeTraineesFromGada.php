@@ -1519,7 +1519,7 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
             '1090852466',
         ];
 
-        $trainees = Trainee::withTrashed()->whereIn('identity_number', $idNumbers)
+        $trainees = Trainee::whereIn('identity_number', $idNumbers)
         ->where('zoho_contract_status','!=','completed')
         ->get();
     
