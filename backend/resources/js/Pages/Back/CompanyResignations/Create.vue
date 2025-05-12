@@ -39,6 +39,14 @@
 
                                     <div class="mt-2">
                                         <div class="col-span-4 sm:col-span-4">
+                                            <jet-label for="resignation_date" :value="'تاريخ الاستقالة'" />
+                                            <jet-input type="date" class="mt-1 block w-full" v-model="form.resignation_date" required/>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="mt-2">
+                                        <div class="col-span-4 sm:col-span-4">
                                             <jet-label for="notes" :value="$t('words.reason')" />
                                             <div class="relative mt-2">
                                                 <select class="mt-1 block w-full bg-gray-100 appearance-none border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:border-gray-500"
@@ -256,6 +264,7 @@ export default {
                 company_id: null,
                 trainees: [],
                 date: new Date().toISOString().substring(0, 10),
+                resignation_date: new Date().toISOString().substring(0, 10),
                 reason: '',
                 emails_to: [],
                 emails_cc: [],

@@ -36,6 +36,8 @@ class Resignation extends Model implements Auditable, HasMedia
         'emails_bcc',
         'sent_at',
         'reason',
+        'resignation_date',
+
     ];
 
     protected $with = [
