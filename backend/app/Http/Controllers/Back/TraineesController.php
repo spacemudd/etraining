@@ -1277,8 +1277,8 @@ class TraineesController extends Controller
         $logs = \App\Models\GosiEmployeeData::orderBy('updated_at', 'desc')
             ->paginate(5);
 
-        $startOfWeek = now()->startOfWeek();
-        $endOfWeek = now()->endOfWeek();
+        $startOfWeek = now()->startOfMonth();
+        $endOfWeek = now()->endOfMonth();
 
         $weeklyReasonStats = \App\Models\GosiEmployeeData::whereBetween('updated_at', [$startOfWeek, $endOfWeek])->get()->reduce(function ($carry, $item) {
             $carry['مكتب التوظيف'] += $item->reason_employment_office ? 1 : 0;
