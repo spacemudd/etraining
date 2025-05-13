@@ -12,7 +12,7 @@
                 <h6 class="text-lg font-semibold mb-2">{{ $t('words.current_month_requests') }}</h6>
                 <div class="p-4 bg-white rounded shadow">
                     <p :class="['text-gray-700 rtl:text-right', { 'bg-green-100 p-2 rounded': counterUpdated }]" dir="ltr">
-                        {{ requestCounter ? requestCounter.count : 0 }} / 600
+                        {{ requestCounter ? requestCounter.count : 0 }} / {{ gosiMonthlyRequests }}
                     </p>
                     <inertia-link
                         :href="route('back.trainees.gosi.log')"
@@ -94,6 +94,7 @@ import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
 import JetInput from '@/Jetstream/Input'
 
 export default {
+    props: ['gosiMonthlyRequests'],
     components: {
         AppLayout,
         GosiContainer,

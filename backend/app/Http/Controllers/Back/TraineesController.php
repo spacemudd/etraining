@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\ExportArchivedTraineesToExcelJob;
 use App\Jobs\ExportTraineesToExcelJob;
 use App\Mail\DeletedTraineeMail;
+use App\Models\AppSetting;
 use App\Models\Back\AttendanceReportRecord;
 use App\Models\Back\AttendanceReportRecordWarning;
 use App\Models\Back\Audit;
@@ -203,7 +204,12 @@ class TraineesController extends Controller
     public function gosi()
     {
         $requestCounter = optional(RequestCounter::where('month', now()->format('Y-m')))->first() ?? 0;
-        return Inertia::render('Back/Trainees/gosi', compact('requestCounter'));
+        $gosiMonthlyRequests = AppSetting::where('name', 'gosi_monthly_requests')->value('value');
+
+        return Inertia::render('Back/Trainees/gosi', [
+            'requestCounter' => $requestCounter,
+            'gosiMonthlyRequests' => $gosiMonthlyRequests,
+        ]);
     }
 
     /**
