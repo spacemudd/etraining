@@ -35,6 +35,7 @@ class CompanyResignationsController extends Controller
             //'company_id' => 'required|exists:companies,id',
             //'trainees.*.id' => 'required|exists:trainees,id',
             'date' => 'required|date',
+            'resignation_date' => 'nullable|date',
             //'reason' => 'required|string',
             //'emails_to' => 'required|string',
             //'emails_cc' => 'nullable|string',
@@ -46,6 +47,7 @@ class CompanyResignationsController extends Controller
 
         $resignation = Resignation::create([
             'date' => Carbon::parse($request->date),
+            'resignation_date' => Carbon::parse($request->resignation_date),
             'company_id' => $request->company_id,
             'reason' => $request->reason,
             'emails_to' => $request->emails_to,

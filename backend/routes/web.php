@@ -20,6 +20,21 @@ use Illuminate\Mail\Markdown;
 
 
 
+Route::post('/attendance-due-dates-report', [\App\Http\Controllers\Back\ReportsController::class, 'attendanceDueDatesReport'])->name('attendance.due.dates.report');
+
+Route::get('reports/attendance/download/{filename}', [\App\Http\Controllers\Back\ReportsController::class, 'downloadAttendanceReport'])
+    ->name('reports.attendance.download');
+
+    Route::get('/reports/attendance-due-dates/latest', function () {
+        return response()->json(
+            \App\Models\AttendanceReportDueDates::where('user_id', auth()->id())->latest()->first()
+        );
+    })->name('reports.attendance-due-dates.latest');
+
+    Route::get('attendance-due-dates', [\App\Http\Controllers\Back\ReportsController::class, 'attendanceDueDates'])->name('attendance-due-dates.index');
+
+    
+
 
 
 
@@ -787,6 +802,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('trainees-witout-invoices', [\App\Http\Controllers\Back\ReportsController::class, 'formTraineesWithoutInvoicesReport'])->name('reports.trainees-witout-invoices.index');
             //trainees without invoices export
             Route::get('trainees-witout-invoices/export', [\App\Http\Controllers\Back\ReportsController::class, 'export'])->name('reports.trainees-witout-invoices.export');
+
 
 
 

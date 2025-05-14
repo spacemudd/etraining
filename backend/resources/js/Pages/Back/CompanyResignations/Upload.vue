@@ -47,6 +47,7 @@
                                                     <th class="text-right border-black border bg-gray-300 px-2">{{ $t('words.name') }}</th>
                                                     <th class="text-right border-black border bg-gray-300 px-2">{{ $t('words.identity_number') }}</th>
                                                     <th class="text-right border-black border bg-gray-300 px-2">{{ $t('words.current-company-as-of-today') }}</th>
+                                                     <th class="text-right border-black border bg-gray-300 px-2">تاريخ الاستقالة</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -55,6 +56,9 @@
                                                     <td class="border-black border px-2">{{ trainee.name }}</td>
                                                     <td class="border-black border px-2">{{ trainee.identity_number }}</td>
                                                     <td class="border-black border px-2"><span v-if="trainee.company">{{ trainee.company.name_ar }}</span></td>
+                                                     <td class="border-black border px-2">
+                                                        {{ resignation.resignation_date }}
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>

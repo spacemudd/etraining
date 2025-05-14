@@ -53,6 +53,13 @@
                     {{ $t('words.attendance-bulk-courses') }}
                 </inertia-link>
 
+            
+
+                  <inertia-link :href="route('attendance-due-dates.index')"
+                              class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
+                    {{ $t('words.attendance-due-dates') }}
+                </inertia-link>
+
             </div>
 
         </div>

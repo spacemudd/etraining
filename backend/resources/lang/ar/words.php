@@ -703,4 +703,6 @@ return [
     'logs' => 'السجل',
     'system' => 'النظام',
     'app-settings' => "اعدادات النظام",
+    'attendance-due-dates' => 'الحضور طبقا لتواريخ محددة',
+
 ];
