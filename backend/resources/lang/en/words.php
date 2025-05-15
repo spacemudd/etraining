@@ -690,4 +690,5 @@ return [
     'system' => 'System',
     'app-settings' => 'App settings',
     'attendance-due-dates' => 'Attendance Due Dates',
+    'cancel-contract' => 'Cancel Contract',
 ];

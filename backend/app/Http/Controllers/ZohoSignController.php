@@ -417,6 +417,19 @@ public function contractMustSign(Request $request){
 
    return redirect()->back()->with('success','contract sent succefully');
 }
+public function cancelContract(Request $request){
+    $trainee=Trainee::find($request->trainee_id);
+    $trainee->zoho_contract_id=null;
+    $trainee->zoho_contract_status=null;
+    $trainee->zoho_sign_date=null;
+    $trainee->must_sign=false;
+    $trainee->contract_signed_notification_sent=false;
+    $trainee->save();
+
+   Log::info("contract Cancelled succefully");
+
+   return redirect()->back()->with('success','contract Cancelled succefully');
+}
 
 
 }

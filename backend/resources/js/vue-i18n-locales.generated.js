@@ -879,7 +879,8 @@ export default {
             "logs": "السجل",
             "system": "النظام",
             "app-settings": "اعدادات النظام",
-            "attendance-due-dates": "الحضور طبقا لتواريخ محددة"
+            "attendance-due-dates": "الحضور طبقا لتواريخ محددة",
+            "cancel-contract": "إلغاء العقد"
         }
     },
     "en": {
@@ -1706,7 +1707,8 @@ export default {
             "logs": "Logs",
             "system": "System",
             "app-settings": "App settings",
-            "attendance-due-dates": "Attendance Due Dates"
+            "attendance-due-dates": "Attendance Due Dates",
+            "cancel-contract": "Cancel Contract"
         }
     }
 }

@@ -272,7 +272,10 @@
                     class="items-center justify-start text-left float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right"
                   >
                     {{ $t("words.send-contract") }}
-              </inertia-link>
+                </inertia-link>
+              
+
+      
 
                  <div
                     v-if="trainee.must_sign && (trainee.zoho_contract_status !== 'completed')"
@@ -289,15 +292,23 @@
                 ✅ {{ $t("words.contract-verified") }} <br />
                 <span class="font-bold">{{ trainee.zoho_sign_date }}</span>
               </div>
+              
+
+             
+          
 
 
                   
           </div>
+               <button
+              v-if="trainee.zoho_contract_status === 'completed'"
+              v-can="'block-trainee'"
+              @click="confirmCancelContract"
+              class="items-center rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right"
+            >
+              {{ $t("words.cancel-contract") }}
+            </button>
 
-          
-
-         
-          
         </div>
 
         <div
@@ -1371,6 +1382,14 @@ export default {
           this.$wait.end("SENDING_INVITATION");
         });
     },
+    confirmCancelContract() {
+  if (confirm(this.$t("words.are-you-sure"))) {
+    this.$inertia.get(
+      route('contract-cancel', { trainee_id: this.trainee.id })
+    );
+  }
+},
+
   },
 };
 </script>
