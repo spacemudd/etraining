@@ -68,7 +68,7 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
   
         ];
 
-        $trainees = Trainee::onlyTrashed()->whereIn('identity_number',$idNumbers)
+        $trainees = Trainee::whereIn('identity_number',$idNumbers)
         ->get();
     
 
