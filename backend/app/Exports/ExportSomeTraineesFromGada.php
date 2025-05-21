@@ -94,7 +94,7 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
         //     '1123678771',
         // ];
 
-        $trainees = Trainee::where('status',1)
+        $trainees = Trainee::where('status',2)
         ->get();
     
 
