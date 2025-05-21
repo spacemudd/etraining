@@ -70,6 +70,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'zoho_contract_id',
         'zoho_contract_status',
         'zoho_sign_date',
+        'team_id',
 
     ];
 
