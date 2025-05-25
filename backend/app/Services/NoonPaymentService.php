@@ -22,7 +22,7 @@ class NoonPaymentService
         $paymentInfo['apiOperation'] = "INITIATE";
         $paymentInfo['order']['channel'] = config("noon_payment.channel");
         $paymentInfo['order']['category'] = config("noon_payment.order_category");
-        $paymentInfo['configuration']['tokenizeCc'] = (!empty($paymentInfo['configuration']['tokenizeCc'])) ? $paymentInfo['configuration']['tokenizeCc'] : "true";
+        $paymentInfo['configuration']['tokenizeCc'] = false;
 
         if ($centerId === 5676) {
             $paymentInfo['configuration']['returnUrl'] = (!empty($paymentInfo['configuration']['returnUrl'])) ? $paymentInfo['configuration']['returnUrl'] : config('noon_payment.jasarah.return_url');

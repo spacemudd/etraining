@@ -19,6 +19,13 @@ use App\Services\GosiService;
 use Illuminate\Mail\Markdown;
 
 
+Route::get('/qr1', function() {
+    return redirect()->url('https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAANAASXDrmxUM0RYRkRKRE9UTFhSMlpSTkE5ODhaNElWQi4u');
+});
+
+Route::get('/qr2', function() {
+   return redirect()->url('https://docs.google.com/forms/d/e/1FAIpQLSdjDCpcabswqgSLLo7gI-h0LC3pspt6CJw94vsV6sioHdwRXQ/viewform?usp=sf_link');
+});
 
 Route::post('/attendance-due-dates-report', [\App\Http\Controllers\Back\ReportsController::class, 'attendanceDueDatesReport'])->name('attendance.due.dates.report');
 
@@ -33,7 +40,7 @@ Route::get('reports/attendance/download/{filename}', [\App\Http\Controllers\Back
 
     Route::get('attendance-due-dates', [\App\Http\Controllers\Back\ReportsController::class, 'attendanceDueDates'])->name('attendance-due-dates.index');
 
-    
+
 
 
 
