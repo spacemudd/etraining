@@ -301,13 +301,15 @@
                   
           </div>
                <button
-              v-if="trainee.zoho_contract_status === 'completed'"
+              v-if="trainee.must_sign==true"
               v-can="'block-trainee'"
               @click="confirmCancelContract"
               class="items-center rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right"
             >
               {{ $t("words.cancel-contract") }}
             </button>
+
+            
 
         </div>
 
