@@ -6,8 +6,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use NotificationChannels\ClickSend\ClickSendChannel;
-use NotificationChannels\ClickSend\ClickSendMessage;
 
 class InstructorWelcomeNotification extends Notification implements ShouldQueue
 {

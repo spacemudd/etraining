@@ -8,7 +8,6 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
-use NotificationChannels\ClickSend\ClickSendChannel;
 
 class TraineeApplicationApprovedNotification extends Notification implements ShouldQueue
 {

@@ -7,7 +7,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Str;
-use NotificationChannels\ClickSend\ClickSendChannel;
 
 class CustomTraineeNotification extends Notification implements ShouldQueue
 {
@@ -46,9 +45,9 @@ class CustomTraineeNotification extends Notification implements ShouldQueue
             $notify_via[] = 'mail';
         }
 
-        if ($notifiable->phone && $this->smsBody && $notifiable->routeNotificationForClickSend()) {
-            //$notify_via[] = ClickSendChannel::class;
-        }
+//        if ($notifiable->phone && $this->smsBody && $notifiable->routeNotificationForClickSend()) {
+//            //$notify_via[] = ClickSendChannel::class;
+//        }
 
         return $notify_via;
     }

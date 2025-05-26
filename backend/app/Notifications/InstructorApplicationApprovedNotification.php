@@ -6,7 +6,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use NotificationChannels\ClickSend\ClickSendChannel;
 
 class InstructorApplicationApprovedNotification extends Notification implements ShouldQueue
 {
@@ -36,9 +35,9 @@ class InstructorApplicationApprovedNotification extends Notification implements 
             $notify_via[] = 'mail';
         }
 
-        if ($notifiable->routeNotificationForClickSend()) {
-            // $notify_via[] = ClickSendChannel::class;
-        }
+//        if ($notifiable->routeNotificationForClickSend()) {
+//            // $notify_via[] = ClickSendChannel::class;
+//        }
 
         return $notify_via;
     }
