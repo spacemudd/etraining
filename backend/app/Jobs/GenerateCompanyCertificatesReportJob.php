@@ -77,7 +77,8 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
 
                 $traineesQuery = $batch->trainee_group->traineesWithTrashed();
 
-                Log::info('Trainees count before chunk: ' . $traineesQuery->count());
+                $traineesQueryClone = clone $traineesQuery;
+                Log::info('Trainees count before chunk: ' . $traineesQueryClone->count());
 
                 if ($companyId) {
                     $traineesQuery->where('company_id', $companyId);
