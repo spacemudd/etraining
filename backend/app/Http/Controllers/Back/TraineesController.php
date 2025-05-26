@@ -639,7 +639,7 @@ class TraineesController extends Controller
         DB::beginTransaction();
         $trainee->update($request->except('_token'));
         if ($user = $trainee->user) {
-            $user->email = $trainee->refresh()->email;
+            $user->email = $trainee->email;
             $user->save();
         }
 

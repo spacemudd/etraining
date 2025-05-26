@@ -85,8 +85,6 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
                 $traineesQueryClone = clone $traineesQuery;
                 Log::info('Trainees count before chunk: ' . $traineesQueryClone->with(['user', 'company'])->count());
 
-                Log::info('Hello?');
-
                 $traineesQuery->with('user')->with('company')->chunk(100, function ($traineesChunk) use (
                     &$results,
                     $batch,
@@ -98,8 +96,6 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
                     $companyIds
                 ) {
                     foreach ($traineesChunk as $trainee) {
-                        Log::info('Sample trainee company_id: ' . $trainee->company_id);
-                        Log::info('Hello2?');
                         $attendanceRecords = $trainee->attendanceReportRecords()
                             ->where('course_batch_id', $batch->id)
                             ->get()
