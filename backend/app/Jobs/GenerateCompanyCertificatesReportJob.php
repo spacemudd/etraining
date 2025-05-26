@@ -95,7 +95,7 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
                     $endOfTargetMonth,
                     $course,
                     $companyName,
-                    $companyId
+                    $companyIds
                 ) {
                     foreach ($traineesChunk as $trainee) {
                         Log::info('Sample trainee company_id: ' . $trainee->company_id);
