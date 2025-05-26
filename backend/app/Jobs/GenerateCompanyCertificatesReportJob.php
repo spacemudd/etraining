@@ -49,9 +49,15 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
         $companyName = '';
 
         foreach ($courses as $course) {
+            Log::info('Course: ' . $course->name_ar . ' | Batches count: ' . $course->batches->count());
             $batches = $course->batches;
 
             foreach ($batches as $batch) {
+                Log::info('Batch ID: ' . $batch->id);
+                if (!$batch->trainee_group) {
+                    Log::warning("Batch {$batch->id} has no trainee group.");
+                    continue;
+                }
                 $courseEndDate = Carbon::parse($batch->ends_at);
                 $startOfMonth = $courseEndDate->copy()->startOfMonth();
                 $daysDifference = $courseEndDate->diffInDays($startOfMonth);
@@ -70,6 +76,8 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
                 $totalSessionsCount = $batch->course_batch_sessions()->count();
 
                 $traineesQuery = $batch->trainee_group->traineesWithTrashed();
+
+                Log::info('Trainees count before chunk: ' . $traineesQuery->count());
 
                 if ($companyId) {
                     $traineesQuery->where('company_id', $companyId);
