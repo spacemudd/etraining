@@ -130,7 +130,8 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
 
                         $traineeCompanyName = $trainee->company ? $trainee->company->name_ar : 'غير مربوط بشركة';
 
-                        if (isset($trainee->name)) {
+                        if ($trainee->name) {
+                            Log::info('Adding trainee to report: ' . $trainee->name);
                             $results[] = [
                                 'paid_date' => $paidDate,
                                 'invoice_to_date' => $invoiceToDate,
@@ -148,6 +149,12 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
                                 'deleted_at' => $trainee->deleted_at,
                                 'last_login_at' => optional($trainee->user)->last_login_at,
                             ];
+                        } else {
+                            Log::info('Skipped trainee, name missing or invoice not matched: ' . json_encode([
+                                'trainee_id' => $trainee->id,
+                                'name' => $trainee->name,
+                                'invoice' => $invoice ? $invoice->id : null,
+                            ]));
                         }
                     }
                 });
