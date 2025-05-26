@@ -16,6 +16,7 @@ class VerifyPhoneOwnershipJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $trainee_id;
+    public $timeout = 5;
 
     /**
      * Create a new job instance.
