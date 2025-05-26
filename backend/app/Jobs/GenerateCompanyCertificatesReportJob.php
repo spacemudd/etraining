@@ -35,6 +35,11 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
 
     public function handle()
     {
+        \Log::info('GenerateCompanyCertificatesReportJob started', [
+            'timestamp' => now()->toDateTimeString(),
+            'user_id' => $this->userId,
+            'request_data' => $this->requestData,
+        ]);
         $courseIds = collect($this->requestData['courseId'])->pluck('id')->toArray();
         $courses = Course::whereIn('id', $courseIds)->get();
 
@@ -153,13 +158,18 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
             return ($attendanceNumeric >= 50 && $trainee['invoice_status'] == 'مدفوع') ? 1 : 0;
         })->values()->toArray();
 
-        $fileName = $companyName ? $companyName . '_attendance_report.xlsx' : 'trainee_attendance_by_course.xlsx';
+        $fileName = str_slug($companyName) ? str_slug($companyName) . '_attendance_report.xlsx' : 'trainee_attendance_by_course.xlsx';
 
         $filePath = 'reports/' . $fileName;
         Excel::store(new TraineeAttendanceExportByGroup($results), $filePath, 's3');
 
         $temporaryUrl = Storage::disk('s3')->temporaryUrl($filePath, now()->addMinutes(30));
 
+        \Log::info('GenerateCompanyCertificatesReportJob completed', [
+            'timestamp' => now()->toDateTimeString(),
+            'user_id' => $this->userId,
+            'report_file' => $filePath,
+        ]);
         // Notify the user
         $user = User::find($this->userId);
         if ($user) {
