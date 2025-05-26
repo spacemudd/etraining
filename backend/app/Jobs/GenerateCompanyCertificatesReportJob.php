@@ -77,9 +77,6 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
 
                 $traineesQuery = $batch->trainee_group->traineesWithTrashed();
 
-                $traineesQueryClone = clone $traineesQuery;
-                Log::info('Trainees count before chunk: ' . $traineesQueryClone->count());
-
                 if ($companyId) {
                     $traineesQuery->where('company_id', $companyId);
                     $company = Company::find($companyId);
@@ -87,6 +84,9 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
                         $companyName = $company->name_ar;
                     }
                 }
+
+                $traineesQueryClone = clone $traineesQuery;
+                Log::info('Trainees count before chunk: ' . $traineesQueryClone->count());
 
                 Log::info('Hello?');
 
