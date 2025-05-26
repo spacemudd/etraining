@@ -99,27 +99,19 @@ export default {
     },
     methods: {
         generateReport() {
-                this.form.processing = true;
+            this.form.processing = true;
 
-                axios.post(route('reports.company-certificates.generate'), this.form)
-                    .then(() => {
-                        this.form.processing = false;
-                        this.$notify({
-                            type: 'success',
-                            title: 'تم إرسال الطلب',
-                            text: 'سيتم تجهيز التقرير وإرساله إليك عند الانتهاء.'
-                        });
-                    })
-                    .catch(error => {
-                        this.form.processing = false;
-                        console.error('Error:', error);
-                        this.$notify({
-                            type: 'error',
-                            title: 'خطأ',
-                            text: 'حدث خطأ أثناء إرسال الطلب. الرجاء المحاولة لاحقًا.'
-                        });
-                    });
-            }
+            axios.post(route('reports.company-certificates.generate'), this.form)
+                .then(() => {
+                    this.form.processing = false;
+                    alert('تم إرسال الطلب بنجاح. سيتم تجهيز التقرير وإرساله إليك عند الانتهاء.');
+                })
+                .catch(error => {
+                    this.form.processing = false;
+                    console.error('Error:', error);
+                    alert('حدث خطأ أثناء إرسال الطلب. الرجاء المحاولة لاحقًا.');
+                });
+        }
     }
 }
 </script>
