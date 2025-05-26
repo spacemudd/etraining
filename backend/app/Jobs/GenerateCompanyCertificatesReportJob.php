@@ -103,6 +103,8 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
                             ->get()
                             ->unique('course_batch_session_id');
 
+                        Log::info('Attendance records count: ' . $attendanceRecords->count());
+
                         $presentCount = $attendanceRecords->whereIn('status', [1, 2, 3])->count();
                         $absentCount = $attendanceRecords->where('status', 0)->count();
 
