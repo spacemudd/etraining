@@ -604,7 +604,6 @@ class TraineesController extends Controller
      */
     public function update(Request $request, $trainee_id)
     {
-        Log::info($request->toArray());
         $request->validate([
             'company_id' => 'nullable|exists:companies,id',
             'trainee_group_name' => 'nullable|string|max:255',
@@ -639,11 +638,8 @@ class TraineesController extends Controller
 
         DB::beginTransaction();
         $trainee->update($request->except('_token'));
-        $trainee->educational_level_id = $request->educational_level_id;
-        $trainee->save();
-
         if ($user = $trainee->user) {
-            $user->email = $trainee->email;
+            $user->email = $trainee->refresh()->email;
             $user->save();
         }
 
