@@ -17,6 +17,8 @@ class VerifyPhoneOwnershipJob implements ShouldQueue
 
     public $trainee_id;
     public $timeout = 5;
+    public $tries = 1;
+    protected $response;
 
     /**
      * Create a new job instance.
@@ -44,6 +46,8 @@ class VerifyPhoneOwnershipJob implements ShouldQueue
         $response = ElmYakeen::new()
             ->verifyOwnership($trainee->identity_number, $trainee->clean_phone);
 
+        $this->response = $response;
+
         if (! array_key_exists('code', $response)) {
             $trainee->phone_ownership_verified_at = now();
             $trainee->phone_is_owned = $response['isOwner'] ?? null;
@@ -59,5 +63,13 @@ class VerifyPhoneOwnershipJob implements ShouldQueue
         ]);
 
         return 1;
+    }
+
+    public function failed(\Throwable $exception)
+    {
+        \Log::error('Phone verification failed for trainee ID ' . $this->trainee_id, [
+            'exception' => $exception->getMessage(),
+            'response' => $this->response ?? null,
+        ]);
     }
 }
