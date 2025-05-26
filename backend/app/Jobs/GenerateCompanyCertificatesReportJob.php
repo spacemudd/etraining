@@ -45,7 +45,7 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
         ini_set('memory_limit', '512M');
         set_time_limit(300);
 
-        $companyId = $this->requestData['companyId']['id'] ?? null;
+        $companyIds = array_column($this->requestData['companyId'], 'id');
         $companyName = '';
 
         foreach ($courses as $course) {
@@ -76,12 +76,10 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
 
                 $traineesQuery = $batch->trainee_group->traineesWithTrashed();
 
-                if ($companyId) {
-                    $traineesQuery->where('company_id', $companyId);
-                    $company = Company::find($companyId);
-                    if ($company) {
-                        $companyName = $company->name_ar;
-                    }
+                if (!empty($companyIds)) {
+                    $traineesQuery->whereIn('company_id', $companyIds);
+                    $companies = Company::whereIn('id', $companyIds)->get();
+                    $companyName = $companies->pluck('name_ar')->implode(', ');
                 }
 
                 $traineesQueryClone = clone $traineesQuery;
@@ -116,8 +114,8 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
 
                         $invoiceQuery = Invoice::where('trainee_id', $trainee->id);
 
-                        if ($companyId) {
-                            $invoiceQuery->where('company_id', $companyId);
+                        if (!empty($companyIds)) {
+                            $invoiceQuery->whereIn('company_id', $companyIds);
                         }
 
                         $invoice = $invoiceQuery->where(function ($query) use ($startOfTargetMonth, $endOfTargetMonth) {
