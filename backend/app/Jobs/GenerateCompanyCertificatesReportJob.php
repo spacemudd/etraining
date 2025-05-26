@@ -35,14 +35,12 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
 
     public function handle()
     {
-        $course = Course::find($this->requestData['courseId']['id']);
+        $courseIds = collect($this->requestData['courseId'])->pluck('id')->toArray();
+        $courses = Course::whereIn('id', $courseIds)->get();
 
-        if (!$course) {
+        if ($courses->isEmpty()) {
             return;
         }
-
-        $courseName = $course->name_ar;
-        $courses = Course::where('name_ar', $courseName)->get();
 
         $results = [];
         ini_set('memory_limit', '512M');
@@ -52,6 +50,7 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
         $companyName = '';
 
         foreach ($courses as $course) {
+            $courseName = $course->name_ar;
             $batches = $course->batches;
 
             foreach ($batches as $batch) {
