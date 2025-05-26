@@ -36,14 +36,8 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
 
     public function handle()
     {
-        $course = Course::find($this->requestData['courseId']['id']);
-
-        if (!$course) {
-            return;
-        }
-
-        $courseName = $course->name_ar;
-        $courses = Course::where('name_ar', $courseName)->get();
+        $courseIds = array_column($this->requestData['courseId'], 'id');
+        $courses = Course::whereIn('id', $courseIds)->get();
 
         $results = [];
         ini_set('memory_limit', '512M');
@@ -89,7 +83,7 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
                     $totalSessionsCount,
                     $startOfTargetMonth,
                     $endOfTargetMonth,
-                    $courseName,
+                    $course,
                     $companyName,
                     $companyId
                 ) {
@@ -135,7 +129,7 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
                                 'attendance_percentage' => round($attendancePercentage, 2) . ' %',
                                 'present_count' => $presentCount,
                                 'absent_count' => $absentCount,
-                                'course_name' => $courseName,
+                                'course_name' => $course->name_ar,
                                 'company_name' => $traineeCompanyName,
                                 'email' => $trainee->email,
                                 'phone' => $trainee->phone,
@@ -155,7 +149,7 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
             return ($attendanceNumeric >= 50 && $trainee['invoice_status'] == 'مدفوع') ? 1 : 0;
         })->values()->toArray();
 
-        $fileName = str_slug($companyName) ? str_slug($companyName) . '_attendance_report.xlsx' : 'trainee_attendance_by_course.xlsx';
+        $fileName = 'attendance_report_' . now()->timestamp . '.xlsx';
 
         $filePath = 'reports/' . $fileName;
         Excel::store(new TraineeAttendanceExportByGroup($results), $filePath, 's3');
