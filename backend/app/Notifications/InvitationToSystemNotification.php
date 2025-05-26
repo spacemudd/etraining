@@ -38,7 +38,7 @@ class InvitationToSystemNotification extends Notification implements ShouldQueue
         }
 
         if ($notifiable->phone) {
-            $notify_via[] = ClickSendChannel::class;
+            // $notify_via[] = ClickSendChannel::class;
         }
 
         return $notify_via;

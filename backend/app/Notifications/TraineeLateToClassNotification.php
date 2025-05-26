@@ -43,7 +43,7 @@ class TraineeLateToClassNotification extends Notification implements ShouldQueue
         }
 
         if ($notifiable->routeNotificationForClickSend()) {
-            $notify_via[] = ClickSendChannel::class;
+            //$notify_via[] = ClickSendChannel::class;
         }
 
         return $notify_via;

@@ -47,7 +47,7 @@ class CustomTraineeNotification extends Notification implements ShouldQueue
         }
 
         if ($notifiable->phone && $this->smsBody && $notifiable->routeNotificationForClickSend()) {
-            $notify_via[] = ClickSendChannel::class;
+            //$notify_via[] = ClickSendChannel::class;
         }
 
         return $notify_via;
