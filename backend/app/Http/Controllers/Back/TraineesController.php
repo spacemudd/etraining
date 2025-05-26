@@ -638,6 +638,9 @@ class TraineesController extends Controller
 
         DB::beginTransaction();
         $trainee->update($request->except('_token'));
+        $trainee->educational_level_id = $request->educational_level_id;
+        $trainee->save();
+        
         if ($user = $trainee->user) {
             $user->email = $trainee->email;
             $user->save();
