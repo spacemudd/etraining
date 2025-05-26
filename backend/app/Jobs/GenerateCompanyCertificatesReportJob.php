@@ -87,6 +87,8 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
                     }
                 }
 
+                Log::info('Hello?');
+
                 $traineesQuery->with('user')->with('company')->chunk(100, function ($traineesChunk) use (
                     &$results,
                     $batch,
@@ -98,6 +100,7 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
                     $companyId
                 ) {
                     foreach ($traineesChunk as $trainee) {
+                        Log::info('Hello2?');
                         $attendanceRecords = $trainee->attendanceReportRecords()
                             ->where('course_batch_id', $batch->id)
                             ->get()
