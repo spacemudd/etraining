@@ -604,7 +604,7 @@ class TraineesController extends Controller
      */
     public function update(Request $request, $trainee_id)
     {
-        Log::info('educational id: '. $request->educational_level_id);
+        Log::info('educational id: '. $request->toArray());
         $request->validate([
             'company_id' => 'nullable|exists:companies,id',
             'trainee_group_name' => 'nullable|string|max:255',
