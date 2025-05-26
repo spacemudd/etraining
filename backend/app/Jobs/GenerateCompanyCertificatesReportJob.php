@@ -38,7 +38,9 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
     {
         $courseIds = array_column($this->requestData['courseId'], 'id');
         $courses = Course::whereIn('id', $courseIds)->get();
-
+        Log::info('GenerateCompanyCertificatesReportJob started', [
+            'course_ids' => $courseIds,
+        ]);
         $results = [];
         ini_set('memory_limit', '512M');
         set_time_limit(300);
