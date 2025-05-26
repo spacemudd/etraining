@@ -14,6 +14,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 
@@ -41,6 +42,7 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
             'request_data' => $this->requestData,
         ]);
         $courseIds = collect($this->requestData['courseId'])->pluck('id')->toArray();
+        Log::info('courseIds', $courseIds);;
         $courses = Course::whereIn('id', $courseIds)->get();
 
         if ($courses->isEmpty()) {
