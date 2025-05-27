@@ -36,20 +36,19 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
 
     public function handle()
     {
-        $courseIds = array_column($this->requestData['courseId'], 'id');
-        $courses = Course::whereIn('id', $courseIds)->get();
-        Log::info('GenerateCompanyCertificatesReportJob started', [
-            'course_ids' => $courseIds,
-        ]);
+        $selectedCourseIds = array_column($this->requestData['courseId'], 'id');
+        $selectedCourses = Course::whereIn('id', $selectedCourseIds)->get();
+        $courseNames = $selectedCourses->pluck('name_ar')->unique()->toArray();
+        $courses = Course::whereIn('name_ar', $courseNames)->get();
+
         $results = [];
         ini_set('memory_limit', '512M');
         set_time_limit(300);
 
-        $companyId = $this->requestData['companyId']['id'] ?? null;
+        $companyIds = array_column($this->requestData['companyId'], 'id');
         $companyName = '';
 
         foreach ($courses as $course) {
-            Log::info('Course: ' . $course->name_ar . ' | Batches count: ' . $course->batches->count());
             $batches = $course->batches;
 
             foreach ($batches as $batch) {
@@ -77,18 +76,14 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
 
                 $traineesQuery = $batch->trainee_group->traineesWithTrashed();
 
-                if ($companyId) {
-                    $traineesQuery->where('company_id', $companyId);
-                    $company = Company::find($companyId);
-                    if ($company) {
-                        $companyName = $company->name_ar;
-                    }
+                if (!empty($companyIds)) {
+                    $traineesQuery->whereIn('company_id', $companyIds);
+                    $companies = Company::whereIn('id', $companyIds)->get();
+                    $companyName = $companies->pluck('name_ar')->implode(', ');
                 }
 
                 $traineesQueryClone = clone $traineesQuery;
                 Log::info('Trainees count before chunk: ' . $traineesQueryClone->with(['user', 'company'])->count());
-
-                Log::info('Hello?');
 
                 $traineesQuery->with('user')->with('company')->chunk(100, function ($traineesChunk) use (
                     &$results,
@@ -98,11 +93,9 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
                     $endOfTargetMonth,
                     $course,
                     $companyName,
-                    $companyId
+                    $companyIds
                 ) {
                     foreach ($traineesChunk as $trainee) {
-                        Log::info('Sample trainee company_id: ' . $trainee->company_id);
-                        Log::info('Hello2?');
                         $attendanceRecords = $trainee->attendanceReportRecords()
                             ->where('course_batch_id', $batch->id)
                             ->get()
@@ -117,8 +110,8 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
 
                         $invoiceQuery = Invoice::where('trainee_id', $trainee->id);
 
-                        if ($companyId) {
-                            $invoiceQuery->where('company_id', $companyId);
+                        if (!empty($companyIds)) {
+                            $invoiceQuery->whereIn('company_id', $companyIds);
                         }
 
                         $invoice = $invoiceQuery->where(function ($query) use ($startOfTargetMonth, $endOfTargetMonth) {

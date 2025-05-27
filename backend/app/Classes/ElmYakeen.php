@@ -34,7 +34,7 @@ class ElmYakeen
      */
     public function verifyOwnership(string $id_number, string $phone_number)
     {
-        return Http::withHeaders($this->http_headers)
+        return Http::timeout(10)->withHeaders($this->http_headers)
             ->get('https://yakeen-lite.api.elm.sa:443/api/v1/person/'.$id_number.'/owns-mobile/'.$phone_number)
             ->json();
     }

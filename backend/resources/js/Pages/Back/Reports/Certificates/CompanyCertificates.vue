@@ -42,6 +42,7 @@
                             placeholder="Select a company"
                             required
                             searchable
+                            :multiple="true"
                             class="block w-full mt-1"
                         />
                     </div>
@@ -92,8 +93,8 @@ export default {
     data() {
         return {
             form: {
-                courseId: [],
-                companyId: null,
+                courseId: null,
+                companyId: [],
                 processing: false,
             },
         }

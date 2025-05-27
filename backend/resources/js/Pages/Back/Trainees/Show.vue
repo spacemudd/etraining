@@ -250,7 +250,7 @@
           >
             {{ $t("words.block-trainee") }}
           </button>
-         
+
 
           <inertia-link
             v-can="'block-trainee'"
@@ -273,9 +273,9 @@
                   >
                     {{ $t("words.send-contract") }}
                 </inertia-link>
-              
 
-      
+
+
 
                  <div
                     v-if="trainee.must_sign && (trainee.zoho_contract_status !== 'completed')"
@@ -292,13 +292,13 @@
                 ✅ {{ $t("words.contract-verified") }} <br />
                 <span class="font-bold">{{ trainee.zoho_sign_date }}</span>
               </div>
-              
-
-             
-          
 
 
-                  
+
+
+
+
+
           </div>
                <button
               v-if="trainee.must_sign==true"
@@ -309,7 +309,7 @@
               {{ $t("words.cancel-contract") }}
             </button>
 
-            
+
 
         </div>
 
@@ -1259,7 +1259,7 @@ export default {
           phone: this.trainee.phone,
           phone_additional: this.trainee.phone_additional,
           national_address: this.trainee.national_address,
-          educational_level: this.trainee.educational_level_id,
+          educational_level_id: this.trainee.educational_level_id,
           city_id: this.trainee.city_id,
           marital_status_id: this.trainee.marital_status_id,
           children_count: this.trainee.children_count,
