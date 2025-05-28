@@ -1,4 +1,4 @@
-FROM trafex/php-nginx:latest
+FROM trafex/php-nginx:3.5.0
 
 # Supervisord settings
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
