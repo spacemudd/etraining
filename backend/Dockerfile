@@ -15,7 +15,7 @@ COPY php-settings.ini /etc/php82/conf.d/settings.ini
 
 COPY --chown=nobody . /var/www/html
 RUN mkdir -p /var/run/php && \
-    chown -R nobody.nobody /var/run/php
+    chown -R nobody:nobody /var/run/php
 
 # Install composer from the official image
 COPY --from=composer /usr/bin/composer /usr/bin/composer
