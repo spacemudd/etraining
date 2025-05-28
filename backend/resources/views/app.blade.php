@@ -37,7 +37,7 @@
         <script src="{{ mix('js/app.js') }}" defer></script>
     </head>
     <body class="font-sans antialiased">
-        @if (env('APP_URL') === 'https://prod.ptc-ksa.com')
+        @if (env('APP_URL') === 'https://prod.jasarah-ksa.com')
             <div class="w-full bg-blue-600 text-center p-5 text-white">
                 النظام في البيئة الإختبارية
             </div>
