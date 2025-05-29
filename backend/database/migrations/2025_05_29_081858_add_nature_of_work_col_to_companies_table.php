@@ -14,7 +14,7 @@ class AddNatureOfWorkColToCompaniesTable extends Migration
     public function up()
     {
         Schema::table('companies', function (Blueprint $table) {
-            $table->string('nature_of_work')->nullable()->after('company_name');
+            $table->string('nature_of_work')->nullable()->after('email');
         });
     }
 
