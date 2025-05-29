@@ -705,6 +705,5 @@ return [
     'app-settings' => "اعدادات النظام",
     'attendance-due-dates' => 'الحضور طبقا لتواريخ محددة',
     'cancel-contract' => 'إلغاء العقد',
-
-
+    'nature_of_work' => 'طبيعة العمل',
 ];
