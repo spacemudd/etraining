@@ -104,6 +104,7 @@
                 'email',
                 'monthly_subscription_per_trainee',
                 'shelf_number',
+                'nature_of_work',
                 'salesperson_email',
                 'salesperson_name',
               ]"
@@ -214,12 +215,13 @@ export default {
     this.form.monthly_subscription_per_trainee =
       this.company.monthly_subscription_per_trainee;
     this.form.shelf_number = this.company.shelf_number;
+      this.form.nature_of_work = this.company.nature_of_work;
     this.form.region_id = this.company.region_id;
     this.form.center_id = this.company.center_id;
     this.form.recruitment_company_id = this.company.recruitment_company_id;
     this.form.salesperson_email = this.company.salesperson_email;
     this.form.salesperson_name = this.company.salesperson_name;
-   
+
   },
   data() {
     return {
@@ -235,6 +237,7 @@ export default {
           email: "",
           monthly_subscription_per_trainee: "",
           shelf_number: "",
+            nature_of_work: "",
           salesperson_email: "",
           salesperson_name: "",
           region_id: "",

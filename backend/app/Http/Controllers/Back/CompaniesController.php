@@ -83,6 +83,7 @@ class CompaniesController extends Controller
         'address' => 'nullable|string|max:255',
         'monthly_subscription_per_trainee' => 'nullable|numeric|min:0|max:100000',
         'shelf_number' => 'nullable|string|max:255',
+        'nature_of_work' => 'nullable|string|max:255',
         'salesperson_email' => 'nullable|email',
         'salesperson_name' => 'nullable',
         'region_id' => 'nullable|exists:regions,id',
@@ -90,7 +91,7 @@ class CompaniesController extends Controller
         'recruitment_company_id' => 'nullable|exists:recruitment_companies,id',
     ]);
 
-   
+
     $company = Company::create($validated);
 
     app()->make(CompaniesService::class)->notifyUsersAboutNewCompany($company);
@@ -180,7 +181,7 @@ class CompaniesController extends Controller
     public function edit($id)
     {
         $company = Company::with('recruitmentCompany')->findOrFail($id);
-    
+
         return Inertia::render('Back/Companies/Edit', [
             'company' => $company,
             'regions' => Region::orderBy('name')->get(),
@@ -188,7 +189,7 @@ class CompaniesController extends Controller
             'recruitmentCompanies' =>RecruitmentCompany::orderBy('name')->get(),
         ]);
     }
-    
+
 
 
     /**
@@ -212,30 +213,31 @@ class CompaniesController extends Controller
             'address' => 'nullable|string|max:255',
             'monthly_subscription_per_trainee' => 'nullable|numeric|min:0|max:100000',
             'shelf_number' => 'nullable|string|max:255',
+            'nature_of_work' => 'nullable|string|max:255',
             'region_id' => 'nullable|exists:regions,id',
             'center_id' => 'nullable|exists:centers,id',
             'recruitment_company_id' => 'nullable|exists:recruitment_companies,id',
         ]);
-    
-       
-    
+
+
+
         $company = Company::findOrFail($id);
         $company->update($request->except(['_token']));
 
-    
+
         // Get regions and centers for redirection
         $region = Region::orderBy('name')->get();
         $center = Center::orderBy('name')->get();
-        $recruitmentCompanies =  RecruitmentCompany::orderBy('name')->get(); 
+        $recruitmentCompanies =  RecruitmentCompany::orderBy('name')->get();
 
-    
+
         return redirect()->route('back.companies.show', ['company' => $company, 'region' => $region, 'center' => $center ,'recruitmentCompanies' => $recruitmentCompanies ])->with(
             'success',
             __('words.updated-successfully')
         );
     }
-    
-    
+
+
 
     /**
      * Remove the specified resource from storage.
@@ -314,5 +316,5 @@ class CompaniesController extends Controller
 
 
 
-    
+
 }

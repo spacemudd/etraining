@@ -54,6 +54,7 @@ class Company extends Model implements SearchableLabels, Auditable, HasMedia
         'region_id',
         'center_id',
         'recruitment_company_id',
+        'nature_of_work'
     ];
 
     protected $appends = [

@@ -139,9 +139,10 @@
             'email',
             'monthly_subscription_per_trainee',
             'shelf_number',
+            'nature_of_work',
             'salesperson_email',
             'salesperson_name',
-          
+
           ]"
         >
           <div class="col-span-4 sm:col-span-1">
@@ -894,6 +895,7 @@ export default {
           email: "",
           monthly_subscription_per_trainee: "",
           shelf_number: "",
+            nature_of_work: "",
           salesperson_email: "",
           salesperson_name: "",
           region_id: "",
@@ -1013,7 +1015,7 @@ export default {
       }
     },
   deleteTrainees: function (selected) {
-  const batchSize = 50;  
+  const batchSize = 50;
   const batches = [];
 
   for (let i = 0; i < selected.length; i += batchSize) {
