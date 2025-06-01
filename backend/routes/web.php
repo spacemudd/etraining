@@ -20,7 +20,7 @@ use Illuminate\Mail\Markdown;
 
 
 Route::get('/qr1', function() {
-    return redirect('https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAANAASXDrmxUM0RYRkRKRE9UTFhSMlpSTkE5ODhaNElWQi4u');
+    return redirect('https://forms.gle/t9nhZgKqz5za9xmp9');
 });
 
 Route::get('/qr2', function() {
