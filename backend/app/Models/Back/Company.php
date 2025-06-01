@@ -93,24 +93,24 @@ class Company extends Model implements SearchableLabels, Auditable, HasMedia
         //    }
         //}
 
-        if (auth()->user()) {
-            $roles = auth()->user()->getRoleNames();
-            $hasRestrictedRole = $roles->contains(function ($role) {
-                return str_contains($role, 'chasers')
-                    || str_contains($role, 'ادارة المحصلين')
-                    || str_contains($role, '_finance');
-            });
-
-            if ($hasRestrictedRole) {
-                static::addGlobalScope('natureOfWorkScope', function (Builder $builder) {
-                    if (auth()->user()->email === 'bashayer@hadaf-hq.com') {
-                        $builder->where('nature_of_work', 'عمل عن بعد');
-                    } else {
-                        $builder->where('nature_of_work', '!=', 'عمل عن بعد');
-                    }
-                });
-            }
-        }
+//        if (auth()->user()) {
+//            $roles = auth()->user()->getRoleNames();
+//            $hasRestrictedRole = $roles->contains(function ($role) {
+//                return str_contains($role, 'chasers')
+//                    || str_contains($role, 'ادارة المحصلين')
+//                    || str_contains($role, '_finance');
+//            });
+//
+//            if ($hasRestrictedRole) {
+//                static::addGlobalScope('natureOfWorkScope', function (Builder $builder) {
+//                    if (auth()->user()->email === 'bashayer@hadaf-hq.com') {
+//                        $builder->where('nature_of_work', 'عمل عن بعد');
+//                    } else {
+//                        $builder->where('nature_of_work', '!=', 'عمل عن بعد');
+//                    }
+//                });
+//            }
+//        }
 
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string) Str::uuid();
