@@ -654,7 +654,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::post('invoices/{id}/upload-receipt', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'uploadReceipt'])->name('invoices.upload-receipt');
             Route::post('invoices/{id}/mark-as-unpaid-from-chaser', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'markAsUnpaidFromChaser'])->name('invoices.mark-as-unpaid-from-chaser');
             Route::post('invoices/{id}/mark-as-paid-from-chaser', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'markAsPaidFromChaser'])->name('invoices.mark-as-paid-from-chaser');
-            Route::get('invoices/{id}/payment-url', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'getPaymentUrl'])->name('invoices.payment-url');
             Route::post('invoices/{id}/approve-payment-receipt/store', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'storePaymentReceiptProof'])->name('invoices.approve-payment-receipt.store');
             Route::get('invoices/{id}/approve-payment-receipt', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'approvePaymentReceipt'])->name('invoices.approve-payment-receipt');
             Route::post('invoices/{id}/reject-payment-receipt', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'rejectPaymentReceipt'])->name('invoices.reject-payment-receipt');
