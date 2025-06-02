@@ -106,7 +106,8 @@ class Company extends Model implements SearchableLabels, Auditable, HasMedia
                     if (auth()->user()->email === 'bashayer@hadaf-hq.com') {
                         $builder->where('nature_of_work', 'عمل عن بعد');
                     } else {
-                        $builder->where('nature_of_work', '!=', 'عمل عن بعد');
+                        $builder->where('nature_of_work', '!=', 'عمل عن بعد')
+                        ->orWhere('nature_of_work', null);
                     }
                 });
             }
