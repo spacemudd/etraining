@@ -692,4 +692,6 @@ return [
     'attendance-due-dates' => 'Attendance Due Dates',
     'cancel-contract' => 'Cancel Contract',
     'nature_of_work' => 'Nature of Work',
+    'payment-link' => 'Payment Link',
+    'copied' => 'Copied',
 ];

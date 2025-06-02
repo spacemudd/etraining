@@ -706,4 +706,6 @@ return [
     'attendance-due-dates' => 'الحضور طبقا لتواريخ محددة',
     'cancel-contract' => 'إلغاء العقد',
     'nature_of_work' => 'طبيعة العمل',
+    'payment-link' => 'رابط الدفع',
+    'copied' => 'تم النسخ بنجاح',
 ];
