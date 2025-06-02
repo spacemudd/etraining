@@ -595,9 +595,9 @@ class  FinancialInvoicesController extends Controller
         return redirect()->route('back.finance.invoices.show', $invoice->id);
     }
 
-    public function getPaymentUrl(Invoice $invoice)
+    public function getPaymentUrl($id)
     {
-        $invoice = Invoice::notPaid()->with(['company', 'trainee'])->find($invoice->id);
+        $invoice = Invoice::notPaid()->with(['company', 'trainee'])->find($id);
         $url = (new NoonService())->createPaymentUrlForInvoice($invoice);
         return response()->json(['url' => $url]);
     }
