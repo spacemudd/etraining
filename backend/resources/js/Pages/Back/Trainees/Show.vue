@@ -380,7 +380,7 @@
             autocomplete="off"
             :disabled="!editButton.editOption"
           />
-          <div v-if="trainee.company && trainee.company.nature_of_work === 'عمل عن بعد'" class="mt-2 p-2 bg-blue-100 text-blue-800 rounded-md text-sm">
+          <div v-if="trainee.company && trainee.company.nature_of_work === 'عمل عن بعد'" class="mt-2 p-2 bg-red-100 text-red-800 rounded-md text-sm">
             هذه الشركة تعمل عن بعد
           </div>
         </div>
