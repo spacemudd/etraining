@@ -165,6 +165,9 @@
                 >
               </div>
             </div>
+            <div v-if="fieldName === 'nature_of_work' && company.nature_of_work === 'عمل عن بعد'" class="mt-2 p-2 bg-red-100 text-red-800 rounded-md text-sm">
+              هذه الشركة تعمل عن بعد
+            </div>
           </div>
         </template>
         <div class="col-span-4 sm:col-span-1">

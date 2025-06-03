@@ -174,6 +174,19 @@
                                 <div class="my-0.5">{{ invoice.from_date | formatDate }}</div>
                                 <div class="font-bold my-0.5">{{ $t('words.to-date') }}</div>
                                 <div class="my-0.5">{{ invoice.to_date | formatDate }}</div>
+                                <div v-if="invoice.status === 0" class="font-bold my-0.5">{{ $t('words.payment-link') }}</div>
+                                <div v-if="invoice.status === 0" class="my-0.5 flex items-center gap-2">
+                                    <input type="text" :value="paymentUrl" class="bg-gray-100 px-3 py-1 rounded-md flex-grow" readonly />
+                                    <button @click="copyToClipboard(paymentUrl)" class="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 flex items-center gap-1">
+                                        <svg v-if="!copied" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+                                        </svg>
+                                        <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        {{ copied ? $t('words.copied') : $t('words.copy') }}
+                                    </button>
+                                </div>
                                 <hr class="my-3">
                                 <hr class="my-3">
                                 <div v-if="invoice.trainee_bank_payment_receipt">
@@ -561,6 +574,8 @@ export default {
             searchString: '',
             searchResults: [],
             searchBoxVisible: false,
+            paymentUrl: null,
+            copied: false,
         }
     },
     mounted() {
@@ -568,6 +583,7 @@ export default {
         this.form.old_to_date = this.old_to_date;
         this.form.created_at = this.created_at;
         this.form.created_by_id = this.created_by_id;
+        this.loadPaymentUrl();
     },
     methods: {
         triggerSearching() {
@@ -747,6 +763,28 @@ export default {
                     this.$confetti.stop();
                 }, 2000);
             }
+        },
+        loadPaymentUrl() {
+            axios.get(route('back.finance.invoices.payment-url', this.invoice.id))
+                .then(response => {
+                    this.paymentUrl = response.data.url;
+                })
+                .catch(error => {
+                    console.error('Error loading payment URL:', error);
+                });
+        },
+        copyToClipboard(text) {
+            if (!text) return;
+            const input = document.createElement('input');
+            input.value = text;
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand('copy');
+            document.body.removeChild(input);
+            this.copied = true;
+            setTimeout(() => {
+                this.copied = false;
+            }, 2000);
         },
     }
 }

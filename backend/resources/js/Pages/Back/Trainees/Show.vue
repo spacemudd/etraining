@@ -380,6 +380,9 @@
             autocomplete="off"
             :disabled="!editButton.editOption"
           />
+          <div v-if="trainee.company && trainee.company.nature_of_work === 'عمل عن بعد'" class="mt-2 p-2 bg-red-100 text-red-800 rounded-md text-sm">
+            هذه الشركة تعمل عن بعد
+          </div>
         </div>
         <div v-else class="col-span-6 sm:col-span-2">
           <jet-label for="company_id" :value="$t('words.company')" />

@@ -14,6 +14,7 @@ use App\Models\JobTracker;
 use App\Models\TraineeBankPaymentReceipt;
 use App\Models\User;
 use App\Reports\InvoicesReportFactory;
+use App\Services\NoonService;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context\CustomContext;
 use Brick\Money\Money;
@@ -592,6 +593,13 @@ class  FinancialInvoicesController extends Controller
         $invoice->status = Invoice::STATUS_UNPAID;
         $invoice->save();
         return redirect()->route('back.finance.invoices.show', $invoice->id);
+    }
+
+    public function getPaymentUrl($id)
+    {
+        $invoice = Invoice::notPaid()->with(['company', 'trainee'])->find($id);
+        $url = (new NoonService())->createPaymentUrlForInvoice($invoice);
+        return response()->json(['url' => $url]);
     }
 }
 

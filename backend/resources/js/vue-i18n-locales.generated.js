@@ -729,7 +729,9 @@ export default {
             "app-settings": "اعدادات النظام",
             "attendance-due-dates": "الحضور طبقا لتواريخ محددة",
             "cancel-contract": "إلغاء العقد",
-            "nature_of_work": "طبيعة العمل"
+            "nature_of_work": "طبيعة العمل",
+            "payment-link": "رابط الدفع",
+            "copied": "تم النسخ بنجاح"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1596,7 +1598,9 @@ export default {
             "app-settings": "App settings",
             "attendance-due-dates": "Attendance Due Dates",
             "cancel-contract": "Cancel Contract",
-            "nature_of_work": "Nature of Work"
+            "nature_of_work": "Nature of Work",
+            "payment-link": "Payment Link",
+            "copied": "Copied"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",
