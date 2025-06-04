@@ -60,6 +60,12 @@
                     {{ $t('words.attendance-due-dates') }}
                 </inertia-link>
 
+                <inertia-link v-if="$page.props.user.email === 'sara@hadaf-hq.com'"
+                              :href="route('back.reports.deleted-trainees.index')"
+                              class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
+                    {{ $t('words.deleted-trainees-report') }}
+                </inertia-link>
+
             </div>
 
         </div>

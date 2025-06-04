@@ -986,3 +986,6 @@ Route::get('/send-test-email', function () {
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('/contract-guides',[\App\Http\Controllers\Back\TraineesController::class,'contractGuides'])->name('contract-guides');
 });
+
+Route::get('reports/deleted-trainees', [\App\Http\Controllers\Back\DeletedTraineesReportController::class, 'index'])->name('reports.deleted-trainees.index');
+Route::post('reports/deleted-trainees/generate', [\App\Http\Controllers\Back\DeletedTraineesReportController::class, 'generate'])->name('reports.deleted-trainees.generate');

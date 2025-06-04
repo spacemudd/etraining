@@ -695,6 +695,7 @@ return [
     'system' => 'System',
     'app-settings' => 'App settings',
     'attendance-due-dates' => 'Attendance Due Dates',
+    'deleted-trainees-report' => 'Deleted Trainees Report',
     'cancel-contract' => 'Cancel Contract',
     'nature_of_work' => 'Nature of Work',
     'payment-link' => 'Payment Link',
