@@ -256,8 +256,8 @@
                 <div>{{ $t("words.total-trainees") }}: {{ company.total_trainees_count }}</div>
                 <div>{{ $t("words.active-trainees") }}: {{ company.trainees_count }}</div>
                 <div>{{ $t("words.trashed-trainees") }}: {{ trainees_trashed_count }}</div>
-                <div class="ml-4">- {{ $t("words.deleted-not-posted") }}: {{ company.trashed_not_posted_count }}</div>
-                <div class="ml-4">- {{ $t("words.posted-trainees") }}: {{ company.posted_trainees_count }}</div>
+                <div class="mr-4">- {{ $t("words.deleted-not-posted") }}: {{ company.trashed_not_posted_count }}</div>
+                <div class="mr-4">- {{ $t("words.posted-trainees") }}: {{ company.posted_trainees_count }}</div>
               </div>
             </h3>
             <inertia-link
