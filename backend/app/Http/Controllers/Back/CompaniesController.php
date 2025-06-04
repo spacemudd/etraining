@@ -159,15 +159,24 @@ class CompaniesController extends Controller
             ->latest()
             ->get();
 
-        return Inertia::render('Back/Companies/Show',[
-            'company' => $company,
+        // Get all trainee counts
+        $total_trainees_count = Trainee::where('company_id', $company->id)->withTrashed()->count();
+        $active_trainees_count = Trainee::where('company_id', $company->id)->count();
+        $posted_trainees_count = Trainee::where('company_id', $company->id)->whereNotNull('posted_at')->withTrashed()->count();
+        $trashed_trainees_count = Trainee::where('company_id', $company->id)->onlyTrashed()->count();
+
+        return Inertia::render('Back/Companies/Show', [
+            'company' => array_merge($company->toArray(), [
+                'total_trainees_count' => $total_trainees_count,
+                'trainees_count' => $active_trainees_count,
+                'posted_trainees_count' => $posted_trainees_count,
+            ]),
             'invoices' => $invoices,
             'instructors' => Instructor::get(),
-            'trainees_trashed_count' => Trainee::where('company_id', $company->id)->onlyTrashed()->count(),
+            'trainees_trashed_count' => $trashed_trainees_count,
             'regions' => Region::orderBy('name')->get(),
             'centers' => Center::orderBy('name')->get(),
             'recruitmentCompanies' => RecruitmentCompany::orderBy('name')->get(),
-
         ]);
     }
 

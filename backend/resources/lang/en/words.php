@@ -13,6 +13,10 @@ return [
     'candidates' => 'Candidates',
     'instructors' => 'Instructors',
     'trainees' => 'Trainees',
+    'total-trainees' => 'Total Trainees',
+    'active-trainees' => 'Active Trainees',
+    'posted-trainees' => 'Posted Trainees',
+    'trashed-trainees' => 'Trashed Trainees',
     'courses' => 'Courses',
     'quick-actions' => 'Quick actions',
     'add-new-trainee' => 'Add new trainee',
@@ -189,7 +193,7 @@ return [
     'access-the-platform' => 'Access the platform',
     'thank-you-for-applying' => 'Thank you for applying!',
     'with-regards' => 'Kind regards',
-    'url-problem' => "If you’re having trouble clicking the \":actionText\" button, copy and paste the URL below\n" .
+    'url-problem' => "If you're having trouble clicking the \":actionText\" button, copy and paste the URL below\n" .
         'into your web browser:',
     'all-rights-reserved' => 'All rights reserved',
     'welcome-to-ptc' => 'Welcome to training portal',
