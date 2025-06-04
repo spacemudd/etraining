@@ -18,7 +18,8 @@
                                 <input
                                     type="date"
                                     v-model="form.date_from"
-                                    class="block w-full mt-1 text-sm rounded border-gray-300 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple form-input"
+                                    class="block w-full mt-1 text-sm border-gray-300 rounded-md focus:border-purple-400 focus:outline-none focus:shadow-outline-purple form-input"
+                                    required
                                 />
                             </label>
                         </div>
@@ -29,7 +30,8 @@
                                 <input
                                     type="date"
                                     v-model="form.date_to"
-                                    class="block w-full mt-1 text-sm rounded border-gray-300 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple form-input"
+                                    class="block w-full mt-1 text-sm border-gray-300 rounded-md focus:border-purple-400 focus:outline-none focus:shadow-outline-purple form-input"
+                                    required
                                 />
                             </label>
                         </div>
@@ -39,10 +41,21 @@
                                 type="submit"
                                 class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
                             >
-                                {{ $t('words.export') }}
+                                {{ $t('words.generate-report') }}
                             </button>
                         </div>
                     </form>
+
+                    <div class="mt-4 text-sm text-gray-600">
+                        <p>{{ $t('words.deleted-trainees-report-description') }}</p>
+                        <ul class="list-disc list-inside mt-2">
+                            <li>{{ $t('words.report-includes-name') }}</li>
+                            <li>{{ $t('words.report-includes-company') }}</li>
+                            <li>{{ $t('words.report-includes-contact') }}</li>
+                            <li>{{ $t('words.report-includes-deletion-info') }}</li>
+                            <li>{{ $t('words.report-includes-posted-status') }}</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -60,16 +73,16 @@ export default {
     },
     data() {
         return {
-            form: this.$inertia.form({
+            form: {
                 date_from: '',
                 date_to: '',
-            }),
+            }
         }
     },
     methods: {
         generateReport() {
-            this.form.post(route('back.reports.deleted-trainees.generate'))
-        },
-    },
+            window.location.href = route('back.reports.deleted-trainees.generate', this.form)
+        }
+    }
 }
 </script> 
