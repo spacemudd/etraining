@@ -17,6 +17,7 @@ return [
     'active-trainees' => 'Active Trainees',
     'posted-trainees' => 'Posted Trainees',
     'trashed-trainees' => 'Trashed Trainees',
+    'deleted-not-posted' => 'Deleted (Not Posted)',
     'courses' => 'Courses',
     'quick-actions' => 'Quick actions',
     'add-new-trainee' => 'Add new trainee',

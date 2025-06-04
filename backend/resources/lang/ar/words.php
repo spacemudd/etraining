@@ -16,6 +16,7 @@ return [
     'active-trainees' => 'المتدربين النشطين',
     'posted-trainees' => 'المتدربين المرحلين',
     'trashed-trainees' => 'المتدربين المحذوفين',
+    'deleted-not-posted' => 'المحذوفين (غير مرحلين)',
     'courses' => 'الدورات التدريبية',
     'quick-actions' => 'إجراءات سريعة',
     'add-new-trainee' => 'أضف متدرب جديد',

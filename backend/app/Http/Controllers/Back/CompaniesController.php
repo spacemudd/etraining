@@ -164,12 +164,14 @@ class CompaniesController extends Controller
         $active_trainees_count = Trainee::where('company_id', $company->id)->count();
         $posted_trainees_count = Trainee::where('company_id', $company->id)->whereNotNull('posted_at')->withTrashed()->count();
         $trashed_trainees_count = Trainee::where('company_id', $company->id)->onlyTrashed()->count();
+        $trashed_not_posted_count = Trainee::where('company_id', $company->id)->onlyTrashed()->whereNull('posted_at')->count();
 
         return Inertia::render('Back/Companies/Show', [
             'company' => array_merge($company->toArray(), [
                 'total_trainees_count' => $total_trainees_count,
                 'trainees_count' => $active_trainees_count,
                 'posted_trainees_count' => $posted_trainees_count,
+                'trashed_not_posted_count' => $trashed_not_posted_count,
             ]),
             'invoices' => $invoices,
             'instructors' => Instructor::get(),
