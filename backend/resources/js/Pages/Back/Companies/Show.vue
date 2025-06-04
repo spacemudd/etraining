@@ -845,7 +845,11 @@ import PostTraineesButton from "@/Components/PostTraineesButton";
 import Input from "../../../Jetstream/Input";
 
 export default {
-  metaInfo: { title: "Files" },
+  metaInfo() {
+    return {
+      title: this.company.name_ar
+    }
+  },
   props: [
     "sessions",
     "company",
