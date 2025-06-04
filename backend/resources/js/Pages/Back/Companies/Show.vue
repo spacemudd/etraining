@@ -252,12 +252,12 @@
           <div class="px-4 sm:px-0">
             <h3 class="text-lg font-medium text-gray-900">
               {{ $t("words.trainees") }}
-              <span v-if="company.trainees_count"
-                >({{ company.trainees_count }})</span
-              >
-              <span v-if="trainees_trashed_count"
-                >({{ trainees_trashed_count }})</span
-              >
+              <div class="mt-2 text-sm text-gray-600">
+                <div>{{ $t("words.total-trainees") }}: {{ company.total_trainees_count }}</div>
+                <div>{{ $t("words.active-trainees") }}: {{ company.trainees_count }}</div>
+                <div>{{ $t("words.posted-trainees") }}: {{ company.posted_trainees_count }}</div>
+                <div>{{ $t("words.trashed-trainees") }}: {{ trainees_trashed_count }}</div>
+              </div>
             </h3>
             <inertia-link
               class="text-sm mt-2 text-blue-500 hover:text-blue-700"
