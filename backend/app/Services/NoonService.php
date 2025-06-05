@@ -53,7 +53,7 @@ class NoonService implements PaymentServiceInterface
             'configuration' => [
                 'locale' => 'ar',
                 'webhookUrl' => $webhookUrl,
-                'returnUrl' => route('trainees.payment.card.charge'),
+                'returnUrl' => 'https://app.jasarah-ksa.com/trainees/payment/card/charge-payment',
                 // 'generateShortLink' => true, // TODO: When sharing the invoice with SMS.
             ]
         ]);
