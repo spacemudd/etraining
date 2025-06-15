@@ -8,6 +8,7 @@
     <tr>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.invoice-number') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.company') }}</strong></th>
+        <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.nature_of_work') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.trainee') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.email') }}</strong></th>
         <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.identity_number') }}</strong></th>
@@ -29,6 +30,7 @@
         <tr>
             <td style="width:50px;text-align:center;border:1px solid black;">{{ $invoice->number_formatted }}</td>
             <td style="width:50px;text-align:center;border:1px solid black;">{{ $invoice->company->name_ar }}</td>
+            <td style="width:50px;text-align:center;border:1px solid black;">{{ $invoice->company->nature_of_work }}</td>
             <td style="border:1px solid black;">{{ $invoice->trainee->name }}</td>
             <td style="border:1px solid black;">{{ $invoice->trainee->email }}</td>
             <td style="border:1px solid black;">{{ $invoice->trainee->identity_number }}</td>
