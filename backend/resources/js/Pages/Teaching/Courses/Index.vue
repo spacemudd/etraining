@@ -49,11 +49,14 @@
                                         {{ course.closest_course_batch }}
                             </span>
                         </td>
-                        <td class="border-t">
-                            <div class="px-6 py-4 flex items-center focus:text-indigo-500">
-                                    <div>{{ course.name_ar }}</div>
-                            </div>
-                        </td>
+                    <td class="border-t">
+                        <div class="px-6 py-4 flex items-center focus:text-indigo-500">
+                            <inertia-link :href="route('teaching.courses.show', course.id)" class="text-blue-600 hover:underline">
+                                {{ course.name_ar }}
+                            </inertia-link>
+                        </div>
+                    </td>
+                        
                         <td class="border-t">
                             <div class="px-6 py-4 flex items-center focus:text-indigo-500">
                                 {{ course.approval_code }}</div>
