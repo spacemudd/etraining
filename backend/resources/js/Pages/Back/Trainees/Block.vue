@@ -39,6 +39,8 @@
                             <option value="الوفاة">الوفاة</option>
                             <option value="مصدر لها شهادة">مصدر لها شهادة</option>
                             <option value="طالبة">طالبة</option>
+                            <option value="حذف فترة تجربة">حذف فترة تجربة</option>
+
 
                         </select>
                         <button type="submit" class="mt-5 items-center justify-start float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400">
