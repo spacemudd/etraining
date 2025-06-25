@@ -9,12 +9,6 @@
           ]"
       ></breadcrumb-container>
 
-      <div v-if="trainee.identity_number === '1101036869'" class="col-span-6 items-center justify-end bg-yellow-100 text-right flex gap-6 p-4 my-4 rounded border border-yellow-400">
-        <span class="text-lg font-bold text-yellow-800">
-          للاستمرار في حضور الدورات الرجاء التواصل مع الرقم 0551333268 للضروره
-        </span>
-      </div>
-
       <validation-errors
         :errors="validationErrors"
         v-if="validationErrors"

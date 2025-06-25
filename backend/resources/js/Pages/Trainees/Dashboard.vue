@@ -300,6 +300,16 @@
                 </div>
             </div>
 
+            <div v-if="user.trainee.identity_number === '1101036869'" class="container mx-auto grid p-6">
+                <div class="bg-yellow-100 rounded-lg p-10 border-yellow-500 border-2">
+                    <div style="width: 100%;">
+                        <p class="text-gray-800 text-center font-bold" style="font-size: 22px; letter-spacing: 1px;">
+                            للاستمرار في حضور الدورات الرجاء التواصل مع الرقم 0551333268 للضروره
+                        </p>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </app-layout>
 </template>
