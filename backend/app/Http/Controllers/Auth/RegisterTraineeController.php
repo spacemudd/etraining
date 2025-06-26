@@ -8,7 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Services\TraineesServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rule;
+use App\Models\User;
+use App\Scope\TeamScope;
 use Inertia\Inertia;
 use Validator;
 
@@ -44,33 +45,23 @@ class RegisterTraineeController extends Controller
     {
         Log::info('RegisterTraineeController@store: Beginning trainee registration.');
 
+        User::withoutGlobalScope(TeamScope::class);
+
         Validator::make($request->toArray(), [
-            'name' => ['required', 'string', 'max:255', Rule::unique('trainee_block_lists')->withoutGlobalScopes()],
-            'email' => ['required', 'string', 'email', 'max:255',
-                Rule::unique('users')->withoutGlobalScopes(),
-                Rule::unique('instructors')->withoutGlobalScopes(),
-                Rule::unique('trainees')->withoutGlobalScopes(),
-                Rule::unique('trainee_block_lists')->withoutGlobalScopes(),
-            ],
+            'name' => ['required', 'string', 'max:255', 'unique:trainee_block_lists'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users', 'unique:instructors', 'unique:trainees', 'unique:trainee_block_lists'],
             'password' => $this->passwordRules(),
-            'identity_number' => ['required',
-                Rule::unique('trainees')->withoutGlobalScopes(),
-                Rule::unique('instructors')->withoutGlobalScopes(),
-                Rule::unique('trainee_block_lists')->withoutGlobalScopes(),
-            ],
+            'identity_number' => ['required', 'unique:trainees', 'unique:instructors', 'unique:trainee_block_lists'],
             'birthday' => ['required'],
-            'phone' => ['required', 'string', 'max:255',
-                Rule::unique('users')->withoutGlobalScopes(),
-                Rule::unique('instructors')->withoutGlobalScopes(),
-                Rule::unique('trainees')->withoutGlobalScopes(),
-                Rule::unique('trainee_block_lists')->withoutGlobalScopes(),
-            ],
-            'phone_additional' => ['required', 'string', 'max:255', Rule::unique('trainee_block_lists')->withoutGlobalScopes()],
+            'phone' => ['required', 'string', 'max:255', 'unique:users', 'unique:instructors', 'unique:trainees', 'unique:trainee_block_lists'],
+            'phone_additional' => ['required', 'string', 'max:255', 'unique:trainee_block_lists'],
             'educational_level_id' => 'required|exists:educational_levels,id',
             'city_id' => 'required|exists:cities,id',
             'marital_status_id' => 'required|exists:marital_statuses,id',
             'children_count' => 'nullable|numeric',
         ])->validate();
+
+        User::addGlobalScope(new TeamScope());
 
         Log::info('RegisterTraineeController@store: Validation successful.');
 
