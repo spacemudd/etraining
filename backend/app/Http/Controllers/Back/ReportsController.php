@@ -331,17 +331,17 @@ class ReportsController extends Controller
 
 
     public function attendanceDueDates()
-{
-    $companies = Company::get();
-    $coursesNames = Course::select('name_ar')->distinct()->get();
-    $report = AttendanceReportDueDates::where('user_id', auth()->id())->latest()->first();
+    {
+        $companies = Company::get();
+        $coursesNames = Course::select('name_ar', 'created_at')->distinct()->latest()->get();
+        $report = AttendanceReportDueDates::where('user_id', auth()->id())->latest()->first();
 
-    return Inertia::render('Back/Reports/AttendanceDueDates/Show', [
-        'companies' => $companies,
-        'coursesNames' => $coursesNames,
-        'latestReport' => $report,
-    ]);
-}
+        return Inertia::render('Back/Reports/AttendanceDueDates/Show', [
+            'companies' => $companies,
+            'coursesNames' => $coursesNames,
+            'latestReport' => $report,
+        ]);
+    }
 
     public function attendanceDueDatesReport(Request $request)
     {
@@ -366,15 +366,15 @@ class ReportsController extends Controller
     }
 
     public function downloadAttendanceReport($filename)
-{
-    $path = 'reports/' . $filename;
+    {
+        $path = 'reports/' . $filename;
 
-    if (!Storage::disk('public')->exists($path)) {
-        abort(404, 'الملف غير موجود');
+        if (!Storage::disk('public')->exists($path)) {
+            abort(404, 'الملف غير موجود');
+        }
+
+        return Storage::disk('public')->download($path);
     }
-
-    return Storage::disk('public')->download($path);
-}
 
 }
 
