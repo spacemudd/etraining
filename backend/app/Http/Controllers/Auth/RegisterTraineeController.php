@@ -49,7 +49,22 @@ class RegisterTraineeController extends Controller
         Log::info('RegisterTraineeController@store: Name validation passed.');
 
         Validator::make($request->toArray(), [
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users', 'unique:instructors', 'unique:trainees', 'unique:trainee_block_lists'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        ])->validate();
+        Log::info('RegisterTraineeController@store: Email validation (users) passed.');
+
+        Validator::make($request->toArray(), [
+            'email' => ['unique:instructors'],
+        ])->validate();
+        Log::info('RegisterTraineeController@store: Email validation (instructors) passed.');
+
+        Validator::make($request->toArray(), [
+            'email' => ['unique:trainees'],
+        ])->validate();
+        Log::info('RegisterTraineeController@store: Email validation (trainees) passed.');
+
+        Validator::make($request->toArray(), [
+            'email' => ['unique:trainee_block_lists'],
         ])->validate();
         Log::info('RegisterTraineeController@store: Email validation passed.');
 
