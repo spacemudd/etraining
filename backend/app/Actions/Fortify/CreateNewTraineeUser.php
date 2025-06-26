@@ -26,15 +26,6 @@ class CreateNewTraineeUser implements CreatesNewUsers
 
     public function create(array $input)
     {
-        Validator::make($input, [
-            'trainee_id' => ['required'],
-            'phone' => ['nullable', 'string'],
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => $this->passwordRules(),
-            'national_address' => ['nullable', 'string', 'max:255'],
-        ])->validate();
-
         \DB::beginTransaction();
         $team = Team::first(); // TODO.
         $role = Role::findByName($team->id.'_trainees', 'web');

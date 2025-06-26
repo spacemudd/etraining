@@ -41,37 +41,17 @@ class RegisterTraineeController extends Controller
     public function store(Request $request)
     {
         Validator::make($request->toArray(), [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'name' => ['required', 'string', 'max:255', 'unique:trainee_block_lists'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users', 'unique:instructors', 'unique:trainees', 'unique:trainee_block_lists'],
             'password' => $this->passwordRules(),
-            'identity_number' => ['required', 'unique:trainees'],
+            'identity_number' => ['required', 'unique:trainees', 'unique:instructors', 'unique:trainee_block_lists'],
             'birthday' => ['required'],
-            'phone' => ['required', 'string', 'max:255', 'unique:users'],
-            'phone_additional' => 'required|string|max:255',
+            'phone' => ['required', 'string', 'max:255', 'unique:users', 'unique:instructors', 'unique:trainees', 'unique:trainee_block_lists'],
+            'phone_additional' => ['required', 'string', 'max:255', 'unique:trainee_block_lists'],
             'educational_level_id' => 'required|exists:educational_levels,id',
             'city_id' => 'required|exists:cities,id',
             'marital_status_id' => 'required|exists:marital_statuses,id',
             'children_count' => 'nullable|numeric',
-        ])->validate();
-
-        Validator::make($request->toArray(), [
-            'identity_number' => ['required', 'unique:instructors'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:instructors'],
-            'phone' => ['required', 'string', 'max:255', 'unique:instructors'],
-        ])->validate();
-
-        Validator::make($request->toArray(), [
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:trainees'],
-            'phone' => ['required', 'string', 'max:255', 'unique:trainees'],
-        ])->validate();
-
-        // Check for the blocked list.
-        Validator::make($request->toArray(), [
-            'identity_number' => ['required', 'unique:trainee_block_lists'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:trainee_block_lists'],
-            'name' => ['required', 'string', 'max:255', 'unique:trainee_block_lists'],
-            'phone' => ['required', 'string', 'max:255', 'unique:trainee_block_lists'],
-            'phone_additional' => ['required', 'string', 'max:255', 'unique:trainee_block_lists'],
         ])->validate();
 
         \DB::beginTransaction();
@@ -83,8 +63,8 @@ class RegisterTraineeController extends Controller
             'email' => $trainee->email,
             'phone' => $trainee->phone,
             'national_address' => $trainee->national_address,
-            'password' => 'password',
-            'password_confirmation' => 'password',
+            'password' => $request->password,
+            'password_confirmation' => $request->password_confirmation,
         ]);
         \DB::commit();
 
