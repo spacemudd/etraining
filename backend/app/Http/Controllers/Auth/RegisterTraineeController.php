@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Services\TraineesServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Validator;
 
@@ -44,59 +45,34 @@ class RegisterTraineeController extends Controller
         Log::info('RegisterTraineeController@store: Beginning trainee registration.');
 
         Validator::make($request->toArray(), [
-            'name' => ['required', 'string', 'max:255', 'unique:trainee_block_lists'],
-        ])->validate();
-        Log::info('RegisterTraineeController@store: Name validation passed.');
-
-        Validator::make($request->toArray(), [
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-        ])->validate();
-        Log::info('RegisterTraineeController@store: Email validation (users) passed.');
-
-        Validator::make($request->toArray(), [
-            'email' => ['unique:instructors'],
-        ])->validate();
-        Log::info('RegisterTraineeController@store: Email validation (instructors) passed.');
-
-        Validator::make($request->toArray(), [
-            'email' => ['unique:trainees'],
-        ])->validate();
-        Log::info('RegisterTraineeController@store: Email validation (trainees) passed.');
-
-        Validator::make($request->toArray(), [
-            'email' => ['unique:trainee_block_lists'],
-        ])->validate();
-        Log::info('RegisterTraineeController@store: Email validation passed.');
-
-        Validator::make($request->toArray(), [
-            'identity_number' => ['required', 'unique:trainees', 'unique:instructors', 'unique:trainee_block_lists'],
-        ])->validate();
-        Log::info('RegisterTraineeController@store: Identity number validation passed.');
-
-        Validator::make($request->toArray(), [
-            'phone' => ['required', 'string', 'max:255', 'unique:users', 'unique:instructors', 'unique:trainees', 'unique:trainee_block_lists'],
-        ])->validate();
-        Log::info('RegisterTraineeController@store: Phone validation passed.');
-
-        Validator::make($request->toArray(), [
-            'phone_additional' => ['required', 'string', 'max:255', 'unique:trainee_block_lists'],
-        ])->validate();
-        Log::info('RegisterTraineeController@store: Uniqueness validation passed.');
-
-        Validator::make($request->toArray(), [
+            'name' => ['required', 'string', 'max:255', Rule::unique('trainee_block_lists')->withoutGlobalScopes()],
+            'email' => ['required', 'string', 'email', 'max:255',
+                Rule::unique('users')->withoutGlobalScopes(),
+                Rule::unique('instructors')->withoutGlobalScopes(),
+                Rule::unique('trainees')->withoutGlobalScopes(),
+                Rule::unique('trainee_block_lists')->withoutGlobalScopes(),
+            ],
             'password' => $this->passwordRules(),
-        ])->validate();
-        Log::info('RegisterTraineeController@store: Password validation passed.');
-
-        Validator::make($request->toArray(), [
+            'identity_number' => ['required',
+                Rule::unique('trainees')->withoutGlobalScopes(),
+                Rule::unique('instructors')->withoutGlobalScopes(),
+                Rule::unique('trainee_block_lists')->withoutGlobalScopes(),
+            ],
             'birthday' => ['required'],
+            'phone' => ['required', 'string', 'max:255',
+                Rule::unique('users')->withoutGlobalScopes(),
+                Rule::unique('instructors')->withoutGlobalScopes(),
+                Rule::unique('trainees')->withoutGlobalScopes(),
+                Rule::unique('trainee_block_lists')->withoutGlobalScopes(),
+            ],
+            'phone_additional' => ['required', 'string', 'max:255', Rule::unique('trainee_block_lists')->withoutGlobalScopes()],
             'educational_level_id' => 'required|exists:educational_levels,id',
             'city_id' => 'required|exists:cities,id',
             'marital_status_id' => 'required|exists:marital_statuses,id',
             'children_count' => 'nullable|numeric',
         ])->validate();
 
-        Log::info('RegisterTraineeController@store: All validation successful.');
+        Log::info('RegisterTraineeController@store: Validation successful.');
 
         \DB::beginTransaction();
         $trainee = $this->service->store($request->except('_token'));
