@@ -4,7 +4,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 8.83.26.
+ * Generated for Laravel 8.83.27.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -1239,7 +1239,7 @@
          * Call the given Closure / class@method and inject its dependencies.
          *
          * @param callable|string $callback
-         * @param \Illuminate\Container\array<string,  mixed>  $parameters
+         * @param array<string, mixed> $parameters
          * @param string|null $defaultMethod
          * @return mixed 
          * @throws \InvalidArgumentException
@@ -9846,12 +9846,12 @@
          * Clones a request and overrides some of its parameters.
          *
          * @return static 
-         * @param array $query The GET parameters
-         * @param array $request The POST parameters
-         * @param array $attributes The request attributes (parameters parsed from the PATH_INFO, ...)
-         * @param array $cookies The COOKIE parameters
-         * @param array $files The FILES parameters
-         * @param array $server The SERVER parameters
+         * @param array|null $query The GET parameters
+         * @param array|null $request The POST parameters
+         * @param array|null $attributes The request attributes (parameters parsed from the PATH_INFO, ...)
+         * @param array|null $cookies The COOKIE parameters
+         * @param array|null $files The FILES parameters
+         * @param array|null $server The SERVER parameters
          * @return static 
          * @static 
          */ 
@@ -18289,20 +18289,10 @@
          *
          * @static 
          */ 
-        public static function jwtRequest()
+        public static function oauthRequest()
         {
                         /** @var \MacsiDigital\Zoom\Support\Entry $instance */
-                        return $instance->jwtRequest();
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function oauth2Request()
-        {
-                        /** @var \MacsiDigital\Zoom\Support\Entry $instance */
-                        return $instance->oauth2Request();
+                        return $instance->oauthRequest();
         }
                     /**
          * 
@@ -18775,6 +18765,21 @@
                         return $instance->captureLastError($hint);
         }
                     /**
+         * 
+         *
+         * @param string $slug Identifier of the Monitor
+         * @param \Sentry\CheckInStatus $status The status of the check-in
+         * @param int|float|null $duration The duration of the check-in
+         * @param \Sentry\MonitorConfig|null $monitorConfig Configuration of the Monitor
+         * @param string|null $checkInId A check-in ID from the previous check-in
+         * @static 
+         */ 
+        public static function captureCheckIn($slug, $status, $duration = null, $monitorConfig = null, $checkInId = null)
+        {
+                        /** @var \Sentry\State\Hub $instance */
+                        return $instance->captureCheckIn($slug, $status, $duration, $monitorConfig, $checkInId);
+        }
+                    /**
          * Records a new breadcrumb which will be attached to future events. They
          * will be added to subsequent events to provide more context on user's
          * actions prior to an error or crash.
@@ -18817,9 +18822,9 @@
          * which point the transaction with all its finished child spans will be sent to
          * Sentry.
          *
-         * @param \Sentry\State\array<string,  mixed> $customSamplingContext Additional context that will be passed to the {@see SamplingContext}
+         * @param array<string, mixed> $customSamplingContext Additional context that will be passed to the {@see SamplingContext}
          * @param \Sentry\Tracing\TransactionContext $context Properties of the new transaction
-         * @param \Sentry\State\array<string,  mixed> $customSamplingContext Additional context that will be passed to the {@see SamplingContext}
+         * @param array<string, mixed> $customSamplingContext Additional context that will be passed to the {@see SamplingContext}
          * @static 
          */ 
         public static function startTransaction($context, $customSamplingContext = [])
