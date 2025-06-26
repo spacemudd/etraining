@@ -5,14 +5,12 @@ namespace App\Jobs;
 use App\Models\Back\Trainee;
 use App\Models\JobTracker;
 use App\Notifications\ReportCompletedNotification;
-use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -102,6 +100,13 @@ class TraineesReportJob implements ShouldQueue
             $totalCount = $query->count();
             Log::info("[TraineesReportJob] Total trainees to process: {$totalCount}");
 
+            // Update tracker with total count
+            $this->tracker->update([
+                'total_records' => $totalCount,
+                'processed_records' => 0,
+                'progress_percentage' => 0
+            ]);
+
             // Create Excel file
             $fileName = $this->generateExcel($query, $totalCount);
 
@@ -114,7 +119,10 @@ class TraineesReportJob implements ShouldQueue
                     'team_id' => $this->tracker->team_id,
                 ])->toMediaCollection('excel');
 
-            $this->tracker->update(['finished_at' => now()]);
+            $this->tracker->update([
+                'finished_at' => now(),
+                'progress_percentage' => 100
+            ]);
             
             // Send notification
             if ($this->tracker->user_id && $user = \App\Models\User::find($this->tracker->user_id)) {
@@ -135,27 +143,55 @@ class TraineesReportJob implements ShouldQueue
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         
-        // Set headers
+        // Set headers - ALL database columns from trainees table
         $headers = [
-            'الاسم',
-            'البريد الإلكتروني', 
-            'رقم الهوية',
-            'الهاتف',
-            'الهاتف الإضافي',
-            'تاريخ الميلاد',
-            'العمر',
-            'الشركة',
-            'المستوى التعليمي',
-            'المدينة',
-            'الحالة الاجتماعية',
-            'عدد الأطفال',
-            'الحالة',
-            'يملك رقم الهاتف',
-            'له فواتير',
-            'علامة الحذف',
-            'تاريخ الحذف',
-            'محذوف بواسطة',
-            'تاريخ الإنشاء'
+            'id',
+            'zoho_contract_id',
+            'zoho_contract_status',
+            'zoho_sign_date',
+            'must_sign',
+            'trainee_agreement_id',
+            'team_id',
+            'user_id',
+            'name',
+            'email',
+            'identity_number',
+            'phone',
+            'phone_ownership_verified_at',
+            'phone_is_owned',
+            'phone_additional',
+            'national_address',
+            'birthday',
+            'educational_level_id',
+            'city_id',
+            'marital_status_id',
+            'children_count',
+            'company_id',
+            'entity_id',
+            'deleted_at',
+            'suspended_at',
+            'gosi_deleted_at',
+            'created_at',
+            'updated_at',
+            'instructor_id',
+            'trainee_group_id',
+            'status',
+            'approved_by_id',
+            'approved_at',
+            'deleted_remark',
+            'skip_uploading_id',
+            'bill_from_date',
+            'linked_date',
+            'override_training_costs',
+            'ignore_attendance',
+            'dont_edit_notice',
+            'suspended_by_id',
+            'deleted_by_id',
+            'posted_at',
+            'trainee_message',
+            'job_number',
+            'english_name',
+            'contract_signed_notification_sent'
         ];
         
         $sheet->fromArray($headers, null, 'A1');
@@ -168,7 +204,7 @@ class TraineesReportJob implements ShouldQueue
                 'color' => ['rgb' => 'E2E8F0']
             ]
         ];
-        $sheet->getStyle('A1:S1')->applyFromArray($headerStyle);
+        $sheet->getStyle('A1:AU1')->applyFromArray($headerStyle);
 
         // Process data in chunks for memory efficiency
         $chunkSize = 100;
@@ -177,31 +213,55 @@ class TraineesReportJob implements ShouldQueue
 
         $query->chunk($chunkSize, function ($trainees) use ($sheet, &$row, &$processed, $totalCount) {
             foreach ($trainees as $trainee) {
-                $age = $trainee->birthday ? Carbon::parse($trainee->birthday)->age : 'N/A';
-                $hasInvoices = $trainee->invoices()->exists() ? 'نعم' : 'لا';
-                $phoneOwnership = $this->getPhoneOwnershipStatus($trainee);
-                $status = $this->getTraineeStatus($trainee);
-                
+                // Extract all database column values exactly as they are
                 $data = [
+                    $trainee->id,
+                    $trainee->zoho_contract_id,
+                    $trainee->zoho_contract_status,
+                    $trainee->zoho_sign_date,
+                    $trainee->must_sign,
+                    $trainee->trainee_agreement_id,
+                    $trainee->team_id,
+                    $trainee->user_id,
                     $trainee->name,
                     $trainee->email,
                     $trainee->identity_number,
                     $trainee->phone,
+                    $trainee->phone_ownership_verified_at,
+                    $trainee->phone_is_owned,
                     $trainee->phone_additional,
-                    $trainee->birthday ? Carbon::parse($trainee->birthday)->format('Y-m-d') : '',
-                    $age,
-                    optional($trainee->company)->name_ar,
-                    optional($trainee->educational_level)->name_ar,
-                    optional($trainee->city)->name_ar,
-                    optional($trainee->marital_status)->name_ar,
+                    $trainee->national_address,
+                    $trainee->birthday,
+                    $trainee->educational_level_id,
+                    $trainee->city_id,
+                    $trainee->marital_status_id,
                     $trainee->children_count,
-                    $status,
-                    $phoneOwnership,
-                    $hasInvoices,
+                    $trainee->company_id,
+                    $trainee->entity_id,
+                    $trainee->deleted_at,
+                    $trainee->suspended_at,
+                    $trainee->gosi_deleted_at,
+                    $trainee->created_at,
+                    $trainee->updated_at,
+                    $trainee->instructor_id,
+                    $trainee->trainee_group_id,
+                    $trainee->status,
+                    $trainee->approved_by_id,
+                    $trainee->approved_at,
                     $trainee->deleted_remark,
-                    $trainee->deleted_at ? $trainee->deleted_at->format('Y-m-d') : '',
-                    optional($trainee->deleted_by)->name,
-                    $trainee->created_at->format('Y-m-d')
+                    $trainee->skip_uploading_id,
+                    $trainee->bill_from_date,
+                    $trainee->linked_date,
+                    $trainee->override_training_costs,
+                    $trainee->ignore_attendance,
+                    $trainee->dont_edit_notice,
+                    $trainee->suspended_by_id,
+                    $trainee->deleted_by_id,
+                    $trainee->posted_at,
+                    $trainee->trainee_message,
+                    $trainee->job_number,
+                    $trainee->english_name,
+                    $trainee->contract_signed_notification_sent
                 ];
                 
                 $sheet->fromArray($data, null, 'A' . $row);
@@ -209,14 +269,23 @@ class TraineesReportJob implements ShouldQueue
                 $processed++;
             }
             
-            // Update progress (simulate for better UX)
-            $progress = min(($processed / $totalCount) * 90, 90); // Keep at 90% until finished
-            Cache::put("job_progress_{$this->tracker->id}", $progress, 3600);
+            // Update real progress in database
+            $progressPercentage = $totalCount > 0 ? round(($processed / $totalCount) * 100, 2) : 0;
+            
+            $this->tracker->update([
+                'processed_records' => $processed,
+                'progress_percentage' => $progressPercentage
+            ]);
+            
+            Log::info("[TraineesReportJob] Progress: {$processed}/{$totalCount} ({$progressPercentage}%)");
         });
 
-        // Auto-size columns
-        foreach (range('A', 'S') as $column) {
+        // Auto-size columns for all 47 columns (A to AU)
+        foreach (range('A', 'Z') as $column) {
             $sheet->getColumnDimension($column)->setAutoSize(true);
+        }
+        foreach (range('A', 'U') as $column) {
+            $sheet->getColumnDimension('A' . $column)->setAutoSize(true);
         }
 
         // Save file
@@ -229,40 +298,7 @@ class TraineesReportJob implements ShouldQueue
         return $fileName;
     }
 
-    /**
-     * Get phone ownership status text
-     */
-    private function getPhoneOwnershipStatus($trainee)
-    {
-        if (!$trainee->phone_ownership_verified_at) {
-            return 'لم يتم التحقق';
-        }
 
-        if ($trainee->phone_is_owned === true) {
-            return 'يملكه';
-        } elseif ($trainee->phone_is_owned === false) {
-            return 'لا يملكه';
-        }
-
-        return 'لم يتم التحقق';
-    }
-
-    /**
-     * Get trainee status text
-     */
-    private function getTraineeStatus($trainee)
-    {
-        switch ($trainee->status) {
-            case Trainee::STATUS_PENDING_UPLOADING_FILES:
-                return 'ملف غير مكتمل';
-            case Trainee::STATUS_PENDING_APPROVAL:
-                return 'مرشح مدرب';
-            case Trainee::STATUS_APPROVED:
-                return 'موافق عليه';
-            default:
-                return 'غير محدد';
-        }
-    }
 
     /**
      * Handle job failure.

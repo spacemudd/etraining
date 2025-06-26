@@ -14,9 +14,26 @@ use Inertia\Inertia;
 
 class TraineesReportController extends Controller
 {
+    /**
+     * Check if the current user can access trainees reports
+     */
+    private function checkTraineesReportAccess()
+    {
+        $allowedEmails = [
+            'riyadh.center@hadaf-hq.com',
+            'sara@hadaf-hq.com',
+            'shafiqalshaar+trainee@adv-line.com'
+        ];
+        
+        if (!in_array(auth()->user()->email, $allowedEmails)) {
+            abort(403, 'Access denied. You are not authorized to access this report.');
+        }
+    }
+
     public function index()
     {
         $this->authorize('view-backoffice-reports');
+        $this->checkTraineesReportAccess();
         
         // Get educational levels
         $educationalLevels = EducationalLevel::orderBy('order')->get(['id', 'name_ar', 'name_en']);
@@ -41,6 +58,7 @@ class TraineesReportController extends Controller
     public function generate(Request $request)
     {
         $this->authorize('view-backoffice-reports');
+        $this->checkTraineesReportAccess();
         
         $request->validate([
             'age_under' => 'nullable|integer|min:1|max:100',

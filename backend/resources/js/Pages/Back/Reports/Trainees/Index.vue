@@ -150,9 +150,14 @@
                             <p class="mt-4 text-gray-600">{{ $t('words.please-wait-report-generating') }}</p>
                             <div v-if="job_tracker && job_tracker.started_at" class="mt-4">
                                 <div class="bg-gray-200 rounded-full h-2 w-full max-w-md mx-auto">
-                                    <div class="bg-purple-600 h-2 rounded-full transition-all duration-300" :style="`width: ${progress}%`"></div>
+                                    <div class="bg-purple-600 h-2 rounded-full transition-all duration-300" :style="`width: ${realProgress}%`"></div>
                                 </div>
-                                <p class="text-sm text-gray-500 mt-2">{{ progress }}% {{ $t('words.completed') }}</p>
+                                <p class="text-sm text-gray-500 mt-2">
+                                    {{ realProgress }}% {{ $t('words.completed') }}
+                                    <span v-if="job_tracker.total_records" class="text-xs text-gray-400 block">
+                                        ({{ job_tracker.processed_records || 0 }} / {{ job_tracker.total_records }} {{ $t('words.records') }})
+                                    </span>
+                                </p>
                             </div>
                         </div>
                     </template>
@@ -212,7 +217,6 @@ export default {
         return {
             report_status: 'new', // new, processing, finished, error
             job_tracker: null,
-            progress: 0,
             form: {
                 processing: false,
                 age_under: '',
@@ -232,7 +236,6 @@ export default {
                 .then(response => {
                     this.job_tracker = response.data;
                     this.report_status = 'processing';
-                    this.progress = 0;
                     let vm = this;
                     setTimeout(function() {
                         vm.checkJobTracker();
@@ -254,7 +257,6 @@ export default {
                     if (response.data.finished_at) {
                         this.report_status = 'finished';
                         this.form.processing = false;
-                        this.progress = 100;
                         return;
                     }
 
@@ -264,17 +266,12 @@ export default {
                         return;
                     }
 
-                    // Simulate progress for better UX
-                    if (response.data.started_at && !response.data.finished_at) {
-                        this.progress = Math.min(this.progress + 10, 90);
-                    }
-
                     // Continue checking if not finished
                     if (!response.data.finished_at && !response.data.failure_reason) {
                         let vm = this;
                         setTimeout(function() {
                             vm.checkJobTracker();
-                        }, 3000);
+                        }, 2000); // Check more frequently for better UX
                     }
                 })
                 .catch(error => {
@@ -287,7 +284,23 @@ export default {
             this.report_status = 'new';
             this.form.processing = false;
             this.job_tracker = null;
-            this.progress = 0;
+        }
+    },
+    computed: {
+        realProgress() {
+            if (!this.job_tracker) return 0;
+            
+            // Use the actual progress percentage from the database
+            if (this.job_tracker.progress_percentage !== undefined) {
+                return Math.round(this.job_tracker.progress_percentage);
+            }
+            
+            // Fallback calculation if progress_percentage is not available
+            if (this.job_tracker.total_records && this.job_tracker.processed_records) {
+                return Math.round((this.job_tracker.processed_records / this.job_tracker.total_records) * 100);
+            }
+            
+            return 0;
         }
     }
 }

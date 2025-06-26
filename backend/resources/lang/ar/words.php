@@ -217,6 +217,7 @@ return [
     'completed' => 'مكتمل',
     'yes' => 'نعم',
     'no' => 'لا',
+    'records' => 'سجل',
     'your-application-has-been-approved' => 'لقد تم قبولك في منصة التدريب ويمكن الدخول عليها من: ',
     'incomplete-application' => 'ملف غير مكتمل',
     'pending-approval' => 'جاري الموافقة',

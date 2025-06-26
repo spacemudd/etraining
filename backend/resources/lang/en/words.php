@@ -217,6 +217,7 @@ return [
     'completed' => 'Completed',
     'yes' => 'Yes',
     'no' => 'No',
+    'records' => 'records',
     'your-application-has-been-approved' => 'Your application has been approved. You can access via: ',
     'incomplete-application' => 'Incomplete application',
     'pending-approval' => 'Pending approval',

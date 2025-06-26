@@ -24,6 +24,9 @@ class JobTracker extends Model implements HasMedia
         'queued_at',
         'started_at',
         'finished_at',
+        'total_records',
+        'processed_records',
+        'progress_percentage',
     ];
 
     protected $casts = [
