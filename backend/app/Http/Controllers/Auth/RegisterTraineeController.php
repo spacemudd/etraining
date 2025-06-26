@@ -46,18 +46,26 @@ class RegisterTraineeController extends Controller
         Validator::make($request->toArray(), [
             'name' => ['required', 'string', 'max:255', 'unique:trainee_block_lists'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users', 'unique:instructors', 'unique:trainees', 'unique:trainee_block_lists'],
-            'password' => $this->passwordRules(),
             'identity_number' => ['required', 'unique:trainees', 'unique:instructors', 'unique:trainee_block_lists'],
-            'birthday' => ['required'],
             'phone' => ['required', 'string', 'max:255', 'unique:users', 'unique:instructors', 'unique:trainees', 'unique:trainee_block_lists'],
             'phone_additional' => ['required', 'string', 'max:255', 'unique:trainee_block_lists'],
+        ])->validate();
+        Log::info('RegisterTraineeController@store: Uniqueness validation passed.');
+
+        Validator::make($request->toArray(), [
+            'password' => $this->passwordRules(),
+        ])->validate();
+        Log::info('RegisterTraineeController@store: Password validation passed.');
+
+        Validator::make($request->toArray(), [
+            'birthday' => ['required'],
             'educational_level_id' => 'required|exists:educational_levels,id',
             'city_id' => 'required|exists:cities,id',
             'marital_status_id' => 'required|exists:marital_statuses,id',
             'children_count' => 'nullable|numeric',
         ])->validate();
 
-        Log::info('RegisterTraineeController@store: Validation successful.');
+        Log::info('RegisterTraineeController@store: All validation successful.');
 
         \DB::beginTransaction();
         $trainee = $this->service->store($request->except('_token'));
