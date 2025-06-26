@@ -45,9 +45,25 @@ class RegisterTraineeController extends Controller
 
         Validator::make($request->toArray(), [
             'name' => ['required', 'string', 'max:255', 'unique:trainee_block_lists'],
+        ])->validate();
+        Log::info('RegisterTraineeController@store: Name validation passed.');
+
+        Validator::make($request->toArray(), [
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users', 'unique:instructors', 'unique:trainees', 'unique:trainee_block_lists'],
+        ])->validate();
+        Log::info('RegisterTraineeController@store: Email validation passed.');
+
+        Validator::make($request->toArray(), [
             'identity_number' => ['required', 'unique:trainees', 'unique:instructors', 'unique:trainee_block_lists'],
+        ])->validate();
+        Log::info('RegisterTraineeController@store: Identity number validation passed.');
+
+        Validator::make($request->toArray(), [
             'phone' => ['required', 'string', 'max:255', 'unique:users', 'unique:instructors', 'unique:trainees', 'unique:trainee_block_lists'],
+        ])->validate();
+        Log::info('RegisterTraineeController@store: Phone validation passed.');
+
+        Validator::make($request->toArray(), [
             'phone_additional' => ['required', 'string', 'max:255', 'unique:trainee_block_lists'],
         ])->validate();
         Log::info('RegisterTraineeController@store: Uniqueness validation passed.');
