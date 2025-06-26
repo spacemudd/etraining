@@ -333,7 +333,10 @@ class ReportsController extends Controller
     public function attendanceDueDates()
     {
         $companies = Company::get();
-        $coursesNames = Course::select('name_ar', 'created_at')->distinct()->latest()->get();
+        $coursesNames = Course::select('name_ar')
+            ->orderBy('created_at', 'desc')
+            ->groupBy('name_ar')
+            ->get();
         $report = AttendanceReportDueDates::where('user_id', auth()->id())->latest()->first();
 
         return Inertia::render('Back/Reports/AttendanceDueDates/Show', [
