@@ -730,4 +730,5 @@ return [
     'payment-link' => 'Payment Link',
     'copied' => 'Copied',
     'all-users' => 'All users',
+    'clear' => 'Clear',
 ];
