@@ -728,4 +728,5 @@ return [
     'report-includes-deletion-info' => 'معلومات الحذف (التاريخ، السبب، ومن قام بالحذف)',
     'report-includes-posted-status' => 'حالة الترحيل وتاريخه',
     'cancel-contract' => 'إلغاء العقد',
+    'all-users' => 'جميع المستخدمين',
 ];

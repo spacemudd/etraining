@@ -729,4 +729,5 @@ return [
     'nature_of_work' => 'Nature of Work',
     'payment-link' => 'Payment Link',
     'copied' => 'Copied',
+    'all-users' => 'All users',
 ];

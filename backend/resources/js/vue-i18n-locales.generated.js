@@ -242,6 +242,7 @@ export default {
             "completed": "مكتمل",
             "yes": "نعم",
             "no": "لا",
+            "records": "سجل",
             "your-application-has-been-approved": "لقد تم قبولك في منصة التدريب ويمكن الدخول عليها من: ",
             "incomplete-application": "ملف غير مكتمل",
             "pending-approval": "جاري الموافقة",
@@ -745,7 +746,8 @@ export default {
             "report-includes-contact": "معلومات الاتصال (البريد الإلكتروني والهاتف)",
             "report-includes-deletion-info": "معلومات الحذف (التاريخ، السبب، ومن قام بالحذف)",
             "report-includes-posted-status": "حالة الترحيل وتاريخه",
-            "cancel-contract": "إلغاء العقد"
+            "cancel-contract": "إلغاء العقد",
+            "all-users": "جميع المستخدمين"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1143,6 +1145,7 @@ export default {
             "completed": "Completed",
             "yes": "Yes",
             "no": "No",
+            "records": "records",
             "your-application-has-been-approved": "Your application has been approved. You can access via: ",
             "incomplete-application": "Incomplete application",
             "pending-approval": "Pending approval",
@@ -1643,7 +1646,8 @@ export default {
             "cancel-contract": "Cancel Contract",
             "nature_of_work": "Nature of Work",
             "payment-link": "Payment Link",
-            "copied": "Copied"
+            "copied": "Copied",
+            "all-users": "All users"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",
