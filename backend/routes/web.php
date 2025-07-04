@@ -19,6 +19,11 @@ use App\Services\GosiService;
 use Illuminate\Mail\Markdown;
 
 
+Route::get('/apple-touch-icon.png', fn() => response('', 204));
+Route::get('/apple-touch-icon-precomposed.png', fn() => response('', 204));
+Route::get('/apple-touch-icon-152x152.png', fn() => response('', 204));
+Route::get('/apple-touch-icon-152x152-precomposed.png', fn() => response('', 204));
+
 Route::get('/qr1', function() {
     return redirect('https://forms.gle/t9nhZgKqz5za9xmp9');
 });
