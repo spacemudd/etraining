@@ -730,4 +730,11 @@ return [
     'cancel-contract' => 'إلغاء العقد',
     'all-users' => 'جميع المستخدمين',
     'clear' => 'مسح',
+    'instructor-preparing-session' => 'المدرب يحضر للجلسة',
+    'instructor-delay-message' => 'المدرب يواجه تأخيراً بسيطاً. يرجى التحلي بالصبر لمدة 1-2 دقيقة بينما يحضر لتسجيل الدخول وبدء الدورة.',
+    'page-will-refresh-in' => 'ستتم إعادة تحميل الصفحة خلال',
+    'seconds' => 'ثانية',
+    'refreshing' => 'جاري التحديث...',
+    'refresh-now' => 'حدث الآن',
+    'having-trouble-contact-support' => 'تواجه مشكلة؟ تواصل مع الدعم الفني للمساعدة.',
 ];

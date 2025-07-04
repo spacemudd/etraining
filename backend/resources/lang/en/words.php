@@ -731,4 +731,11 @@ return [
     'copied' => 'Copied',
     'all-users' => 'All users',
     'clear' => 'Clear',
+    'instructor-preparing-session' => 'Instructor is preparing the session',
+    'instructor-delay-message' => 'The instructor is having a slight delay. Please be patient for 1-2 minutes while they prepare to login and begin the course.',
+    'page-will-refresh-in' => 'Page will refresh in',
+    'seconds' => 'seconds',
+    'refreshing' => 'Refreshing...',
+    'refresh-now' => 'Refresh now',
+    'having-trouble-contact-support' => 'Having trouble? Contact support for assistance.',
 ];

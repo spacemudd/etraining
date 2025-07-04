@@ -748,7 +748,14 @@ export default {
             "report-includes-posted-status": "حالة الترحيل وتاريخه",
             "cancel-contract": "إلغاء العقد",
             "all-users": "جميع المستخدمين",
-            "clear": "مسح"
+            "clear": "مسح",
+            "instructor-preparing-session": "المدرب يحضر للجلسة",
+            "instructor-delay-message": "المدرب يواجه تأخيراً بسيطاً. يرجى التحلي بالصبر لمدة 1-2 دقيقة بينما يحضر لتسجيل الدخول وبدء الدورة.",
+            "page-will-refresh-in": "ستتم إعادة تحميل الصفحة خلال",
+            "seconds": "ثانية",
+            "refreshing": "جاري التحديث...",
+            "refresh-now": "حدث الآن",
+            "having-trouble-contact-support": "تواجه مشكلة؟ تواصل مع الدعم الفني للمساعدة."
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1649,7 +1656,14 @@ export default {
             "payment-link": "Payment Link",
             "copied": "Copied",
             "all-users": "All users",
-            "clear": "Clear"
+            "clear": "Clear",
+            "instructor-preparing-session": "Instructor is preparing the session",
+            "instructor-delay-message": "The instructor is having a slight delay. Please be patient for 1-2 minutes while they prepare to login and begin the course.",
+            "page-will-refresh-in": "Page will refresh in",
+            "seconds": "seconds",
+            "refreshing": "Refreshing...",
+            "refresh-now": "Refresh now",
+            "having-trouble-contact-support": "Having trouble? Contact support for assistance."
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

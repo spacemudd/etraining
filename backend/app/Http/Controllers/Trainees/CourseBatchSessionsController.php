@@ -30,7 +30,9 @@ class CourseBatchSessionsController extends Controller
         $session = CourseBatchSession::with(['course', 'course_batch'])->findOrFail($course_batch_session_id);
 
         if (! $session->zoom_meeting_id) {
-            abort(403);
+            return Inertia::render('Trainees/CourseBatchSessions/Waiting', [
+                'course_batch_session' => $session,
+            ]);
         }
 
         $this->attendanceService->markAttendance($session, auth()->user()->trainee);
