@@ -729,4 +729,5 @@ return [
     'report-includes-posted-status' => 'حالة الترحيل وتاريخه',
     'cancel-contract' => 'إلغاء العقد',
     'all-users' => 'جميع المستخدمين',
+    'clear' => 'مسح',
 ];
