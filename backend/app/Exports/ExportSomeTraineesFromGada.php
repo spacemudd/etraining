@@ -46,7 +46,7 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
 
         ];
 
-        $trainees = Trainee::whereIn('id', function ($query) use ($invoiceIds) {
+        $trainees = Trainee::withTrashed()->whereIn('id', function ($query) use ($invoiceIds) {
             $query->select('trainee_id')
                 ->from('invoices')
                 ->whereIn('id', $invoiceIds);
