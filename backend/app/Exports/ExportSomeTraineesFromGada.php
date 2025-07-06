@@ -74,7 +74,7 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
         // ->get();
 
         $companies = Company::whereHas('trainees', function ($query) {
-        $query->where('trainee_group_id', 'e7a256f6-1913-47df-a1c2-10c174bfbf5f');
+        $query->where('trainee_group_id', '47396796-9ee4-41d0-a069-179ea1b83a56');
          })->get();
     
 
