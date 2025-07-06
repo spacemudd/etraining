@@ -55,7 +55,7 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
 
         return $trainees->map(function ($trainee) {
             return [
-                'name' => $trainee->name_ar,
+                'name' => $trainee->name,
                 'phone' => $trainee->phone,
                 'company' => $trainee->company->name_ar,
             ];
