@@ -53,6 +53,12 @@
                     {{ $t('words.attendance-bulk-courses') }}
                 </inertia-link>
 
+                <inertia-link v-if="canAccessTraineesReport"
+                              :href="route('back.reports.trainees.index')"
+                              class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
+                    {{ $t('words.trainees-report') }}
+                </inertia-link>
+
             
 
                   <inertia-link :href="route('attendance-due-dates.index')"
@@ -89,6 +95,14 @@ export default {
         BreadcrumbContainer,
     },
     computed: {
+        canAccessTraineesReport() {
+            const allowedEmails = [
+                'riyadh.center@hadaf-hq.com',
+                'sara@hadaf-hq.com',
+                'shafiqalshaar+trainee@adv-line.com'
+            ];
+            return allowedEmails.includes(this.$page.props.user.email);
+        }
     },
     data() {
         return {

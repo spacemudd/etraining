@@ -19,6 +19,11 @@ use App\Services\GosiService;
 use Illuminate\Mail\Markdown;
 
 
+Route::get('/apple-touch-icon.png', fn() => response('', 204));
+Route::get('/apple-touch-icon-precomposed.png', fn() => response('', 204));
+Route::get('/apple-touch-icon-152x152.png', fn() => response('', 204));
+Route::get('/apple-touch-icon-152x152-precomposed.png', fn() => response('', 204));
+
 Route::get('/qr1', function() {
     return redirect('https://forms.gle/t9nhZgKqz5za9xmp9');
 });
@@ -810,6 +815,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('trainees-witout-invoices', [\App\Http\Controllers\Back\ReportsController::class, 'formTraineesWithoutInvoicesReport'])->name('reports.trainees-witout-invoices.index');
             //trainees without invoices export
             Route::get('trainees-witout-invoices/export', [\App\Http\Controllers\Back\ReportsController::class, 'export'])->name('reports.trainees-witout-invoices.export');
+
+            // Trainees report routes
+            Route::get('trainees', [\App\Http\Controllers\Back\TraineesReportController::class, 'index'])->name('reports.trainees.index');
+            Route::post('trainees/generate', [\App\Http\Controllers\Back\TraineesReportController::class, 'generate'])->name('reports.trainees.generate');
 
 
 
