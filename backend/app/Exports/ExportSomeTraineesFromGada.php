@@ -12,75 +12,52 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
 {
     public function collection()
     {
-        // $idNumbers=[
-        //      '1142458262',
-        //      '1131569830',
-        //      '1114128562',
-        //      '1067218402',
-        //      '1083553048',
-        //      '1115636043',
-        //      '1113608028',
-        //      '١١٠٩٥٩٧٣٥٩',
-        //      '1120806656',
-        //      '1101101168',
-        //      '1049917287',
-        //      '1091043289',
-        //      '1093569026',
-        //      '1072284464',
-        //      '1083294965',
-        //      '1114948100',
-        //      '1121228397',
-        //      '1098806332',
-        //      '1127387817',
-        //      '1126306453',
-        //      '1085592796',
-        //      '1087953590',
-        //      '1098899998',
-        //      '1108934819',
-        //      '1090327998',
-        //      '1084896800',
-        //      '1084456753',
-        //      '1094485784',
-        //      '1123372409',
-        //      '1037113105',
-        //      '1057171561',
-        //      '1043213469',
-        //      '1118067063',
-        //      '1057313338',
-        //      '1129974836',
-        //      '1073286716',
-        //      '1020634984',
-        //      '1095233506',
-        //      '1106540030',
-        //      '1120892581',
-        //      '1098159989',
-        //      '1070429996',
-        //      '1060700729',
-        //      '1122295627',
-        //      '1092637311',
-        //      '١٠٣٤٥٩٠٦٣٦',
-        //      '1118402500',
-        //      '1106987488',
-        //      '1092559911',
-        //      '1098389750',
-        //      '1084419330',
-        //      '1090786045',
-        //      '1097372179',
+        $invoiceIds=[
+            'fde280f6-2329-4aba-98f5-314a30f9245b',  
+            '007efc69-46ca-44c8-ab03-c12dad6eb802',  
+            '6d23e452-4ee3-43f7-99a0-c49e7a978d06',  
+            '78be29b2-6e2f-4512-a2a7-e9d6d2220256',  
+            '6c1e96f8-50d6-4dbb-874f-448abd2586b6',  
+            '69f4dde7-3a11-4607-94ab-69e922da2dfb',  
+            '2dfb5e3e-6da6-40b4-a06a-5e23f796893e',  
+            'c165988f-dea1-4598-90f5-95e49f165246',  
+            '1f4b1653-0888-4003-860b-aee799f74651',  
+            '1734667c-1ce9-4c34-9cd0-d5eded52c699',  
+            '07a02794-97db-4fdc-8dff-30d67652c6f0',  
+            '7d241618-4923-4dd0-a591-6b5748df905c',  
+            '6c1e96f8-50d6-4dbb-874f-448abd2586b6',  
+            'a6218b39-f481-4d38-8ace-e2769a64ed15',  
+            'cf488c8f-995a-4265-8a2a-6c3e1d11d889',  
+            '87d4daf3-9e2d-42cf-a45e-6208da029152',  
+            'cc106952-b79e-4db1-8b72-0fe6da036fe6',  
+            'c1e31042-927e-45f9-a9c4-60d18c4676e8',  
+            '9ee2c464-dec9-49e6-b1a0-c5a626ce010f',  
+            '077f7f06-d7bc-4fd9-89f1-0535a24c846a',  
+            '41530c04-4bbd-4d32-a9b1-061edded0815',  
+            '1734667c-1ce9-4c34-9cd0-d5eded52c699',  
+            '007efc69-46ca-44c8-ab03-c12dad6eb802',  
+            '007efc69-46ca-44c8-ab03-c12dad6eb802',  
+            '1734667c-1ce9-4c34-9cd0-d5eded52c699',  
+            '1f4b1653-0888-4003-860b-aee799f74651',  
+            '6d23e452-4ee3-43f7-99a0-c49e7a978d06',  
+            '07a02794-97db-4fdc-8dff-30d67652c6f0',  
+            '007efc69-46ca-44c8-ab03-c12dad6eb802',  
+            'c165988f-dea1-4598-90f5-95e49f165246',
 
-        // ];
+        ];
 
-        // $trainees = Trainee::withTrashed()->whereIn('identity_number',$idNumbers)
-        // ->where('zoho_contract_status','completed')
-        // ->get();
+        $trainees = Trainee::whereIn('id', function ($query) use ($invoiceIds) {
+            $query->select('trainee_id')
+                ->from('invoices')
+                ->whereIn('id', $invoiceIds);
+        })->get();
+            
 
-        $companies = Company::whereHas('trainees', function ($query) {
-        $query->where('trainee_group_id', '47396796-9ee4-41d0-a069-179ea1b83a56');
-         })->get();
-    
-
-        return $companies->map(function ($company) {
+        return $trainees->map(function ($trainee) {
             return [
-                'name' => $company->name_ar,
+                'name' => $trainee->name_ar,
+                'phone' => $trainee->phone,
+                'company' => $trainee->company->name_ar,
             ];
         });
     }
@@ -88,6 +65,8 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
+            'الشركة',
+            'الجوال',
             'الإسم',
         ];
     }
