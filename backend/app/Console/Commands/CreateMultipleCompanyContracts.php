@@ -35,25 +35,28 @@ class CreateMultipleCompanyContracts extends Command
      */
     public function handle()
     {
-        // ضع هنا معرفات الشركات
-        $companyIds = [
-            // مثال:
-            // 1, 2, 3, 4, 5
-        ];
-        // $companyIds = explode(',', $this->option('companies')); // لم تعد مطلوبة
+        // جلب معرفات الشركات باستخدام get()
+        $companies = Company::whereHas('trainees', function ($query) {
+            $query->where('trainee_group_id', 'ab64a42c-77ea-43fa-838d-b9e02d81f9ea');
+             })->get();
+        
+
         $instructorId = $this->option('instructor');
         $groupId = $this->option('group');
 
-        $instructor = Instructor::findOrFail($instructorId);
-        $group = TraineeGroup::findOrFail($groupId);
+        $instructor = Instructor::find($instructorId);
+        if (!$instructor) {
+            $this->error("المدرب بالمعرف {$instructorId} غير موجود!");
+            return 1;
+        }
 
-        foreach ($companyIds as $companyId) {
-            $company = Company::find($companyId);
-            if (!$company) {
-                $this->error("الشركة بالمعرف {$companyId} غير موجودة!");
-                continue;
-            }
+        $group = TraineeGroup::find($groupId);
+        if (!$group) {
+            $this->error("الشعبة بالمعرف {$groupId} غير موجودة!");
+            return 1;
+        }
 
+        foreach ($companies as $company) {
             $contract = new CompanyContract();
             $contract->company_id = $company->id;
             $contract->contract_starts_at = now();
