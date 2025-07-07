@@ -57,6 +57,9 @@ class CreateMultipleCompanyContracts extends Command
         }
 
         foreach ($companies as $company) {
+            // حذف العقود السابقة للشركة
+            CompanyContract::where('company_id', $company->id)->delete();
+            
             $contract = new CompanyContract();
             $contract->company_id = $company->id;
             $contract->contract_starts_at = now();
@@ -67,7 +70,7 @@ class CreateMultipleCompanyContracts extends Command
             // ربط جميع متدربي الشركة بالشعبة والمدرب المحددين
             Trainee::where('company_id', $company->id)
                 ->update([
-                    'trainee_group_id' => $group->id,
+                    //'trainee_group_id' => $group->id,
                     'instructor_id' => $instructor->id
                 ]);
 
@@ -77,6 +80,6 @@ class CreateMultipleCompanyContracts extends Command
             $this->info("تم إنشاء عقد للشركة: {$company->name_ar} وربطه بالمدرب والشعبة بنجاح.");
         }
         $this->info('تمت العملية بنجاح لجميع الشركات.');
-        return 0;
+        return 1;
     }
 } 
