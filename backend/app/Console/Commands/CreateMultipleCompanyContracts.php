@@ -62,6 +62,7 @@ class CreateMultipleCompanyContracts extends Command
             
             $contract = new CompanyContract();
             $contract->company_id = $company->id;
+            $contract->team_id = $company->team_id;
             $contract->contract_starts_at = now();
             $contract->save();
 
