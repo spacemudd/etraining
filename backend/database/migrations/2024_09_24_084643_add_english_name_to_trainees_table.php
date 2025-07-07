@@ -14,7 +14,9 @@ class AddEnglishNameToTraineesTable extends Migration
     public function up()
     {
         Schema::table('trainees', function (Blueprint $table) {
-            $table->string('english_name')->nullable(); // Add the new column
+            if (!Schema::hasColumn('trainees', 'english_name')) {
+                $table->string('english_name')->nullable(); // Add the new column
+            }
         });
     }
 
