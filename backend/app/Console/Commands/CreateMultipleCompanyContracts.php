@@ -37,7 +37,7 @@ class CreateMultipleCompanyContracts extends Command
     {
         // جلب معرفات الشركات باستخدام get()
         $companies = Company::whereHas('trainees', function ($query) {
-            $query->where('trainee_group_id', 'ab64a42c-77ea-43fa-838d-b9e02d81f9ea');
+            $query->where('trainee_group_id', '7567725f-f0ac-46fd-8ac4-72b26e21f4e2');
              })->get();
         
 
