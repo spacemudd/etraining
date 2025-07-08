@@ -50,8 +50,7 @@ class CreateMultipleCompanyContracts extends Command
         foreach ($companies as $company) {
             // جلب جميع الشعب الموجودة في هذه الشركة
             $groups = TraineeGroup::where('company_id', $company->id)->get();
-            CompanyContract::where('company_id', $company->id)->delete();
-         
+            
             foreach ($groups as $group) {
                 // التحقق من وجود مدرب لهذه الشعبة
                 if (!isset($instructorsByGroup[$group->id])) {
@@ -67,9 +66,7 @@ class CreateMultipleCompanyContracts extends Command
                     continue;
                 }
 
-                // حذف العقود السابقة لهذه الشركة والشعبة
-                
-                // إنشاء عقد جديد للشركة
+                // إنشاء عقد جديد لهذه الشعبة في الشركة
                 $contract = new CompanyContract();
                 $contract->company_id = $company->id;
                 $contract->team_id = $company->team_id;
