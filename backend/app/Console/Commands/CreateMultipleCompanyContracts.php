@@ -35,52 +35,62 @@ class CreateMultipleCompanyContracts extends Command
      */
     public function handle()
     {
-        // جلب معرفات الشركات باستخدام get()
-        $companies = Company::whereHas('trainees', function ($query) {
-            $query->where('trainee_group_id', '47396796-9ee4-41d0-a069-179ea1b83a56');
-             })->get();
-        
+        // جلب جميع الشركات في النظام
+        $companies = Company::all();
 
-        $instructorId = $this->option('instructor');
-        $groupId = $this->option('group');
-
-        $instructor = Instructor::find($instructorId);
-        if (!$instructor) {
-            $this->error("المدرب بالمعرف {$instructorId} غير موجود!");
-            return 1;
-        }
-
-        $group = TraineeGroup::find($groupId);
-        if (!$group) {
-            $this->error("الشعبة بالمعرف {$groupId} غير موجودة!");
-            return 1;
-        }
+        // تعريف المدربين حسب الشعب
+        $instructorsByGroup = [
+            'ab64a42c-77ea-43fa-838d-b9e02d81f9ea' => 'bd841a1a-b4e3-4e18-9474-1a35692dd294', // شعبة 4 -> مدرب معرفه 1
+            '7567725f-f0ac-46fd-8ac4-72b26e21f4e2' => 'bd841a1a-b4e3-4e18-9474-1a35692dd294', // شعبة 3 -> مدرب معرفه 5
+            'e7a256f6-1913-47df-a1c2-10c174bfbf5f' => 'a476dfe7-5a61-4860-b6f1-2a5aae5310b2',
+            '47396796-9ee4-41d0-a069-179ea1b83a56' =>'bd841a1a-b4e3-4e18-9474-1a35692dd294',
+            '3a021404-4876-4a5d-b889-59889aa19256' =>'a476dfe7-5a61-4860-b6f1-2a5aae5310b2',  
+        ];
 
         foreach ($companies as $company) {
-            // حذف العقود السابقة للشركة
+            // جلب جميع الشعب الموجودة في هذه الشركة
+            $groups = TraineeGroup::where('company_id', $company->id)->get();
             CompanyContract::where('company_id', $company->id)->delete();
-            
-            $contract = new CompanyContract();
-            $contract->company_id = $company->id;
-            $contract->team_id = $company->team_id;
-            $contract->contract_starts_at = now();
-            $contract->save();
+         
+            foreach ($groups as $group) {
+                // التحقق من وجود مدرب لهذه الشعبة
+                if (!isset($instructorsByGroup[$group->id])) {
+                    $this->warn("لا يوجد مدرب محدد للشعبة: {$group->name} في الشركة: {$company->name_ar}");
+                    continue;
+                }
 
-            $contract->instructors()->attach($instructor->id);
+                $instructorId = $instructorsByGroup[$group->id];
+                $instructor = Instructor::find($instructorId);
+                
+                if (!$instructor) {
+                    $this->error("المدرب بالمعرف {$instructorId} غير موجود!");
+                    continue;
+                }
 
-            // ربط جميع متدربي الشركة بالشعبة والمدرب المحددين
-            Trainee::where('company_id', $company->id)
-                ->update([
-                    //'trainee_group_id' => $group->id,
-                    'instructor_id' => $instructor->id
-                ]);
+                // حذف العقود السابقة لهذه الشركة والشعبة
+                
+                // إنشاء عقد جديد للشركة
+                $contract = new CompanyContract();
+                $contract->company_id = $company->id;
+                $contract->team_id = $company->team_id;
+                $contract->contract_starts_at = now();
+                $contract->save();
 
-            // ربط جميع متدربي الشركة بالشعبة المحددة (اختياري)
-            // App\Models\Back\Trainee::where('company_id', $company->id)->update(['trainee_group_id' => $group->id]);
+                // ربط العقد بالمدرب
+                $contract->instructors()->attach($instructor->id);
 
-            $this->info("تم إنشاء عقد للشركة: {$company->name_ar} وربطه بالمدرب والشعبة بنجاح.");
+                // ربط متدربي هذه الشعبة بالمدرب
+                Trainee::where('company_id', $company->id)
+                    ->where('trainee_group_id', $group->id)
+                    ->update([
+                        'instructor_id' => $instructor->id
+                    ]);
+
+                $this->info("تم إنشاء عقد للشركة: {$company->name_ar} - الشعبة: {$group->name} وربطه بالمدرب: {$instructor->name} بنجاح.");
+            }
         }
-        $this->info('تمت العملية بنجاح لجميع الشركات.');
-        return 1;
+        
+        $this->info('تمت العملية بنجاح لجميع الشركات والشعب.');
+        return 0;
     }
 } 
