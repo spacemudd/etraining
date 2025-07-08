@@ -48,9 +48,15 @@ class CreateMultipleCompanyContracts extends Command
         foreach ($companies as $company) {
             $companyCount++;
             $this->info('جاري معالجة الشركة: ' . $company->name_ar . ' (ID: ' . $company->id . ')');
-            $groups = TraineeGroup::where('company_id', $company->id)->get();
+            // جلب جميع معرفات الشعب الفريدة من متدربي الشركة
+            $groupIds =Trainee::where('company_id', $company->id)
+                ->whereNotNull('trainee_group_id')
+                ->distinct()
+                ->pluck('trainee_group_id');
             $groupCount = 0;
-            foreach ($groups as $group) {
+            foreach ($groupIds as $groupId) {
+                $group =TraineeGroup::find($groupId);
+                if (!$group) continue;
                 $groupCount++;
                 $this->info('  جاري معالجة الشعبة: ' . $group->name . ' (ID: ' . $group->id . ')');
                 if (!isset($instructorsByGroup[$group->id])) {
@@ -69,6 +75,7 @@ class CreateMultipleCompanyContracts extends Command
                 $contract->contract_starts_at = now();
                 $contract->save();
                 $contract->instructors()->attach($instructor->id);
+                // ربط متدربي هذه الشعبة بالمدرب
                 Trainee::where('company_id', $company->id)
                     ->where('trainee_group_id', $group->id)
                     ->update([
