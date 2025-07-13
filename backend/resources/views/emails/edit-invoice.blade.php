@@ -89,7 +89,6 @@
         }
     </style>
     <meta charset="utf-8">
-    <img src="https://app.ptc-ksa.com/img/logo-lg.png" alt="PTC KSA">
 </head>
 <body style="text-align:right;">
 <div>

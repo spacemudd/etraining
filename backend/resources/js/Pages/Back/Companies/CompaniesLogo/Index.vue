@@ -41,7 +41,7 @@
         >
           <img
             v-if="company.logo_files.length"
-            :src="`https://prod.ptc-ksa.net/back/media/${company.logo_files[0].id}`"
+            :src="`https://prod.jasara-ksa.com/back/media/${company.logo_files[0].id}`"
             :alt="`${company.name} Logo`"
             class="company-logo w-32 h-auto"
           />
@@ -125,8 +125,8 @@ export default {
 
 <style scoped>
 .company-logo {
-  width: 60%; 
-  height: 60%; 
+  width: 60%;
+  height: 60%;
 }
 </style>
 

@@ -24,7 +24,7 @@
                 </div>
                 <div class="col">
                     <div class="px-20">
-                        <img src="https://i.ibb.co/V9jF2jh/new-ptc-complaints-v2.jpg" class="shadow-lg rounded-lg" alt="PTCComplaints">
+<!--                        <img src="https://i.ibb.co/V9jF2jh/new-ptc-complaints-v2.jpg" class="shadow-lg rounded-lg" alt="PTCComplaints">-->
                     </div>
                 </div>
             </div>

@@ -9,7 +9,7 @@
             </div>
 
             <div class="mt-20 bg-white shadow-lg rounded-lg p-5 text-center flex content-center">
-                <img src="/img/ptc_survey_new.png" class="mx-auto" style="max-width:600px;">
+<!--                <img src="/img/ptc_survey_new.png" class="mx-auto" style="max-width:600px;">-->
             </div>
         </div>
     </app-layout>

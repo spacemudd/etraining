@@ -10,11 +10,11 @@
             }
         },
         mounted() {
-            if (window.location.href.includes('ptc-ksa.net')) {
-                // this.link = '/img/logo.png';
-            } else {
-                // this.link = '/img/logo-lg.png';
-            }
+            // if (window.location.href.includes('ptc-ksa.net')) {
+            //     // this.link = '/img/logo.png';
+            // } else {
+            //     // this.link = '/img/logo-lg.png';
+            // }
         },
         methods: {
             //

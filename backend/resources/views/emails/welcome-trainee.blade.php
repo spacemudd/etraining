@@ -4,7 +4,7 @@
 @lang('words.welcome-to-our-center-we-will-inform-you-when-your-application-is-approved')
 
 <div style="text-align: center;margin: 4rem 0;">
-    <img src="{{ url('/img/welcome-to-ptc.png') }}">
+{{--    <img src="{{ url('/img/welcome-to-ptc.png') }}">--}}
 </div>
 
 @component('mail::button', ['url' => url('/'), 'color' => 'primary'])

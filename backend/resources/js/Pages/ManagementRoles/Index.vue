@@ -4,7 +4,7 @@
             <div class="grid grid-cols-1 gap-6 mt-5">
                 <div class="col text-center">
                     <div class="px-20 text-center mx-auto">
-                        <img src="/img/PTCManagement.jpg" class="shadow-lg rounded-lg w-1/2 mx-auto" alt="PTCManagement">
+<!--                        <img src="/img/PTCManagement.jpg" class="shadow-lg rounded-lg w-1/2 mx-auto" alt="PTCManagement">-->
                     </div>
                 </div>
             </div>

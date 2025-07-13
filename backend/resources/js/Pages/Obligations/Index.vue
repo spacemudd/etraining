@@ -18,8 +18,8 @@
                     </a>
                     <br/>
                     <br/>
-                    <p>تقديم الدعم من خلال الايميل الخاص بشركة مركز احترافية التدريب</p>
-                    <p><a href="mailto:training@ptc-ksa.net">training@ptc-ksa.net</a></p>
+<!--                    <p>تقديم الدعم من خلال الايميل الخاص بشركة مركز احترافية التدريب</p>-->
+<!--                    <p><a href="mailto:training@ptc-ksa.net">training@ptc-ksa.net</a></p>-->
                 </div>
             </div>
 

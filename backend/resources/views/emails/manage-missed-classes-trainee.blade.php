@@ -89,7 +89,7 @@
         }
     </style>
     <meta charset="utf-8">
-    <img src="https://app.ptc-ksa.net/img/logo-lg.png" alt="PTC KSA">
+{{--    <img src="https://app.ptc-ksa.net/img/logo-lg.png" alt="PTC KSA">--}}
 </head>
 <body style="text-align:right;">
 <div>

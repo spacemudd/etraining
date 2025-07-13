@@ -416,7 +416,7 @@
             </table>
             @if ($report->with_logo && !$base64logo)
                 <div class="row" style="text-align:center;">
-                    <img style="margin:0 auto;border:none;" src="{{ public_path('/img/ptc_stamp_2023.png')}}" alt="logo" width="200"/>
+{{--                    <img style="margin:0 auto;border:none;" src="{{ public_path('/img/ptc_stamp_2023.png')}}" alt="logo" width="200"/>--}}
                 </div>
             @endif
         </div>
