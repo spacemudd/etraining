@@ -569,6 +569,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('/settings/complaints', [\App\Http\Controllers\Back\ComplaintsSettingsController::class, 'index'])->name('settings.complaints.index');
         Route::put('/settings/complaints/update', [\App\Http\Controllers\Back\ComplaintsSettingsController::class, 'update'])->name('settings.complaints.update');
 
+        Route::get('/settings/resignation', [\App\Http\Controllers\Back\ResignationSettingsController::class, 'index'])->name('settings.resignation.index');
+        Route::put('/settings/resignation', [\App\Http\Controllers\Back\ResignationSettingsController::class, 'update'])->name('settings.resignation.update');
+
         Route::put('/settings/payment/update', [\App\Http\Controllers\Back\PaymentController::class, 'update'])->name('settings.payment.update');
         Route::get('/settings/payment', [\App\Http\Controllers\Back\PaymentController::class, 'index'])->name('settings.payment.index');
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
 use App\Mail\ResignationsMail;
+use App\Models\AppSetting;
 use App\Models\Back\Company;
 use App\Models\Back\MaxNumber;
 use App\Models\Back\Resignation;
@@ -24,8 +25,14 @@ class CompanyResignationsController extends Controller
      */
     public function create($compay_id)
     {
+        // Get default emails from app settings
+        $defaultCcEmails = AppSetting::where('name', 'resignation_default_cc_emails')->value('value') ?? '';
+        $defaultBccEmails = AppSetting::where('name', 'resignation_default_bcc_emails')->value('value') ?? '';
+
         return Inertia::render('Back/CompanyResignations/Create', [
             'company' => Company::with('trainees')->with('resignations')->findOrFail($compay_id),
+            'default_cc_emails' => $defaultCcEmails,
+            'default_bcc_emails' => $defaultBccEmails,
         ]);
     }
 
