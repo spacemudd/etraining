@@ -130,6 +130,10 @@ class TraineesController extends Controller
     {
         $trainee = Trainee::withTrashed()->find($id);
 
+        // Check if trainee exists, return 404 if not found
+        if (!$trainee) {
+            abort(404);
+        }
 
         //zoho check contarct status
         $zohoController = new ZohoSignController();
@@ -1157,6 +1161,12 @@ class TraineesController extends Controller
     public function deleteFromBlockList($id)
     {
         $trainee = Trainee::find($id);
+        
+        // Check if trainee exists, return 404 if not found
+        if (!$trainee) {
+            abort(404);
+        }
+        
         TraineeBlockList::where('phone', $trainee->phone)
             ->orWhere('identity_number', $trainee->identity_number)
             ->orWhere('email', $trainee->email)
@@ -1240,6 +1250,12 @@ class TraineesController extends Controller
     public function downloadAllFiles($id)
     {
         $trainee = Trainee::withTrashed()->find($id);
+        
+        // Check if trainee exists, return 404 if not found
+        if (!$trainee) {
+            abort(404);
+        }
+        
         $downloads = $trainee->getMedia('identity')
             ->merge($trainee->getMedia('qualification'))
             ->merge($trainee->getMedia('bank-account'))

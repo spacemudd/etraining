@@ -100,7 +100,16 @@ class CourseBatchesController extends Controller
      */
     public function destroy($coursE_id, $id)
     {
-        CourseBatch::find($id)->delete();
+        $courseBatch = CourseBatch::find($id);
+        
+        if (!$courseBatch) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Course batch not found'
+            ], 404);
+        }
+        
+        $courseBatch->delete();
         return response()->json([
             'success' => true,
         ]);

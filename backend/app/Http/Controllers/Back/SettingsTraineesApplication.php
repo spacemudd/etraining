@@ -52,7 +52,16 @@ class SettingsTraineesApplication extends Controller
      */
     public function delete($id)
     {
-        RequiredTraineesFiles::find($id)->delete();
+        $requiredFile = RequiredTraineesFiles::find($id);
+        
+        if (!$requiredFile) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Required file not found'
+            ], 404);
+        }
+        
+        $requiredFile->delete();
         return response()->json([
             'success' => true,
         ]);
