@@ -744,4 +744,10 @@ return [
     'refreshing' => 'جاري التحديث...',
     'refresh-now' => 'حدث الآن',
     'having-trouble-contact-support' => 'تواجه مشكلة؟ تواصل مع الدعم الفني للمساعدة.',
+    'page-not-found' => 'الصفحة غير موجودة',
+    'error-404' => 'خطأ 404',
+    'the-page-you-are-looking-for-could-not-be-found' => 'لا يمكن العثور على الصفحة التي تبحث عنها.',
+    'please-check-the-url-and-try-again' => 'يرجى التحقق من الرابط والمحاولة مرة أخرى.',
+    'go-back-home' => 'العودة للصفحة الرئيسية',
+    'go-back' => 'العودة',
 ];

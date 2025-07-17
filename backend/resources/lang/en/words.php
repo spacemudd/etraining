@@ -745,4 +745,10 @@ return [
     'refreshing' => 'Refreshing...',
     'refresh-now' => 'Refresh now',
     'having-trouble-contact-support' => 'Having trouble? Contact support for assistance.',
+    'page-not-found' => 'Page Not Found',
+    'error-404' => 'Error 404',
+    'the-page-you-are-looking-for-could-not-be-found' => 'The page you are looking for could not be found.',
+    'please-check-the-url-and-try-again' => 'Please check the URL and try again.',
+    'go-back-home' => 'Go Back Home',
+    'go-back' => 'Go Back',
 ];
