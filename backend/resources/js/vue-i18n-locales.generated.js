@@ -768,7 +768,15 @@ export default {
             "the-page-you-are-looking-for-could-not-be-found": "لا يمكن العثور على الصفحة التي تبحث عنها.",
             "please-check-the-url-and-try-again": "يرجى التحقق من الرابط والمحاولة مرة أخرى.",
             "go-back-home": "العودة للصفحة الرئيسية",
-            "go-back": "العودة"
+            "go-back": "العودة",
+            "page-expired": "انتهت صلاحية الصفحة",
+            "error-419": "خطأ 419",
+            "your-session-has-expired": "انتهت صلاحية جلستك",
+            "this-happens-when-you-stay-idle-for-too-long": "يحدث هذا عندما تبقى غير نشط على صفحة لفترة طويلة.",
+            "please-refresh-the-page-and-try-again": "يرجى إعادة تحميل الصفحة والمحاولة مرة أخرى.",
+            "refresh-page": "إعادة تحميل الصفحة",
+            "session-expired-explanation": "لأسباب أمنية، انتهت صلاحية جلستك بعد فترة من عدم النشاط.",
+            "auto-refresh-in": "إعادة تحميل تلقائي خلال"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1694,7 +1702,15 @@ export default {
             "the-page-you-are-looking-for-could-not-be-found": "The page you are looking for could not be found.",
             "please-check-the-url-and-try-again": "Please check the URL and try again.",
             "go-back-home": "Go Back Home",
-            "go-back": "Go Back"
+            "go-back": "Go Back",
+            "page-expired": "Page Expired",
+            "error-419": "Error 419",
+            "your-session-has-expired": "Your session has expired",
+            "this-happens-when-you-stay-idle-for-too-long": "This happens when you stay idle on a page for too long.",
+            "please-refresh-the-page-and-try-again": "Please refresh the page and try again.",
+            "refresh-page": "Refresh Page",
+            "session-expired-explanation": "For security reasons, your session has expired after a period of inactivity.",
+            "auto-refresh-in": "Auto-refresh in"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

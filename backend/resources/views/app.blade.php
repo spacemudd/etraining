@@ -50,5 +50,36 @@
             </div>
         @endif
         @inertia
+        
+        <!-- CSRF Token Auto-Refresh Script -->
+        <script>
+            // Auto-refresh CSRF token every 30 minutes
+            setInterval(function() {
+                fetch('/csrf-token')
+                    .then(response => response.json())
+                    .then(data => {
+                        // Update all CSRF tokens on the page
+                        document.querySelectorAll('input[name="_token"]').forEach(function(input) {
+                            input.value = data.token;
+                        });
+                        
+                        // Update meta tag
+                        const metaTag = document.querySelector('meta[name="csrf-token"]');
+                        if (metaTag) {
+                            metaTag.setAttribute('content', data.token);
+                        }
+                        
+                        // Update Axios default header if using
+                        if (window.axios) {
+                            window.axios.defaults.headers.common['X-CSRF-TOKEN'] = data.token;
+                        }
+                        
+                        console.log('CSRF token refreshed successfully');
+                    })
+                    .catch(error => {
+                        console.log('CSRF token refresh failed:', error);
+                    });
+            }, 30 * 60 * 1000); // Every 30 minutes
+        </script>
     </body>
 </html>

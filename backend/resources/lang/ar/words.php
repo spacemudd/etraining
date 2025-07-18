@@ -750,4 +750,13 @@ return [
     'please-check-the-url-and-try-again' => 'يرجى التحقق من الرابط والمحاولة مرة أخرى.',
     'go-back-home' => 'العودة للصفحة الرئيسية',
     'go-back' => 'العودة',
+    'page-expired' => 'انتهت صلاحية الصفحة',
+    'error-419' => 'خطأ 419',
+    'your-session-has-expired' => 'انتهت صلاحية جلستك',
+    'this-happens-when-you-stay-idle-for-too-long' => 'يحدث هذا عندما تبقى غير نشط على صفحة لفترة طويلة.',
+    'please-refresh-the-page-and-try-again' => 'يرجى إعادة تحميل الصفحة والمحاولة مرة أخرى.',
+    'refresh-page' => 'إعادة تحميل الصفحة',
+    'session-expired-explanation' => 'لأسباب أمنية، انتهت صلاحية جلستك بعد فترة من عدم النشاط.',
+    'auto-refresh-in' => 'إعادة تحميل تلقائي خلال',
+    'seconds' => 'ثانية',
 ];

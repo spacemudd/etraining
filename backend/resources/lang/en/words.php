@@ -751,4 +751,13 @@ return [
     'please-check-the-url-and-try-again' => 'Please check the URL and try again.',
     'go-back-home' => 'Go Back Home',
     'go-back' => 'Go Back',
+    'page-expired' => 'Page Expired',
+    'error-419' => 'Error 419',
+    'your-session-has-expired' => 'Your session has expired',
+    'this-happens-when-you-stay-idle-for-too-long' => 'This happens when you stay idle on a page for too long.',
+    'please-refresh-the-page-and-try-again' => 'Please refresh the page and try again.',
+    'refresh-page' => 'Refresh Page',
+    'session-expired-explanation' => 'For security reasons, your session has expired after a period of inactivity.',
+    'auto-refresh-in' => 'Auto-refresh in',
+    'seconds' => 'seconds',
 ];

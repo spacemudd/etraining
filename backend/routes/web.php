@@ -28,6 +28,11 @@ Route::get('/qr1', function() {
     return redirect('https://forms.gle/t9nhZgKqz5za9xmp9');
 });
 
+// CSRF token refresh route for handling expired sessions
+Route::get('/csrf-token', function () {
+    return response()->json(['token' => csrf_token()]);
+});
+
 Route::get('/qr2', function() {
     return redirect('https://docs.google.com/forms/d/e/1FAIpQLSdjDCpcabswqgSLLo7gI-h0LC3pspt6CJw94vsV6sioHdwRXQ/viewform?usp=sf_link');
 });
