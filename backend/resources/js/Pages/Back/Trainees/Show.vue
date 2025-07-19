@@ -778,8 +778,8 @@
 
       <jet-section-border></jet-section-border>
 
-      <div class="grid grid-cols-1 md:grid-cols-6 gap-6 my-2">
-        <div class="md:col-span-4 lg:col-span-1 sm:col-span-3">
+      <div class="grid grid-cols-1 md:grid-cols-7 gap-6 my-2">
+        <div class="md:col-span-7 lg:col-span-1 sm:col-span-3">
           <div class="px-4 sm:px-0">
             <h3 class="text-lg font-medium text-gray-900">
               {{ $t("words.documents") }}
@@ -843,7 +843,6 @@
           ></vue-dropzone>
         </div>
 
-        <!-- my comment -->
         <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
           <jet-label
             :value="$t('words.qualification-photocopy')"
@@ -873,8 +872,6 @@
             :options="dropzoneOptionsQualification"
           ></vue-dropzone>
         </div>
-
-
 
         <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
           <jet-label :value="$t('words.bank-account-photocopy')" class="mb-2" />
@@ -957,6 +954,62 @@
             id="dropzoneCv"
             @vdropzone-sending="sendingCsrf"
             :options="dropzoneOptionsCv"
+          ></vue-dropzone>
+        </div>
+
+        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
+          <jet-label :value="$t('words.gosi-certificate')" class="mb-2" />
+
+          <div
+            class="bg-white border-2 rounder-lg flex flex-col justify-center items-center min-container-upload"
+            v-if="trainee.gosi_certificate_copy_url"
+          >
+            <a
+              class="bg-gray-700 text-white font-semibold p-2 text-center w-1/2 rounded my-1"
+              target="_blank"
+              :href="trainee.gosi_certificate_copy_url"
+              >{{ $t("words.download") }}</a
+            >
+            <button
+              class="bg-red-500 text-white font-semibold p-2 text-center w-1/2 rounded my-1"
+              @click="deleteGosiCertificate"
+            >
+              {{ $t("words.delete") }}
+            </button>
+          </div>
+          <vue-dropzone
+            v-else
+            id="dropzoneGosiCertificate"
+            @vdropzone-sending="sendingCsrf"
+            :options="dropzoneOptionsGosiCertificate"
+          ></vue-dropzone>
+        </div>
+
+        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
+          <jet-label :value="$t('words.qiwa-contract')" class="mb-2" />
+
+          <div
+            class="bg-white border-2 rounder-lg flex flex-col justify-center items-center min-container-upload"
+            v-if="trainee.qiwa_contract_copy_url"
+          >
+            <a
+              class="bg-gray-700 text-white font-semibold p-2 text-center w-1/2 rounded my-1"
+              target="_blank"
+              :href="trainee.qiwa_contract_copy_url"
+              >{{ $t("words.download") }}</a
+            >
+            <button
+              class="bg-red-500 text-white font-semibold p-2 text-center w-1/2 rounded my-1"
+              @click="deleteQiwaContract"
+            >
+              {{ $t("words.delete") }}
+            </button>
+          </div>
+          <vue-dropzone
+            v-else
+            id="dropzoneQiwaContract"
+            @vdropzone-sending="sendingCsrf"
+            :options="dropzoneOptionsQiwaContract"
           ></vue-dropzone>
         </div>
       </div>
@@ -1192,6 +1245,28 @@ export default {
         thumbnailWidth: 150,
         maxFilesize: 20,
       },
+      dropzoneOptionsGosiCertificate: {
+        destroyDropzone: false,
+        url: route("back.trainees.attachments.gosi-certificate", {
+          trainee_id: this.trainee.id,
+        }),
+        dictDefaultMessage:
+          "<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> " +
+          this.$t("words.upload-files-here"),
+        thumbnailWidth: 150,
+        maxFilesize: 20,
+      },
+      dropzoneOptionsQiwaContract: {
+        destroyDropzone: false,
+        url: route("back.trainees.attachments.qiwa-contract", {
+          trainee_id: this.trainee.id,
+        }),
+        dictDefaultMessage:
+          "<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> " +
+          this.$t("words.upload-files-here"),
+        thumbnailWidth: 150,
+        maxFilesize: 20,
+      },
       companySelector: null,
     };
   },
@@ -1360,6 +1435,24 @@ export default {
       if (confirm(this.$t("words.are-you-sure"))) {
         this.$inertia.delete(
           route("back.trainees.attachments.cv.destroy", {
+            trainee_id: this.trainee.id,
+          })
+        );
+      }
+    },
+    deleteGosiCertificate() {
+      if (confirm(this.$t("words.are-you-sure"))) {
+        this.$inertia.delete(
+          route("back.trainees.attachments.gosi-certificate.destroy", {
+            trainee_id: this.trainee.id,
+          })
+        );
+      }
+    },
+    deleteQiwaContract() {
+      if (confirm(this.$t("words.are-you-sure"))) {
+        this.$inertia.delete(
+          route("back.trainees.attachments.qiwa-contract.destroy", {
             trainee_id: this.trainee.id,
           })
         );

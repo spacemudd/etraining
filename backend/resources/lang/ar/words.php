@@ -113,6 +113,8 @@ return [
     'identity-card-photocopy' => 'الهوية (صورة)',
     'qualification-photocopy' => 'المؤهل (صورة)',
     'bank-account-photocopy' => 'حساب البنكي (صورة)',
+    'gosi-certificate' => 'شهادة التأمينات',
+    'qiwa-contract' => 'عقد قوى',
     'download' => 'عرض',
     'open-new-instructor-file' => 'إنشاء ملف مدرب جديد',
     'open-new-instructor-file-description' => 'هنا يمكن لك إنشاء ملف مدرب جديد ورفع كل المستندات المطلوبة',

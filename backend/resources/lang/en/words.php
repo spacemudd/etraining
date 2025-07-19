@@ -113,6 +113,8 @@ return [
     'identity-card-photocopy' => 'ID card photocopy',
     'qualification-photocopy' => 'Qualification photocopy',
     'bank-account-photocopy' => 'Bank account photocopy',
+    'gosi-certificate' => 'GOSI certificate',
+    'qiwa-contract' => 'Qiwa contract',
     'download' => 'Download',
     'open-new-instructor-file' => 'Open a new instructor file',
     'open-new-instructor-file-description' => 'Here you can open a new instructor file and upload all required documents.',
