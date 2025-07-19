@@ -68,6 +68,16 @@ class CourseBatchSessionWarningsJob implements ShouldQueue
                     continue;
                 }
 
+                // Skip warning if trainee was created less than or equal to 2 days before the session
+                $sessionDate = $this->courseBatchSession->starts_at;
+                $traineeCreatedDate = $attendance->trainee->created_at;
+                $daysDifference = $traineeCreatedDate->diffInDays($sessionDate);
+                
+                if ($daysDifference <= 2) {
+                    Log::debug('[CourseBatchSessionWarningsJob] Skipping warning - trainee created '.$daysDifference.' days before session: '.$attendance->trainee->email);
+                    continue;
+                }
+
                 $warning = new AttendanceReportRecordWarning();
                 $warning->team_id = $attendance->team_id;
                 $warning->attendance_report_id = $this->report->id;
@@ -118,6 +128,16 @@ class CourseBatchSessionWarningsJob implements ShouldQueue
                     ->exists();
 
                 if ($alreadySent) {
+                    continue;
+                }
+
+                // Skip warning if trainee was created less than or equal to 2 days before the session
+                $sessionDate = $this->courseBatchSession->starts_at;
+                $traineeCreatedDate = $attendance->trainee->created_at;
+                $daysDifference = $traineeCreatedDate->diffInDays($sessionDate);
+                
+                if ($daysDifference <= 2) {
+                    Log::debug('[CourseBatchSessionWarningsJob] Skipping late warning - trainee created '.$daysDifference.' days before session: '.$attendance->trainee->email);
                     continue;
                 }
 

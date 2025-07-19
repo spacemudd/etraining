@@ -12,6 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
@@ -79,6 +80,16 @@ class SendEmailsToLateAndMissedTraineesJob implements ShouldQueue
         foreach ($usersWhoDidntAttended as $punchIn) {
             Log::debug('Sending warning to user: '.$punchIn->email);
 
+            // Skip warning if trainee was created less than or equal to 2 days before the session
+            $sessionDate = $this->courseBatchSession->starts_at;
+            $traineeCreatedDate = $punchIn->created_at;
+            $daysDifference = $traineeCreatedDate->diffInDays($sessionDate);
+            
+            if ($daysDifference <= 2) {
+                Log::debug('Skipping warning - trainee created '.$daysDifference.' days before session: '.$punchIn->email);
+                continue;
+            }
+
             if (Str::startsWith($punchIn->phone, '05')) {
                 $punchIn->phone = Str::replaceFirst('05', '9665', $punchIn->phone);
                 $punchIn->save();
@@ -112,6 +123,16 @@ class SendEmailsToLateAndMissedTraineesJob implements ShouldQueue
         foreach ($usersWhoWhereLate as $punchInAttendance) {
             $punchIn = $punchInAttendance->trainee;
             Log::debug('Sending warning to user: '.$punchIn->email);
+
+            // Skip warning if trainee was created less than or equal to 2 days before the session
+            $sessionDate = $this->courseBatchSession->starts_at;
+            $traineeCreatedDate = $punchIn->created_at;
+            $daysDifference = $traineeCreatedDate->diffInDays($sessionDate);
+            
+            if ($daysDifference <= 2) {
+                Log::debug('Skipping late warning - trainee created '.$daysDifference.' days before session: '.$punchIn->email);
+                continue;
+            }
 
             if (Str::startsWith($punchIn->phone, '05')) {
                 $punchIn->phone = Str::replaceFirst('05', '9665', $punchIn->phone);
