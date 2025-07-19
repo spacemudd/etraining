@@ -1351,6 +1351,8 @@ class TraineesController extends Controller
             ->merge($trainee->getMedia('bank-account'))
             ->merge($trainee->getMedia('national-address'))
             ->merge($trainee->getMedia('cv'))
+            ->merge($trainee->getMedia('gosi-certificate'))
+            ->merge($trainee->getMedia('qiwa-contract'))
             ->merge($trainee->getMedia('general_files'));
 
         return MediaStream::create(str_slug($trainee->name) . '-files.zip')
