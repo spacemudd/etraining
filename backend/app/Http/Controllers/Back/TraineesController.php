@@ -443,6 +443,96 @@ class TraineesController extends Controller
     }
 
     /**
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param                          $trainee_id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function storeGosiCertificate(Request $request, $trainee_id)
+    {
+        $request->validate([
+            'gosi_certificate' => 'required_without:file',
+            'file' => 'required_without:gosi_certificate',
+        ]);
+
+        $trainee = Trainee::findOrFail($trainee_id);
+        $file = $request->file('gosi_certificate') ?: $request->file('file');
+        $uploaded_file = $trainee->uploadToFolder($file, 'gosi-certificate');
+
+        // When the other has been filled, mark the application as pending approval from the administration.
+        if ($trainee->gosi_certificate_copy_url) {
+            $trainee->status = Trainee::STATUS_PENDING_APPROVAL;
+            $trainee->save();
+        }
+
+        return $uploaded_file;
+    }
+
+    /**
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param                          $trainee_id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function deleteGosiCertificate(Request $request, $trainee_id)
+    {
+        $trainee = Trainee::findOrFail($trainee_id);
+        $trainee->getMedia('gosi-certificate')->each->forceDelete();
+
+        $trainee->status = Instructor::STATUS_PENDING_UPLOADING_FILES;
+        $trainee->save();
+
+        return response()->redirectToRoute('back.trainees.show', $trainee->id);
+    }
+
+    /**
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param                          $trainee_id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function storeQiwaContract(Request $request, $trainee_id)
+    {
+        $request->validate([
+            'qiwa_contract' => 'required_without:file',
+            'file' => 'required_without:qiwa_contract',
+        ]);
+
+        $trainee = Trainee::findOrFail($trainee_id);
+        $file = $request->file('qiwa_contract') ?: $request->file('file');
+        $uploaded_file = $trainee->uploadToFolder($file, 'qiwa-contract');
+
+        // When the other has been filled, mark the application as pending approval from the administration.
+        if ($trainee->qiwa_contract_copy_url) {
+            $trainee->status = Trainee::STATUS_PENDING_APPROVAL;
+            $trainee->save();
+        }
+
+        return $uploaded_file;
+    }
+
+    /**
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param                          $trainee_id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function deleteQiwaContract(Request $request, $trainee_id)
+    {
+        $trainee = Trainee::findOrFail($trainee_id);
+        $trainee->getMedia('qiwa-contract')->each->forceDelete();
+
+        $trainee->status = Instructor::STATUS_PENDING_UPLOADING_FILES;
+        $trainee->save();
+
+        return response()->redirectToRoute('back.trainees.show', $trainee->id);
+    }
+
+    /**
      * Shows all trainees with groups.
      *
      * @returns array

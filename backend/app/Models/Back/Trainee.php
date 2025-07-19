@@ -92,6 +92,8 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'bank_account_copy_url',
         'national_address_copy_url',
         'cv_url',
+        'gosi_certificate_copy_url',
+        'qiwa_contract_copy_url',
         'name_selectable',
         'show_url',
         'created_at_date',
@@ -332,6 +334,16 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     public function getCvUrlAttribute()
     {
         return $this->getCopyUrl('cv');
+    }
+
+    public function getGosiCertificateCopyUrlAttribute()
+    {
+        return $this->getCopyUrl('gosi-certificate');
+    }
+
+    public function getQiwaContractCopyUrlAttribute()
+    {
+        return $this->getCopyUrl('qiwa-contract');
     }
 
     public function getCopyUrl($collection_name)
