@@ -833,6 +833,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             //trainees without invoices export
             Route::get('trainees-witout-invoices/export', [\App\Http\Controllers\Back\ReportsController::class, 'export'])->name('reports.trainees-witout-invoices.export');
 
+            // Certificates issued report routes
+            Route::get('certificates-issued', [\App\Http\Controllers\Back\ReportsController::class, 'formCertificatesIssuedReport'])->name('reports.certificates-issued.index');
+            Route::get('certificates-issued/export', [\App\Http\Controllers\Back\ReportsController::class, 'exportCertificatesIssued'])->name('reports.certificates-issued.export');
+
             // Trainees report routes
             Route::get('trainees', [\App\Http\Controllers\Back\TraineesReportController::class, 'index'])->name('reports.trainees.index');
             Route::post('trainees/generate', [\App\Http\Controllers\Back\TraineesReportController::class, 'generate'])->name('reports.trainees.generate');

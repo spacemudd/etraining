@@ -152,6 +152,26 @@ class ReportsController extends Controller
 
     }
 
+    public function formCertificatesIssuedReport()
+    {
+        $this->authorize('view-backoffice-reports');
+        return Inertia::render('Back/Reports/CertificatesIssued/Index');
+    }
+
+    public function exportCertificatesIssued(Request $request)
+    {
+        $this->authorize('view-backoffice-reports');
+
+        Audit::create([
+            'event' => 'certificatesIssued.export.excel',
+            'auditable_id' => auth()->user()->id,
+            'auditable_type' => User::class,
+            'new_values' => [],
+        ]);
+
+        return Excel::download(new \App\Exports\CertificatesIssuedExport(), now()->format('Y-m-d').'-certificates-issued.xlsx');
+    }
+
 
     public function formCompanyCertificateseGenerateReport(Request $request)
     {
