@@ -17,6 +17,7 @@ use App\Models\Back\Instructor;
 use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
 use App\Models\Back\TraineeBlockList;
+use App\Models\Back\TraineeCustomCertificate;
 use App\Models\Back\TraineeGroup;
 use App\Models\City;
 use App\Models\EducationalLevel;
@@ -190,6 +191,9 @@ class TraineesController extends Controller
                 ->withCount('general_files')
                 ->with(['invoices' => function($q) {
                     $q->orderBy('number', 'desc');
+                }])
+                ->with(['custom_certificates' => function($q) {
+                    $q->orderBy('created_at', 'desc')->limit(2);
                 }])
                 ->findOrFail($id),
             'trainee_groups' => TraineeGroup::get(),
@@ -530,6 +534,48 @@ class TraineesController extends Controller
         $trainee->save();
 
         return response()->redirectToRoute('back.trainees.show', $trainee->id);
+    }
+
+    /**
+     * Show the form for creating a custom certificate.
+     *
+     * @param                          $trainee_id
+     *
+     * @return \Inertia\Response
+     */
+    public function createCustomCertificate($trainee_id)
+    {
+        $trainee = Trainee::withTrashed()->findOrFail($trainee_id);
+
+        return Inertia::render('Back/Trainees/Certificates/Create', [
+            'trainee' => $trainee,
+        ]);
+    }
+
+    /**
+     * Store a custom certificate for a trainee.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param                          $trainee_id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function storeCustomCertificate(Request $request, $trainee_id)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'issued_at' => 'required|date',
+        ]);
+
+        $trainee = Trainee::withTrashed()->findOrFail($trainee_id);
+        
+        TraineeCustomCertificate::create([
+            'trainee_id' => $trainee->id,
+            'title' => $request->title,
+            'issued_at' => $request->issued_at,
+        ]);
+
+        return redirect()->route('back.trainees.show', $trainee->id);
     }
 
     /**

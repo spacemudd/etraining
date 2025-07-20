@@ -774,6 +774,29 @@
             </span>
               </inertia-link>
           </div>
+
+          <div class="col-span-6 sm:col-span-1" v-can="'override-training-costs'">
+              <jet-label 
+                  for="name" 
+                  :value="$t('words.certificates')" 
+                  @click="navigateToCreateCertificate"
+                  class="cursor-pointer"
+              />
+              <div 
+                  @click="navigateToCreateCertificate"
+                  class="cursor-pointer hover:bg-gray-100 rounded"
+              >
+                  <div v-if="trainee.custom_certificates && trainee.custom_certificates.length > 0" 
+                       class="text-sm mt-2 p-1 px-2 bg-gray-200 rounded-lg">
+                      <div v-for="certificate in trainee.custom_certificates" :key="certificate.id" class="mt-1">
+                          {{ certificate.title }} - {{ certificate.issued_at_formatted }}
+                      </div>
+                  </div>
+                  <div v-else class="text-sm inline-block mt-2 p-1 px-2 bg-gray-200 rounded-lg hover:bg-gray-300">
+                      {{ $t("words.no-certificates") }}
+                  </div>
+              </div>
+          </div>
       </div>
 
       <jet-section-border></jet-section-border>
@@ -1114,7 +1137,6 @@
 import AppLayout from "@/Layouts/AppLayout";
 import JetSectionBorder from "@/Jetstream/SectionBorder";
 import Breadcrumb from "@/Components/Breadcrumb";
-import JetDialogModal from "@/Jetstream/DialogModal";
 import JetInput from "@/Jetstream/Input";
 import JetInputError from "@/Jetstream/InputError";
 import JetActionMessage from "@/Jetstream/ActionMessage";
@@ -1159,7 +1181,6 @@ export default {
     CompanyContractsPagination,
     JetActionMessage,
     JetButton,
-    JetDialogModal,
     JetFormSection,
     JetInput,
     JetInputError,
@@ -1487,6 +1508,11 @@ export default {
     );
   }
 },
+
+    // Navigate to certificate creation page
+    navigateToCreateCertificate() {
+      this.$inertia.visit(route('back.trainees.custom-certificates.create', this.trainee.id));
+    },
 
   },
 };
