@@ -979,7 +979,9 @@
             :options="dropzoneOptionsCv"
           ></vue-dropzone>
         </div>
+      </div>
 
+      <div class="grid grid-cols-1 md:grid-cols-7 gap-6 my-2">
         <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
           <jet-label :value="$t('words.gosi-certificate')" class="mb-2" />
 
