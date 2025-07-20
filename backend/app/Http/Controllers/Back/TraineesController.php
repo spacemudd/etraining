@@ -238,8 +238,11 @@ class TraineesController extends Controller
         $file = $request->file('identity_card_copy') ?: $request->file('file');
         $uploaded_file = $trainee->uploadToFolder($file, 'identity');
 
+        // Refresh the trainee model to get the updated URL after upload
+        $trainee->refresh();
+
         // When the other has been filled, mark the application as pending approval from the administration.
-        if ($trainee->identity_card_url) {
+        if ($trainee->identity_copy_url) {
             $trainee->status = Trainee::STATUS_PENDING_APPROVAL;
             $trainee->save();
         }
@@ -283,6 +286,9 @@ class TraineesController extends Controller
         $trainee = Trainee::findOrFail($trainee_id);
         $file = $request->file('qualification_copy') ?: $request->file('file');
         $uploaded_file = $trainee->uploadToFolder($file, 'qualification');
+
+        // Refresh the trainee model to get the updated URL after upload
+        $trainee->refresh();
 
         // When the other has been filled, mark the application as pending approval from the administration.
         if ($trainee->qualification_copy_url) {
@@ -329,6 +335,9 @@ class TraineesController extends Controller
         $file = $request->file('bank_account_copy') ?: $request->file('file');
         $uploaded_file = $trainee->uploadToFolder($file, 'bank-account');
 
+        // Refresh the trainee model to get the updated URL after upload
+        $trainee->refresh();
+
         // When the other has been filled, mark the application as pending approval from the administration.
         if ($trainee->bank_account_copy_url) {
             $trainee->status = Trainee::STATUS_PENDING_APPROVAL;
@@ -356,8 +365,11 @@ class TraineesController extends Controller
         $file = $request->file('national_address_copy') ?: $request->file('file');
         $uploaded_file = $trainee->uploadToFolder($file, 'national-address');
 
+        // Refresh the trainee model to get the updated URL after upload
+        $trainee->refresh();
+
         // When the other has been filled, mark the application as pending approval from the administration.
-        if ($trainee->national_address_copy) {
+        if ($trainee->national_address_copy_url) {
             $trainee->status = Trainee::STATUS_PENDING_APPROVAL;
             $trainee->save();
         }
@@ -382,6 +394,9 @@ class TraineesController extends Controller
         $trainee = Trainee::findOrFail($trainee_id);
         $file = $request->file('cv') ?: $request->file('file');
         $uploaded_file = $trainee->uploadToFolder($file, 'cv');
+
+        // Refresh the trainee model to get the updated URL after upload
+        $trainee->refresh();
 
         // When the other has been filled, mark the application as pending approval from the administration.
         if ($trainee->cv_url) {
@@ -464,11 +479,11 @@ class TraineesController extends Controller
         $file = $request->file('gosi_certificate') ?: $request->file('file');
         $uploaded_file = $trainee->uploadToFolder($file, 'gosi-certificate');
 
-        // When the other has been filled, mark the application as pending approval from the administration.
-        if ($trainee->gosi_certificate_copy_url) {
-            $trainee->status = Trainee::STATUS_PENDING_APPROVAL;
-            $trainee->save();
-        }
+        // Refresh the trainee model to get the updated URL after upload
+        $trainee->refresh();
+
+        // For optional documents, we don't change the status when uploaded
+        // The status will be managed by the approval process
 
         return $uploaded_file;
     }
@@ -485,8 +500,8 @@ class TraineesController extends Controller
         $trainee = Trainee::findOrFail($trainee_id);
         $trainee->getMedia('gosi-certificate')->each->forceDelete();
 
-        $trainee->status = Instructor::STATUS_PENDING_UPLOADING_FILES;
-        $trainee->save();
+        // For optional documents, we don't change the status when deleted
+        // The status will be managed by the approval process
 
         return response()->redirectToRoute('back.trainees.show', $trainee->id);
     }
@@ -509,11 +524,11 @@ class TraineesController extends Controller
         $file = $request->file('qiwa_contract') ?: $request->file('file');
         $uploaded_file = $trainee->uploadToFolder($file, 'qiwa-contract');
 
-        // When the other has been filled, mark the application as pending approval from the administration.
-        if ($trainee->qiwa_contract_copy_url) {
-            $trainee->status = Trainee::STATUS_PENDING_APPROVAL;
-            $trainee->save();
-        }
+        // Refresh the trainee model to get the updated URL after upload
+        $trainee->refresh();
+
+        // For optional documents, we don't change the status when uploaded
+        // The status will be managed by the approval process
 
         return $uploaded_file;
     }
@@ -530,8 +545,8 @@ class TraineesController extends Controller
         $trainee = Trainee::findOrFail($trainee_id);
         $trainee->getMedia('qiwa-contract')->each->forceDelete();
 
-        $trainee->status = Instructor::STATUS_PENDING_UPLOADING_FILES;
-        $trainee->save();
+        // For optional documents, we don't change the status when deleted
+        // The status will be managed by the approval process
 
         return response()->redirectToRoute('back.trainees.show', $trainee->id);
     }
@@ -721,6 +736,28 @@ class TraineesController extends Controller
         //$this->authorize('approve-trainee-applicants');
 
         $trainee = Trainee::findOrFail($trainee_id);
+        
+        // Check if optional documents are missing
+        $missingOptionalDocuments = [];
+        if (!$trainee->gosi_certificate_copy_url) {
+            $missingOptionalDocuments[] = 'GOSI Certificate';
+        }
+        if (!$trainee->qiwa_contract_copy_url) {
+            $missingOptionalDocuments[] = 'Qiwa Contract';
+        }
+        
+        // If optional documents are missing, set status to pending approval
+        if (!empty($missingOptionalDocuments)) {
+            $trainee->status = Trainee::STATUS_PENDING_APPROVAL;
+            $trainee->save();
+            
+            Log::info('Trainee ID: ' . $trainee->id . ' approval blocked due to missing optional documents: ' . implode(', ', $missingOptionalDocuments));
+            
+            return redirect()->route('back.trainees.show', $trainee->id)
+                ->with('error', 'Cannot approve trainee. Missing optional documents: ' . implode(', ', $missingOptionalDocuments));
+        }
+        
+        // All required documents are present, approve the trainee
         $trainee->status = Trainee::STATUS_APPROVED;
         $trainee->approved_by_id = auth()->user()->id;
         $trainee->approved_at = now();
@@ -1459,5 +1496,55 @@ class TraineesController extends Controller
             'logs' => $logs,
             'weekly_reason_stats' => $weeklyReasonStats,
         ]);
+    }
+
+    /**
+     * Check if trainee has missing optional documents and set status accordingly
+     *
+     * @param Trainee $trainee
+     * @return bool
+     */
+    private function checkOptionalDocumentsAndSetStatus($trainee)
+    {
+        $missingOptionalDocuments = [];
+        
+        if (!$trainee->gosi_certificate_copy_url) {
+            $missingOptionalDocuments[] = 'GOSI Certificate';
+        }
+        if (!$trainee->qiwa_contract_copy_url) {
+            $missingOptionalDocuments[] = 'Qiwa Contract';
+        }
+        
+        // If optional documents are missing, set status to pending approval
+        if (!empty($missingOptionalDocuments)) {
+            $trainee->status = Trainee::STATUS_PENDING_APPROVAL;
+            $trainee->save();
+            
+            Log::info('Trainee ID: ' . $trainee->id . ' status set to pending approval due to missing optional documents: ' . implode(', ', $missingOptionalDocuments));
+            
+            return false; // Documents are missing
+        }
+        
+        return true; // All optional documents are present
+    }
+
+    /**
+     * Public method to check and update trainee status based on optional documents
+     *
+     * @param $trainee_id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function checkOptionalDocumentsStatus($trainee_id)
+    {
+        $trainee = Trainee::findOrFail($trainee_id);
+        $hasAllDocuments = $this->checkOptionalDocumentsAndSetStatus($trainee);
+        
+        if ($hasAllDocuments) {
+            return redirect()->route('back.trainees.show', $trainee->id)
+                ->with('success', 'All optional documents are present. Trainee can be approved.');
+        } else {
+            return redirect()->route('back.trainees.show', $trainee->id)
+                ->with('error', 'Trainee status set to pending approval due to missing optional documents.');
+        }
     }
 }
