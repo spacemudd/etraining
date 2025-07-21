@@ -737,27 +737,7 @@ class TraineesController extends Controller
 
         $trainee = Trainee::findOrFail($trainee_id);
         
-        // Check if optional documents are missing
-        $missingOptionalDocuments = [];
-        if (!$trainee->gosi_certificate_copy_url) {
-            $missingOptionalDocuments[] = 'GOSI Certificate';
-        }
-        if (!$trainee->qiwa_contract_copy_url) {
-            $missingOptionalDocuments[] = 'Qiwa Contract';
-        }
-        
-        // If optional documents are missing, set status to pending approval
-        if (!empty($missingOptionalDocuments)) {
-            $trainee->status = Trainee::STATUS_PENDING_APPROVAL;
-            $trainee->save();
-            
-            Log::info('Trainee ID: ' . $trainee->id . ' approval blocked due to missing optional documents: ' . implode(', ', $missingOptionalDocuments));
-            
-            return redirect()->route('back.trainees.show', $trainee->id)
-                ->with('error', 'Cannot approve trainee. Missing optional documents: ' . implode(', ', $missingOptionalDocuments));
-        }
-        
-        // All required documents are present, approve the trainee
+        // Approve the trainee regardless of GOSI or Qiwa documents
         $trainee->status = Trainee::STATUS_APPROVED;
         $trainee->approved_by_id = auth()->user()->id;
         $trainee->approved_at = now();
