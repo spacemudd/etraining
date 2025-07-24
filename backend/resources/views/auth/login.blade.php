@@ -25,19 +25,6 @@
                 <button type="submit" id="password-login-btn" class="w-full px-4 py-2 bg-blue-600 text-white rounded mt-4">الدخول باستخدام كلمة المرور</button>
             </div>
 
-            <div class="mt-4" id="otp-section" style="display:none;">
-                <form id="otp-request-form" method="POST" action="{{ route('login.2fa-code') }}">
-                    @csrf
-                    <input type="hidden" name="email" id="otp-email" value="{{ old('email') }}">
-                    <button type="button" id="request-otp-btn" class="w-full px-4 py-2 bg-green-500 text-white rounded mt-2">طلب رمز OTP</button>
-                    <div id="otp-input-group" style="display:none;">
-                        <x-jet-label value="رمز التحقق" />
-                        <x-jet-input class="block mt-1 w-full" type="text" name="otp" id="otp-input" />
-                        <button type="submit" id="otp-login-btn" class="w-full px-4 py-2 bg-green-600 text-white rounded mt-4">تسجيل الدخول برمز التحقق</button>
-                    </div>
-                </form>
-            </div>
-
             <div class="block mt-4" id="remember-section" style="display:none;">
                 <label class="flex items-center">
                     <input type="checkbox" class="form-checkbox" name="remember">
@@ -53,6 +40,19 @@
                 @endif
             </div>
         </form>
+
+        <div class="mt-4" id="otp-section" style="display:none;">
+            <form id="otp-request-form" method="POST" action="{{ route('login.2fa-code') }}">
+                @csrf
+                <input type="hidden" name="email" id="otp-email" value="{{ old('email') }}">
+                <button type="button" id="request-otp-btn" class="w-full px-4 py-2 bg-green-500 text-white rounded mt-2">طلب رمز OTP</button>
+                <div id="otp-input-group" style="display:none;">
+                    <x-jet-label value="رمز التحقق" />
+                    <x-jet-input class="block mt-1 w-full" type="text" name="otp" id="otp-input" />
+                    <button type="submit" id="otp-login-btn" class="w-full px-4 py-2 bg-green-600 text-white rounded mt-4">تسجيل الدخول برمز التحقق</button>
+                </div>
+            </form>
+        </div>
 
         <div class="mt-4" id="login-options" style="display:none; flex-direction: column; gap: 0.5rem;">
             <button type="button" id="show-password-btn" class="w-full px-4 py-2 bg-blue-600 text-white rounded mb-2">الدخول باستخدام كلمة المرور</button>
