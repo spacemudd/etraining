@@ -15,8 +15,10 @@ class VerificationsController extends Controller
             'email' => 'required',
         ]);
 
-
-        $user = User::where('email', $request->email)->firstOrFail();
+        $user = User::where('email', $request->email)->first();
+        if (! $user) {
+            return redirect()->back()->withErrors(['email' => 'البريد الإلكتروني غير صحيح أو غير مسجل.']);
+        }
         $this->sendWhatsAppCode($user);
 
         return redirect()->route('login.verify', ['email' => $request->email]);
