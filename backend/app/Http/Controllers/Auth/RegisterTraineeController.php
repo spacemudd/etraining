@@ -124,7 +124,7 @@ class RegisterTraineeController extends Controller
             ]));
 
             // Redirect to login page with a success message
-            return redirect()->route('login')->with('status', 'Registration successful! Please log in.');
+            return redirect()->route('login')->with('status', 'تم التسجيل بنجاح! الرجاء تسجيل الدخول.');
         } catch (\Throwable $e) {
             \DB::rollBack();
             Log::error('[REGISTRATION] Exception', array_merge($logContext, [
