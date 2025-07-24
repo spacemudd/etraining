@@ -22,6 +22,7 @@
             <div class="mt-4" id="password-section" style="display:none;">
                 <x-jet-label value="{{ __('words.password') }}" />
                 <x-jet-input id="password" dir="ltr" class="block mt-1 w-full" type="password" name="password" autocomplete="current-password" />
+                <button type="submit" id="password-login-btn" class="w-full px-4 py-2 bg-blue-600 text-white rounded mt-4">الدخول باستخدام كلمة المرور</button>
             </div>
 
             <div class="block mt-4" id="remember-section" style="display:none;">
@@ -58,16 +59,19 @@
             const loginForm = document.getElementById('loginForm');
             const magicLinkForm = document.getElementById('magic-link-form');
             const magicLinkEmail = document.getElementById('magic-link-email');
+            const passwordLoginBtn = document.getElementById('password-login-btn');
 
             function showOptions() {
                 if (emailField.value.trim() !== '') {
                     loginOptions.style.display = 'flex';
                     passwordSection.style.display = 'none';
                     rememberSection.style.display = 'none';
+                    passwordLoginBtn.style.display = 'none';
                 } else {
                     loginOptions.style.display = 'none';
                     passwordSection.style.display = 'none';
                     rememberSection.style.display = 'none';
+                    passwordLoginBtn.style.display = 'none';
                 }
             }
 
@@ -81,7 +85,12 @@
                 passwordSection.style.display = 'block';
                 rememberSection.style.display = 'block';
                 loginOptions.style.display = 'none';
+                passwordLoginBtn.style.display = 'block';
                 document.getElementById('password').focus();
+            });
+
+            loginForm.addEventListener('submit', function(e) {
+                // Optionally, show a loading spinner or disable the button
             });
 
             magicLinkForm.addEventListener('submit', function(e) {
