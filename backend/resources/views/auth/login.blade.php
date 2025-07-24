@@ -26,12 +26,15 @@
             </div>
 
             <div class="mt-4" id="otp-section" style="display:none;">
-                <form id="otp-form" method="POST" action="{{ route('login.2fa-code') }}">
+                <form id="otp-request-form" method="POST" action="{{ route('login.2fa-code') }}">
                     @csrf
                     <input type="hidden" name="email" id="otp-email" value="{{ old('email') }}">
-                    <x-jet-label value="رمز التحقق" />
-                    <x-jet-input class="block mt-1 w-full" type="text" name="otp" required />
-                    <button type="submit" class="w-full px-4 py-2 bg-green-500 text-white rounded mt-4">تسجيل الدخول برمز التحقق</button>
+                    <button type="button" id="request-otp-btn" class="w-full px-4 py-2 bg-green-500 text-white rounded mt-2">طلب رمز OTP</button>
+                    <div id="otp-input-group" style="display:none;">
+                        <x-jet-label value="رمز التحقق" />
+                        <x-jet-input class="block mt-1 w-full" type="text" name="otp" id="otp-input" />
+                        <button type="submit" id="otp-login-btn" class="w-full px-4 py-2 bg-green-600 text-white rounded mt-4">تسجيل الدخول برمز التحقق</button>
+                    </div>
                 </form>
             </div>
 
@@ -72,6 +75,11 @@
             const passwordLoginBtn = document.getElementById('password-login-btn');
             const otpSection = document.getElementById('otp-section');
             const otpEmail = document.getElementById('otp-email');
+            const otpRequestForm = document.getElementById('otp-request-form');
+            const requestOtpBtn = document.getElementById('request-otp-btn');
+            const otpInputGroup = document.getElementById('otp-input-group');
+            const otpInput = document.getElementById('otp-input');
+            const otpLoginBtn = document.getElementById('otp-login-btn');
 
             function showOptions() {
                 const email = emailField.value.trim();
@@ -120,6 +128,15 @@
 
             magicLinkForm.addEventListener('submit', function(e) {
                 // Optionally, show a loading spinner or disable the button
+            });
+
+            requestOtpBtn.addEventListener('click', function() {
+                // Submit the form with only the email to request OTP
+                otpInputGroup.style.display = 'block';
+                otpInput.required = true;
+                requestOtpBtn.style.display = 'none';
+                // Optionally, you can submit the form here to trigger OTP send, or require user to click again to login
+                otpRequestForm.submit();
             });
         </script>
     </x-jet-authentication-card>
