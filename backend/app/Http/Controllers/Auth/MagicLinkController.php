@@ -18,23 +18,22 @@ class MagicLinkController extends Controller
     {
         $request->validate(['email' => 'required|email|exists:users,email']);
         $user = User::where('email', $request->email)->firstOrFail();
-        $token = URL::temporarySignedRoute(
+        $url = URL::temporarySignedRoute(
             'login.magic-link.consume',
             now()->addMinutes(10),
-            ['token' => sha1($user->email . '|' . $user->id . '|' . now()->timestamp)]
+            ['email' => $user->email]
         );
         Notification::route('mail', $user->email)
-            ->notify(new MagicLinkNotification($token));
+            ->notify(new MagicLinkNotification($url));
         return redirect()->route('login.magic-link.sent');
     }
 
     // Consume magic link and log in
-    public function login(Request $request, $token)
+    public function login(Request $request)
     {
         if (! $request->hasValidSignature()) {
             abort(401, 'This magic link is invalid or has expired.');
         }
-        // Find user by email in the signed URL
         $email = $request->query('email');
         $user = User::where('email', $email)->first();
         if (! $user) {
