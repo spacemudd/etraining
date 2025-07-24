@@ -45,12 +45,7 @@
             <form id="otp-request-form" method="POST" action="{{ route('login.2fa-code') }}">
                 @csrf
                 <input type="hidden" name="email" id="otp-email" value="{{ old('email') }}">
-                <button type="button" id="request-otp-btn" class="w-full px-4 py-2 bg-green-500 text-white rounded mt-2">طلب رمز OTP</button>
-                <div id="otp-input-group" style="display:none;">
-                    <x-jet-label value="رمز التحقق" />
-                    <x-jet-input class="block mt-1 w-full" type="text" name="otp" id="otp-input" />
-                    <button type="submit" id="otp-login-btn" class="w-full px-4 py-2 bg-green-600 text-white rounded mt-4">تسجيل الدخول برمز التحقق</button>
-                </div>
+                <button type="submit" id="request-otp-btn" class="w-full px-4 py-2 bg-green-500 text-white rounded mt-2">طلب رمز OTP</button>
             </form>
         </div>
 
@@ -78,9 +73,6 @@
             const otpEmail = document.getElementById('otp-email');
             const otpRequestForm = document.getElementById('otp-request-form');
             const requestOtpBtn = document.getElementById('request-otp-btn');
-            const otpInputGroup = document.getElementById('otp-input-group');
-            const otpInput = document.getElementById('otp-input');
-            const otpLoginBtn = document.getElementById('otp-login-btn');
 
             function showOptions() {
                 const email = emailField.value.trim();
@@ -133,9 +125,6 @@
 
             if (otpRequestForm && requestOtpBtn) {
                 requestOtpBtn.addEventListener('click', function() {
-                    otpInputGroup.style.display = 'block';
-                    otpInput.required = true;
-                    requestOtpBtn.style.display = 'none';
                     otpRequestForm.submit();
                 });
             }
