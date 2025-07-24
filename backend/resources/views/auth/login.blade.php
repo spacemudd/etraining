@@ -14,32 +14,26 @@
 
         <form id="loginForm" method="POST" action="{{ route('login') }}">
             @csrf
-
             <div>
                 <x-jet-label value="{{ __('words.email') }}" />
                 <x-jet-input id="email" dir="ltr" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
             </div>
 
-            <div class="mt-4" id="hideFor2Fa">
+            <div class="mt-4" id="password-section" style="display:none;">
                 <x-jet-label value="{{ __('words.password') }}" />
-                <x-jet-input id="password" dir="ltr" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
+                <x-jet-input id="password" dir="ltr" class="block mt-1 w-full" type="password" name="password" autocomplete="current-password" />
             </div>
 
-            <div class="mt-4">
-                <form method="POST" action="{{ route('login.magic-link.send') }}">
+            <div class="mt-4" id="login-options" style="display:none; flex-direction: column; gap: 0.5rem;">
+                <button type="button" id="show-password-btn" class="w-full px-4 py-2 bg-blue-600 text-white rounded mb-2">{{ __('words.login') }}</button>
+                <form id="magic-link-form" method="POST" action="{{ route('login.magic-link.send') }}">
                     @csrf
                     <input type="hidden" name="email" id="magic-link-email" value="{{ old('email') }}">
-                    <button type="submit" class="text-blue-700 underline text-sm hover:text-blue-900 mt-2">{{ __('Send me a magic link to login') }}</button>
+                    <button type="submit" class="w-full px-4 py-2 bg-yellow-400 text-black rounded">استخدم الرابط السريع للدخول 🪄</button>
                 </form>
             </div>
-            <script>
-                // Keep magic link email in sync with login email field
-                document.getElementById('email').addEventListener('input', function() {
-                    document.getElementById('magic-link-email').value = this.value;
-                });
-            </script>
 
-            <div class="block mt-4">
+            <div class="block mt-4" id="remember-section" style="display:none;">
                 <label class="flex items-center">
                     <input type="checkbox" class="form-checkbox" name="remember">
                     <span class="mx-2 text-sm text-gray-600">{{ __('words.remember-me') }}</span>
@@ -52,62 +46,47 @@
                         {{ __('words.forget-password') }}
                     </a>
                 @endif
-
-                <x-jet-button class="ltr:ml-4 rtl:mr-4 tracking-normal">
-                    {{ __('words.login') }}
-                </x-jet-button>
             </div>
         </form>
 
         <script>
-            {{-- Add listener to email field --}}
-            var emailField = document.getElementById("email");
-            emailField.addEventListener('input', function() {
-                // if (document.getElementById('email').value.includes('nelc.user@ptc-ksa.net' || 'nelc@ptc-ksa.net')) {
-                //     document.getElementById('hideFor2Fa').style.display = 'block';
-                //     document.getElementById('password').required = true;
-                // }
-                if (document.getElementById('email').value.includes('nelc.instructor@ptc-ksa.net')) {
-                    document.getElementById('hideFor2Fa').style.display = 'block';
-                    document.getElementById('password').required = true;
-                }
-                else if (document.getElementById('email').value.includes('nelc.user@ptc-ksa.net')) {
-                    document.getElementById('hideFor2Fa').style.display = 'block';
-                    document.getElementById('password').required = true;
-                }
-                else if (document.getElementById('email').value.includes('ptc-ksa.net') || document.getElementById('email').value.includes('hadaf-hq.com')) {
-                    document.getElementById('hideFor2Fa').style.display = 'none';
-                    document.getElementById('password').required = false;
-                } else {
-                    document.getElementById('hideFor2Fa').style.display = 'block';
-                    document.getElementById('password').required = true;
-                }
-            });
-            emailField.dispatchEvent(new Event('input'));
+            const emailField = document.getElementById('email');
+            const passwordSection = document.getElementById('password-section');
+            const loginOptions = document.getElementById('login-options');
+            const rememberSection = document.getElementById('remember-section');
+            const showPasswordBtn = document.getElementById('show-password-btn');
+            const loginForm = document.getElementById('loginForm');
+            const magicLinkForm = document.getElementById('magic-link-form');
+            const magicLinkEmail = document.getElementById('magic-link-email');
 
-            {{-- Redirect PTC users to 2FA page --}}
-            const form = document.getElementById("loginForm");
-            form.onsubmit = function() {
-                // if (emailField.value.includes('nelc.user@ptc-ksa.net' || 'nelc@ptc-ksa.net')) {
-                //     form.action = '/login';
-                //     form.submit();
-                // }
-                if (emailField.value.includes('nelc.instructor@ptc-ksa.net')) {
-                    form.action = '/login';
-                    form.submit();
-                }
-                else if (emailField.value.includes('nelc.user@ptc-ksa.net')) {
-                    form.action = '/login';
-                    form.submit();
-                }
-                else if (emailField.value.includes('ptc-ksa.net') || emailField.value.includes('hadaf-hq.com')) {
-                    form.action = '/login/2fa-code';
-                    form.submit();
+            function showOptions() {
+                if (emailField.value.trim() !== '') {
+                    loginOptions.style.display = 'flex';
+                    passwordSection.style.display = 'none';
+                    rememberSection.style.display = 'none';
                 } else {
-                    form.action = '/login';
-                    form.submit();
+                    loginOptions.style.display = 'none';
+                    passwordSection.style.display = 'none';
+                    rememberSection.style.display = 'none';
                 }
-            };
+            }
+
+            emailField.addEventListener('input', function() {
+                magicLinkEmail.value = this.value;
+                showOptions();
+            });
+            showOptions();
+
+            showPasswordBtn.addEventListener('click', function() {
+                passwordSection.style.display = 'block';
+                rememberSection.style.display = 'block';
+                loginOptions.style.display = 'none';
+                document.getElementById('password').focus();
+            });
+
+            magicLinkForm.addEventListener('submit', function(e) {
+                // Optionally, show a loading spinner or disable the button
+            });
         </script>
     </x-jet-authentication-card>
 </x-guest-layout>

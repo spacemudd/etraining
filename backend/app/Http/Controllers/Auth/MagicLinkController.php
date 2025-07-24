@@ -25,7 +25,7 @@ class MagicLinkController extends Controller
         );
         Notification::route('mail', $user->email)
             ->notify(new MagicLinkNotification($token));
-        return back()->with('status', Lang::get('A magic login link has been sent to your email.'));
+        return redirect()->route('login.magic-link.sent');
     }
 
     // Consume magic link and log in
@@ -42,5 +42,10 @@ class MagicLinkController extends Controller
         }
         Auth::login($user);
         return redirect()->route('dashboard');
+    }
+
+    public function sent()
+    {
+        return view('auth.magic-link-sent');
     }
 } 
