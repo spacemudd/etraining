@@ -24,15 +24,6 @@
                 <x-jet-input id="password" dir="ltr" class="block mt-1 w-full" type="password" name="password" autocomplete="current-password" />
             </div>
 
-            <div class="mt-4" id="login-options" style="display:none; flex-direction: column; gap: 0.5rem;">
-                <button type="button" id="show-password-btn" class="w-full px-4 py-2 bg-blue-600 text-white rounded mb-2">الدخول باستخدام كلمة المرور</button>
-                <form id="magic-link-form" method="POST" action="{{ route('login.magic-link.send') }}">
-                    @csrf
-                    <input type="hidden" name="email" id="magic-link-email" value="{{ old('email') }}">
-                    <button type="submit" class="w-full px-4 py-2 bg-yellow-400 text-black font-bold border-2 border-yellow-500 shadow-lg rounded">استخدم الرابط السريع للدخول 🪄</button>
-                </form>
-            </div>
-
             <div class="block mt-4" id="remember-section" style="display:none;">
                 <label class="flex items-center">
                     <input type="checkbox" class="form-checkbox" name="remember">
@@ -48,6 +39,15 @@
                 @endif
             </div>
         </form>
+
+        <div class="mt-4" id="login-options" style="display:none; flex-direction: column; gap: 0.5rem;">
+            <button type="button" id="show-password-btn" class="w-full px-4 py-2 bg-blue-600 text-white rounded mb-2">الدخول باستخدام كلمة المرور</button>
+            <form id="magic-link-form" method="POST" action="{{ route('login.magic-link.send') }}">
+                @csrf
+                <input type="hidden" name="email" id="magic-link-email" value="{{ old('email') }}">
+                <button type="submit" class="w-full px-4 py-2 bg-yellow-400 text-black font-bold border-2 border-yellow-500 shadow-lg rounded">استخدم الرابط السريع للدخول 🪄</button>
+            </form>
+        </div>
 
         <script>
             const emailField = document.getElementById('email');
