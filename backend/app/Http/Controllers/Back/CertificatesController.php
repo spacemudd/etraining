@@ -18,7 +18,10 @@ class CertificatesController extends Controller
 {
     public function import()
     {
-        return Inertia::render('Back/Certificates/Import');
+        $courses = Course::select('id', 'name_ar')->orderBy('name_ar')->paginate(100);
+        return Inertia::render('Back/Certificates/Import', [
+            'courses' => $courses,
+        ]);
     }
 
     public function upload(Request $request)
