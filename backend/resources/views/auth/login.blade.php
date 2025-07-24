@@ -25,6 +25,16 @@
                 <button type="submit" id="password-login-btn" class="w-full px-4 py-2 bg-blue-600 text-white rounded mt-4">الدخول باستخدام كلمة المرور</button>
             </div>
 
+            <div class="mt-4" id="otp-section" style="display:none;">
+                <form id="otp-form" method="POST" action="{{ route('login.2fa-code') }}">
+                    @csrf
+                    <input type="hidden" name="email" id="otp-email" value="{{ old('email') }}">
+                    <x-jet-label value="رمز التحقق" />
+                    <x-jet-input class="block mt-1 w-full" type="text" name="otp" required />
+                    <button type="submit" class="w-full px-4 py-2 bg-green-500 text-white rounded mt-4">تسجيل الدخول برمز التحقق</button>
+                </form>
+            </div>
+
             <div class="block mt-4" id="remember-section" style="display:none;">
                 <label class="flex items-center">
                     <input type="checkbox" class="form-checkbox" name="remember">
@@ -60,23 +70,37 @@
             const magicLinkForm = document.getElementById('magic-link-form');
             const magicLinkEmail = document.getElementById('magic-link-email');
             const passwordLoginBtn = document.getElementById('password-login-btn');
+            const otpSection = document.getElementById('otp-section');
+            const otpEmail = document.getElementById('otp-email');
 
             function showOptions() {
-                if (emailField.value.trim() !== '') {
-                    loginOptions.style.display = 'flex';
-                    passwordSection.style.display = 'none';
-                    rememberSection.style.display = 'none';
-                    passwordLoginBtn.style.display = 'none';
+                const email = emailField.value.trim();
+                if (email !== '') {
+                    if (email.endsWith('@hadaf-hq.com')) {
+                        otpSection.style.display = 'block';
+                        loginOptions.style.display = 'none';
+                        passwordSection.style.display = 'none';
+                        rememberSection.style.display = 'none';
+                        passwordLoginBtn.style.display = 'none';
+                    } else {
+                        loginOptions.style.display = 'flex';
+                        passwordSection.style.display = 'none';
+                        rememberSection.style.display = 'none';
+                        passwordLoginBtn.style.display = 'none';
+                        otpSection.style.display = 'none';
+                    }
                 } else {
                     loginOptions.style.display = 'none';
                     passwordSection.style.display = 'none';
                     rememberSection.style.display = 'none';
                     passwordLoginBtn.style.display = 'none';
+                    otpSection.style.display = 'none';
                 }
             }
 
             emailField.addEventListener('input', function() {
                 magicLinkEmail.value = this.value;
+                otpEmail.value = this.value;
                 showOptions();
             });
             showOptions();
@@ -86,6 +110,7 @@
                 rememberSection.style.display = 'block';
                 loginOptions.style.display = 'none';
                 passwordLoginBtn.style.display = 'block';
+                otpSection.style.display = 'none';
                 document.getElementById('password').focus();
             });
 
