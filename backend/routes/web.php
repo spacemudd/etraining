@@ -1021,3 +1021,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
     Route::post('reports/deleted-trainees/generate', [\App\Http\Controllers\Back\DeletedTraineesReportController::class, 'generate'])->name('back.reports.deleted-trainees.generate');
     Route::get('reports/deleted-trainees', [\App\Http\Controllers\Back\DeletedTraineesReportController::class, 'index'])->name('back.reports.deleted-trainees.index');
 });
+
+// Magic link login
+Route::post('/login/magic-link', [\App\Http\Controllers\Auth\MagicLinkController::class, 'send'])->name('login.magic-link.send');
+Route::get('/login/magic/{token}', [\App\Http\Controllers\Auth\MagicLinkController::class, 'login'])->name('login.magic-link.consume');

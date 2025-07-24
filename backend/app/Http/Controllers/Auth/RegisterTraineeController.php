@@ -106,15 +106,16 @@ class RegisterTraineeController extends Controller
                 'trainee_id' => $trainee->id,
             ]));
 
-            Log::info('[REGISTRATION] Auth login: Starting', array_merge($logContext, [
-                'step' => 'auth_login_start',
-                'user_id' => $user->id,
-            ]));
-            auth()->loginUsingId($user->id);
-            Log::info('[REGISTRATION] Auth login: Success', array_merge($logContext, [
-                'step' => 'auth_login_success',
-                'user_id' => $user->id,
-            ]));
+            // Removed automatic login for the user
+            // Log::info('[REGISTRATION] Auth login: Starting', array_merge($logContext, [
+            //     'step' => 'auth_login_start',
+            //     'user_id' => $user->id,
+            // ]));
+            // auth()->loginUsingId($user->id);
+            // Log::info('[REGISTRATION] Auth login: Success', array_merge($logContext, [
+            //     'step' => 'auth_login_success',
+            //     'user_id' => $user->id,
+            // ]));
 
             Log::info('[REGISTRATION] End: Success', array_merge($logContext, [
                 'step' => 'end_success',
@@ -122,7 +123,8 @@ class RegisterTraineeController extends Controller
                 'trainee_id' => $trainee->id,
             ]));
 
-            return redirect()->route('dashboard');
+            // Redirect to login page with a success message
+            return redirect()->route('login')->with('status', 'Registration successful! Please log in.');
         } catch (\Throwable $e) {
             \DB::rollBack();
             Log::error('[REGISTRATION] Exception', array_merge($logContext, [

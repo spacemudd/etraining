@@ -25,6 +25,20 @@
                 <x-jet-input id="password" dir="ltr" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
             </div>
 
+            <div class="mt-4">
+                <form method="POST" action="{{ route('login.magic-link.send') }}">
+                    @csrf
+                    <input type="hidden" name="email" id="magic-link-email" value="{{ old('email') }}">
+                    <button type="submit" class="text-blue-700 underline text-sm hover:text-blue-900 mt-2">{{ __('Send me a magic link to login') }}</button>
+                </form>
+            </div>
+            <script>
+                // Keep magic link email in sync with login email field
+                document.getElementById('email').addEventListener('input', function() {
+                    document.getElementById('magic-link-email').value = this.value;
+                });
+            </script>
+
             <div class="block mt-4">
                 <label class="flex items-center">
                     <input type="checkbox" class="form-checkbox" name="remember">
@@ -34,7 +48,7 @@
 
             <div class="flex items-center justify-end mt-4">
                 @if (Route::has('password.request'))
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('password.request') }}">
+                    <a class="underline text-lg font-bold text-blue-700 hover:text-blue-900 mr-4 px-3 py-2 border border-blue-300 rounded transition duration-150 ease-in-out bg-blue-50" href="{{ route('password.request') }}">
                         {{ __('words.forget-password') }}
                     </a>
                 @endif
