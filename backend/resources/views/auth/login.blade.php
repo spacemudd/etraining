@@ -64,6 +64,7 @@
         </div>
 
         <script>
+        document.addEventListener('DOMContentLoaded', function() {
             const emailField = document.getElementById('email');
             const passwordSection = document.getElementById('password-section');
             const loginOptions = document.getElementById('login-options');
@@ -130,14 +131,15 @@
                 // Optionally, show a loading spinner or disable the button
             });
 
-            requestOtpBtn.addEventListener('click', function() {
-                // Submit the form with only the email to request OTP
-                otpInputGroup.style.display = 'block';
-                otpInput.required = true;
-                requestOtpBtn.style.display = 'none';
-                // Optionally, you can submit the form here to trigger OTP send, or require user to click again to login
-                otpRequestForm.submit();
-            });
+            if (otpRequestForm && requestOtpBtn) {
+                requestOtpBtn.addEventListener('click', function() {
+                    otpInputGroup.style.display = 'block';
+                    otpInput.required = true;
+                    requestOtpBtn.style.display = 'none';
+                    otpRequestForm.submit();
+                });
+            }
+        });
         </script>
     </x-jet-authentication-card>
 </x-guest-layout>
