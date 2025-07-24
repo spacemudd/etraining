@@ -45,7 +45,7 @@
             <form id="magic-link-form" method="POST" action="{{ route('login.magic-link.send') }}">
                 @csrf
                 <input type="hidden" name="email" id="magic-link-email" value="{{ old('email') }}">
-                <button type="submit" class="w-full px-4 py-2 bg-yellow-400 text-black font-bold border-2 border-yellow-500 shadow-lg rounded">استخدم الرابط السريع للدخول 🪄</button>
+                <button type="submit" class="w-full px-4 py-2 bg-yellow-300 text-black font-bold shadow-lg rounded">استخدم الرابط السريع للدخول 🪄</button>
             </form>
         </div>
 
