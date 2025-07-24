@@ -13,6 +13,7 @@ class CertificatesImportsRow extends Model
         'trainee_id',
         'course_id',
         'sent_at',
+        'pdf_path',
     ];
 
     public function trainee()

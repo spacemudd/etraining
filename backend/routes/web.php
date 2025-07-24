@@ -719,6 +719,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('certificates/import/{id}/issue', [\App\Http\Controllers\Back\CertificatesController::class, 'issue'])->name('certificates.import.issue');
         Route::get('certificates/import/{id}', [\App\Http\Controllers\Back\CertificatesController::class, 'job'])->name('certificates.import.job');
         Route::post('certificates/import/upload', [\App\Http\Controllers\Back\CertificatesController::class, 'upload'])->name('certificates.import.upload');
+        Route::post('certificates/import/upload-zip', [\App\Http\Controllers\Back\CertificatesController::class, 'uploadZip'])->name('certificates.import.uploadZip');
+        Route::post('certificates/import/finalize', [\App\Http\Controllers\Back\CertificatesController::class, 'finalizeImport'])->name('certificates.import.finalize');
         Route::get('certificates/import', [\App\Http\Controllers\Back\CertificatesController::class, 'import'])->name('certificates.import');
 
         // Trainees

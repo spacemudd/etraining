@@ -22,6 +22,7 @@ class CreateCertificatesImportsRowsTable extends Migration
             $table->uuid('course_id');
             $table->foreign('course_id')->references('id')->on('courses');
             $table->timestamp('sent_at')->nullable();
+            $table->string('pdf_path')->nullable();
             $table->timestamps();
         });
     }
