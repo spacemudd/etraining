@@ -1,5 +1,10 @@
 <?php
 return [
+    /**
+     * Register route for NoonPaymentController
+     */
+    "register_routes" => false,
+    
     'jisr' => [
         'business_id' => env('NOON_PAYMENT_JISR_BUSINESS_ID'),
         'app_name' => env('NOON_PAYMENT_JISR_APP_NAME'),
