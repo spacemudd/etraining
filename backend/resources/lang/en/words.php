@@ -778,4 +778,9 @@ return [
     'session-expired-explanation' => 'For security reasons, your session has expired after a period of inactivity.',
     'auto-refresh-in' => 'Auto-refresh in',
     'seconds' => 'seconds',
+    'requests_count' => 'Requests Count',
+    'monthly_limit' => 'Monthly Limit',
+    'cost_per_request' => 'Cost Per Request',
+    'total_cost' => 'Total Cost',
+    'last_12_months_history' => 'Last 12 Months History',
 ];

@@ -17,6 +17,8 @@ alwaysApply: true
   - Use descriptive variable and method names.
   - Use lowercase with dashes for directories (e.g., app/Http/Controllers).
   - Favor dependency injection and service containers.
+  - When adding translation words (e.g. $t('words.hello')) - make sure they exist both in Arabic and English languages.
+  - When finishing adding translation words, run the cmd `php artisan vue-i18n:generate`
 
   PHP/Laravel
   - Use PHP 8.2+ features when appropriate (e.g., typed properties, match expressions).

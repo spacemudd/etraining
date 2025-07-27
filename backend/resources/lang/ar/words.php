@@ -777,4 +777,9 @@ return [
     'session-expired-explanation' => 'لأسباب أمنية، انتهت صلاحية جلستك بعد فترة من عدم النشاط.',
     'auto-refresh-in' => 'إعادة تحميل تلقائي خلال',
     'seconds' => 'ثانية',
+    'requests_count' => 'عدد الطلبات',
+    'monthly_limit' => 'الحد الشهري',
+    'cost_per_request' => 'التكلفة لكل طلب',
+    'total_cost' => 'التكلفة الإجمالية',
+    'last_12_months_history' => 'سجل آخر 12 شهر',
 ];

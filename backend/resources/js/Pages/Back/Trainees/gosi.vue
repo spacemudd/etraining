@@ -37,9 +37,6 @@
                                     {{ $t('words.requests_count') }}
                                 </th>
                                 <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    {{ $t('words.monthly_limit') }}
-                                </th>
-                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     {{ $t('words.cost_per_request') }}
                                 </th>
                                 <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -58,9 +55,6 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     {{ monthData.requestsCount }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {{ monthData.monthlyLimit }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     7.36 ريال
@@ -82,9 +76,6 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
                                     {{ totalRequests }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
-                                    {{ totalLimit }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
                                     -
