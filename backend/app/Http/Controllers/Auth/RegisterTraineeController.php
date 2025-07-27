@@ -66,7 +66,8 @@ class RegisterTraineeController extends Controller
         Log::info('RegisterTraineeController@store: Validation successful.');
 
         \DB::beginTransaction();
-        $trainee = $this->service->store($request->except('_token'));
+        try {
+            $trainee = $this->service->store($request->except('_token'));
 
             // Removed automatic login for the user
             // Log::info('[REGISTRATION] Auth login: Starting', array_merge($logContext, [
@@ -79,26 +80,26 @@ class RegisterTraineeController extends Controller
             //     'user_id' => $user->id,
             // ]));
 
-        $user = (new CreateNewTraineeUser())->create([
-            'trainee_id' => $trainee->id,
-            'name' => $trainee->name,
-            'email' => $trainee->email,
-            'phone' => $trainee->phone,
-            'national_address' => $trainee->national_address,
-            'password' => $request->password,
-            'password_confirmation' => $request->password_confirmation,
-        ]);
-        \DB::commit();
+            $user = (new CreateNewTraineeUser())->create([
+                'trainee_id' => $trainee->id,
+                'name' => $trainee->name,
+                'email' => $trainee->email,
+                'phone' => $trainee->phone,
+                'national_address' => $trainee->national_address,
+                'password' => $request->password,
+                'password_confirmation' => $request->password_confirmation,
+            ]);
+            \DB::commit();
 
             // Redirect to login page with a success message
             return redirect()->route('login')->with('status', 'تم التسجيل بنجاح! الرجاء تسجيل الدخول.');
         } catch (\Throwable $e) {
             \DB::rollBack();
-            Log::error('[REGISTRATION] Exception', array_merge($logContext, [
+            Log::error('[REGISTRATION] Exception', [
                 'step' => 'exception',
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
-            ]));
+            ]);
             throw $e;
         }
     }
