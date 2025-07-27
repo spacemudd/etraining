@@ -25,9 +25,9 @@
                     </inertia-link>
 
                     <!-- Issue Certificates Button -->
-                    <inertia-link class="btn-gray ml-2" :href="route('back.certificates.import')">
+                    <button class="btn-gray ml-2" @click="showCertificateModal = true">
                         <span>{{ $t('words.issue-certificates', 'Issue certificates') }} - إصدار شهادات</span>
-                    </inertia-link>
+                    </button>
 
                     <inertia-link :href="route('back.courses.today')" class="rounded items-center mr-3 justify-start float-left px-3 py-2.5 bg-yellow-200 hover:bg-yellow-300 text-left">
                         {{ $t('words.show-today-courses') }}
@@ -123,6 +123,73 @@
             <pagination :links="courses.links" />
         </div>
     </app-layout>
+
+    <!-- Certificate Issue Modal -->
+    <div v-if="showCertificateModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg relative">
+            <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" @click="showCertificateModal = false">&times;</button>
+            <h2 class="text-xl font-bold mb-4">{{ $t('words.issue-certificates', 'Issue certificates') }} - إصدار شهادات</h2>
+            <form @submit.prevent="handleCertificateZipUpload">
+                <label class="block mb-2">Select Course:</label>
+                <select v-model="selectedCourseId" required class="mb-4 w-full border rounded p-2">
+                    <option v-for="course in courses.data" :key="course.id" :value="course.id">
+                        {{ course.name_ar }}
+                    </option>
+                </select>
+                <label class="block mb-2">Upload .zip file containing certificates (ID_Name.pdf):</label>
+                <input type="file" accept=".zip" @change="onZipFileChange" required class="mb-4" />
+                <button type="submit" class="btn-gray">{{ $t('words.upload', 'Upload') }}</button>
+            </form>
+            <div v-if="uploadError" class="text-red-500 mt-2">{{ uploadError }}</div>
+            <div v-if="matchedTrainees.length || unmatchedTrainees.length" class="mt-4">
+                <div v-if="matchedTrainees.length">
+                    <h3 class="font-bold">Matched Trainees ({{ matchedTrainees.length }})</h3>
+                    <ul class="mb-2">
+                        <li v-for="t in matchedTrainees" :key="t.id">{{ t.identity_number }} - {{ t.name }}</li>
+                    </ul>
+                </div>
+                <div v-if="unmatchedTrainees.length">
+                    <h3 class="font-bold">Unmatched Trainees ({{ unmatchedTrainees.length }})</h3>
+                    <ul>
+                        <li v-for="(t, idx) in unmatchedTrainees" :key="t.filename" class="mb-2">
+                            <div>
+                                <span>{{ t.identity_number || 'Unknown ID' }} - {{ t.filename }}</span>
+                                <input
+                                    type="text"
+                                    v-model="t.searchQuery"
+                                    @input="searchTrainees(idx)"
+                                    placeholder="Search trainee by name or ID"
+                                    class="border rounded p-1 ml-2"
+                                />
+                                <div v-if="t.searchResults && t.searchResults.length" class="bg-white border rounded shadow mt-1 max-h-32 overflow-y-auto z-50 absolute">
+                                    <div
+                                        v-for="trainee in t.searchResults"
+                                        :key="trainee.id"
+                                        @click="selectTraineeForUnmatched(idx, trainee)"
+                                        class="p-2 hover:bg-gray-100 cursor-pointer"
+                                    >
+                                        {{ trainee.identity_number }} - {{ trainee.name }}
+                                    </div>
+                                </div>
+                                <div v-if="t.selectedTrainee" class="inline-block ml-2 text-green-700">
+                                    Linked: {{ t.selectedTrainee.identity_number }} - {{ t.selectedTrainee.name }}
+                                    <button @click="removeLinkedTrainee(idx)" class="ml-1 text-red-500">&times;</button>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <button
+                v-if="matchedTrainees.length || (unmatchedTrainees.length && allUnmatchedLinked)"
+                class="btn-primary mt-4"
+                :disabled="!allUnmatchedLinked"
+                @click="submitCertificatesImport"
+            >
+                Submit & Queue Certificates
+            </button>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -161,9 +228,20 @@
                     // trashed: this.filters.trashed,
                 },
                 currentDate: '',
+                showCertificateModal: false,
+                certificateZipFile: null,
+                uploadError: '',
+                selectedCourseId: '',
+                matchedTrainees: [],
+                unmatchedTrainees: [],
+                searchTimeouts: {},
+                lastImportId: null,
             }
         },
         computed: {
+            allUnmatchedLinked() {
+                return this.unmatchedTrainees.every(t => t.selectedTrainee);
+            },
         },
         watch: {
             form: {
@@ -177,6 +255,73 @@
         methods: {
             reset() {
                 this.form = mapValues(this.form, () => null)
+            },
+            onZipFileChange(e) {
+                this.certificateZipFile = e.target.files[0];
+            },
+            async handleCertificateZipUpload() {
+                if (!this.certificateZipFile || !this.selectedCourseId) {
+                    this.uploadError = 'Please select a course and a .zip file.';
+                    return;
+                }
+                this.uploadError = '';
+                const formData = new FormData();
+                formData.append('zip', this.certificateZipFile);
+                formData.append('course_id', this.selectedCourseId);
+                try {
+                    const response = await axios.post('/certificates/import/upload-zip', formData, {
+                        headers: { 'Content-Type': 'multipart/form-data' }
+                    });
+                    this.matchedTrainees = response.data.matched || [];
+                    this.unmatchedTrainees = (response.data.unmatched || []).map(t => ({ ...t, searchQuery: '', searchResults: [], selectedTrainee: null }));
+                    this.lastImportId = response.data.import_id;
+                    // Keep modal open to allow user to review and link unmatched
+                } catch (err) {
+                    this.uploadError = 'Upload failed.';
+                }
+            },
+            searchTrainees(idx) {
+                clearTimeout(this.searchTimeouts[idx]);
+                const query = this.unmatchedTrainees[idx].searchQuery;
+                if (!query || query.length < 2) {
+                    this.$set(this.unmatchedTrainees[idx], 'searchResults', []);
+                    return;
+                }
+                this.searchTimeouts[idx] = setTimeout(() => {
+                    axios.get('/search', { params: { search: query, trainees: true } })
+                        .then(res => {
+                            this.$set(this.unmatchedTrainees[idx], 'searchResults', res.data);
+                        });
+                }, 300);
+            },
+            selectTraineeForUnmatched(idx, trainee) {
+                this.$set(this.unmatchedTrainees[idx], 'selectedTrainee', trainee);
+                this.$set(this.unmatchedTrainees[idx], 'searchResults', []);
+                this.$set(this.unmatchedTrainees[idx], 'searchQuery', `${trainee.identity_number} - ${trainee.name}`);
+            },
+            removeLinkedTrainee(idx) {
+                this.$set(this.unmatchedTrainees[idx], 'selectedTrainee', null);
+            },
+            async submitCertificatesImport() {
+                // Gather mapping for unmatched
+                const mappings = this.unmatchedTrainees.map(t => ({
+                    filename: t.filename,
+                    trainee_id: t.selectedTrainee.id,
+                }));
+                try {
+                    const response = await axios.post('/certificates/import/finalize', {
+                        import_id: this.lastImportId || (this.matchedTrainees[0] && this.matchedTrainees[0].import_id),
+                        mappings,
+                    });
+                    alert('Certificates queued for sending!');
+                    this.showCertificateModal = false;
+                    this.certificateZipFile = null;
+                    this.selectedCourseId = '';
+                    this.matchedTrainees = [];
+                    this.unmatchedTrainees = [];
+                } catch (err) {
+                    alert('Submission failed.');
+                }
             },
         },
         mounted() {
