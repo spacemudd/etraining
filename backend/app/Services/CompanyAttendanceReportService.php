@@ -7,6 +7,7 @@ use App\Models\Back\Company;
 use App\Models\Back\CompanyAttendanceReport;
 use App\Models\Back\CompanyAttendanceReportsEmail;
 use App\Models\Back\CompanyAttendanceReportsTrainee;
+use App\Models\Back\Resignation;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Mail;
@@ -148,6 +149,39 @@ class CompanyAttendanceReportService
             $current_day = $current_day->addDay();
         }
 
+        // تعديل: فحص الاستقالات للمتدربات
+        $active_trainees = $report->getActiveTrainees();
+        $modified_trainees = [];
+        
+        foreach ($active_trainees as $trainee_record) {
+            $trainee = $trainee_record->trainee;
+            
+            // البحث عن الاستقالات النشطة للمتدرب
+            $active_resignation = Resignation::whereHas('trainees', function($query) use ($trainee) {
+                $query->where('trainee_id', $trainee->id);
+            })
+            ->where('status', 'sent')
+            ->where('resignation_date', '>=', $report->date_from)
+            ->where('resignation_date', '<=', $report->date_to)
+            ->first();
+            
+            if ($active_resignation) {
+                // تعديل تاريخ النهاية ليكون تاريخ الاستقالة
+                $trainee_record->end_date = $active_resignation->resignation_date;
+                $trainee_record->resignation_info = [
+                    'has_resignation' => true,
+                    'resignation_date' => $active_resignation->resignation_date->format('Y-m-d'),
+                    'reason' => $active_resignation->reason
+                ];
+            } else {
+                $trainee_record->resignation_info = [
+                    'has_resignation' => false
+                ];
+            }
+            
+            $modified_trainees[] = $trainee_record;
+        }
+
         // To fix formatting issue on 2nd page when the table is split.
         $view = $report->activeTraineesCount() > 8 ? 'pdf.company-attendance-report.show' : 'pdf.company-attendance-report.one-table';
 
@@ -181,7 +215,7 @@ class CompanyAttendanceReportService
             ->loadView($view, [
                 'base64logo' => $report->company->logo_files->count() ? 'data:image/jpeg;base64,'.base64_encode(@file_get_contents('https://prod.jisr-ksa.com/back/media/'.$report->company->logo_files->first()->id)) : null,
                 'report' => $report,
-                'active_trainees' => $report->getActiveTrainees(),
+                'active_trainees' => $modified_trainees, // استخدام المتدربات المعدلة
                 'days' => $days,
             ]);
 
@@ -194,6 +228,28 @@ class CompanyAttendanceReportService
             ->where('trainee_id', $trainee_id)
             ->with('trainee', 'report')
             ->first();
+
+        // تعديل: فحص الاستقالة للمتدرب
+        $active_resignation = Resignation::whereHas('trainees', function($query) use ($trainee_id) {
+            $query->where('trainee_id', $trainee_id);
+        })
+        ->where('status', 'sent')
+        ->where('resignation_date', '>=', $record->report->date_from)
+        ->where('resignation_date', '<=', $record->report->date_to)
+        ->first();
+        
+        if ($active_resignation) {
+            $record->end_date = $active_resignation->resignation_date;
+            $record->resignation_info = [
+                'has_resignation' => true,
+                'resignation_date' => $active_resignation->resignation_date->format('Y-m-d'),
+                'reason' => $active_resignation->reason
+            ];
+        } else {
+            $record->resignation_info = [
+                'has_resignation' => false
+            ];
+        }
 
         $days = [];
         Carbon::setLocale('ar');

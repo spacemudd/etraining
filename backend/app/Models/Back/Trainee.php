@@ -589,6 +589,21 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         return $this->hasMany(ResignationTrainee::class);
     }
 
+    /**
+     * الحصول على الاستقالة النشطة للمتدرب في فترة زمنية معينة
+     */
+    public function getActiveResignation($dateFrom, $dateTo)
+    {
+        return $this->resignations()
+            ->whereHas('resignation', function($query) use ($dateFrom, $dateTo) {
+                $query->where('status', 'sent')
+                      ->where('resignation_date', '>=', $dateFrom)
+                      ->where('resignation_date', '<=', $dateTo);
+            })
+            ->with('resignation')
+            ->first();
+    }
+
     public function traineeAgreement()
     {
         return $this->belongsTo(TraineeAgreement::class, 'trainee_agreement_id');

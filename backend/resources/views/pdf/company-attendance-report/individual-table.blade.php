@@ -16,6 +16,11 @@
             -webkit-transform: rotate(90deg);
             -webkit-transform-origin: center bottom auto;
         }
+        .resignation-info {
+            color: red;
+            font-size: 10px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -127,7 +132,15 @@
                         <td>{{ ++$counter }}</td>
                         <td>{{ $record->trainee->job_number }}</td>
                         <td>فعال</td>
-                        <td>{{ $record->trainee->name }}</td>
+                        <td>
+                            {{ $record->trainee->name }}
+                            @if (isset($record->resignation_info) && $record->resignation_info['has_resignation'])
+                                <br/>
+                                <span class="resignation-info">
+                                    (استقالة بتاريخ: {{ $record->resignation_info['resignation_date'] }})
+                                </span>
+                            @endif
+                        </td>
                         <td>{{ $record->trainee->clean_identity_number }}</td>
                         <td style="text-align: center;">
                             @if ($record->status === 'suspend_account')
@@ -207,7 +220,15 @@
                     <tr>
                         <td>{{ ++$counter }}</td>
                         <td>فعال</td>
-                        <td>{{ $record->trainee->name }}</td>
+                        <td>
+                            {{ $record->trainee->name }}
+                            @if (isset($record->resignation_info) && $record->resignation_info['has_resignation'])
+                                <br/>
+                                <span class="resignation-info">
+                                    (استقالة بتاريخ: {{ $record->resignation_info['resignation_date'] }})
+                                </span>
+                            @endif
+                        </td>
                         <td>{{ $record->trainee->clean_identity_number }}</td>
                         <td style="text-align: center;">
                             @if ($record->status === 'suspend_account')
