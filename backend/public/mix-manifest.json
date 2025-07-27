@@ -1,16 +1,6 @@
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
-    "/js/app.js": "/js/app.js?id=406e7573c2f9d7432d7e",
-    "/css/app.css": "/css/app.css?id=b82f71412cd4311d020e",
-=======
-    "/js/app.js": "/js/app.js?id=f95d05cbe8383c1a2e18",
-    "/css/app.css": "/css/app.css?id=5499d01b546f843861c1",
->>>>>>> parent of c041cc9f (WIP)
-=======
-    "/js/app.js": "/js/app.js?id=b4b97f1c2377605e79cb",
-    "/css/app.css": "/css/app.css?id=2489d474dcc9611861a0",
->>>>>>> parent of 9a2aa8ee (add certificates & logging to registeration)
+    "/js/app.js": "/js/app.js?id=be4cab1f969d9651162b",
+    "/css/app.css": "/css/app.css?id=56c2c174adebb69568e0",
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
     "/js/vendor.js": "/js/vendor.js?id=5b27d98e04321a012e6e"
 }
