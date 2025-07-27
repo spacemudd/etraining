@@ -192,7 +192,7 @@ class TraineesReportJob implements ShouldQueue
         // Load relationships for text values
         $query->with(['educational_level', 'city', 'marital_status', 'company']);
 
-        $query->chunk($chunkSize, function ($trainees) use ($sheet, &$row, &$processed, $totalCount) {
+        $query->chunk($chunkSize, function ($trainees) use ($sheet, &$row, &$processed, $totalCount, $startTime, $maxExecutionTime) {
             try {
                 foreach ($trainees as $trainee) {
                     // Map status to Arabic text
