@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\Back\Trainee;
 use App\Models\JobTracker;
 use App\Notifications\ReportCompletedNotification;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -48,14 +49,14 @@ class TraineesReportJob implements ShouldQueue
         $this->tracker->update(['started_at' => now()]);
 
         $startTime = microtime(true);
+        $maxExecutionTime = 7000; // 7000 seconds (just under 2 hours)
 
         try {
             // Get filters from metadata
             $filters = $this->tracker->metadata;
             
-            // Build query
-            $query = Trainee::with(['company', 'educational_level', 'city', 'marital_status', 'deleted_by'])
-                ->withTrashed(); // Include deleted trainees
+            // Build query - don't load relationships for Excel export to save memory
+            $query = Trainee::withTrashed(); // Include deleted trainees
 
             // Apply filters
             if (!empty($filters['age_under'])) {
@@ -108,7 +109,7 @@ class TraineesReportJob implements ShouldQueue
             ]);
 
             // Create Excel file
-            $fileName = $this->generateExcel($query, $totalCount);
+            $fileName = $this->generateExcel($query, $totalCount, $startTime, $maxExecutionTime);
 
             $executionTime = microtime(true) - $startTime;
             Log::info('[TraineesReportJob] Report generated in ' . $executionTime . ' seconds');
@@ -138,7 +139,7 @@ class TraineesReportJob implements ShouldQueue
     /**
      * Generate Excel file from query
      */
-    private function generateExcel($query, $totalCount)
+    private function generateExcel($query, $totalCount, $startTime, $maxExecutionTime)
     {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -212,80 +213,91 @@ class TraineesReportJob implements ShouldQueue
         $row = 2;
 
         $query->chunk($chunkSize, function ($trainees) use ($sheet, &$row, &$processed, $totalCount) {
-            foreach ($trainees as $trainee) {
-                // Extract all database column values exactly as they are
-                $data = [
-                    $trainee->id,
-                    $trainee->zoho_contract_id,
-                    $trainee->zoho_contract_status,
-                    $trainee->zoho_sign_date,
-                    $trainee->must_sign,
-                    $trainee->trainee_agreement_id,
-                    $trainee->team_id,
-                    $trainee->user_id,
-                    $trainee->name,
-                    $trainee->email,
-                    $trainee->identity_number,
-                    $trainee->phone,
-                    $trainee->phone_ownership_verified_at,
-                    $trainee->phone_is_owned,
-                    $trainee->phone_additional,
-                    $trainee->national_address,
-                    $trainee->birthday,
-                    $trainee->educational_level_id,
-                    $trainee->city_id,
-                    $trainee->marital_status_id,
-                    $trainee->children_count,
-                    $trainee->company_id,
-                    $trainee->entity_id,
-                    $trainee->deleted_at,
-                    $trainee->suspended_at,
-                    $trainee->gosi_deleted_at,
-                    $trainee->created_at,
-                    $trainee->updated_at,
-                    $trainee->instructor_id,
-                    $trainee->trainee_group_id,
-                    $trainee->status,
-                    $trainee->approved_by_id,
-                    $trainee->approved_at,
-                    $trainee->deleted_remark,
-                    $trainee->skip_uploading_id,
-                    $trainee->bill_from_date,
-                    $trainee->linked_date,
-                    $trainee->override_training_costs,
-                    $trainee->ignore_attendance,
-                    $trainee->dont_edit_notice,
-                    $trainee->suspended_by_id,
-                    $trainee->deleted_by_id,
-                    $trainee->posted_at,
-                    $trainee->trainee_message,
-                    $trainee->job_number,
-                    $trainee->english_name,
-                    $trainee->contract_signed_notification_sent
-                ];
+            try {
+                foreach ($trainees as $trainee) {
+                    // Extract all database column values exactly as they are
+                    $data = [
+                        $trainee->id,
+                        $trainee->zoho_contract_id,
+                        $trainee->zoho_contract_status,
+                        $trainee->zoho_sign_date,
+                        $trainee->must_sign,
+                        $trainee->trainee_agreement_id,
+                        $trainee->team_id,
+                        $trainee->user_id,
+                        $trainee->name,
+                        $trainee->email,
+                        $trainee->identity_number,
+                        $trainee->phone,
+                        $trainee->phone_ownership_verified_at,
+                        $trainee->phone_is_owned,
+                        $trainee->phone_additional,
+                        $trainee->national_address,
+                        $trainee->birthday,
+                        $trainee->educational_level_id,
+                        $trainee->city_id,
+                        $trainee->marital_status_id,
+                        $trainee->children_count,
+                        $trainee->company_id,
+                        $trainee->entity_id,
+                        $trainee->deleted_at,
+                        $trainee->suspended_at,
+                        $trainee->gosi_deleted_at,
+                        $trainee->created_at,
+                        $trainee->updated_at,
+                        $trainee->instructor_id,
+                        $trainee->trainee_group_id,
+                        $trainee->status,
+                        $trainee->approved_by_id,
+                        $trainee->approved_at,
+                        $trainee->deleted_remark,
+                        $trainee->skip_uploading_id,
+                        $trainee->bill_from_date,
+                        $trainee->linked_date,
+                        $trainee->override_training_costs,
+                        $trainee->ignore_attendance,
+                        $trainee->dont_edit_notice,
+                        $trainee->suspended_by_id,
+                        $trainee->deleted_by_id,
+                        $trainee->posted_at,
+                        $trainee->trainee_message,
+                        $trainee->job_number,
+                        $trainee->english_name,
+                        $trainee->contract_signed_notification_sent
+                    ];
+                    
+                    $sheet->fromArray($data, null, 'A' . $row);
+                    $row++;
+                    $processed++;
+                }
                 
-                $sheet->fromArray($data, null, 'A' . $row);
-                $row++;
-                $processed++;
+                // Update real progress in database
+                $progressPercentage = $totalCount > 0 ? round(($processed / $totalCount) * 100, 2) : 0;
+                
+                $this->tracker->update([
+                    'processed_records' => $processed,
+                    'progress_percentage' => $progressPercentage
+                ]);
+                
+                Log::info("[TraineesReportJob] Progress: {$processed}/{$totalCount} ({$progressPercentage}%)");
+                
+                // Check for timeout
+                if ((microtime(true) - $startTime) > $maxExecutionTime) {
+                    throw new \Exception("Job execution time exceeded maximum allowed time of {$maxExecutionTime} seconds");
+                }
+            } catch (Throwable $e) {
+                Log::error("[TraineesReportJob] Error processing chunk: " . $e->getMessage());
+                Log::error($e->getTraceAsString());
+                throw $e;
             }
-            
-            // Update real progress in database
-            $progressPercentage = $totalCount > 0 ? round(($processed / $totalCount) * 100, 2) : 0;
-            
-            $this->tracker->update([
-                'processed_records' => $processed,
-                'progress_percentage' => $progressPercentage
-            ]);
-            
-            Log::info("[TraineesReportJob] Progress: {$processed}/{$totalCount} ({$progressPercentage}%)");
         });
 
         // Auto-size columns for all 47 columns (A to AU)
         foreach (range('A', 'Z') as $column) {
             $sheet->getColumnDimension($column)->setAutoSize(true);
         }
-        foreach (range('A', 'U') as $column) {
-            $sheet->getColumnDimension('A' . $column)->setAutoSize(true);
+        foreach (range('AA', 'AU') as $column) {
+            $sheet->getColumnDimension($column)->setAutoSize(true);
         }
 
         // Save file
