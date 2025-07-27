@@ -117,7 +117,7 @@ export default {
             formData.append('zip', this.certificateZipFile);
             formData.append('course_id', this.selectedCourseId);
             try {
-                const response = await axios.post('/certificates/import/upload-zip', formData, {
+                const response = await axios.post('/back/certificates/import/upload-zip', formData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
                 this.matchedTrainees = response.data.matched || [];
@@ -155,7 +155,7 @@ export default {
                 trainee_id: t.selectedTrainee.id,
             }));
             try {
-                const response = await axios.post('/certificates/import/finalize', {
+                const response = await axios.post('/back/certificates/import/finalize', {
                     import_id: this.lastImportId,
                     mappings,
                 });
