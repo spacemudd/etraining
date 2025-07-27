@@ -144,129 +144,97 @@ class TraineesReportJob implements ShouldQueue
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         
-        // Set headers - ALL database columns from trainees table
+        // Set headers - specific columns requested by user in Arabic
         $headers = [
-            'id',
-            'zoho_contract_id',
-            'zoho_contract_status',
-            'zoho_sign_date',
-            'must_sign',
-            'trainee_agreement_id',
-            'team_id',
-            'user_id',
-            'name',
-            'email',
-            'identity_number',
-            'phone',
-            'phone_ownership_verified_at',
-            'phone_is_owned',
-            'phone_additional',
-            'national_address',
-            'birthday',
-            'educational_level_id',
-            'city_id',
-            'marital_status_id',
-            'children_count',
-            'company_id',
-            'entity_id',
-            'deleted_at',
-            'suspended_at',
-            'gosi_deleted_at',
-            'created_at',
-            'updated_at',
-            'instructor_id',
-            'trainee_group_id',
-            'status',
-            'approved_by_id',
-            'approved_at',
-            'deleted_remark',
-            'skip_uploading_id',
-            'bill_from_date',
-            'linked_date',
-            'override_training_costs',
-            'ignore_attendance',
-            'dont_edit_notice',
-            'suspended_by_id',
-            'deleted_by_id',
-            'posted_at',
-            'trainee_message',
-            'job_number',
-            'english_name',
-            'contract_signed_notification_sent'
+            'الاسم',
+            'البريد الإلكتروني',
+            'رقم الهوية',
+            'رقم الجوال',
+            'تاريخ الميلاد',
+            'المستوى التعليمي',
+            'المدينة',
+            'الحالة الاجتماعية',
+            'عدد الأطفال',
+            'اسم الشركة',
+            'تاريخ الحذف',
+            'تاريخ الإيقاف',
+            'تاريخ الإنشاء',
+            'الحالة',
         ];
         
         $sheet->fromArray($headers, null, 'A1');
         
-        // Style headers
+        // Style headers with RTL support
         $headerStyle = [
-            'font' => ['bold' => true],
+            'font' => [
+                'bold' => true,
+                'size' => 12,
+            ],
             'fill' => [
                 'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
                 'color' => ['rgb' => 'E2E8F0']
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
             ]
         ];
-        $sheet->getStyle('A1:AU1')->applyFromArray($headerStyle);
+        $sheet->getStyle('A1:N1')->applyFromArray($headerStyle);
+
+        // Set RTL direction for the entire sheet
+        $sheet->setRightToLeft(true);
 
         // Process data in chunks for memory efficiency
         $chunkSize = 100;
         $processed = 0;
         $row = 2;
 
+        // Load relationships for text values
+        $query->with(['educational_level', 'city', 'marital_status', 'company']);
+
         $query->chunk($chunkSize, function ($trainees) use ($sheet, &$row, &$processed, $totalCount) {
             try {
                 foreach ($trainees as $trainee) {
-                    // Extract all database column values exactly as they are
+                    // Map status to Arabic text
+                    $statusText = '';
+                    switch ($trainee->status) {
+                        case Trainee::STATUS_PENDING_UPLOADING_FILES:
+                            $statusText = 'في انتظار رفع الملفات';
+                            break;
+                        case Trainee::STATUS_PENDING_APPROVAL:
+                            $statusText = 'في انتظار الموافقة';
+                            break;
+                        case Trainee::STATUS_APPROVED:
+                            $statusText = 'تمت الموافقة';
+                            break;
+                        default:
+                            $statusText = 'غير معروف';
+                            break;
+                    }
+
+                    // Extract data with text values for relationships
                     $data = [
-                        $trainee->id,
-                        $trainee->zoho_contract_id,
-                        $trainee->zoho_contract_status,
-                        $trainee->zoho_sign_date,
-                        $trainee->must_sign,
-                        $trainee->trainee_agreement_id,
-                        $trainee->team_id,
-                        $trainee->user_id,
                         $trainee->name,
                         $trainee->email,
                         $trainee->identity_number,
                         $trainee->phone,
-                        $trainee->phone_ownership_verified_at,
-                        $trainee->phone_is_owned,
-                        $trainee->phone_additional,
-                        $trainee->national_address,
                         $trainee->birthday,
-                        $trainee->educational_level_id,
-                        $trainee->city_id,
-                        $trainee->marital_status_id,
+                        optional($trainee->educational_level)->name_ar ?? '',
+                        optional($trainee->city)->name_ar ?? '',
+                        optional($trainee->marital_status)->name_ar ?? '',
                         $trainee->children_count,
-                        $trainee->company_id,
-                        $trainee->entity_id,
+                        optional($trainee->company)->name_ar ?? '',
                         $trainee->deleted_at,
                         $trainee->suspended_at,
-                        $trainee->gosi_deleted_at,
                         $trainee->created_at,
-                        $trainee->updated_at,
-                        $trainee->instructor_id,
-                        $trainee->trainee_group_id,
-                        $trainee->status,
-                        $trainee->approved_by_id,
-                        $trainee->approved_at,
-                        $trainee->deleted_remark,
-                        $trainee->skip_uploading_id,
-                        $trainee->bill_from_date,
-                        $trainee->linked_date,
-                        $trainee->override_training_costs,
-                        $trainee->ignore_attendance,
-                        $trainee->dont_edit_notice,
-                        $trainee->suspended_by_id,
-                        $trainee->deleted_by_id,
-                        $trainee->posted_at,
-                        $trainee->trainee_message,
-                        $trainee->job_number,
-                        $trainee->english_name,
-                        $trainee->contract_signed_notification_sent
+                        $statusText,
                     ];
                     
                     $sheet->fromArray($data, null, 'A' . $row);
+                    
+                    // Apply RTL alignment to data rows
+                    $sheet->getStyle('A' . $row . ':N' . $row)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+                    
                     $row++;
                     $processed++;
                 }
@@ -292,11 +260,8 @@ class TraineesReportJob implements ShouldQueue
             }
         });
 
-        // Auto-size columns for all 47 columns (A to AU)
-        foreach (range('A', 'Z') as $column) {
-            $sheet->getColumnDimension($column)->setAutoSize(true);
-        }
-        foreach (range('AA', 'AU') as $column) {
+        // Auto-size columns for the 14 columns (A to N)
+        foreach (range('A', 'N') as $column) {
             $sheet->getColumnDimension($column)->setAutoSize(true);
         }
 
