@@ -586,7 +586,8 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
 
     public function resignations()
     {
-        return $this->hasMany(ResignationTrainee::class);
+        return $this->belongsToMany(Resignation::class, 'resignation_trainees', 'trainee_id', 'resignation_id')
+            ->withTrashed();
     }
 
     /**
@@ -595,12 +596,9 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     public function getActiveResignation($dateFrom, $dateTo)
     {
         return $this->resignations()
-            ->whereHas('resignation', function($query) use ($dateFrom, $dateTo) {
-                $query->where('status', 'sent')
-                      ->where('resignation_date', '>=', $dateFrom)
-                      ->where('resignation_date', '<=', $dateTo);
-            })
-            ->with('resignation')
+            ->where('status', 'sent')
+            ->where('resignation_date', '>=', $dateFrom)
+            ->where('resignation_date', '<=', $dateTo)
             ->first();
     }
 

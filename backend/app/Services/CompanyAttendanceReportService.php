@@ -156,14 +156,8 @@ class CompanyAttendanceReportService
         foreach ($active_trainees as $trainee_record) {
             $trainee = $trainee_record->trainee;
             
-            // البحث عن الاستقالات النشطة للمتدرب
-            $active_resignation = Resignation::whereHas('trainees', function($query) use ($trainee) {
-                $query->where('trainee_id', $trainee->id);
-            })
-            ->where('status', 'sent')
-            ->where('resignation_date', '>=', $report->date_from)
-            ->where('resignation_date', '<=', $report->date_to)
-            ->first();
+            // البحث عن الاستقالات النشطة للمتدرب باستخدام العلاقة الجديدة
+            $active_resignation = $trainee->getActiveResignation($report->date_from, $report->date_to);
             
             if ($active_resignation) {
                 // تعديل تاريخ النهاية ليكون تاريخ الاستقالة
@@ -230,13 +224,7 @@ class CompanyAttendanceReportService
             ->first();
 
         // تعديل: فحص الاستقالة للمتدرب
-        $active_resignation = Resignation::whereHas('trainees', function($query) use ($trainee_id) {
-            $query->where('trainee_id', $trainee_id);
-        })
-        ->where('status', 'sent')
-        ->where('resignation_date', '>=', $record->report->date_from)
-        ->where('resignation_date', '<=', $record->report->date_to)
-        ->first();
+        $active_resignation = $record->trainee->getActiveResignation($record->report->date_from, $record->report->date_to);
         
         if ($active_resignation) {
             $record->end_date = $active_resignation->resignation_date;
