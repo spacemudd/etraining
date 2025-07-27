@@ -517,6 +517,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         $requestCounter = optional(RequestCounter::where('month', now()->format('Y-m')))->first();
         return response()->json(['requestCounter' => $requestCounter]);
     })->name('back.gosi.request-counter');
+    Route::get('/lookup/masdr/monthly-history', [\App\Http\Controllers\Back\GosiController::class, 'getMonthlyHistory'])->name('back.gosi.monthly-history');
     Route::post('masdr', [\App\Http\Controllers\Back\GosiController::class, 'show'])->name('back.gosi.show');
     Route::get('masdr/log', [\App\Http\Controllers\Back\TraineesController::class, 'gosiLog'])->name('back.trainees.gosi.log');
     Route::get('lookup/masdr', [\App\Http\Controllers\Back\TraineesController::class, 'gosi'])->name('back.trainees.gosi');
