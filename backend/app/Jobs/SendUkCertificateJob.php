@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Back\UkCertificate;
+use App\Models\Back\Trainee;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
