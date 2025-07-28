@@ -50,7 +50,12 @@ class UkCertificate extends Model
 
     public function unmatchedRows()
     {
-        return $this->hasMany(UkCertificateRow::class)->whereNull('trainee_id');
+        return $this->hasMany(UkCertificateRow::class)->whereNull('trainee_id')->where('status', '!=', UkCertificateRow::STATUS_FAILED);
+    }
+
+    public function failedRows()
+    {
+        return $this->hasMany(UkCertificateRow::class)->where('status', UkCertificateRow::STATUS_FAILED);
     }
 
     protected static function boot()

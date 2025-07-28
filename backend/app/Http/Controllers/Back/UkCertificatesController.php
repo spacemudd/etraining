@@ -75,7 +75,17 @@ class UkCertificatesController extends Controller
                 $parts = explode('_', $basename, 2);
                 
                 if (count($parts) !== 2) {
-                    // Invalid filename format
+                    // Invalid filename format - save to DB
+                    UkCertificateRow::create([
+                        'uk_certificate_id' => $ukCertificate->id,
+                        'trainee_id' => null,
+                        'identity_number' => '',
+                        'trainee_name' => '',
+                        'filename' => $filename,
+                        'status' => UkCertificateRow::STATUS_FAILED,
+                        'error_message' => 'Invalid filename format. Expected: {identity_number}_{name}.pdf',
+                    ]);
+
                     $unmatched[] = [
                         'filename' => $filename,
                         'identity_number' => '',
@@ -149,6 +159,7 @@ class UkCertificatesController extends Controller
             'total_files' => $totalFiles,
             'matched_count' => count($matched),
             'unmatched_count' => count($unmatched),
+            'failed_count' => $ukCertificate->rows()->where('status', UkCertificateRow::STATUS_FAILED)->count(),
         ]);
 
         return response()->json([
@@ -225,7 +236,8 @@ class UkCertificatesController extends Controller
         $ukCertificate->update([
             'status' => UkCertificate::STATUS_SENDING,
             'matched_count' => $ukCertificate->rows()->whereNotNull('trainee_id')->count(),
-            'unmatched_count' => $ukCertificate->rows()->whereNull('trainee_id')->count(),
+            'unmatched_count' => $ukCertificate->rows()->whereNull('trainee_id')->where('status', '!=', UkCertificateRow::STATUS_FAILED)->count(),
+            'failed_count' => $ukCertificate->rows()->where('status', UkCertificateRow::STATUS_FAILED)->count(),
         ]);
 
         // Dispatch job to send emails
