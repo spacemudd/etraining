@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Back;
 use App\Http\Controllers\Controller;
 use App\Models\Back\UkCertificate;
 use App\Models\Back\UkCertificateRow;
-use App\Models\Course;
+use App\Models\Back\Course;
 use App\Models\Trainee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
