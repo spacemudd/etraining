@@ -604,6 +604,7 @@ return [
     'uk-certificates' => 'شهادات المملكة المتحدة',
     'uk-certificates-help' => 'ارفع ملف ZIP يحتوي على شهادات PDF. يجب تسمية كل ملف بالشكل: {رقم_الهوية}_{اسم_المتدرب}.pdf',
     'process-files' => 'معالجة الملفات',
+    'select-course' => 'اختر الدورة',
     'processing-results' => 'نتائج المعالجة',
     'matched-trainees' => 'المتدربون المطابقون',
     'unmatched-trainees' => 'المتدربون غير المطابقين',

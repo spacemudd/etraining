@@ -592,6 +592,7 @@ return [
     'uk-certificates' => 'UK Certificates',
     'uk-certificates-help' => 'Upload a ZIP file containing PDF certificates. Each file should be named as: {identity_number}_{trainee_name}.pdf',
     'process-files' => 'Process Files',
+    'select-course' => 'Select Course',
     'processing-results' => 'Processing Results',
     'matched-trainees' => 'Matched Trainees',
     'unmatched-trainees' => 'Unmatched Trainees',
