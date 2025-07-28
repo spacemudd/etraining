@@ -39,7 +39,7 @@ class SendUkCertificateJob implements ShouldQueue
         Mail::raw(
             "The UK certificate process has been queued\ncourse: {$this->ukCertificate->course_id}\nstarted_at: {$start}\nqueued_at: {$end}",
             function ($message) {
-                $message->to('shafiqalshaar@adv-line.com')
+                $message->to(['shafiqalshaar@adv-line.com', 'mashael.a@hadaf-hq.com'])
                     ->subject('UK Certificate Process Queued');
             }
         );
