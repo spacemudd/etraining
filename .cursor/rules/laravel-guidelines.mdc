@@ -35,6 +35,7 @@ alwaysApply: true
   - Utilize Laravel's Eloquent ORM for database interactions.
   - Use Laravel's query builder for complex database queries.
   - Implement proper database migrations and seeders.
+  - When adding new models or classes into controllers or PHP classes, make sure they are properly imported.
 
   Dependencies
   - Laravel (latest stable version)
