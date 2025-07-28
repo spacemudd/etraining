@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Back\UkCertificate;
 use App\Models\Back\UkCertificateRow;
 use App\Models\Back\Course;
-use App\Models\Trainee;
+use App\Models\Back\Trainee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
