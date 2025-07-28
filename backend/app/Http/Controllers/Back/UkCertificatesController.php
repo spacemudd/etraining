@@ -63,6 +63,10 @@ class UkCertificatesController extends Controller
             for ($i = 0; $i < $zip->numFiles; $i++) {
                 $filename = $zip->getNameIndex($i);
                 
+                // Skip files that start with a dot (hidden/system files)
+                if (strpos(basename($filename), '.') === 0) {
+                    continue;
+                }
                 // Skip directories and non-PDF files
                 if (substr($filename, -1) === '/' || !str_ends_with($filename, '.pdf')) {
                     continue;
