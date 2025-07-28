@@ -39,12 +39,27 @@ class UkCertificatesController extends Controller
             'started_at' => now(),
         ]);
 
+        // Upload ZIP to S3 first
+        $zipS3Path = 'uk-certificates/' . $ukCertificate->id . '/original.zip';
+        Storage::disk('s3')->put($zipS3Path, file_get_contents($zipFile->getPathname()));
+
         $matched = [];
         $unmatched = [];
         $totalFiles = 0;
 
+        // Download ZIP from S3 and process
+        $zipContent = Storage::disk('s3')->get($zipS3Path);
+        $tempZipPath = storage_path('app/temp/' . $ukCertificate->id . '.zip');
+        
+        // Ensure temp directory exists
+        if (!file_exists(dirname($tempZipPath))) {
+            mkdir(dirname($tempZipPath), 0755, true);
+        }
+        
+        file_put_contents($tempZipPath, $zipContent);
+
         $zip = new ZipArchive();
-        if ($zip->open($zipFile->getPathname()) === TRUE) {
+        if ($zip->open($tempZipPath) === TRUE) {
             for ($i = 0; $i < $zip->numFiles; $i++) {
                 $filename = $zip->getNameIndex($i);
                 
@@ -124,6 +139,11 @@ class UkCertificatesController extends Controller
             $zip->close();
         }
 
+        // Clean up temp file
+        if (file_exists($tempZipPath)) {
+            unlink($tempZipPath);
+        }
+
         // Update certificate counts
         $ukCertificate->update([
             'total_files' => $totalFiles,
@@ -149,6 +169,18 @@ class UkCertificatesController extends Controller
 
         $ukCertificate = UkCertificate::findOrFail($request->input('import_id'));
         
+        // Get the original ZIP from S3
+        $zipS3Path = 'uk-certificates/' . $ukCertificate->id . '/original.zip';
+        $zipContent = Storage::disk('s3')->get($zipS3Path);
+        $tempZipPath = storage_path('app/temp/' . $ukCertificate->id . '_finalize.zip');
+        
+        // Ensure temp directory exists
+        if (!file_exists(dirname($tempZipPath))) {
+            mkdir(dirname($tempZipPath), 0755, true);
+        }
+        
+        file_put_contents($tempZipPath, $zipContent);
+        
         // Update unmatched rows with trainee mappings
         foreach ($request->input('mappings') as $mapping) {
             $row = UkCertificateRow::where('uk_certificate_id', $ukCertificate->id)
@@ -160,9 +192,20 @@ class UkCertificatesController extends Controller
                 if ($trainee) {
                     // Upload PDF to S3 if not already uploaded
                     if (!$row->pdf_path) {
-                        // This would need to be handled differently since we don't have the original zip
-                        // For now, we'll skip this case
-                        continue;
+                        // Extract the PDF from the ZIP and upload to S3
+                        $zip = new ZipArchive();
+                        if ($zip->open($tempZipPath) === TRUE) {
+                            $pdfContent = $zip->getFromName($row->filename);
+                            if ($pdfContent) {
+                                $s3Path = 'uk-certificates/' . $ukCertificate->id . '/' . $row->filename;
+                                Storage::disk('s3')->put($s3Path, $pdfContent);
+                                
+                                $row->update([
+                                    'pdf_path' => $s3Path,
+                                ]);
+                            }
+                            $zip->close();
+                        }
                     }
                     
                     $row->update([
@@ -171,6 +214,11 @@ class UkCertificatesController extends Controller
                     ]);
                 }
             }
+        }
+
+        // Clean up temp file
+        if (file_exists($tempZipPath)) {
+            unlink($tempZipPath);
         }
 
         // Update certificate status and counts

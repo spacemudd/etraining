@@ -52,4 +52,25 @@ class UkCertificate extends Model
     {
         return $this->hasMany(UkCertificateRow::class)->whereNull('trainee_id');
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($ukCertificate) {
+            // Delete all PDF files from S3
+            foreach ($ukCertificate->rows as $row) {
+                if ($row->pdf_path) {
+                    \Storage::disk('s3')->delete($row->pdf_path);
+                }
+            }
+            
+            // Delete the original ZIP file from S3
+            $zipS3Path = 'uk-certificates/' . $ukCertificate->id . '/original.zip';
+            \Storage::disk('s3')->delete($zipS3Path);
+            
+            // Delete the entire directory
+            \Storage::disk('s3')->deleteDirectory('uk-certificates/' . $ukCertificate->id);
+        });
+    }
 }
