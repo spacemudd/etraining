@@ -4,7 +4,7 @@ namespace App\Models\Back;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Trainee;
+use App\Models\Back\Trainee;
 
 class UkCertificateRow extends Model
 {
