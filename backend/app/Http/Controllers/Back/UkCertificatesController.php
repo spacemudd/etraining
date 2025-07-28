@@ -98,6 +98,27 @@ class UkCertificatesController extends Controller
                 $identityNumber = $parts[0];
                 $traineeName = $parts[1];
 
+                // Additional validation: identity number and name must not be empty, name must not be just a dot or whitespace
+                if (empty($identityNumber) || empty($traineeName) || trim($traineeName) === '.' || trim($traineeName) === '') {
+                    UkCertificateRow::create([
+                        'uk_certificate_id' => $ukCertificate->id,
+                        'trainee_id' => null,
+                        'identity_number' => $identityNumber,
+                        'trainee_name' => $traineeName,
+                        'filename' => $filename,
+                        'status' => UkCertificateRow::STATUS_FAILED,
+                        'error_message' => 'Invalid identity number or trainee name in filename.',
+                    ]);
+
+                    $unmatched[] = [
+                        'filename' => $filename,
+                        'identity_number' => $identityNumber,
+                        'trainee_name' => $traineeName,
+                        'reason' => 'Invalid identity number or trainee name in filename',
+                    ];
+                    continue;
+                }
+
                 // Try to find trainee by identity number
                 $trainee = Trainee::where('identity_number', $identityNumber)->first();
 
