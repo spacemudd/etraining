@@ -814,7 +814,8 @@ export default {
             "monthly_limit": "الحد الشهري",
             "cost_per_request": "التكلفة لكل طلب",
             "total_cost": "التكلفة الإجمالية",
-            "last_12_months_history": "سجل آخر 12 شهر"
+            "last_12_months_history": "تاريخ آخر 12 شهر",
+            "uk-certificate": "شهادة بريطانية"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1786,7 +1787,8 @@ export default {
             "monthly_limit": "Monthly Limit",
             "cost_per_request": "Cost Per Request",
             "total_cost": "Total Cost",
-            "last_12_months_history": "Last 12 Months History"
+            "last_12_months_history": "Last 12 Months History",
+            "uk-certificate": "UK Certificate"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

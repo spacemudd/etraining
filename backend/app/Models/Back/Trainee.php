@@ -233,6 +233,11 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         return $this->hasMany(TraineeCustomCertificate::class);
     }
 
+    public function uk_certificates()
+    {
+        return $this->hasMany(UkCertificateRow::class);
+    }
+
     public function scopeResponsibleToTeach($q)
     {
         return $q->where('instructor_id', auth()->user()->instructor->id);

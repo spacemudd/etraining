@@ -1030,3 +1030,6 @@ Route::middleware(['auth:sanctum'])->group(function() {
 Route::post('/login/magic-link', [\App\Http\Controllers\Auth\MagicLinkController::class, 'send'])->name('login.magic-link.send');
 Route::get('/login/magic', [\App\Http\Controllers\Auth\MagicLinkController::class, 'login'])->name('login.magic-link.consume');
 Route::get('/login/magic-link/sent', [\App\Http\Controllers\Auth\MagicLinkController::class, 'sent'])->name('login.magic-link.sent');
+
+        // UK certificates
+        Route::get('uk-certificates/{row_id}/download', [\App\Http\Controllers\Back\UkCertificatesController::class, 'downloadCertificate'])->name('uk-certificates.download');

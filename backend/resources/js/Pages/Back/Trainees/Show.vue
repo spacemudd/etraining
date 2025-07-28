@@ -792,7 +792,27 @@
                           {{ certificate.title }} - {{ certificate.issued_at_formatted }}
                       </div>
                   </div>
-                  <div v-else class="text-sm inline-block mt-2 p-1 px-2 bg-gray-200 rounded-lg hover:bg-gray-300">
+                  
+                  <!-- UK Certificates -->
+                  <div v-if="trainee.uk_certificates && trainee.uk_certificates.length > 0" 
+                       class="text-sm mt-2 p-1 px-2 bg-blue-100 rounded-lg">
+                      <div v-for="certificate in trainee.uk_certificates" :key="certificate.id" class="mt-1 flex items-center justify-between">
+                          <span>{{ certificate.uk_certificate.course.name_ar }} - {{ certificate.sent_at ? new Date(certificate.sent_at).toLocaleDateString() : '' }}</span>
+                          <a 
+                              :href="route('back.uk-certificates.download', certificate.id)"
+                              target="_blank"
+                              class="text-blue-600 hover:text-blue-800 ml-2"
+                              @click.stop
+                          >
+                              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                              </svg>
+                          </a>
+                      </div>
+                  </div>
+                  
+                  <div v-if="(!trainee.custom_certificates || trainee.custom_certificates.length === 0) && (!trainee.uk_certificates || trainee.uk_certificates.length === 0)" 
+                       class="text-sm inline-block mt-2 p-1 px-2 bg-gray-200 rounded-lg hover:bg-gray-300">
                       {{ $t("words.no-certificates") }}
                   </div>
               </div>

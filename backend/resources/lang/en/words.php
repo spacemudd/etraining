@@ -800,4 +800,6 @@ return [
     'cost_per_request' => 'Cost Per Request',
     'total_cost' => 'Total Cost',
     'last_12_months_history' => 'Last 12 Months History',
+    'uk-certificate' => 'UK Certificate',
+    'download-certificate' => 'Download Certificate',
 ];

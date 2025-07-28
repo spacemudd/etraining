@@ -195,6 +195,12 @@ class TraineesController extends Controller
                 ->with(['custom_certificates' => function($q) {
                     $q->orderBy('created_at', 'desc')->limit(2);
                 }])
+                ->with(['uk_certificates' => function($q) {
+                    $q->where('status', 'sent')
+                      ->with(['ukCertificate.course'])
+                      ->orderBy('sent_at', 'desc')
+                      ->limit(5);
+                }])
                 ->findOrFail($id),
             'trainee_groups' => TraineeGroup::get(),
             'cities' => City::orderBy('name_ar')->get(),
