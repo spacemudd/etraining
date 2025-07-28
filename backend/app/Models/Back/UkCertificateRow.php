@@ -38,6 +38,6 @@ class UkCertificateRow extends Model
 
     public function trainee()
     {
-        return $this->belongsTo(Trainee::class);
+        return $this->belongsTo(\App\Models\Back\Trainee::class);
     }
 }
