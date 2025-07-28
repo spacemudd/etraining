@@ -156,6 +156,11 @@ class CompanyAttendanceReportService
         foreach ($active_trainees as $trainee_record) {
             $trainee = $trainee_record->trainee;
             
+            // التأكد من أن المتدرب موجود (حتى لو كان محذوف)
+            if (!$trainee) {
+                continue;
+            }
+            
             // البحث عن الاستقالات النشطة للمتدرب باستخدام العلاقة الجديدة
             $active_resignation = $trainee->getActiveResignation($report->date_from, $report->date_to);
             
@@ -220,8 +225,15 @@ class CompanyAttendanceReportService
     {
         $record = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $report_id)
             ->where('trainee_id', $trainee_id)
-            ->with('trainee', 'report')
+            ->with(['trainee' => function($query) {
+                $query->withTrashed();
+            }, 'report'])
             ->first();
+
+        // التأكد من أن السجل والمتدرب موجودان
+        if (!$record || !$record->trainee) {
+            throw new \Exception('Trainee record not found');
+        }
 
         // تعديل: فحص الاستقالة للمتدرب
         $active_resignation = $record->trainee->getActiveResignation($record->report->date_from, $record->report->date_to);

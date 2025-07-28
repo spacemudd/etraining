@@ -119,7 +119,7 @@
             </tr>
             </thead>
             <tbody style="page-break-inside: avoid;">
-            @if ($report->trainees()->where('job_number', '!=', NULL)->count())
+            @if ($active_trainees->where('trainee.job_number', '!=', NULL)->count())
                 @foreach ($active_trainees as $counter => $record)
                     @if(! ($counter ===  (count($active_trainees) - 1) || $counter ===  (count($active_trainees) - 2)) )
                         @if ($record->status === 'temporary_stop')

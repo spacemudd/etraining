@@ -123,7 +123,7 @@
             </tr>
             </thead>
             <tbody style="page-break-inside: avoid;">
-            @if(\App\Models\Back\Trainee::where('company_id', $report->company_id)->where('job_number', '!=', NULL)->count() > 0)
+            @if($active_trainees->where('trainee.job_number', '!=', NULL)->count() > 0)
                 @foreach ($active_trainees as $counter => $record)
                     @if ($record->status === 'temporary_stop')
                         @continue

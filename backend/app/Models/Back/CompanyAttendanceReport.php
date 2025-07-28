@@ -126,6 +126,9 @@ class CompanyAttendanceReport extends Model implements Auditable
     {
         return CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->id)
                 ->where('active', true)
+                ->with(['trainee' => function($query) {
+                    $query->withTrashed();
+                }])
                 ->get();
     }
 
