@@ -22,7 +22,7 @@
                     <select v-model="selectedCourseId" class="w-full form-select">
                         <option value="">{{ $t('words.select-course') }}</option>
                         <option v-for="course in courses.data" :key="course.id" :value="course.id">
-                            {{ course.name_ar }}
+                            {{ course.name_ar }} - {{ course.instructor ? course.instructor.name : 'No Instructor' }} ({{ new Date(course.created_at).toLocaleDateString() }})
                         </option>
                     </select>
                 </div>

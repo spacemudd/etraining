@@ -35,7 +35,7 @@ class SendIndividualUkCertificateJob implements ShouldQueue
             
             if ($pdfContent) {
                 Mail::to($row->trainee->email)
-                    ->send(new \App\Mail\UkCertificateMail($pdfContent, basename($row->pdf_path)));
+                    ->send(new \App\Mail\UkCertificateMail($pdfContent, basename($row->pdf_path), $row->trainee));
                 
                 $row->update([
                     'sent_at' => now(),

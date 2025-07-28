@@ -16,7 +16,10 @@ class UkCertificatesController extends Controller
 {
     public function index()
     {
-        $courses = Course::select('id', 'name_ar')->orderBy('name_ar')->paginate(100);
+        $courses = Course::select('id', 'name_ar', 'instructor_id', 'created_at')
+            ->with('instructor:id,name')
+            ->orderBy('name_ar')
+            ->paginate(100);
         return Inertia::render('Back/UkCertificates/Index', [
             'courses' => $courses,
         ]);

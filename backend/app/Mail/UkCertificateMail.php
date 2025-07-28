@@ -13,16 +13,18 @@ class UkCertificateMail extends Mailable
 
     protected $pdfContent;
     protected $filename;
+    protected $trainee;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($pdfContent = null, $filename = null)
+    public function __construct($pdfContent = null, $filename = null, $trainee = null)
     {
         $this->pdfContent = $pdfContent;
         $this->filename = $filename;
+        $this->trainee = $trainee;
     }
 
     /**
@@ -33,7 +35,7 @@ class UkCertificateMail extends Mailable
     public function build()
     {
         $mail = $this->subject('شهادة تدريبية')
-                     ->markdown('emails.uk-certificate');
+                     ->markdown('emails.uk-certificate', ['trainee' => $this->trainee]);
         
         if ($this->pdfContent && $this->filename) {
             $mail->attachData($this->pdfContent, $this->filename, ['mime' => 'application/pdf']);
