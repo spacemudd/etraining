@@ -5,9 +5,6 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Queue\SerializesModels;
 
 class UkCertificateMail extends Mailable
@@ -17,37 +14,31 @@ class UkCertificateMail extends Mailable
     protected $pdfContent;
     protected $filename;
 
+    /**
+     * Create a new message instance.
+     *
+     * @return void
+     */
     public function __construct($pdfContent = null, $filename = null)
     {
         $this->pdfContent = $pdfContent;
         $this->filename = $filename;
     }
 
-    public function envelope(): Envelope
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
+    public function build()
     {
-        return new Envelope(
-            subject: 'شهادة تدريبية',
-        );
-    }
-
-    public function content(): Content
-    {
-        return new Content(
-            markdown: 'emails.uk-certificate',
-        );
-    }
-
-    public function attachments(): array
-    {
-        $attachments = [];
+        $mail = $this->subject('شهادة تدريبية')
+                     ->markdown('emails.uk-certificate');
         
         if ($this->pdfContent && $this->filename) {
-            $attachments[] = Attachment::fromData(
-                fn() => $this->pdfContent,
-                $this->filename
-            )->withMime('application/pdf');
+            $mail->attachData($this->pdfContent, $this->filename, ['mime' => 'application/pdf']);
         }
         
-        return $attachments;
+        return $mail;
     }
 }
