@@ -726,6 +726,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('uk-certificates', [\App\Http\Controllers\Back\UkCertificatesController::class, 'index'])->name('uk-certificates.index');
         Route::post('uk-certificates/upload-zip', [\App\Http\Controllers\Back\UkCertificatesController::class, 'uploadZip'])->name('uk-certificates.upload-zip');
         Route::post('uk-certificates/finalize', [\App\Http\Controllers\Back\UkCertificatesController::class, 'finalizeImport'])->name('uk-certificates.finalize');
+        Route::get('uk-certificates/{row_id}/download', [\App\Http\Controllers\Back\UkCertificatesController::class, 'downloadCertificate'])->name('uk-certificates.download');
 
         // Trainees
         Route::get('trainees/{id}/download-all-files', [\App\Http\Controllers\Back\TraineesController::class, 'downloadAllFiles'])->name('trainees.download-all-files');
@@ -1030,6 +1031,3 @@ Route::middleware(['auth:sanctum'])->group(function() {
 Route::post('/login/magic-link', [\App\Http\Controllers\Auth\MagicLinkController::class, 'send'])->name('login.magic-link.send');
 Route::get('/login/magic', [\App\Http\Controllers\Auth\MagicLinkController::class, 'login'])->name('login.magic-link.consume');
 Route::get('/login/magic-link/sent', [\App\Http\Controllers\Auth\MagicLinkController::class, 'sent'])->name('login.magic-link.sent');
-
-        // UK certificates
-        Route::get('uk-certificates/{row_id}/download', [\App\Http\Controllers\Back\UkCertificatesController::class, 'downloadCertificate'])->name('uk-certificates.download');
