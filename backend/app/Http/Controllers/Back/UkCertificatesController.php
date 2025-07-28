@@ -198,63 +198,64 @@ class UkCertificatesController extends Controller
     {
         $request->validate([
             'import_id' => 'required|exists:uk_certificates,id',
-            'mappings' => 'required|array',
-            'mappings.*.filename' => 'required|string',
-            'mappings.*.trainee_id' => 'required|exists:trainees,id',
         ]);
 
         $ukCertificate = UkCertificate::findOrFail($request->input('import_id'));
         
-        // Get the original ZIP from S3
-        $zipS3Path = 'uk-certificates/' . $ukCertificate->id . '/original.zip';
-        $zipContent = Storage::disk('s3')->get($zipS3Path);
-        $tempZipPath = storage_path('app/temp/' . $ukCertificate->id . '_finalize.zip');
-        
-        // Ensure temp directory exists
-        if (!file_exists(dirname($tempZipPath))) {
-            mkdir(dirname($tempZipPath), 0755, true);
-        }
-        
-        file_put_contents($tempZipPath, $zipContent);
-        
-        // Update unmatched rows with trainee mappings
-        foreach ($request->input('mappings') as $mapping) {
-            $row = UkCertificateRow::where('uk_certificate_id', $ukCertificate->id)
-                ->where('filename', $mapping['filename'])
-                ->first();
+        // If mappings are present, process them
+        $mappings = $request->input('mappings', []);
+        if (!empty($mappings)) {
+            // Get the original ZIP from S3
+            $zipS3Path = 'uk-certificates/' . $ukCertificate->id . '/original.zip';
+            $zipContent = Storage::disk('s3')->get($zipS3Path);
+            $tempZipPath = storage_path('app/temp/' . $ukCertificate->id . '_finalize.zip');
             
-            if ($row && !$row->trainee_id) {
-                $trainee = Trainee::find($mapping['trainee_id']);
-                if ($trainee) {
-                    // Upload PDF to S3 if not already uploaded
-                    if (!$row->pdf_path) {
-                        // Extract the PDF from the ZIP and upload to S3
-                        $zip = new ZipArchive();
-                        if ($zip->open($tempZipPath) === TRUE) {
-                            $pdfContent = $zip->getFromName($row->filename);
-                            if ($pdfContent) {
-                                $s3Path = 'uk-certificates/' . $ukCertificate->id . '/' . $row->filename;
-                                Storage::disk('s3')->put($s3Path, $pdfContent);
-                                
-                                $row->update([
-                                    'pdf_path' => $s3Path,
-                                ]);
+            // Ensure temp directory exists
+            if (!file_exists(dirname($tempZipPath))) {
+                mkdir(dirname($tempZipPath), 0755, true);
+            }
+            
+            file_put_contents($tempZipPath, $zipContent);
+            
+            // Update unmatched rows with trainee mappings
+            foreach ($mappings as $mapping) {
+                $row = UkCertificateRow::where('uk_certificate_id', $ukCertificate->id)
+                    ->where('filename', $mapping['filename'])
+                    ->first();
+                
+                if ($row && !$row->trainee_id) {
+                    $trainee = Trainee::find($mapping['trainee_id']);
+                    if ($trainee) {
+                        // Upload PDF to S3 if not already uploaded
+                        if (!$row->pdf_path) {
+                            // Extract the PDF from the ZIP and upload to S3
+                            $zip = new ZipArchive();
+                            if ($zip->open($tempZipPath) === TRUE) {
+                                $pdfContent = $zip->getFromName($row->filename);
+                                if ($pdfContent) {
+                                    $s3Path = 'uk-certificates/' . $ukCertificate->id . '/' . $row->filename;
+                                    Storage::disk('s3')->put($s3Path, $pdfContent);
+                                    
+                                    $row->update([
+                                        'pdf_path' => $s3Path,
+                                    ]);
+                                }
+                                $zip->close();
                             }
-                            $zip->close();
                         }
+                        
+                        $row->update([
+                            'trainee_id' => $trainee->id,
+                            'identity_number' => $trainee->identity_number,
+                        ]);
                     }
-                    
-                    $row->update([
-                        'trainee_id' => $trainee->id,
-                        'identity_number' => $trainee->identity_number,
-                    ]);
                 }
             }
-        }
 
-        // Clean up temp file
-        if (file_exists($tempZipPath)) {
-            unlink($tempZipPath);
+            // Clean up temp file
+            if (file_exists($tempZipPath)) {
+                unlink($tempZipPath);
+            }
         }
 
         // Update certificate status and counts
