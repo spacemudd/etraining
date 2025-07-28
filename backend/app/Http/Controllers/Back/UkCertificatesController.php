@@ -279,17 +279,15 @@ class UkCertificatesController extends Controller
     {
         $row = UkCertificateRow::with(['ukCertificate.course'])->findOrFail($row_id);
         
-        // Check if the user has permission to view this trainee's certificates
-        if ($row->trainee_id && auth()->user()->can('view-trainee', $row->trainee)) {
-            if ($row->pdf_path && Storage::disk('s3')->exists($row->pdf_path)) {
-                $pdfContent = Storage::disk('s3')->get($row->pdf_path);
-                
-                return response($pdfContent)
-                    ->header('Content-Type', 'application/pdf')
-                    ->header('Content-Disposition', 'attachment; filename="' . $row->filename . '"');
-            }
+        // Check if PDF exists and download it
+        if ($row->pdf_path && Storage::disk('s3')->exists($row->pdf_path)) {
+            $pdfContent = Storage::disk('s3')->get($row->pdf_path);
+            
+            return response($pdfContent)
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', 'attachment; filename="' . $row->filename . '"');
         }
         
-        abort(404, 'Certificate not found or access denied');
+        abort(404, 'Certificate not found');
     }
 }
