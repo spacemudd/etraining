@@ -722,6 +722,11 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('certificates/import/{id}/issue', [\App\Http\Controllers\Back\CertificatesController::class, 'issue'])->name('certificates.import.issue');
         Route::get('certificates/import/{id}', [\App\Http\Controllers\Back\CertificatesController::class, 'job'])->name('certificates.import.job');
 
+        // UK Certificates
+        Route::get('uk-certificates', [\App\Http\Controllers\Back\UkCertificatesController::class, 'index'])->name('uk-certificates.index');
+        Route::post('uk-certificates/upload-zip', [\App\Http\Controllers\Back\UkCertificatesController::class, 'uploadZip'])->name('uk-certificates.upload-zip');
+        Route::post('uk-certificates/finalize', [\App\Http\Controllers\Back\UkCertificatesController::class, 'finalizeImport'])->name('uk-certificates.finalize');
+
         // Trainees
         Route::get('trainees/{id}/download-all-files', [\App\Http\Controllers\Back\TraineesController::class, 'downloadAllFiles'])->name('trainees.download-all-files');
         Route::get('trainees/fixed-training-costs', [\App\Http\Controllers\Back\TraineesController::class, 'indexFixedTrainingCosts'])->name('trainees.fixed-training-costs.index');

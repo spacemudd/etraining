@@ -24,6 +24,10 @@
                         <span>{{ $t('words.new') }}</span>
                     </inertia-link>
 
+                    <inertia-link class="btn-gray ml-2" :href="route('back.uk-certificates.index')">
+                        <span>{{ $t('words.send-certificates-by-id') }}</span>
+                    </inertia-link>
+
                     <inertia-link :href="route('back.courses.today')" class="rounded items-center mr-3 justify-start float-left px-3 py-2.5 bg-yellow-200 hover:bg-yellow-300 text-left">
                         {{ $t('words.show-today-courses') }}
                     </inertia-link>
