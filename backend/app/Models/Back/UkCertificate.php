@@ -4,7 +4,7 @@ namespace App\Models\Back;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Course;
+use App\Models\Back\Course;
 
 class UkCertificate extends Model
 {
