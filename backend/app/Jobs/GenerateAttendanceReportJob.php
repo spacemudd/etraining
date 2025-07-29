@@ -41,7 +41,8 @@ class GenerateAttendanceReportJob implements ShouldQueue
     {
         $courses = Course::where('name_ar', $this->courseName)->pluck('id')->toArray();
     
-        $trainees = Trainee::whereIn('id', function ($query) use ($courses) {
+        // تعديل: استخدام withTrashed() لتضمين المتدربات المحذوفات
+        $trainees = Trainee::withTrashed()->whereIn('id', function ($query) use ($courses) {
             $query->select('trainee_id')
                 ->from('attendance_report_records')
                 ->whereIn('course_id', $courses)
@@ -55,25 +56,42 @@ class GenerateAttendanceReportJob implements ShouldQueue
         $trainees = $trainees->get();
     
         $data = $trainees->map(function ($trainee) use ($courses) {
+            // البحث عن الاستقالة النشطة للمتدرب
+            $active_resignation = $trainee->getActiveResignation($this->startDate, $this->endDate);
+            
+            // تحديد تاريخ النهاية بناءً على الاستقالة
+            $effectiveEndDate = $active_resignation ? $active_resignation->resignation_date : $this->endDate;
+            
             $records = $trainee->attendanceReportRecords()
                 ->whereIn('course_id', $courses)
                 ->whereDate('session_starts_at', '>=', $this->startDate)
-                ->whereDate('session_starts_at', '<=', $this->endDate)
+                ->whereDate('session_starts_at', '<=', $effectiveEndDate)
                 ->get();
     
             $presentCount = $records->whereIn('status', [1, 2, 3])->count();
             $absentCount = $records->where('status', 0)->count();
+            
+            // إضافة معلومات الاستقالة
+            $resignationInfo = '';
+            if ($active_resignation) {
+                $resignationInfo = ' (استقالة بتاريخ: ' . $active_resignation->resignation_date->format('Y-m-d') . ')';
+            }
+            
+            // إضافة علامة للمتدربات المحذوفات
+            $deletedMark = $trainee->trashed() ? ' [محذوف]' : '';
     
             return [
-                'اسم المتدرب' => $trainee->name,
+                'اسم المتدرب' => $trainee->name . $deletedMark . $resignationInfo,
                 'رقم الهوية' => $trainee->identity_number,
                 'رقم الجوال' => $trainee->phone,
                 'اسم الشركة' => optional($trainee->company)->name_ar ?? 'بدون شركة',
                 'اسم الكورس' => $this->courseName,
                 'تاريخ البداية' => $this->startDate,
-                'تاريخ النهاية' => $this->endDate,
-                'عدد الحضور' =>(int) $presentCount,
-                'عدد الغياب' =>(int) $absentCount,
+                'تاريخ النهاية' => $effectiveEndDate->format('Y-m-d'),
+                'عدد الحضور' => (int) $presentCount,
+                'عدد الغياب' => (int) $absentCount,
+                'تاريخ الاستقالة' => $active_resignation ? $active_resignation->resignation_date->format('Y-m-d') : '',
+                'سبب الاستقالة' => $active_resignation ? $active_resignation->reason : '',
             ];
         });
     
@@ -99,6 +117,8 @@ class GenerateAttendanceReportJob implements ShouldQueue
                     'تاريخ النهاية',
                     'عدد الحضور',
                     'عدد الغياب',
+                    'تاريخ الاستقالة',
+                    'سبب الاستقالة',
                 ];
             }
         }, $filepath, 'public');
