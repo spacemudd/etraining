@@ -34,7 +34,8 @@ class UkCertificateMail extends Mailable
      */
     public function build()
     {
-        $mail = $this->subject('شهادة تدريبية')
+        $mail = $this->from('certificates@mg.noreplycenter.com')
+                     ->subject('شهادة تدريبية')
                      ->markdown('emails.uk-certificate', ['trainee' => $this->trainee]);
         
         if ($this->pdfContent && $this->filename) {
