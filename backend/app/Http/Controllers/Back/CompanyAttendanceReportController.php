@@ -146,7 +146,9 @@ class CompanyAttendanceReportController extends Controller
     {
         $report = CompanyAttendanceReport::with('company')
             ->with('approved_by')
-            ->with('trainees')
+            ->with(['trainees' => function($query) {
+                $query->withTrashed();
+            }])
             ->with('emails_to')
             ->with('emails_cc')
             ->findOrFail($id);
