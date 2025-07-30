@@ -608,7 +608,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     public function getAnyActiveResignation()
     {
         return $this->resignations()
-            ->where('status', 'sent')
+            ->whereNotNull('resignation_date')
             ->orderBy('resignation_date', 'asc')
             ->first();
     }

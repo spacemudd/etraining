@@ -118,6 +118,13 @@ class CompanyAttendanceReportController extends Controller
                 }
             }
             
+            // إضافة تفاصيل عن جميع الاستقالات بغض النظر عن الحالة
+            $all_resignations = $trainee->resignations()->get();
+            \Log::info('  - All resignations (including non-sent): ' . $all_resignations->count());
+            foreach ($all_resignations as $resignation) {
+                \Log::info('    * All Resignation ID: ' . $resignation->id . ', Date: ' . $resignation->resignation_date . ', Status: ' . $resignation->status);
+            }
+            
             // إضافة تفاصيل عن الاستقالة النشطة إذا وجدت
             if ($active_resignation) {
                 \Log::info('  - Active resignation found:');
