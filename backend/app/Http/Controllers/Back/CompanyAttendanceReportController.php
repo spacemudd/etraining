@@ -83,7 +83,7 @@ class CompanyAttendanceReportController extends Controller
             'with_logo' => false,
         ]);
         
-        // تعديل: تضمين المتدربات المحذوفات
+        // تعديل: تضمين المتدربات العاديات والمحذوفات الذين لهم استقالة فقط
         $all_trainees = Trainee::withTrashed()->where('company_id', $company->id)->get();
         $trainees_to_attach = [];
         
@@ -91,15 +91,20 @@ class CompanyAttendanceReportController extends Controller
             // البحث عن الاستقالة النشطة للمتدرب
             $active_resignation = $trainee->getActiveResignation($date_from, $date_to);
             
-            // إضافة المتدرب مع معلومات الاستقالة والحذف
-            $trainees_to_attach[$trainee->id] = [
-                'active' => true,
-                'start_date' => $date_from,
-                'end_date' => $active_resignation ? $active_resignation->resignation_date : $date_to,
-                'status' => $active_resignation ? 'resigned' : ($trainee->deleted_at ? 'deleted' : 'active'),
-                'comment' => $active_resignation ? 'استقالة بتاريخ: ' . $active_resignation->resignation_date->format('Y-m-d') : 
-                            ($trainee->deleted_at ? 'محذوف بتاريخ: ' . $trainee->deleted_at->format('Y-m-d') : null),
-            ];
+            // تضمين المتدرب إذا كان:
+            // 1. غير محذوف، أو
+            // 2. محذوف ولديه استقالة
+            if (!$trainee->deleted_at || ($trainee->deleted_at && $active_resignation)) {
+                // إضافة المتدرب مع معلومات الاستقالة والحذف
+                $trainees_to_attach[$trainee->id] = [
+                    'active' => true,
+                    'start_date' => $date_from,
+                    'end_date' => $active_resignation ? $active_resignation->resignation_date : $date_to,
+                    'status' => $active_resignation ? 'resigned' : ($trainee->deleted_at ? 'deleted' : 'active'),
+                    'comment' => $active_resignation ? 'استقالة بتاريخ: ' . $active_resignation->resignation_date->format('Y-m-d') : 
+                                ($trainee->deleted_at ? 'محذوف بتاريخ: ' . $trainee->deleted_at->format('Y-m-d') : null),
+                ];
+            }
         }
         
         $report->trainees()->attach($trainees_to_attach);
