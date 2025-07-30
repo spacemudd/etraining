@@ -28,9 +28,25 @@ class CompanyAttendanceReportService
         $report->save();
         $report = $report->refresh();
 
-        $report->trainees()->attach($report->company->trainees->flatMap(function($trainee) {
-            return [$trainee->id => ['active' => true]];
-        }));
+        // تعديل: تضمين جميع المتدربات (بما فيهم من لديهم استقالات)
+        $all_trainees = $report->company->trainees()->get();
+        $trainees_to_attach = [];
+        
+        foreach ($all_trainees as $trainee) {
+            // البحث عن الاستقالة النشطة للمتدرب
+            $active_resignation = $trainee->getActiveResignation($report->date_from, $report->date_to);
+            
+            // إضافة المتدرب مع معلومات الاستقالة
+            $trainees_to_attach[$trainee->id] = [
+                'active' => true,
+                'start_date' => $report->date_from,
+                'end_date' => $active_resignation ? $active_resignation->resignation_date : $report->date_to,
+                'status' => $active_resignation ? 'resigned' : 'active',
+                'comment' => $active_resignation ? 'استقالة بتاريخ: ' . $active_resignation->resignation_date->format('Y-m-d') : null,
+            ];
+        }
+        
+        $report->trainees()->attach($trainees_to_attach);
         DB::commit();
 
         return $report;
