@@ -123,9 +123,9 @@ class CompanyAttendanceReportController extends Controller
                 $trainees_to_attach[$trainee->id] = [
                     'active' => true,
                     'start_date' => $date_from,
-                    'end_date' => $active_resignation ? $active_resignation->resignation_date : $date_to,
+                    'end_date' => $active_resignation && $active_resignation->resignation_date ? $active_resignation->resignation_date : $date_to,
                     'status' => $active_resignation ? 'resigned' : ($trainee->deleted_at ? 'deleted' : 'active'),
-                    'comment' => $active_resignation ? 'استقالة بتاريخ: ' . $active_resignation->resignation_date->format('Y-m-d') : 
+                    'comment' => $active_resignation && $active_resignation->resignation_date ? 'استقالة بتاريخ: ' . $active_resignation->resignation_date->format('Y-m-d') : 
                                 ($trainee->deleted_at ? 'محذوف بتاريخ: ' . $trainee->deleted_at->format('Y-m-d') : null),
                 ];
             } else {
