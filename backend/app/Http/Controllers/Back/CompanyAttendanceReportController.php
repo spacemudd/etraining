@@ -94,10 +94,10 @@ class CompanyAttendanceReportController extends Controller
             // البحث عن الاستقالة النشطة للمتدرب
             $active_resignation = null;
             
-            // إذا كان المتدرب محذوف، ابحث عن أي استقالة نشطة
+            // إذا كان المتدرب محذوف، ابحث عن استقالة في الفترة المحددة
             if ($trainee->deleted_at) {
-                \Log::info('  - Trainee is deleted, searching for ANY active resignation');
-                $active_resignation = $trainee->getAnyActiveResignation();
+                \Log::info('  - Trainee is deleted, searching for resignation in period');
+                $active_resignation = $trainee->getActiveResignation($date_from, $date_to);
                 \Log::info('  - Found resignation: ' . ($active_resignation ? 'Yes' : 'No'));
             } else {
                 // إذا كان المتدرب غير محذوف، ابحث عن استقالة في الفترة المحددة
