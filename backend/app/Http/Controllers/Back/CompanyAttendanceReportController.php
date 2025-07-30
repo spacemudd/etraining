@@ -87,14 +87,23 @@ class CompanyAttendanceReportController extends Controller
         $all_trainees = Trainee::withTrashed()->where('company_id', $company->id)->get();
         $trainees_to_attach = [];
         
+        \Log::info('Creating report for company: ' . $company->name_ar . ' (ID: ' . $company->id . ')');
+        \Log::info('Total trainees found: ' . $all_trainees->count());
+        
         foreach ($all_trainees as $trainee) {
             // البحث عن الاستقالة النشطة للمتدرب
             $active_resignation = $trainee->getActiveResignation($date_from, $date_to);
+            
+            \Log::info('Processing trainee: ' . $trainee->name . ' (ID: ' . $trainee->id . ')');
+            \Log::info('  - Deleted: ' . ($trainee->deleted_at ? 'Yes' : 'No'));
+            \Log::info('  - Has resignation: ' . ($active_resignation ? 'Yes' : 'No'));
             
             // تضمين المتدرب إذا كان:
             // 1. غير محذوف، أو
             // 2. محذوف ولديه استقالة
             if (!$trainee->deleted_at || ($trainee->deleted_at && $active_resignation)) {
+                \Log::info('  - Including trainee in report');
+                
                 // إضافة المتدرب مع معلومات الاستقالة والحذف
                 $trainees_to_attach[$trainee->id] = [
                     'active' => true,
@@ -104,9 +113,12 @@ class CompanyAttendanceReportController extends Controller
                     'comment' => $active_resignation ? 'استقالة بتاريخ: ' . $active_resignation->resignation_date->format('Y-m-d') : 
                                 ($trainee->deleted_at ? 'محذوف بتاريخ: ' . $trainee->deleted_at->format('Y-m-d') : null),
                 ];
+            } else {
+                \Log::info('  - Excluding trainee from report');
             }
         }
         
+        \Log::info('Final trainees to attach: ' . count($trainees_to_attach));
         $report->trainees()->attach($trainees_to_attach);
 
         // If there is an old report, use the previous emails. Otherwise, copy the company's emails.
