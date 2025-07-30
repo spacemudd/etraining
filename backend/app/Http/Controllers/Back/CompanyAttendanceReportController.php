@@ -118,6 +118,14 @@ class CompanyAttendanceReportController extends Controller
                 }
             }
             
+            // إضافة تفاصيل عن الاستقالة النشطة إذا وجدت
+            if ($active_resignation) {
+                \Log::info('  - Active resignation found:');
+                \Log::info('    * ID: ' . $active_resignation->id);
+                \Log::info('    * Date: ' . $active_resignation->resignation_date);
+                \Log::info('    * Status: ' . $active_resignation->status);
+            }
+            
             \Log::info('  - Search period: ' . $date_from . ' to ' . $date_to);
             
             // تضمين المتدرب إذا كان:
