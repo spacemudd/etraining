@@ -74,7 +74,6 @@ class CompanyAttendanceReport extends Model implements Auditable
     {
         return $this
             ->belongsToMany(Trainee::class,'company_attendance_reports_trainees')
-            ->withTrashed()
             ->withPivot('active', 'status', 'comment', 'start_date', 'end_date');
     }
 
