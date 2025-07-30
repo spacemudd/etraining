@@ -8,6 +8,7 @@ use App\Models\Back\CompanyAttendanceReport;
 use App\Models\Back\CompanyAttendanceReportsEmail;
 use App\Models\Back\CompanyAttendanceReportsTrainee;
 use App\Models\Back\Resignation;
+use App\Models\Back\Trainee;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Mail;
@@ -29,7 +30,7 @@ class CompanyAttendanceReportService
         $report = $report->refresh();
 
         // تعديل: تضمين جميع المتدربات (بما فيهم المحذوفات ومن لديهم استقالات)
-        $all_trainees = $report->company->trainees()->withTrashed()->get();
+        $all_trainees = Trainee::withTrashed()->where('company_id', $company_id)->get();
         $trainees_to_attach = [];
         
         foreach ($all_trainees as $trainee) {
