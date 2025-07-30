@@ -10,6 +10,7 @@ use App\Models\Back\Company;
 use App\Models\Back\CompanyAttendanceReport;
 use App\Models\Back\CompanyAttendanceReportsEmail;
 use App\Models\Back\CompanyAttendanceReportsTrainee;
+use App\Models\Back\Trainee;
 use App\Services\CompanyAttendanceReportService;
 use App\Services\CompanyMigrationHelper;
 use Carbon\Carbon;
@@ -81,7 +82,27 @@ class CompanyAttendanceReportController extends Controller
             'date_to' => $date_to,
             'with_logo' => false,
         ]);
-        $report->trainees()->attach($company->trainees()->pluck('id'));
+        
+        // تعديل: تضمين المتدربات المحذوفات
+        $all_trainees = Trainee::withTrashed()->where('company_id', $company->id)->get();
+        $trainees_to_attach = [];
+        
+        foreach ($all_trainees as $trainee) {
+            // البحث عن الاستقالة النشطة للمتدرب
+            $active_resignation = $trainee->getActiveResignation($date_from, $date_to);
+            
+            // إضافة المتدرب مع معلومات الاستقالة والحذف
+            $trainees_to_attach[$trainee->id] = [
+                'active' => true,
+                'start_date' => $date_from,
+                'end_date' => $active_resignation ? $active_resignation->resignation_date : $date_to,
+                'status' => $active_resignation ? 'resigned' : ($trainee->deleted_at ? 'deleted' : 'active'),
+                'comment' => $active_resignation ? 'استقالة بتاريخ: ' . $active_resignation->resignation_date->format('Y-m-d') : 
+                            ($trainee->deleted_at ? 'محذوف بتاريخ: ' . $trainee->deleted_at->format('Y-m-d') : null),
+            ];
+        }
+        
+        $report->trainees()->attach($trainees_to_attach);
 
         // If there is an old report, use the previous emails. Otherwise, copy the company's emails.
         if ($previousReport) {
