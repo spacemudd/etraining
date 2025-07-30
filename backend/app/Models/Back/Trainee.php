@@ -586,7 +586,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
 
     public function resignations()
     {
-        return $this->belongsToMany(Resignation::class, 'resignation_trainees', 'trainee_id', 'resignation_id');
+        return $this->belongsToMany(Resignation::class, 'resignation_trainees', 'trainee_id', 'resignation_id')->withTrashed();
     }
 
     /**
@@ -598,6 +598,17 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
             ->where('status', 'sent')
             ->where('resignation_date', '>=', $dateFrom)
             ->where('resignation_date', '<=', $dateTo)
+            ->orderBy('resignation_date', 'asc')
+            ->first();
+    }
+
+    /**
+     * الحصول على أي استقالة نشطة للمتدرب بغض النظر عن الفترة الزمنية
+     */
+    public function getAnyActiveResignation()
+    {
+        return $this->resignations()
+            ->where('status', 'sent')
             ->orderBy('resignation_date', 'asc')
             ->first();
     }
