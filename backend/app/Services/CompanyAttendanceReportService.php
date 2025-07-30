@@ -28,21 +28,22 @@ class CompanyAttendanceReportService
         $report->save();
         $report = $report->refresh();
 
-        // تعديل: تضمين جميع المتدربات (بما فيهم من لديهم استقالات)
-        $all_trainees = $report->company->trainees()->get();
+        // تعديل: تضمين جميع المتدربات (بما فيهم المحذوفات ومن لديهم استقالات)
+        $all_trainees = $report->company->trainees()->withTrashed()->get();
         $trainees_to_attach = [];
         
         foreach ($all_trainees as $trainee) {
             // البحث عن الاستقالة النشطة للمتدرب
             $active_resignation = $trainee->getActiveResignation($report->date_from, $report->date_to);
             
-            // إضافة المتدرب مع معلومات الاستقالة
+            // إضافة المتدرب مع معلومات الاستقالة والحذف
             $trainees_to_attach[$trainee->id] = [
                 'active' => true,
                 'start_date' => $report->date_from,
                 'end_date' => $active_resignation ? $active_resignation->resignation_date : $report->date_to,
-                'status' => $active_resignation ? 'resigned' : 'active',
-                'comment' => $active_resignation ? 'استقالة بتاريخ: ' . $active_resignation->resignation_date->format('Y-m-d') : null,
+                'status' => $active_resignation ? 'resigned' : ($trainee->deleted_at ? 'deleted' : 'active'),
+                'comment' => $active_resignation ? 'استقالة بتاريخ: ' . $active_resignation->resignation_date->format('Y-m-d') : 
+                            ($trainee->deleted_at ? 'محذوف بتاريخ: ' . $trainee->deleted_at->format('Y-m-d') : null),
             ];
         }
         
