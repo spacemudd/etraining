@@ -92,11 +92,18 @@ class CompanyAttendanceReportController extends Controller
         
         foreach ($all_trainees as $trainee) {
             // البحث عن الاستقالة النشطة للمتدرب
-            $active_resignation = $trainee->getActiveResignation($date_from, $date_to);
+            $active_resignation = null;
             
-            // إذا كان المتدرب محذوف ولا توجد استقالة في الفترة المحددة، ابحث عن أي استقالة
-            if ($trainee->deleted_at && !$active_resignation) {
+            // إذا كان المتدرب محذوف، ابحث عن أي استقالة نشطة
+            if ($trainee->deleted_at) {
+                \Log::info('  - Trainee is deleted, searching for ANY active resignation');
                 $active_resignation = $trainee->getAnyActiveResignation();
+                \Log::info('  - Found resignation: ' . ($active_resignation ? 'Yes' : 'No'));
+            } else {
+                // إذا كان المتدرب غير محذوف، ابحث عن استقالة في الفترة المحددة
+                \Log::info('  - Trainee is not deleted, searching for resignation in period');
+                $active_resignation = $trainee->getActiveResignation($date_from, $date_to);
+                \Log::info('  - Found resignation: ' . ($active_resignation ? 'Yes' : 'No'));
             }
             
             \Log::info('Processing trainee: ' . $trainee->name . ' (ID: ' . $trainee->id . ')');
