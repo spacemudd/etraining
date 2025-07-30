@@ -147,8 +147,8 @@ class CompanyAttendanceReportController extends Controller
                     'start_date' => $date_from,
                     'end_date' => $active_resignation && $active_resignation->resignation_date ? $active_resignation->resignation_date : $date_to,
                     'status' => $active_resignation ? 'resigned' : ($trainee->deleted_at ? 'deleted' : 'active'),
-                    'comment' => $active_resignation && $active_resignation->resignation_date ? 'استقالة بتاريخ: ' . $active_resignation->resignation_date->format('Y-m-d') : 
-                                ($trainee->deleted_at ? 'محذوف بتاريخ: ' . $trainee->deleted_at->format('Y-m-d') : null),
+                    'comment' => $active_resignation && $active_resignation->resignation_date ? 'استقالة بتاريخ: ' . \Carbon\Carbon::parse($active_resignation->resignation_date)->format('Y-m-d') : 
+                                ($trainee->deleted_at ? 'محذوف بتاريخ: ' . \Carbon\Carbon::parse($trainee->deleted_at)->format('Y-m-d') : null),
                 ];
             } else {
                 \Log::info('  - Excluding trainee from report');
