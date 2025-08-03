@@ -40,6 +40,7 @@
                             <option value="مصدر لها شهادة">مصدر لها شهادة</option>
                             <option value="طالبة">طالبة</option>
                             <option value="حذف فترة تجربة">حذف فترة تجربة</option>
+                            <option value="الموظفة حذفت نفسها">الموظفة حذفت نفسها</option>
 
 
                         </select>
