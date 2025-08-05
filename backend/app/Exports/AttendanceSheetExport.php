@@ -60,8 +60,10 @@ class AttendanceSheetExport implements FromView, WithEvents, WithStyles, WithCol
             'D' => 20,
             'E' => 15,
             'F' => 22,
-            'G' => 22,
-
+            'G' => 15,
+            'H' => 22,
+            'I' => 22,
+            'J' => 22,
         ];
     }
 
@@ -81,7 +83,7 @@ class AttendanceSheetExport implements FromView, WithEvents, WithStyles, WithCol
                 $q->withTrashed();
             })
             ->with(['trainee' => function($q) {
-                $q->withTrashed();
+                $q->withTrashed()->with('trainee_group');
             }])
             ->whereIn('status', [AttendanceReportRecord::STATUS_PRESENT, AttendanceReportRecord::STATUS_LATE_TO_CLASS]);
 
@@ -90,7 +92,7 @@ class AttendanceSheetExport implements FromView, WithEvents, WithStyles, WithCol
                 $q->withTrashed();
             })
             ->with(['trainee' => function($q) {
-                $q->withTrashed();
+                $q->withTrashed()->with('trainee_group');
             }])
             ->whereIn('status', [AttendanceReportRecord::STATUS_ABSENT, AttendanceReportRecord::STATUS_ABSENT_WITH_EXCUSE]);
 

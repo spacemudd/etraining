@@ -40,6 +40,7 @@
             <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.identity_number') }}</strong></th>
             <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.phone') }}</strong></th>
             <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.company') }}</strong></th>
+            <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.group') }}</strong></th>
             <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.attendance') }}</strong></th>
             <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.time') }}</strong></th>
             <th style="border:1px solid black;background-color:#a0a0a0;width:50px; text-align:center"><strong>{{ __('words.last-login-to-platform') }}</strong></th>
@@ -48,7 +49,7 @@
 
     <tbody>
         <tr>
-            <td colspan="8" style="border:1px solid black;;text-align:center;background-color:#d4d4d4">{{ __('words.attendees-plus-late-attendees') }}</td>
+            <td colspan="10" style="border:1px solid black;;text-align:center;background-color:#d4d4d4">{{ __('words.attendees-plus-late-attendees') }}</td>
         </tr>
 
         @foreach ($attendances as $attendanceRecord)
@@ -71,6 +72,7 @@
                     ="{{ $attendanceRecord->trainee->phone }}"
                 </td>
                 <td style="border:1px solid black;">{{ optional($attendanceRecord->trainee->company)->name_ar }}</td>
+                <td style="border:1px solid black;">{{ optional($attendanceRecord->trainee->trainee_group)->name ?? '-' }}</td>
                 <td style="width:50px; text-align:center; color:{{ $attendanceRecord->status_color }}; background-color:darkgrey;border:1px solid black;">
                     {{ __('words.'.$attendanceRecord->status_name) }}
                 </td>
@@ -85,7 +87,7 @@
 
         @if (count($users_who_didnt_attend))
             <tr>
-                <td colspan="8" style="border:1px solid black;text-align:center;background-color:#d4d4d4">{{ __('words.didnt-attend-at-all') }}</td>
+                <td colspan="10" style="border:1px solid black;text-align:center;background-color:#d4d4d4">{{ __('words.didnt-attend-at-all') }}</td>
             </tr>
         @endif
         @foreach ($users_who_didnt_attend as $attendanceRecord)
@@ -108,6 +110,7 @@
                     ="{{ $attendanceRecord->trainee->phone }}"
                 </td>
                 <td style="border:1px solid black;">{{ optional($attendanceRecord->trainee->company)->name_ar }}</td>
+                <td style="border:1px solid black;">{{ optional($attendanceRecord->trainee->trainee_group)->name ?? '-' }}</td>
                 <td style="width:50px; text-align:center; color:{{ $attendanceRecord->status_color }}; background-color:darkgrey;border:1px solid black;">
                     {{ __('words.'.$attendanceRecord->status_name) }} @if ($attendanceRecord->absence_reason) ({{ $attendanceRecord->absence_reason }}) @endif
                 </td>
