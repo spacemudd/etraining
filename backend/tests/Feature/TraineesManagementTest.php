@@ -50,6 +50,7 @@ class TraineesManagementTest extends TestCase
 
         return [
             'name' => 'Davy Jones',
+            'english_name' => 'Davy Jones',
             'email' => 'davy.jones@gmail.com',
             'identity_number' => '2020202010',
             'birthday' => '1994-12-10',
@@ -82,6 +83,7 @@ class TraineesManagementTest extends TestCase
     {
         $trainee = [
             'name' => 'Shafiq al-Shaar',
+            'english_name' => 'Shafiq al-Shaar',
             'identity_number' => '10000',
             'phone' => '96670000000',
             'phone_additional' => '97300000000',

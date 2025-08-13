@@ -1,4 +1,172 @@
-<meta charset="utf-8">
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ config('app.name', 'Laravel') }}</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    <style>
+        /* Ensure all form inputs have consistent styling */
+        .form-input, 
+        .form-input[type="text"], 
+        .form-input[type="email"], 
+        .form-input[type="password"], 
+        .form-input[type="date"],
+        .form-input[type="tel"],
+        .form-input[type="number"] {
+            height: 48px !important;
+            min-height: 48px !important;
+            max-height: 48px !important;
+            padding: 12px 16px !important;
+            font-size: 14px !important;
+            line-height: 1.5 !important;
+            border: 1px solid #d1d5db !important;
+            border-radius: 0.375rem !important;
+            background-color: #ffffff !important;
+            color: #374151 !important;
+            width: 100% !important;
+            transition: all 0.2s ease-in-out !important;
+            box-sizing: border-box !important;
+            display: block !important;
+        }
+        
+        .form-input:focus {
+            outline: none !important;
+            border-color: #3b82f6 !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+        }
+        
+        .form-input.error {
+            border-color: #ef4444 !important;
+        }
+        
+        /* Select dropdowns - ENSURE EXACT MATCH */
+        select {
+            height: 48px !important;
+            min-height: 48px !important;
+            max-height: 48px !important;
+            padding: 12px 16px !important;
+            font-size: 14px !important;
+            line-height: 1.5 !important;
+            border: 1px solid #d1d5db !important;
+            border-radius: 0.375rem !important;
+            background-color: #ffffff !important;
+            color: #374151 !important;
+            width: 100% !important;
+            transition: all 0.2s ease-in-out !important;
+            cursor: pointer !important;
+            box-sizing: border-box !important;
+            display: block !important;
+        }
+        
+        select:focus {
+            outline: none !important;
+            border-color: #3b82f6 !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+        }
+        
+        /* Labels */
+        label {
+            display: block !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+            color: #374151 !important;
+            margin-bottom: 0.5rem !important;
+        }
+        
+        /* Form groups */
+        .form-group {
+            margin-bottom: 1rem !important;
+        }
+        
+        /* Force all form elements to have exact same dimensions */
+        .form-input,
+        select {
+            box-sizing: border-box !important;
+            margin: 0 !important;
+            vertical-align: top !important;
+        }
+        
+        /* Additional consistency fixes */
+        .form-input[type="number"]::-webkit-inner-spin-button,
+        .form-input[type="number"]::-webkit-outer-spin-button {
+            opacity: 1 !important;
+            height: 24px !important;
+            margin-right: 8px !important;
+        }
+        
+        /* Ensure all form containers have same spacing */
+        .mt-4 > div {
+            margin-bottom: 0 !important;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            .form-input,
+            select {
+                font-size: 16px !important; /* Prevents zoom on iOS */
+            }
+        }
+        
+        /* Button styling */
+        .btn-primary {
+            background-color: #3b82f6 !important;
+            color: #ffffff !important;
+            padding: 12px 24px !important;
+            border-radius: 0.375rem !important;
+            font-weight: 500 !important;
+            transition: all 0.2s ease-in-out !important;
+            border: none !important;
+            cursor: pointer !important;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2563eb !important;
+            transform: translateY(-1px) !important;
+        }
+        
+        .btn-primary:focus {
+            outline: none !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+        }
+    </style>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Force all form inputs to have exact same height
+            function enforceConsistentHeight() {
+                const allInputs = document.querySelectorAll('.form-input, select');
+                allInputs.forEach(function(input) {
+                    if (input.style.height !== '48px') {
+                        input.style.height = '48px';
+                        input.style.minHeight = '48px';
+                        input.style.maxHeight = '48px';
+                    }
+                });
+            }
+            
+            // Run immediately
+            enforceConsistentHeight();
+            
+            // Run after a short delay to catch any dynamic elements
+            setTimeout(enforceConsistentHeight, 100);
+            setTimeout(enforceConsistentHeight, 500);
+            setTimeout(enforceConsistentHeight, 1000);
+            
+            // Run on window resize
+            window.addEventListener('resize', enforceConsistentHeight);
+        });
+    </script>
+</head>
+<body class="font-sans antialiased">
 <x-guest-layout>
     <x-jet-authentication-card>
         <x-slot name="logo">
@@ -6,6 +174,18 @@
         </x-slot>
 
         <x-jet-validation-errors class="mb-4" />
+
+        @if (session('error'))
+            <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                <span class="block sm:inline">{{ session('error') }}</span>
+            </div>
+        @endif
+
+        @if (session('status'))
+            <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                <span class="block sm:inline">{{ session('status') }}</span>
+            </div>
+        @endif
 
         <form method="POST" action="{{ route('register.trainees.store') }}">
             @csrf
@@ -22,49 +202,53 @@
 
             <div>
                 <x-jet-label value="{{ __('words.full-name') }}" />
-                <x-jet-input class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+                <x-jet-input class="block mt-1 w-full h-12 px-4 py-3" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+            </div>
+
+            <div class="mt-4">
+                <x-jet-label value="{{ __('words.name_en') }}" />
+                <x-jet-input class="block mt-1 w-full h-12 px-4 py-3" type="text" name="english_name" :value="old('english_name')" required autocomplete="name" />
             </div>
 
             <div class="mt-4">
                 <x-jet-label value="{{ __('words.identity_number') }}" />
-                <x-jet-input class="block mt-1 w-full" type="text" name="identity_number" :value="old('identity_number')" required />
+                <x-jet-input class="block mt-1 w-full h-12 px-4 py-3" type="text" name="identity_number" :value="old('identity_number')" required />
             </div>
 
             <div class="mt-4">
                 <x-jet-label value="{{ __('words.birthday') }}" />
-                <x-jet-input class="block mt-1 w-full" type="date" name="birthday" :value="old('birthday')" required />
+                <x-jet-input class="block mt-1 w-full h-12 px-4 py-3" type="date" name="birthday" :value="old('birthday')" required />
             </div>
 
             <div class="mt-4">
                 <x-jet-label value="{{ __('words.email') }}" />
-                <x-jet-input class="block mt-1 w-full" type="email" name="email" :value="old('email')" required />
+                <x-jet-input class="block mt-1 w-full h-12 px-4 py-3" type="email" name="email" :value="old('email')" required />
             </div>
 
             <div class="mt-4">
                 <x-jet-label value="{{ __('words.phone') }}" />
-                <x-jet-intel-tel-input class="block mt-1 w-full" type="text" name="phone" :value="old('phone')" required />
+                <x-jet-intel-tel-input class="block mt-1 w-full h-12 px-4 py-3" type="text" name="phone" :value="old('phone')" required />
             </div>
-
 
             <div class="mt-4">
                 <x-jet-label value="{{ __('words.phone_additional') }}" />
-                <x-jet-input class="block mt-1 w-full" type="text" name="phone_additional" :value="old('phone_additional')" required />
+                <x-jet-intel-tel-input class="block mt-1 w-full h-12 px-4 py-3" type="text" name="phone_additional" :value="old('phone_additional')" required />
             </div>
 
             <div class="mt-4">
                 <x-jet-label value="{{ __('words.password') }}" />
-                <x-jet-input class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
+                <x-jet-input class="block mt-1 w-full h-12 px-4 py-3" type="password" name="password" required autocomplete="new-password" />
             </div>
 
             <div class="mt-4">
                 <x-jet-label value="{{ __('words.password-confirm') }}" />
-                <x-jet-input class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
+                <x-jet-input class="block mt-1 w-full h-12 px-4 py-3" type="password" name="password_confirmation" required autocomplete="new-password" />
             </div>
 
             <div class="mt-4">
                 <x-jet-label value="{{ __('words.educational_level') }}" />
                 <div class="relative">
-                    <select class="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    <select class="block appearance-none w-full h-12 px-4 py-3 border border-gray-200 text-gray-700 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                     name="educational_level_id"
                     id="educational_level_id">
                     @foreach (\App\Models\EducationalLevel::orderBy('order')->get() as $level)
@@ -86,7 +270,7 @@
             <div class="mt-4">
                 <x-jet-label value="{{ __('words.city') }}" />
                 <div class="relative">
-                    <select class="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    <select class="block appearance-none w-full h-12 px-4 py-3 border border-gray-200 text-gray-700 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                             name="city_id"
                             id="city_id">
                         <option value=""></option>
@@ -106,10 +290,10 @@
                 </div>
             </div>
 
-            <div class="mt-2">
+            <div class="mt-4">
                 <x-jet-label value="{{ __('words.marital_status') }}" />
                 <div class="relative">
-                    <select class="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    <select class="block appearance-none w-full h-12 px-4 py-3 border border-gray-200 text-gray-700 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                             name="marital_status_id"
                             id="marital_status_id">
                         <option value=""></option>
@@ -129,9 +313,9 @@
                 </div>
             </div>
 
-            <div class="mt-2">
+            <div class="mt-4">
                 <x-jet-label value="{{ __('words.children_count') }}" />
-                <x-jet-input class="block mt-1 w-full" type="text" name="children_count" />
+                <x-jet-input class="block mt-1 w-full h-12 px-4 py-3" type="number" name="children_count" min="0" max="20" placeholder="0" />
             </div>
 
             <div class="flex items-center justify-end mt-4">
@@ -146,3 +330,5 @@
         </form>
     </x-jet-authentication-card>
 </x-guest-layout>
+</body>
+</html>
