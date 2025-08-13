@@ -137,6 +137,20 @@
             outline: none !important;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
         }
+
+        /* Error message styling */
+        .error-message {
+            color: #ef4444 !important;
+            font-size: 12px !important;
+            margin-top: 4px !important;
+            font-weight: 500 !important;
+        }
+
+        /* Input error state */
+        .form-input.error {
+            border-color: #ef4444 !important;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+        }
     </style>
     
     <script>
@@ -163,6 +177,164 @@
             
             // Run on window resize
             window.addEventListener('resize', enforceConsistentHeight);
+
+            // Validate Arabic input fields to only allow English characters and numbers
+            function validateEnglishInput(input, fieldName) {
+                const value = input.value;
+                const englishOnly = /^[a-zA-Z0-9\s\-_\.@]+$/;
+                
+                if (value && !englishOnly.test(value)) {
+                    input.classList.add('error');
+                    input.style.borderColor = '#ef4444';
+                    
+                    // Show error message
+                    let errorMsg = input.parentNode.querySelector('.error-message');
+                    if (!errorMsg) {
+                        errorMsg = document.createElement('p');
+                        errorMsg.className = 'error-message text-xs text-red-500 mt-1';
+                        errorMsg.textContent = `يجب إدخال ${fieldName} باللغة الإنجليزية والأرقام فقط`;
+                        input.parentNode.appendChild(errorMsg);
+                    }
+                    
+                    return false;
+                } else {
+                    input.classList.remove('error');
+                    input.style.borderColor = '#d1d5db';
+                    
+                    // Remove error message
+                    const errorMsg = input.parentNode.querySelector('.error-message');
+                    if (errorMsg) {
+                        errorMsg.remove();
+                    }
+                    
+                    return true;
+                }
+            }
+
+            // Apply validation to identity number field
+            const identityInput = document.querySelector('input[name="identity_number"]');
+            if (identityInput) {
+                identityInput.addEventListener('input', function(e) {
+                    validateEnglishInput(this, 'رقم الهوية');
+                });
+                
+                identityInput.addEventListener('blur', function(e) {
+                    validateEnglishInput(this, 'رقم الهوية');
+                });
+            }
+
+            // Apply validation to phone fields
+            const phoneInputs = document.querySelectorAll('input[type="tel"]');
+            phoneInputs.forEach(function(input) {
+                input.addEventListener('input', function(e) {
+                    // Remove non-numeric characters - only allow numbers
+                    let value = e.target.value.replace(/[^0-9]/g, '');
+                    
+                    // Limit to 9 digits for Saudi phone numbers
+                    if (value.length > 9) {
+                        value = value.substring(0, 9);
+                    }
+                    
+                    // Update input value
+                    e.target.value = value;
+                    
+                    // Validate format
+                    if (value && value.length < 9) {
+                        e.target.classList.add('error');
+                        e.target.style.borderColor = '#ef4444';
+                        
+                        // Show error message
+                        let errorMsg = input.parentNode.querySelector('.phone-error-message');
+                        if (!errorMsg) {
+                            errorMsg = document.createElement('p');
+                            errorMsg.className = 'phone-error-message text-xs text-red-500 mt-1';
+                            errorMsg.textContent = 'رقم الجوال يجب أن يكون 9 أرقام فقط';
+                            input.parentNode.appendChild(errorMsg);
+                        }
+                    } else {
+                        e.target.classList.remove('error');
+                        e.target.style.borderColor = '#d1d5db';
+                        
+                        // Remove error message
+                        const errorMsg = input.parentNode.querySelector('.phone-error-message');
+                        if (errorMsg) {
+                            errorMsg.remove();
+                        }
+                    }
+                });
+                
+                input.addEventListener('blur', function(e) {
+                    const value = e.target.value;
+                    if (value && value.length < 9) {
+                        e.target.classList.add('error');
+                        e.target.style.borderColor = '#ef4444';
+                        
+                        // Show error message
+                        let errorMsg = input.parentNode.querySelector('.phone-error-message');
+                        if (!errorMsg) {
+                            errorMsg = document.createElement('p');
+                            errorMsg.className = 'phone-error-message text-xs text-red-500 mt-1';
+                            errorMsg.textContent = 'رقم الجوال يجب أن يكون 9 أرقام فقط';
+                            input.parentNode.appendChild(errorMsg);
+                        }
+                    } else {
+                        e.target.classList.remove('error');
+                        e.target.style.borderColor = '#d1d5db';
+                        
+                        // Remove error message
+                        const errorMsg = input.parentNode.querySelector('.phone-error-message');
+                        if (errorMsg) {
+                            errorMsg.remove();
+                        }
+                    }
+                });
+            });
+
+            // Apply validation to additional phone field
+            const additionalPhoneInput = document.querySelector('input[name="phone_additional"]');
+            if (additionalPhoneInput) {
+                additionalPhoneInput.addEventListener('input', function(e) {
+                    // Remove non-numeric characters - only allow numbers
+                    let value = e.target.value.replace(/[^0-9]/g, '');
+                    
+                    // Limit to 9 digits for Saudi phone numbers
+                    if (value.length > 9) {
+                        value = value.substring(0, 9);
+                    }
+                    
+                    // Update input value
+                    e.target.value = value;
+                });
+            }
+
+            // Form submission validation
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    let hasErrors = false;
+                    
+                    // Validate identity number
+                    if (identityInput && !validateEnglishInput(identityInput, 'رقم الهوية')) {
+                        hasErrors = true;
+                    }
+                    
+                    // Validate phone numbers
+                    phoneInputs.forEach(function(input) {
+                        const value = input.value;
+                        if (value && value.length < 9) {
+                            input.classList.add('error');
+                            input.style.borderColor = '#ef4444';
+                            hasErrors = true;
+                        }
+                    });
+                    
+                    if (hasErrors) {
+                        e.preventDefault();
+                        alert('يرجى التأكد من إدخال جميع البيانات بالشكل الصحيح');
+                        return false;
+                    }
+                });
+            }
         });
     </script>
 </head>

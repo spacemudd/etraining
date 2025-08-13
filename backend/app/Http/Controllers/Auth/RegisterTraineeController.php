@@ -56,14 +56,18 @@ class RegisterTraineeController extends Controller
             'english_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users', 'unique:instructors', 'unique:trainees', 'unique:trainee_block_lists'],
             'password' => $this->passwordRules(),
-            'identity_number' => ['required', 'string', 'max:255', 'unique:trainees', 'unique:instructors', 'unique:trainee_block_lists'],
+            'identity_number' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9\s\-_\.]+$/', 'unique:trainees', 'unique:instructors', 'unique:trainee_block_lists'],
             'birthday' => ['required', 'date'],
-            'phone' => ['required', 'string', 'max:255', 'unique:users', 'unique:instructors', 'unique:trainees', 'unique:trainee_block_lists'],
-            'phone_additional' => ['required', 'string', 'max:255', 'unique:trainee_block_lists'],
+            'phone' => ['required', 'string', 'max:255', 'regex:/^[0-9]{9}$/', 'unique:users', 'unique:instructors', 'unique:trainees', 'unique:trainee_block_lists'],
+            'phone_additional' => ['required', 'string', 'max:255', 'regex:/^[0-9]{9}$/', 'unique:trainee_block_lists'],
             'educational_level_id' => 'required|exists:educational_levels,id',
             'city_id' => 'required|exists:cities,id',
             'marital_status_id' => 'required|exists:marital_statuses,id',
             'children_count' => 'nullable|integer|min:0|max:20',
+        ], [
+            'identity_number.regex' => 'رقم الهوية يجب أن يحتوي على أحرف لاتينية وأرقام فقط',
+            'phone.regex' => 'رقم الجوال يجب أن يكون 9 أرقام فقط',
+            'phone_additional.regex' => 'رقم الجوال الإضافي يجب أن يكون 9 أرقام فقط',
         ])->validate();
 
         User::addGlobalScope(new TeamScope());
