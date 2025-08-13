@@ -72,6 +72,7 @@ class CreateTraineesTest extends TestCase
 
         $trainee = [
             'name' => 'Shafiq al-Shaar',
+            'english_name' => 'Shafiq al-Shaar',
             'email' => 'shafiqalshaar@gmail.com',
             'identity_number' => '2020202010',
             'password' => 'password',
@@ -85,9 +86,10 @@ class CreateTraineesTest extends TestCase
             'children_count' => 0,
         ];
 
-        $this->post(route('register.trainees'), $trainee)
-            ->assertSessionHasNoErrors()
-            ->assertRedirect();
+        $response = $this->post(route('register.trainees.store'), $trainee);
+        
+        $response->assertSessionHasNoErrors()
+                 ->assertRedirect(route('login'));
 
         $this->assertDatabaseHas('users', [
             'email' => $trainee['email'],
@@ -96,6 +98,16 @@ class CreateTraineesTest extends TestCase
 
         $this->assertDatabaseHas('trainees', [
             'email' => $trainee['email'],
+            'name' => $trainee['name'],
+            'english_name' => $trainee['english_name'],
+            'identity_number' => $trainee['identity_number'],
+            'phone' => $trainee['phone'],
+            'phone_additional' => $trainee['phone_additional'],
+            'birthday' => $trainee['birthday'],
+            'educational_level_id' => $trainee['educational_level_id'],
+            'city_id' => $trainee['city_id'],
+            'marital_status_id' => $trainee['marital_status_id'],
+            'children_count' => $trainee['children_count'],
         ]);
     }
 

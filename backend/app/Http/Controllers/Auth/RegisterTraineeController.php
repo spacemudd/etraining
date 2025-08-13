@@ -47,18 +47,23 @@ class RegisterTraineeController extends Controller
 
         User::withoutGlobalScope(TeamScope::class);
 
-        Validator::make($request->toArray(), [
+        // Clean and prepare data
+        $data = $request->except('_token');
+        $data['children_count'] = $data['children_count'] ? (int) $data['children_count'] : 0;
+
+        Validator::make($data, [
             'name' => ['required', 'string', 'max:255', 'unique:trainee_block_lists'],
+            'english_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users', 'unique:instructors', 'unique:trainees', 'unique:trainee_block_lists'],
             'password' => $this->passwordRules(),
-            'identity_number' => ['required', 'unique:trainees', 'unique:instructors', 'unique:trainee_block_lists'],
-            'birthday' => ['required'],
+            'identity_number' => ['required', 'string', 'max:255', 'unique:trainees', 'unique:instructors', 'unique:trainee_block_lists'],
+            'birthday' => ['required', 'date'],
             'phone' => ['required', 'string', 'max:255', 'unique:users', 'unique:instructors', 'unique:trainees', 'unique:trainee_block_lists'],
             'phone_additional' => ['required', 'string', 'max:255', 'unique:trainee_block_lists'],
             'educational_level_id' => 'required|exists:educational_levels,id',
             'city_id' => 'required|exists:cities,id',
             'marital_status_id' => 'required|exists:marital_statuses,id',
-            'children_count' => 'nullable|numeric',
+            'children_count' => 'nullable|integer|min:0|max:20',
         ])->validate();
 
         User::addGlobalScope(new TeamScope());
@@ -67,29 +72,24 @@ class RegisterTraineeController extends Controller
 
         \DB::beginTransaction();
         try {
-            $trainee = $this->service->store($request->except('_token'));
-
-            // Removed automatic login for the user
-            // Log::info('[REGISTRATION] Auth login: Starting', array_merge($logContext, [
-            //     'step' => 'auth_login_start',
-            //     'user_id' => $user->id,
-            // ]));
-            // auth()->loginUsingId($user->id);
-            // Log::info('[REGISTRATION] Auth login: Success', array_merge($logContext, [
-            //     'step' => 'auth_login_success',
-            //     'user_id' => $user->id,
-            // ]));
+            $trainee = $this->service->store($data);
 
             $user = (new CreateNewTraineeUser())->create([
                 'trainee_id' => $trainee->id,
                 'name' => $trainee->name,
                 'email' => $trainee->email,
                 'phone' => $trainee->phone,
-                'national_address' => $trainee->national_address,
+                'national_address' => $trainee->national_address ?? '',
                 'password' => $request->password,
                 'password_confirmation' => $request->password_confirmation,
             ]);
             \DB::commit();
+
+            Log::info('RegisterTraineeController@store: Trainee registration successful.', [
+                'trainee_id' => $trainee->id,
+                'user_id' => $user->id,
+                'email' => $user->email
+            ]);
 
             // Redirect to login page with a success message
             return redirect()->route('login')->with('status', 'تم التسجيل بنجاح! الرجاء تسجيل الدخول.');
@@ -100,7 +100,9 @@ class RegisterTraineeController extends Controller
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);
-            throw $e;
+            
+            // Return back with error message
+            return back()->withErrors(['error' => 'حدث خطأ أثناء التسجيل. الرجاء المحاولة مرة أخرى.'])->withInput();
         }
     }
 
