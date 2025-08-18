@@ -70,15 +70,6 @@ class DashboardController extends Controller
             ->latest()
             ->get();
 
-        // Debug: Log trainee data
-        \Log::info('Trainee data for dashboard:', [
-            'user_id' => $user->id,
-            'trainee_id' => $trainee ? $trainee->id : null,
-            'english_name' => $trainee ? $trainee->english_name : null,
-            'trainee_exists' => $trainee ? true : false,
-            'trainee_data' => $trainee ? $trainee->toArray() : null
-        ]);
-
         return Inertia::render('Trainees/Dashboard', [
             'user' => auth()->user(),
             'sessions' => $sessions,

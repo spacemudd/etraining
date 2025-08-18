@@ -310,14 +310,6 @@
                 </div>
             </div>
 
-            <!-- English Name Popup -->
-            <EnglishNamePopup
-                v-if="shouldShowEnglishNamePopup"
-                :show="showEnglishNamePopup"
-                @saved="onEnglishNameSaved"
-                @temporary-close="onTemporaryClose"
-            />
-
         </div>
     </app-layout>
 </template>
@@ -327,7 +319,6 @@ import AppLayout from '@/Layouts/AppLayoutTrainee'
 import Welcome from '@/Jetstream/Welcome'
 import LanguageSelector from "@/Shared/LanguageSelector";
 import HeaderCard from "@/Components/HeaderCard";
-import EnglishNamePopup from "@/Components/EnglishNamePopup";
 import Swal from 'sweetalert2';
 
 
@@ -338,7 +329,6 @@ export default {
         Welcome,
         LanguageSelector,
         HeaderCard,
-        EnglishNamePopup,
     },
     data() {
         return {
@@ -346,21 +336,6 @@ export default {
             pdfUrl: null,
             contractStatus: null,
             errorMessage: null,
-            showEnglishNamePopup: false,
-        }
-    },
-    computed: {
-        shouldShowEnglishNamePopup() {
-            const english = this.trainee && this.trainee.english_name ? String(this.trainee.english_name) : '';
-            const shouldShow = !!this.trainee && english.trim().length === 0;
-            console.log('Computed shouldShowEnglishNamePopup:', {
-                trainee: this.trainee,
-                english_name: english,
-                shouldShow: shouldShow,
-                traineeExists: !!this.trainee,
-                traineeId: this.trainee ? this.trainee.id : null
-            });
-            return shouldShow;
         }
     },
     filters: {
@@ -379,18 +354,6 @@ export default {
         this.checkCoursesEnabledInterval = setInterval(function() {
             vm.updateCoursesEnabled();
         }, 2000)
-
-        // Debug: Log props data
-        console.log('Dashboard mounted with props:', {
-            user: this.user,
-            trainee: this.trainee,
-            traineeEnglishName: this.trainee ? this.trainee.english_name : null,
-            traineeId: this.trainee ? this.trainee.id : null,
-            propsKeys: Object.keys(this.$props)
-        });
-
-        // Check if English name popup should be shown
-        this.checkEnglishNamePopup();
     },
     methods: {
         updateCoursesEnabled() {
@@ -476,49 +439,6 @@ export default {
             } catch (error) {
                 this.errorMessage = error.response?.data?.error || "حدث خطأ أثناء جلب حالة العقد.";
             }
-        },
-        
-        checkEnglishNamePopup() {
-            console.log('Checking English name popup...');
-            console.log('Trainee object:', this.trainee);
-            console.log('Should show popup:', this.shouldShowEnglishNamePopup);
-            
-            if (this.shouldShowEnglishNamePopup) {
-                console.log('Showing English name popup');
-                this.showEnglishNamePopup = true;
-            }
-        },
-        
-        onEnglishNameSaved(englishName) {
-            // Update the trainee object with the new English name
-            if (this.trainee) {
-                this.trainee.english_name = englishName;
-            }
-            this.showEnglishNamePopup = false;
-            
-            // Show success message
-            Swal.fire({
-                title: 'تم الحفظ بنجاح!',
-                text: 'تم حفظ الاسم الإنجليزي بنجاح',
-                icon: 'success',
-                confirmButtonText: 'حسناً'
-            });
-        },
-        
-        closeEnglishNamePopup() {
-            this.showEnglishNamePopup = false;
-        },
-        
-        onTemporaryClose() {
-            this.showEnglishNamePopup = false;
-            
-            // Show message that popup will reappear
-            Swal.fire({
-                title: 'تم الإغلاق مؤقتاً',
-                text: 'سيتم إعادة عرض النافذة عند تحديث الصفحة',
-                icon: 'info',
-                confirmButtonText: 'حسناً'
-            });
         }
     },
     beforeDestroy() {
