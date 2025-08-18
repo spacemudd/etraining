@@ -932,6 +932,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
         Route::get('attendance-sheet', [\App\Http\Controllers\Trainees\AttendanceSheetController::class, 'index'])->name('attendance-sheet.index');
         Route::get('training-packages', [\App\Http\Controllers\Trainees\TrainingPackagesController::class, 'index'])->name('training-packages.index');
+        
+        // English name update route
+        Route::post('update-english-name', [\App\Http\Controllers\Trainees\EnglishNameController::class, 'update'])->name('update-english-name');
 
         Route::get('training-plan', [\App\Http\Controllers\Trainees\TrainingPlanController::class, 'index'])->name('training-plan.index');
 

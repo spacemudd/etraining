@@ -310,6 +310,14 @@
                 </div>
             </div>
 
+            <!-- English Name Popup -->
+            <EnglishNamePopup
+                :show="showEnglishNamePopup"
+                :trainee-id="trainee.id"
+                @saved="onEnglishNameSaved"
+                @close="closeEnglishNamePopup"
+            />
+
         </div>
     </app-layout>
 </template>
@@ -319,6 +327,7 @@ import AppLayout from '@/Layouts/AppLayoutTrainee'
 import Welcome from '@/Jetstream/Welcome'
 import LanguageSelector from "@/Shared/LanguageSelector";
 import HeaderCard from "@/Components/HeaderCard";
+import EnglishNamePopup from "@/Components/EnglishNamePopup";
 import Swal from 'sweetalert2';
 
 
@@ -329,6 +338,7 @@ export default {
         Welcome,
         LanguageSelector,
         HeaderCard,
+        EnglishNamePopup,
     },
     data() {
         return {
@@ -336,6 +346,7 @@ export default {
             pdfUrl: null,
             contractStatus: null,
             errorMessage: null,
+            showEnglishNamePopup: false,
         }
     },
     filters: {
@@ -354,6 +365,9 @@ export default {
         this.checkCoursesEnabledInterval = setInterval(function() {
             vm.updateCoursesEnabled();
         }, 2000)
+
+        // Check if English name popup should be shown
+        this.checkEnglishNamePopup();
     },
     methods: {
         updateCoursesEnabled() {
@@ -439,6 +453,32 @@ export default {
             } catch (error) {
                 this.errorMessage = error.response?.data?.error || "حدث خطأ أثناء جلب حالة العقد.";
             }
+        },
+        
+        checkEnglishNamePopup() {
+            if (this.shouldShowEnglishNamePopup) {
+                this.showEnglishNamePopup = true;
+            }
+        },
+        
+        onEnglishNameSaved(englishName) {
+            // Update the trainee object with the new English name
+            if (this.trainee) {
+                this.trainee.english_name = englishName;
+            }
+            this.showEnglishNamePopup = false;
+            
+            // Show success message
+            Swal.fire({
+                title: 'تم الحفظ بنجاح!',
+                text: 'تم حفظ الاسم الإنجليزي بنجاح',
+                icon: 'success',
+                confirmButtonText: 'حسناً'
+            });
+        },
+        
+        closeEnglishNamePopup() {
+            this.showEnglishNamePopup = false;
         }
     },
     beforeDestroy() {
