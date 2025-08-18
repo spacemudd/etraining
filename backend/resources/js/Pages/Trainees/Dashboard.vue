@@ -315,6 +315,7 @@
                 v-if="shouldShowEnglishNamePopup"
                 :show="showEnglishNamePopup"
                 @saved="onEnglishNameSaved"
+                @temporary-close="onTemporaryClose"
             />
 
         </div>
@@ -355,7 +356,9 @@ export default {
             console.log('Computed shouldShowEnglishNamePopup:', {
                 trainee: this.trainee,
                 english_name: english,
-                shouldShow: shouldShow
+                shouldShow: shouldShow,
+                traineeExists: !!this.trainee,
+                traineeId: this.trainee ? this.trainee.id : null
             });
             return shouldShow;
         }
@@ -381,7 +384,9 @@ export default {
         console.log('Dashboard mounted with props:', {
             user: this.user,
             trainee: this.trainee,
-            traineeEnglishName: this.trainee ? this.trainee.english_name : null
+            traineeEnglishName: this.trainee ? this.trainee.english_name : null,
+            traineeId: this.trainee ? this.trainee.id : null,
+            propsKeys: Object.keys(this.$props)
         });
 
         // Check if English name popup should be shown
@@ -502,6 +507,18 @@ export default {
         
         closeEnglishNamePopup() {
             this.showEnglishNamePopup = false;
+        },
+        
+        onTemporaryClose() {
+            this.showEnglishNamePopup = false;
+            
+            // Show message that popup will reappear
+            Swal.fire({
+                title: 'تم الإغلاق مؤقتاً',
+                text: 'سيتم إعادة عرض النافذة عند تحديث الصفحة',
+                icon: 'info',
+                confirmButtonText: 'حسناً'
+            });
         }
     },
     beforeDestroy() {

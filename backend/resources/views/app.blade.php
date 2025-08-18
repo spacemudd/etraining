@@ -43,7 +43,7 @@
             </div>
         @endif
         @if (app('impersonate')->isImpersonating())
-            <div class="w-full bg-blue-600 text-center p-5 text-white">
+            <div class="w-full bg-blue-600 text-center p-5 text-white relative" style="z-index: 9999;">
                 {{ __('words.you-are-currently-logged-in-as') }}: {{ \App\Models\User::find(app('impersonate')->getImpersonatorId())->name }}
                 <br/>
                 <a class="mt-5 block underline" href="{{ route('impersonate.leave') }}">{{ __('words.to-go-back-to-your-account-click-here') }}</a>
