@@ -312,10 +312,9 @@
 
             <!-- English Name Popup -->
             <EnglishNamePopup
+                v-if="shouldShowEnglishNamePopup"
                 :show="showEnglishNamePopup"
-                :trainee-id="trainee.id"
                 @saved="onEnglishNameSaved"
-                @close="closeEnglishNamePopup"
             />
 
         </div>
@@ -349,6 +348,18 @@ export default {
             showEnglishNamePopup: false,
         }
     },
+    computed: {
+        shouldShowEnglishNamePopup() {
+            const english = this.trainee && this.trainee.english_name ? String(this.trainee.english_name) : '';
+            const shouldShow = !!this.trainee && english.trim().length === 0;
+            console.log('Computed shouldShowEnglishNamePopup:', {
+                trainee: this.trainee,
+                english_name: english,
+                shouldShow: shouldShow
+            });
+            return shouldShow;
+        }
+    },
     filters: {
         toDate(timestamp) {
             return moment(timestamp, 'YYYY-MM-DD LT').format('DD-MM-YYYY');
@@ -365,6 +376,13 @@ export default {
         this.checkCoursesEnabledInterval = setInterval(function() {
             vm.updateCoursesEnabled();
         }, 2000)
+
+        // Debug: Log props data
+        console.log('Dashboard mounted with props:', {
+            user: this.user,
+            trainee: this.trainee,
+            traineeEnglishName: this.trainee ? this.trainee.english_name : null
+        });
 
         // Check if English name popup should be shown
         this.checkEnglishNamePopup();
@@ -456,7 +474,12 @@ export default {
         },
         
         checkEnglishNamePopup() {
+            console.log('Checking English name popup...');
+            console.log('Trainee object:', this.trainee);
+            console.log('Should show popup:', this.shouldShowEnglishNamePopup);
+            
             if (this.shouldShowEnglishNamePopup) {
+                console.log('Showing English name popup');
                 this.showEnglishNamePopup = true;
             }
         },
