@@ -438,10 +438,7 @@
         </table>
         
         <!-- Footer -->
-        <div class="footer">
-            <p>تم إنشاء هذا السجل في {{ now()->format('Y-m-d H:i:s') }}</p>
-            <p>This record was generated on {{ now()->format('Y-m-d H:i:s') }}</p>
-        </div>
+        <!-- تم إزالة Footer بناءً على طلب المستخدم -->
     </div>
 </body>
 </html> 
