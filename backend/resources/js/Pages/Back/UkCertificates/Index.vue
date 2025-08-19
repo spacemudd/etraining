@@ -392,7 +392,7 @@ export default {
             this.searchTimeouts[index] = setTimeout(async () => {
                 try {
                     const response = await axios.get('/back/search', {
-                        params: { q: query }
+                        params: { search: query }
                     });
                     trainee.searchResults = response.data.slice(0, 10); // Limit to 10 results
                 } catch (err) {

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 use App\Models\Back\UkCertificate;
 use App\Models\Back\UkCertificateRow;
-use App\Models\Trainee;
+use App\Models\Back\Trainee;
 use Google_Client;
 use Google_Service_Drive;
 
