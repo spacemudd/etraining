@@ -5,33 +5,37 @@
 
 ## الحلول المطبقة
 
-### 1. إضافة خيارات SSL/TLS في إعدادات PDF
+### 1. إزالة الخيارات غير الصحيحة
 
-تم إضافة الخيارات التالية في `CompanyAttendanceReportService.php`:
+تم إزالة الخيارات التالية من `CompanyAttendanceReportService.php` لأنها غير مدعومة:
 
 ```php
-->setOption('no-ssl-errors', true)
-->setOption('ignore-ssl-errors', true)
-->setOption('ssl-no-verify', true)
-->setOption('disable-ssl', true)
+// هذه الخيارات غير مدعومة في knp-snappy
+->setOption('no-ssl-errors', true)        // ❌ غير مدعوم
+->setOption('ignore-ssl-errors', true)    // ❌ غير مدعوم
+->setOption('ssl-no-verify', true)        // ❌ غير مدعوم
+->setOption('disable-ssl', true)          // ❌ غير مدعوم
 ```
 
 ### 2. تحديث ملف إعدادات Snappy
 
-تم تحديث `config/snappy.php` بإضافة خيارات SSL:
+تم تحديث `config/snappy.php` بإضافة خيارات صحيحة:
 
 ```php
 'options' => [
     'enable-local-file-access' => true,
     'encoding'      => 'UTF-8',
-    'no-ssl-errors' => true,
-    'ignore-ssl-errors' => true,
-    'ssl-no-verify' => true,
-    'disable-ssl' => true,
     'no-stop-slow-scripts' => true,
     'javascript-delay' => 1000,
     'enable-internal-links' => true,
-    'enable-external-links' => true
+    'enable-external-links' => true,
+    'disable-smart-shrinking' => true,
+    'viewport-size' => '1024×768',
+    'zoom' => '0.78'
+],
+'env' => [
+    'QT_LOGGING_RULES' => '*.debug=false;qt.webengine*.debug=false',
+    'QTWEBENGINE_CHROMIUM_FLAGS' => '--disable-web-security --disable-features=VizDisplayCompositor',
 ],
 ```
 
@@ -54,6 +58,21 @@ try {
     $view = 'pdf.company-attendance-report.special-company-fallback';
 }
 ```
+
+## الخيارات الصحيحة المدعومة في wkhtmltopdf
+
+### خيارات SSL المدعومة:
+- `--disable-web-security` - تعطيل أمان الويب
+- `--disable-features=VizDisplayCompositor` - تعطيل ميزات معينة
+- `--no-stop-slow-scripts` - عدم إيقاف النصوص البطيئة
+- `--javascript-delay` - تأخير JavaScript
+
+### خيارات التخطيط المدعومة:
+- `--page-size` - حجم الصفحة
+- `--orientation` - اتجاه الصفحة
+- `--margin-top/bottom/left/right` - الهوامش
+- `--encoding` - الترميز
+- `--dpi` - دقة الطباعة
 
 ## كيفية الاختبار
 
@@ -78,7 +97,7 @@ RUN apk add --no-cache wkhtmltopdf
 ### 2. إضافة متغيرات البيئة
 ```bash
 # في .env
-WKHTML_PDF_BINARY=/usr/local/bin/wkhtmltopdf
+WKHTML_PDF_BINARY=/usr/local/bin/wkhtmltopdf2
 WKHTML_IMG_BINARY=/usr/local/bin/wkhtmltoimage
 ```
 
@@ -106,7 +125,7 @@ tail -f storage/logs/laravel.log
 ### 2. فحص أخطاء wkhtmltopdf
 ```bash
 # اختبار مباشر
-wkhtmltopdf --no-ssl-errors --ignore-ssl-errors --ssl-no-verify --disable-ssl test.html test.pdf
+wkhtmltopdf --disable-web-security --disable-features=VizDisplayCompositor test.html test.pdf
 ```
 
 ### 3. فحص إصدار المكتبة
@@ -137,6 +156,7 @@ wkhtmltopdf --version
 - لا توجد تغييرات في قاعدة البيانات
 - جميع الوظائف تعمل بشكل طبيعي
 - التصميم البديل يستخدم أنماط CSS مضمنة
+- تم إزالة الخيارات غير المدعومة لتجنب الأخطاء
 
 ## الدعم
 
@@ -144,4 +164,5 @@ wkhtmltopdf --version
 1. فحص سجلات الأخطاء
 2. اختبار إعدادات SSL
 3. التأكد من إصدار wkhtmltopdf
-4. مراجعة إعدادات الخادم 
+4. مراجعة إعدادات الخادم
+5. التأكد من أن جميع الخيارات المستخدمة مدعومة 

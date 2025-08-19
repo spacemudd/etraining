@@ -188,10 +188,6 @@ class CompanyAttendanceReportService
             ->setOption('viewport-size', '1024×768')
             ->setOption('zoom', 0.78)
             ->setOption('footer-html', $report->with_logo ? resource_path('views/pdf/company-attendance-report/company-attendance-report-footer.html') : false)
-            ->setOption('no-ssl-errors', true)
-            ->setOption('ignore-ssl-errors', true)
-            ->setOption('ssl-no-verify', true)
-            ->setOption('disable-ssl', true)
             ->loadView($view, [
                 'base64logo' => $report->company->logo_files->count() ? 'data:image/jpeg;base64,'.base64_encode(@file_get_contents('https://prod.jisr-ksa.com/back/media/'.$report->company->logo_files->first()->id)) : null,
                 'report' => $report,
@@ -258,10 +254,6 @@ class CompanyAttendanceReportService
             ->setOption('viewport-size', '1024×768')
             ->setOption('zoom', 0.78)
             ->setOption('footer-html', resource_path('views/pdf/company-attendance-report/company-attendance-report-footer.html'))
-            ->setOption('no-ssl-errors', true)
-            ->setOption('ignore-ssl-errors', true)
-            ->setOption('ssl-no-verify', true)
-            ->setOption('disable-ssl', true)
             ->loadView($view, [
                 'base64logo' => $record->company->logo_files->count() ? 'data:image/jpeg;base64,'.base64_encode(@file_get_contents('https://prod.ptc-ksa.net/back/media/'.$record->report->company->logo_files->first()->id)) : null,
                 'report' => $record->report,
