@@ -42,9 +42,19 @@ return [
         'timeout' => false,
         'options' => [
             'enable-local-file-access' => true,
-            'encoding'      => 'UTF-8'
+            'encoding'      => 'UTF-8',
+            'no-stop-slow-scripts' => true,
+            'javascript-delay' => 1000,
+            'enable-internal-links' => true,
+            'enable-external-links' => true,
+            'disable-smart-shrinking' => true,
+            'viewport-size' => '1024×768',
+            'zoom' => '0.78'
         ],
-        'env'     => [],
+        'env'     => [
+            'QT_LOGGING_RULES' => '*.debug=false;qt.webengine*.debug=false',
+            'QTWEBENGINE_CHROMIUM_FLAGS' => '--disable-web-security --disable-features=VizDisplayCompositor',
+        ],
     ],
 
     'image' => [
