@@ -11,361 +11,283 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #2c3e50;
-            line-height: 1.6;
-            padding: 15px;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.4;
+            padding: 20px;
         }
         
         .container {
             background: white;
-            border: none;
-            border-radius: 20px;
-            padding: 25px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
             margin: 0 auto;
-            max-width: 1200px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            max-width: 1000px;
         }
         
         .header {
             text-align: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #4a90e2;
             color: white;
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-            opacity: 0.3;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
         }
         
         .header h1 {
-            font-size: 32px;
+            font-size: 28px;
             margin-bottom: 10px;
-            font-weight: 700;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            position: relative;
-            z-index: 1;
         }
         
         .header p {
             font-size: 18px;
             opacity: 0.9;
-            position: relative;
-            z-index: 1;
         }
         
         .company-info {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            border-left: 5px solid #667eea;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4a90e2;
         }
         
         .company-name {
-            font-size: 26px;
-            font-weight: 700;
+            font-size: 22px;
+            font-weight: bold;
             color: #2c3e50;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
         }
         
         .company-subtitle {
-            color: #6c757d;
-            font-size: 16px;
-            font-weight: 500;
+            color: #7f8c8d;
+            font-size: 14px;
         }
         
         .trainee-info {
-            background: linear-gradient(135deg, #d5f4e6 0%, #a8e6cf 100%);
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 25px;
+            background: #d5f4e6;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
             border: 2px solid #27ae60;
-            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.2);
         }
         
         .trainee-info h3 {
-            margin: 0 0 20px 0;
+            margin: 0 0 15px 0;
             color: #27ae60;
             text-align: center;
-            font-size: 20px;
-            font-weight: 700;
+            font-size: 18px;
         }
         
         .trainee-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            display: table;
+            width: 100%;
+            border-collapse: collapse;
         }
         
-        .trainee-item {
+        .trainee-row {
+            display: table-row;
+        }
+        
+        .trainee-cell {
+            display: table-cell;
+            padding: 10px;
+            border: 1px solid #27ae60;
             background: white;
-            padding: 18px;
-            border-radius: 12px;
             text-align: center;
-            border: 2px solid #27ae60;
-            box-shadow: 0 3px 10px rgba(39, 174, 96, 0.1);
+            width: 25%;
         }
         
         .trainee-label {
-            font-weight: 600;
+            font-weight: bold;
             color: #27ae60;
             font-size: 12px;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            margin-bottom: 5px;
         }
         
         .trainee-value {
-            font-size: 16px;
-            color: #2c3e50;
-            font-weight: 600;
+            font-size: 14px;
+            color: #333;
         }
         
         .report-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 25px;
+            display: table;
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
         }
         
-        .report-item {
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-            padding: 20px;
-            border-radius: 12px;
+        .report-row {
+            display: table-row;
+        }
+        
+        .report-cell {
+            display: table-cell;
+            padding: 10px;
+            border: 1px solid #3498db;
+            background: #ebf3fd;
             text-align: center;
-            border: 2px solid #2196f3;
-            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.2);
+            width: 25%;
         }
         
         .report-label {
-            font-weight: 600;
-            color: #1976d2;
-            margin-bottom: 8px;
+            font-weight: bold;
+            color: #2980b9;
             font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            margin-bottom: 5px;
         }
         
         .report-value {
-            font-size: 18px;
-            color: #2c3e50;
-            font-weight: 700;
+            font-size: 16px;
+            color: #333;
         }
         
         .attendance-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 25px;
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border: 2px solid #e9ecef;
+            margin-top: 20px;
+            border: 2px solid #ddd;
         }
         
         .attendance-table th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #34495e;
             color: white;
-            padding: 18px 12px;
+            padding: 12px 8px;
             text-align: center;
-            font-weight: 600;
-            border: 1px solid #e9ecef;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-weight: bold;
+            border: 1px solid #ddd;
+            font-size: 12px;
         }
         
         .attendance-table td {
-            padding: 15px 12px;
+            padding: 10px 8px;
             text-align: center;
-            border: 1px solid #e9ecef;
+            border: 1px solid #ddd;
             background: white;
-            font-size: 12px;
-            transition: background-color 0.2s ease;
+            font-size: 11px;
         }
         
         .attendance-table tr:nth-child(even) td {
             background: #f8f9fa;
         }
         
-        .attendance-table tr:hover td {
-            background: #e3f2fd;
-        }
-        
         .present {
             background: #27ae60 !important;
             color: white;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            line-height: 20px;
             font-weight: bold;
-            font-size: 12px;
-            box-shadow: 0 2px 5px rgba(39, 174, 96, 0.3);
+            font-size: 10px;
         }
         
         .absent {
             background: #e74c3c !important;
             color: white;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            line-height: 20px;
             font-weight: bold;
-            font-size: 12px;
-            box-shadow: 0 2px 5px rgba(231, 76, 60, 0.3);
+            font-size: 10px;
         }
         
         .vacation {
             background: #f39c12 !important;
             color: white;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            line-height: 20px;
             font-weight: bold;
-            font-size: 12px;
-            box-shadow: 0 2px 5px rgba(243, 156, 18, 0.3);
+            font-size: 10px;
         }
         
         .day-header {
-            background: linear-gradient(135deg, #d5f4e6 0%, #a8e6cf 100%) !important;
+            background: #d5f4e6 !important;
             color: #27ae60;
-            font-weight: 600;
+            font-weight: bold;
         }
         
         .vacation-day {
-            background: linear-gradient(135deg, #fef9e7 0%, #fdeaa7 100%) !important;
+            background: #fef9e7 !important;
             color: #f39c12;
         }
         
         .summary {
-            margin-top: 25px;
-            padding: 25px;
-            background: linear-gradient(135deg, #d5f4e6 0%, #a8e6cf 100%);
-            border-radius: 15px;
+            margin-top: 20px;
+            padding: 20px;
+            background: #d5f4e6;
+            border-radius: 6px;
             border: 2px solid #27ae60;
-            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.2);
         }
         
         .summary h4 {
-            margin: 0 0 20px 0;
+            margin: 0 0 15px 0;
             color: #27ae60;
             text-align: center;
-            font-size: 18px;
-            font-weight: 700;
+            font-size: 16px;
         }
         
         .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px;
+            display: table;
+            width: 100%;
+            border-collapse: collapse;
         }
         
-        .summary-item {
+        .summary-row {
+            display: table-row;
+        }
+        
+        .summary-cell {
+            display: table-cell;
+            padding: 10px;
+            border: 1px solid #27ae60;
             background: white;
-            padding: 20px;
-            border-radius: 12px;
             text-align: center;
-            border: 2px solid #27ae60;
-            box-shadow: 0 3px 10px rgba(39, 174, 96, 0.1);
+            width: 33.33%;
         }
         
         .summary-label {
-            font-weight: 600;
+            font-weight: bold;
             color: #27ae60;
-            font-size: 13px;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-size: 12px;
+            margin-bottom: 5px;
         }
         
         .summary-value {
-            font-size: 20px;
-            color: #2c3e50;
-            font-weight: 700;
+            font-size: 16px;
+            color: #333;
         }
         
         .footer {
-            margin-top: 25px;
+            margin-top: 20px;
             text-align: center;
-            padding: 20px;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 15px;
-            border-top: 3px solid #667eea;
-            box-shadow: 0 -5px 15px rgba(0,0,0,0.08);
+            padding: 15px;
+            background: #ecf0f1;
+            border-radius: 6px;
+            border-top: 2px solid #bdc3c7;
         }
         
         .footer p {
             margin: 0;
-            color: #6c757d;
-            font-size: 13px;
-            font-weight: 500;
-        }
-        
-        .footer p:last-child {
-            margin: 5px 0 0 0;
-            color: #adb5bd;
-            font-size: 11px;
+            color: #7f8c8d;
+            font-size: 12px;
         }
         
         .logo {
-            max-width: 130px;
+            max-width: 120px;
             height: auto;
-            border-radius: 10px;
-            border: 3px solid rgba(255,255,255,0.3);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border-radius: 6px;
+            border: 2px solid #ddd;
             float: right;
-            margin-top: -45px;
-        }
-        
-        .legend {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #e9ecef;
-        }
-        
-        .legend h4 {
-            margin: 0 0 10px 0;
-            color: #2c3e50;
-            font-size: 14px;
-            font-weight: 600;
-        }
-        
-        .legend-items {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            color: #6c757d;
+            margin-top: -40px;
         }
         
         @media print {
@@ -375,20 +297,19 @@
             }
             
             .container {
-                box-shadow: none;
-                border: 1px solid #ddd;
+                border: none;
                 margin: 0;
-                padding: 15px;
+                padding: 10px;
             }
             
             .header {
-                background: #667eea !important;
+                background: #4a90e2 !important;
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
             }
             
             .attendance-table th {
-                background: #667eea !important;
+                background: #34495e !important;
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
             }
@@ -421,26 +342,28 @@
         <div class="trainee-info">
             <h3>معلومات الموظف</h3>
             <div class="trainee-details">
-                <div class="trainee-item">
-                    <div class="trainee-label">الاسم الكامل</div>
-                    <div class="trainee-value">{{ $record->trainee->name }}</div>
-                </div>
-                <div class="trainee-item">
-                    <div class="trainee-label">رقم الهوية</div>
-                    <div class="trainee-value">{{ $record->trainee->clean_identity_number }}</div>
-                </div>
-                @if ($record->trainee->job_number)
-                <div class="trainee-item">
-                    <div class="trainee-label">الرقم الوظيفي</div>
-                    <div class="trainee-value">{{ $record->trainee->job_number }}</div>
-                </div>
-                @endif
-                <div class="trainee-item">
-                    <div class="trainee-label">حالة التوظيف</div>
-                    <div class="trainee-value">
-                        <span style="background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); color: white; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; box-shadow: 0 2px 5px rgba(39, 174, 96, 0.3);">
-                            {{ $record->status === 'active' ? 'موظف نشط' : 'غير نشط' }}
-                        </span>
+                <div class="trainee-row">
+                    <div class="trainee-cell">
+                        <div class="trainee-label">الاسم الكامل</div>
+                        <div class="trainee-value">{{ $record->trainee->name }}</div>
+                    </div>
+                    <div class="trainee-cell">
+                        <div class="trainee-label">رقم الهوية</div>
+                        <div class="trainee-value">{{ $record->trainee->clean_identity_number }}</div>
+                    </div>
+                    @if ($record->trainee->job_number)
+                    <div class="trainee-cell">
+                        <div class="trainee-label">الرقم الوظيفي</div>
+                        <div class="trainee-value">{{ $record->trainee->job_number }}</div>
+                    </div>
+                    @endif
+                    <div class="trainee-cell">
+                        <div class="trainee-label">حالة التوظيف</div>
+                        <div class="trainee-value">
+                            <span style="background: #27ae60; color: white; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: bold;">
+                                {{ $record->status === 'active' ? 'موظف نشط' : 'غير نشط' }}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -448,45 +371,28 @@
         
         <!-- Report Details -->
         <div class="report-details">
-            <div class="report-item">
-                <div class="report-label">رقم السجل</div>
-                <div class="report-value">{{ $record->report->number }}</div>
-            </div>
-            <div class="report-item">
-                <div class="report-label">فترة المتابعة</div>
-                <div class="report-value">{{ $report->date_from->format('Y-m-d') }} - {{ $report->date_to->format('Y-m-d') }}</div>
-            </div>
-            <div class="report-item">
-                <div class="report-label">أيام العمل المطلوبة</div>
-                <div class="report-value">
-                    @if ($record->start_date)
-                        {{ $record->start_date->diffInDays($record->end_date) + 1 }}
-                    @else
-                        {{ count($days) }}
-                    @endif
+            <div class="report-row">
+                <div class="report-cell">
+                    <div class="report-label">رقم السجل</div>
+                    <div class="report-value">{{ $record->report->number }}</div>
                 </div>
-            </div>
-            <div class="report-item">
-                <div class="report-label">مدة المتابعة</div>
-                <div class="report-value">{{ count($days) }} يوم</div>
-            </div>
-        </div>
-        
-        <!-- Legend -->
-        <div class="legend">
-            <h4>دليل الرموز المستخدمة:</h4>
-            <div class="legend-items">
-                <div class="legend-item">
-                    <span class="present">✓</span>
-                    <span>حضور</span>
+                <div class="report-cell">
+                    <div class="report-label">فترة المتابعة</div>
+                    <div class="report-value">{{ $report->date_from->format('Y-m-d') }} - {{ $report->date_to->format('Y-m-d') }}</div>
                 </div>
-                <div class="legend-item">
-                    <span class="absent">✗</span>
-                    <span>غياب</span>
+                <div class="report-cell">
+                    <div class="report-label">أيام العمل المطلوبة</div>
+                    <div class="report-value">
+                        @if ($record->start_date)
+                            {{ $record->start_date->diffInDays($record->end_date) + 1 }}
+                        @else
+                            {{ count($days) }}
+                        @endif
+                    </div>
                 </div>
-                <div class="legend-item">
-                    <span class="vacation">X</span>
-                    <span>إجازة رسمية</span>
+                <div class="report-cell">
+                    <div class="report-label">مدة المتابعة</div>
+                    <div class="report-value">{{ count($days) }} يوم</div>
                 </div>
             </div>
         </div>
@@ -507,8 +413,8 @@
             <tbody>
                 @foreach ($days as $day)
                     <tr>
-                        <td style="font-weight: 600; color: #2c3e50;">{{ $day['date'] }}</td>
-                        <td class="{{ $day['vacation_day'] ? 'vacation-day' : 'day-header' }}" style="font-weight: 600;">
+                        <td>{{ $day['date'] }}</td>
+                        <td class="{{ $day['vacation_day'] ? 'vacation-day' : 'day-header' }}">
                             {{ $day['name'] }}
                         </td>
                         <td>
@@ -561,40 +467,32 @@
         <div class="summary">
             <h4>ملخص سجل المتابعة</h4>
             <div class="summary-grid">
-                <div class="summary-item">
-                    <div class="summary-label">أيام الحضور</div>
-                    <div class="summary-value">
-                        @if ($record->start_date)
-                            {{ $record->start_date->diffInDays($record->end_date) + 1 }}
-                        @else
-                            {{ count($days) }}
-                        @endif
+                <div class="summary-row">
+                    <div class="summary-cell">
+                        <div class="summary-label">أيام الحضور</div>
+                        <div class="summary-value">
+                            @if ($record->start_date)
+                                {{ $record->start_date->diffInDays($record->end_date) + 1 }}
+                            @else
+                                {{ count($days) }}
+                            @endif
+                        </div>
                     </div>
-                </div>
-                <div class="summary-item">
-                    <div class="summary-label">أيام الغياب</div>
-                    <div class="summary-value">
-                        @if ($record->start_date)
-                            {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
-                        @else
-                            0
-                        @endif
+                    <div class="summary-cell">
+                        <div class="summary-label">أيام الغياب</div>
+                        <div class="summary-value">
+                            @if ($record->start_date)
+                                {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
+                            @else
+                                0
+                            @endif
+                        </div>
                     </div>
-                </div>
-                <div class="summary-item">
-                    <div class="summary-label">أيام الإجازة</div>
-                    <div class="summary-value">
-                        {{ count(array_filter($days, function($day) { return $day['vacation_day']; })) }}
-                    </div>
-                </div>
-                <div class="summary-item">
-                    <div class="summary-label">نسبة الحضور</div>
-                    <div class="summary-value">
-                        @if ($record->start_date)
-                            {{ round((($record->start_date->diffInDays($record->end_date) + 1) / count($days)) * 100, 1) }}%
-                        @else
-                            100%
-                        @endif
+                    <div class="summary-cell">
+                        <div class="summary-label">أيام الإجازة</div>
+                        <div class="summary-value">
+                            {{ count(array_filter($days, function($day) { return $day['vacation_day']; })) }}
+                        </div>
                     </div>
                 </div>
             </div>
