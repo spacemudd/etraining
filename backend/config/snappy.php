@@ -42,7 +42,15 @@ return [
         'timeout' => false,
         'options' => [
             'enable-local-file-access' => true,
-            'encoding'      => 'UTF-8'
+            'encoding'      => 'UTF-8',
+            'no-ssl-errors' => true,
+            'ignore-ssl-errors' => true,
+            'ssl-no-verify' => true,
+            'disable-ssl' => true,
+            'no-stop-slow-scripts' => true,
+            'javascript-delay' => 1000,
+            'enable-internal-links' => true,
+            'enable-external-links' => true
         ],
         'env'     => [],
     ],

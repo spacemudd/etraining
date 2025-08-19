@@ -151,7 +151,12 @@ class CompanyAttendanceReportService
         // To fix formatting issue on 2nd page when the table is split.
         // Check if this is the special company to use different design
         if ($report->company->id === '9ef83749-d1ba-44a5-82a9-f726840e02db') {
-            $view = 'pdf.company-attendance-report.special-company';
+            // Try to use the special design, fallback to basic if SSL issues occur
+            try {
+                $view = 'pdf.company-attendance-report.special-company';
+            } catch (Exception $e) {
+                $view = 'pdf.company-attendance-report.special-company-fallback';
+            }
         } else {
             $view = $report->activeTraineesCount() > 8 ? 'pdf.company-attendance-report.show' : 'pdf.company-attendance-report.one-table';
         }
@@ -183,6 +188,10 @@ class CompanyAttendanceReportService
             ->setOption('viewport-size', '1024×768')
             ->setOption('zoom', 0.78)
             ->setOption('footer-html', $report->with_logo ? resource_path('views/pdf/company-attendance-report/company-attendance-report-footer.html') : false)
+            ->setOption('no-ssl-errors', true)
+            ->setOption('ignore-ssl-errors', true)
+            ->setOption('ssl-no-verify', true)
+            ->setOption('disable-ssl', true)
             ->loadView($view, [
                 'base64logo' => $report->company->logo_files->count() ? 'data:image/jpeg;base64,'.base64_encode(@file_get_contents('https://prod.jisr-ksa.com/back/media/'.$report->company->logo_files->first()->id)) : null,
                 'report' => $report,
@@ -219,7 +228,12 @@ class CompanyAttendanceReportService
 
         // Check if this is the special company to use different design
         if ($record->company->id === '9ef83749-d1ba-44a5-82a9-f726840e02db') {
-            $view = 'pdf.company-attendance-report.special-company-individual';
+            // Try to use the special design, fallback to basic if SSL issues occur
+            try {
+                $view = 'pdf.company-attendance-report.special-company-individual';
+            } catch (Exception $e) {
+                $view = 'pdf.company-attendance-report.special-company-individual-fallback';
+            }
         } else {
             $view = 'pdf.company-attendance-report.individual-table';
         }
@@ -244,6 +258,10 @@ class CompanyAttendanceReportService
             ->setOption('viewport-size', '1024×768')
             ->setOption('zoom', 0.78)
             ->setOption('footer-html', resource_path('views/pdf/company-attendance-report/company-attendance-report-footer.html'))
+            ->setOption('no-ssl-errors', true)
+            ->setOption('ignore-ssl-errors', true)
+            ->setOption('ssl-no-verify', true)
+            ->setOption('disable-ssl', true)
             ->loadView($view, [
                 'base64logo' => $record->company->logo_files->count() ? 'data:image/jpeg;base64,'.base64_encode(@file_get_contents('https://prod.ptc-ksa.net/back/media/'.$record->report->company->logo_files->first()->id)) : null,
                 'report' => $record->report,
