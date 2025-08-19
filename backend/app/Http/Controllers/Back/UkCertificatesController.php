@@ -9,6 +9,7 @@ use App\Models\Back\Course;
 use App\Models\Back\Trainee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
 use Inertia\Inertia;
 use ZipArchive;
 
@@ -77,33 +78,32 @@ class UkCertificatesController extends Controller
 
                 $totalFiles++;
                 
-                // Parse filename: {identity_number}_{name}.pdf
-                $basename = basename($filename, '.pdf');
-                $parts = explode('_', $basename, 2);
+                // Use the enhanced filename parsing method
+                $parseResult = $this->parseGoogleDriveFilename($filename);
                 
-                if (count($parts) !== 2) {
+                if (!$parseResult['valid']) {
                     // Invalid filename format - save to DB
                     UkCertificateRow::create([
                         'uk_certificate_id' => $ukCertificate->id,
                         'trainee_id' => null,
-                        'identity_number' => '',
-                        'trainee_name' => '',
+                        'identity_number' => $parseResult['identity_number'],
+                        'trainee_name' => $parseResult['trainee_name'],
                         'filename' => $filename,
                         'status' => UkCertificateRow::STATUS_FAILED,
-                        'error_message' => 'Invalid filename format. Expected: {identity_number}_{name}.pdf',
+                        'error_message' => $parseResult['error'],
                     ]);
 
                     $unmatched[] = [
                         'filename' => $filename,
-                        'identity_number' => '',
-                        'trainee_name' => '',
-                        'reason' => 'Invalid filename format'
+                        'identity_number' => $parseResult['identity_number'],
+                        'trainee_name' => $parseResult['trainee_name'],
+                        'reason' => $parseResult['error']
                     ];
                     continue;
                 }
 
-                $identityNumber = $parts[0];
-                $traineeName = $parts[1];
+                $identityNumber = $parseResult['identity_number'];
+                $traineeName = $parseResult['trainee_name'];
 
                 // Additional validation: identity number and name must not be empty, name must not be just a dot or whitespace
                 if (empty($identityNumber) || empty($traineeName) || trim($traineeName) === '.' || trim($traineeName) === '') {
@@ -289,5 +289,217 @@ class UkCertificatesController extends Controller
         }
         
         abort(404, 'Certificate not found');
+    }
+
+    /**
+     * Process certificates from Google Drive folder URL
+     */
+    public function processGoogleDrive(Request $request)
+    {
+        $request->validate([
+            'drive_url' => 'required|url',
+            'course_id' => 'required|exists:courses,id',
+        ]);
+
+        $driveUrl = $request->input('drive_url');
+        $courseId = $request->input('course_id');
+
+        // Validate Google Drive URL format
+        if (!$this->isValidGoogleDriveUrl($driveUrl)) {
+            return response()->json(['error' => 'Invalid Google Drive folder URL'], 400);
+        }
+
+        // Create UK certificate record
+        $ukCertificate = UkCertificate::create([
+            'course_id' => $courseId,
+            'status' => UkCertificate::STATUS_PROCESSING,
+            'started_at' => now(),
+            'drive_url' => $driveUrl,
+        ]);
+
+        // Process files in background job
+        dispatch(new \App\Jobs\ProcessGoogleDriveCertificatesJob($ukCertificate, $driveUrl));
+
+        return response()->json([
+            'import_id' => $ukCertificate->id,
+            'message' => 'Processing started. Files will be downloaded from Google Drive.',
+            'status' => 'processing'
+        ]);
+    }
+
+    /**
+     * Show processing page for an import
+     */
+    public function showProcessing($importId)
+    {
+        $ukCertificate = UkCertificate::with(['course:id,name_ar', 'rows'])->findOrFail($importId);
+        
+        return Inertia::render('Back/UkCertificates/Processing', [
+            'import' => $ukCertificate,
+        ]);
+    }
+
+    /**
+     * Get processing status for any import (ZIP or Google Drive)
+     */
+    public function getProcessingStatus($importId)
+    {
+        $ukCertificate = UkCertificate::with(['rows' => function ($query) {
+            $query->select('uk_certificate_id', 'status', 'trainee_id', 'identity_number', 'trainee_name', 'filename', 'error_message');
+        }, 'rows.trainee:id,name,email'])->findOrFail($importId);
+
+        $matched = $ukCertificate->rows->where('trainee_id', '!=', null)->map(function ($row) {
+            return [
+                'id' => $row->trainee_id,
+                'name' => $row->trainee->name ?? 'Unknown',
+                'email' => $row->trainee->email ?? '',
+                'identity_number' => $row->identity_number,
+                'filename' => $row->filename,
+                'status' => $row->status,
+            ];
+        })->values();
+        
+        $unmatched = $ukCertificate->rows->where('trainee_id', null)->where('status', '!=', UkCertificateRow::STATUS_FAILED)->map(function ($row) {
+            return [
+                'filename' => $row->filename,
+                'identity_number' => $row->identity_number,
+                'trainee_name' => $row->trainee_name,
+                'status' => $row->status,
+                'searchQuery' => '',
+                'searchResults' => [],
+                'selectedTrainee' => null,
+            ];
+        })->values();
+        
+        $failed = $ukCertificate->rows->where('status', UkCertificateRow::STATUS_FAILED)->map(function ($row) {
+            return [
+                'filename' => $row->filename,
+                'identity_number' => $row->identity_number,
+                'trainee_name' => $row->trainee_name,
+                'error_message' => $row->error_message,
+                'status' => $row->status,
+            ];
+        })->values();
+
+        return response()->json([
+            'import_id' => $ukCertificate->id,
+            'status' => $ukCertificate->status,
+            'progress_percentage' => $ukCertificate->progress_percentage ?? 0,
+            'current_file' => $ukCertificate->current_file ?? '',
+            'total_files' => $ukCertificate->total_files ?? 0,
+            'matched_count' => $ukCertificate->matched_count ?? 0,
+            'unmatched_count' => $ukCertificate->unmatched_count ?? 0,
+            'failed_count' => $ukCertificate->failed_count ?? 0,
+            'started_at' => $ukCertificate->started_at,
+            'completed_at' => $ukCertificate->completed_at,
+            'drive_url' => $ukCertificate->drive_url,
+            'course_name' => $ukCertificate->course->name_ar ?? 'Unknown Course',
+            'matched' => $matched,
+            'unmatched' => $unmatched,
+            'failed' => $failed,
+        ]);
+    }
+
+    /**
+     * Enhanced filename parsing for Google Drive files
+     */
+    public function parseGoogleDriveFilename($filename)
+    {
+        // Remove .pdf extension and trim whitespace
+        $basename = trim(basename($filename, '.pdf'));
+        
+        // Handle files with Arabic numerals - convert to English numerals
+        $basename = $this->convertArabicNumeralsToEnglish($basename);
+        
+        // Normalize NBSP and collapse runs of whitespace (spaces, tabs)
+        $basename = preg_replace('/\x{00A0}+/u', ' ', $basename);
+        $basename = preg_replace('/\s+/u', ' ', $basename);
+
+        // Accept either underscores or any whitespace between ID and name
+        // Examples: "10000000 Name", "10000000\tName", "10000000   Name", "10000000_Name"
+        if (preg_match('/^\s*([0-9]+)[\s_]+(.+?)\s*$/u', $basename, $matches) !== 1) {
+            return [
+                'valid' => false,
+                'identity_number' => '',
+                'trainee_name' => '',
+                'error' => 'Invalid filename format. Expected: {identity_number} {name}.pdf or {identity_number}_{name}.pdf'
+            ];
+        }
+
+        $identityNumber = trim($matches[1]);
+        $traineeName = trim($matches[2]);
+        
+        // Additional validation
+        if (empty($identityNumber) || empty($traineeName)) {
+            return [
+                'valid' => false,
+                'identity_number' => $identityNumber,
+                'trainee_name' => $traineeName,
+                'error' => 'Identity number or trainee name is empty'
+            ];
+        }
+        
+        // Validate identity number format (should be numeric)
+        if (!is_numeric($identityNumber)) {
+            return [
+                'valid' => false,
+                'identity_number' => $identityNumber,
+                'trainee_name' => $traineeName,
+                'error' => 'Identity number must be numeric'
+            ];
+        }
+        
+        return [
+            'valid' => true,
+            'identity_number' => $identityNumber,
+            'trainee_name' => $traineeName,
+            'error' => null
+        ];
+    }
+
+    /**
+     * Convert Arabic numerals to English numerals
+     */
+    private function convertArabicNumeralsToEnglish($text)
+    {
+        $arabicNumerals = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+        $englishNumerals = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        
+        return str_replace($arabicNumerals, $englishNumerals, $text);
+    }
+
+    /**
+     * Validate Google Drive URL format
+     */
+    public function isValidGoogleDriveUrl($url)
+    {
+        return preg_match('/drive\.google\.com\/drive\/folders\/[a-zA-Z0-9-_]+/', $url);
+    }
+
+    /**
+     * Extract folder ID from Google Drive URL
+     */
+    public function extractFolderIdFromUrl($url)
+    {
+        if (preg_match('/\/folders\/([a-zA-Z0-9-_]+)/', $url, $matches)) {
+            return $matches[1];
+        }
+        return null;
+    }
+
+    /**
+     * Create failed row record
+     */
+    public function createFailedRow($ukCertificate, $filename, $identityNumber, $traineeName, $errorMessage)
+    {
+        UkCertificateRow::create([
+            'uk_certificate_id' => $ukCertificate->id,
+            'trainee_id' => null,
+            'identity_number' => $identityNumber,
+            'trainee_name' => $traineeName,
+            'filename' => $filename,
+            'status' => UkCertificateRow::STATUS_FAILED,
+            'error_message' => $errorMessage,
+        ]);
     }
 }

@@ -725,6 +725,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         // UK Certificates
         Route::get('uk-certificates', [\App\Http\Controllers\Back\UkCertificatesController::class, 'index'])->name('uk-certificates.index');
         Route::post('uk-certificates/upload-zip', [\App\Http\Controllers\Back\UkCertificatesController::class, 'uploadZip'])->name('uk-certificates.upload-zip');
+        Route::post('uk-certificates/google-drive', [\App\Http\Controllers\Back\UkCertificatesController::class, 'processGoogleDrive'])->name('uk-certificates.google-drive');
+        Route::get('uk-certificates/{importId}', [\App\Http\Controllers\Back\UkCertificatesController::class, 'showProcessing'])->name('uk-certificates.processing');
+        Route::get('uk-certificates/{importId}/status', [\App\Http\Controllers\Back\UkCertificatesController::class, 'getProcessingStatus'])->name('uk-certificates.status');
         Route::post('uk-certificates/finalize', [\App\Http\Controllers\Back\UkCertificatesController::class, 'finalizeImport'])->name('uk-certificates.finalize');
         Route::get('uk-certificates/{row_id}/download', [\App\Http\Controllers\Back\UkCertificatesController::class, 'downloadCertificate'])->name('uk-certificates.download');
 

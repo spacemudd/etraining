@@ -20,15 +20,20 @@ class UkCertificate extends Model
         'failed_count',
         'started_at',
         'completed_at',
+        'drive_url',
+        'progress_percentage',
+        'current_file',
     ];
 
     protected $casts = [
         'started_at' => 'datetime',
         'completed_at' => 'datetime',
+        'progress_percentage' => 'decimal:2',
     ];
 
     // Status constants
     const STATUS_PROCESSING = 'processing';
+    const STATUS_COMPLETED = 'completed';
     const STATUS_SENDING = 'sending';
     const STATUS_SENT = 'sent';
     const STATUS_FAILED = 'failed';
