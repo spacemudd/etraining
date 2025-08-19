@@ -149,7 +149,12 @@ class CompanyAttendanceReportService
         }
 
         // To fix formatting issue on 2nd page when the table is split.
-        $view = $report->activeTraineesCount() > 8 ? 'pdf.company-attendance-report.show' : 'pdf.company-attendance-report.one-table';
+        // Check if this is the special company to use different design
+        if ($report->company->id === '9ef83749-d1ba-44a5-82a9-f726840e02db') {
+            $view = 'pdf.company-attendance-report.special-company';
+        } else {
+            $view = $report->activeTraineesCount() > 8 ? 'pdf.company-attendance-report.show' : 'pdf.company-attendance-report.one-table';
+        }
 
         //if ($report->company->logo_files->count()) {
         //    $tmpfname = tempnam("/tmp", "UL_IMAGE");
@@ -212,7 +217,12 @@ class CompanyAttendanceReportService
             $current_day = $current_day->addDay();
         }
 
-        $view = 'pdf.company-attendance-report.individual-table';
+        // Check if this is the special company to use different design
+        if ($record->company->id === '9ef83749-d1ba-44a5-82a9-f726840e02db') {
+            $view = 'pdf.company-attendance-report.special-company-individual';
+        } else {
+            $view = 'pdf.company-attendance-report.individual-table';
+        }
 
         $pdf = PDF::setOption('margin-bottom', 30)
             ->setOption('page-size', 'A4')
