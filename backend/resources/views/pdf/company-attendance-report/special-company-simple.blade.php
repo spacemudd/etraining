@@ -218,13 +218,13 @@
         
         .day-header {
             background: #d5f4e6 !important;
-            color: #27ae60;
+            color: #1e7e34 !important;
             font-weight: bold;
         }
         
         .vacation-day {
             background: #fef9e7 !important;
-            color: #f39c12;
+            color: #d68910 !important;
         }
         
         /* تحسين عرض الأعمدة */
