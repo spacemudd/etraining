@@ -38,6 +38,15 @@ return [
         'client_secret' => env('MASDR_CLIENT_SECRET'),
     ],
 
+    'google' => [
+        'project_id' => env('GOOGLE_DRIVE_PROJECT_ID'),
+        'private_key_id' => env('GOOGLE_DRIVE_PRIVATE_KEY_ID'),
+        'private_key' => env('GOOGLE_DRIVE_PRIVATE_KEY'),
+        'client_email' => env('GOOGLE_DRIVE_CLIENT_EMAIL'),
+        'client_id' => env('GOOGLE_DRIVE_CLIENT_ID'),
+        'client_x509_cert_url' => env('GOOGLE_DRIVE_CLIENT_X509_CERT_URL'),
+    ],
+
     'http' => [
         'verify' => 'C:\xampp\php\extras\ssl\cacert.pem',
     ],

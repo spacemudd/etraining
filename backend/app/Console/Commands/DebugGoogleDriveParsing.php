@@ -3,8 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Google_Client;
+use Google_Service_Drive;
 
 class DebugGoogleDriveParsing extends Command
 {
@@ -20,7 +21,7 @@ class DebugGoogleDriveParsing extends Command
      *
      * @var string
      */
-    protected $description = 'Debug Google Drive URL parsing using the same logic as the job';
+    protected $description = 'Debug Google Drive URL parsing using Google Drive API';
 
     /**
      * Create a new command instance.
@@ -42,13 +43,11 @@ class DebugGoogleDriveParsing extends Command
         $url = $this->argument('url');
         
         $this->info("🔍 Debugging Google Drive URL: {$url}");
-        $this->info("Expected files:");
-        $this->info("  - 518_Rawan Mohammed S Al-Duaylij.pdf");
-        $this->info("  - 10000000_Shatha Hassan T Al-Mutairi.pdf");
+        $this->info("Expected: Should find all 530+ certificates in the folder");
         $this->info("");
         
         try {
-            // Use the exact same logic as the job
+            // Use the exact same logic as the updated job
             $files = $this->extractFilesFromGoogleDrive($url);
             
             $this->info("📊 Results:");
@@ -60,16 +59,21 @@ class DebugGoogleDriveParsing extends Command
                 return 1;
             }
             
-            $this->info("📁 Files extracted:");
-            foreach ($files as $i => $file) {
-                $this->info("  " . ($i + 1) . ". " . $file['name']);
+            $this->info("📁 First 10 files extracted:");
+            foreach (array_slice($files, 0, 10) as $i => $file) {
+                $this->info("  " . ($i + 1) . ". " . $file['name'] . " (" . $file['size'] . ")");
+            }
+            
+            if (count($files) > 10) {
+                $this->info("  ... and " . (count($files) - 10) . " more files");
             }
             
             $this->info("");
             
-            // Test filename parsing
-            $this->info("🔍 Testing filename parsing:");
-            foreach ($files as $file) {
+            // Test filename parsing on a sample
+            $this->info("🔍 Testing filename parsing on sample files:");
+            $sampleFiles = array_slice($files, 0, 5);
+            foreach ($sampleFiles as $file) {
                 $filename = $file['name'];
                 $this->info("  Testing: {$filename}");
                 
@@ -91,183 +95,157 @@ class DebugGoogleDriveParsing extends Command
     }
 
     /**
-     * Extract files from Google Drive folder by scraping the public folder page
-     * EXACT COPY of the job method
+     * Extract files from Google Drive folder using Google Drive API
+     * EXACT COPY of the updated job method
      */
     private function extractFilesFromGoogleDrive($driveUrl)
     {
         try {
-            // Convert to a format that might work for scraping
-            $scrapingUrl = $this->convertToScrapableUrl($driveUrl);
+            $folderId = $this->extractFolderIdFromUrl($driveUrl);
             
-            $this->info("  Fetching HTML from: {$scrapingUrl}");
-            
-            // Make HTTP request to get the folder contents
-            $response = Http::timeout(30)
-                ->withHeaders([
-                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-                ])
-                ->get($scrapingUrl);
-
-            if (!$response->successful()) {
-                $this->error("  ❌ Failed to fetch Google Drive folder");
-                $this->error("  Status: " . $response->status());
+            if (!$folderId) {
+                $this->error("  ❌ Could not extract folder ID from URL");
                 return [];
             }
 
-            $html = $response->body();
-            $this->info("  ✅ HTML fetched successfully");
-            $this->info("  HTML length: " . strlen($html) . " characters");
+            $this->info("  📁 Extracting files from Google Drive folder ID: {$folderId}");
+
+            // Initialize Google Client
+            $this->initializeGoogleClient();
             
-            $files = $this->parseFilesFromHtml($html);
+            $service = new Google_Service_Drive($this->googleClient);
             
-            $this->info("  📁 Parsed " . count($files) . " files from HTML");
+            $files = [];
+            $pageToken = null;
+            $totalFiles = 0;
             
+            do {
+                $parameters = [
+                    'q' => "'{$folderId}' in parents and trashed=false and mimeType='application/pdf'",
+                    'fields' => 'nextPageToken, files(id, name, size, mimeType)',
+                    'pageSize' => 1000, // Maximum allowed by Google Drive API
+                ];
+                
+                if ($pageToken) {
+                    $parameters['pageToken'] = $pageToken;
+                }
+                
+                $this->info("    📄 Fetching batch " . (count($files) > 0 ? ceil(count($files) / 1000) + 1 : 1));
+                
+                $results = $service->files->listFiles($parameters);
+                $fileList = $results->getFiles();
+                
+                foreach ($fileList as $file) {
+                    $files[] = [
+                        'id' => $file->getId(),
+                        'name' => $file->getName(),
+                        'size' => $file->getSize() ? $this->formatBytes($file->getSize()) : 'Unknown',
+                        'mime_type' => $file->getMimeType(),
+                        'download_url' => $this->generateDirectDownloadUrl($file->getId())
+                    ];
+                    $totalFiles++;
+                }
+                
+                $pageToken = $results->getNextPageToken();
+                
+                $this->info("      ✅ Fetched " . count($fileList) . " files (Total: {$totalFiles})");
+                
+            } while ($pageToken);
+            
+            $this->info("  ✅ Successfully extracted all files from Google Drive");
+            $this->info("  📊 Total files found: " . count($files));
+
             return $files;
 
         } catch (\Exception $e) {
-            $this->error("  ❌ Error extracting files: " . $e->getMessage());
+            $this->error("  ❌ Error extracting files from Google Drive API: " . $e->getMessage());
             return [];
         }
     }
 
     /**
-     * Convert Google Drive URL to a scrapable format
-     * EXACT COPY of the job method
+     * Initialize Google Client with service account credentials
+     * EXACT COPY of the updated job method
      */
-    private function convertToScrapableUrl($url)
+    private function initializeGoogleClient()
     {
-        // Extract folder ID
-        preg_match('/\/folders\/([a-zA-Z0-9-_]+)/', $url, $matches);
-        $folderId = $matches[1] ?? null;
-        
-        if (!$folderId) {
-            return $url;
+        try {
+            $this->googleClient = new Google_Client();
+            $this->googleClient->setApplicationName('ETraining UK Certificates');
+            $this->googleClient->setScopes([Google_Service_Drive::DRIVE_READONLY]);
+            
+            // Check if we have service account credentials
+            $credentialsPath = storage_path('app/google-drive-credentials.json');
+            
+            if (file_exists($credentialsPath)) {
+                $this->googleClient->setAuthConfig($credentialsPath);
+                $this->info("    🔑 Using service account credentials from file");
+            } else {
+                // Fallback to environment variables
+                $this->googleClient->setAuthConfig([
+                    'type' => 'service_account',
+                    'project_id' => config('services.google.project_id'),
+                    'private_key_id' => config('services.google.private_key_id'),
+                    'private_key' => config('services.google.private_key'),
+                    'client_email' => config('services.google.client_email'),
+                    'client_id' => config('services.google.client_id'),
+                    'auth_uri' => 'https://accounts.google.com/o/oauth2/auth',
+                    'token_uri' => 'https://oauth2.googleapis.com/token',
+                    'auth_provider_x509_cert_url' => 'https://www.googleapis.com/oauth2/v1/certs',
+                    'client_x509_cert_url' => config('services.google.client_x509_cert_url'),
+                ]);
+                $this->info("    🔑 Using service account credentials from environment");
+            }
+            
+        } catch (\Exception $e) {
+            $this->error("    ❌ Failed to initialize Google Client: " . $e->getMessage());
+            throw $e;
         }
-
-        // Return the original URL as it should be publicly accessible
-        return $url;
     }
 
     /**
-     * Parse files from HTML content
-     * EXACT COPY of the job method
+     * Extract folder ID from Google Drive URL
+     * EXACT COPY of the updated job method
      */
-    private function parseFilesFromHtml($html)
+    private function extractFolderIdFromUrl($url)
     {
-        $files = [];
-        
-        $this->info("  🔍 Starting HTML parsing...");
-        
-        // Method 1: Look for specific patterns in Google Drive HTML
-        // Try multiple regex patterns to catch different HTML structures
+        // Handle different Google Drive URL formats
         $patterns = [
-            // Pattern for quoted filenames
-            '/"([^"]*\.pdf)"/i',
-            // Pattern for filenames with various delimiters, allowing spaces
-            '/([^\/<>"\']+\.pdf)/i',
-            // Pattern for data-* attributes containing filenames
-            '/data-[^=]*="[^"]*([^"\/\\\\]*\.pdf)[^"]*"/i',
-            // Pattern for title or alt attributes
-            '/(?:title|alt)="([^"]*\.pdf)"/i'
+            '/\/folders\/([a-zA-Z0-9-_]+)/',  // Standard folder URL
+            '/id=([a-zA-Z0-9-_]+)/',          // Alternative format
         ];
         
-        foreach ($patterns as $i => $pattern) {
-            $this->info("    Testing pattern " . ($i + 1) . ": " . $pattern);
-            
-            if (preg_match_all($pattern, $html, $matches)) {
-                $foundFiles = array_unique($matches[1]);
-                
-                $this->info("      Found " . count($foundFiles) . " files with this pattern:");
-                foreach ($foundFiles as $filename) {
-                    $this->info("        - " . $filename);
-                }
-                
-                foreach ($foundFiles as $filename) {
-                    $cleanFilename = html_entity_decode(trim($filename));
-                    
-                    // Remove common prefixes like "PDF: " or "File: "
-                    $cleanFilename = preg_replace('/^(PDF|File|Document):\s*/i', '', $cleanFilename);
-                    $cleanFilename = trim($cleanFilename);
-                    
-                    // Skip if it doesn't look like a valid PDF filename
-                    if (strlen($cleanFilename) < 5 || !preg_match('/\.pdf$/i', $cleanFilename)) {
-                        $this->info("          ❌ Skipped (invalid): " . $cleanFilename);
-                        continue;
-                    }
-                    
-                    // Skip filenames that contain HTML entities or look like JSON fragments
-                    if (strpos($cleanFilename, '\\x') !== false || strpos($cleanFilename, '\x') !== false) {
-                        $this->info("          ❌ Skipped (JSON fragment): " . $cleanFilename);
-                        continue;
-                    }
-                    
-                    // Skip if we already have this file
-                    $alreadyExists = false;
-                    foreach ($files as $existingFile) {
-                        if ($existingFile['name'] === $cleanFilename) {
-                            $alreadyExists = true;
-                            break;
-                        }
-                    }
-                    
-                    if (!$alreadyExists) {
-                        $files[] = [
-                            'name' => $cleanFilename,
-                            'download_url' => $this->generateDirectDownloadUrl($cleanFilename),
-                            'size' => '1.8 MB'
-                        ];
-                        $this->info("          ✅ Added: " . $cleanFilename);
-                    } else {
-                        $this->info("          ⚠️  Already exists: " . $cleanFilename);
-                    }
-                }
-            } else {
-                $this->info("      No matches found");
+        foreach ($patterns as $pattern) {
+            if (preg_match($pattern, $url, $matches)) {
+                return $matches[1];
             }
         }
         
-        // Method 2: If still no files found, try to find the specific filenames we know exist
-        if (empty($files)) {
-            $this->warn("    No files found with regex patterns, trying manual search");
-            
-            // Look for the specific filenames we know should be there
-            $knownPatterns = [
-                '518_Rawan Mohammed S Al-Duaylij.pdf',
-                '10000000_Shatha Hassan T Al-Mutairi.pdf'
-            ];
-            
-            foreach ($knownPatterns as $filename) {
-                if (strpos($html, $filename) !== false) {
-                    $files[] = [
-                        'name' => $filename,
-                        'download_url' => $this->generateDirectDownloadUrl($filename),
-                        'size' => '1.8 MB'
-                    ];
-                    $this->info("      ✅ Found known file: " . $filename);
-                } else {
-                    $this->error("      ❌ Known file NOT found: " . $filename);
-                }
-            }
-        }
-        
-        $this->info("  📊 Final parsed files: " . count($files));
-        foreach ($files as $file) {
-            $this->info("    - " . $file['name']);
-        }
-
-        return $files;
+        return null;
     }
 
     /**
-     * Generate direct download URL for a file (simplified approach)
-     * EXACT COPY of the job method
+     * Generate direct download URL for a file
+     * EXACT COPY of the updated job method
      */
-    private function generateDirectDownloadUrl($filename)
+    private function generateDirectDownloadUrl($fileId)
     {
-        // This is a placeholder - in production you'd need to implement proper
-        // Google Drive API integration or file ID extraction
-        return "https://drive.google.com/uc?export=download&id=FILE_ID_FOR_{$filename}";
+        return "https://www.googleapis.com/drive/v3/files/{$fileId}?alt=media";
+    }
+
+    /**
+     * Format bytes to human readable format
+     * EXACT COPY of the updated job method
+     */
+    private function formatBytes($bytes, $precision = 2)
+    {
+        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        
+        for ($i = 0; $bytes > 1024 && $i < count($units) - 1; $i++) {
+            $bytes /= 1024;
+        }
+        
+        return round($bytes, $precision) . ' ' . $units[$i];
     }
 
     /**

@@ -20,6 +20,7 @@
         "fideloper/proxy": "^4.2",
         "firebase/php-jwt": "^6.8",
         "fruitcake/laravel-cors": "^2.0",
+        "google/apiclient": "^2.14",
         "guzzlehttp/guzzle": "^7.8",
         "guzzlehttp/psr7": "^1.6.1",
         "h4cc/wkhtmltopdf-amd64": "^0.12.4",
