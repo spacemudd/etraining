@@ -374,7 +374,7 @@
             <div class="report-row">
                 <div class="report-cell">
                     <div class="report-label">رقم السجل</div>
-                    <div class="report-value">{{ $record->report->number }}</div>
+                    <div class="report-value">{{ str_replace('ATR-', '', $record->report->number) }}</div>
                 </div>
                 <div class="report-cell">
                     <div class="report-label">فترة المتابعة</div>

@@ -24,7 +24,8 @@
             border-radius: 8px;
             padding: 20px;
             margin: 0 auto;
-            max-width: 1200px;
+            max-width: 1400px;
+            min-width: 1200px;
         }
         
         .header {
@@ -103,24 +104,29 @@
             border-collapse: collapse;
             margin-top: 20px;
             border: 2px solid #ddd;
+            table-layout: fixed;
         }
         
         .attendance-table th {
             background: #34495e;
             color: white;
-            padding: 12px 8px;
+            padding: 12px 6px;
             text-align: center;
             font-weight: bold;
             border: 1px solid #ddd;
-            font-size: 12px;
+            font-size: 11px;
+            overflow: hidden;
+            white-space: nowrap;
         }
         
         .attendance-table td {
-            padding: 10px 8px;
+            padding: 8px 4px;
             text-align: center;
             border: 1px solid #ddd;
             background: white;
-            font-size: 11px;
+            font-size: 10px;
+            overflow: hidden;
+            white-space: nowrap;
         }
         
         .attendance-table tr:nth-child(even) td {
@@ -131,48 +137,50 @@
             background: #27ae60 !important;
             color: white;
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             display: inline-block;
-            line-height: 20px;
+            line-height: 18px;
             font-weight: bold;
-            font-size: 10px;
+            font-size: 9px;
         }
         
         .absent {
             background: #e74c3c !important;
             color: white;
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             display: inline-block;
-            line-height: 20px;
+            line-height: 18px;
             font-weight: bold;
-            font-size: 10px;
+            font-size: 9px;
         }
         
         .vacation {
             background: #f39c12 !important;
             color: white;
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             display: inline-block;
-            line-height: 20px;
+            line-height: 18px;
             font-weight: bold;
-            font-size: 10px;
+            font-size: 9px;
         }
         
         .employee-name {
             font-weight: bold;
             color: #2c3e50;
-            font-size: 12px;
+            font-size: 11px;
+            line-height: 1.2;
         }
         
         .employee-id {
             color: #7f8c8d;
-            font-size: 10px;
+            font-size: 9px;
             margin-top: 2px;
+            line-height: 1.1;
         }
         
         .status-active {
@@ -219,6 +227,15 @@
             color: #f39c12;
         }
         
+        /* تحسين عرض الأعمدة */
+        .col-index { width: 40px; }
+        .col-employee { width: 200px; }
+        .col-job-number { width: 80px; }
+        .col-civil { width: 100px; }
+        .col-work-days { width: 80px; }
+        .col-day { width: 22px; }
+        .col-absence { width: 80px; }
+        
         @media print {
             body {
                 background: white;
@@ -229,12 +246,19 @@
                 border: none;
                 margin: 0;
                 padding: 10px;
+                max-width: none;
+                min-width: auto;
             }
             
             .header {
                 background: #4a90e2 !important;
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
+            }
+            
+            .attendance-table {
+                table-layout: auto;
+                width: 100%;
             }
             
             .attendance-table th {
@@ -272,7 +296,7 @@
             <div class="detail-row">
                 <div class="detail-cell">
                     <div class="detail-label">رقم السجل</div>
-                    <div class="detail-value">{{ $report->number }}</div>
+                    <div class="detail-value">{{ str_replace('ATR-', '', $report->number) }}</div>
                 </div>
                 <div class="detail-cell">
                     <div class="detail-label">فترة المتابعة</div>
@@ -293,22 +317,22 @@
         <table class="attendance-table">
             <thead>
                 <tr>
-                    <th style="width: 40px;">م</th>
-                    <th style="width: 180px;">بيانات الموظف</th>
+                    <th class="col-index">م</th>
+                    <th class="col-employee">بيانات الموظف</th>
                     @if ($report->trainees()->where('job_number', '!=', NULL)->count())
-                        <th style="width: 80px;">الرقم الوظيفي</th>
+                        <th class="col-job-number">الرقم الوظيفي</th>
                     @endif
-                    <th style="width: 100px;">السجل المدني</th>
-                    <th style="width: 80px;">أيام العمل</th>
+                    <th class="col-civil">السجل المدني</th>
+                    <th class="col-work-days">أيام العمل</th>
                     @foreach ($days as $day)
-                        <th class="{{ $day['vacation_day'] ? 'vacation-day' : 'day-header' }}" style="width: 25px;">
-                            <div style="writing-mode: vertical-rl; transform: rotate(180deg); height: 80px; display: flex; align-items: center; justify-content: center; font-size: 10px;">
+                        <th class="col-day {{ $day['vacation_day'] ? 'vacation-day' : 'day-header' }}">
+                            <div style="writing-mode: vertical-rl; transform: rotate(180deg); height: 70px; display: flex; align-items: center; justify-content: center; font-size: 9px;">
                                 {{ $day['name'] }}<br>
-                                <small>{{ $day['date'] }}</small>
+                                <small style="font-size: 8px;">{{ $day['date'] }}</small>
                             </div>
                         </th>
                     @endforeach
-                    <th style="width: 80px;">أيام الغياب</th>
+                    <th class="col-absence">أيام الغياب</th>
                 </tr>
             </thead>
             <tbody>
@@ -319,16 +343,16 @@
                                 @continue
                             @endif
                             <tr>
-                                <td>{{ ++$counter }}</td>
-                                <td>
+                                <td class="col-index">{{ ++$counter }}</td>
+                                <td class="col-employee">
                                     <div class="employee-name">{{ $record->trainee->name }}</div>
                                     <div class="employee-id">معرف: {{ $record->trainee->id }}</div>
                                 </td>
                                 @if ($report->trainees()->where('job_number', '!=', NULL)->count())
-                                    <td>{{ $record->trainee->job_number }}</td>
+                                    <td class="col-job-number">{{ $record->trainee->job_number }}</td>
                                 @endif
-                                <td>{{ $record->trainee->clean_identity_number }}</td>
-                                <td>
+                                <td class="col-civil">{{ $record->trainee->clean_identity_number }}</td>
+                                <td class="col-work-days">
                                     @if ($record->start_date)
                                         {{ $record->start_date->diffInDays($record->end_date) + 1 }}
                                     @else
@@ -336,7 +360,7 @@
                                     @endif
                                 </td>
                                 @for($i=0;$i<count($days);$i++)
-                                    <td class="{{ $days[$i]['vacation_day'] ? 'vacation-day' : '' }}">
+                                    <td class="col-day {{ $days[$i]['vacation_day'] ? 'vacation-day' : '' }}">
                                         @if ($days[$i]['vacation_day'])
                                             <span class="vacation">X</span>
                                         @else
@@ -354,7 +378,7 @@
                                         @endif
                                     </td>
                                 @endfor
-                                <td>
+                                <td class="col-absence">
                                     @if ($record->start_date)
                                         {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
                                     @else
@@ -371,13 +395,13 @@
                                 @continue
                             @endif
                             <tr>
-                                <td>{{ ++$counter }}</td>
-                                <td>
+                                <td class="col-index">{{ ++$counter }}</td>
+                                <td class="col-employee">
                                     <div class="employee-name">{{ $record->trainee->name }}</div>
                                     <div class="employee-id">معرف: {{ $record->trainee->id }}</div>
                                 </td>
-                                <td>{{ $record->trainee->clean_identity_number }}</td>
-                                <td>
+                                <td class="col-civil">{{ $record->trainee->clean_identity_number }}</td>
+                                <td class="col-work-days">
                                     @if ($record->start_date)
                                         {{ $record->start_date->diffInDays($record->end_date) + 1 }}
                                     @else
@@ -385,7 +409,7 @@
                                     @endif
                                 </td>
                                 @for($i=0;$i<count($days);$i++)
-                                    <td class="{{ $days[$i]['vacation_day'] ? 'vacation-day' : '' }}">
+                                    <td class="col-day {{ $days[$i]['vacation_day'] ? 'vacation-day' : '' }}">
                                         @if ($days[$i]['vacation_day'])
                                             <span class="vacation">X</span>
                                         @else
@@ -403,7 +427,7 @@
                                         @endif
                                     </td>
                                 @endfor
-                                <td>
+                                <td class="col-absence">
                                     @if ($record->start_date)
                                         {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
                                     @else
