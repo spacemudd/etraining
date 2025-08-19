@@ -11,295 +11,212 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #2c3e50;
-            line-height: 1.6;
-            padding: 15px;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.4;
+            padding: 20px;
         }
         
         .container {
             background: white;
-            border: none;
-            border-radius: 20px;
-            padding: 25px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
             margin: 0 auto;
-            max-width: 1400px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            max-width: 1200px;
         }
         
         .header {
             text-align: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #4a90e2;
             color: white;
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-            opacity: 0.3;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
         }
         
         .header h1 {
-            font-size: 32px;
+            font-size: 28px;
             margin-bottom: 10px;
-            font-weight: 700;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            position: relative;
-            z-index: 1;
         }
         
         .header p {
             font-size: 18px;
             opacity: 0.9;
-            position: relative;
-            z-index: 1;
         }
         
         .company-info {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            border-left: 5px solid #667eea;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4a90e2;
         }
         
         .company-name {
-            font-size: 26px;
-            font-weight: 700;
+            font-size: 22px;
+            font-weight: bold;
             color: #2c3e50;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
         }
         
         .company-subtitle {
-            color: #6c757d;
-            font-size: 16px;
-            font-weight: 500;
+            color: #7f8c8d;
+            font-size: 14px;
         }
         
         .report-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 25px;
+            display: table;
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
         }
         
-        .detail-item {
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-            padding: 20px;
-            border-radius: 12px;
+        .detail-row {
+            display: table-row;
+        }
+        
+        .detail-cell {
+            display: table-cell;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background: #f8f9fa;
             text-align: center;
-            border: 2px solid #2196f3;
-            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.2);
-            transition: transform 0.3s ease;
-        }
-        
-        .detail-item:hover {
-            transform: translateY(-3px);
+            width: 25%;
         }
         
         .detail-label {
-            font-weight: 600;
-            color: #1976d2;
-            margin-bottom: 8px;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 12px;
+            margin-bottom: 5px;
         }
         
         .detail-value {
-            font-size: 20px;
-            color: #2c3e50;
-            font-weight: 700;
+            font-size: 16px;
+            color: #333;
         }
         
         .attendance-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 25px;
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border: 2px solid #e9ecef;
+            margin-top: 20px;
+            border: 2px solid #ddd;
         }
         
         .attendance-table th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #34495e;
             color: white;
-            padding: 18px 12px;
+            padding: 12px 8px;
             text-align: center;
-            font-weight: 600;
-            border: 1px solid #e9ecef;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-weight: bold;
+            border: 1px solid #ddd;
+            font-size: 12px;
         }
         
         .attendance-table td {
-            padding: 15px 12px;
+            padding: 10px 8px;
             text-align: center;
-            border: 1px solid #e9ecef;
+            border: 1px solid #ddd;
             background: white;
-            font-size: 12px;
-            transition: background-color 0.2s ease;
+            font-size: 11px;
         }
         
         .attendance-table tr:nth-child(even) td {
             background: #f8f9fa;
         }
         
-        .attendance-table tr:hover td {
-            background: #e3f2fd;
-        }
-        
         .present {
             background: #27ae60 !important;
             color: white;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            line-height: 20px;
             font-weight: bold;
-            font-size: 12px;
-            box-shadow: 0 2px 5px rgba(39, 174, 96, 0.3);
+            font-size: 10px;
         }
         
         .absent {
             background: #e74c3c !important;
             color: white;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            line-height: 20px;
             font-weight: bold;
-            font-size: 12px;
-            box-shadow: 0 2px 5px rgba(231, 76, 60, 0.3);
+            font-size: 10px;
         }
         
         .vacation {
             background: #f39c12 !important;
             color: white;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            line-height: 20px;
             font-weight: bold;
-            font-size: 12px;
-            box-shadow: 0 2px 5px rgba(243, 156, 18, 0.3);
+            font-size: 10px;
         }
         
         .employee-name {
-            font-weight: 600;
+            font-weight: bold;
             color: #2c3e50;
-            font-size: 13px;
+            font-size: 12px;
         }
         
         .employee-id {
-            color: #6c757d;
+            color: #7f8c8d;
             font-size: 10px;
-            margin-top: 3px;
-            font-style: italic;
+            margin-top: 2px;
         }
         
         .status-active {
-            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            background: #27ae60;
             color: white;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            box-shadow: 0 2px 5px rgba(39, 174, 96, 0.3);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
         }
         
         .footer {
-            margin-top: 25px;
+            margin-top: 20px;
             text-align: center;
-            padding: 20px;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 15px;
-            border-top: 3px solid #667eea;
-            box-shadow: 0 -5px 15px rgba(0,0,0,0.08);
+            padding: 15px;
+            background: #ecf0f1;
+            border-radius: 6px;
+            border-top: 2px solid #bdc3c7;
         }
         
         .footer p {
             margin: 0;
-            color: #6c757d;
-            font-size: 13px;
-            font-weight: 500;
-        }
-        
-        .footer p:last-child {
-            margin: 5px 0 0 0;
-            color: #adb5bd;
-            font-size: 11px;
+            color: #7f8c8d;
+            font-size: 12px;
         }
         
         .logo {
-            max-width: 130px;
+            max-width: 120px;
             height: auto;
-            border-radius: 10px;
-            border: 3px solid rgba(255,255,255,0.3);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border-radius: 6px;
+            border: 2px solid #ddd;
             float: right;
-            margin-top: -45px;
+            margin-top: -40px;
         }
         
         .day-header {
-            background: linear-gradient(135deg, #d5f4e6 0%, #a8e6cf 100%) !important;
+            background: #d5f4e6 !important;
             color: #27ae60;
-            font-weight: 600;
+            font-weight: bold;
         }
         
         .vacation-day {
-            background: linear-gradient(135deg, #fef9e7 0%, #fdeaa7 100%) !important;
+            background: #fef9e7 !important;
             color: #f39c12;
-        }
-        
-        .legend {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #e9ecef;
-        }
-        
-        .legend h4 {
-            margin: 0 0 10px 0;
-            color: #2c3e50;
-            font-size: 14px;
-            font-weight: 600;
-        }
-        
-        .legend-items {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            color: #6c757d;
         }
         
         @media print {
@@ -309,20 +226,19 @@
             }
             
             .container {
-                box-shadow: none;
-                border: 1px solid #ddd;
+                border: none;
                 margin: 0;
-                padding: 15px;
+                padding: 10px;
             }
             
             .header {
-                background: #667eea !important;
+                background: #4a90e2 !important;
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
             }
             
             .attendance-table th {
-                background: #667eea !important;
+                background: #34495e !important;
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
             }
@@ -353,39 +269,22 @@
         
         <!-- Report Details -->
         <div class="report-details">
-            <div class="detail-item">
-                <div class="detail-label">رقم السجل</div>
-                <div class="detail-value">{{ $report->number }}</div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-label">فترة المتابعة</div>
-                <div class="detail-value">{{ $report->date_from->format('Y-m-d') }} - {{ $report->date_to->format('Y-m-d') }}</div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-label">إجمالي الموظفين</div>
-                <div class="detail-value">{{ $report->activeTraineesCount() }}</div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-label">عدد أيام العمل</div>
-                <div class="detail-value">{{ count($days) }}</div>
-            </div>
-        </div>
-        
-        <!-- Legend -->
-        <div class="legend">
-            <h4>دليل الرموز المستخدمة:</h4>
-            <div class="legend-items">
-                <div class="legend-item">
-                    <span class="present">✓</span>
-                    <span>حضور</span>
+            <div class="detail-row">
+                <div class="detail-cell">
+                    <div class="detail-label">رقم السجل</div>
+                    <div class="detail-value">{{ $report->number }}</div>
                 </div>
-                <div class="legend-item">
-                    <span class="absent">✗</span>
-                    <span>غياب</span>
+                <div class="detail-cell">
+                    <div class="detail-label">فترة المتابعة</div>
+                    <div class="detail-value">{{ $report->date_from->format('Y-m-d') }} - {{ $report->date_to->format('Y-m-d') }}</div>
                 </div>
-                <div class="legend-item">
-                    <span class="vacation">X</span>
-                    <span>إجازة رسمية</span>
+                <div class="detail-cell">
+                    <div class="detail-label">إجمالي الموظفين</div>
+                    <div class="detail-value">{{ $report->activeTraineesCount() }}</div>
+                </div>
+                <div class="detail-cell">
+                    <div class="detail-label">عدد أيام العمل</div>
+                    <div class="detail-value">{{ count($days) }}</div>
                 </div>
             </div>
         </div>
@@ -394,7 +293,7 @@
         <table class="attendance-table">
             <thead>
                 <tr>
-                    <th style="width: 45px;">م</th>
+                    <th style="width: 40px;">م</th>
                     <th style="width: 180px;">بيانات الموظف</th>
                     @if ($report->trainees()->where('job_number', '!=', NULL)->count())
                         <th style="width: 80px;">الرقم الوظيفي</th>
@@ -402,10 +301,10 @@
                     <th style="width: 100px;">السجل المدني</th>
                     <th style="width: 80px;">أيام العمل</th>
                     @foreach ($days as $day)
-                        <th class="{{ $day['vacation_day'] ? 'vacation-day' : 'day-header' }}" style="width: 28px;">
-                            <div style="writing-mode: vertical-rl; transform: rotate(180deg); height: 100px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600;">
+                        <th class="{{ $day['vacation_day'] ? 'vacation-day' : 'day-header' }}" style="width: 25px;">
+                            <div style="writing-mode: vertical-rl; transform: rotate(180deg); height: 80px; display: flex; align-items: center; justify-content: center; font-size: 10px;">
                                 {{ $day['name'] }}<br>
-                                <small style="font-size: 9px;">{{ $day['date'] }}</small>
+                                <small>{{ $day['date'] }}</small>
                             </div>
                         </th>
                     @endforeach
@@ -420,7 +319,7 @@
                                 @continue
                             @endif
                             <tr>
-                                <td style="font-weight: 600; color: #667eea;">{{ ++$counter }}</td>
+                                <td>{{ ++$counter }}</td>
                                 <td>
                                     <div class="employee-name">{{ $record->trainee->name }}</div>
                                     <div class="employee-id">معرف: {{ $record->trainee->id }}</div>
@@ -455,7 +354,7 @@
                                         @endif
                                     </td>
                                 @endfor
-                                <td style="font-weight: 600; color: #e74c3c;">
+                                <td>
                                     @if ($record->start_date)
                                         {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
                                     @else
@@ -472,7 +371,7 @@
                                 @continue
                             @endif
                             <tr>
-                                <td style="font-weight: 600; color: #667eea;">{{ ++$counter }}</td>
+                                <td>{{ ++$counter }}</td>
                                 <td>
                                     <div class="employee-name">{{ $record->trainee->name }}</div>
                                     <div class="employee-id">معرف: {{ $record->trainee->id }}</div>
@@ -504,7 +403,7 @@
                                         @endif
                                     </td>
                                 @endfor
-                                <td style="font-weight: 600; color: #e74c3c;">
+                                <td>
                                     @if ($record->start_date)
                                         {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
                                     @else
