@@ -151,12 +151,8 @@ class CompanyAttendanceReportService
         // To fix formatting issue on 2nd page when the table is split.
         // Check if this is the special company to use different design
         if ($report->company->id === '9ef83749-d1ba-44a5-82a9-f726840e02db') {
-            // Try to use the special design, fallback to basic if SSL issues occur
-            try {
-                $view = 'pdf.company-attendance-report.special-company';
-            } catch (Exception $e) {
-                $view = 'pdf.company-attendance-report.special-company-fallback';
-            }
+            // Use simplified design to avoid SSL issues
+            $view = 'pdf.company-attendance-report.special-company-simple';
         } else {
             $view = $report->activeTraineesCount() > 8 ? 'pdf.company-attendance-report.show' : 'pdf.company-attendance-report.one-table';
         }
@@ -224,12 +220,8 @@ class CompanyAttendanceReportService
 
         // Check if this is the special company to use different design
         if ($record->company->id === '9ef83749-d1ba-44a5-82a9-f726840e02db') {
-            // Try to use the special design, fallback to basic if SSL issues occur
-            try {
-                $view = 'pdf.company-attendance-report.special-company-individual';
-            } catch (Exception $e) {
-                $view = 'pdf.company-attendance-report.special-company-individual-fallback';
-            }
+            // Use simplified design to avoid SSL issues
+            $view = 'pdf.company-attendance-report.special-company-individual-simple';
         } else {
             $view = 'pdf.company-attendance-report.individual-table';
         }
