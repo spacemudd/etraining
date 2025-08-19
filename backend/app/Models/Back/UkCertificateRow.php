@@ -17,6 +17,8 @@ class UkCertificateRow extends Model
         'trainee_name',
         'filename',
         'pdf_path',
+        'source',
+        'source_ref',
         'sent_at',
         'status',
         'error_message',

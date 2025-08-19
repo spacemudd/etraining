@@ -143,6 +143,8 @@ class UkCertificatesController extends Controller
                         'trainee_name' => $traineeName,
                         'filename' => $filename,
                         'pdf_path' => $s3Path,
+                        'source' => 'zip',
+                        'source_ref' => 'uk-certificates/' . $ukCertificate->id . '/original.zip',
                         'status' => UkCertificateRow::STATUS_PENDING,
                     ]);
 
@@ -241,6 +243,8 @@ class UkCertificatesController extends Controller
                                     
                                     $row->update([
                                         'pdf_path' => $s3Path,
+                                        'source' => $row->source ?? 'zip',
+                                        'source_ref' => $row->source_ref ?? ('uk-certificates/' . $ukCertificate->id . '/original.zip'),
                                     ]);
                                 }
                                 $zip->close();

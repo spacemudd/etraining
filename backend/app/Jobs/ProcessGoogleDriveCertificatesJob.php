@@ -352,6 +352,8 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
                     'trainee_name' => $traineeName,
                     'filename' => $filename,
                     'pdf_path' => $s3Path,
+                    'source' => 'gdrive',
+                    'source_ref' => $file['id'] ?? null,
                     'status' => UkCertificateRow::STATUS_PENDING,
                 ]);
 
