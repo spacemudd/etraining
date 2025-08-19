@@ -338,104 +338,100 @@
             <tbody>
                 @if ($report->trainees()->where('job_number', '!=', NULL)->count())
                     @foreach ($active_trainees as $counter => $record)
-                        @if(! ($counter ===  (count($active_trainees) - 1) || $counter ===  (count($active_trainees) - 2)) )
-                            @if ($record->status === 'temporary_stop')
-                                @continue
-                            @endif
-                            <tr>
-                                <td class="col-index">{{ ++$counter }}</td>
-                                <td class="col-employee">
-                                    <div class="employee-name">{{ $record->trainee->name }}</div>
-                                    <div class="employee-id">معرف: {{ $record->trainee->id }}</div>
-                                </td>
-                                @if ($report->trainees()->where('job_number', '!=', NULL)->count())
-                                    <td class="col-job-number">{{ $record->trainee->job_number }}</td>
-                                @endif
-                                <td class="col-civil">{{ $record->trainee->clean_identity_number }}</td>
-                                <td class="col-work-days">
-                                    @if ($record->start_date)
-                                        {{ $record->start_date->diffInDays($record->end_date) + 1 }}
-                                    @else
-                                        {{ count($days) }}
-                                    @endif
-                                </td>
-                                @for($i=0;$i<count($days);$i++)
-                                    <td class="col-day {{ $days[$i]['vacation_day'] ? 'vacation-day' : '' }}">
-                                        @if ($days[$i]['vacation_day'])
-                                            <span class="vacation">X</span>
-                                        @else
-                                            @if ($record->start_date)
-                                                @if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date))
-                                                    <span class="present">✓</span>
-                                                @else
-                                                    @if ($record->status === 'new_registration')
-                                                        <span class="absent">✗</span>
-                                                    @endif
-                                                @endif
-                                            @else
-                                                <span class="present">✓</span>
-                                            @endif
-                                        @endif
-                                    </td>
-                                @endfor
-                                <td class="col-absence">
-                                    @if ($record->start_date)
-                                        {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
-                                    @else
-                                        0
-                                    @endif
-                                </td>
-                            </tr>
+                        @if ($record->status === 'temporary_stop')
+                            @continue
                         @endif
+                        <tr>
+                            <td class="col-index">{{ $loop->iteration }}</td>
+                            <td class="col-employee">
+                                <div class="employee-name">{{ $record->trainee->name }}</div>
+                                <div class="employee-id">معرف: {{ $record->trainee->id }}</div>
+                            </td>
+                            @if ($report->trainees()->where('job_number', '!=', NULL)->count())
+                                <td class="col-job-number">{{ $record->trainee->job_number }}</td>
+                            @endif
+                            <td class="col-civil">{{ $record->trainee->clean_identity_number }}</td>
+                            <td class="col-work-days">
+                                @if ($record->start_date)
+                                    {{ $record->start_date->diffInDays($record->end_date) + 1 }}
+                                @else
+                                    {{ count($days) }}
+                                @endif
+                            </td>
+                            @for($i=0;$i<count($days);$i++)
+                                <td class="col-day {{ $days[$i]['vacation_day'] ? 'vacation-day' : '' }}">
+                                    @if ($days[$i]['vacation_day'])
+                                        <span class="vacation">X</span>
+                                    @else
+                                        @if ($record->start_date)
+                                            @if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date))
+                                                <span class="present">✓</span>
+                                            @else
+                                                @if ($record->status === 'new_registration')
+                                                    <span class="absent">✗</span>
+                                                @endif
+                                            @endif
+                                        @else
+                                            <span class="present">✓</span>
+                                        @endif
+                                    @endif
+                                </td>
+                            @endfor
+                            <td class="col-absence">
+                                @if ($record->start_date)
+                                    {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
+                                @else
+                                    0
+                                @endif
+                            </td>
+                        </tr>
                     @endforeach
                 @else
                     @foreach ($active_trainees as $counter => $record)
-                        @if(! ($counter ===  (count($active_trainees) - 1) || $counter ===  (count($active_trainees) - 2)) )
-                            @if ($record->status === 'temporary_stop')
-                                @continue
-                            @endif
-                            <tr>
-                                <td class="col-index">{{ ++$counter }}</td>
-                                <td class="col-employee">
-                                    <div class="employee-name">{{ $record->trainee->name }}</div>
-                                    <div class="employee-id">معرف: {{ $record->trainee->id }}</div>
-                                </td>
-                                <td class="col-civil">{{ $record->trainee->clean_identity_number }}</td>
-                                <td class="col-work-days">
-                                    @if ($record->start_date)
-                                        {{ $record->start_date->diffInDays($record->end_date) + 1 }}
-                                    @else
-                                        {{ count($days) }}
-                                    @endif
-                                </td>
-                                @for($i=0;$i<count($days);$i++)
-                                    <td class="col-day {{ $days[$i]['vacation_day'] ? 'vacation-day' : '' }}">
-                                        @if ($days[$i]['vacation_day'])
-                                            <span class="vacation">X</span>
-                                        @else
-                                            @if ($record->start_date)
-                                                @if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date))
-                                                    <span class="present">✓</span>
-                                                @else
-                                                    @if ($record->status === 'new_registration')
-                                                        <span class="absent">✗</span>
-                                                    @endif
-                                                @endif
-                                            @else
-                                                <span class="present">✓</span>
-                                            @endif
-                                        @endif
-                                    </td>
-                                @endfor
-                                <td class="col-absence">
-                                    @if ($record->start_date)
-                                        {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
-                                    @else
-                                        0
-                                    @endif
-                                </td>
-                            </tr>
+                        @if ($record->status === 'temporary_stop')
+                            @continue
                         @endif
+                        <tr>
+                            <td class="col-index">{{ $loop->iteration }}</td>
+                            <td class="col-employee">
+                                <div class="employee-name">{{ $record->trainee->name }}</div>
+                                <div class="employee-id">معرف: {{ $record->trainee->id }}</div>
+                            </td>
+                            <td class="col-civil">{{ $record->trainee->clean_identity_number }}</td>
+                            <td class="col-work-days">
+                                @if ($record->start_date)
+                                    {{ $record->start_date->diffInDays($record->end_date) + 1 }}
+                                @else
+                                    {{ count($days) }}
+                                @endif
+                            </td>
+                            @for($i=0;$i<count($days);$i++)
+                                <td class="col-day {{ $days[$i]['vacation_day'] ? 'vacation-day' : '' }}">
+                                    @if ($days[$i]['vacation_day'])
+                                        <span class="vacation">X</span>
+                                    @else
+                                        @if ($record->start_date)
+                                            @if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date))
+                                                <span class="present">✓</span>
+                                            @else
+                                                @if ($record->status === 'new_registration')
+                                                    <span class="absent">✗</span>
+                                                @endif
+                                            @endif
+                                        @else
+                                            <span class="present">✓</span>
+                                        @endif
+                                    @endif
+                                </td>
+                            @endfor
+                            <td class="col-absence">
+                                @if ($record->start_date)
+                                    {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
+                                @else
+                                    0
+                                @endif
+                            </td>
+                        </tr>
                     @endforeach
                 @endif
             </tbody>
