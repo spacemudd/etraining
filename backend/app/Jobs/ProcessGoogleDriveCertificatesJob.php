@@ -337,12 +337,10 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
 
         if ($trainee) {
             try {
-                // For now, we'll create the record without actually downloading the file
-                // In production, you'd download from $file['download_url'] and upload to S3
                 $s3Path = 'uk-certificates/' . $this->ukCertificate->id . '/' . $filename;
                 
-                // Simulate file download and upload (placeholder)
-                // $this->downloadAndUploadFile($file['download_url'], $s3Path);
+                // Actually download the file from Google Drive and upload to S3
+                $this->downloadAndUploadFile($file['download_url'], $s3Path);
 
                 // Create row record
                 UkCertificateRow::create([
@@ -363,13 +361,15 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
                 return 'failed';
             }
         } else {
-            // Create unmatched row record
+            // Create unmatched row record with source info but no pdf_path yet
             UkCertificateRow::create([
                 'uk_certificate_id' => $this->ukCertificate->id,
                 'trainee_id' => null,
                 'identity_number' => $identityNumber,
                 'trainee_name' => $traineeName,
                 'filename' => $filename,
+                'source' => 'gdrive',
+                'source_ref' => $file['id'] ?? null,
                 'status' => UkCertificateRow::STATUS_PENDING,
             ]);
 

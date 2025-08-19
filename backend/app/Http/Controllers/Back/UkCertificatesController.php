@@ -233,21 +233,47 @@ class UkCertificatesController extends Controller
                     if ($trainee) {
                         // Upload PDF to S3 if not already uploaded
                         if (!$row->pdf_path) {
-                            // Extract the PDF from the ZIP and upload to S3
-                            $zip = new ZipArchive();
-                            if ($zip->open($tempZipPath) === TRUE) {
-                                $pdfContent = $zip->getFromName($row->filename);
-                                if ($pdfContent) {
+                            if ($row->source === 'gdrive' && $row->source_ref) {
+                                // Download from Google Drive and upload to S3
+                                try {
                                     $s3Path = 'uk-certificates/' . $ukCertificate->id . '/' . $row->filename;
-                                    Storage::disk('s3')->put($s3Path, $pdfContent);
+                                    $downloadUrl = "https://www.googleapis.com/drive/v3/files/{$row->source_ref}?alt=media";
                                     
-                                    $row->update([
-                                        'pdf_path' => $s3Path,
-                                        'source' => $row->source ?? 'zip',
-                                        'source_ref' => $row->source_ref ?? ('uk-certificates/' . $ukCertificate->id . '/original.zip'),
+                                    $response = Http::timeout(300)->get($downloadUrl);
+                                    if ($response->successful()) {
+                                        Storage::disk('s3')->put($s3Path, $response->body());
+                                        
+                                        $row->update([
+                                            'pdf_path' => $s3Path,
+                                        ]);
+                                    } else {
+                                        throw new \Exception('Failed to download file from Google Drive');
+                                    }
+                                } catch (\Exception $e) {
+                                    \Log::error('Failed to download Google Drive file during finalize', [
+                                        'row_id' => $row->id,
+                                        'file_id' => $row->source_ref,
+                                        'error' => $e->getMessage()
                                     ]);
+                                    continue; // Skip this row if download fails
                                 }
-                                $zip->close();
+                            } else {
+                                // Extract the PDF from the ZIP and upload to S3
+                                $zip = new ZipArchive();
+                                if ($zip->open($tempZipPath) === TRUE) {
+                                    $pdfContent = $zip->getFromName($row->filename);
+                                    if ($pdfContent) {
+                                        $s3Path = 'uk-certificates/' . $ukCertificate->id . '/' . $row->filename;
+                                        Storage::disk('s3')->put($s3Path, $pdfContent);
+                                        
+                                        $row->update([
+                                            'pdf_path' => $s3Path,
+                                            'source' => $row->source ?? 'zip',
+                                            'source_ref' => $row->source_ref ?? ('uk-certificates/' . $ukCertificate->id . '/original.zip'),
+                                        ]);
+                                    }
+                                    $zip->close();
+                                }
                             }
                         }
                         
