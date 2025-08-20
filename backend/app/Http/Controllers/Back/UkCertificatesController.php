@@ -233,23 +233,103 @@ class UkCertificatesController extends Controller
                     if ($trainee) {
                         // Upload PDF to S3 if not already uploaded
                         if (!$row->pdf_path) {
+                            \Log::info('DEBUG: Processing row without pdf_path during finalize', [
+                                'row_id' => $row->id,
+                                'filename' => $row->filename,
+                                'source' => $row->source,
+                                'source_ref' => $row->source_ref,
+                                'certificate_id' => $ukCertificate->id,
+                                'timestamp' => now()->toISOString()
+                            ]);
+                            
                             if ($row->source === 'gdrive' && $row->source_ref) {
+                                \Log::info('DEBUG: Processing Google Drive row during finalize', [
+                                    'row_id' => $row->id,
+                                    'filename' => $row->filename,
+                                    'source' => $row->source,
+                                    'source_ref' => $row->source_ref,
+                                    'certificate_id' => $ukCertificate->id,
+                                    'timestamp' => now()->toISOString()
+                                ]);
+                                
                                 // Download from Google Drive and upload to S3
                                 try {
                                     $s3Path = 'uk-certificates/' . $ukCertificate->id . '/' . $row->filename;
                                     $downloadUrl = "https://www.googleapis.com/drive/v3/files/{$row->source_ref}?alt=media";
                                     
+                                    \Log::info('DEBUG: Making HTTP request to Google Drive during finalize', [
+                                        'row_id' => $row->id,
+                                        'filename' => $row->filename,
+                                        'download_url' => $downloadUrl,
+                                        's3_path' => $s3Path,
+                                        'certificate_id' => $ukCertificate->id,
+                                        'timestamp' => now()->toISOString()
+                                    ]);
+                                    
                                     $response = Http::timeout(300)->get($downloadUrl);
+                                    
+                                    \Log::info('DEBUG: HTTP response received during finalize', [
+                                        'row_id' => $row->id,
+                                        'filename' => $row->filename,
+                                        'status_code' => $response->status(),
+                                        'body_size' => strlen($response->body()),
+                                        'certificate_id' => $ukCertificate->id,
+                                        'timestamp' => now()->toISOString()
+                                    ]);
+                                    
                                     if ($response->successful()) {
+                                        \Log::info('DEBUG: HTTP request successful, uploading to S3 during finalize', [
+                                            'row_id' => $row->id,
+                                            'filename' => $row->filename,
+                                            's3_path' => $s3Path,
+                                            'body_size' => strlen($response->body()),
+                                            'certificate_id' => $ukCertificate->id,
+                                            'timestamp' => now()->toISOString()
+                                        ]);
+                                        
                                         Storage::disk('s3')->put($s3Path, $response->body());
+                                        
+                                        \Log::info('DEBUG: File successfully uploaded to S3 during finalize', [
+                                            'row_id' => $row->id,
+                                            'filename' => $row->filename,
+                                            's3_path' => $s3Path,
+                                            's3_exists' => Storage::disk('s3')->exists($s3Path),
+                                            'certificate_id' => $ukCertificate->id,
+                                            'timestamp' => now()->toISOString()
+                                        ]);
                                         
                                         $row->update([
                                             'pdf_path' => $s3Path,
                                         ]);
+                                        
+                                        \Log::info('DEBUG: Row updated with pdf_path during finalize', [
+                                            'row_id' => $row->id,
+                                            'filename' => $row->filename,
+                                            'pdf_path' => $s3Path,
+                                            'certificate_id' => $ukCertificate->id,
+                                            'timestamp' => now()->toISOString()
+                                        ]);
                                     } else {
-                                        throw new \Exception('Failed to download file from Google Drive');
+                                        \Log::error('DEBUG: HTTP request failed during finalize', [
+                                            'row_id' => $row->id,
+                                            'filename' => $row->filename,
+                                            'status_code' => $response->status(),
+                                            'body' => $response->body(),
+                                            'certificate_id' => $ukCertificate->id,
+                                            'timestamp' => now()->toISOString()
+                                        ]);
+                                        throw new \Exception('Failed to download file from Google Drive: HTTP ' . $response->status());
                                     }
                                 } catch (\Exception $e) {
+                                    \Log::error('DEBUG: Exception during Google Drive download in finalize', [
+                                        'row_id' => $row->id,
+                                        'filename' => $row->filename,
+                                        'file_id' => $row->source_ref,
+                                        'error' => $e->getMessage(),
+                                        'trace' => $e->getTraceAsString(),
+                                        'certificate_id' => $ukCertificate->id,
+                                        'timestamp' => now()->toISOString()
+                                    ]);
                                     \Log::error('Failed to download Google Drive file during finalize', [
                                         'row_id' => $row->id,
                                         'file_id' => $row->source_ref,
@@ -258,6 +338,15 @@ class UkCertificatesController extends Controller
                                     continue; // Skip this row if download fails
                                 }
                             } else {
+                                \Log::info('DEBUG: Processing ZIP row during finalize', [
+                                    'row_id' => $row->id,
+                                    'filename' => $row->filename,
+                                    'source' => $row->source,
+                                    'source_ref' => $row->source_ref,
+                                    'certificate_id' => $ukCertificate->id,
+                                    'timestamp' => now()->toISOString()
+                                ]);
+                                
                                 // Extract the PDF from the ZIP and upload to S3
                                 $zip = new ZipArchive();
                                 if ($zip->open($tempZipPath) === TRUE) {
@@ -271,10 +360,28 @@ class UkCertificatesController extends Controller
                                             'source' => $row->source ?? 'zip',
                                             'source_ref' => $row->source_ref ?? ('uk-certificates/' . $ukCertificate->id . '/original.zip'),
                                         ]);
+                                        
+                                        \Log::info('DEBUG: ZIP row processed successfully during finalize', [
+                                            'row_id' => $row->id,
+                                            'filename' => $row->filename,
+                                            's3_path' => $s3Path,
+                                            'certificate_id' => $ukCertificate->id,
+                                            'timestamp' => now()->toISOString()
+                                        ]);
                                     }
                                     $zip->close();
                                 }
                             }
+                        } else {
+                            \Log::info('DEBUG: Row already has pdf_path, skipping processing', [
+                                'row_id' => $row->id,
+                                'filename' => $row->filename,
+                                'pdf_path' => $row->pdf_path,
+                                'source' => $row->source,
+                                'source_ref' => $row->source_ref,
+                                'certificate_id' => $ukCertificate->id,
+                                'timestamp' => now()->toISOString()
+                            ]);
                         }
                         
                         $row->update([

@@ -80,6 +80,15 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
 
             foreach ($files as $file) {
                 try {
+                    Log::info('DEBUG: Starting to process file in main loop', [
+                        'certificate_id' => $this->ukCertificate->id,
+                        'filename' => $file['name'],
+                        'file_data' => $file,
+                        'processed' => $processed,
+                        'total' => $total,
+                        'timestamp' => now()->toISOString()
+                    ]);
+                    
                     // Update progress
                     $this->ukCertificate->update([
                         'progress_percentage' => ($processed / $total) * 100,
@@ -87,6 +96,13 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
                     ]);
 
                     $result = $this->processFile($file);
+                    
+                    Log::info('DEBUG: File processing result', [
+                        'certificate_id' => $this->ukCertificate->id,
+                        'filename' => $file['name'],
+                        'result' => $result,
+                        'timestamp' => now()->toISOString()
+                    ]);
                     
                     switch ($result) {
                         case 'matched':
@@ -106,6 +122,14 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
                     usleep(200000); // 0.2 seconds
 
                 } catch (\Exception $e) {
+                    Log::error('DEBUG: Exception in main file processing loop', [
+                        'certificate_id' => $this->ukCertificate->id,
+                        'filename' => $file['name'],
+                        'file_data' => $file,
+                        'error' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString(),
+                        'timestamp' => now()->toISOString()
+                    ]);
                     Log::error('Error processing file', [
                         'certificate_id' => $this->ukCertificate->id,
                         'filename' => $file['name'],
@@ -193,13 +217,21 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
                 $fileList = $results->getFiles();
                 
                 foreach ($fileList as $file) {
-                    $files[] = [
+                    $fileData = [
                         'id' => $file->getId(),
                         'name' => $file->getName(),
                         'size' => $file->getSize() ? $this->formatBytes($file->getSize()) : 'Unknown',
                         'mime_type' => $file->getMimeType(),
                         'download_url' => $this->generateDirectDownloadUrl($file->getId())
                     ];
+                    
+                    Log::info('DEBUG: Extracted file from Google Drive', [
+                        'certificate_id' => $this->ukCertificate->id,
+                        'file_data' => $fileData,
+                        'timestamp' => now()->toISOString()
+                    ]);
+                    
+                    $files[] = $fileData;
                     $totalFiles++;
                 }
                 
@@ -320,11 +352,31 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
     {
         $filename = $file['name'];
         
+        Log::info('DEBUG: Processing file in Google Drive job', [
+            'certificate_id' => $this->ukCertificate->id,
+            'filename' => $filename,
+            'file_data' => $file,
+            'timestamp' => now()->toISOString()
+        ]);
+        
         // Parse filename using the controller method
         $controller = app(\App\Http\Controllers\Back\UkCertificatesController::class);
         $parseResult = $controller->parseGoogleDriveFilename($filename);
         
+        Log::info('DEBUG: Filename parsing result', [
+            'certificate_id' => $this->ukCertificate->id,
+            'filename' => $filename,
+            'parse_result' => $parseResult,
+            'timestamp' => now()->toISOString()
+        ]);
+        
         if (!$parseResult['valid']) {
+            Log::warning('DEBUG: Invalid filename format', [
+                'certificate_id' => $this->ukCertificate->id,
+                'filename' => $filename,
+                'error' => $parseResult['error'],
+                'timestamp' => now()->toISOString()
+            ]);
             $controller->createFailedRow($this->ukCertificate, $filename, '', '', $parseResult['error']);
             return 'failed';
         }
@@ -334,16 +386,43 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
 
         // Try to find trainee by identity number
         $trainee = Trainee::where('identity_number', $identityNumber)->first();
+        
+        Log::info('DEBUG: Trainee lookup result', [
+            'certificate_id' => $this->ukCertificate->id,
+            'filename' => $filename,
+            'identity_number' => $identityNumber,
+            'trainee_name' => $traineeName,
+            'trainee_found' => $trainee ? true : false,
+            'trainee_id' => $trainee ? $trainee->id : null,
+            'timestamp' => now()->toISOString()
+        ]);
 
         if ($trainee) {
             try {
                 $s3Path = 'uk-certificates/' . $this->ukCertificate->id . '/' . $filename;
                 
+                Log::info('DEBUG: Starting file download for matched trainee', [
+                    'certificate_id' => $this->ukCertificate->id,
+                    'filename' => $filename,
+                    'trainee_id' => $trainee->id,
+                    'download_url' => $file['download_url'],
+                    's3_path' => $s3Path,
+                    'timestamp' => now()->toISOString()
+                ]);
+                
                 // Actually download the file from Google Drive and upload to S3
                 $this->downloadAndUploadFile($file['download_url'], $s3Path);
+                
+                Log::info('DEBUG: File successfully downloaded and uploaded to S3', [
+                    'certificate_id' => $this->ukCertificate->id,
+                    'filename' => $filename,
+                    'trainee_id' => $trainee->id,
+                    's3_path' => $s3Path,
+                    'timestamp' => now()->toISOString()
+                ]);
 
                 // Create row record
-                UkCertificateRow::create([
+                $row = UkCertificateRow::create([
                     'uk_certificate_id' => $this->ukCertificate->id,
                     'trainee_id' => $trainee->id,
                     'identity_number' => $identityNumber,
@@ -354,15 +433,45 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
                     'source_ref' => $file['id'] ?? null,
                     'status' => UkCertificateRow::STATUS_PENDING,
                 ]);
+                
+                Log::info('DEBUG: Created matched row record', [
+                    'certificate_id' => $this->ukCertificate->id,
+                    'row_id' => $row->id,
+                    'filename' => $filename,
+                    'trainee_id' => $trainee->id,
+                    'pdf_path' => $s3Path,
+                    'source' => 'gdrive',
+                    'source_ref' => $file['id'] ?? null,
+                    'timestamp' => now()->toISOString()
+                ]);
 
                 return 'matched';
             } catch (\Exception $e) {
+                Log::error('DEBUG: Failed to download/upload file for matched trainee', [
+                    'certificate_id' => $this->ukCertificate->id,
+                    'filename' => $filename,
+                    'trainee_id' => $trainee->id,
+                    'download_url' => $file['download_url'],
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
+                    'timestamp' => now()->toISOString()
+                ]);
                 $controller->createFailedRow($this->ukCertificate, $filename, $identityNumber, $traineeName, 'Download error: ' . $e->getMessage());
                 return 'failed';
             }
         } else {
+            Log::info('DEBUG: Creating unmatched row record', [
+                'certificate_id' => $this->ukCertificate->id,
+                'filename' => $filename,
+                'identity_number' => $identityNumber,
+                'trainee_name' => $traineeName,
+                'source' => 'gdrive',
+                'source_ref' => $file['id'] ?? null,
+                'timestamp' => now()->toISOString()
+            ]);
+            
             // Create unmatched row record with source info but no pdf_path yet
-            UkCertificateRow::create([
+            $row = UkCertificateRow::create([
                 'uk_certificate_id' => $this->ukCertificate->id,
                 'trainee_id' => null,
                 'identity_number' => $identityNumber,
@@ -371,6 +480,15 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
                 'source' => 'gdrive',
                 'source_ref' => $file['id'] ?? null,
                 'status' => UkCertificateRow::STATUS_PENDING,
+            ]);
+            
+            Log::info('DEBUG: Created unmatched row record', [
+                'certificate_id' => $this->ukCertificate->id,
+                'row_id' => $row->id,
+                'filename' => $filename,
+                'source' => 'gdrive',
+                'source_ref' => $file['id'] ?? null,
+                'timestamp' => now()->toISOString()
             ]);
 
             return 'unmatched';
@@ -382,13 +500,71 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
      */
     private function downloadAndUploadFile($downloadUrl, $s3Path)
     {
-        // Download file with streaming
-        $response = Http::timeout(300)->get($downloadUrl);
+        Log::info('DEBUG: Starting downloadAndUploadFile', [
+            'certificate_id' => $this->ukCertificate->id,
+            'download_url' => $downloadUrl,
+            's3_path' => $s3Path,
+            'timestamp' => now()->toISOString()
+        ]);
         
-        if ($response->successful()) {
-            Storage::disk('s3')->put($s3Path, $response->body());
-        } else {
-            throw new \Exception('Failed to download file from Google Drive');
+        try {
+            // Download file with streaming
+            Log::info('DEBUG: Making HTTP request to Google Drive', [
+                'certificate_id' => $this->ukCertificate->id,
+                'download_url' => $downloadUrl,
+                'timeout' => 300,
+                'timestamp' => now()->toISOString()
+            ]);
+            
+            $response = Http::timeout(300)->get($downloadUrl);
+            
+            Log::info('DEBUG: HTTP response received', [
+                'certificate_id' => $this->ukCertificate->id,
+                'download_url' => $downloadUrl,
+                'status_code' => $response->status(),
+                'headers' => $response->headers(),
+                'body_size' => strlen($response->body()),
+                'timestamp' => now()->toISOString()
+            ]);
+            
+            if ($response->successful()) {
+                Log::info('DEBUG: HTTP request successful, uploading to S3', [
+                    'certificate_id' => $this->ukCertificate->id,
+                    'download_url' => $downloadUrl,
+                    's3_path' => $s3Path,
+                    'body_size' => strlen($response->body()),
+                    'timestamp' => now()->toISOString()
+                ]);
+                
+                Storage::disk('s3')->put($s3Path, $response->body());
+                
+                Log::info('DEBUG: File successfully uploaded to S3', [
+                    'certificate_id' => $this->ukCertificate->id,
+                    'download_url' => $downloadUrl,
+                    's3_path' => $s3Path,
+                    's3_exists' => Storage::disk('s3')->exists($s3Path),
+                    'timestamp' => now()->toISOString()
+                ]);
+            } else {
+                Log::error('DEBUG: HTTP request failed', [
+                    'certificate_id' => $this->ukCertificate->id,
+                    'download_url' => $downloadUrl,
+                    'status_code' => $response->status(),
+                    'body' => $response->body(),
+                    'timestamp' => now()->toISOString()
+                ]);
+                throw new \Exception('Failed to download file from Google Drive: HTTP ' . $response->status());
+            }
+        } catch (\Exception $e) {
+            Log::error('DEBUG: Exception in downloadAndUploadFile', [
+                'certificate_id' => $this->ukCertificate->id,
+                'download_url' => $downloadUrl,
+                's3_path' => $s3Path,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'timestamp' => now()->toISOString()
+            ]);
+            throw $e;
         }
     }
 }
