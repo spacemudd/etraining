@@ -37,7 +37,7 @@ class CompanyAttendanceReportService
         
         // 2. Trainees with resignations AND deleted (soft deleted) - ONLY THESE SHOULD BE INCLUDED
         $resignationTrainees = $company->resignations()
-            ->where('status', 'sent') // Only approved resignations
+            ->whereIn('status', ['new', 'sent']) // Include both new and sent resignations
             ->where('resignation_date', '>=', $report->date_from) // Resignation date should be within or after report period
             ->with(['trainees' => function($q) {
                 $q->onlyTrashed(); // ONLY deleted trainees
@@ -97,7 +97,7 @@ class CompanyAttendanceReportService
         
         // 2. Trainees with resignations AND deleted (soft deleted) - ONLY THESE SHOULD BE INCLUDED
         $resignationTrainees = $company->resignations()
-            ->where('status', 'sent') // Only approved resignations
+            ->whereIn('status', ['new', 'sent']) // Include both new and sent resignations
             ->where('resignation_date', '>=', $clone->date_from) // Resignation date should be within or after report period
             ->with(['trainees' => function($q) {
                 $q->onlyTrashed(); // ONLY deleted trainees
