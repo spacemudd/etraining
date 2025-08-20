@@ -730,7 +730,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('uk-certificates/{importId}/status', [\App\Http\Controllers\Back\UkCertificatesController::class, 'getProcessingStatus'])->name('uk-certificates.status');
         Route::post('uk-certificates/finalize', [\App\Http\Controllers\Back\UkCertificatesController::class, 'finalizeImport'])->name('uk-certificates.finalize');
         Route::get('uk-certificates/{row_id}/download', [\App\Http\Controllers\Back\UkCertificatesController::class, 'downloadCertificate'])->name('uk-certificates.download');
-Route::delete('uk-certificates/{importId}', [\App\Http\Controllers\Back\UkCertificatesController::class, 'delete'])->name('uk-certificates.delete');
+        Route::get('uk-certificates/{importId}/delivery-report', [\App\Http\Controllers\Back\UkCertificatesController::class, 'downloadDeliveryReport'])->name('uk-certificates.delivery-report');
+        Route::delete('uk-certificates/{importId}', [\App\Http\Controllers\Back\UkCertificatesController::class, 'delete'])->name('uk-certificates.delete');
 
         // Trainees
         Route::get('trainees/{id}/download-all-files', [\App\Http\Controllers\Back\TraineesController::class, 'downloadAllFiles'])->name('trainees.download-all-files');

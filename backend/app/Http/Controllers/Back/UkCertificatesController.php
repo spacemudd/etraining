@@ -869,4 +869,66 @@ class UkCertificatesController extends Controller
             // Don't throw here, continue with main record deletion
         }
     }
+
+    /**
+     * Download delivery report for UK certificates
+     */
+    public function downloadDeliveryReport($importId)
+    {
+        $ukCertificate = UkCertificate::with(['course:id,name_ar', 'rows.trainee:id,name,email'])->findOrFail($importId);
+        
+        $rows = $ukCertificate->rows()->with('trainee')->get();
+        
+        $reportData = [];
+        foreach ($rows as $row) {
+            $reportData[] = [
+                'filename' => $row->filename,
+                'trainee_name' => $row->trainee_name,
+                'identity_number' => $row->identity_number,
+                'trainee_email' => $row->trainee->email ?? 'N/A',
+                'status' => $row->status,
+                'delivery_status' => $row->delivery_status,
+                'sent_at' => $row->sent_at ? $row->sent_at->format('Y-m-d H:i:s') : 'N/A',
+                'delivered_at' => $row->delivered_at ? $row->delivered_at->format('Y-m-d H:i:s') : 'N/A',
+                'failed_at' => $row->failed_at ? $row->failed_at->format('Y-m-d H:i:s') : 'N/A',
+                'delivery_failure_reason' => $row->delivery_failure_reason ?? 'N/A',
+                'mailgun_message_id' => $row->mailgun_message_id ?? 'N/A',
+            ];
+        }
+        
+        $filename = "uk_certificate_delivery_report_{$ukCertificate->id}_" . now()->format('Y-m-d_H-i-s') . ".csv";
+        
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ];
+        
+        $callback = function() use ($reportData) {
+            $file = fopen('php://output', 'w');
+            
+            // Add CSV headers
+            fputcsv($file, [
+                'Filename',
+                'Trainee Name',
+                'Identity Number',
+                'Trainee Email',
+                'Status',
+                'Delivery Status',
+                'Sent At',
+                'Delivered At',
+                'Failed At',
+                'Delivery Failure Reason',
+                'Mailgun Message ID'
+            ]);
+            
+            // Add data rows
+            foreach ($reportData as $row) {
+                fputcsv($file, $row);
+            }
+            
+            fclose($file);
+        };
+        
+        return response()->stream($callback, 200, $headers);
+    }
 }

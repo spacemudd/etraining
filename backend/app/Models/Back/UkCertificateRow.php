@@ -22,16 +22,28 @@ class UkCertificateRow extends Model
         'sent_at',
         'status',
         'error_message',
+        'mailgun_message_id',
+        'delivered_at',
+        'failed_at',
+        'delivery_failure_reason',
+        'delivery_status',
     ];
 
     protected $casts = [
         'sent_at' => 'datetime',
+        'delivered_at' => 'datetime',
+        'failed_at' => 'datetime',
     ];
 
     // Status constants
     const STATUS_PENDING = 'pending';
     const STATUS_SENT = 'sent';
     const STATUS_FAILED = 'failed';
+
+    // Delivery status constants
+    const DELIVERY_STATUS_PENDING = 'pending';
+    const DELIVERY_STATUS_DELIVERED = 'delivered';
+    const DELIVERY_STATUS_FAILED = 'failed';
 
     public function ukCertificate()
     {

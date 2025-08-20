@@ -44,13 +44,25 @@ class SendIndividualUkCertificateJob implements ShouldQueue
             $pdfContent = Storage::disk('s3')->get($row->pdf_path);
             
             if ($pdfContent) {
-                Mail::to($row->trainee->email)
+                // Send email with row ID for tracking
+                $mail = Mail::to($row->trainee->email)
                     ->bcc(['shafiqalshaar@adv-line.com', 'mashael.a@hadaf-hq.com'])
-                    ->send(new \App\Mail\UkCertificateMail($pdfContent, basename($row->pdf_path), $row->trainee));
+                    ->send(new \App\Mail\UkCertificateMail($pdfContent, basename($row->pdf_path), $row->trainee, $this->rowId));
+                
+                // Extract Mailgun message ID from the sent message
+                $messageId = null;
+                if (method_exists($mail, 'getSymfonySentMessage')) {
+                    $symfonyMessage = $mail->getSymfonySentMessage();
+                    if ($symfonyMessage) {
+                        $messageId = $symfonyMessage->getMessageId();
+                    }
+                }
                 
                 $row->update([
                     'sent_at' => now(),
                     'status' => 'sent',
+                    'mailgun_message_id' => $messageId,
+                    'delivery_status' => UkCertificateRow::DELIVERY_STATUS_PENDING,
                 ]);
             } else {
                 throw new \Exception('PDF content is empty or could not be retrieved from S3');
@@ -59,6 +71,9 @@ class SendIndividualUkCertificateJob implements ShouldQueue
             $row->update([
                 'status' => 'failed',
                 'error_message' => $e->getMessage(),
+                'delivery_status' => UkCertificateRow::DELIVERY_STATUS_FAILED,
+                'failed_at' => now(),
+                'delivery_failure_reason' => $e->getMessage(),
             ]);
             \Log::error('Failed to send UK certificate for row ' . $this->rowId . ': ' . $e->getMessage());
         }

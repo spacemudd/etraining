@@ -14,17 +14,19 @@ class UkCertificateMail extends Mailable
     protected $pdfContent;
     protected $filename;
     protected $trainee;
+    protected $rowId;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($pdfContent = null, $filename = null, $trainee = null)
+    public function __construct($pdfContent = null, $filename = null, $trainee = null, $rowId = null)
     {
         $this->pdfContent = $pdfContent;
         $this->filename = $filename;
         $this->trainee = $trainee;
+        $this->rowId = $rowId;
     }
 
     /**
@@ -37,6 +39,17 @@ class UkCertificateMail extends Mailable
         $mail = $this->from('certificates@mg.noreplycenter.com')
                      ->subject('شهادة تدريبية')
                      ->markdown('emails.uk-certificate', ['trainee' => $this->trainee]);
+        
+        // Add Mailgun tracking headers for webhook events
+        if ($this->rowId) {
+            $mail->withSwiftMessage(function ($message) {
+                $message->getHeaders()
+                    ->addTextHeader('X-Mailgun-Variables', json_encode([
+                        'uk_certificate_row_id' => $this->rowId,
+                        'type' => 'uk_certificate'
+                    ]));
+            });
+        }
         
         if ($this->pdfContent && $this->filename) {
             $mail->attachData($this->pdfContent, $this->filename, ['mime' => 'application/pdf']);

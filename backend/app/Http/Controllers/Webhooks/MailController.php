@@ -7,6 +7,7 @@ use App\Mail\CompanyAttendanceFailureMail;
 use App\Models\Back\Company;
 use App\Models\Back\CompanyAttendanceReport;
 use App\Models\Back\CompanyMail;
+use App\Models\Back\UkCertificateRow;
 use App\Services\CompaniesService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -20,6 +21,41 @@ class MailController extends Controller
     public function store(Request $request)
     {
         $eventData = $request->input('event-data');
+
+        // tracking delivery of UK certificates
+        if (array_key_exists('uk_certificate_row_id', $eventData['user-variables'])) {
+            $rowId = $eventData['user-variables']['uk_certificate_row_id'];
+            $row = UkCertificateRow::find($rowId);
+            
+            if ($row) {
+                if ($eventData['event'] === 'delivered') {
+                    $row->update([
+                        'delivery_status' => 'delivered',
+                        'delivered_at' => now(),
+                    ]);
+                } elseif ($eventData['event'] === 'failed') {
+                    $row->update([
+                        'delivery_status' => 'failed',
+                        'failed_at' => now(),
+                        'delivery_failure_reason' => $eventData['delivery-status']['message'] ?? 'Unknown delivery failure',
+                    ]);
+                } elseif ($eventData['event'] === 'bounced') {
+                    $row->update([
+                        'delivery_status' => 'failed',
+                        'failed_at' => now(),
+                        'delivery_failure_reason' => 'Email bounced: ' . ($eventData['delivery-status']['message'] ?? 'Unknown bounce reason'),
+                    ]);
+                } elseif ($eventData['event'] === 'complained') {
+                    $row->update([
+                        'delivery_status' => 'failed',
+                        'failed_at' => now(),
+                        'delivery_failure_reason' => 'Email marked as spam/complaint',
+                    ]);
+                }
+            }
+            
+            return response()->json(['success' => true, 'uk_certificate_row_id' => $rowId]);
+        }
 
         // tracking delivery of company attendances reports
         if (array_key_exists('company_attendance_report_id', $eventData['user-variables'])) {
@@ -56,10 +92,10 @@ class MailController extends Controller
                     ]);
             }
 
-            return true;
+            return response()->json(['success' => true]);
         }
 
-        return true;
+        return response()->json(['success' => true]);
 
         $company = CompaniesService::new()->findByDomainName(Str::after($request->input('sender'), '@'));
 
