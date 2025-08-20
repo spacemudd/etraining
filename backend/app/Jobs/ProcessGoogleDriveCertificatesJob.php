@@ -20,6 +20,16 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    /**
+     * The number of times the job may be attempted.
+     */
+    public $tries = 1;
+
+    /**
+     * The maximum number of unhandled exceptions to allow before failing.
+     */
+    public $maxExceptions = 1;
+
     protected $ukCertificate;
     protected $driveUrl;
     protected $googleClient;
