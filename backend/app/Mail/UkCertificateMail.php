@@ -42,12 +42,12 @@ class UkCertificateMail extends Mailable
         
         // Add Mailgun tracking headers for webhook events
         if ($this->rowId) {
-            $mail->withSymfonyMessage(function ($message) {
-                $headers = $message->getHeaders();
-                $headers->addTextHeader('X-Mailgun-Variables', json_encode([
-                    'uk_certificate_row_id' => $this->rowId,
-                    'type' => 'uk_certificate'
-                ]));
+            $mail->withSwiftMessage(function ($message) {
+                $message->getHeaders()
+                    ->addTextHeader('X-Mailgun-Variables', json_encode([
+                        'uk_certificate_row_id' => $this->rowId,
+                        'type' => 'uk_certificate'
+                    ]));
             });
         }
         

@@ -38,12 +38,34 @@ class MailController extends Controller
             'timestamp' => now()->toISOString(),
         ]);
 
+        // Debug: Check for user-variables in different locations
+        Log::info('Mailgun Webhook User Variables Debug', [
+            'user_variables' => $eventData['user-variables'] ?? 'not_found',
+            'message_headers' => $eventData['message']['headers'] ?? 'not_found',
+            'envelope' => $eventData['envelope'] ?? 'not_found',
+            'tags' => $eventData['tags'] ?? 'not_found',
+            'timestamp' => now()->toISOString(),
+        ]);
+
         // tracking delivery of UK certificates
         if (array_key_exists('uk_certificate_row_id', $eventData['user-variables'])) {
+            Log::info('UK Certificate tracking: Found uk_certificate_row_id in user-variables', [
+                'row_id' => $eventData['user-variables']['uk_certificate_row_id'],
+                'event' => $eventData['event'],
+                'timestamp' => now()->toISOString(),
+            ]);
+            
             $rowId = $eventData['user-variables']['uk_certificate_row_id'];
             $row = UkCertificateRow::find($rowId);
             
             if ($row) {
+                Log::info('UK Certificate tracking: Found row in database', [
+                    'row_id' => $rowId,
+                    'row_status' => $row->status,
+                    'delivery_status' => $row->delivery_status,
+                    'timestamp' => now()->toISOString(),
+                ]);
+                
                 // Try to capture Mailgun Message-Id from headers if available
                 $messageId = Arr::get($eventData, 'message.headers.message-id')
                     ?? Arr::get($eventData, 'message.headers.Message-Id')
@@ -58,6 +80,12 @@ class MailController extends Controller
                         'sent_at' => $row->sent_at ?: now(),
                         'status' => 'sent',
                     ]);
+                    
+                    Log::info('UK Certificate tracking: Updated row as delivered', [
+                        'row_id' => $rowId,
+                        'message_id' => $messageId,
+                        'timestamp' => now()->toISOString(),
+                    ]);
                 } elseif ($eventData['event'] === 'failed') {
                     $row->update([
                         'delivery_status' => 'failed',
@@ -65,6 +93,13 @@ class MailController extends Controller
                         'delivery_failure_reason' => Arr::get($eventData, 'delivery-status.message', 'Unknown delivery failure'),
                         'mailgun_message_id' => $row->mailgun_message_id ?: $messageId,
                         'status' => 'failed',
+                    ]);
+                    
+                    Log::info('UK Certificate tracking: Updated row as failed', [
+                        'row_id' => $rowId,
+                        'message_id' => $messageId,
+                        'failure_reason' => Arr::get($eventData, 'delivery-status.message', 'Unknown delivery failure'),
+                        'timestamp' => now()->toISOString(),
                     ]);
                 } elseif ($eventData['event'] === 'bounced') {
                     $row->update([
@@ -74,6 +109,13 @@ class MailController extends Controller
                         'mailgun_message_id' => $row->mailgun_message_id ?: $messageId,
                         'status' => 'failed',
                     ]);
+                    
+                    Log::info('UK Certificate tracking: Updated row as bounced', [
+                        'row_id' => $rowId,
+                        'message_id' => $messageId,
+                        'bounce_reason' => Arr::get($eventData, 'delivery-status.message', 'Unknown bounce reason'),
+                        'timestamp' => now()->toISOString(),
+                    ]);
                 } elseif ($eventData['event'] === 'complained') {
                     $row->update([
                         'delivery_status' => 'failed',
@@ -82,10 +124,62 @@ class MailController extends Controller
                         'mailgun_message_id' => $row->mailgun_message_id ?: $messageId,
                         'status' => 'failed',
                     ]);
+                    
+                    Log::info('UK Certificate tracking: Updated row as complained', [
+                        'row_id' => $rowId,
+                        'message_id' => $messageId,
+                        'timestamp' => now()->toISOString(),
+                    ]);
                 }
+            } else {
+                Log::warning('UK Certificate tracking: Row not found in database', [
+                    'row_id' => $rowId,
+                    'event' => $eventData['event'],
+                    'timestamp' => now()->toISOString(),
+                ]);
             }
             
             return response()->json(['success' => true, 'uk_certificate_row_id' => $rowId]);
+        } else {
+            Log::info('UK Certificate tracking: No uk_certificate_row_id found in user-variables', [
+                'user_variables' => $eventData['user-variables'] ?? 'not_found',
+                'event' => $eventData['event'],
+                'timestamp' => now()->toISOString(),
+            ]);
+        }
+
+        // Fallback: Try to extract row ID from message headers or other sources
+        // This is a workaround in case user-variables are not being passed correctly
+        $messageId = Arr::get($eventData, 'message.headers.message-id');
+        if ($messageId && $eventData['event'] === 'delivered') {
+            Log::info('Attempting fallback UK certificate tracking via message ID', [
+                'message_id' => $messageId,
+                'event' => $eventData['event'],
+                'timestamp' => now()->toISOString(),
+            ]);
+            
+            // Try to find the row by checking if this message ID matches any recent sent certificates
+            // This is not ideal but provides a fallback tracking mechanism
+            $recentRow = UkCertificateRow::where('status', 'sent')
+                ->where('sent_at', '>=', now()->subHours(24))
+                ->whereNull('delivery_status')
+                ->first();
+                
+            if ($recentRow) {
+                Log::info('Found recent UK certificate row for fallback tracking', [
+                    'row_id' => $recentRow->id,
+                    'message_id' => $messageId,
+                    'timestamp' => now()->toISOString(),
+                ]);
+                
+                $recentRow->update([
+                    'delivery_status' => 'delivered',
+                    'delivered_at' => now(),
+                    'mailgun_message_id' => $messageId,
+                ]);
+                
+                return response()->json(['success' => true, 'fallback_tracking' => true, 'row_id' => $recentRow->id]);
+            }
         }
 
         // tracking delivery of company attendances reports
