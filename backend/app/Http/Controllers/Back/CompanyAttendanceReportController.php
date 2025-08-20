@@ -81,7 +81,31 @@ class CompanyAttendanceReportController extends Controller
             'date_to' => $date_to,
             'with_logo' => false,
         ]);
-        $report->trainees()->attach($company->trainees()->pluck('id'));
+
+        // Get all trainees including deleted ones and those with resignations
+        $allTrainees = collect();
+        
+        // 1. Active trainees (not deleted)
+        $activeTrainees = $company->trainees()->get();
+        $allTrainees = $allTrainees->merge($activeTrainees);
+        
+        // 2. Trainees with resignations AND deleted (soft deleted) - ONLY THESE SHOULD BE INCLUDED
+        $resignationTrainees = $company->resignations()
+            ->where('status', 'sent') // Only approved resignations
+            ->where('resignation_date', '>=', $date_from) // Resignation date should be within or after report period
+            ->with(['trainees' => function($q) {
+                $q->onlyTrashed(); // ONLY deleted trainees
+            }])
+            ->get()
+            ->flatMap(function($resignation) {
+                return $resignation->trainees;
+            });
+        
+        $allTrainees = $allTrainees->merge($resignationTrainees);
+        
+        // Remove duplicates and attach to report
+        $uniqueTraineeIds = $allTrainees->unique('id')->pluck('id');
+        $report->trainees()->attach($uniqueTraineeIds);
 
         // If there is an old report, use the previous emails. Otherwise, copy the company's emails.
         if ($previousReport) {

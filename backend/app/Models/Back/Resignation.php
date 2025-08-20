@@ -52,6 +52,7 @@ class Resignation extends Model implements Auditable, HasMedia
         'created_at',
         'updated_at',
         'sent_at',
+        'resignation_date',
     ];
 
     protected static function boot(): void

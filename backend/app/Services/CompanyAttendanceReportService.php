@@ -27,9 +27,34 @@ class CompanyAttendanceReportService
         $report->save();
         $report = $report->refresh();
 
-        $report->trainees()->attach($report->company->trainees->flatMap(function($trainee) {
-            return [$trainee->id => ['active' => true]];
+        // Get all trainees including deleted ones and those with resignations
+        $allTrainees = collect();
+        $company = $report->company;
+        
+        // 1. Active trainees (not deleted)
+        $activeTrainees = $company->trainees()->get();
+        $allTrainees = $allTrainees->merge($activeTrainees);
+        
+        // 2. Trainees with resignations AND deleted (soft deleted) - ONLY THESE SHOULD BE INCLUDED
+        $resignationTrainees = $company->resignations()
+            ->where('status', 'sent') // Only approved resignations
+            ->where('resignation_date', '>=', $report->date_from) // Resignation date should be within or after report period
+            ->with(['trainees' => function($q) {
+                $q->onlyTrashed(); // ONLY deleted trainees
+            }])
+            ->get()
+            ->flatMap(function($resignation) {
+                return $resignation->trainees;
+            });
+        
+        $allTrainees = $allTrainees->merge($resignationTrainees);
+        
+        // Remove duplicates and attach to report
+        $uniqueTraineeIds = $allTrainees->unique('id')->pluck('id');
+        $report->trainees()->attach($uniqueTraineeIds->flatMap(function($traineeId) {
+            return [$traineeId => ['active' => true]];
         }));
+        
         DB::commit();
 
         return $report;
@@ -62,11 +87,33 @@ class CompanyAttendanceReportService
                 ];
             })->toArray());
 
-        $original_trainees = $original->trainees->flatMap(function($trainee) {
-            return [$trainee->id => ['active' => $trainee->pivot->active]];
-        });
-
-        $clone->trainees()->attach($original_trainees);
+        // Get all trainees including deleted ones and those with resignations for the new period
+        $allTrainees = collect();
+        $company = $clone->company;
+        
+        // 1. Active trainees (not deleted)
+        $activeTrainees = $company->trainees()->get();
+        $allTrainees = $allTrainees->merge($activeTrainees);
+        
+        // 2. Trainees with resignations AND deleted (soft deleted) - ONLY THESE SHOULD BE INCLUDED
+        $resignationTrainees = $company->resignations()
+            ->where('status', 'sent') // Only approved resignations
+            ->where('resignation_date', '>=', $clone->date_from) // Resignation date should be within or after report period
+            ->with(['trainees' => function($q) {
+                $q->onlyTrashed(); // ONLY deleted trainees
+            }])
+            ->get()
+            ->flatMap(function($resignation) {
+                return $resignation->trainees;
+            });
+        
+        $allTrainees = $allTrainees->merge($resignationTrainees);
+        
+        // Remove duplicates and attach to report
+        $uniqueTraineeIds = $allTrainees->unique('id')->pluck('id');
+        $clone->trainees()->attach($uniqueTraineeIds->flatMap(function($traineeId) {
+            return [$traineeId => ['active' => true]];
+        }));
 
         DB::commit();
 
@@ -187,7 +234,7 @@ class CompanyAttendanceReportService
             ->loadView($view, [
                 'base64logo' => $report->company->logo_files->count() ? 'data:image/jpeg;base64,'.base64_encode(@file_get_contents('https://prod.jisr-ksa.com/back/media/'.$report->company->logo_files->first()->id)) : null,
                 'report' => $report,
-                'active_trainees' => $report->getActiveTrainees(),
+                'active_trainees' => $report->getAllTraineesWithResignations(),
                 'days' => $days,
             ]);
 
@@ -247,9 +294,9 @@ class CompanyAttendanceReportService
             ->setOption('zoom', 0.78)
             ->setOption('footer-html', resource_path('views/pdf/company-attendance-report/company-attendance-report-footer.html'))
             ->loadView($view, [
-                'base64logo' => $record->company->logo_files->count() ? 'data:image/jpeg;base64,'.base64_encode(@file_get_contents('https://prod.ptc-ksa.net/back/media/'.$record->report->company->logo_files->first()->id)) : null,
+                'base64logo' => $record->company->logo_files->count() ? 'data:image/jpeg;base64,'.base64_encode(@file_get_contents('https://prod.ptc-ksa.com/back/media/'.$record->report->company->logo_files->first()->id)) : null,
                 'report' => $record->report,
-                'active_trainees' => [$record],
+                'active_trainees' => $record->report->getAllTraineesWithResignations()->where('trainee.id', $trainee_id),
                 'days' => $days,
                 'with_attendance_times' => $with_attendance_times,
             ]);
