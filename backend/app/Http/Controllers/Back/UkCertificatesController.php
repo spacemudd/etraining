@@ -127,13 +127,17 @@ class UkCertificatesController extends Controller
                     continue;
                 }
 
-                // Try to find trainee by identity number
-                $trainee = Trainee::where('identity_number', $identityNumber)->first();
+                // Try to find trainee by identity number (including trashed)
+                $trainee = Trainee::withTrashed()->where('identity_number', $identityNumber)->first();
 
                 if ($trainee) {
                     // Upload PDF to S3
                     $pdfContent = $zip->getFromIndex($i);
-                    $s3Path = 'uk-certificates/' . $ukCertificate->id . '/' . $filename;
+                    
+                    // Sanitize filename for S3 storage while preserving original filename
+                    $sanitizedFilename = $this->sanitizeFilenameForS3($filename, $identityNumber, $traineeName);
+                    $s3Path = 'uk-certificates/' . $ukCertificate->id . '/' . $sanitizedFilename;
+                    
                     Storage::disk('s3')->put($s3Path, $pdfContent);
 
                     // Create row record
@@ -142,8 +146,8 @@ class UkCertificatesController extends Controller
                         'trainee_id' => $trainee->id,
                         'identity_number' => $identityNumber,
                         'trainee_name' => $traineeName,
-                        'filename' => $filename,
-                        'pdf_path' => $s3Path,
+                        'filename' => $filename, // Keep original filename for display
+                        'pdf_path' => $s3Path,   // Store sanitized S3 path
                         'source' => 'zip',
                         'source_ref' => 'uk-certificates/' . $ukCertificate->id . '/original.zip',
                         'status' => UkCertificateRow::STATUS_PENDING,
@@ -163,7 +167,7 @@ class UkCertificatesController extends Controller
                         'trainee_id' => null,
                         'identity_number' => $identityNumber,
                         'trainee_name' => $traineeName,
-                        'filename' => $filename,
+                        'filename' => $filename, // Keep original filename for display
                         'status' => UkCertificateRow::STATUS_PENDING,
                     ]);
 
@@ -230,7 +234,7 @@ class UkCertificatesController extends Controller
                     ->first();
                 
                 if ($row && !$row->trainee_id) {
-                    $trainee = Trainee::find($mapping['trainee_id']);
+                    $trainee = Trainee::withTrashed()->find($mapping['trainee_id']);
                     if ($trainee) {
                         // Upload PDF to S3 if not already uploaded
                         if (!$row->pdf_path) {
@@ -255,7 +259,9 @@ class UkCertificatesController extends Controller
                                 
                                 // Download from Google Drive and upload to S3
                                 try {
-                                    $s3Path = 'uk-certificates/' . $ukCertificate->id . '/' . $row->filename;
+                                    // Sanitize filename for S3 storage
+                                    $sanitizedFilename = $this->sanitizeFilenameForS3($row->filename, $row->identity_number, $row->trainee_name);
+                                    $s3Path = 'uk-certificates/' . $ukCertificate->id . '/' . $sanitizedFilename;
                                     $downloadUrl = "https://www.googleapis.com/drive/v3/files/{$row->source_ref}?alt=media";
                                     
                                     \Log::info('DEBUG: Making HTTP request to Google Drive during finalize', [
@@ -353,7 +359,9 @@ class UkCertificatesController extends Controller
                                 if ($zip->open($tempZipPath) === TRUE) {
                                     $pdfContent = $zip->getFromName($row->filename);
                                     if ($pdfContent) {
-                                        $s3Path = 'uk-certificates/' . $ukCertificate->id . '/' . $row->filename;
+                                        // Sanitize filename for S3 storage
+                                        $sanitizedFilename = $this->sanitizeFilenameForS3($row->filename, $row->identity_number, $row->trainee_name);
+                                        $s3Path = 'uk-certificates/' . $ukCertificate->id . '/' . $sanitizedFilename;
                                         Storage::disk('s3')->put($s3Path, $pdfContent);
                                         
                                         $row->update([
@@ -604,6 +612,82 @@ class UkCertificatesController extends Controller
         $englishNumerals = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
         
         return str_replace($arabicNumerals, $englishNumerals, $text);
+    }
+
+    /**
+     * Sanitize filename for S3 storage
+     * Creates a safe filename while preserving the original for display
+     */
+    private function sanitizeFilenameForS3($originalFilename, $identityNumber, $traineeName)
+    {
+        // Create a safe filename: {identity_number}_{sanitized_name}.pdf
+        $sanitizedName = $this->sanitizeStringForS3($traineeName);
+        
+        // Limit name length to avoid very long paths
+        if (strlen($sanitizedName) > 100) {
+            $sanitizedName = substr($sanitizedName, 0, 100);
+        }
+        
+        return $identityNumber . '_' . $sanitizedName . '.pdf';
+    }
+
+    /**
+     * Sanitize string for S3 storage
+     * Removes or replaces problematic characters
+     */
+    private function sanitizeStringForS3($string)
+    {
+        // Remove or replace problematic characters for S3
+        $sanitized = $string;
+        
+        // Replace Arabic characters with transliterated equivalents or remove them
+        $sanitized = $this->transliterateArabicToEnglish($sanitized);
+        
+        // Remove or replace other problematic characters
+        $sanitized = preg_replace('/[^\w\s\-_\.]/', '', $sanitized);
+        
+        // Replace spaces with underscores
+        $sanitized = preg_replace('/\s+/', '_', $sanitized);
+        
+        // Remove multiple underscores
+        $sanitized = preg_replace('/_+/', '_', $sanitized);
+        
+        // Trim underscores from start and end
+        $sanitized = trim($sanitized, '_');
+        
+        return $sanitized;
+    }
+
+    /**
+     * Transliterate Arabic text to English for S3 compatibility
+     */
+    private function transliterateArabicToEnglish($text)
+    {
+        // Common Arabic to English transliterations
+        $transliterations = [
+            'ا' => 'a', 'ب' => 'b', 'ت' => 't', 'ث' => 'th', 'ج' => 'j',
+            'ح' => 'h', 'خ' => 'kh', 'د' => 'd', 'ذ' => 'dh', 'ر' => 'r',
+            'ز' => 'z', 'س' => 's', 'ش' => 'sh', 'ص' => 's', 'ض' => 'd',
+            'ط' => 't', 'ظ' => 'z', 'ع' => 'a', 'غ' => 'gh', 'ف' => 'f',
+            'ق' => 'q', 'ك' => 'k', 'ل' => 'l', 'م' => 'm', 'ن' => 'n',
+            'ه' => 'h', 'و' => 'w', 'ي' => 'y', 'ة' => 'h', 'ى' => 'a',
+            'ء' => 'a'
+        ];
+        
+        $result = '';
+        $length = mb_strlen($text, 'UTF-8');
+        
+        for ($i = 0; $i < $length; $i++) {
+            $char = mb_substr($text, $i, 1, 'UTF-8');
+            if (isset($transliterations[$char])) {
+                $result .= $transliterations[$char];
+            } else {
+                // Keep the character if it's not Arabic or if transliteration not found
+                $result .= $char;
+            }
+        }
+        
+        return $result;
     }
 
     /**
