@@ -22,8 +22,15 @@ class UkCertificatesController extends Controller
             ->with('instructor:id,name')
             ->orderBy('created_at', 'desc')
             ->paginate(100);
+
+        $ukCertificates = UkCertificate::with(['course:id,name_ar', 'course.instructor:id,name'])
+            ->select('id', 'course_id', 'status', 'total_files', 'matched_count', 'unmatched_count', 'sent_count', 'failed_count', 'started_at', 'completed_at', 'created_at', 'drive_url')
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+
         return Inertia::render('Back/UkCertificates/Index', [
             'courses' => $courses,
+            'ukCertificates' => $ukCertificates,
         ]);
     }
 

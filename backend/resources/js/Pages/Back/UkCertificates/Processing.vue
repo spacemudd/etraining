@@ -59,6 +59,12 @@
                             </svg>
                             {{ $t('words.completed') }}
                         </div>
+                        <div v-else-if="status.status === 'sent'" class="flex items-center text-blue-600">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            {{ $t('words.sent') }}
+                        </div>
                         <div v-else-if="status.status === 'failed'" class="flex items-center text-red-600">
                             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
@@ -248,6 +254,30 @@
                     >
                         {{ $t('words.submit-and-send-certificates') }}
                     </button>
+                    <a 
+                        :href="route('back.uk-certificates.delivery-report', importData.id)"
+                        class="btn-gray bg-green-500 hover:bg-green-600 text-white"
+                    >
+                        {{ $t('words.delivery-report') }}
+                    </a>
+                    <button 
+                        @click="goBack" 
+                        class="btn-gray bg-gray-500 hover:bg-gray-600"
+                    >
+                        {{ $t('words.back-to-imports') }}
+                    </button>
+                </div>
+            </div>
+
+            <!-- Delivery Report for Sent Status -->
+            <div v-if="status.status === 'sent'" class="bg-white rounded shadow p-6">
+                <div class="flex space-x-4">
+                    <a 
+                        :href="route('back.uk-certificates.delivery-report', importData.id)"
+                        class="btn-gray bg-green-500 hover:bg-green-600 text-white"
+                    >
+                        {{ $t('words.delivery-report') }}
+                    </a>
                     <button 
                         @click="goBack" 
                         class="btn-gray bg-gray-500 hover:bg-gray-600"
@@ -289,18 +319,18 @@ export default {
     data() {
         return {
             status: {
-                import_id: this.import?.id || null,
-                status: this.import?.status || 'processing',
-                progress_percentage: parseFloat(this.import?.progress_percentage || 0),
-                current_file: this.import?.current_file || '',
-                total_files: this.import?.total_files || 0,
-                matched_count: this.import?.matched_count || 0,
-                unmatched_count: this.import?.unmatched_count || 0,
-                failed_count: this.import?.failed_count || 0,
-                started_at: this.import?.started_at || null,
-                completed_at: this.import?.completed_at || null,
-                drive_url: this.import?.drive_url || '',
-                course_name: this.import?.course?.name_ar || 'Unknown Course',
+                import_id: this.importData?.id || null,
+                status: this.importData?.status || 'unknown',
+                progress_percentage: parseFloat(this.importData?.progress_percentage || 0),
+                current_file: this.importData?.current_file || '',
+                total_files: this.importData?.total_files || 0,
+                matched_count: this.importData?.matched_count || 0,
+                unmatched_count: this.importData?.unmatched_count || 0,
+                failed_count: this.importData?.failed_count || 0,
+                started_at: this.importData?.started_at || null,
+                completed_at: this.importData?.completed_at || null,
+                drive_url: this.importData?.drive_url || '',
+                course_name: this.importData?.course?.name_ar || 'Unknown Course',
                 matched: [],
                 unmatched: [],
                 failed: [],
@@ -312,6 +342,7 @@ export default {
     },
     mounted() {
         this.loadStatus();
+        // Only start continuous status checking if still processing
         if (this.isProcessing) {
             this.startStatusChecking();
         }
@@ -326,15 +357,33 @@ export default {
     methods: {
         async loadStatus() {
             try {
-                const response = await axios.get(`/back/uk-certificates/${this.import.id}/status`);
+                const response = await axios.get(`/back/uk-certificates/${this.importData.id}/status`);
                 const data = response.data;
+                
                 // Ensure progress_percentage is a number
                 if (data.progress_percentage !== undefined) {
                     data.progress_percentage = parseFloat(data.progress_percentage || 0);
                 }
+                
                 this.status = { ...this.status, ...data };
             } catch (err) {
                 console.error('Failed to load status:', err);
+                // Don't override the status if API call fails, keep the initial import status
+                // Only update other fields if they exist in the import prop
+                if (this.importData) {
+                    this.status = {
+                        ...this.status,
+                        status: this.importData.status || 'unknown',
+                        total_files: this.importData.total_files || 0,
+                        matched_count: this.importData.matched_count || 0,
+                        unmatched_count: this.importData.unmatched_count || 0,
+                        failed_count: this.importData.failed_count || 0,
+                        started_at: this.importData.started_at || null,
+                        completed_at: this.importData.completed_at || null,
+                        drive_url: this.importData.drive_url || '',
+                        course_name: this.importData.course?.name_ar || 'Unknown Course',
+                    };
+                }
             }
         },
 
@@ -342,7 +391,7 @@ export default {
             this.statusCheckInterval = setInterval(async () => {
                 await this.loadStatus();
                 
-                if (this.status.status === 'completed' || this.status.status === 'failed') {
+                if (this.status.status === 'completed' || this.status.status === 'failed' || this.status.status === 'sent') {
                     clearInterval(this.statusCheckInterval);
                     this.statusCheckInterval = null;
                 }
@@ -355,10 +404,14 @@ export default {
                     return this.$t('words.processing-files');
                 case 'sending':
                     return this.$t('words.sending-certificates');
+                case 'sent':
+                    return this.$t('words.certificates-sent');
                 case 'completed':
                     return this.$t('words.processing-completed');
                 case 'failed':
                     return this.$t('words.processing-failed');
+                case 'unknown':
+                    return this.$t('words.loading-status');
                 default:
                     return this.$t('words.processing-status');
             }
@@ -440,7 +493,7 @@ export default {
             this.isDeleting = true;
             
             try {
-                const response = await axios.delete(`/back/uk-certificates/${this.import.id}`);
+                const response = await axios.delete(`/back/uk-certificates/${this.importData.id}`);
                 
                 if (response.data.success) {
                     alert(this.$t('words.uk-certificate-deleted-successfully'));

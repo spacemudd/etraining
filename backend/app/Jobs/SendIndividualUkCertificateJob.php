@@ -64,6 +64,12 @@ class SendIndividualUkCertificateJob implements ShouldQueue
                     'mailgun_message_id' => $messageId,
                     'delivery_status' => UkCertificateRow::DELIVERY_STATUS_PENDING,
                 ]);
+                
+                // Check if all emails have been sent and update main certificate status
+                $ukCertificate = $row->ukCertificate;
+                if ($ukCertificate) {
+                    $ukCertificate->checkAndUpdateCompletionStatus();
+                }
             } else {
                 throw new \Exception('PDF content is empty or could not be retrieved from S3');
             }

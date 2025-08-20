@@ -11,6 +11,92 @@
                 <h1 class="mb-8 font-bold text-3xl">{{ $t('words.uk-certificates') }}</h1>
             </div>
 
+            <!-- UK Certificate Imports List -->
+            <div class="bg-white rounded shadow p-6 mb-8">
+                <h2 class="text-xl font-semibold mb-4">{{ $t('words.uk-certificate-imports') }}</h2>
+                
+                <div v-if="ukCertificates.data && ukCertificates.data.length > 0" class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('words.import-id') }}</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('words.course') }}</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('words.instructor') }}</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('words.status') }}</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('words.total-files') }}</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('words.matched') }}</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('words.unmatched') }}</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('words.sent') }}</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('words.failed') }}</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('words.created-at') }}</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('words.actions') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr v-for="certificate in ukCertificates.data" :key="certificate.id" class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#{{ certificate.id }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ certificate.course?.name_ar || 'Unknown Course' }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ certificate.course?.instructor?.name || 'No Instructor' }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span :class="getStatusClass(certificate.status)" class="inline-flex px-2 py-1 text-xs font-semibold rounded-full">
+                                        {{ getStatusText(certificate.status) }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ certificate.total_files || 0 }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-medium">{{ certificate.matched_count || 0 }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-orange-600 font-medium">{{ certificate.unmatched_count || 0 }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 font-medium">{{ certificate.sent_count || 0 }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-medium">{{ certificate.failed_count || 0 }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ formatDateTime(certificate.created_at) }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <div class="flex space-x-2">
+                                        <inertia-link 
+                                            :href="route('back.uk-certificates.processing', certificate.id)"
+                                            class="text-indigo-600 hover:text-indigo-900"
+                                        >
+                                            {{ $t('words.view') }}
+                                        </inertia-link>
+                                        <a 
+                                            v-if="certificate.status === 'sent' || certificate.status === 'completed'"
+                                            :href="route('back.uk-certificates.delivery-report', certificate.id)"
+                                            class="text-green-600 hover:text-green-900"
+                                        >
+                                            {{ $t('words.delivery-report') }}
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <!-- Pagination -->
+                    <div v-if="ukCertificates.links && ukCertificates.links.length > 3" class="mt-6">
+                        <nav class="flex justify-center">
+                            <div class="flex space-x-1">
+                                <inertia-link 
+                                    v-for="(link, index) in ukCertificates.links" 
+                                    :key="index"
+                                    :href="link.url"
+                                    :class="[
+                                        'px-3 py-2 text-sm font-medium rounded-md',
+                                        link.url === null 
+                                            ? 'text-gray-400 cursor-not-allowed' 
+                                            : link.active 
+                                                ? 'bg-indigo-100 text-indigo-700' 
+                                                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                                    ]"
+                                    v-html="link.label"
+                                ></inertia-link>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+                
+                <div v-else class="text-center py-8 text-gray-500">
+                    {{ $t('words.no-uk-certificate-imports') }}
+                </div>
+            </div>
+
             <div class="bg-white rounded shadow p-6">
                 <h2 class="text-xl font-semibold mb-4">{{ $t('words.send-certificates-by-id') }}</h2>
                 
@@ -219,6 +305,7 @@ export default {
     },
     props: {
         courses: Object,
+        ukCertificates: Object,
     },
     data() {
         return {
@@ -445,6 +532,46 @@ export default {
                 alert(this.$t('words.submission-failed'));
             }
         },
+
+        getStatusClass(status) {
+            switch (status) {
+                case 'pending':
+                    return 'bg-yellow-100 text-yellow-800';
+                case 'processing':
+                    return 'bg-blue-100 text-blue-800';
+                case 'completed':
+                    return 'bg-green-100 text-green-800';
+                case 'failed':
+                    return 'bg-red-100 text-red-800';
+                case 'sent':
+                    return 'bg-blue-100 text-blue-800';
+                default:
+                    return 'bg-gray-100 text-gray-800';
+            }
+        },
+
+        getStatusText(status) {
+            switch (status) {
+                case 'pending':
+                    return this.$t('words.pending');
+                case 'processing':
+                    return this.$t('words.processing');
+                case 'completed':
+                    return this.$t('words.completed');
+                case 'failed':
+                    return this.$t('words.failed');
+                case 'sent':
+                    return this.$t('words.sent');
+                default:
+                    return status;
+            }
+        },
+
+        formatDateTime(timestamp) {
+            if (!timestamp) return '';
+            const date = new Date(timestamp);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        }
     },
     beforeDestroy() {
         if (this.statusCheckInterval) {

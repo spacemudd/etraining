@@ -64,6 +64,45 @@ class UkCertificate extends Model
         return $this->hasMany(UkCertificateRow::class)->where('status', UkCertificateRow::STATUS_FAILED);
     }
 
+    /**
+     * Check if all emails have been sent and update status accordingly
+     */
+    public function checkAndUpdateCompletionStatus()
+    {
+        $totalRows = $this->rows()->count();
+        $sentRows = $this->rows()->where('status', UkCertificateRow::STATUS_SENT)->count();
+        $failedRows = $this->rows()->where('status', UkCertificateRow::STATUS_FAILED)->count();
+        
+        // If all rows that should be sent are either sent or failed, mark as completed
+        if ($sentRows + $failedRows >= $totalRows) {
+            if ($failedRows > 0) {
+                $this->update(['status' => self::STATUS_FAILED]);
+            } else {
+                $this->update(['status' => self::STATUS_SENT]);
+            }
+            $this->update(['completed_at' => now()]);
+            return true;
+        }
+        
+        return false;
+    }
+
+    /**
+     * Get the count of sent emails
+     */
+    public function getSentCount()
+    {
+        return $this->rows()->where('status', UkCertificateRow::STATUS_SENT)->count();
+    }
+
+    /**
+     * Get the count of failed emails
+     */
+    public function getFailedCount()
+    {
+        return $this->rows()->where('status', UkCertificateRow::STATUS_FAILED)->count();
+    }
+
     protected static function boot()
     {
         parent::boot();
