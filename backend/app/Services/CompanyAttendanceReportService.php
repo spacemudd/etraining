@@ -61,7 +61,7 @@ class CompanyAttendanceReportService
             $resignation = $company->resignations()
                 ->whereIn('status', ['new', 'sent'])
                 ->whereHas('trainees', function($q) use ($traineeId) {
-                    $q->where('id', $traineeId);
+                    $q->where('trainees.id', $traineeId); // Specify table name to avoid ambiguity
                 })
                 ->first();
             
@@ -148,7 +148,7 @@ class CompanyAttendanceReportService
             $resignation = $company->resignations()
                 ->whereIn('status', ['new', 'sent'])
                 ->whereHas('trainees', function($q) use ($traineeId) {
-                    $q->where('id', $traineeId);
+                    $q->where('trainees.id', $traineeId); // Specify table name to avoid ambiguity
                 })
                 ->first();
             
@@ -161,7 +161,6 @@ class CompanyAttendanceReportService
                 ];
             } else {
                 // This is an active trainee
-                $traineeId = $traineeId;
                 $traineeData[$traineeId] = [
                     'active' => true,
                 ];

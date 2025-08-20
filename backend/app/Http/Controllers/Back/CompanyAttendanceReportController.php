@@ -115,7 +115,7 @@ class CompanyAttendanceReportController extends Controller
             $resignation = $company->resignations()
                 ->whereIn('status', ['new', 'sent'])
                 ->whereHas('trainees', function($q) use ($traineeId) {
-                    $q->where('id', $traineeId);
+                    $q->where('trainees.id', $traineeId); // Specify table name to avoid ambiguity
                 })
                 ->first();
             
