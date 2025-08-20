@@ -105,7 +105,36 @@ class CompanyAttendanceReportController extends Controller
         
         // Remove duplicates and attach to report
         $uniqueTraineeIds = $allTrainees->unique('id')->pluck('id');
-        $report->trainees()->attach($uniqueTraineeIds);
+        
+        // Prepare trainee data with start_date and end_date for resigned trainees
+        $traineeData = [];
+        foreach ($uniqueTraineeIds as $traineeId) {
+            $trainee = $allTrainees->firstWhere('id', $traineeId);
+            
+            // Check if this trainee has a resignation
+            $resignation = $company->resignations()
+                ->whereIn('status', ['new', 'sent'])
+                ->whereHas('trainees', function($q) use ($traineeId) {
+                    $q->where('id', $traineeId);
+                })
+                ->first();
+            
+            if ($resignation && $trainee->trashed()) {
+                // This is a resigned and deleted trainee
+                $traineeData[$traineeId] = [
+                    'active' => true,
+                    'start_date' => $date_from, // Start from report start date
+                    'end_date' => Carbon::parse($resignation->resignation_date)->endOfDay(), // End at resignation date
+                ];
+            } else {
+                // This is an active trainee
+                $traineeData[$traineeId] = [
+                    'active' => true,
+                ];
+            }
+        }
+        
+        $report->trainees()->attach($traineeData);
 
         // If there is an old report, use the previous emails. Otherwise, copy the company's emails.
         if ($previousReport) {
