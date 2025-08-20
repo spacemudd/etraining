@@ -356,26 +356,64 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
     }
 
     /**
+     * Sanitize filename for safe file system usage
+     */
+    private function sanitizeFilename($filename)
+    {
+        $original = $filename;
+        
+        // Replace tab characters with spaces
+        $sanitized = str_replace("\t", " ", $filename);
+        
+        // Remove any other control characters that might cause issues
+        $sanitized = preg_replace('/[\x00-\x1F\x7F]/', '', $sanitized);
+        
+        // Ensure the filename is not empty after sanitization
+        if (empty(trim($sanitized))) {
+            throw new \Exception('Filename is empty after sanitization');
+        }
+        
+        // Log the sanitization process if there were changes
+        if ($original !== $sanitized) {
+            Log::info('DEBUG: Filename sanitized', [
+                'certificate_id' => $this->ukCertificate->id,
+                'original_filename' => $original,
+                'sanitized_filename' => $sanitized,
+                'had_tabs' => strpos($original, "\t") !== false,
+                'had_control_chars' => preg_match('/[\x00-\x1F\x7F]/', $original),
+                'timestamp' => now()->toISOString()
+            ]);
+        }
+        
+        return $sanitized;
+    }
+
+    /**
      * Process individual file
      */
     private function processFile($file)
     {
         $filename = $file['name'];
         
+        // Sanitize the filename for safe file system usage
+        $sanitizedFilename = $this->sanitizeFilename($filename);
+        
         Log::info('DEBUG: Processing file in Google Drive job', [
             'certificate_id' => $this->ukCertificate->id,
-            'filename' => $filename,
+            'original_filename' => $filename,
+            'sanitized_filename' => $sanitizedFilename,
             'file_data' => $file,
             'timestamp' => now()->toISOString()
         ]);
         
         // Parse filename using the controller method
         $controller = app(\App\Http\Controllers\Back\UkCertificatesController::class);
-        $parseResult = $controller->parseGoogleDriveFilename($filename);
+        $parseResult = $controller->parseGoogleDriveFilename($sanitizedFilename);
         
         Log::info('DEBUG: Filename parsing result', [
             'certificate_id' => $this->ukCertificate->id,
-            'filename' => $filename,
+            'original_filename' => $filename,
+            'sanitized_filename' => $sanitizedFilename,
             'parse_result' => $parseResult,
             'timestamp' => now()->toISOString()
         ]);
@@ -383,11 +421,12 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
         if (!$parseResult['valid']) {
             Log::warning('DEBUG: Invalid filename format', [
                 'certificate_id' => $this->ukCertificate->id,
-                'filename' => $filename,
+                'original_filename' => $filename,
+                'sanitized_filename' => $sanitizedFilename,
                 'error' => $parseResult['error'],
                 'timestamp' => now()->toISOString()
             ]);
-            $controller->createFailedRow($this->ukCertificate, $filename, '', '', $parseResult['error']);
+            $controller->createFailedRow($this->ukCertificate, $sanitizedFilename, '', '', $parseResult['error']);
             return 'failed';
         }
 
@@ -399,7 +438,8 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
         
         Log::info('DEBUG: Trainee lookup result', [
             'certificate_id' => $this->ukCertificate->id,
-            'filename' => $filename,
+            'original_filename' => $filename,
+            'sanitized_filename' => $sanitizedFilename,
             'identity_number' => $identityNumber,
             'trainee_name' => $traineeName,
             'trainee_found' => $trainee ? true : false,
@@ -409,11 +449,13 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
 
         if ($trainee) {
             try {
-                $s3Path = 'uk-certificates/' . $this->ukCertificate->id . '/' . $filename;
+                // Use sanitized filename for S3 path
+                $s3Path = 'uk-certificates/' . $this->ukCertificate->id . '/' . $sanitizedFilename;
                 
                 Log::info('DEBUG: Starting file download for matched trainee', [
                     'certificate_id' => $this->ukCertificate->id,
-                    'filename' => $filename,
+                    'original_filename' => $filename,
+                    'sanitized_filename' => $sanitizedFilename,
                     'trainee_id' => $trainee->id,
                     'download_url' => $file['download_url'],
                     's3_path' => $s3Path,
@@ -425,19 +467,20 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
                 
                 Log::info('DEBUG: File successfully downloaded and uploaded to S3', [
                     'certificate_id' => $this->ukCertificate->id,
-                    'filename' => $filename,
+                    'original_filename' => $filename,
+                    'sanitized_filename' => $sanitizedFilename,
                     'trainee_id' => $trainee->id,
                     's3_path' => $s3Path,
                     'timestamp' => now()->toISOString()
                 ]);
 
-                // Create row record
+                // Create row record with sanitized filename
                 $row = UkCertificateRow::create([
                     'uk_certificate_id' => $this->ukCertificate->id,
                     'trainee_id' => $trainee->id,
                     'identity_number' => $identityNumber,
                     'trainee_name' => $traineeName,
-                    'filename' => $filename,
+                    'filename' => $sanitizedFilename, // Store sanitized filename
                     'pdf_path' => $s3Path,
                     'source' => 'gdrive',
                     'source_ref' => $file['id'] ?? null,
@@ -447,7 +490,8 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
                 Log::info('DEBUG: Created matched row record', [
                     'certificate_id' => $this->ukCertificate->id,
                     'row_id' => $row->id,
-                    'filename' => $filename,
+                    'original_filename' => $filename,
+                    'sanitized_filename' => $sanitizedFilename,
                     'trainee_id' => $trainee->id,
                     'pdf_path' => $s3Path,
                     'source' => 'gdrive',
@@ -459,20 +503,22 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
             } catch (\Exception $e) {
                 Log::error('DEBUG: Failed to download/upload file for matched trainee', [
                     'certificate_id' => $this->ukCertificate->id,
-                    'filename' => $filename,
+                    'original_filename' => $filename,
+                    'sanitized_filename' => $sanitizedFilename,
                     'trainee_id' => $trainee->id,
                     'download_url' => $file['download_url'],
                     'error' => $e->getMessage(),
                     'trace' => $e->getTraceAsString(),
                     'timestamp' => now()->toISOString()
                 ]);
-                $controller->createFailedRow($this->ukCertificate, $filename, $identityNumber, $traineeName, 'Download error: ' . $e->getMessage());
+                $controller->createFailedRow($this->ukCertificate, $sanitizedFilename, $identityNumber, $traineeName, 'Download error: ' . $e->getMessage());
                 return 'failed';
             }
         } else {
             Log::info('DEBUG: Creating unmatched row record', [
                 'certificate_id' => $this->ukCertificate->id,
-                'filename' => $filename,
+                'original_filename' => $filename,
+                'sanitized_filename' => $sanitizedFilename,
                 'identity_number' => $identityNumber,
                 'trainee_name' => $traineeName,
                 'source' => 'gdrive',
@@ -480,13 +526,13 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
                 'timestamp' => now()->toISOString()
             ]);
             
-            // Create unmatched row record with source info but no pdf_path yet
+            // Create unmatched row record with sanitized filename
             $row = UkCertificateRow::create([
                 'uk_certificate_id' => $this->ukCertificate->id,
                 'trainee_id' => null,
                 'identity_number' => $identityNumber,
                 'trainee_name' => $traineeName,
-                'filename' => $filename,
+                'filename' => $sanitizedFilename, // Store sanitized filename
                 'source' => 'gdrive',
                 'source_ref' => $file['id'] ?? null,
                 'status' => UkCertificateRow::STATUS_PENDING,
@@ -495,7 +541,8 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
             Log::info('DEBUG: Created unmatched row record', [
                 'certificate_id' => $this->ukCertificate->id,
                 'row_id' => $row->id,
-                'filename' => $filename,
+                'original_filename' => $filename,
+                'sanitized_filename' => $sanitizedFilename,
                 'source' => 'gdrive',
                 'source_ref' => $file['id'] ?? null,
                 'timestamp' => now()->toISOString()
