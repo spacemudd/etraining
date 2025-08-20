@@ -255,7 +255,10 @@ class CompanyAttendanceReportService
 
         // To fix formatting issue on 2nd page when the table is split.
         // Check if this is the special company to use different design
-        if ($report->company->id === '9ef83749-d1ba-44a5-82a9-f726840e02db') {
+        if (in_array($report->company->id, [
+            '9ef83749-d1ba-44a5-82a9-f726840e02db', // مصنع هلال مشبب العتيبي
+            '92d30511-77a8-4290-8d20-419f93ede3fd', // الشركة الجديدة
+        ])) {
             // Use simplified design to avoid SSL issues
             $view = 'pdf.company-attendance-report.special-company-simple';
         } else {
@@ -324,7 +327,10 @@ class CompanyAttendanceReportService
         }
 
         // Check if this is the special company to use different design
-        if ($record->company->id === '9ef83749-d1ba-44a5-82a9-f726840e02db') {
+        if (in_array($record->company->id, [
+            '9ef83749-d1ba-44a5-82a9-f726840e02db', // مصنع هلال مشبب العتيبي
+            '92d30511-77a8-4290-8d20-419f93ede3fd', // الشركة الجديدة
+        ])) {
             // Use simplified design to avoid SSL issues
             $view = 'pdf.company-attendance-report.special-company-individual-simple';
         } else {
