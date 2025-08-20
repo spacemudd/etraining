@@ -28,28 +28,43 @@ class MailController extends Controller
             $row = UkCertificateRow::find($rowId);
             
             if ($row) {
+                // Try to capture Mailgun Message-Id from headers if available
+                $messageId = Arr::get($eventData, 'message.headers.message-id')
+                    ?? Arr::get($eventData, 'message.headers.Message-Id')
+                    ?? Arr::get($eventData, 'Message-Id');
+
                 if ($eventData['event'] === 'delivered') {
                     $row->update([
                         'delivery_status' => 'delivered',
                         'delivered_at' => now(),
+                        'mailgun_message_id' => $row->mailgun_message_id ?: $messageId,
+                        // Ensure these are set in case job did not update them for any reason
+                        'sent_at' => $row->sent_at ?: now(),
+                        'status' => 'sent',
                     ]);
                 } elseif ($eventData['event'] === 'failed') {
                     $row->update([
                         'delivery_status' => 'failed',
                         'failed_at' => now(),
-                        'delivery_failure_reason' => $eventData['delivery-status']['message'] ?? 'Unknown delivery failure',
+                        'delivery_failure_reason' => Arr::get($eventData, 'delivery-status.message', 'Unknown delivery failure'),
+                        'mailgun_message_id' => $row->mailgun_message_id ?: $messageId,
+                        'status' => 'failed',
                     ]);
                 } elseif ($eventData['event'] === 'bounced') {
                     $row->update([
                         'delivery_status' => 'failed',
                         'failed_at' => now(),
-                        'delivery_failure_reason' => 'Email bounced: ' . ($eventData['delivery-status']['message'] ?? 'Unknown bounce reason'),
+                        'delivery_failure_reason' => 'Email bounced: ' . (Arr::get($eventData, 'delivery-status.message', 'Unknown bounce reason')),
+                        'mailgun_message_id' => $row->mailgun_message_id ?: $messageId,
+                        'status' => 'failed',
                     ]);
                 } elseif ($eventData['event'] === 'complained') {
                     $row->update([
                         'delivery_status' => 'failed',
                         'failed_at' => now(),
                         'delivery_failure_reason' => 'Email marked as spam/complaint',
+                        'mailgun_message_id' => $row->mailgun_message_id ?: $messageId,
+                        'status' => 'failed',
                     ]);
                 }
             }
