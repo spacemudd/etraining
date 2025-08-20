@@ -52,6 +52,7 @@ class MailController extends Controller
             Log::info('UK Certificate tracking: Found uk_certificate_row_id in user-variables', [
                 'row_id' => $eventData['user-variables']['uk_certificate_row_id'],
                 'event' => $eventData['event'],
+                'recipient' => $eventData['recipient'],
                 'timestamp' => now()->toISOString(),
             ]);
             
@@ -59,75 +60,96 @@ class MailController extends Controller
             $row = UkCertificateRow::find($rowId);
             
             if ($row) {
-                Log::info('UK Certificate tracking: Found row in database', [
-                    'row_id' => $rowId,
-                    'row_status' => $row->status,
-                    'delivery_status' => $row->delivery_status,
-                    'timestamp' => now()->toISOString(),
-                ]);
+                // Only track delivery status for the primary recipient (trainee's email)
+                // Ignore BCC recipients as they shouldn't affect the main delivery status
+                $traineeEmail = $row->trainee->email ?? null;
+                $currentRecipient = $eventData['recipient'];
                 
-                // Try to capture Mailgun Message-Id from headers if available
-                $messageId = Arr::get($eventData, 'message.headers.message-id')
-                    ?? Arr::get($eventData, 'message.headers.Message-Id')
-                    ?? Arr::get($eventData, 'Message-Id');
+                if ($traineeEmail && $currentRecipient === $traineeEmail) {
+                    Log::info('UK Certificate tracking: Processing primary recipient (trainee)', [
+                        'row_id' => $rowId,
+                        'trainee_email' => $traineeEmail,
+                        'current_recipient' => $currentRecipient,
+                        'event' => $eventData['event'],
+                        'timestamp' => now()->toISOString(),
+                    ]);
+                    
+                    // Try to capture Mailgun Message-Id from headers if available
+                    $messageId = Arr::get($eventData, 'message.headers.message-id')
+                        ?? Arr::get($eventData, 'message.headers.Message-Id')
+                        ?? Arr::get($eventData, 'Message-Id');
 
-                if ($eventData['event'] === 'delivered') {
-                    $row->update([
-                        'delivery_status' => 'delivered',
-                        'delivered_at' => now(),
-                        'mailgun_message_id' => $row->mailgun_message_id ?: $messageId,
-                        // Ensure these are set in case job did not update them for any reason
-                        'sent_at' => $row->sent_at ?: now(),
-                        'status' => 'sent',
-                    ]);
-                    
-                    Log::info('UK Certificate tracking: Updated row as delivered', [
+                    if ($eventData['event'] === 'delivered') {
+                        $row->update([
+                            'delivery_status' => 'delivered',
+                            'delivered_at' => now(),
+                            'mailgun_message_id' => $row->mailgun_message_id ?: $messageId,
+                            // Ensure these are set in case job did not update them for any reason
+                            'sent_at' => $row->sent_at ?: now(),
+                            'status' => 'sent',
+                        ]);
+                        
+                        Log::info('UK Certificate tracking: Updated row as delivered (primary recipient)', [
+                            'row_id' => $rowId,
+                            'message_id' => $messageId,
+                            'recipient' => $currentRecipient,
+                            'timestamp' => now()->toISOString(),
+                        ]);
+                    } elseif ($eventData['event'] === 'failed') {
+                        $row->update([
+                            'delivery_status' => 'failed',
+                            'failed_at' => now(),
+                            'delivery_failure_reason' => Arr::get($eventData, 'delivery-status.message', 'Unknown delivery failure'),
+                            'mailgun_message_id' => $row->mailgun_message_id ?: $messageId,
+                            'status' => 'failed',
+                        ]);
+                        
+                        Log::info('UK Certificate tracking: Updated row as failed (primary recipient)', [
+                            'row_id' => $rowId,
+                            'message_id' => $messageId,
+                            'failure_reason' => Arr::get($eventData, 'delivery-status.message', 'Unknown delivery failure'),
+                            'recipient' => $currentRecipient,
+                            'timestamp' => now()->toISOString(),
+                        ]);
+                    } elseif ($eventData['event'] === 'bounced') {
+                        $row->update([
+                            'delivery_status' => 'failed',
+                            'failed_at' => now(),
+                            'delivery_failure_reason' => 'Email bounced: ' . (Arr::get($eventData, 'delivery-status.message', 'Unknown bounce reason')),
+                            'mailgun_message_id' => $row->mailgun_message_id ?: $messageId,
+                            'status' => 'failed',
+                        ]);
+                        
+                        Log::info('UK Certificate tracking: Updated row as bounced (primary recipient)', [
+                            'row_id' => $rowId,
+                            'message_id' => $messageId,
+                            'bounce_reason' => Arr::get($eventData, 'delivery-status.message', 'Unknown bounce reason'),
+                            'recipient' => $currentRecipient,
+                            'timestamp' => now()->toISOString(),
+                        ]);
+                    } elseif ($eventData['event'] === 'complained') {
+                        $row->update([
+                            'delivery_status' => 'failed',
+                            'failed_at' => now(),
+                            'delivery_failure_reason' => 'Email marked as spam/complaint',
+                            'mailgun_message_id' => $row->mailgun_message_id ?: $messageId,
+                            'status' => 'failed',
+                        ]);
+                        
+                        Log::info('UK Certificate tracking: Updated row as complained (primary recipient)', [
+                            'row_id' => $rowId,
+                            'message_id' => $messageId,
+                            'recipient' => $currentRecipient,
+                            'timestamp' => now()->toISOString(),
+                        ]);
+                    }
+                } else {
+                    Log::info('UK Certificate tracking: Ignoring BCC recipient event', [
                         'row_id' => $rowId,
-                        'message_id' => $messageId,
-                        'timestamp' => now()->toISOString(),
-                    ]);
-                } elseif ($eventData['event'] === 'failed') {
-                    $row->update([
-                        'delivery_status' => 'failed',
-                        'failed_at' => now(),
-                        'delivery_failure_reason' => Arr::get($eventData, 'delivery-status.message', 'Unknown delivery failure'),
-                        'mailgun_message_id' => $row->mailgun_message_id ?: $messageId,
-                        'status' => 'failed',
-                    ]);
-                    
-                    Log::info('UK Certificate tracking: Updated row as failed', [
-                        'row_id' => $rowId,
-                        'message_id' => $messageId,
-                        'failure_reason' => Arr::get($eventData, 'delivery-status.message', 'Unknown delivery failure'),
-                        'timestamp' => now()->toISOString(),
-                    ]);
-                } elseif ($eventData['event'] === 'bounced') {
-                    $row->update([
-                        'delivery_status' => 'failed',
-                        'failed_at' => now(),
-                        'delivery_failure_reason' => 'Email bounced: ' . (Arr::get($eventData, 'delivery-status.message', 'Unknown bounce reason')),
-                        'mailgun_message_id' => $row->mailgun_message_id ?: $messageId,
-                        'status' => 'failed',
-                    ]);
-                    
-                    Log::info('UK Certificate tracking: Updated row as bounced', [
-                        'row_id' => $rowId,
-                        'message_id' => $messageId,
-                        'bounce_reason' => Arr::get($eventData, 'delivery-status.message', 'Unknown bounce reason'),
-                        'timestamp' => now()->toISOString(),
-                    ]);
-                } elseif ($eventData['event'] === 'complained') {
-                    $row->update([
-                        'delivery_status' => 'failed',
-                        'failed_at' => now(),
-                        'delivery_failure_reason' => 'Email marked as spam/complaint',
-                        'mailgun_message_id' => $row->mailgun_message_id ?: $messageId,
-                        'status' => 'failed',
-                    ]);
-                    
-                    Log::info('UK Certificate tracking: Updated row as complained', [
-                        'row_id' => $rowId,
-                        'message_id' => $messageId,
+                        'trainee_email' => $traineeEmail,
+                        'current_recipient' => $currentRecipient,
+                        'event' => $eventData['event'],
+                        'reason' => $traineeEmail ? 'BCC recipient' : 'No trainee email found',
                         'timestamp' => now()->toISOString(),
                     ]);
                 }
