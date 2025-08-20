@@ -9,12 +9,12 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Http;
 use App\Models\Back\UkCertificate;
 use App\Models\Back\UkCertificateRow;
 use App\Models\Back\Trainee;
-use Google_Client;
-use Google_Service_Drive;
+use Google\Client as GoogleClient;
+use Google\Service\Drive as GoogleDriveService;
+use Google\Service\Exception as GoogleServiceException;
 
 class ProcessGoogleDriveCertificatesJob implements ShouldQueue
 {
@@ -32,7 +32,7 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
 
     protected $ukCertificate;
     protected $driveUrl;
-    protected $googleClient;
+    protected GoogleClient $googleClient;
 
     public function __construct(UkCertificate $ukCertificate, $driveUrl)
     {
@@ -206,7 +206,7 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
             // Initialize Google Client
             $this->initializeGoogleClient();
             
-            $service = new Google_Service_Drive($this->googleClient);
+            $service = new GoogleDriveService($this->googleClient);
             
             $files = [];
             $pageToken = null;
@@ -278,9 +278,9 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
     private function initializeGoogleClient()
     {
         try {
-            $this->googleClient = new Google_Client();
+            $this->googleClient = new GoogleClient();
             $this->googleClient->setApplicationName('ETraining UK Certificates');
-            $this->googleClient->setScopes([Google_Service_Drive::DRIVE_READONLY]);
+            $this->googleClient->setScopes([GoogleDriveService::DRIVE_READONLY]);
             
             // Check if we have service account credentials
             $credentialsPath = storage_path('app/google-drive-credentials.json');
@@ -518,53 +518,70 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
         ]);
         
         try {
-            // Download file with streaming
-            Log::info('DEBUG: Making HTTP request to Google Drive', [
-                'certificate_id' => $this->ukCertificate->id,
-                'download_url' => $downloadUrl,
-                'timeout' => 300,
-                'timestamp' => now()->toISOString()
-            ]);
+            // Extract file ID from the download URL
+            $fileId = $this->extractFileIdFromUrl($downloadUrl);
             
-            $response = Http::timeout(300)->get($downloadUrl);
-            
-            Log::info('DEBUG: HTTP response received', [
-                'certificate_id' => $this->ukCertificate->id,
-                'download_url' => $downloadUrl,
-                'status_code' => $response->status(),
-                'headers' => $response->headers(),
-                'body_size' => strlen($response->body()),
-                'timestamp' => now()->toISOString()
-            ]);
-            
-            if ($response->successful()) {
-                Log::info('DEBUG: HTTP request successful, uploading to S3', [
-                    'certificate_id' => $this->ukCertificate->id,
-                    'download_url' => $downloadUrl,
-                    's3_path' => $s3Path,
-                    'body_size' => strlen($response->body()),
-                    'timestamp' => now()->toISOString()
-                ]);
-                
-                Storage::disk('s3')->put($s3Path, $response->body());
-                
-                Log::info('DEBUG: File successfully uploaded to S3', [
-                    'certificate_id' => $this->ukCertificate->id,
-                    'download_url' => $downloadUrl,
-                    's3_path' => $s3Path,
-                    's3_exists' => Storage::disk('s3')->exists($s3Path),
-                    'timestamp' => now()->toISOString()
-                ]);
-            } else {
-                Log::error('DEBUG: HTTP request failed', [
-                    'certificate_id' => $this->ukCertificate->id,
-                    'download_url' => $downloadUrl,
-                    'status_code' => $response->status(),
-                    'body' => $response->body(),
-                    'timestamp' => now()->toISOString()
-                ]);
-                throw new \Exception('Failed to download file from Google Drive: HTTP ' . $response->status());
+            if (!$fileId) {
+                throw new \Exception('Could not extract file ID from download URL: ' . $downloadUrl);
             }
+            
+            Log::info('DEBUG: Using authenticated Google Drive service to download file', [
+                'certificate_id' => $this->ukCertificate->id,
+                'file_id' => $fileId,
+                's3_path' => $s3Path,
+                'timestamp' => now()->toISOString()
+            ]);
+            
+            // Verify Google Client is initialized
+            if (!$this->googleClient) {
+                throw new \Exception('Google Client not initialized');
+            }
+            
+            // Use the authenticated Google Drive service to download the file
+            $service = new GoogleDriveService($this->googleClient);
+            
+            try {
+                $file = $service->files->get($fileId, ['alt' => 'media']);
+            } catch (GoogleServiceException $e) {
+                Log::error('DEBUG: Google Drive API error', [
+                    'certificate_id' => $this->ukCertificate->id,
+                    'file_id' => $fileId,
+                    'error_code' => $e->getCode(),
+                    'error_message' => $e->getMessage(),
+                    'timestamp' => now()->toISOString()
+                ]);
+                
+                if ($e->getCode() == 403) {
+                    throw new \Exception('Access denied to file. Service account may not have permission to access this file or the file may not exist.');
+                } elseif ($e->getCode() == 404) {
+                    throw new \Exception('File not found. The file may have been deleted or moved.');
+                } else {
+                    throw new \Exception('Google Drive API error: ' . $e->getMessage());
+                }
+            }
+            
+            // Get the file content
+            $fileContent = $file->getBody()->getContents();
+            
+            Log::info('DEBUG: File downloaded successfully from Google Drive', [
+                'certificate_id' => $this->ukCertificate->id,
+                'file_id' => $fileId,
+                's3_path' => $s3Path,
+                'content_size' => strlen($fileContent),
+                'timestamp' => now()->toISOString()
+            ]);
+            
+            // Upload to S3
+            Storage::disk('s3')->put($s3Path, $fileContent);
+            
+            Log::info('DEBUG: File successfully uploaded to S3', [
+                'certificate_id' => $this->ukCertificate->id,
+                'file_id' => $fileId,
+                's3_path' => $s3Path,
+                's3_exists' => Storage::disk('s3')->exists($s3Path),
+                'timestamp' => now()->toISOString()
+            ]);
+            
         } catch (\Exception $e) {
             Log::error('DEBUG: Exception in downloadAndUploadFile', [
                 'certificate_id' => $this->ukCertificate->id,
@@ -576,5 +593,17 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
             ]);
             throw $e;
         }
+    }
+    
+    /**
+     * Extract file ID from Google Drive download URL
+     */
+    private function extractFileIdFromUrl($downloadUrl)
+    {
+        // Extract file ID from URL like: https://www.googleapis.com/drive/v3/files/{fileId}?alt=media
+        if (preg_match('/\/files\/([^?]+)/', $downloadUrl, $matches)) {
+            return $matches[1];
+        }
+        return null;
     }
 }

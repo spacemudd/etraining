@@ -4,8 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use Google_Client;
-use Google_Service_Drive;
+use Google\Client as GoogleClient;
+use Google\Service\Drive as GoogleDriveService;
 
 class DebugGoogleDriveParsing extends Command
 {
@@ -22,6 +22,11 @@ class DebugGoogleDriveParsing extends Command
      * @var string
      */
     protected $description = 'Debug Google Drive URL parsing using Google Drive API';
+
+    /**
+     * Google Client instance
+     */
+    protected GoogleClient $googleClient;
 
     /**
      * Create a new command instance.
@@ -113,7 +118,7 @@ class DebugGoogleDriveParsing extends Command
             // Initialize Google Client
             $this->initializeGoogleClient();
             
-            $service = new Google_Service_Drive($this->googleClient);
+            $service = new GoogleDriveService($this->googleClient);
             
             $files = [];
             $pageToken = null;
@@ -170,9 +175,9 @@ class DebugGoogleDriveParsing extends Command
     private function initializeGoogleClient()
     {
         try {
-            $this->googleClient = new Google_Client();
+            $this->googleClient = new GoogleClient();
             $this->googleClient->setApplicationName('ETraining UK Certificates');
-            $this->googleClient->setScopes([Google_Service_Drive::DRIVE_READONLY]);
+            $this->googleClient->setScopes([GoogleDriveService::DRIVE_READONLY]);
             
             // Check if we have service account credentials
             $credentialsPath = storage_path('app/google-drive-credentials.json');
