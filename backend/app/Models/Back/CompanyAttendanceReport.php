@@ -143,7 +143,7 @@ class CompanyAttendanceReport extends Model implements Auditable
         
         // 2. Get trainees with resignations AND deleted (soft deleted) - ONLY THESE SHOULD BE INCLUDED
         $resignationTrainees = $this->company->resignations()
-            ->where('status', 'sent') // Only approved resignations
+            ->whereIn('status', ['new', 'sent']) // Include both new and sent resignations
             ->where('resignation_date', '>=', $this->date_from) // Resignation date should be within or after report period
             ->with(['trainees' => function($q) {
                 $q->onlyTrashed(); // ONLY deleted trainees
