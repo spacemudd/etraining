@@ -361,7 +361,11 @@
                             @for($i=0;$i<count($days);$i++)
                                 <td class="col-day {{ $days[$i]['vacation_day'] ? 'vacation-day' : '' }}">
                                     @if ($days[$i]['vacation_day'])
-                                        <span class="vacation">X</span>
+                                        @if ($record->start_date && $days[$i]['date_carbon']->isAfter($record->end_date))
+                                            {{-- Weekend after resignation date - show empty --}}
+                                        @else
+                                            <span class="vacation">X</span>
+                                        @endif
                                     @else
                                         @if ($record->start_date)
                                             @if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date))
@@ -408,7 +412,11 @@
                             @for($i=0;$i<count($days);$i++)
                                 <td class="col-day {{ $days[$i]['vacation_day'] ? 'vacation-day' : '' }}">
                                     @if ($days[$i]['vacation_day'])
-                                        <span class="vacation">X</span>
+                                        @if ($record->start_date && $days[$i]['date_carbon']->isAfter($record->end_date))
+                                            {{-- Weekend after resignation date - show empty --}}
+                                        @else
+                                            <span class="vacation">X</span>
+                                        @endif
                                     @else
                                         @if ($record->start_date)
                                             @if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date))
