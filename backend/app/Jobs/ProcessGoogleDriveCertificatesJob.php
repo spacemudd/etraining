@@ -21,6 +21,11 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
+     * The number of seconds the job can run before timing out.
+     */
+    public $timeout = 7200; // 2 hours - increased for large batches
+
+    /**
      * The number of times the job may be attempted.
      */
     public $tries = 1;
@@ -29,6 +34,16 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
      * The maximum number of unhandled exceptions to allow before failing.
      */
     public $maxExceptions = 1;
+
+    /**
+     * The number of seconds to wait before retrying the job.
+     */
+    public $backoff = 60;
+
+    /**
+     * The tags that should be assigned to the job.
+     */
+    public $tags = ['uk-certificates', 'google-drive'];
 
     protected $ukCertificate;
     protected $driveUrl;
@@ -77,112 +92,173 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
                 return;
             }
 
-            $matched = 0;
-            $unmatched = 0;
-            $failed = 0;
-            $processed = 0;
             $total = count($files);
-
-            Log::info('Processing files from Google Drive', [
+            $batchSize = 25; // Smaller batch size for better progress tracking
+            $totalBatches = ceil($total / $batchSize);
+            
+            Log::info('Processing files from Google Drive in batches', [
                 'certificate_id' => $this->ukCertificate->id,
-                'total_files' => $total
+                'total_files' => $total,
+                'batch_size' => $batchSize,
+                'total_batches' => $totalBatches
             ]);
 
-            foreach ($files as $file) {
-                try {
-                    Log::info('DEBUG: Starting to process file in main loop', [
-                        'certificate_id' => $this->ukCertificate->id,
-                        'filename' => $file['name'],
-                        'file_data' => $file,
-                        'processed' => $processed,
-                        'total' => $total,
-                        'timestamp' => now()->toISOString()
-                    ]);
-                    
-                    // Update progress
-                    $this->ukCertificate->update([
-                        'progress_percentage' => ($processed / $total) * 100,
-                        'current_file' => $file['name'],
-                    ]);
+            $totalMatched = 0;
+            $totalUnmatched = 0;
+            $totalFailed = 0;
 
-                    $result = $this->processFile($file);
-                    
-                    Log::info('DEBUG: File processing result', [
-                        'certificate_id' => $this->ukCertificate->id,
-                        'filename' => $file['name'],
-                        'result' => $result,
-                        'timestamp' => now()->toISOString()
-                    ]);
-                    
-                    switch ($result) {
-                        case 'matched':
-                            $matched++;
-                            break;
-                        case 'unmatched':
-                            $unmatched++;
-                            break;
-                        case 'failed':
-                            $failed++;
-                            break;
-                    }
-
-                    $processed++;
-                    
-                    // Small delay to prevent overwhelming Google Drive
-                    usleep(200000); // 0.2 seconds
-
-                } catch (\Exception $e) {
-                    Log::error('DEBUG: Exception in main file processing loop', [
-                        'certificate_id' => $this->ukCertificate->id,
-                        'filename' => $file['name'],
-                        'file_data' => $file,
-                        'error' => $e->getMessage(),
-                        'trace' => $e->getTraceAsString(),
-                        'timestamp' => now()->toISOString()
-                    ]);
-                    Log::error('Error processing file', [
-                        'certificate_id' => $this->ukCertificate->id,
-                        'filename' => $file['name'],
-                        'error' => $e->getMessage()
-                    ]);
-                    $failed++;
-                    $processed++;
-                }
+            // Process files in batches
+            for ($batch = 0; $batch < $totalBatches; $batch++) {
+                $startIndex = $batch * $batchSize;
+                $endIndex = min($startIndex + $batchSize, $total);
+                $batchFiles = array_slice($files, $startIndex, $batchSize);
+                
+                Log::info('Processing batch', [
+                    'certificate_id' => $this->ukCertificate->id,
+                    'batch_number' => $batch + 1,
+                    'total_batches' => $totalBatches,
+                    'batch_start' => $startIndex + 1,
+                    'batch_end' => $endIndex,
+                    'batch_size' => count($batchFiles),
+                    'timestamp' => now()->toISOString()
+                ]);
+                
+                $batchResult = $this->processBatch($batchFiles, $startIndex, $total);
+                
+                // Accumulate results
+                $totalMatched += $batchResult['matched'];
+                $totalUnmatched += $batchResult['unmatched'];
+                $totalFailed += $batchResult['failed'];
+                
+                // Update progress after each batch
+                $progressPercentage = ($endIndex / $total) * 100;
+                $this->ukCertificate->update([
+                    'progress_percentage' => $progressPercentage,
+                    'current_file' => "Batch " . ($batch + 1) . " of " . $totalBatches,
+                    'matched_count' => $totalMatched,
+                    'unmatched_count' => $totalUnmatched,
+                    'failed_count' => $totalFailed,
+                ]);
+                
+                Log::info('Batch completed', [
+                    'certificate_id' => $this->ukCertificate->id,
+                    'batch_number' => $batch + 1,
+                    'total_batches' => $totalBatches,
+                    'batch_result' => $batchResult,
+                    'progress_percentage' => $progressPercentage,
+                    'total_matched' => $totalMatched,
+                    'total_unmatched' => $totalUnmatched,
+                    'total_failed' => $totalFailed,
+                    'timestamp' => now()->toISOString()
+                ]);
             }
-
-            // Update final counts
+            
+            // All batches completed successfully
             $this->ukCertificate->update([
-                'total_files' => $total,
-                'matched_count' => $matched,
-                'unmatched_count' => $unmatched,
-                'failed_count' => $failed,
                 'status' => UkCertificate::STATUS_COMPLETED,
                 'progress_percentage' => 100,
+                'current_file' => 'All files processed',
+                'total_files' => $total,
+                'matched_count' => $totalMatched,
+                'unmatched_count' => $totalUnmatched,
+                'failed_count' => $totalFailed,
                 'completed_at' => now(),
             ]);
-
-            Log::info('Google Drive processing completed', [
+            
+            Log::info('All files processed successfully', [
                 'certificate_id' => $this->ukCertificate->id,
-                'total' => $total,
-                'matched' => $matched,
-                'unmatched' => $unmatched,
-                'failed' => $failed
+                'total_files' => $total,
+                'total_matched' => $totalMatched,
+                'total_unmatched' => $totalUnmatched,
+                'total_failed' => $totalFailed,
+                'timestamp' => now()->toISOString()
             ]);
-
+            
         } catch (\Exception $e) {
-            Log::error('Google Drive processing failed', [
+            Log::error('Error in Google Drive processing job', [
                 'certificate_id' => $this->ukCertificate->id,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
+                'timestamp' => now()->toISOString()
             ]);
-
+            
             $this->ukCertificate->update([
                 'status' => UkCertificate::STATUS_FAILED,
-                'progress_percentage' => 100,
+                'failed_count' => ($this->ukCertificate->failed_count ?? 0) + 1,
+                'current_file' => 'Error: ' . $e->getMessage(),
             ]);
             
             throw $e;
         }
+    }
+
+    /**
+     * Process a batch of files
+     */
+    private function processBatch($batchFiles, $startIndex, $total)
+    {
+        $matched = 0;
+        $unmatched = 0;
+        $failed = 0;
+        
+        foreach ($batchFiles as $index => $file) {
+            $globalIndex = $startIndex + $index;
+            
+            try {
+                Log::info('DEBUG: Starting to process file in batch', [
+                    'certificate_id' => $this->ukCertificate->id,
+                    'filename' => $file['name'],
+                    'file_data' => $file,
+                    'global_index' => $globalIndex + 1,
+                    'total' => $total,
+                    'batch_index' => $index + 1,
+                    'batch_size' => count($batchFiles),
+                    'timestamp' => now()->toISOString()
+                ]);
+                
+                $result = $this->processFile($file);
+                
+                Log::info('DEBUG: File processing result', [
+                    'certificate_id' => $this->ukCertificate->id,
+                    'filename' => $file['name'],
+                    'result' => $result,
+                    'timestamp' => now()->toISOString()
+                ]);
+                
+                switch ($result) {
+                    case 'matched':
+                        $matched++;
+                        break;
+                    case 'unmatched':
+                        $unmatched++;
+                        break;
+                    case 'failed':
+                        $failed++;
+                        break;
+                }
+                
+                // Reduced delay to speed up processing
+                usleep(100000); // 0.1 seconds instead of 0.2
+                
+            } catch (\Exception $e) {
+                Log::error('DEBUG: Exception in batch file processing', [
+                    'certificate_id' => $this->ukCertificate->id,
+                    'filename' => $file['name'],
+                    'file_data' => $file,
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
+                    'timestamp' => now()->toISOString()
+                ]);
+                $failed++;
+            }
+        }
+        
+        return [
+            'matched' => $matched,
+            'unmatched' => $unmatched,
+            'failed' => $failed,
+            'total' => count($batchFiles)
+        ];
     }
 
     /**
@@ -585,7 +661,11 @@ class ProcessGoogleDriveCertificatesJob implements ShouldQueue
             }
             
             // Use the authenticated Google Drive service to download the file
-            $service = new GoogleDriveService($this->googleClient);
+            // Create service instance once and reuse it
+            static $service = null;
+            if ($service === null) {
+                $service = new GoogleDriveService($this->googleClient);
+            }
             
             try {
                 $file = $service->files->get($fileId, ['alt' => 'media']);
