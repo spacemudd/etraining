@@ -309,7 +309,7 @@ export default {
             return this.import;
         },
         isProcessing() {
-            return this.status.status === 'processing' || this.status.status === 'sending';
+            return this.status.status === 'processing' || this.status.status === 'sending' || this.status.status === 'unknown';
         },
         canSubmit() {
             return this.status.status === 'completed' && 
@@ -341,11 +341,17 @@ export default {
         }
     },
     mounted() {
+        // Always load status immediately when component mounts
         this.loadStatus();
-        // Only start continuous status checking if still processing
-        if (this.isProcessing) {
-            this.startStatusChecking();
-        }
+        
+        // Start continuous status checking immediately for all statuses
+        // This ensures we catch status changes from Google Drive uploads
+        this.startStatusChecking();
+        
+        // Also refresh status after a short delay to catch any immediate updates
+        setTimeout(() => {
+            this.loadStatus();
+        }, 1000);
     },
     beforeDestroy() {
         if (this.statusCheckInterval) {
@@ -357,8 +363,11 @@ export default {
     methods: {
         async loadStatus() {
             try {
+                console.log('Loading status for import:', this.importData.id);
                 const response = await axios.get(`/back/uk-certificates/${this.importData.id}/status`);
                 const data = response.data;
+                
+                console.log('Status API response:', data);
                 
                 // Ensure progress_percentage is a number
                 if (data.progress_percentage !== undefined) {
@@ -366,6 +375,7 @@ export default {
                 }
                 
                 this.status = { ...this.status, ...data };
+                console.log('Updated local status:', this.status);
             } catch (err) {
                 console.error('Failed to load status:', err);
                 // Don't override the status if API call fails, keep the initial import status
@@ -388,13 +398,18 @@ export default {
         },
 
         startStatusChecking() {
+            console.log('Starting status checking interval...');
             this.statusCheckInterval = setInterval(async () => {
+                console.log('Status check interval triggered, current status:', this.status.status);
                 await this.loadStatus();
                 
+                // Only stop checking when we have a definitive final status
                 if (this.status.status === 'completed' || this.status.status === 'failed' || this.status.status === 'sent') {
+                    console.log('Stopping status checking, final status reached:', this.status.status);
                     clearInterval(this.statusCheckInterval);
                     this.statusCheckInterval = null;
                 }
+                // Continue checking for 'processing', 'sending', 'unknown', etc.
             }, 2000); // Check every 2 seconds
         },
 

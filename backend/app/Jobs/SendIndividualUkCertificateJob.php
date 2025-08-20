@@ -45,23 +45,15 @@ class SendIndividualUkCertificateJob implements ShouldQueue
             
             if ($pdfContent) {
                 // Send email with row ID for tracking
-                $mail = Mail::to($row->trainee->email)
-                    ->bcc(['shafiqalshaar@adv-line.com', 'mashael.a@hadaf-hq.com'])
+                Mail::to($row->trainee->email)
+                    ->bcc(['shafiqal-shaar@adv-line.com', 'mashael.a@hadaf-hq.com'])
                     ->send(new \App\Mail\UkCertificateMail($pdfContent, basename($row->pdf_path), $row->trainee, $this->rowId));
                 
-                // Extract Mailgun message ID from the sent message
-                $messageId = null;
-                if (method_exists($mail, 'getSymfonySentMessage')) {
-                    $symfonyMessage = $mail->getSymfonySentMessage();
-                    if ($symfonyMessage) {
-                        $messageId = $symfonyMessage->getMessageId();
-                    }
-                }
-                
+                // Since Mail::send returns void, we can't extract message ID here
+                // The message ID will be captured by Mailgun webhooks instead
                 $row->update([
                     'sent_at' => now(),
                     'status' => 'sent',
-                    'mailgun_message_id' => $messageId,
                     'delivery_status' => UkCertificateRow::DELIVERY_STATUS_PENDING,
                 ]);
                 
