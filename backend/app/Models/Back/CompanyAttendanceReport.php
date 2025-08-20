@@ -129,6 +129,48 @@ class CompanyAttendanceReport extends Model implements Auditable
                 ->get();
     }
 
+    public function getAllTraineesWithResignations()
+    {
+        // Get all trainees including deleted ones and those with resignations
+        $allTrainees = collect();
+        
+        // 1. Active trainees from the report
+        $activeTrainees = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->id)
+            ->with(['trainee' => function($q) {
+                $q->withTrashed();
+            }])->get();
+        $allTrainees = $allTrainees->merge($activeTrainees);
+        
+        // 2. Get trainees with resignations AND deleted (soft deleted) - ONLY THESE SHOULD BE INCLUDED
+        $resignationTrainees = $this->company->resignations()
+            ->where('status', 'sent') // Only approved resignations
+            ->where('resignation_date', '>=', $this->date_from) // Resignation date should be within or after report period
+            ->with(['trainees' => function($q) {
+                $q->onlyTrashed(); // ONLY deleted trainees
+            }])
+            ->get()
+            ->flatMap(function($resignation) {
+                return $resignation->trainees->map(function($trainee) use ($resignation) {
+                    // Create a mock CompanyAttendanceReportsTrainee object for display
+                    $mockAttendance = new \stdClass();
+                    $mockAttendance->trainee = $trainee;
+                    $mockAttendance->is_resignation = true;
+                    $mockAttendance->resignation_date = $resignation->resignation_date;
+                    $mockAttendance->active = true; // Set as active for display purposes
+                    return $mockAttendance;
+                });
+            });
+        
+        $allTrainees = $allTrainees->merge($resignationTrainees);
+        
+        // Remove duplicates based on trainee ID
+        $uniqueTrainees = $allTrainees->unique(function($item) {
+            return $item->trainee->id;
+        });
+
+        return $uniqueTrainees;
+    }
+
     public function getFallsUnderPtcNetAttribute()
     {
         return $this->company->is_ptc_net;
