@@ -127,9 +127,11 @@ class CompanyAttendanceReportController extends Controller
                     'end_date' => Carbon::parse($resignation->resignation_date)->endOfDay(), // End at resignation date
                 ];
             } else {
-                // This is an active trainee
+                // This is an active trainee - set start_date and end_date to null
                 $traineeData[$traineeId] = [
                     'active' => true,
+                    'start_date' => null,
+                    'end_date' => null,
                 ];
             }
         }
