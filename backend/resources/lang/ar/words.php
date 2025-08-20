@@ -847,4 +847,9 @@ return [
     'sending-certificates' => 'إرسال الشهادات',
     'certificates-sent' => 'تم إرسال الشهادات بنجاح',
     'back-to-imports' => 'العودة إلى الاستيرادات',
+    'delivery-status' => 'حالة التسليم',
+    'delivered' => 'تم التسليم',
+    'failed' => 'فشل',
+    'pending' => 'في الانتظار',
+    'unknown' => 'غير معروف',
 ];

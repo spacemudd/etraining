@@ -498,7 +498,7 @@ class UkCertificatesController extends Controller
     public function getProcessingStatus($importId)
     {
         $ukCertificate = UkCertificate::with(['rows' => function ($query) {
-            $query->select('uk_certificate_id', 'status', 'trainee_id', 'identity_number', 'trainee_name', 'filename', 'error_message');
+            $query->select('uk_certificate_id', 'status', 'trainee_id', 'identity_number', 'trainee_name', 'filename', 'error_message', 'delivery_status', 'delivered_at', 'failed_at', 'delivery_failure_reason', 'mailgun_message_id', 'sent_at');
         }, 'rows.trainee:id,name,email'])->findOrFail($importId);
 
         $matched = $ukCertificate->rows->where('trainee_id', '!=', null)->map(function ($row) {
@@ -509,6 +509,12 @@ class UkCertificatesController extends Controller
                 'identity_number' => $row->identity_number,
                 'filename' => $row->filename,
                 'status' => $row->status,
+                'delivery_status' => $row->delivery_status,
+                'delivered_at' => $row->delivered_at,
+                'failed_at' => $row->failed_at,
+                'delivery_failure_reason' => $row->delivery_failure_reason,
+                'mailgun_message_id' => $row->mailgun_message_id,
+                'sent_at' => $row->sent_at,
             ];
         })->values();
         
@@ -518,6 +524,12 @@ class UkCertificatesController extends Controller
                 'identity_number' => $row->identity_number,
                 'trainee_name' => $row->trainee_name,
                 'status' => $row->status,
+                'delivery_status' => $row->delivery_status,
+                'delivered_at' => $row->delivered_at,
+                'failed_at' => $row->failed_at,
+                'delivery_failure_reason' => $row->delivery_failure_reason,
+                'mailgun_message_id' => $row->mailgun_message_id,
+                'sent_at' => $row->sent_at,
                 'searchQuery' => '',
                 'searchResults' => [],
                 'selectedTrainee' => null,
@@ -531,6 +543,12 @@ class UkCertificatesController extends Controller
                 'trainee_name' => $row->trainee_name,
                 'error_message' => $row->error_message,
                 'status' => $row->status,
+                'delivery_status' => $row->delivery_status,
+                'delivered_at' => $row->delivered_at,
+                'failed_at' => $row->failed_at,
+                'delivery_failure_reason' => $row->delivery_failure_reason,
+                'mailgun_message_id' => $row->mailgun_message_id,
+                'sent_at' => $row->sent_at,
             ];
         })->values();
 

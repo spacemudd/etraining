@@ -849,4 +849,9 @@ return [
     'sending-certificates' => 'Sending certificates',
     'certificates-sent' => 'Certificates sent successfully',
     'back-to-imports' => 'Back to imports',
+    'delivery-status' => 'Delivery Status',
+    'delivered' => 'Delivered',
+    'failed' => 'Failed',
+    'pending' => 'Pending',
+    'unknown' => 'Unknown',
 ];

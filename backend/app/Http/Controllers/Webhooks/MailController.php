@@ -12,6 +12,7 @@ use App\Services\CompaniesService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Mail;
@@ -20,7 +21,22 @@ class MailController extends Controller
 {
     public function store(Request $request)
     {
+        // Debug: Log raw webhook data
+        Log::info('Mailgun Webhook Raw Data', [
+            'headers' => $request->headers->all(),
+            'body' => $request->all(),
+            'raw_content' => $request->getContent(),
+            'timestamp' => now()->toISOString(),
+        ]);
+
         $eventData = $request->input('event-data');
+
+        // Debug: Log parsed event data
+        Log::info('Mailgun Webhook Event Data', [
+            'event_data' => $eventData,
+            'event_type' => $eventData['event'] ?? 'unknown',
+            'timestamp' => now()->toISOString(),
+        ]);
 
         // tracking delivery of UK certificates
         if (array_key_exists('uk_certificate_row_id', $eventData['user-variables'])) {

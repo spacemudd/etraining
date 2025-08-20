@@ -636,7 +636,7 @@ export default {
             "unmatched": "غير مطابق",
             "sent": "تم الارسال",
             "delivery-report": "تقرير التسليم",
-            "pending": "مــعـلـق",
+            "pending": "في الانتظار",
             "processing": "جاري المعالجة",
             "process-files": "معالجة الملفات",
             "select-course": "اختر الدورة",
@@ -848,7 +848,10 @@ export default {
             "loading-status": "جاري تحميل الحالة...",
             "sending-certificates": "إرسال الشهادات",
             "certificates-sent": "تم إرسال الشهادات بنجاح",
-            "back-to-imports": "العودة إلى الاستيرادات"
+            "back-to-imports": "العودة إلى الاستيرادات",
+            "delivery-status": "حالة التسليم",
+            "delivered": "تم التسليم",
+            "unknown": "غير معروف"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -1854,7 +1857,10 @@ export default {
             "loading-status": "Loading status...",
             "sending-certificates": "Sending certificates",
             "certificates-sent": "Certificates sent successfully",
-            "back-to-imports": "Back to imports"
+            "back-to-imports": "Back to imports",
+            "delivery-status": "Delivery Status",
+            "delivered": "Delivered",
+            "unknown": "Unknown"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",
