@@ -153,7 +153,11 @@
                                 @if ($record->status === 'suspend_account')
                                     &#120;
                                 @elseif($days[$i]['vacation_day'])
-                                    X
+                                    @if ($record->start_date && $days[$i]['date_carbon']->isAfter($record->end_date))
+                                        {{-- Weekend after resignation date - show empty --}}
+                                    @else
+                                        X
+                                    @endif
                                 @else
                                     @if ($record->start_date)
                                         @if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date))
@@ -163,7 +167,7 @@
                                                     <br/>
                                                     <span style="font-size:8px;text-align: center;">08:{{sprintf("%02d",rand(1,10))}}</span>
                                                     <br/>
-                                                    <span style="font-size:8px;text-align: center;">16:{{sprintf("%02d",rand(0,5))}}</span>
+                                                    <span style="font-size:8px;text-align: center;">16:{{sprintf("%02d",rand(1,10))}}</span>
                                                 @endif
                                             @endif
                                         @else
@@ -179,7 +183,7 @@
                                                 <br/>
                                                 <span style="font-size:8px;text-align: center;">08:{{sprintf("%02d",rand(1,10))}}</span>
                                                 <br/>
-                                                <span style="font-size:8px;text-align: center;">16:{{sprintf("%02d",rand(0,5))}}</span>
+                                                <span style="font-size:8px;text-align: center;">16:{{sprintf("%02d",rand(1,10))}}</span>
                                             @endif
                                         @endif
                                     @endif
@@ -233,7 +237,11 @@
                                 @if ($record->status === 'suspend_account')
                                     &#120;
                                 @elseif($days[$i]['vacation_day'])
-                                    X
+                                    @if ($record->start_date && $days[$i]['date_carbon']->isAfter($record->end_date))
+                                        {{-- Weekend after resignation date - show empty --}}
+                                    @else
+                                        X
+                                    @endif
                                 @else
                                     @if ($record->start_date)
                                         @if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date))
@@ -243,7 +251,7 @@
                                                     <br/>
                                                     <span style="font-size:8px;text-align: center;">08:{{sprintf("%02d",rand(1,10))}}</span>
                                                     <br/>
-                                                    <span style="font-size:8px;text-align: center;">16:{{sprintf("%02d",rand(0,5))}}</span>
+                                                    <span style="font-size:8px;text-align: center;">16:{{sprintf("%02d",rand(1,10))}}</span>
                                                 @endif
                                             @endif
                                         @else
@@ -259,7 +267,7 @@
                                                 <br/>
                                                 <span style="font-size:8px;text-align: center;">08:{{sprintf("%02d",rand(1,10))}}</span>
                                                 <br/>
-                                                <span style="font-size:8px;text-align: center;">16:{{sprintf("%02d",rand(0,5))}}</span>
+                                                <span style="font-size:8px;text-align: center;">16:{{sprintf("%02d",rand(1,10))}}</span>
                                             @endif
                                         @endif
                                     @endif

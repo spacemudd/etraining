@@ -28,7 +28,7 @@ class AddResignationDateToResignationsTable extends Migration
     public function down()
     {
         Schema::table('resignations', function (Blueprint $table) {
-            //
+            $table->dropColumn('resignation_date');
         });
     }
 }

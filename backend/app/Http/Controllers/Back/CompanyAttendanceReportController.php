@@ -81,7 +81,62 @@ class CompanyAttendanceReportController extends Controller
             'date_to' => $date_to,
             'with_logo' => false,
         ]);
-        $report->trainees()->attach($company->trainees()->pluck('id'));
+
+        // Get all trainees including deleted ones and those with resignations
+        $allTrainees = collect();
+        
+        // 1. Active trainees (not deleted)
+        $activeTrainees = $company->trainees()->get();
+        $allTrainees = $allTrainees->merge($activeTrainees);
+        
+        // 2. Trainees with resignations AND deleted (soft deleted) - ONLY THESE SHOULD BE INCLUDED
+        $resignationTrainees = $company->resignations()
+            ->whereIn('status', ['new', 'sent']) // Include both new and sent resignations
+            ->where('resignation_date', '>=', $date_from) // Resignation date should be within or after report period
+            ->with(['trainees' => function($q) {
+                $q->onlyTrashed(); // ONLY deleted trainees
+            }])
+            ->get()
+            ->flatMap(function($resignation) {
+                return $resignation->trainees;
+            });
+        
+        $allTrainees = $allTrainees->merge($resignationTrainees);
+        
+        // Remove duplicates and attach to report
+        $uniqueTraineeIds = $allTrainees->unique('id')->pluck('id');
+        
+        // Prepare trainee data with start_date and end_date for resigned trainees
+        $traineeData = [];
+        foreach ($uniqueTraineeIds as $traineeId) {
+            $trainee = $allTrainees->firstWhere('id', $traineeId);
+            
+            // Check if this trainee has a resignation
+            $resignation = $company->resignations()
+                ->whereIn('status', ['new', 'sent'])
+                ->whereHas('trainees', function($q) use ($traineeId) {
+                    $q->where('trainees.id', $traineeId); // Specify table name to avoid ambiguity
+                })
+                ->first();
+            
+            if ($resignation && $trainee->trashed()) {
+                // This is a resigned and deleted trainee
+                $traineeData[$traineeId] = [
+                    'active' => true,
+                    'start_date' => $date_from, // Start from report start date
+                    'end_date' => Carbon::parse($resignation->resignation_date)->endOfDay(), // End at resignation date
+                ];
+            } else {
+                // This is an active trainee - set start_date and end_date to null
+                $traineeData[$traineeId] = [
+                    'active' => true,
+                    'start_date' => null,
+                    'end_date' => null,
+                ];
+            }
+        }
+        
+        $report->trainees()->attach($traineeData);
 
         // If there is an old report, use the previous emails. Otherwise, copy the company's emails.
         if ($previousReport) {

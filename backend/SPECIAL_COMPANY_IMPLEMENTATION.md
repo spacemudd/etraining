@@ -1,7 +1,9 @@
-# تنفيذ تصميم خاص لشيت الحضور للشركة المحددة
+# تنفيذ تصميم خاص لشيت الحضور للشركات المحددة
 
 ## نظرة عامة
-تم تنفيذ تصميم مختلف لشيت الحضور والانصراف للشركة التي تحمل المعرف `9ef83749-d1ba-44a5-82a9-f726840e02db` فقط.
+تم تنفيذ تصميم مختلف لشيت الحضور والانصراف للشركات التالية:
+- `9ef83749-d1ba-44a5-82a9-f726840e02db` - مصنع هلال مشبب العتيبي
+- `92d30511-77a8-4290-8d20-419f93ede3fd` - الشركة الجديدة
 
 ## الملفات المضافة/المعدلة
 
@@ -22,7 +24,10 @@
 #### دالة makePdf()
 ```php
 // Check if this is the special company to use different design
-if ($report->company->id === '9ef83749-d1ba-44a5-82a9-f726840e02db') {
+if (in_array($report->company->id, [
+    '9ef83749-d1ba-44a5-82a9-f726840e02db', // مصنع هلال مشبب العتيبي
+    '92d30511-77a8-4290-8d20-419f93ede3fd', // الشركة الجديدة
+])) {
     $view = 'pdf.company-attendance-report.special-company';
 } else {
     $view = $report->activeTraineesCount() > 8 ? 'pdf.company-attendance-report.show' : 'pdf.company-attendance-report.one-table';
@@ -32,7 +37,10 @@ if ($report->company->id === '9ef83749-d1ba-44a5-82a9-f726840e02db') {
 #### دالة makeIndividualPdf()
 ```php
 // Check if this is the special company to use different design
-if ($record->company->id === '9ef83749-d1ba-44a5-82a9-f726840e02db') {
+if (in_array($record->company->id, [
+    '9ef83749-d1ba-44a5-82a9-f726840e02db', // مصنع هلال مشبب العتيبي
+    '92d30511-77a8-4290-8d20-419f93ede3fd', // الشركة الجديدة
+])) {
     $view = 'pdf.company-attendance-report.special-company-individual';
 } else {
     $view = 'pdf.company-attendance-report.individual-table';

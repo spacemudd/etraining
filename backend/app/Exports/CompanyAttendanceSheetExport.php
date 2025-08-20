@@ -75,17 +75,48 @@ class CompanyAttendanceSheetExport implements FromView, WithEvents, WithStyles, 
             $company_name = $this->report->company->name_en;
         }
 
-        $attendances = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->report->id)
+        // Get all trainees including deleted ones and those with resignations
+        $allTrainees = collect();
+        
+        // 1. Active trainees from the report
+        $activeTrainees = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->report->id)
             ->with(['trainee' => function($q) {
                 $q->withTrashed();
             }])->get();
+        $allTrainees = $allTrainees->merge($activeTrainees);
+        
+        // 2. Get trainees with resignations AND deleted (soft deleted) - ONLY THESE SHOULD BE INCLUDED
+        $resignationTrainees = $this->report->company->resignations()
+            ->whereIn('status', ['new', 'sent']) // Include both new and sent resignations
+            ->where('resignation_date', '>=', $this->report->date_from) // Resignation date should be within or after report period
+            ->with(['trainees' => function($q) {
+                $q->onlyTrashed(); // ONLY deleted trainees
+            }])
+            ->get()
+            ->flatMap(function($resignation) {
+                return $resignation->trainees->map(function($trainee) use ($resignation) {
+                    // Create a mock CompanyAttendanceReportsTrainee object for display
+                    $mockAttendance = new \stdClass();
+                    $mockAttendance->trainee = $trainee;
+                    $mockAttendance->is_resignation = true;
+                    $mockAttendance->resignation_date = $resignation->resignation_date;
+                    return $mockAttendance;
+                });
+            });
+        
+        $allTrainees = $allTrainees->merge($resignationTrainees);
+        
+        // Remove duplicates based on trainee ID
+        $uniqueTrainees = $allTrainees->unique(function($item) {
+            return $item->trainee->id;
+        });
 
-        $attendancesCount = $attendances->count();
+        $attendancesCount = $uniqueTrainees->count();
 
          return view('exports.company-attendance-sheet', [
              'report' => $this->report,
              'company_name' => $company_name,
-             'company_attendance' => $attendances,
+             'company_attendance' => $uniqueTrainees,
         ]);
     }
 }

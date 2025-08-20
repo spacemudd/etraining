@@ -24,7 +24,8 @@
         <tr style="height:120px;background:#e0e0e0;">
             <th style="border:1px solid black;background-color:#a0a0a0; text-align:center; width:50px; text-align:center">اسم الموظف</th>
             <th style="border:1px solid black;background-color:#a0a0a0; text-align:center; width:50px; text-align:center">السجل المدني</th>
-
+            <th style="border:1px solid black;background-color:#a0a0a0; text-align:center; width:50px; text-align:center">الحالة</th>
+            <th style="border:1px solid black;background-color:#a0a0a0; text-align:center; width:50px; text-align:center">تاريخ الاستقالة</th>
         </tr>
     </thead>
 
@@ -33,6 +34,22 @@
     <tr>
             <td style="border:1px solid black; text-align:center;">{{ $attendance->trainee->name }}</td>
             <td style="border:1px solid black; text-align:center;"> {{ $attendance->trainee->identity_number }}</td>
+            <td style="border:1px solid black; text-align:center;">
+                @if(isset($attendance->is_resignation) && $attendance->is_resignation)
+                    مستقيل ومحذوف
+                @elseif($attendance->trainee->trashed())
+                    محذوف
+                @else
+                    نشط
+                @endif
+            </td>
+            <td style="border:1px solid black; text-align:center;">
+                @if(isset($attendance->is_resignation) && $attendance->is_resignation && isset($attendance->resignation_date))
+                    {{ \Carbon\Carbon::parse($attendance->resignation_date)->format('Y-m-d') }}
+                @else
+                    -
+                @endif
+            </td>
     </tr>
     @endforeach
     </tbody>
