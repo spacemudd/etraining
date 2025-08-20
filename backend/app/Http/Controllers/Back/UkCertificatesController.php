@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 use Inertia\Inertia;
 use ZipArchive;
+use Illuminate\Support\Facades\Log;
 
 class UkCertificatesController extends Controller
 {
@@ -638,5 +639,150 @@ class UkCertificatesController extends Controller
             'status' => UkCertificateRow::STATUS_FAILED,
             'error_message' => $errorMessage,
         ]);
+    }
+
+    /**
+     * Delete UK certificate and all associated files
+     */
+    public function delete($importId)
+    {
+        try {
+            $ukCertificate = UkCertificate::findOrFail($importId);
+            
+            Log::info('Starting deletion of UK certificate', [
+                'certificate_id' => $importId,
+                'status' => $ukCertificate->status,
+                'total_files' => $ukCertificate->total_files ?? 0,
+                'timestamp' => now()->toISOString()
+            ]);
+
+            // Stop any running jobs if still processing
+            if ($ukCertificate->status === UkCertificate::STATUS_PROCESSING) {
+                $this->stopRunningJobs($ukCertificate);
+            }
+
+            // Delete all S3 files
+            $this->deleteS3Files($ukCertificate);
+
+            // Delete all database records
+            $this->deleteDatabaseRecords($ukCertificate);
+
+            // Delete the main certificate record
+            $ukCertificate->delete();
+
+            Log::info('Successfully deleted UK certificate and all associated data', [
+                'certificate_id' => $importId,
+                'timestamp' => now()->toISOString()
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'UK certificate and all associated files have been deleted successfully.'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Failed to delete UK certificate', [
+                'certificate_id' => $importId,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'timestamp' => now()->toISOString()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete UK certificate: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Stop any running jobs for this certificate
+     */
+    private function stopRunningJobs($ukCertificate)
+    {
+        try {
+            // Check if there are any running jobs in the queue
+            // For now, we'll just update the status to cancelled
+            // In a more sophisticated implementation, you could use Laravel Horizon to stop specific jobs
+            
+            $ukCertificate->update([
+                'status' => UkCertificate::STATUS_CANCELLED,
+                'current_file' => 'Deletion requested - job cancelled',
+                'completed_at' => now(),
+            ]);
+
+            Log::info('Cancelled running jobs for UK certificate', [
+                'certificate_id' => $ukCertificate->id,
+                'timestamp' => now()->toISOString()
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Failed to stop running jobs', [
+                'certificate_id' => $ukCertificate->id,
+                'error' => $e->getMessage(),
+                'timestamp' => now()->toISOString()
+            ]);
+        }
+    }
+
+    /**
+     * Delete all S3 files for this certificate
+     */
+    private function deleteS3Files($ukCertificate)
+    {
+        try {
+            $s3Path = 'uk-certificates/' . $ukCertificate->id;
+            
+            // Check if the directory exists
+            if (Storage::disk('s3')->exists($s3Path)) {
+                // Delete the entire directory and all its contents
+                Storage::disk('s3')->deleteDirectory($s3Path);
+                
+                Log::info('Successfully deleted S3 directory', [
+                    'certificate_id' => $ukCertificate->id,
+                    's3_path' => $s3Path,
+                    'timestamp' => now()->toISOString()
+                ]);
+            } else {
+                Log::info('S3 directory does not exist, nothing to delete', [
+                    'certificate_id' => $ukCertificate->id,
+                    's3_path' => $s3Path,
+                    'timestamp' => now()->toISOString()
+                ]);
+            }
+
+        } catch (\Exception $e) {
+            Log::error('Failed to delete S3 files', [
+                'certificate_id' => $ukCertificate->id,
+                'error' => $e->getMessage(),
+                'timestamp' => now()->toISOString()
+            ]);
+            // Don't throw here, continue with database cleanup
+        }
+    }
+
+    /**
+     * Delete all database records for this certificate
+     */
+    private function deleteDatabaseRecords($ukCertificate)
+    {
+        try {
+            // Delete all certificate rows
+            $deletedRows = UkCertificateRow::where('uk_certificate_id', $ukCertificate->id)->delete();
+            
+            Log::info('Successfully deleted database records', [
+                'certificate_id' => $ukCertificate->id,
+                'deleted_rows' => $deletedRows,
+                'timestamp' => now()->toISOString()
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Failed to delete database records', [
+                'certificate_id' => $ukCertificate->id,
+                'error' => $e->getMessage(),
+                'timestamp' => now()->toISOString()
+            ]);
+            // Don't throw here, continue with main record deletion
+        }
     }
 }

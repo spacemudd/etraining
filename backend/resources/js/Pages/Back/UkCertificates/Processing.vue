@@ -14,9 +14,30 @@
                     <h1 class="font-bold text-3xl">{{ $t('words.processing-uk-certificates') }}</h1>
                     <p class="text-gray-600 mt-2">{{ $t('words.course') }}: {{ importData.course?.name_ar || 'Unknown Course' }}</p>
                 </div>
-                <div class="text-right">
-                    <div class="text-sm text-gray-500">{{ $t('words.import-id') }}: {{ importData.id }}</div>
-                    <div class="text-sm text-gray-500">{{ $t('words.started-at') }}: {{ formatDateTime(importData.started_at) }}</div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-right">
+                        <div class="text-sm text-gray-500">{{ $t('words.import-id') }}: {{ importData.id }}</div>
+                        <div class="text-sm text-gray-500">{{ $t('words.started-at') }}: {{ formatDateTime(importData.started_at) }}</div>
+                    </div>
+                    <button 
+                        @click="confirmDelete" 
+                        class="btn-red px-4 py-2 text-sm"
+                        :disabled="isDeleting"
+                    >
+                        <span v-if="isDeleting" class="flex items-center">
+                            <svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            {{ $t('words.deleting') }}...
+                        </span>
+                        <span v-else class="flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 000-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                            </svg>
+                            {{ $t('words.delete') }}
+                        </span>
+                    </button>
                 </div>
             </div>
 
@@ -271,6 +292,7 @@ export default {
             },
             statusCheckInterval: null,
             searchTimeouts: {},
+            isDeleting: false,
         }
     },
     mounted() {
@@ -391,6 +413,32 @@ export default {
 
         goBack() {
             this.$inertia.visit(route('back.uk-certificates.index'));
+        },
+
+        confirmDelete() {
+            if (confirm(this.$t('words.confirm-delete-uk-certificate'))) {
+                this.deleteCertificate();
+            }
+        },
+
+        async deleteCertificate() {
+            this.isDeleting = true;
+            
+            try {
+                const response = await axios.delete(`/back/uk-certificates/${this.import.id}`);
+                
+                if (response.data.success) {
+                    alert(this.$t('words.uk-certificate-deleted-successfully'));
+                    this.goBack();
+                } else {
+                    alert(this.$t('words.failed-to-delete-uk-certificate'));
+                }
+            } catch (err) {
+                console.error('Delete failed:', err);
+                alert(this.$t('words.failed-to-delete-uk-certificate'));
+            } finally {
+                this.isDeleting = false;
+            }
         },
     }
 }

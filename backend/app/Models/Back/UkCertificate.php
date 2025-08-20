@@ -37,6 +37,7 @@ class UkCertificate extends Model
     const STATUS_SENDING = 'sending';
     const STATUS_SENT = 'sent';
     const STATUS_FAILED = 'failed';
+    const STATUS_CANCELLED = 'cancelled';
 
     public function course()
     {
