@@ -97,8 +97,8 @@ class ProcessSingleGoogleDriveFileJob implements ShouldQueue
             $identityNumber = $parseResult['identity_number'];
             $traineeName = $parseResult['trainee_name'];
 
-            // Try to find trainee by identity number
-            $trainee = Trainee::where('identity_number', $identityNumber)->first();
+            // Try to find trainee by identity number (including trashed)
+            $trainee = Trainee::withTrashed()->where('identity_number', $identityNumber)->first();
 
             if ($trainee) {
                 // Process matched trainee
