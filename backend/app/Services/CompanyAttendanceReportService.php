@@ -258,6 +258,7 @@ class CompanyAttendanceReportService
         if (in_array($report->company->id, [
             '9ef83749-d1ba-44a5-82a9-f726840e02db', // مصنع هلال مشبب العتيبي
             '92d30511-77a8-4290-8d20-419f93ede3fd', // الشركة الجديدة
+            '19762266-e0fc-43e5-b6ae-b4deec886bb1', // الشركة الجديدة المضافة
         ])) {
             // Use simplified design to avoid SSL issues
             $view = 'pdf.company-attendance-report.special-company-simple';
@@ -330,6 +331,7 @@ class CompanyAttendanceReportService
         if (in_array($record->company->id, [
             '9ef83749-d1ba-44a5-82a9-f726840e02db', // مصنع هلال مشبب العتيبي
             '92d30511-77a8-4290-8d20-419f93ede3fd', // الشركة الجديدة
+            '19762266-e0fc-43e5-b6ae-b4deec886bb1', // الشركة الجديدة المضافة
         ])) {
             // Use simplified design to avoid SSL issues
             $view = 'pdf.company-attendance-report.special-company-individual-simple';
