@@ -104,30 +104,39 @@
                             </div>
                         </td>
 
-                        <!-- الملف المرفوع -->
-                        <td class="px-6 py-4">
-                            <div v-if="leave.has_file && leave.leave_file_url" class="flex items-center">
-                                <a 
-                                    :href="leave.leave_file_url" 
-                                    target="_blank"
-                                    class="inline-flex items-center px-3 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors duration-200 border border-green-200 group"
-                                    title="انقر لفتح الملف"
-                                >
-                                    <svg class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
-                                    </svg>
-                                    <span class="text-sm font-medium">{{ leave.leave_file_name || 'عرض الملف' }}</span>
-                                </a>
-                            </div>
-                            <div v-else class="flex items-center">
-                                <span class="inline-flex items-center px-3 py-2 bg-gray-50 text-gray-500 rounded-lg border border-gray-200">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                    </svg>
-                                    <span class="text-sm">لا يوجد ملف</span>
-                                </span>
-                            </div>
-                        </td>
+                                                 <!-- الملف المرفوع -->
+                         <td class="px-6 py-4">
+                             <div v-if="leave.has_file && leave.leave_file_url" class="flex items-center">
+                                 <a 
+                                     :href="leave.leave_file_url" 
+                                     target="_blank"
+                                     @click="handleFileClick($event, leave)"
+                                     class="inline-flex items-center px-3 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors duration-200 border border-green-200 group"
+                                     title="انقر لفتح الملف"
+                                 >
+                                     <svg class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                                     </svg>
+                                     <span class="text-sm font-medium">{{ leave.leave_file_name || 'عرض الملف' }}</span>
+                                 </a>
+                             </div>
+                             <div v-else-if="leave.has_file && !leave.leave_file_url" class="flex items-center">
+                                 <span class="inline-flex items-center px-3 py-2 bg-red-50 text-red-600 rounded-lg border border-red-200">
+                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                     </svg>
+                                     <span class="text-sm">خطأ في تحميل الملف</span>
+                                 </span>
+                             </div>
+                             <div v-else class="flex items-center">
+                                 <span class="inline-flex items-center px-3 py-2 bg-gray-50 text-gray-500 rounded-lg border border-gray-200">
+                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                     </svg>
+                                     <span class="text-sm">لا يوجد ملف</span>
+                                 </span>
+                             </div>
+                         </td>
 
                         <!-- الفترة الزمنية -->
                         <td class="px-6 py-4">
@@ -179,31 +188,44 @@
                         </td>
                     </tr>
 
-                    <!-- Empty State -->
-                    <tr v-if="!leaves.length">
-                        <td colspan="5" class="px-6 py-12 text-center">
-                            <div class="flex flex-col items-center gap-4">
-                                <div class="bg-gray-100 rounded-full p-6">
-                                    <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h3 class="text-lg font-medium text-gray-900 mb-2">لا توجد طلبات إجازة</h3>
-                                    <p class="text-gray-500">لم يتم إرسال أي طلبات إجازة بعد</p>
-                                </div>
-                                <button 
-                                    @click="openCreateModal" 
-                                    class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200"
-                                >
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                    </svg>
-                                    إرسال أول طلب إجازة
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
+                                         <!-- Loading State -->
+                     <tr v-if="loadingLeaves">
+                         <td colspan="5" class="px-6 py-12 text-center">
+                             <div class="flex flex-col items-center gap-4">
+                                 <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                                 <div>
+                                     <h3 class="text-lg font-medium text-gray-900 mb-2">جاري التحميل...</h3>
+                                     <p class="text-gray-500">يرجى الانتظار</p>
+                                 </div>
+                             </div>
+                         </td>
+                     </tr>
+                     
+                     <!-- Empty State -->
+                     <tr v-else-if="!leaves.length">
+                         <td colspan="5" class="px-6 py-12 text-center">
+                             <div class="flex flex-col items-center gap-4">
+                                 <div class="bg-gray-100 rounded-full p-6">
+                                     <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                     </svg>
+                                 </div>
+                                 <div>
+                                     <h3 class="text-lg font-medium text-gray-900 mb-2">لا توجد طلبات إجازة</h3>
+                                     <p class="text-gray-500">لم يتم إرسال أي طلبات إجازة بعد</p>
+                                 </div>
+                                 <button 
+                                     @click="openCreateModal" 
+                                     class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                                 >
+                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                     </svg>
+                                     إرسال أول طلب إجازة
+                                 </button>
+                             </div>
+                         </td>
+                     </tr>
                 </tbody>
             </table>
         </div>
@@ -350,6 +372,7 @@ export default {
             showModal: false,
             editingLeave: null,
             loading: false,
+            loadingLeaves: false,
             form: {
                 leave_type: '',
                 from_date: '',
@@ -364,12 +387,22 @@ export default {
     },
     methods: {
         getLeaves() {
+            this.loadingLeaves = true;
             axios.get(route('back.trainees.leaves.index', { trainee_id: this.trainee_id }))
             .then(response => {
                 this.leaves = response.data;
             })
             .catch(error => {
                 console.error('Error loading leaves:', error);
+                // إضافة رسالة خطأ للمستخدم
+                if (error.response && error.response.data && error.response.data.error) {
+                    alert('خطأ في تحميل البيانات: ' + error.response.data.error);
+                } else {
+                    alert('حدث خطأ أثناء تحميل البيانات. يرجى المحاولة مرة أخرى.');
+                }
+            })
+            .finally(() => {
+                this.loadingLeaves = false;
             });
         },
         
@@ -515,6 +548,23 @@ export default {
                         alert('حدث خطأ أثناء حذف الإجازة');
                     }
                 });
+            }
+        },
+        
+        handleFileClick(event, leave) {
+            // التحقق من أن الملف متاح قبل فتحه
+            if (!leave.leave_file_url) {
+                event.preventDefault();
+                alert('عذراً، لا يمكن الوصول إلى الملف في الوقت الحالي. يرجى المحاولة لاحقاً.');
+                return;
+            }
+            
+            // محاولة فتح الملف في نافذة جديدة
+            try {
+                window.open(leave.leave_file_url, '_blank');
+            } catch (error) {
+                console.error('Error opening file:', error);
+                alert('عذراً، حدث خطأ أثناء فتح الملف. يرجى المحاولة مرة أخرى.');
             }
         }
     }
