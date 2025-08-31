@@ -40,11 +40,22 @@ class CompanyInvoicesController extends Controller
         $deleted_trainees = $company->trainees->where('deleted_at', '!=', null)
             ->pluck('name', 'id');
 
+        // جلب معلومات الإجازات للمتدربين (معتمدة ومعلقة)
+        $trainee_leaves = \App\Models\Back\TraineeLeave::whereIn('trainee_id', $company->trainees->pluck('id'))
+            ->whereIn('status', ['approved', 'pending'])
+            ->where('from_date', '<=', now())
+            ->where('to_date', '>=', now())
+            ->with('trainee')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->groupBy('trainee_id');
+
         return Inertia::render('Back/Companies/Invoices/Create', [
             'company' => $company,
             'trainees' => $trainees,
             'deleted_trainees' => $deleted_trainees ?? [],
             'monthly_subscription_per_trainee' => $company->monthly_subscription_per_trainee,
+            'trainee_leaves' => $trainee_leaves,
         ]);
     }
 
