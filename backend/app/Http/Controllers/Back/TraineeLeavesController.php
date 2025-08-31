@@ -145,13 +145,21 @@ class TraineeLeavesController extends Controller
      */
     public function destroy($trainee_id, $id)
     {
-        $leave = TraineeLeave::where('trainee_id', $trainee_id)
-            ->where('id', $id)
-            ->firstOrFail();
+        try {
+            $leave = TraineeLeave::where('trainee_id', $trainee_id)
+                ->where('id', $id)
+                ->firstOrFail();
 
-        $leave->delete();
+            // حذف الملفات المرتبطة
+            $leave->clearMediaCollection('leave_file');
+            
+            // حذف الإجازة
+            $leave->delete();
 
-        return response()->json(['message' => 'تم حذف طلب الإجازة بنجاح']);
+            return response()->json(['message' => 'تم حذف طلب الإجازة بنجاح']);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'حدث خطأ أثناء حذف الإجازة'], 500);
+        }
     }
 
     /**

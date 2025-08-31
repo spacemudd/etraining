@@ -497,13 +497,23 @@ export default {
             if (confirm('هل أنت متأكد من حذف طلب الإجازة هذا؟')) {
                 axios.delete(route('back.trainees.leaves.destroy', { 
                     trainee_id: this.trainee_id, 
-                    leave: leaveId 
+                    id: leaveId 
                 }))
                 .then(response => {
                     this.getLeaves();
+                    // إضافة رسالة نجاح
+                    if (response.data && response.data.message) {
+                        alert(response.data.message);
+                    }
                 })
                 .catch(error => {
                     console.error('Error deleting leave:', error);
+                    // إضافة رسالة خطأ
+                    if (error.response && error.response.data && error.response.data.message) {
+                        alert('خطأ في حذف الإجازة: ' + error.response.data.message);
+                    } else {
+                        alert('حدث خطأ أثناء حذف الإجازة');
+                    }
                 });
             }
         }
