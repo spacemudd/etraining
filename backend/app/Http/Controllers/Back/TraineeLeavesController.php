@@ -48,7 +48,7 @@ class TraineeLeavesController extends Controller
     public function store(Request $request, $trainee_id)
     {
         $request->validate([
-            'leave_type' => 'required|string',
+            'leave_type' => 'required|string|in:أجازة وضع',
             'from_date' => 'required|date',
             'to_date' => 'required|date|after_or_equal:from_date',
             'notes' => 'nullable|string',
@@ -110,7 +110,7 @@ class TraineeLeavesController extends Controller
     public function update(Request $request, $trainee_id, $id)
     {
         $request->validate([
-            'leave_type' => 'required|string',
+            'leave_type' => 'required|string|in:أجازة وضع',
             'from_date' => 'required|date',
             'to_date' => 'required|date|after_or_equal:from_date',
             'notes' => 'nullable|string',
