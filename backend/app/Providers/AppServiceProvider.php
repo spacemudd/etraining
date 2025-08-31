@@ -47,5 +47,15 @@ class AppServiceProvider extends ServiceProvider
             });
             URL::forceScheme('https');
         }
+        
+        // إعداد Media Library للعمل مع المنفذ الصحيح في البيئة المحلية
+        if (config('app.env') === 'local') {
+            \Spatie\MediaLibrary\MediaCollections\Models\Media::creating(function ($media) {
+                // تأكد من أن الروابط تحتوي على المنفذ الصحيح
+                if (request()->getPort() && request()->getPort() !== 80) {
+                    $media->setCustomProperty('port', request()->getPort());
+                }
+            });
+        }
     }
 }

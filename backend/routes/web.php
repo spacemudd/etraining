@@ -709,6 +709,16 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::delete('trainees/{trainee_id}/warnings/all', [\App\Http\Controllers\Back\TraineesController::class, 'warningDeleteAll'])->name('trainees.warnings.delete.all');
         Route::delete('trainees/{trainee_id}/warnings/{id}', [\App\Http\Controllers\Back\TraineesController::class, 'warningDelete'])->name('trainees.warnings.delete');
 
+        // Leave management of trainee
+        Route::get('trainees/{trainee_id}/leaves', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'index'])->name('trainees.leaves.index');
+        Route::post('trainees/{trainee_id}/leaves', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'store'])->name('trainees.leaves.store');
+        Route::get('trainees/{trainee_id}/leaves/create', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'create'])->name('trainees.leaves.create');
+        Route::get('trainees/{trainee_id}/leaves/{id}', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'show'])->name('trainees.leaves.show');
+        Route::get('trainees/{trainee_id}/leaves/{id}/edit', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'edit'])->name('trainees.leaves.edit');
+        Route::put('trainees/{trainee_id}/leaves/{id}', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'update'])->name('trainees.leaves.update');
+        Route::delete('trainees/{trainee_id}/leaves/{id}', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'destroy'])->name('trainees.leaves.destroy');
+        Route::put('trainees/{trainee_id}/leaves/{id}/status', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'updateStatus'])->name('trainees.leaves.update-status');
+
         // Invoice management of trainee
         Route::get('trainees/{trainee_id}/invoices', [\App\Http\Controllers\Back\TraineesController::class, 'invoices'])->name('trainees.invoices');
 
