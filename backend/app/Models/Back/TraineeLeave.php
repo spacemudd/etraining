@@ -99,13 +99,25 @@ class TraineeLeave extends Model implements Auditable, HasMedia
     {
         $media = $this->getFirstMedia('leave_file');
         if ($media) {
-            $url = $media->getUrl();
-            // إذا كان التطبيق يعمل على منفذ مختلف عن 80، أضف المنفذ للرابط
-            if (config('app.env') === 'local') {
-                // تأكد من أن الرابط يحتوي على المنفذ 8000
-                $url = str_replace('://localhost/', '://localhost:8000/', $url);
+            try {
+                // محاولة الحصول على URL مباشرة
+                $url = $media->getUrl();
+                
+                // إذا كان التطبيق يعمل على localhost، أضف المنفذ
+                if (config('app.env') === 'local' && str_contains($url, 'localhost')) {
+                    $url = str_replace('://localhost/', '://localhost:8000/', $url);
+                }
+                
+                return $url;
+            } catch (\Exception $e) {
+                // إذا فشل الحصول على URL، حاول الحصول على signed URL
+                try {
+                    return $media->getTemporaryUrl(now()->addMinutes(60));
+                } catch (\Exception $e2) {
+                    // إذا فشل كل شيء، ارجع null
+                    return null;
+                }
             }
-            return $url;
         }
         return null;
     }

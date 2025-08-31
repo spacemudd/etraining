@@ -16,18 +16,17 @@ class TraineeLeavesController extends Controller
      */
     public function index($trainee_id)
     {
-        $trainee = Trainee::findOrFail($trainee_id);
-        $leaves = TraineeLeave::where('trainee_id', $trainee_id)
-            ->with('trainee')
-            ->orderBy('created_at', 'desc')
-            ->get();
+        try {
+            $trainee = Trainee::findOrFail($trainee_id);
+            $leaves = TraineeLeave::where('trainee_id', $trainee_id)
+                ->with('trainee')
+                ->orderBy('created_at', 'desc')
+                ->get();
 
-        // تحديث روابط الملفات لتعمل مع المنفذ الصحيح (هذا الآن يتم في النموذج)
-        // $leaves->each(function ($leave) {
-        //     // الرابط الآن يتم إصلاحه في النموذج TraineeLeave
-        // });
-
-        return response()->json($leaves);
+            return response()->json($leaves);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'حدث خطأ أثناء تحميل البيانات'], 500);
+        }
     }
 
     /**
