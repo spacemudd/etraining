@@ -128,7 +128,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         });
 
         static::created(function ($model) {
-            if (app()->isProduction()) {
+            if (app()->isProduction() && config('yakeen.enabled', false)) {
                 VerifyPhoneOwnershipJob::dispatchSync($model->id);
             }
         });
@@ -148,7 +148,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         });
 
         static::updated(function ($model) {
-            if ($model->isDirty('phone')) {
+            if ($model->isDirty('phone') && config('yakeen.enabled', false)) {
                 VerifyPhoneOwnershipJob::dispatch($model->id);
             }
         });

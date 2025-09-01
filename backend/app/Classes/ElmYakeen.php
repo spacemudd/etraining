@@ -30,10 +30,20 @@ class ElmYakeen
      *
      * @param string $id_number The identity number
      * @param string $phone_number Phone number to verify
-     * @return void
+     * @return array
      */
     public function verifyOwnership(string $id_number, string $phone_number)
     {
+        // Check if Yakeen API is disabled
+        if (!config('yakeen.enabled', false)) {
+            \Log::info('Yakeen API is disabled - returning default response');
+            return [
+                'code' => 'YAKEEN_DISABLED',
+                'message' => 'Yakeen API verification is disabled',
+                'isOwner' => false
+            ];
+        }
+
         return Http::timeout(10)->withHeaders($this->http_headers)
             ->get('https://yakeen-lite.api.elm.sa:443/api/v1/person/'.$id_number.'/owns-mobile/'.$phone_number)
             ->json();

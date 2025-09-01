@@ -43,6 +43,12 @@ class VerifyPhoneOwnershipJob implements ShouldQueue
             return 1;
         }
 
+        // Yakeen API is disabled - skip verification
+        if (!config('yakeen.enabled', false)) {
+            \Log::info('Yakeen API is disabled - skipping phone ownership verification for trainee: ' . $this->trainee_id);
+            return 1;
+        }
+
         $response = ElmYakeen::new()
             ->verifyOwnership($trainee->identity_number, $trainee->clean_phone);
 
