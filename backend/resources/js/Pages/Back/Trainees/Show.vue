@@ -1078,6 +1078,23 @@
 
       <jet-section-border></jet-section-border>
 
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-2" v-if="$page.props.user.email === 'mashael.a@hadaf-hq.com' || $page.props.user.email === 'admin@admin.com' || $page.props.user.email === 'ebrahim.hosny@hadaf-hq.com' ">
+        <div class="md:col-span-4 lg:col-span-1 sm:col-span-3">
+          <div class="px-4 sm:px-0">
+            <h3 class="text-lg font-medium text-gray-900">
+              طلبات الإجازة
+            </h3>
+          </div>
+        </div>
+
+        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
+          <trainee-leaves-management :trainee_id="trainee.id">
+          </trainee-leaves-management>
+        </div>
+      </div>
+
+      <jet-section-border></jet-section-border>
+
       <div
         v-can="'issue-monthly-invoices'"
         class="grid grid-cols-1 md:grid-cols-2 gap-6 my-2"
@@ -1172,6 +1189,7 @@ import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import SelectTraineeGroup from "@/Components/SelectTraineeGroup";
 import ChangeTraineePassword from "@/Components/ChangeTraineePassword";
 import AttendanceSheetManagementForTrainee from "@/Components/AttendanceSheetManagementForTrainee";
+import TraineeLeavesManagement from "@/Components/TraineeLeavesManagement";
 import "selectize/dist/js/standalone/selectize.min";
 import EmptySlate from "@/Components/EmptySlate";
 import TraineeAuditContainer from "@/Components/TraineeAuditContainer";
@@ -1197,6 +1215,7 @@ export default {
     TraineeAuditContainer,
     AppLayout,
     AttendanceSheetManagementForTrainee,
+    TraineeLeavesManagement,
     Breadcrumb,
     BreadcrumbContainer,
     ChangeTraineePassword,
