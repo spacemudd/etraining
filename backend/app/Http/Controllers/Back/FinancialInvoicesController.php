@@ -597,7 +597,7 @@ class  FinancialInvoicesController extends Controller
 
     public function getPaymentUrl($id)
     {
-        $invoice = Invoice::notPaid()->with(['company', 'trainee'])->find($id);
+        $invoice = Invoice::notPaid()->with(['company', 'trainee.company'])->findOrFail($id);
         $url = (new NoonService())->createPaymentUrlForInvoice($invoice);
         return response()->json(['url' => $url]);
     }
