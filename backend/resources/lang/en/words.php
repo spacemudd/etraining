@@ -578,6 +578,7 @@ return [
     'removed' => 'Removed',
     'selected' => 'Selected',
     'edit-amount' => 'ُEdit Amount',
+    'are-you-sure-to-edit' => 'Are you sure you want to edit?',
     'receive-notification-on-trainee-delete' => 'Receive notification on trainee delete',
     'action' => 'Action',
     'new-registration' => 'New registration',

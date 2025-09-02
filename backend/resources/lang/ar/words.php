@@ -591,6 +591,7 @@ return [
     'removed' => 'محذوف',
     'selected' => 'المختار',
     'edit-amount' => 'تعديل مبلغ الفاتورة',
+    'are-you-sure-to-edit' => 'هل أنت متأكد من التعديل؟',
     'receive-notification-on-trainee-delete' => 'استلام اشعار عند حذف متدرب',
     'action' => 'الإجراء',
     'new-registration' => 'تسجيل جديد',

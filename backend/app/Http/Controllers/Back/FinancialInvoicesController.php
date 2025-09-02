@@ -484,7 +484,7 @@ class  FinancialInvoicesController extends Controller
 
         DB::commit();
 
-        return redirect(\route('back.finance.invoices.index'));
+        return redirect()->route('back.finance.invoices.show', $new->id);
     }
 
     public function datePeriod(Request $request, string $invoice_id)
