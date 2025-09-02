@@ -426,7 +426,7 @@
             </div>
 
             <!-- Edit Company Section -->
-            <div class="mt-8 flex flex-col md:flex-row md:space-x-5 mt-8 mb-8" v-if="$page.props.user.email === 'ebrahim.hosny@hadaf-hq.com' || $page.props.user.email === 'acc2@jisr-ksa.com' || $page.props.user.email === 'admin@admin.com'">
+            <div class="mt-8 flex flex-col md:flex-row md:space-x-5 mt-8 mb-8" v-if="invoice.status === 0 && $page.props.user.email === 'ebrahim.hosny@hadaf-hq.com' || $page.props.user.email === 'acc2@jisr-ksa.com' || $page.props.user.email === 'admin@admin.com'">
                 <div class="w-full md:w-8/12">
                     <div class="grid grid-cols-2 gap-6">
                         <div>
