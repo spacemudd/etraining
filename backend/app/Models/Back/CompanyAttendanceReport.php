@@ -131,15 +131,14 @@ class CompanyAttendanceReport extends Model implements Auditable
 
     public function getAllTraineesWithResignations()
     {
-        // Get all trainees including deleted ones and those with resignations
-        $allTrainees = collect();
-        
-        // 1. Active trainees from the report
+        // Get only ACTIVE trainees from the report (selected by user)
         $activeTrainees = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->id)
+            ->where('active', true) // Only get selected trainees
             ->with(['trainee' => function($q) {
                 $q->withTrashed();
             }])->get();
-        $allTrainees = $allTrainees->merge($activeTrainees);
+        
+        $allTrainees = collect($activeTrainees);
         
         // 2. Get trainees with resignations AND deleted (soft deleted) - ONLY THESE SHOULD BE INCLUDED
         $resignationTrainees = $this->company->resignations()
