@@ -681,6 +681,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::post('invoices/{id}/reset-status', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'resetStatus'])->name('invoices.reset-status');
             Route::resource('invoices', \App\Http\Controllers\Back\FinancialInvoicesController::class);
             Route::post('expected-amount-per-invoice', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'expectedAmountPerInvoice']);
+            Route::put('invoices/{invoice_id}/update-company', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'updateCompany'])->name('invoices.update-company');
 
         });
 

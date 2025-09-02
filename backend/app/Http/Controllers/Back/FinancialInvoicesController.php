@@ -563,10 +563,55 @@ class  FinancialInvoicesController extends Controller
 
 
         if (Str::contains(redirect()->back()->getTargetUrl(), 'companies')) {
-            return redirect()->back();
+            return redirect()->route('back.companies.show', request()->company_id);
         }
 
-        return redirect(\route('back.finance.invoices.index'));
+        return redirect()->route('back.finance.invoices.index');
+    }
+
+    /**
+     * Update the company associated with an invoice
+     */
+    public function updateCompany(Request $request, $invoice_id)
+    {
+
+        $request->validate([
+            'company_id' => 'required|exists:companies,id',
+        ]);
+
+        $invoice = Invoice::findOrFail($invoice_id);
+        
+        // Check if invoice is not paid to allow company change
+        if ($invoice->paid_at) {
+            return redirect()->route('back.finance.invoices.show', $invoice->id)->with('error', 'لا يمكن تغيير الشركة للفاتورة المدفوعة');
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $oldCompanyId = $invoice->company_id;
+            $invoice->company_id = $request->company_id;
+            $invoice->save();
+
+            // Log the change
+            \App\Models\Back\Audit::create([
+                'event' => 'invoice.company.changed',
+                'user_type' => \App\Models\User::class,
+                'user_id' => auth()->user()->id,
+                'auditable_id' => $invoice->id,
+                'auditable_type' => Invoice::class,
+                'old_values' => ['company_id' => $oldCompanyId],
+                'new_values' => ['company_id' => $request->company_id],
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('back.finance.invoices.show', $invoice->id)->with('success', 'تم تحديث الشركة بنجاح');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->route('back.finance.invoices.show', $invoice->id)->with('error', 'حدث خطأ أثناء تحديث الشركة');
+        }
     }
 
     function markUnderReview($invoice_id, Request $request)

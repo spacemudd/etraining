@@ -755,6 +755,8 @@ return [
     'download-all-files' => 'تحميل جميع الملفات',
     'center' => 'المركز',
     'edit-date-period' => 'تعديل فترة الاستحقاق',
+    'edit-invoice-company' => 'تعديل الشركة',
+    'edit-company' => 'تعديل الشركة',
     'trainees-without-invoice' => 'متدربات لم تتم فوترتهم حسب الشهر',
     'select-month' => 'اختر الشهر',
     'current-month' => 'الشهر الحالي',

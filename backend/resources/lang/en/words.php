@@ -754,6 +754,8 @@ return [
     'download-all-files' => 'Download all files',
     'center' => 'Center',
     'edit-date-period' => 'ُEdit Date Period',
+    'edit-invoice-company' => 'Edit company',
+    'edit-company' => 'Edit company',
     'trainees-without-invoice' => 'Trainees without invoices for the specified month',
     'select-month' => 'Select Month',
     'current-month' => 'Current Month',
