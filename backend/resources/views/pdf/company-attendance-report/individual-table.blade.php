@@ -136,7 +136,11 @@
                                 @if ($record->start_date)
                                     {{ $record->start_date->diffInDays($record->end_date) + 1 }}
                                 @else
-                                    {{ count($days) }}
+                                    @if (isset($record->is_resignation) && $record->is_resignation)
+                                        {{ count($days) }}
+                                    @else
+                                        {{ count($days) }}
+                                    @endif
                                 @endif
                             @endif
                             @if ($with_attendance_times)
@@ -220,7 +224,11 @@
                                 @if ($record->start_date)
                                     {{ $record->start_date->diffInDays($record->end_date) + 1 }}
                                 @else
-                                    {{ count($days) }}
+                                    @if (isset($record->is_resignation) && $record->is_resignation)
+                                        {{ count($days) }}
+                                    @else
+                                        {{ count($days) }}
+                                    @endif
                                 @endif
                             @endif
                             @if ($with_attendance_times)

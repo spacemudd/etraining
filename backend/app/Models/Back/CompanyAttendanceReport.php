@@ -180,13 +180,13 @@ class CompanyAttendanceReport extends Model implements Auditable
                             return null; // Skip this trainee
                         }
                         
-                        // Use the original attendance record but add resignation info and reset dates
+                        // Use the original attendance record but add resignation info
                         $attendanceRecord->is_resignation = true;
                         $attendanceRecord->resignation_date = $resignation->resignation_date;
                         
-                        // Reset start_date and end_date to null for deleted trainees to ensure they're treated like regular trainees
-                        $attendanceRecord->start_date = null;
-                        $attendanceRecord->end_date = null;
+                        // For deleted trainees, we should not reset start_date and end_date to null
+                        // Instead, we should keep the original values to maintain correct attendance calculation
+                        // The view will handle the display logic for deleted trainees
                         
                         \Log::info('Using original attendance record for deleted trainee ' . $trainee->id . ' with start_date reset to null and end_date reset to null');
                         

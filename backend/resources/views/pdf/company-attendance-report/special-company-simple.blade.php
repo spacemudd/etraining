@@ -360,11 +360,10 @@
                             $record->trainee = $record->trainee;
                         }
                         
-                        // For deleted trainees (with is_resignation flag), ensure start_date and end_date are null
+                        // For deleted trainees (with is_resignation flag), we should keep the original dates
+                        // to maintain correct attendance calculation
                         if (isset($record->is_resignation) && $record->is_resignation) {
-                            $record->start_date = null;
-                            $record->end_date = null;
-                            \Log::info('Reset dates for deleted trainee ' . $record->trainee->id . ' in view: start_date=null, end_date=null');
+                            \Log::info('Keeping original dates for deleted trainee ' . $record->trainee->id . ' in view: start_date=' . ($record->start_date ? $record->start_date->format('Y-m-d') : 'null') . ', end_date=' . ($record->end_date ? $record->end_date->format('Y-m-d') : 'null'));
                         }
                     }
                 @endphp
@@ -387,7 +386,11 @@
                                 @if ($record->start_date)
                                     {{ $record->start_date->diffInDays($record->end_date) + 1 }}
                                 @else
-                                    {{ count($days) }}
+                                    @if (isset($record->is_resignation) && $record->is_resignation)
+                                        {{ count($days) }}
+                                    @else
+                                        {{ count($days) }}
+                                    @endif
                                 @endif
                             </td>
                             @for($i=0;$i<count($days);$i++)
@@ -438,7 +441,11 @@
                                 @if ($record->start_date)
                                     {{ $record->start_date->diffInDays($record->end_date) + 1 }}
                                 @else
-                                    {{ count($days) }}
+                                    @if (isset($record->is_resignation) && $record->is_resignation)
+                                        {{ count($days) }}
+                                    @else
+                                        {{ count($days) }}
+                                    @endif
                                 @endif
                             </td>
                             @for($i=0;$i<count($days);$i++)
