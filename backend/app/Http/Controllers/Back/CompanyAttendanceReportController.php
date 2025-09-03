@@ -120,11 +120,11 @@ class CompanyAttendanceReportController extends Controller
                 ->first();
             
             if ($resignation && $trainee->trashed()) {
-                // This is a resigned and deleted trainee
+                // This is a resigned and deleted trainee - set start_date and end_date to null to ensure correct work days calculation
                 $traineeData[$traineeId] = [
                     'active' => true,
-                    'start_date' => $date_from, // Start from report start date
-                    'end_date' => Carbon::parse($resignation->resignation_date)->endOfDay(), // End at resignation date
+                    'start_date' => null, // Set to null to ensure correct work days calculation
+                    'end_date' => null, // Set to null to ensure correct work days calculation
                 ];
             } else {
                 // This is an active trainee - set start_date and end_date to null
