@@ -69,61 +69,79 @@ class CompanyAttendanceSheetExport implements FromView, WithEvents, WithStyles, 
      */
     public function view(): View
     {
-        if (app()->getLocale() === 'ar') {
-            $company_name = $this->report->company->name_ar;
-        } else {
-            $company_name = $this->report->company->name_en;
-        }
+        try {
+            if (app()->getLocale() === 'ar') {
+                $company_name = $this->report->company->name_ar;
+            } else {
+                $company_name = $this->report->company->name_en;
+            }
 
-        // Get all trainees including deleted ones and those with resignations
-        $allTrainees = collect();
-        
-        // 1. Active trainees from the report
-        $activeTrainees = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->report->id)
-            ->with(['trainee' => function($q) {
-                $q->withTrashed();
-            }])->get();
+            // Get all trainees including deleted ones and those with resignations
+            $allTrainees = collect();
             
-        // Filter out records where trainee is null (in case of any data inconsistency)
-        $activeTrainees = $activeTrainees->filter(function($record) {
-            return $record->trainee !== null;
-        });
-        $allTrainees = $allTrainees->merge($activeTrainees);
-        
-        // 2. Get trainees with resignations AND deleted (soft deleted) - ONLY THESE SHOULD BE INCLUDED
-        $resignationTrainees = $this->report->company->resignations()
-            ->whereIn('status', ['new', 'sent']) // Include both new and sent resignations
-            ->where('resignation_date', '>=', $this->report->date_from) // Resignation date should be within or after report period
-            ->with(['trainees' => function($q) {
-                $q->onlyTrashed(); // ONLY deleted trainees
-            }])
-            ->get()
-            ->flatMap(function($resignation) {
-                return $resignation->trainees->filter(function($trainee) {
-                    return $trainee !== null;
-                })->map(function($trainee) use ($resignation) {
-                    // Create a mock CompanyAttendanceReportsTrainee object for display
-                    $mockAttendance = new \stdClass();
-                    $mockAttendance->trainee = $trainee;
-                    $mockAttendance->is_resignation = true;
-                    $mockAttendance->resignation_date = $resignation->resignation_date;
-                    return $mockAttendance;
+            // 1. Active trainees from the report
+            try {
+                $activeTrainees = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->report->id)
+                    ->with(['trainee' => function($q) {
+                        $q->withTrashed();
+                    }])->get();
+                    
+                // Filter out records where trainee is null (in case of any data inconsistency)
+                $activeTrainees = $activeTrainees->filter(function($record) {
+                    return $record->trainee !== null;
                 });
+                $allTrainees = $allTrainees->merge($activeTrainees);
+            } catch (\Exception $e) {
+                \Log::error('Error getting active trainees for export report ' . $this->report->id . ': ' . $e->getMessage());
+            }
+            
+            // 2. Get trainees with resignations AND deleted (soft deleted) - ONLY THESE SHOULD BE INCLUDED
+            try {
+                $resignationTrainees = $this->report->company->resignations()
+                    ->whereIn('status', ['new', 'sent']) // Include both new and sent resignations
+                    ->where('resignation_date', '>=', $this->report->date_from) // Resignation date should be within or after report period
+                    ->with(['trainees' => function($q) {
+                        $q->onlyTrashed(); // ONLY deleted trainees
+                    }])
+                    ->get()
+                    ->flatMap(function($resignation) {
+                        return $resignation->trainees->filter(function($trainee) {
+                            return $trainee !== null;
+                        })->map(function($trainee) use ($resignation) {
+                            // Create a mock CompanyAttendanceReportsTrainee object for display
+                            $mockAttendance = new \stdClass();
+                            $mockAttendance->trainee = $trainee;
+                            $mockAttendance->is_resignation = true;
+                            $mockAttendance->resignation_date = $resignation->resignation_date;
+                            return $mockAttendance;
+                        });
+                    });
+                
+                $allTrainees = $allTrainees->merge($resignationTrainees);
+            } catch (\Exception $e) {
+                \Log::error('Error getting resignation trainees for export report ' . $this->report->id . ': ' . $e->getMessage());
+            }
+            
+            // Remove duplicates based on trainee ID
+            $uniqueTrainees = $allTrainees->unique(function($item) {
+                return $item->trainee->id;
             });
-        
-        $allTrainees = $allTrainees->merge($resignationTrainees);
-        
-        // Remove duplicates based on trainee ID
-        $uniqueTrainees = $allTrainees->unique(function($item) {
-            return $item->trainee->id;
-        });
 
-        $attendancesCount = $uniqueTrainees->count();
+            $attendancesCount = $uniqueTrainees->count();
 
-         return view('exports.company-attendance-sheet', [
-             'report' => $this->report,
-             'company_name' => $company_name,
-             'company_attendance' => $uniqueTrainees,
-        ]);
+             return view('exports.company-attendance-sheet', [
+                 'report' => $this->report,
+                 'company_name' => $company_name,
+                 'company_attendance' => $uniqueTrainees,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error in CompanyAttendanceSheetExport view for report ' . $this->report->id . ': ' . $e->getMessage());
+            // Return a basic view with error message
+            return view('exports.company-attendance-sheet', [
+                'report' => $this->report,
+                'company_name' => 'Error',
+                'company_attendance' => collect(),
+            ]);
+        }
     }
 }

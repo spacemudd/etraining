@@ -131,50 +131,61 @@ class CompanyAttendanceReport extends Model implements Auditable
 
     public function getAllTraineesWithResignations()
     {
-        // Get only ACTIVE trainees from the report (selected by user)
-        $activeTrainees = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->id)
-            ->where('active', true) // Only get selected trainees
-            ->with(['trainee' => function($q) {
-                $q->withTrashed();
-            }])->get();
-        
-        // Filter out records where trainee is null
-        $activeTrainees = $activeTrainees->filter(function($record) {
-            return $record->trainee !== null;
-        });
-        
-        $allTrainees = collect($activeTrainees);
-        
-        // 2. Get trainees with resignations AND deleted (soft deleted) - ONLY THESE SHOULD BE INCLUDED
-        $resignationTrainees = $this->company->resignations()
-            ->whereIn('status', ['new', 'sent']) // Include both new and sent resignations
-            ->where('resignation_date', '>=', $this->date_from) // Resignation date should be within or after report period
-            ->with(['trainees' => function($q) {
-                $q->onlyTrashed(); // ONLY deleted trainees
-            }])
-            ->get()
-            ->flatMap(function($resignation) {
-                return $resignation->trainees->filter(function($trainee) {
-                    return $trainee !== null;
-                })->map(function($trainee) use ($resignation) {
-                    // Create a mock CompanyAttendanceReportsTrainee object for display
-                    $mockAttendance = new \stdClass();
-                    $mockAttendance->trainee = $trainee;
-                    $mockAttendance->is_resignation = true;
-                    $mockAttendance->resignation_date = $resignation->resignation_date;
-                    $mockAttendance->active = true; // Set as active for display purposes
-                    return $mockAttendance;
-                });
+        try {
+            // Get only ACTIVE trainees from the report (selected by user)
+            $activeTrainees = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->id)
+                ->where('active', true) // Only get selected trainees
+                ->with(['trainee' => function($q) {
+                    $q->withTrashed();
+                }])->get();
+            
+            // Filter out records where trainee is null
+            $activeTrainees = $activeTrainees->filter(function($record) {
+                return $record->trainee !== null;
             });
-        
-        $allTrainees = $allTrainees->merge($resignationTrainees);
-        
-        // Remove duplicates based on trainee ID
-        $uniqueTrainees = $allTrainees->unique(function($item) {
-            return $item->trainee->id;
-        });
+            
+            $allTrainees = collect($activeTrainees);
+            
+            // 2. Get trainees with resignations AND deleted (soft deleted) - ONLY THESE SHOULD BE INCLUDED
+            try {
+                $resignationTrainees = $this->company->resignations()
+                    ->whereIn('status', ['new', 'sent']) // Include both new and sent resignations
+                    ->where('resignation_date', '>=', $this->date_from) // Resignation date should be within or after report period
+                    ->with(['trainees' => function($q) {
+                        $q->onlyTrashed(); // ONLY deleted trainees
+                    }])
+                    ->get()
+                    ->flatMap(function($resignation) {
+                        return $resignation->trainees->filter(function($trainee) {
+                            return $trainee !== null;
+                        })->map(function($trainee) use ($resignation) {
+                            // Create a mock CompanyAttendanceReportsTrainee object for display
+                            $mockAttendance = new \stdClass();
+                            $mockAttendance->trainee = $trainee;
+                            $mockAttendance->is_resignation = true;
+                            $mockAttendance->resignation_date = $resignation->resignation_date;
+                            $mockAttendance->active = true; // Set as active for display purposes
+                            return $mockAttendance;
+                        });
+                    });
+                
+                $allTrainees = $allTrainees->merge($resignationTrainees);
+            } catch (\Exception $e) {
+                \Log::error('Error getting resignation trainees for report ' . $this->id . ': ' . $e->getMessage());
+                // Continue without resignation trainees if there's an error
+            }
+            
+            // Remove duplicates based on trainee ID
+            $uniqueTrainees = $allTrainees->unique(function($item) {
+                return $item->trainee->id;
+            });
 
-        return $uniqueTrainees;
+            return $uniqueTrainees;
+        } catch (\Exception $e) {
+            \Log::error('Error in getAllTraineesWithResignations for report ' . $this->id . ': ' . $e->getMessage());
+            // Return empty collection if there's an error
+            return collect();
+        }
     }
 
     public function getFallsUnderPtcNetAttribute()

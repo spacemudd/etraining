@@ -277,9 +277,13 @@ class CompanyAttendanceReportController extends Controller
 
     public function preview($id)
     {
-        $pdf = CompanyAttendanceReportService::makePdf($id);
-
-        return $pdf->inline();
+        try {
+            $pdf = CompanyAttendanceReportService::makePdf($id);
+            return $pdf->inline();
+        } catch (\Exception $e) {
+            \Log::error('Error in preview for report ' . $id . ': ' . $e->getMessage());
+            return back()->withErrors(['message' => 'حدث خطأ في عرض التقرير: ' . $e->getMessage()]);
+        }
     }
 
     public function approve($id)
