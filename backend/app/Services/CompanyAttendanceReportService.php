@@ -437,10 +437,21 @@ class CompanyAttendanceReportService
         $workDaysCount = 0;
         $absenceDaysCount = 0;
 
+        // Get the report date range from the first day
+        $reportStartDate = $days[0]['date_carbon'] ?? \Carbon\Carbon::parse($days[0]['date']);
+        $reportEndDate = end($days)['date_carbon'] ?? \Carbon\Carbon::parse(end($days)['date']);
+
+        \Log::info('Calculating attendance for deleted trainee ' . $record->trainee->id . 
+                  ' - Report period: ' . $reportStartDate->format('Y-m-d') . ' to ' . $reportEndDate->format('Y-m-d') . 
+                  ' - Trainee period: ' . ($record->start_date ? $record->start_date->format('Y-m-d') : 'null') . 
+                  ' to ' . ($record->end_date ? $record->end_date->format('Y-m-d') : 'null'));
+
         foreach ($days as $day) {
             if ($day['vacation_day']) {
                 continue; // Skip vacation days
             }
+
+            $dayDate = $day['date_carbon'] ?? \Carbon\Carbon::parse($day['date']);
 
             // Check if this day should show an icon based on the same logic used in the view
             $shouldShowIcon = false;
@@ -448,18 +459,24 @@ class CompanyAttendanceReportService
             $isAbsent = false;
 
             if ($record->start_date) {
-                if ($day['date_carbon']->isBetween($record->start_date, $record->end_date)) {
+                // Check if the day is within the report period AND within the trainee's work period
+                if ($dayDate->isBetween($record->start_date, $record->end_date) && 
+                    $dayDate->isBetween($reportStartDate, $reportEndDate)) {
                     $shouldShowIcon = true;
                     $isPresent = true;
                 } else {
-                    if ($record->status === 'new_registration') {
+                    if ($record->status === 'new_registration' && 
+                        $dayDate->isBetween($reportStartDate, $reportEndDate)) {
                         $shouldShowIcon = true;
                         $isAbsent = true;
                     }
                 }
             } else {
-                $shouldShowIcon = true;
-                $isPresent = true;
+                // If no start_date, only count days within the report period
+                if ($dayDate->isBetween($reportStartDate, $reportEndDate)) {
+                    $shouldShowIcon = true;
+                    $isPresent = true;
+                }
             }
 
             if ($shouldShowIcon) {
@@ -470,6 +487,8 @@ class CompanyAttendanceReportService
                 }
             }
         }
+
+        \Log::info('Result for trainee ' . $record->trainee->id . ': work_days=' . $workDaysCount . ', absence_days=' . $absenceDaysCount);
 
         return [
             'work_days' => $workDaysCount,
