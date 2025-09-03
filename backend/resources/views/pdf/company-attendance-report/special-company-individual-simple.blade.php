@@ -471,20 +471,42 @@
                     <div class="summary-cell">
                         <div class="summary-label">أيام الحضور</div>
                         <div class="summary-value">
-                            @if ($record->start_date)
-                                {{ $record->start_date->diffInDays($record->end_date) + 1 }}
+                            @if (isset($record->is_resignation) && $record->is_resignation)
+                                @php
+                                    $workDaysCount = 0;
+                                    for($i=0;$i<count($days);$i++) {
+                                        if (!$days[$i]['vacation_day']) {
+                                            if ($record->start_date) {
+                                                if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date)) {
+                                                    $workDaysCount++;
+                                                }
+                                            } else {
+                                                $workDaysCount++;
+                                            }
+                                        }
+                                    }
+                                @endphp
+                                {{ $workDaysCount }}
                             @else
-                                {{ count($days) }}
+                                @if ($record->start_date)
+                                    {{ $record->start_date->diffInDays($record->end_date) + 1 }}
+                                @else
+                                    {{ count($days) }}
+                                @endif
                             @endif
                         </div>
                     </div>
                     <div class="summary-cell">
                         <div class="summary-label">أيام الغياب</div>
                         <div class="summary-value">
-                            @if ($record->start_date)
-                                {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
-                            @else
+                            @if (isset($record->is_resignation) && $record->is_resignation)
                                 0
+                            @else
+                                @if ($record->start_date)
+                                    {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
+                                @else
+                                    0
+                                @endif
                             @endif
                         </div>
                     </div>

@@ -383,13 +383,31 @@
                             @endif
                             <td class="col-civil">{{ $record->trainee->clean_identity_number }}</td>
                             <td class="col-work-days">
-                                @if ($record->start_date)
-                                    {{ $record->start_date->diffInDays($record->end_date) + 1 }}
+                                @if (isset($record->is_resignation) && $record->is_resignation)
+                                    @php
+                                        $workDaysCount = 0;
+                                        for($i=0;$i<count($days);$i++) {
+                                            if (!$days[$i]['vacation_day']) {
+                                                if ($record->start_date) {
+                                                    if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date)) {
+                                                        $workDaysCount++;
+                                                    }
+                                                } else {
+                                                    $workDaysCount++;
+                                                }
+                                            }
+                                        }
+                                    @endphp
+                                    {{ $workDaysCount }}
                                 @else
-                                    @if (isset($record->is_resignation) && $record->is_resignation)
-                                        {{ count($days) }}
+                                    @if ($record->start_date)
+                                        {{ $record->start_date->diffInDays($record->end_date) + 1 }}
                                     @else
-                                        {{ count($days) }}
+                                        @if (isset($record->is_resignation) && $record->is_resignation)
+                                            {{ count($days) }}
+                                        @else
+                                            {{ count($days) }}
+                                        @endif
                                     @endif
                                 @endif
                             </td>
@@ -417,10 +435,14 @@
                                 </td>
                             @endfor
                             <td class="col-absence">
-                                @if ($record->start_date)
-                                    {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
-                                @else
+                                @if (isset($record->is_resignation) && $record->is_resignation)
                                     0
+                                @else
+                                    @if ($record->start_date)
+                                        {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
+                                    @else
+                                        0
+                                    @endif
                                 @endif
                             </td>
                         </tr>
@@ -438,13 +460,31 @@
                             </td>
                             <td class="col-civil">{{ $record->trainee->clean_identity_number }}</td>
                             <td class="col-work-days">
-                                @if ($record->start_date)
-                                    {{ $record->start_date->diffInDays($record->end_date) + 1 }}
+                                @if (isset($record->is_resignation) && $record->is_resignation)
+                                    @php
+                                        $workDaysCount = 0;
+                                        for($i=0;$i<count($days);$i++) {
+                                            if (!$days[$i]['vacation_day']) {
+                                                if ($record->start_date) {
+                                                    if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date)) {
+                                                        $workDaysCount++;
+                                                    }
+                                                } else {
+                                                    $workDaysCount++;
+                                                }
+                                            }
+                                        }
+                                    @endphp
+                                    {{ $workDaysCount }}
                                 @else
-                                    @if (isset($record->is_resignation) && $record->is_resignation)
-                                        {{ count($days) }}
+                                    @if ($record->start_date)
+                                        {{ $record->start_date->diffInDays($record->end_date) + 1 }}
                                     @else
-                                        {{ count($days) }}
+                                        @if (isset($record->is_resignation) && $record->is_resignation)
+                                            {{ count($days) }}
+                                        @else
+                                            {{ count($days) }}
+                                        @endif
                                     @endif
                                 @endif
                             </td>
@@ -472,10 +512,14 @@
                                 </td>
                             @endfor
                             <td class="col-absence">
-                                @if ($record->start_date)
-                                    {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
-                                @else
+                                @if (isset($record->is_resignation) && $record->is_resignation)
                                     0
+                                @else
+                                    @if ($record->start_date)
+                                        {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
+                                    @else
+                                        0
+                                    @endif
                                 @endif
                             </td>
                         </tr>
