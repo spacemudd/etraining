@@ -163,17 +163,18 @@ class CompanyAttendanceReport extends Model implements Auditable
                 \Log::info('Found ' . $resignationTrainees->count() . ' resignations for report ' . $this->id);
                 
                 $resignationTrainees = $resignationTrainees->flatMap(function($resignation) {
-                    return $resignation->trainees->filter(function($trainee) {
-                        return $trainee !== null;
-                    })->map(function($trainee) use ($resignation) {
-                        // Create a mock CompanyAttendanceReportsTrainee object for display
-                        $mockAttendance = new \stdClass();
-                        $mockAttendance->trainee = $trainee;
-                        $mockAttendance->is_resignation = true;
-                        $mockAttendance->resignation_date = $resignation->resignation_date;
-                        $mockAttendance->active = true; // Set as active for display purposes
-                        return $mockAttendance;
-                    });
+                                            return $resignation->trainees->filter(function($trainee) {
+                            return $trainee !== null;
+                        })->map(function($trainee) use ($resignation) {
+                            // Create a mock CompanyAttendanceReportsTrainee object for display
+                            $mockAttendance = new \stdClass();
+                            $mockAttendance->trainee = $trainee;
+                            $mockAttendance->is_resignation = true;
+                            $mockAttendance->resignation_date = $resignation->resignation_date;
+                            $mockAttendance->active = true; // Set as active for display purposes
+                            $mockAttendance->status = 'active'; // Add status property for view compatibility
+                            return $mockAttendance;
+                        });
                 });
                 
                 \Log::info('Found ' . $resignationTrainees->count() . ' resignation trainees for report ' . $this->id);

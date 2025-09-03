@@ -336,9 +336,17 @@
                 </tr>
             </thead>
             <tbody>
+                @php
+                    // Ensure all records have status property
+                    foreach ($active_trainees as $record) {
+                        if (!isset($record->status)) {
+                            $record->status = 'active';
+                        }
+                    }
+                @endphp
                 @if ($report->trainees()->where('job_number', '!=', NULL)->count())
                     @foreach ($active_trainees as $counter => $record)
-                        @if ($record->status === 'temporary_stop')
+                        @if (isset($record->status) && $record->status === 'temporary_stop')
                             @continue
                         @endif
                         <tr>
@@ -392,7 +400,7 @@
                     @endforeach
                 @else
                     @foreach ($active_trainees as $counter => $record)
-                        @if ($record->status === 'temporary_stop')
+                        @if (isset($record->status) && $record->status === 'temporary_stop')
                             @continue
                         @endif
                         <tr>
