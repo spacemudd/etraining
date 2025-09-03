@@ -359,6 +359,13 @@
                         if (!isset($record->trainee) && method_exists($record, 'getTraineeAttribute')) {
                             $record->trainee = $record->trainee;
                         }
+                        
+                        // For deleted trainees (with is_resignation flag), ensure start_date and end_date are null
+                        if (isset($record->is_resignation) && $record->is_resignation) {
+                            $record->start_date = null;
+                            $record->end_date = null;
+                            \Log::info('Reset dates for deleted trainee ' . $record->trainee->id . ' in view: start_date=null, end_date=null');
+                        }
                     }
                 @endphp
                 @if ($report->trainees()->where('job_number', '!=', NULL)->count())

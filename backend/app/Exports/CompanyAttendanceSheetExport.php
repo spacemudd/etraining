@@ -122,11 +122,15 @@ class CompanyAttendanceSheetExport implements FromView, WithEvents, WithStyles, 
                                 return null; // Skip this trainee
                             }
                             
-                            // Use the original attendance record but add resignation info
+                            // Use the original attendance record but add resignation info and reset dates
                             $attendanceRecord->is_resignation = true;
                             $attendanceRecord->resignation_date = $resignation->resignation_date;
                             
-                            \Log::info('Using original attendance record for deleted trainee ' . $trainee->id . ' in export with start_date: ' . ($attendanceRecord->start_date ? $attendanceRecord->start_date->format('Y-m-d') : 'null') . ' and end_date: ' . ($attendanceRecord->end_date ? $attendanceRecord->end_date->format('Y-m-d') : 'null'));
+                            // Reset start_date and end_date to null for deleted trainees to ensure they're treated like regular trainees
+                            $attendanceRecord->start_date = null;
+                            $attendanceRecord->end_date = null;
+                            
+                            \Log::info('Using original attendance record for deleted trainee ' . $trainee->id . ' in export with start_date reset to null and end_date reset to null');
                             
                             return $attendanceRecord;
                         })->filter(function($item) {
