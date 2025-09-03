@@ -139,10 +139,14 @@ class CompanyAttendanceReport extends Model implements Auditable
                     $q->withTrashed();
                 }])->get();
             
+            \Log::info('Found ' . $activeTrainees->count() . ' active trainees for report ' . $this->id);
+            
             // Filter out records where trainee is null
             $activeTrainees = $activeTrainees->filter(function($record) {
                 return $record->trainee !== null;
             });
+            
+            \Log::info('After filtering null trainees: ' . $activeTrainees->count() . ' trainees for report ' . $this->id);
             
             $allTrainees = collect($activeTrainees);
             
@@ -154,20 +158,25 @@ class CompanyAttendanceReport extends Model implements Auditable
                     ->with(['trainees' => function($q) {
                         $q->onlyTrashed(); // ONLY deleted trainees
                     }])
-                    ->get()
-                    ->flatMap(function($resignation) {
-                        return $resignation->trainees->filter(function($trainee) {
-                            return $trainee !== null;
-                        })->map(function($trainee) use ($resignation) {
-                            // Create a mock CompanyAttendanceReportsTrainee object for display
-                            $mockAttendance = new \stdClass();
-                            $mockAttendance->trainee = $trainee;
-                            $mockAttendance->is_resignation = true;
-                            $mockAttendance->resignation_date = $resignation->resignation_date;
-                            $mockAttendance->active = true; // Set as active for display purposes
-                            return $mockAttendance;
-                        });
+                    ->get();
+                
+                \Log::info('Found ' . $resignationTrainees->count() . ' resignations for report ' . $this->id);
+                
+                $resignationTrainees = $resignationTrainees->flatMap(function($resignation) {
+                    return $resignation->trainees->filter(function($trainee) {
+                        return $trainee !== null;
+                    })->map(function($trainee) use ($resignation) {
+                        // Create a mock CompanyAttendanceReportsTrainee object for display
+                        $mockAttendance = new \stdClass();
+                        $mockAttendance->trainee = $trainee;
+                        $mockAttendance->is_resignation = true;
+                        $mockAttendance->resignation_date = $resignation->resignation_date;
+                        $mockAttendance->active = true; // Set as active for display purposes
+                        return $mockAttendance;
                     });
+                });
+                
+                \Log::info('Found ' . $resignationTrainees->count() . ' resignation trainees for report ' . $this->id);
                 
                 $allTrainees = $allTrainees->merge($resignationTrainees);
             } catch (\Exception $e) {
@@ -179,6 +188,8 @@ class CompanyAttendanceReport extends Model implements Auditable
             $uniqueTrainees = $allTrainees->unique(function($item) {
                 return $item->trainee->id;
             });
+
+            \Log::info('Final unique trainees count: ' . $uniqueTrainees->count() . ' for report ' . $this->id);
 
             return $uniqueTrainees;
         } catch (\Exception $e) {

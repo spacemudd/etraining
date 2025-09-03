@@ -273,6 +273,7 @@ class CompanyAttendanceReportService
             $active_trainees = collect();
             try {
                 $active_trainees = $report->getAllTraineesWithResignations();
+                \Log::info('Successfully got ' . $active_trainees->count() . ' trainees for report ' . $id);
             } catch (\Exception $e) {
                 \Log::error('Error getting trainees for report ' . $id . ': ' . $e->getMessage());
                 // Fallback to basic trainees if there's an error
@@ -284,6 +285,7 @@ class CompanyAttendanceReportService
                     ->filter(function($record) {
                         return $record->trainee !== null;
                     });
+                \Log::info('Fallback: Got ' . $active_trainees->count() . ' trainees for report ' . $id);
             }
 
             //if ($report->company->logo_files->count()) {

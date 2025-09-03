@@ -201,48 +201,76 @@ class CompanyAttendanceReportController extends Controller
 
     public function attach($id, Request $request)
     {
-        $request->validate(['trainee_id' => 'required']);
-        
-        // Check if trainee exists (including soft deleted ones)
-        $traineeExists = \App\Models\Back\Trainee::withTrashed()->where('id', $request->trainee_id)->exists();
-        if (!$traineeExists) {
-            return back()->withErrors(['trainee_id' => 'المتدرب غير موجود']);
-        }
-        
-        $record = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $id)
-            ->where('trainee_id', $request->trainee_id)
-            ->first();
+        try {
+            $request->validate(['trainee_id' => 'required']);
             
-        if (!$record) {
-            return back()->withErrors(['trainee_id' => 'المتدرب غير مرتبط بهذا التقرير']);
+            \Log::info('Attaching trainee ' . $request->trainee_id . ' to report ' . $id);
+            
+            // Check if trainee exists (including soft deleted ones)
+            $traineeExists = \App\Models\Back\Trainee::withTrashed()->where('id', $request->trainee_id)->exists();
+            if (!$traineeExists) {
+                \Log::warning('Trainee ' . $request->trainee_id . ' not found (including soft deleted)');
+                return back()->withErrors(['trainee_id' => 'المتدرب غير موجود']);
+            }
+            
+            $record = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $id)
+                ->where('trainee_id', $request->trainee_id)
+                ->first();
+                
+            if (!$record) {
+                \Log::warning('Trainee ' . $request->trainee_id . ' not linked to report ' . $id);
+                return back()->withErrors(['trainee_id' => 'المتدرب غير مرتبط بهذا التقرير']);
+            }
+            
+            \Log::info('Found record for trainee ' . $request->trainee_id . ' in report ' . $id . '. Current active status: ' . ($record->active ? 'true' : 'false'));
+            
+            $record->active = true;
+            $record->save();
+            
+            \Log::info('Successfully attached trainee ' . $request->trainee_id . ' to report ' . $id);
+            
+            return redirect()->route('back.reports.company-attendance.show', $id);
+        } catch (\Exception $e) {
+            \Log::error('Error attaching trainee ' . $request->trainee_id . ' to report ' . $id . ': ' . $e->getMessage());
+            return back()->withErrors(['trainee_id' => 'حدث خطأ في إضافة المتدرب: ' . $e->getMessage()]);
         }
-        
-        $record->active = true;
-        $record->save();
-        return redirect()->route('back.reports.company-attendance.show', $id);
     }
 
     public function detach($id, Request $request)
     {
-        $request->validate(['trainee_id' => 'required']);
-        
-        // Check if trainee exists (including soft deleted ones)
-        $traineeExists = \App\Models\Back\Trainee::withTrashed()->where('id', $request->trainee_id)->exists();
-        if (!$traineeExists) {
-            return back()->withErrors(['trainee_id' => 'المتدرب غير موجود']);
-        }
-        
-        $record = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $id)
-            ->where('trainee_id', $request->trainee_id)
-            ->first();
+        try {
+            $request->validate(['trainee_id' => 'required']);
             
-        if (!$record) {
-            return back()->withErrors(['trainee_id' => 'المتدرب غير مرتبط بهذا التقرير']);
+            \Log::info('Detaching trainee ' . $request->trainee_id . ' from report ' . $id);
+            
+            // Check if trainee exists (including soft deleted ones)
+            $traineeExists = \App\Models\Back\Trainee::withTrashed()->where('id', $request->trainee_id)->exists();
+            if (!$traineeExists) {
+                \Log::warning('Trainee ' . $request->trainee_id . ' not found (including soft deleted)');
+                return back()->withErrors(['trainee_id' => 'المتدرب غير موجود']);
+            }
+            
+            $record = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $id)
+                ->where('trainee_id', $request->trainee_id)
+                ->first();
+                
+            if (!$record) {
+                \Log::warning('Trainee ' . $request->trainee_id . ' not linked to report ' . $id);
+                return back()->withErrors(['trainee_id' => 'المتدرب غير مرتبط بهذا التقرير']);
+            }
+            
+            \Log::info('Found record for trainee ' . $request->trainee_id . ' in report ' . $id . '. Current active status: ' . ($record->active ? 'true' : 'false'));
+            
+            $record->active = false;
+            $record->save();
+            
+            \Log::info('Successfully detached trainee ' . $request->trainee_id . ' from report ' . $id);
+            
+            return redirect()->route('back.reports.company-attendance.show', $id);
+        } catch (\Exception $e) {
+            \Log::error('Error detaching trainee ' . $request->trainee_id . ' from report ' . $id . ': ' . $e->getMessage());
+            return back()->withErrors(['trainee_id' => 'حدث خطأ في إزالة المتدرب: ' . $e->getMessage()]);
         }
-        
-        $record->active = false;
-        $record->save();
-        return redirect()->route('back.reports.company-attendance.show', $id);
     }
 
     public function update($id, Request $request)
@@ -282,7 +310,11 @@ class CompanyAttendanceReportController extends Controller
             return $pdf->inline();
         } catch (\Exception $e) {
             \Log::error('Error in preview for report ' . $id . ': ' . $e->getMessage());
-            return back()->withErrors(['message' => 'حدث خطأ في عرض التقرير: ' . $e->getMessage()]);
+            // Instead of redirecting back, return a simple error response
+            return response()->json([
+                'error' => true,
+                'message' => 'حدث خطأ في عرض التقرير: ' . $e->getMessage()
+            ], 500);
         }
     }
 
