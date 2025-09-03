@@ -83,6 +83,11 @@ class CompanyAttendanceSheetExport implements FromView, WithEvents, WithStyles, 
             ->with(['trainee' => function($q) {
                 $q->withTrashed();
             }])->get();
+            
+        // Filter out records where trainee is null (in case of any data inconsistency)
+        $activeTrainees = $activeTrainees->filter(function($record) {
+            return $record->trainee !== null;
+        });
         $allTrainees = $allTrainees->merge($activeTrainees);
         
         // 2. Get trainees with resignations AND deleted (soft deleted) - ONLY THESE SHOULD BE INCLUDED
@@ -94,7 +99,9 @@ class CompanyAttendanceSheetExport implements FromView, WithEvents, WithStyles, 
             }])
             ->get()
             ->flatMap(function($resignation) {
-                return $resignation->trainees->map(function($trainee) use ($resignation) {
+                return $resignation->trainees->filter(function($trainee) {
+                    return $trainee !== null;
+                })->map(function($trainee) use ($resignation) {
                     // Create a mock CompanyAttendanceReportsTrainee object for display
                     $mockAttendance = new \stdClass();
                     $mockAttendance->trainee = $trainee;

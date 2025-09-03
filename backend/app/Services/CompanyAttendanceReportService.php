@@ -309,8 +309,14 @@ class CompanyAttendanceReportService
     {
         $record = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $report_id)
             ->where('trainee_id', $trainee_id)
-            ->with('trainee', 'report')
+            ->with(['trainee' => function($q) {
+                $q->withTrashed();
+            }, 'report'])
             ->first();
+            
+        if (!$record) {
+            throw new \Exception('السجل غير موجود');
+        }
 
         $days = [];
         Carbon::setLocale('ar');
@@ -330,7 +336,7 @@ class CompanyAttendanceReportService
         }
 
         // Check if this is the special company to use different design
-        if (in_array($record->company->id, [
+        if (in_array($record->report->company->id, [
             '9ef83749-d1ba-44a5-82a9-f726840e02db', // مصنع هلال مشبب العتيبي
             '92d30511-77a8-4290-8d20-419f93ede3fd', // الشركة الجديدة
             '19762266-e0fc-43e5-b6ae-b4deec886bb1',
@@ -364,7 +370,7 @@ class CompanyAttendanceReportService
             ->setOption('zoom', 0.78)
             ->setOption('footer-html', resource_path('views/pdf/company-attendance-report/company-attendance-report-footer.html'))
             ->loadView($view, [
-                'base64logo' => $record->company->logo_files->count() ? 'data:image/jpeg;base64,'.base64_encode(@file_get_contents('https://prod.ptc-ksa.com/back/media/'.$record->report->company->logo_files->first()->id)) : null,
+                'base64logo' => $record->report->company->logo_files->count() ? 'data:image/jpeg;base64,'.base64_encode(@file_get_contents('https://prod.ptc-ksa.com/back/media/'.$record->report->company->logo_files->first()->id)) : null,
                 'report' => $record->report,
                 'active_trainees' => $record->report->getAllTraineesWithResignations()->where('trainee.id', $trainee_id),
                 'days' => $days,

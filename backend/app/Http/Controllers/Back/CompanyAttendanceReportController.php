@@ -201,10 +201,22 @@ class CompanyAttendanceReportController extends Controller
 
     public function attach($id, Request $request)
     {
-        $request->validate(['trainee_id' => 'required|exists:trainees,id']);
+        $request->validate(['trainee_id' => 'required']);
+        
+        // Check if trainee exists (including soft deleted ones)
+        $traineeExists = \App\Models\Back\Trainee::withTrashed()->where('id', $request->trainee_id)->exists();
+        if (!$traineeExists) {
+            return back()->withErrors(['trainee_id' => 'المتدرب غير موجود']);
+        }
+        
         $record = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $id)
             ->where('trainee_id', $request->trainee_id)
             ->first();
+            
+        if (!$record) {
+            return back()->withErrors(['trainee_id' => 'المتدرب غير مرتبط بهذا التقرير']);
+        }
+        
         $record->active = true;
         $record->save();
         return redirect()->route('back.reports.company-attendance.show', $id);
@@ -212,10 +224,22 @@ class CompanyAttendanceReportController extends Controller
 
     public function detach($id, Request $request)
     {
-        $request->validate(['trainee_id' => 'required|exists:trainees,id']);
+        $request->validate(['trainee_id' => 'required']);
+        
+        // Check if trainee exists (including soft deleted ones)
+        $traineeExists = \App\Models\Back\Trainee::withTrashed()->where('id', $request->trainee_id)->exists();
+        if (!$traineeExists) {
+            return back()->withErrors(['trainee_id' => 'المتدرب غير موجود']);
+        }
+        
         $record = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $id)
             ->where('trainee_id', $request->trainee_id)
             ->first();
+            
+        if (!$record) {
+            return back()->withErrors(['trainee_id' => 'المتدرب غير مرتبط بهذا التقرير']);
+        }
+        
         $record->active = false;
         $record->save();
         return redirect()->route('back.reports.company-attendance.show', $id);
@@ -319,11 +343,20 @@ class CompanyAttendanceReportController extends Controller
     public function toggleSelect($id)
     {
         $report = CompanyAttendanceReport::findOrFail($id);
-        if ($report->trainees()->where('active', true)->count()) {
-            $report->trainees()->update(['active' => false]);
+        
+        // Use the pivot table directly to avoid issues with soft deleted trainees
+        $activeCount = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $id)
+            ->where('active', true)
+            ->count();
+            
+        if ($activeCount > 0) {
+            CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $id)
+                ->update(['active' => false]);
         } else {
-            $report->trainees()->update(['active' => true]);
+            CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $id)
+                ->update(['active' => true]);
         }
+        
         return redirect()->route('back.reports.company-attendance.show', $id);
     }
     public function excel($report_id)
@@ -338,8 +371,14 @@ class CompanyAttendanceReportController extends Controller
     {
         $record = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $report_id)
             ->where('trainee_id', $trainee_id)
-            ->with('trainee', 'report')
+            ->with(['trainee' => function($q) {
+                $q->withTrashed();
+            }, 'report'])
             ->first();
+
+        if (!$record) {
+            return back()->withErrors(['message' => 'السجل غير موجود']);
+        }
 
         return Inertia::render('Back/Reports/CompanyAttendance/Individual', [
             'record' => $record,
@@ -348,6 +387,15 @@ class CompanyAttendanceReportController extends Controller
 
     public function individualPdf($report_id, $trainee_id)
     {
+        // Check if record exists before generating PDF
+        $record = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $report_id)
+            ->where('trainee_id', $trainee_id)
+            ->first();
+            
+        if (!$record) {
+            abort(404, 'السجل غير موجود');
+        }
+        
         $pdf = CompanyAttendanceReportService::makeIndividualPdf($report_id, $trainee_id, request()->boolean('with_attendance_times'));
         return $pdf->inline();
     }
@@ -355,6 +403,15 @@ class CompanyAttendanceReportController extends Controller
     public function individualEmail($report_id, $trainee_id)
     {
         $report = CompanyAttendanceReport::findOrFail($report_id);
+        
+        // Check if record exists before sending email
+        $record = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $report_id)
+            ->where('trainee_id', $trainee_id)
+            ->first();
+            
+        if (!$record) {
+            return back()->withErrors(['message' => 'السجل غير موجود']);
+        }
 
         Mail::to($report->emails_to()->pluck('email') ?: null)
             ->bcc($report->emails_cc()->pluck('email') ?: null)
@@ -418,10 +475,25 @@ class CompanyAttendanceReportController extends Controller
     public function addTrainee($report_id, Request $request)
     {
         $request->validate([
-            'trainee_id' => 'required|exists:trainees,id',
+            'trainee_id' => 'required',
         ]);
 
+        // Check if trainee exists (including soft deleted ones)
+        $traineeExists = \App\Models\Back\Trainee::withTrashed()->where('id', $request->trainee_id)->exists();
+        if (!$traineeExists) {
+            return back()->withErrors(['trainee_id' => 'المتدرب غير موجود']);
+        }
+
         $report = CompanyAttendanceReport::findOrFail($report_id);
+
+        // Check if trainee is already attached to this report
+        $existingRecord = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $report_id)
+            ->where('trainee_id', $request->trainee_id)
+            ->first();
+            
+        if ($existingRecord) {
+            return back()->withErrors(['trainee_id' => 'المتدرب مرتبط بالفعل بهذا التقرير']);
+        }
 
         $report->trainees()->attach($request->trainee_id);
 

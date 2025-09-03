@@ -138,6 +138,11 @@ class CompanyAttendanceReport extends Model implements Auditable
                 $q->withTrashed();
             }])->get();
         
+        // Filter out records where trainee is null
+        $activeTrainees = $activeTrainees->filter(function($record) {
+            return $record->trainee !== null;
+        });
+        
         $allTrainees = collect($activeTrainees);
         
         // 2. Get trainees with resignations AND deleted (soft deleted) - ONLY THESE SHOULD BE INCLUDED
@@ -149,7 +154,9 @@ class CompanyAttendanceReport extends Model implements Auditable
             }])
             ->get()
             ->flatMap(function($resignation) {
-                return $resignation->trainees->map(function($trainee) use ($resignation) {
+                return $resignation->trainees->filter(function($trainee) {
+                    return $trainee !== null;
+                })->map(function($trainee) use ($resignation) {
                     // Create a mock CompanyAttendanceReportsTrainee object for display
                     $mockAttendance = new \stdClass();
                     $mockAttendance->trainee = $trainee;
