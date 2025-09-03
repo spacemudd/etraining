@@ -108,6 +108,17 @@ class CompanyAttendanceSheetExport implements FromView, WithEvents, WithStyles, 
                         return $resignation->trainees->filter(function($trainee) {
                             return $trainee !== null;
                         })->map(function($trainee) use ($resignation) {
+                            // Check if this trainee is in the attendance report and is active
+                            $attendanceRecord = \App\Models\Back\CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->report->id)
+                                ->where('trainee_id', $trainee->id)
+                                ->where('active', true)
+                                ->first();
+                            
+                            // Only include if the trainee is actively selected in the report
+                            if (!$attendanceRecord) {
+                                return null; // Skip this trainee
+                            }
+                            
                             // Create a mock CompanyAttendanceReportsTrainee object for display
                             $mockAttendance = new \stdClass();
                             $mockAttendance->trainee = $trainee;
@@ -117,9 +128,12 @@ class CompanyAttendanceSheetExport implements FromView, WithEvents, WithStyles, 
                             $mockAttendance->start_date = $resignation->resignation_date; // Add start_date property
                             $mockAttendance->end_date = $resignation->resignation_date; // Add end_date property
                             return $mockAttendance;
+                        })->filter(function($item) {
+                            return $item !== null; // Remove null items
                         });
                     });
                 
+                \Log::info('Found ' . $resignationTrainees->count() . ' resignation trainees for export report ' . $this->report->id . ' (after filtering active ones)');
                 $allTrainees = $allTrainees->merge($resignationTrainees);
             } catch (\Exception $e) {
                 \Log::error('Error getting resignation trainees for export report ' . $this->report->id . ': ' . $e->getMessage());
