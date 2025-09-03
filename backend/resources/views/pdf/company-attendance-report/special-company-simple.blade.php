@@ -355,6 +355,10 @@
                         if ($record->end_date && !($record->end_date instanceof \Carbon\Carbon)) {
                             $record->end_date = \Carbon\Carbon::parse($record->end_date);
                         }
+                        // Ensure trainee relationship is loaded
+                        if (!isset($record->trainee) && method_exists($record, 'getTraineeAttribute')) {
+                            $record->trainee = $record->trainee;
+                        }
                     }
                 @endphp
                 @if ($report->trainees()->where('job_number', '!=', NULL)->count())

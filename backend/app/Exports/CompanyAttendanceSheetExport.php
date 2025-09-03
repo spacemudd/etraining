@@ -112,6 +112,9 @@ class CompanyAttendanceSheetExport implements FromView, WithEvents, WithStyles, 
                             $attendanceRecord = \App\Models\Back\CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->report->id)
                                 ->where('trainee_id', $trainee->id)
                                 ->where('active', true)
+                                ->with(['trainee' => function($q) {
+                                    $q->withTrashed();
+                                }])
                                 ->first();
                             
                             // Only include if the trainee is actively selected in the report
@@ -119,15 +122,13 @@ class CompanyAttendanceSheetExport implements FromView, WithEvents, WithStyles, 
                                 return null; // Skip this trainee
                             }
                             
-                            // Create a mock CompanyAttendanceReportsTrainee object for display
-                            $mockAttendance = new \stdClass();
-                            $mockAttendance->trainee = $trainee;
-                            $mockAttendance->is_resignation = true;
-                            $mockAttendance->resignation_date = $resignation->resignation_date;
-                            $mockAttendance->status = 'active'; // Add status property for view compatibility
-                            $mockAttendance->start_date = null; // Set to null like regular trainees for correct work days calculation
-                            $mockAttendance->end_date = null; // Set to null like regular trainees for correct work days calculation
-                            return $mockAttendance;
+                            // Use the original attendance record but add resignation info
+                            $attendanceRecord->is_resignation = true;
+                            $attendanceRecord->resignation_date = $resignation->resignation_date;
+                            
+                            \Log::info('Using original attendance record for deleted trainee ' . $trainee->id . ' in export with start_date: ' . ($attendanceRecord->start_date ? $attendanceRecord->start_date->format('Y-m-d') : 'null') . ' and end_date: ' . ($attendanceRecord->end_date ? $attendanceRecord->end_date->format('Y-m-d') : 'null'));
+                            
+                            return $attendanceRecord;
                         })->filter(function($item) {
                             return $item !== null; // Remove null items
                         });
