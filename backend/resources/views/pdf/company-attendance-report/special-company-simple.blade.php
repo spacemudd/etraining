@@ -436,7 +436,10 @@
                             @endfor
                             <td class="col-absence">
                                 @if (isset($record->is_resignation) && $record->is_resignation)
-                                    0
+                                    @php
+                                        $attendance = \App\Services\CompanyAttendanceReportService::calculateAttendanceForDeletedTrainee($record, $days);
+                                    @endphp
+                                    {{ $attendance['absence_days'] }}
                                 @else
                                     @if ($record->start_date)
                                         {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}

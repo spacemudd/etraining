@@ -7,8 +7,68 @@
 
 ## الحل المطبق
 
-### 1. تعديل منطق حساب أيام العمل
-تم تعديل جميع ملفات العرض لتستخدم منطق حساب جديد للمتدربين المحذوفين:
+### 1. إنشاء دالة في الباك اند لحساب الأيقونات الفعلية
+تم إضافة دالة جديدة في `app/Services/CompanyAttendanceReportService.php`:
+
+```php
+/**
+ * Calculate work days and absence days for deleted trainees based on actual icons
+ */
+public static function calculateAttendanceForDeletedTrainee($record, $days)
+{
+    if (!isset($record->is_resignation) || !$record->is_resignation) {
+        return [
+            'work_days' => 0,
+            'absence_days' => 0
+        ];
+    }
+
+    $workDaysCount = 0;
+    $absenceDaysCount = 0;
+
+    foreach ($days as $day) {
+        if ($day['vacation_day']) {
+            continue; // Skip vacation days
+        }
+
+        // Check if this day should show an icon based on the same logic used in the view
+        $shouldShowIcon = false;
+        $isPresent = false;
+        $isAbsent = false;
+
+        if ($record->start_date) {
+            if ($day['date_carbon']->isBetween($record->start_date, $record->end_date)) {
+                $shouldShowIcon = true;
+                $isPresent = true;
+            } else {
+                if ($record->status === 'new_registration') {
+                    $shouldShowIcon = true;
+                    $isAbsent = true;
+                }
+            }
+        } else {
+            $shouldShowIcon = true;
+            $isPresent = true;
+        }
+
+        if ($shouldShowIcon) {
+            if ($isPresent) {
+                $workDaysCount++;
+            } elseif ($isAbsent) {
+                $absenceDaysCount++;
+            }
+        }
+    }
+
+    return [
+        'work_days' => $workDaysCount,
+        'absence_days' => $absenceDaysCount
+    ];
+}
+```
+
+### 2. تعديل ملفات العرض لاستخدام الدالة الجديدة
+تم تعديل جميع ملفات العرض لتستخدم الدالة الجديدة من الباك اند:
 
 #### الملفات المعدلة:
 - `resources/views/pdf/company-attendance-report/special-company-simple.blade.php`
@@ -21,43 +81,20 @@
 ```php
 @if (isset($record->is_resignation) && $record->is_resignation)
     @php
-        $workDaysCount = 0;
-        for($i=0;$i<count($days);$i++) {
-            if (!$days[$i]['vacation_day']) {
-                if ($record->start_date) {
-                    if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date)) {
-                        $workDaysCount++;
-                    }
-                } else {
-                    $workDaysCount++;
-                }
-            }
-        }
+        $attendance = \App\Services\CompanyAttendanceReportService::calculateAttendanceForDeletedTrainee($record, $days);
     @endphp
-    {{ $workDaysCount }}
+    {{ $attendance['work_days'] }}  // عدد أيام العمل
+    {{ $attendance['absence_days'] }}  // عدد أيام الغياب
 @else
     // المنطق القديم للمتدربين العاديين
 @endif
 ```
-
-### 2. تعديل منطق حساب أيام الغياب
-تم تعيين عدد أيام الغياب إلى صفر دائماً للمتدربين المحذوفين:
-
-```php
-@if (isset($record->is_resignation) && $record->is_resignation)
-    0
-@else
-    // المنطق القديم للمتدربين العاديين
-@endif
-```
-
-### 3. إصلاح ملف التصدير
-تم تعديل `app/Exports/CompanyAttendanceSheetExport.php` لإزالة تعيين `start_date` و `end_date` إلى `null` للمتدربين المحذوفين.
 
 ## النتيجة
 - عدد أيام العمل للمتدربين المحذوفين أصبح يعتمد على عدد الأيقونات الفعلية في الجدول
-- عدد أيام الغياب أصبح صفر دائماً للمتدربين المحذوفين
+- عدد أيام الغياب أصبح يحسب بناءً على الأيقونات الفعلية للمتدربين المحذوفين
 - الأرقام أصبحت متطابقة مع الأيقونات المرئية في الجدول
+- الحساب يتم من الباك اند مما يضمن الدقة والاتساق
 
 ## كيفية تحديد المتدربين المحذوفين
 يتم تحديد المتدربين المحذوفين من خلال:
@@ -68,3 +105,4 @@
 - التغييرات تؤثر فقط على المتدربين المحذوفين (soft delete)
 - المتدربين العاديين يستمرون في استخدام المنطق القديم
 - جميع ملفات العرض تم تحديثها لضمان الاتساق
+- الحساب يتم من الباك اند مما يضمن الدقة

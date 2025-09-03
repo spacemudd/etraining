@@ -421,4 +421,59 @@ class CompanyAttendanceReportService
             throw new \Exception('حدث خطأ في إنشاء التقرير الفردي: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Calculate work days and absence days for deleted trainees based on actual icons
+     */
+    public static function calculateAttendanceForDeletedTrainee($record, $days)
+    {
+        if (!isset($record->is_resignation) || !$record->is_resignation) {
+            return [
+                'work_days' => 0,
+                'absence_days' => 0
+            ];
+        }
+
+        $workDaysCount = 0;
+        $absenceDaysCount = 0;
+
+        foreach ($days as $day) {
+            if ($day['vacation_day']) {
+                continue; // Skip vacation days
+            }
+
+            // Check if this day should show an icon based on the same logic used in the view
+            $shouldShowIcon = false;
+            $isPresent = false;
+            $isAbsent = false;
+
+            if ($record->start_date) {
+                if ($day['date_carbon']->isBetween($record->start_date, $record->end_date)) {
+                    $shouldShowIcon = true;
+                    $isPresent = true;
+                } else {
+                    if ($record->status === 'new_registration') {
+                        $shouldShowIcon = true;
+                        $isAbsent = true;
+                    }
+                }
+            } else {
+                $shouldShowIcon = true;
+                $isPresent = true;
+            }
+
+            if ($shouldShowIcon) {
+                if ($isPresent) {
+                    $workDaysCount++;
+                } elseif ($isAbsent) {
+                    $absenceDaysCount++;
+                }
+            }
+        }
+
+        return [
+            'work_days' => $workDaysCount,
+            'absence_days' => $absenceDaysCount
+        ];
+    }
 }
