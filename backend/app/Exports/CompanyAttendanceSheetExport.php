@@ -125,8 +125,8 @@ class CompanyAttendanceSheetExport implements FromView, WithEvents, WithStyles, 
                             $mockAttendance->is_resignation = true;
                             $mockAttendance->resignation_date = $resignation->resignation_date;
                             $mockAttendance->status = 'active'; // Add status property for view compatibility
-                            $mockAttendance->start_date = $resignation->resignation_date; // Add start_date property
-                            $mockAttendance->end_date = $resignation->resignation_date; // Add end_date property
+                            $mockAttendance->start_date = null; // Set to null like regular trainees for correct work days calculation
+                            $mockAttendance->end_date = null; // Set to null like regular trainees for correct work days calculation
                             return $mockAttendance;
                         })->filter(function($item) {
                             return $item !== null; // Remove null items
