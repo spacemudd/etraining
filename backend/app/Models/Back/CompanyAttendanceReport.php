@@ -173,6 +173,8 @@ class CompanyAttendanceReport extends Model implements Auditable
                             $mockAttendance->resignation_date = $resignation->resignation_date;
                             $mockAttendance->active = true; // Set as active for display purposes
                             $mockAttendance->status = 'active'; // Add status property for view compatibility
+                            $mockAttendance->start_date = $resignation->resignation_date; // Add start_date property
+                            $mockAttendance->end_date = $resignation->resignation_date; // Add end_date property
                             return $mockAttendance;
                         });
                 });

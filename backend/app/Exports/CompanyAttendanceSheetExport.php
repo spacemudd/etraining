@@ -114,6 +114,8 @@ class CompanyAttendanceSheetExport implements FromView, WithEvents, WithStyles, 
                             $mockAttendance->is_resignation = true;
                             $mockAttendance->resignation_date = $resignation->resignation_date;
                             $mockAttendance->status = 'active'; // Add status property for view compatibility
+                            $mockAttendance->start_date = $resignation->resignation_date; // Add start_date property
+                            $mockAttendance->end_date = $resignation->resignation_date; // Add end_date property
                             return $mockAttendance;
                         });
                     });

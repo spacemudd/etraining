@@ -337,10 +337,23 @@
             </thead>
             <tbody>
                 @php
-                    // Ensure all records have status property
+                    // Ensure all records have required properties
                     foreach ($active_trainees as $record) {
                         if (!isset($record->status)) {
                             $record->status = 'active';
+                        }
+                        if (!isset($record->start_date)) {
+                            $record->start_date = null;
+                        }
+                        if (!isset($record->end_date)) {
+                            $record->end_date = null;
+                        }
+                        // Ensure start_date and end_date are Carbon instances if they exist
+                        if ($record->start_date && !($record->start_date instanceof \Carbon\Carbon)) {
+                            $record->start_date = \Carbon\Carbon::parse($record->start_date);
+                        }
+                        if ($record->end_date && !($record->end_date instanceof \Carbon\Carbon)) {
+                            $record->end_date = \Carbon\Carbon::parse($record->end_date);
                         }
                     }
                 @endphp
