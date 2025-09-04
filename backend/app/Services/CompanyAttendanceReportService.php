@@ -264,7 +264,8 @@ class CompanyAttendanceReportService
                 '19762266-e0fc-43e5-b6ae-b4deec886bb1',
                 '73017d20-40c8-401f-8dc1-b36ca0416e35',
                 '077e3421-a623-49f4-b3f2-dcf80c9d295f',
-                '21b4c354-2b4d-467f-b028-04a692496bab', // الشركة الجديدة المضافة
+                '21b4c354-2b4d-467f-b028-04a692496bab',
+                '620d6e65-9892-4e69-bad4-2b0dc51af7fc', // الشركة الجديدة المضافة
             ])) {
                 // Use simplified design to avoid SSL issues
                 $view = 'pdf.company-attendance-report.special-company-simple';
@@ -369,7 +370,8 @@ class CompanyAttendanceReportService
                 '19762266-e0fc-43e5-b6ae-b4deec886bb1',
                 '73017d20-40c8-401f-8dc1-b36ca0416e35', 
                 '077e3421-a623-49f4-b3f2-dcf80c9d295f',
-                '21b4c354-2b4d-467f-b028-04a692496bab',// الشركة الجديدة المضافة
+                '21b4c354-2b4d-467f-b028-04a692496bab',
+                '620d6e65-9892-4e69-bad4-2b0dc51af7fc',// الشركة الجديدة المضافة
             ])) {
                 // Use simplified design to avoid SSL issues
                 $view = 'pdf.company-attendance-report.special-company-individual-simple';
