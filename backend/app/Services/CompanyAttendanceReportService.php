@@ -141,7 +141,20 @@ class CompanyAttendanceReportService
         // Remove duplicates and attach to report
         $uniqueTraineeIds = $allTrainees->unique('id')->pluck('id');
         
+        // Get settings from original report to preserve user preferences
+        $originalTraineesSettings = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $original->id)
+            ->get()
+            ->keyBy('trainee_id');
+        
+        \Log::info('Debug - Clone: Preserving settings from original report:', [
+            'original_report_id' => $original->id,
+            'clone_report_id' => $clone->id,
+            'original_trainees_count' => $originalTraineesSettings->count(),
+            'preserved_inactive_trainees' => $originalTraineesSettings->where('active', false)->count(),
+        ]);
+        
         // Prepare trainee data with start_date and end_date for resigned trainees
+        // AND preserve previous settings (active status, comment, etc.)
         $traineeData = [];
         foreach ($uniqueTraineeIds as $traineeId) {
             $trainee = $allTrainees->firstWhere('id', $traineeId);
@@ -154,19 +167,26 @@ class CompanyAttendanceReportService
                 })
                 ->first();
             
+            // Get previous settings for this trainee if they exist
+            $previousSettings = $originalTraineesSettings->get($traineeId);
+            
             if ($resignation && $trainee->trashed()) {
                 // This is a resigned and deleted trainee
                 $traineeData[$traineeId] = [
-                    'active' => true,
+                    'active' => $previousSettings ? $previousSettings->active : true, // Preserve previous active status
+                    'status' => $previousSettings ? $previousSettings->status : null, // Preserve previous status
+                    'comment' => $previousSettings ? $previousSettings->comment : null, // Preserve previous comment
                     'start_date' => $clone->date_from, // Start from report start date
                     'end_date' => Carbon::parse($resignation->resignation_date)->endOfDay(), // End at resignation date
                 ];
             } else {
-                // This is an active trainee - set start_date and end_date to null
+                // This is an active trainee - preserve previous settings if exist
                 $traineeData[$traineeId] = [
-                    'active' => true,
-                    'start_date' => null,
-                    'end_date' => null,
+                    'active' => $previousSettings ? $previousSettings->active : true, // Preserve previous active status, default true for new trainees
+                    'status' => $previousSettings ? $previousSettings->status : null, // Preserve previous status
+                    'comment' => $previousSettings ? $previousSettings->comment : null, // Preserve previous comment
+                    'start_date' => $previousSettings && $previousSettings->start_date ? $previousSettings->start_date : null, // Preserve custom dates if exist
+                    'end_date' => $previousSettings && $previousSettings->end_date ? $previousSettings->end_date : null,
                 ];
             }
         }
@@ -236,8 +256,6 @@ class CompanyAttendanceReportService
     {
         $report = CompanyAttendanceReport::findOrFail($id);
         
-        // Debug logging
-        \Log::info('Debug - makePdf called for report: ' . $id);
 
         $days = [];
         Carbon::setLocale('ar');
@@ -299,10 +317,7 @@ class CompanyAttendanceReportService
             ->setOption('zoom', 0.78)
             ->setOption('footer-html', $report->with_logo ? resource_path('views/pdf/company-attendance-report/company-attendance-report-footer.html') : false);
         
-        // Debug before calling getAllTraineesWithResignations
-        \Log::info('Debug - About to call getAllTraineesWithResignations for report: ' . $id);
         $activeTrainees = $report->getAllTraineesWithResignations();
-        \Log::info('Debug - getAllTraineesWithResignations returned ' . $activeTrainees->count() . ' trainees for report: ' . $id);
         
         $pdf = $pdf->loadView($view, [
                 'base64logo' => $report->company->logo_files->count() ? 'data:image/jpeg;base64,'.base64_encode(@file_get_contents('https://prod.jisr-ksa.com/back/media/'.$report->company->logo_files->first()->id)) : null,

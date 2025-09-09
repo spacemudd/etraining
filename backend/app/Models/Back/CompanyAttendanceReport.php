@@ -137,23 +137,6 @@ class CompanyAttendanceReport extends Model implements Auditable
                 $q->withTrashed();
             }])->get();
         
-        // Debug logging for specific trainee  
-        $debugTrainee = $allReportTrainees->filter(function($item) {
-            return $item->trainee && str_contains($item->trainee->name, 'دانه');
-        })->first();
-        
-        if ($debugTrainee) {
-            \Log::info('Debug - Found دانه in report trainees:', [
-                'report_id' => $this->id,
-                'trainee_id' => $debugTrainee->trainee_id,
-                'trainee_name' => $debugTrainee->trainee->name,
-                'active' => $debugTrainee->active,
-                'status' => $debugTrainee->status,
-                'is_trashed' => $debugTrainee->trainee->trashed(),
-            ]);
-        } else {
-            \Log::info('Debug - دانه NOT found in report trainees for report: ' . $this->id);
-        }
         
         // Filter only ACTIVE trainees
         $activeTrainees = $allReportTrainees->where('active', true);
@@ -223,16 +206,6 @@ class CompanyAttendanceReport extends Model implements Auditable
             return $item->trainee->id;
         });
         
-        // Final debug logging
-        \Log::info('Debug - Final result for report ' . $this->id . ':', [
-            'total_report_trainees' => $allReportTrainees->count(),
-            'active_trainees' => $activeTrainees->count(),
-            'resignation_trainees' => $resignationTrainees->count(),
-            'unique_trainees' => $uniqueTrainees->count(),
-            'final_trainee_names' => $uniqueTrainees->map(function($item) {
-                return $item->trainee->name;
-            })->toArray(),
-        ]);
 
         return $uniqueTrainees;
     }
