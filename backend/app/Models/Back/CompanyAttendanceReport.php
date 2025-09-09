@@ -131,16 +131,20 @@ class CompanyAttendanceReport extends Model implements Auditable
 
     public function getAllTraineesWithResignations()
     {
-        // Get only ACTIVE trainees from the report (selected by user)
-        $activeTrainees = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->id)
-            ->where('active', true) // Only get selected trainees
+        // Get ALL trainees from the report (both active and inactive) with their status
+        $allReportTrainees = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->id)
             ->with(['trainee' => function($q) {
                 $q->withTrashed();
             }])->get();
         
+        // Filter only ACTIVE trainees
+        $activeTrainees = $allReportTrainees->where('active', true);
         $allTrainees = collect($activeTrainees);
         
-        // 2. Get trainees with resignations AND deleted (soft deleted) - ONLY THESE SHOULD BE INCLUDED
+        // Create a map of existing trainees with their active status for quick lookup
+        $existingTraineesMap = $allReportTrainees->pluck('active', 'trainee_id')->toArray();
+        
+        // 2. Get trainees with resignations AND deleted (soft deleted) - ONLY if they are not already deactivated by user
         $resignationTrainees = $this->company->resignations()
             ->whereIn('status', ['new', 'sent']) // Include both new and sent resignations
             ->where('resignation_date', '>=', $this->date_from) // Resignation date should be within or after report period
@@ -148,16 +152,26 @@ class CompanyAttendanceReport extends Model implements Auditable
                 $q->onlyTrashed(); // ONLY deleted trainees
             }])
             ->get()
-            ->flatMap(function($resignation) {
-                return $resignation->trainees->map(function($trainee) use ($resignation) {
-                    // Create a mock CompanyAttendanceReportsTrainee object for display
-                    $mockAttendance = new \stdClass();
-                    $mockAttendance->trainee = $trainee;
-                    $mockAttendance->is_resignation = true;
-                    $mockAttendance->resignation_date = $resignation->resignation_date;
-                    $mockAttendance->active = true; // Set as active for display purposes
-                    return $mockAttendance;
-                });
+            ->flatMap(function($resignation) use ($existingTraineesMap) {
+                return $resignation->trainees
+                    ->filter(function($trainee) use ($existingTraineesMap) {
+                        // Only include if:
+                        // 1. Not already in the report, OR
+                        // 2. In the report and still active (not deactivated by user)
+                        if (array_key_exists($trainee->id, $existingTraineesMap)) {
+                            return $existingTraineesMap[$trainee->id]; // Only if active
+                        }
+                        return true; // Not in report, so include
+                    })
+                    ->map(function($trainee) use ($resignation) {
+                        // Create a mock CompanyAttendanceReportsTrainee object for display
+                        $mockAttendance = new \stdClass();
+                        $mockAttendance->trainee = $trainee;
+                        $mockAttendance->is_resignation = true;
+                        $mockAttendance->resignation_date = $resignation->resignation_date;
+                        $mockAttendance->active = true; // Set as active for display purposes
+                        return $mockAttendance;
+                    });
             });
         
         $allTrainees = $allTrainees->merge($resignationTrainees);
