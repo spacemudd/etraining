@@ -216,8 +216,31 @@ class CompanyAttendanceReportController extends Controller
         $record = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $id)
             ->where('trainee_id', $request->trainee_id)
             ->first();
-        $record->active = false;
-        $record->save();
+        
+        // Debug logging
+        \Log::info('Debug - Detaching trainee:', [
+            'report_id' => $id,
+            'trainee_id' => $request->trainee_id,
+            'record_found' => $record ? 'yes' : 'no',
+            'old_active_status' => $record ? $record->active : 'N/A',
+        ]);
+        
+        if ($record) {
+            $record->active = false;
+            $record->save();
+            
+            \Log::info('Debug - Trainee detached successfully:', [
+                'report_id' => $id,
+                'trainee_id' => $request->trainee_id,
+                'new_active_status' => $record->active,
+            ]);
+        } else {
+            \Log::error('Debug - Could not find record to detach:', [
+                'report_id' => $id,
+                'trainee_id' => $request->trainee_id,
+            ]);
+        }
+        
         return redirect()->route('back.reports.company-attendance.show', $id);
     }
 

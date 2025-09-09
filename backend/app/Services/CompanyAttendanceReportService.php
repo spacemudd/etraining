@@ -235,6 +235,9 @@ class CompanyAttendanceReportService
     static public function makePdf($id)
     {
         $report = CompanyAttendanceReport::findOrFail($id);
+        
+        // Debug logging
+        \Log::info('Debug - makePdf called for report: ' . $id);
 
         $days = [];
         Carbon::setLocale('ar');
@@ -294,11 +297,17 @@ class CompanyAttendanceReportService
             ->setOption('disable-smart-shrinking', true)
             ->setOption('viewport-size', '1024×768')
             ->setOption('zoom', 0.78)
-            ->setOption('footer-html', $report->with_logo ? resource_path('views/pdf/company-attendance-report/company-attendance-report-footer.html') : false)
-            ->loadView($view, [
+            ->setOption('footer-html', $report->with_logo ? resource_path('views/pdf/company-attendance-report/company-attendance-report-footer.html') : false);
+        
+        // Debug before calling getAllTraineesWithResignations
+        \Log::info('Debug - About to call getAllTraineesWithResignations for report: ' . $id);
+        $activeTrainees = $report->getAllTraineesWithResignations();
+        \Log::info('Debug - getAllTraineesWithResignations returned ' . $activeTrainees->count() . ' trainees for report: ' . $id);
+        
+        $pdf = $pdf->loadView($view, [
                 'base64logo' => $report->company->logo_files->count() ? 'data:image/jpeg;base64,'.base64_encode(@file_get_contents('https://prod.jisr-ksa.com/back/media/'.$report->company->logo_files->first()->id)) : null,
                 'report' => $report,
-                'active_trainees' => $report->getAllTraineesWithResignations(),
+                'active_trainees' => $activeTrainees,
                 'days' => $days,
             ]);
 
