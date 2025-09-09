@@ -180,10 +180,26 @@ class CompanyAttendanceReportController extends Controller
     {
         $report = CompanyAttendanceReport::with('company')
             ->with('approved_by')
-            ->with('trainees')
             ->with('emails_to')
             ->with('emails_cc')
             ->findOrFail($id);
+
+        // Get trainees including soft deleted ones from pivot table
+        $trainees = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $id)
+            ->with(['trainee' => function($q) {
+                $q->withTrashed(); // Include soft deleted trainees
+            }])
+            ->get()
+            ->filter(function($record) {
+                return $record->trainee !== null; // Filter out null trainees
+            });
+
+        // Add trainees to report
+        $report->trainees = $trainees->map(function($record) {
+            $trainee = $record->trainee;
+            $trainee->pivot = $record; // Add pivot data
+            return $trainee;
+        });
 
         return Inertia::render('Back/Reports/CompanyAttendance/Show',[
             'report' => $report,

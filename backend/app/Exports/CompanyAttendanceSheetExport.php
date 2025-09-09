@@ -76,79 +76,25 @@ class CompanyAttendanceSheetExport implements FromView, WithEvents, WithStyles, 
                 $company_name = $this->report->company->name_en;
             }
 
-            // Get all trainees including deleted ones and those with resignations
-            $allTrainees = collect();
+            // Get all active trainees from the report (only those with checkbox selected)
+            $uniqueTrainees = collect();
             
-            // 1. Active trainees from the report (only those with checkbox selected)
             try {
                 $activeTrainees = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->report->id)
                     ->where('active', true) // Only include trainees with checkbox selected
                     ->with(['trainee' => function($q) {
-                        $q->withTrashed();
+                        $q->withTrashed(); // Include soft deleted trainees
                     }])->get();
                     
-                // Filter out records where trainee is null (in case of any data inconsistency)
-                $activeTrainees = $activeTrainees->filter(function($record) {
+                // Filter out records where trainee is null (in case of any data inconsistency)  
+                $uniqueTrainees = $activeTrainees->filter(function($record) {
                     return $record->trainee !== null;
                 });
-                $allTrainees = $allTrainees->merge($activeTrainees);
-            } catch (\Exception $e) {
-                \Log::error('Error getting active trainees for export report ' . $this->report->id . ': ' . $e->getMessage());
-            }
-            
-            // 2. Get trainees with resignations AND deleted (soft deleted) - ONLY THESE SHOULD BE INCLUDED
-            try {
-                $resignationTrainees = $this->report->company->resignations()
-                    ->whereIn('status', ['new', 'sent']) // Include both new and sent resignations
-                    ->where('resignation_date', '>=', $this->report->date_from) // Resignation date should be within or after report period
-                    ->with(['trainees' => function($q) {
-                        $q->onlyTrashed(); // ONLY deleted trainees
-                    }])
-                    ->get()
-                    ->flatMap(function($resignation) {
-                        return $resignation->trainees->filter(function($trainee) {
-                            return $trainee !== null;
-                        })->map(function($trainee) use ($resignation) {
-                            // Check if this trainee is in the attendance report and is active
-                            $attendanceRecord = \App\Models\Back\CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->report->id)
-                                ->where('trainee_id', $trainee->id)
-                                ->where('active', true)
-                                ->with(['trainee' => function($q) {
-                                    $q->withTrashed();
-                                }])
-                                ->first();
-                            
-                            // Only include if the trainee is actively selected in the report
-                            if (!$attendanceRecord) {
-                                return null; // Skip this trainee
-                            }
-                            
-                            // Use the original attendance record but add resignation info and reset dates
-                            $attendanceRecord->is_resignation = true;
-                            $attendanceRecord->resignation_date = $resignation->resignation_date;
-                            
-                            // For deleted trainees, we should not reset start_date and end_date to null
-                            // Instead, we should keep the original values to maintain correct attendance calculation
-                            // The view will handle the display logic for deleted trainees
-                            
-                            \Log::info('Using original attendance record for deleted trainee ' . $trainee->id . ' in export with original start_date and end_date');
-                            
-                            return $attendanceRecord;
-                        })->filter(function($item) {
-                            return $item !== null; // Remove null items
-                        });
-                    });
                 
-                \Log::info('Found ' . $resignationTrainees->count() . ' resignation trainees for export report ' . $this->report->id . ' (after filtering active ones)');
-                $allTrainees = $allTrainees->merge($resignationTrainees);
+                \Log::info('Found ' . $uniqueTrainees->count() . ' active selected trainees for export report ' . $this->report->id);
             } catch (\Exception $e) {
-                \Log::error('Error getting resignation trainees for export report ' . $this->report->id . ': ' . $e->getMessage());
+                \Log::error('Error getting trainees for export report ' . $this->report->id . ': ' . $e->getMessage());
             }
-            
-            // Remove duplicates based on trainee ID
-            $uniqueTrainees = $allTrainees->unique(function($item) {
-                return $item->trainee->id;
-            });
 
             $attendancesCount = $uniqueTrainees->count();
 
