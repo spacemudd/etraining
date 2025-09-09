@@ -79,9 +79,10 @@ class CompanyAttendanceSheetExport implements FromView, WithEvents, WithStyles, 
             // Get all trainees including deleted ones and those with resignations
             $allTrainees = collect();
             
-            // 1. Active trainees from the report
+            // 1. Active trainees from the report (only those with checkbox selected)
             try {
                 $activeTrainees = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->report->id)
+                    ->where('active', true) // Only include trainees with checkbox selected
                     ->with(['trainee' => function($q) {
                         $q->withTrashed();
                     }])->get();
