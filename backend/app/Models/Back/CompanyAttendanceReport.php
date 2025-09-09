@@ -170,6 +170,10 @@ class CompanyAttendanceReport extends Model implements Auditable
                         $mockAttendance->is_resignation = true;
                         $mockAttendance->resignation_date = $resignation->resignation_date;
                         $mockAttendance->active = true; // Set as active for display purposes
+                        $mockAttendance->status = null; // Default status
+                        $mockAttendance->comment = null; // Default comment
+                        $mockAttendance->start_date = \Carbon\Carbon::parse($this->date_from); // Start from report start date
+                        $mockAttendance->end_date = \Carbon\Carbon::parse($resignation->resignation_date)->endOfDay(); // End at resignation date
                         return $mockAttendance;
                     });
             });
