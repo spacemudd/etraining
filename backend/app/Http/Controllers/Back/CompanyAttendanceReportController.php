@@ -106,7 +106,23 @@ class CompanyAttendanceReportController extends Controller
         // Remove duplicates and attach to report
         $uniqueTraineeIds = $allTrainees->unique('id')->pluck('id');
         
+        // Get settings from previous report to preserve user preferences (if exists)
+        $previousTraineesSettings = collect();
+        if ($previousReport) {
+            $previousTraineesSettings = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $previousReport->id)
+                ->get()
+                ->keyBy('trainee_id');
+                
+            \Log::info('Debug - Store: Preserving settings from previous report:', [
+                'previous_report_id' => $previousReport->id,
+                'new_report_id' => $report->id,
+                'previous_trainees_count' => $previousTraineesSettings->count(),
+                'preserved_inactive_trainees' => $previousTraineesSettings->where('active', false)->count(),
+            ]);
+        }
+        
         // Prepare trainee data with start_date and end_date for resigned trainees
+        // AND preserve previous settings if they exist
         $traineeData = [];
         foreach ($uniqueTraineeIds as $traineeId) {
             $trainee = $allTrainees->firstWhere('id', $traineeId);
@@ -118,20 +134,27 @@ class CompanyAttendanceReportController extends Controller
                     $q->where('trainees.id', $traineeId); // Specify table name to avoid ambiguity
                 })
                 ->first();
+                
+            // Get previous settings for this trainee if they exist
+            $previousSettings = $previousTraineesSettings->get($traineeId);
             
             if ($resignation && $trainee->trashed()) {
                 // This is a resigned and deleted trainee
                 $traineeData[$traineeId] = [
-                    'active' => true,
+                    'active' => $previousSettings ? $previousSettings->active : true, // Preserve previous active status
+                    'status' => $previousSettings ? $previousSettings->status : null, // Preserve previous status
+                    'comment' => $previousSettings ? $previousSettings->comment : null, // Preserve previous comment
                     'start_date' => $date_from, // Start from report start date
                     'end_date' => Carbon::parse($resignation->resignation_date)->endOfDay(), // End at resignation date
                 ];
             } else {
-                // This is an active trainee - set start_date and end_date to null
+                // This is an active trainee - preserve previous settings if exist
                 $traineeData[$traineeId] = [
-                    'active' => true,
-                    'start_date' => null,
-                    'end_date' => null,
+                    'active' => $previousSettings ? $previousSettings->active : true, // Preserve previous active status, default true for new trainees
+                    'status' => $previousSettings ? $previousSettings->status : null, // Preserve previous status
+                    'comment' => $previousSettings ? $previousSettings->comment : null, // Preserve previous comment
+                    'start_date' => $previousSettings && $previousSettings->start_date ? $previousSettings->start_date : null, // Preserve custom dates if exist
+                    'end_date' => $previousSettings && $previousSettings->end_date ? $previousSettings->end_date : null,
                 ];
             }
         }
@@ -216,8 +239,12 @@ class CompanyAttendanceReportController extends Controller
         $record = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $id)
             ->where('trainee_id', $request->trainee_id)
             ->first();
-        $record->active = false;
-        $record->save();
+        
+        if ($record) {
+            $record->active = false;
+            $record->save();
+        }
+        
         return redirect()->route('back.reports.company-attendance.show', $id);
     }
 

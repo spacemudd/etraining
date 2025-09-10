@@ -141,7 +141,20 @@ class CompanyAttendanceReportService
         // Remove duplicates and attach to report
         $uniqueTraineeIds = $allTrainees->unique('id')->pluck('id');
         
+        // Get settings from original report to preserve user preferences
+        $originalTraineesSettings = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $original->id)
+            ->get()
+            ->keyBy('trainee_id');
+        
+        \Log::info('Debug - Clone: Preserving settings from original report:', [
+            'original_report_id' => $original->id,
+            'clone_report_id' => $clone->id,
+            'original_trainees_count' => $originalTraineesSettings->count(),
+            'preserved_inactive_trainees' => $originalTraineesSettings->where('active', false)->count(),
+        ]);
+        
         // Prepare trainee data with start_date and end_date for resigned trainees
+        // AND preserve previous settings (active status, comment, etc.)
         $traineeData = [];
         foreach ($uniqueTraineeIds as $traineeId) {
             $trainee = $allTrainees->firstWhere('id', $traineeId);
@@ -154,19 +167,26 @@ class CompanyAttendanceReportService
                 })
                 ->first();
             
+            // Get previous settings for this trainee if they exist
+            $previousSettings = $originalTraineesSettings->get($traineeId);
+            
             if ($resignation && $trainee->trashed()) {
                 // This is a resigned and deleted trainee
                 $traineeData[$traineeId] = [
-                    'active' => true,
+                    'active' => $previousSettings ? $previousSettings->active : true, // Preserve previous active status
+                    'status' => $previousSettings ? $previousSettings->status : null, // Preserve previous status
+                    'comment' => $previousSettings ? $previousSettings->comment : null, // Preserve previous comment
                     'start_date' => $clone->date_from, // Start from report start date
                     'end_date' => Carbon::parse($resignation->resignation_date)->endOfDay(), // End at resignation date
                 ];
             } else {
-                // This is an active trainee - set start_date and end_date to null
+                // This is an active trainee - preserve previous settings if exist
                 $traineeData[$traineeId] = [
-                    'active' => true,
-                    'start_date' => null,
-                    'end_date' => null,
+                    'active' => $previousSettings ? $previousSettings->active : true, // Preserve previous active status, default true for new trainees
+                    'status' => $previousSettings ? $previousSettings->status : null, // Preserve previous status
+                    'comment' => $previousSettings ? $previousSettings->comment : null, // Preserve previous comment
+                    'start_date' => $previousSettings && $previousSettings->start_date ? $previousSettings->start_date : null, // Preserve custom dates if exist
+                    'end_date' => $previousSettings && $previousSettings->end_date ? $previousSettings->end_date : null,
                 ];
             }
         }
@@ -235,6 +255,7 @@ class CompanyAttendanceReportService
     static public function makePdf($id)
     {
         $report = CompanyAttendanceReport::findOrFail($id);
+        
 
         $days = [];
         Carbon::setLocale('ar');
@@ -260,7 +281,9 @@ class CompanyAttendanceReportService
             '92d30511-77a8-4290-8d20-419f93ede3fd', // الشركة الجديدة
             '19762266-e0fc-43e5-b6ae-b4deec886bb1',
             '73017d20-40c8-401f-8dc1-b36ca0416e35',
-            '077e3421-a623-49f4-b3f2-dcf80c9d295f', // الشركة الجديدة المضافة
+            '077e3421-a623-49f4-b3f2-dcf80c9d295f',
+            'b455f112-ff48-4647-8db6-a3d365a3d0a3',
+            '2d8b0e51-5ea6-4c4d-9c38-ec38429cb74e',
         ])) {
             // Use simplified design to avoid SSL issues
             $view = 'pdf.company-attendance-report.special-company-simple';
@@ -294,11 +317,14 @@ class CompanyAttendanceReportService
             ->setOption('disable-smart-shrinking', true)
             ->setOption('viewport-size', '1024×768')
             ->setOption('zoom', 0.78)
-            ->setOption('footer-html', $report->with_logo ? resource_path('views/pdf/company-attendance-report/company-attendance-report-footer.html') : false)
-            ->loadView($view, [
+            ->setOption('footer-html', $report->with_logo ? resource_path('views/pdf/company-attendance-report/company-attendance-report-footer.html') : false);
+        
+        $activeTrainees = $report->getAllTraineesWithResignations();
+        
+        $pdf = $pdf->loadView($view, [
                 'base64logo' => $report->company->logo_files->count() ? 'data:image/jpeg;base64,'.base64_encode(@file_get_contents('https://prod.jisr-ksa.com/back/media/'.$report->company->logo_files->first()->id)) : null,
                 'report' => $report,
-                'active_trainees' => $report->getAllTraineesWithResignations(),
+                'active_trainees' => $activeTrainees,
                 'days' => $days,
             ]);
 
@@ -334,8 +360,10 @@ class CompanyAttendanceReportService
             '9ef83749-d1ba-44a5-82a9-f726840e02db', // مصنع هلال مشبب العتيبي
             '92d30511-77a8-4290-8d20-419f93ede3fd', // الشركة الجديدة
             '19762266-e0fc-43e5-b6ae-b4deec886bb1',
-            '73017d20-40c8-401f-8dc1-b36ca0416e35', 
-            '077e3421-a623-49f4-b3f2-dcf80c9d295f',// الشركة الجديدة المضافة
+            '73017d20-40c8-401f-8dc1-b36ca0416e35',
+            '077e3421-a623-49f4-b3f2-dcf80c9d295f', 
+            'b455f112-ff48-4647-8db6-a3d365a3d0a3',
+            '2d8b0e51-5ea6-4c4d-9c38-ec38429cb74e',
         ])) {
             // Use simplified design to avoid SSL issues
             $view = 'pdf.company-attendance-report.special-company-individual-simple';

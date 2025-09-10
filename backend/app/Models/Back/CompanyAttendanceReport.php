@@ -131,34 +131,73 @@ class CompanyAttendanceReport extends Model implements Auditable
 
     public function getAllTraineesWithResignations()
     {
-        // Get only ACTIVE trainees from the report (selected by user)
-        $activeTrainees = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->id)
-            ->where('active', true) // Only get selected trainees
+        // Get ALL trainees from the report (both active and inactive) with their status
+        $allReportTrainees = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->id)
             ->with(['trainee' => function($q) {
                 $q->withTrashed();
             }])->get();
         
+        
+        // Filter only ACTIVE trainees
+        $activeTrainees = $allReportTrainees->where('active', true);
         $allTrainees = collect($activeTrainees);
         
-        // 2. Get trainees with resignations AND deleted (soft deleted) - ONLY THESE SHOULD BE INCLUDED
-        $resignationTrainees = $this->company->resignations()
-            ->whereIn('status', ['new', 'sent']) // Include both new and sent resignations
-            ->where('resignation_date', '>=', $this->date_from) // Resignation date should be within or after report period
-            ->with(['trainees' => function($q) {
-                $q->onlyTrashed(); // ONLY deleted trainees
-            }])
-            ->get()
-            ->flatMap(function($resignation) {
-                return $resignation->trainees->map(function($trainee) use ($resignation) {
-                    // Create a mock CompanyAttendanceReportsTrainee object for display
-                    $mockAttendance = new \stdClass();
-                    $mockAttendance->trainee = $trainee;
-                    $mockAttendance->is_resignation = true;
-                    $mockAttendance->resignation_date = $resignation->resignation_date;
-                    $mockAttendance->active = true; // Set as active for display purposes
-                    return $mockAttendance;
+        // Create a map of existing trainees with their active status for quick lookup
+        $existingTraineesMap = $allReportTrainees->pluck('active', 'trainee_id')->toArray();
+        
+        // 2. Get trainees with resignations AND deleted (soft deleted) - ONLY if they are ACTIVE in the report
+        $resignationTrainees = collect(); // Start with empty collection
+        
+        // Only add resignation trainees if they are explicitly ACTIVE in the report
+        $activeResignationIds = $allReportTrainees->where('active', true)->pluck('trainee_id')->toArray();
+        
+        if (!empty($activeResignationIds)) {
+            $resignationTrainees = $this->company->resignations()
+                ->whereIn('status', ['new', 'sent']) // Include both new and sent resignations
+                ->where('resignation_date', '>=', $this->date_from) // Resignation date should be within or after report period
+                ->with(['trainees' => function($q) use ($activeResignationIds) {
+                    $q->onlyTrashed()->whereIn('trainees.id', $activeResignationIds); // ONLY deleted trainees that are ACTIVE in report
+                }])
+                ->get()
+                ->flatMap(function($resignation) {
+                    return $resignation->trainees
+                        ->map(function($trainee) use ($resignation) {
+                            // Get the actual record from database to preserve all properties
+                            $actualRecord = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->id)
+                                ->where('trainee_id', $trainee->id)
+                                ->first();
+                            
+                            if ($actualRecord) {
+                                // Load the trainee relationship with trashed
+                                $actualRecord->load(['trainee' => function($q) {
+                                    $q->withTrashed();
+                                }]);
+                                $actualRecord->is_resignation = true;
+                                $actualRecord->resignation_date = $resignation->resignation_date;
+                                // Keep original start_date and end_date from database if they exist
+                                if (!$actualRecord->start_date) {
+                                    $actualRecord->start_date = \Carbon\Carbon::parse($this->date_from);
+                                }
+                                if (!$actualRecord->end_date) {
+                                    $actualRecord->end_date = \Carbon\Carbon::parse($resignation->resignation_date)->endOfDay();
+                                }
+                                return $actualRecord;
+                            } else {
+                                // Fallback: Create a mock CompanyAttendanceReportsTrainee object for display
+                                $mockAttendance = new \stdClass();
+                                $mockAttendance->trainee = $trainee;
+                                $mockAttendance->is_resignation = true;
+                                $mockAttendance->resignation_date = $resignation->resignation_date;
+                                $mockAttendance->active = true; // Set as active for display purposes
+                                $mockAttendance->status = null; // Default status
+                                $mockAttendance->comment = null; // Default comment
+                                $mockAttendance->start_date = \Carbon\Carbon::parse($this->date_from); // Start from report start date
+                                $mockAttendance->end_date = \Carbon\Carbon::parse($resignation->resignation_date)->endOfDay(); // End at resignation date
+                                return $mockAttendance;
+                            }
+                        });
                 });
-            });
+        }
         
         $allTrainees = $allTrainees->merge($resignationTrainees);
         
@@ -166,6 +205,7 @@ class CompanyAttendanceReport extends Model implements Auditable
         $uniqueTrainees = $allTrainees->unique(function($item) {
             return $item->trainee->id;
         });
+        
 
         return $uniqueTrainees;
     }

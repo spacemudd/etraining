@@ -236,6 +236,41 @@
         .col-day { width: 22px; }
         .col-absence { width: 80px; }
         
+        /* تحسين عرض الصفحات وتجنب مشاكل التنسيق عند التقسيم */
+        .attendance-table {
+            page-break-after: auto;
+        }
+        
+        .attendance-table thead {
+            display: table-header-group;
+        }
+        
+        .attendance-table tfoot {
+            display: table-footer-group;
+        }
+        
+        .attendance-table tr {
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }
+        
+        .attendance-table td {
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }
+        
+        .header {
+            page-break-after: avoid;
+        }
+        
+        .company-info {
+            page-break-after: avoid;
+        }
+        
+        .report-details {
+            page-break-after: avoid;
+        }
+
         @media print {
             body {
                 background: white;
@@ -254,17 +289,38 @@
                 background: #4a90e2 !important;
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
+                page-break-after: avoid;
+            }
+            
+            .company-info {
+                page-break-after: avoid;
+            }
+            
+            .report-details {
+                page-break-after: avoid;
             }
             
             .attendance-table {
                 table-layout: auto;
                 width: 100%;
+                page-break-after: auto;
+            }
+            
+            .attendance-table thead {
+                display: table-header-group;
+                page-break-after: avoid;
+            }
+            
+            .attendance-table tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
             }
             
             .attendance-table th {
                 background: #34495e !important;
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
+                page-break-after: avoid;
             }
             
             .present, .absent, .vacation {
