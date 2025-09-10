@@ -136,15 +136,14 @@
                                 @php
                                     $workDays = 0;
                                     foreach ($days as $day) {
-                                        if ($day['vacation_day']) continue; // Skip vacation days
-                                        
+                                        // Count all days (including vacation days) to match header count
                                         if ($record->start_date) {
                                             // For resigned trainees, count days within their work period
                                             if ($day['date_carbon']->isBetween($record->start_date, $record->end_date)) {
                                                 $workDays++;
                                             }
                                         } else {
-                                            // For active trainees, count all work days
+                                            // For active trainees, count all days
                                             $workDays++;
                                         }
                                     }
@@ -228,15 +227,14 @@
                                 @php
                                     $workDays = 0;
                                     foreach ($days as $day) {
-                                        if ($day['vacation_day']) continue; // Skip vacation days
-                                        
+                                        // Count all days (including vacation days) to match header count
                                         if ($record->start_date) {
                                             // For resigned trainees, count days within their work period
                                             if ($day['date_carbon']->isBetween($record->start_date, $record->end_date)) {
                                                 $workDays++;
                                             }
                                         } else {
-                                            // For active trainees, count all work days
+                                            // For active trainees, count all days
                                             $workDays++;
                                         }
                                     }
