@@ -9,7 +9,7 @@
         table { page-break-after:auto }
         tr    { page-break-inside:avoid; page-break-after:auto }
         td    { page-break-inside:avoid; page-break-after:auto }
-        thead { display: table-row-group; }
+        thead { display: table-header-group; }
         tfoot { display:table-footer-group }
         .vertical-text {
             writing-mode: vertical-rl;
