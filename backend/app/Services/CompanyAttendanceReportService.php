@@ -283,6 +283,7 @@ class CompanyAttendanceReportService
             '73017d20-40c8-401f-8dc1-b36ca0416e35',
             '077e3421-a623-49f4-b3f2-dcf80c9d295f',
             'b455f112-ff48-4647-8db6-a3d365a3d0a3',
+            '2d8b0e51-5ea6-4c4d-9c38-ec38429cb74e',
         ])) {
             // Use simplified design to avoid SSL issues
             $view = 'pdf.company-attendance-report.special-company-simple';
@@ -362,6 +363,7 @@ class CompanyAttendanceReportService
             '73017d20-40c8-401f-8dc1-b36ca0416e35',
             '077e3421-a623-49f4-b3f2-dcf80c9d295f', 
             'b455f112-ff48-4647-8db6-a3d365a3d0a3',
+            '2d8b0e51-5ea6-4c4d-9c38-ec38429cb74e',
         ])) {
             // Use simplified design to avoid SSL issues
             $view = 'pdf.company-attendance-report.special-company-individual-simple';
