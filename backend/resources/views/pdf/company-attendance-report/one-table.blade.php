@@ -186,11 +186,7 @@
                             @if ($record->status === 'suspend_account')
                                 {{ count($days) }}
                             @else
-                                @if ($record->start_date)
-                                    {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
-                                @else
-                                    0
-                                @endif
+0
                             @endif
                         </td>
                     </tr>
@@ -266,11 +262,7 @@
                             @if ($record->status === 'suspend_account')
                                 {{ count($days) }}
                             @else
-                                @if ($record->start_date)
-                                    {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
-                                @else
-                                    0
-                                @endif
+0
                             @endif
                         </td>
                     </tr>

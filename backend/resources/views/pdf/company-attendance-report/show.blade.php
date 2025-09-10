@@ -177,13 +177,7 @@
                                     @endif
                                 </td>
                             @endfor
-                            <td>
-                                @if ($record->start_date)
-                                    {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
-                                @else
-                                    0
-                                @endif
-                            </td>
+                            <td>0</td>
                         </tr>
                     @endif
                 @endforeach
@@ -245,13 +239,7 @@
                                     @endif
                                 </td>
                             @endfor
-                            <td>
-                                @if ($record->start_date)
-                                    {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
-                                @else
-                                    0
-                                @endif
-                            </td>
+                            <td>0</td>
                         </tr>
                     @endif
                 @endforeach
@@ -279,11 +267,23 @@
                                 <td>{{ $record->trainee->name }}</td>
                                 <td>{{ $record->trainee->clean_identity_number }}</td>
                                 <td style="text-align: center;">
-                                    @if ($record->start_date)
-                                        {{ $record->start_date->diffInDays($record->end_date) + 1 }}
-                                    @else
-                                        {{ count($days) }}
-                                    @endif
+                                    @php
+                                        $workDays = 0;
+                                        foreach ($days as $day) {
+                                            if ($day['vacation_day']) continue; // Skip vacation days
+                                            
+                                            if ($record->start_date) {
+                                                // For resigned trainees, count days within their work period
+                                                if ($day['date_carbon']->isBetween($record->start_date, $record->end_date)) {
+                                                    $workDays++;
+                                                }
+                                            } else {
+                                                // For active trainees, count all work days
+                                                $workDays++;
+                                            }
+                                        }
+                                    @endphp
+                                    {{ $workDays }}
                                     @if ($report->with_attendance_times)
                                         <span style="font-size:12px;">
                                                 <br/>
@@ -344,11 +344,23 @@
                                 <td>{{ $record->trainee->name }}</td>
                                 <td>{{ $record->trainee->clean_identity_number }}</td>
                                 <td style="text-align: center;">
-                                    @if ($record->start_date)
-                                        {{ $record->start_date->diffInDays($record->end_date) + 1 }}
-                                    @else
-                                        {{ count($days) }}
-                                    @endif
+                                    @php
+                                        $workDays = 0;
+                                        foreach ($days as $day) {
+                                            if ($day['vacation_day']) continue; // Skip vacation days
+                                            
+                                            if ($record->start_date) {
+                                                // For resigned trainees, count days within their work period
+                                                if ($day['date_carbon']->isBetween($record->start_date, $record->end_date)) {
+                                                    $workDays++;
+                                                }
+                                            } else {
+                                                // For active trainees, count all work days
+                                                $workDays++;
+                                            }
+                                        }
+                                    @endphp
+                                    {{ $workDays }}
                                     @if ($report->with_attendance_times)
                                         <span style="font-size:12px;">
                                                 <br/>

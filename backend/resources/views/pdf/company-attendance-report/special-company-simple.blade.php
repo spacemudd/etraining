@@ -408,11 +408,23 @@
                             @endif
                             <td class="col-civil">{{ $record->trainee->clean_identity_number }}</td>
                             <td class="col-work-days">
-                                @if ($record->start_date)
-                                    {{ $record->start_date->diffInDays($record->end_date) + 1 }}
-                                @else
-                                    {{ count($days) }}
-                                @endif
+                                @php
+                                    $workDays = 0;
+                                    foreach ($days as $day) {
+                                        if ($day['vacation_day']) continue; // Skip vacation days
+                                        
+                                        if ($record->start_date) {
+                                            // For resigned trainees, count days within their work period
+                                            if ($day['date_carbon']->isBetween($record->start_date, $record->end_date)) {
+                                                $workDays++;
+                                            }
+                                        } else {
+                                            // For active trainees, count all work days
+                                            $workDays++;
+                                        }
+                                    }
+                                @endphp
+                                {{ $workDays }}
                             </td>
                             @for($i=0;$i<count($days);$i++)
                                 <td class="col-day {{ $days[$i]['vacation_day'] ? 'vacation-day' : '' }}">
@@ -437,13 +449,7 @@
                                     @endif
                                 </td>
                             @endfor
-                            <td class="col-absence">
-                                @if ($record->start_date)
-                                    {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
-                                @else
-                                    0
-                                @endif
-                            </td>
+                            <td class="col-absence">0</td>
                         </tr>
                     @endforeach
                 @else
@@ -459,11 +465,23 @@
                             </td>
                             <td class="col-civil">{{ $record->trainee->clean_identity_number }}</td>
                             <td class="col-work-days">
-                                @if ($record->start_date)
-                                    {{ $record->start_date->diffInDays($record->end_date) + 1 }}
-                                @else
-                                    {{ count($days) }}
-                                @endif
+                                @php
+                                    $workDays = 0;
+                                    foreach ($days as $day) {
+                                        if ($day['vacation_day']) continue; // Skip vacation days
+                                        
+                                        if ($record->start_date) {
+                                            // For resigned trainees, count days within their work period
+                                            if ($day['date_carbon']->isBetween($record->start_date, $record->end_date)) {
+                                                $workDays++;
+                                            }
+                                        } else {
+                                            // For active trainees, count all work days
+                                            $workDays++;
+                                        }
+                                    }
+                                @endphp
+                                {{ $workDays }}
                             </td>
                             @for($i=0;$i<count($days);$i++)
                                 <td class="col-day {{ $days[$i]['vacation_day'] ? 'vacation-day' : '' }}">
@@ -488,13 +506,7 @@
                                     @endif
                                 </td>
                             @endfor
-                            <td class="col-absence">
-                                @if ($record->start_date)
-                                    {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
-                                @else
-                                    0
-                                @endif
-                            </td>
+                            <td class="col-absence">0</td>
                         </tr>
                     @endforeach
                 @endif
