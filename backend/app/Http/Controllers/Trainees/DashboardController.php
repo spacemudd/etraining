@@ -9,6 +9,7 @@ use App\Models\Back\CourseBatchSession;
 use App\Models\Back\GlobalMessages;
 use App\Models\Back\Trainee;
 use App\Models\Back\TraineeAgreement;
+use App\Models\TraineeResignationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -70,6 +71,9 @@ class DashboardController extends Controller
             ->latest()
             ->get();
 
+        // التحقق من وجود طلب استقالة
+        $resignationRequest = TraineeResignationRequest::where('trainee_id', $trainee->id)->first();
+
         return Inertia::render('Trainees/Dashboard', [
             'user' => auth()->user(),
             'sessions' => $sessions,
@@ -77,7 +81,12 @@ class DashboardController extends Controller
             'show_failed_payment' => $show_failed_payment,
             'class_timings' => $class_timings,
             'global_messages' => $global_messages,
-            'trainee' => $trainee
+            'trainee' => $trainee,
+            'resignation_request' => $resignationRequest ? [
+                'status' => $resignationRequest->status,
+                'status_text' => $resignationRequest->status_text,
+                'created_at' => $resignationRequest->created_at->format('Y-m-d H:i:s'),
+            ] : null
         ]);
     }
 }

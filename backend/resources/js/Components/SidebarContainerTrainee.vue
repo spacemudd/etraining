@@ -61,6 +61,22 @@
             </template>
         </sidebar-link>
 
+        <sidebar-link :link-value="route('trainees.resignation-request.index')" :active="$page.currentRouteName == 'trainees.resignation-request.index'">
+            <template #icon>
+                <ion-icon name="exit-outline" class="w-5 h-5"></ion-icon>
+            </template>
+            <template #title>
+                <span class="ltr:ml-4 rtl:mr-4">
+                    <span v-if="$page.props.resignation_request">
+                        تم الطلب ({{ $page.props.resignation_request.status_text }})
+                    </span>
+                    <span v-else>
+                        طلب إستقالة
+                    </span>
+                </span>
+            </template>
+        </sidebar-link>
+
        <!-- <sidebar-link v-if="contractStatus !== 'completed'">
             <template #icon>
             </template>

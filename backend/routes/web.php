@@ -970,6 +970,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
         Route::get('payment/card/charge-payment', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'chargePayment'])
             ->name('payment.card.charge');
+
+        // Resignation request routes
+        Route::get('resignation-request', [\App\Http\Controllers\Trainees\ResignationRequestController::class, 'index'])->name('resignation-request.index');
+        Route::post('resignation-request', [\App\Http\Controllers\Trainees\ResignationRequestController::class, 'store'])->name('resignation-request.store');
     });
 });
 
