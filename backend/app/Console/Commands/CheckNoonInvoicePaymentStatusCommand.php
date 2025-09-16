@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 class CheckNoonInvoicePaymentStatusCommand extends Command
 {
     protected $signature = 'noon:check-payment-status
-        {--ids=* : قائمة invoice_id للتحقق (اختياري)}
+        {--ids=* : قائمة payment_reference_id للتحقق (اختياري)}
         {--days=30 : تحقق فقط من الفواتير المدفوعة خلال آخر X يوم بناءً على وقت الدفع (افتراضي: 30 يوم)}
         {--chunk=25 : حجم الدُفعة}
         {--dry : تشغيل تجريبي بدون حفظ}';
@@ -30,7 +30,7 @@ class CheckNoonInvoicePaymentStatusCommand extends Command
 
         // مصدر الفواتير: IDs صريحة أو من الداتابيز
         $invoiceNumbers = !empty($ids) ? $ids : [
-            'b9bc2920-f21b-4b7b-92af-636a569354f5',
+            '9682113813984388', // رقم الطلب المدفوع من الصورة
             
             // أضف المزيد من أرقام الفواتير هنا
         ];
@@ -56,8 +56,8 @@ class CheckNoonInvoicePaymentStatusCommand extends Command
 
         foreach ($invoiceNumbers as $invoiceNumber) {
             try {
-                // البحث عن الفاتورة في قاعدة البيانات باستخدام invoice_id
-                $invoice = Invoice::find($invoiceNumber);
+                // البحث عن الفاتورة في قاعدة البيانات باستخدام payment_reference_id
+                $invoice = Invoice::where('payment_reference_id', $invoiceNumber)->first();
 
                 if (!$invoice) {
                     $this->error("الفاتورة رقم {$invoiceNumber} غير موجودة في قاعدة البيانات");
@@ -77,15 +77,7 @@ class CheckNoonInvoicePaymentStatusCommand extends Command
 
                 $this->info("التحقق من الفاتورة رقم {$invoiceNumber}...");
 
-                // التحقق من وجود payment_reference_id للبحث في نون
-                if (!$invoice->payment_reference_id) {
-                    $this->warn("الفاتورة رقم {$invoiceNumber} لا تحتوي على payment_reference_id للبحث في نون");
-                    $notPaidCount++;
-                    $bar->advance();
-                    continue;
-                }
-
-                $orderId = $invoice->payment_reference_id;
+                $orderId = $invoiceNumber;
                 $this->info("استخدام payment_reference_id: {$orderId} للبحث في نون");
 
                 // البحث في جميع الطلبات للفاتورة الواحدة خلال آخر 30 يوم
