@@ -6,14 +6,12 @@ use App\Models\Back\Invoice;
 use App\Services\NoonService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class CheckNoonInvoicePaymentStatusCommand extends Command
 {
     protected $signature = 'noon:check-payment-status
-        {--ids=* : قائمة orderId للتحقق (اختياري)}
+        {--ids=* : قائمة invoice_id للتحقق (اختياري)}
         {--days=30 : تحقق فقط من الفواتير المدفوعة خلال آخر X يوم بناءً على وقت الدفع (افتراضي: 30 يوم)}
         {--chunk=25 : حجم الدُفعة}
         {--dry : تشغيل تجريبي بدون حفظ}';
@@ -33,7 +31,7 @@ class CheckNoonInvoicePaymentStatusCommand extends Command
         // مصدر الفواتير: IDs صريحة أو من الداتابيز
         $invoiceNumbers = !empty($ids) ? $ids : [
             'b9bc2920-f21b-4b7b-92af-636a569354f5',
-           
+            
             // أضف المزيد من أرقام الفواتير هنا
         ];
 
@@ -58,8 +56,8 @@ class CheckNoonInvoicePaymentStatusCommand extends Command
 
         foreach ($invoiceNumbers as $invoiceNumber) {
             try {
-                // البحث عن الفاتورة في قاعدة البيانات باستخدام payment_reference_id
-                $invoice = Invoice::where('payment_reference_id', $invoiceNumber)->first();
+                // البحث عن الفاتورة في قاعدة البيانات باستخدام invoice_id
+                $invoice = Invoice::find($invoiceNumber);
 
                 if (!$invoice) {
                     $this->error("الفاتورة رقم {$invoiceNumber} غير موجودة في قاعدة البيانات");
@@ -67,6 +65,8 @@ class CheckNoonInvoicePaymentStatusCommand extends Command
                     $bar->advance();
                     continue;
                 }
+
+                $this->info("تم العثور على الفاتورة: {$invoice->id}");
 
                 // التحقق من أن الفاتورة غير مدفوعة مسبقاً
                 if ($invoice->status == Invoice::STATUS_PAID) {
@@ -76,6 +76,17 @@ class CheckNoonInvoicePaymentStatusCommand extends Command
                 }
 
                 $this->info("التحقق من الفاتورة رقم {$invoiceNumber}...");
+
+                // التحقق من وجود payment_reference_id للبحث في نون
+                if (!$invoice->payment_reference_id) {
+                    $this->warn("الفاتورة رقم {$invoiceNumber} لا تحتوي على payment_reference_id للبحث في نون");
+                    $notPaidCount++;
+                    $bar->advance();
+                    continue;
+                }
+
+                $orderId = $invoice->payment_reference_id;
+                $this->info("استخدام payment_reference_id: {$orderId} للبحث في نون");
 
                 // البحث في جميع الطلبات للفاتورة الواحدة خلال آخر 30 يوم
                 $paidOrderFound = false;
@@ -87,7 +98,7 @@ class CheckNoonInvoicePaymentStatusCommand extends Command
                 
                 foreach ($centerIds as $centerId) {
                     try {
-                        $order = $noon->getOrder($invoiceNumber, $centerId);
+                        $order = $noon->getOrder($orderId, $centerId);
                         
                         if ($order && isset($order->result)) {
                             $this->info("تم العثور على طلب في المركز {$centerId}");
