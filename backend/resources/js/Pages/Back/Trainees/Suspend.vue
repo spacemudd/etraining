@@ -43,6 +43,8 @@
                         <option value="طالبة">طالبة</option>
                         <option value="حذف فترة تجربة">حذف فترة تجربة</option>
                          <option value="الموظفة حذفت نفسها">الموظفة حذفت نفسها</option>
+                         <option value="لها عقد قوى سابق">لها عقد قوى سابق</option>
+
 
 
                     </select>
