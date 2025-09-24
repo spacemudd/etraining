@@ -484,11 +484,20 @@ public function updateTemplate($id, Request $request)
         'template_type' => $request->template_type,
     ]);
 
-    return response()->json([
-        'success' => true,
-        'message' => 'تم تحديث القالب بنجاح',
-        'template_type' => $report->template_type
-    ]);
+    return redirect()->route('back.reports.company-attendance.show', $id)
+        ->with('success', 'تم تحديث القالب بنجاح إلى: ' . $this->getTemplateName($request->template_type));
+}
+
+private function getTemplateName($templateType)
+{
+    switch ($templateType) {
+        case 'simple':
+            return 'القالب المبسط';
+        case 'modern':
+            return 'القالب الحديث';
+        default:
+            return 'القالب الافتراضي';
+    }
 }
 
 }
