@@ -296,7 +296,18 @@ class CompanyAttendanceReportService
             // Use modern design template
             $view = 'pdf.company-attendance-report.special-company-modern';
         } else {
-            $view = $report->activeTraineesCount() > 8 ? 'pdf.company-attendance-report.show' : 'pdf.company-attendance-report.one-table';
+            // Use template based on user selection or default
+            switch ($report->template_type ?? 'default') {
+                case 'simple':
+                    $view = 'pdf.company-attendance-report.special-company-simple';
+                    break;
+                case 'modern':
+                    $view = 'pdf.company-attendance-report.special-company-modern';
+                    break;
+                default:
+                    $view = $report->activeTraineesCount() > 8 ? 'pdf.company-attendance-report.show' : 'pdf.company-attendance-report.one-table';
+                    break;
+            }
         }
 
         //if ($report->company->logo_files->count()) {
@@ -384,7 +395,18 @@ class CompanyAttendanceReportService
             // Use modern design template for individual reports
             $view = 'pdf.company-attendance-report.special-company-individual-modern';
         } else {
-            $view = 'pdf.company-attendance-report.individual-table';
+            // Use template based on user selection or default
+            switch ($record->report->template_type ?? 'default') {
+                case 'simple':
+                    $view = 'pdf.company-attendance-report.special-company-individual-simple';
+                    break;
+                case 'modern':
+                    $view = 'pdf.company-attendance-report.special-company-individual-modern';
+                    break;
+                default:
+                    $view = 'pdf.company-attendance-report.individual-table';
+                    break;
+            }
         }
 
         $pdf = PDF::setOption('margin-bottom', 30)

@@ -67,6 +67,17 @@
                     <input type="checkbox" id="with_logo" v-model="updateAttendanceReportForm.with_logo">
                     <label for="with_logo">{{ $t('words.with-logo') }}</label>
                 </div>
+
+                <div class="col-span-6 sm:col-span-4">
+                    <jet-label for="template_type" :value="$t('words.template-type')" />
+                    <select class="mt-2 block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" 
+                            v-model="updateAttendanceReportForm.template_type">
+                        <option value="default">{{ $t('words.default-template') }}</option>
+                        <option value="simple">{{ $t('words.simple-template') }}</option>
+                        <option value="modern">{{ $t('words.modern-template') }}</option>
+                    </select>
+                    <jet-input-error class="mt-2" />
+                </div>
             </template>
 
             <template #actions>
@@ -132,6 +143,7 @@
             this.updateAttendanceReportForm.company_id = this.report.company_id;
             this.updateAttendanceReportForm.with_attendance_times = this.report.with_attendance_times;
             this.updateAttendanceReportForm.with_logo = this.report.with_logo;
+            this.updateAttendanceReportForm.template_type = this.report.template_type || 'default';
             this.updateAttendanceReportForm.period = {
                 startDate: startDate,
                 endDate: endDate,
@@ -152,6 +164,7 @@
                     period: {startDate, endDate},
                     with_attendance_times: null,
                     with_logo: null,
+                    template_type: 'default',
                 }, {
                     bag: 'createAttendanceReport',
                     resetOnSuccess: true,

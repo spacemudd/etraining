@@ -28,6 +28,7 @@ class CompanyAttendanceReport extends Model implements Auditable
         'cc_emails',
         'with_attendance_times',
         'with_logo',
+        'template_type',
     ];
 
     protected $casts = [
