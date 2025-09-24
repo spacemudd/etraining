@@ -2,7 +2,7 @@
 <html dir="rtl">
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <title>تقرير الحضور والانصراف</title>
+    <title>تقرير الحضور والانصراف - التصميم الحديث</title>
     <style>
         * {
             margin: 0;
@@ -11,127 +11,142 @@
         }
         
         body {
-            font-family: Arial, sans-serif;
-            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: #333;
-            line-height: 1.4;
-            padding: 20px;
+            line-height: 1.5;
+            padding: 15px;
+            min-height: 100vh;
         }
         
         .container {
             background: white;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 30px;
             margin: 0 auto;
             max-width: 1400px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-width: 1200px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #f9ca24, #f0932b);
         }
         
         .header {
             text-align: center;
-            background: #007bff;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 20px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            page-break-after: avoid;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            position: relative;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
         }
         
         .header h1 {
-            font-size: 24px;
-            margin-bottom: 5px;
-            font-weight: bold;
+            font-size: 32px;
+            margin-bottom: 8px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         
         .header p {
-            font-size: 14px;
+            font-size: 16px;
             opacity: 0.9;
+            font-weight: 300;
         }
         
         .company-info {
-            background: #e9ecef;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            border-right: 4px solid #007bff;
-            page-break-after: avoid;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 25px rgba(240, 147, 251, 0.3);
         }
         
-        .company-name {
-            font-size: 20px;
-            font-weight: bold;
-            color: #495057;
-            margin-bottom: 5px;
+        .company-details h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         
-        .company-subtitle {
-            color: #6c757d;
-            font-size: 14px;
+        .logo {
+            max-width: 100px;
+            height: auto;
+            border-radius: 8px;
+            border: 3px solid rgba(255,255,255,0.3);
         }
         
         .report-details {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 15px;
-            margin-bottom: 20px;
-            page-break-after: avoid;
+            margin-bottom: 25px;
         }
         
         .detail-card {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            padding: 15px;
-            border-radius: 6px;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 20px;
+            border-radius: 12px;
             text-align: center;
+            box-shadow: 0 6px 20px rgba(168, 237, 234, 0.3);
         }
         
         .detail-label {
-            font-weight: bold;
-            color: #495057;
-            font-size: 12px;
-            margin-bottom: 5px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .detail-value {
-            font-size: 18px;
-            font-weight: bold;
-            color: #007bff;
+            font-size: 24px;
+            font-weight: 700;
+            color: #e74c3c;
         }
         
         .attendance-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
+            margin-top: 25px;
+            border-radius: 12px;
             overflow: hidden;
-            table-layout: fixed;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
         
         .attendance-table th {
-            background: #495057;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             color: white;
-            padding: 12px 6px;
+            padding: 15px 8px;
             text-align: center;
-            font-weight: bold;
-            font-size: 10px;
-            border: 1px solid #6c757d;
-            page-break-after: avoid;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .attendance-table td {
-            padding: 8px 4px;
+            padding: 12px 6px;
             text-align: center;
-            border: 1px solid #dee2e6;
+            border-bottom: 1px solid #ecf0f1;
             background: white;
-            font-size: 9px;
-            vertical-align: middle;
-            page-break-inside: avoid;
-        }
-        
-        .attendance-table tr {
-            page-break-inside: avoid;
+            font-size: 11px;
         }
         
         .attendance-table tr:nth-child(even) td {
@@ -139,207 +154,119 @@
         }
         
         .employee-name {
-            font-weight: bold;
-            color: #495057;
-            font-size: 11px;
-            margin-bottom: 2px;
-            line-height: 1.2;
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 13px;
+            margin-bottom: 4px;
         }
         
         .employee-id {
-            color: #6c757d;
-            font-size: 8px;
-            line-height: 1.1;
+            color: #7f8c8d;
+            font-size: 10px;
         }
         
         .attendance-mark {
             display: inline-block;
-            width: 18px;
-            height: 18px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
-            line-height: 18px;
-            font-weight: bold;
-            font-size: 9px;
+            line-height: 24px;
+            font-weight: 700;
+            font-size: 12px;
             text-align: center;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
         }
         
         .present {
-            background: #28a745;
+            background: linear-gradient(135deg, #00b894, #00cec9);
             color: white;
         }
         
         .absent {
-            background: #dc3545;
+            background: linear-gradient(135deg, #e17055, #d63031);
             color: white;
         }
         
         .vacation {
-            background: #ffc107;
-            color: #212529;
+            background: linear-gradient(135deg, #fdcb6e, #e17055);
+            color: white;
         }
         
         .day-header {
-            background: #007bff !important;
+            background: linear-gradient(135deg, #74b9ff, #0984e3) !important;
             color: white !important;
         }
         
         .vacation-day {
-            background: #6c757d !important;
+            background: linear-gradient(135deg, #fab1a0, #e17055) !important;
             color: white !important;
         }
         
-        .logo {
-            max-width: 80px;
-            height: auto;
-            border-radius: 4px;
-            border: 1px solid #dee2e6;
-        }
-        
-        /* تحسينات الطباعة والتقسيم */
+        /* تحسينات الطباعة */
         @media print {
             body {
                 background: white;
                 padding: 0;
-                margin: 0;
             }
             
             .container {
                 box-shadow: none;
-                border: none;
+                border: 1px solid #ddd;
                 margin: 0;
-                padding: 10px;
-                max-width: none;
-            }
-            
-            .header {
-                page-break-after: avoid;
-                margin-bottom: 15px;
-            }
-            
-            .company-info {
-                page-break-after: avoid;
-                margin-bottom: 15px;
-            }
-            
-            .report-details {
-                page-break-after: avoid;
-                margin-bottom: 15px;
-            }
-            
-            .attendance-table {
-                page-break-inside: auto;
-                border: 1px solid #000;
-            }
-            
-            .attendance-table thead {
-                display: table-header-group;
-                page-break-after: avoid;
-            }
-            
-            .attendance-table tbody {
-                display: table-row-group;
-            }
-            
-            .attendance-table tr {
-                page-break-inside: avoid;
-                page-break-after: auto;
-            }
-            
-            .attendance-table th {
-                page-break-after: avoid;
-                background: #495057 !important;
-                -webkit-print-color-adjust: exact;
-                color-adjust: exact;
-            }
-            
-            .attendance-table td {
-                page-break-inside: avoid;
-                background: white !important;
-                -webkit-print-color-adjust: exact;
-                color-adjust: exact;
+                padding: 20px;
             }
             
             .present, .absent, .vacation {
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
             }
-            
-            /* تحسين التقسيم للصفحات */
-            .attendance-table tr:nth-child(odd) {
-                page-break-after: avoid;
-            }
-            
-            .attendance-table tr:nth-child(even) {
-                page-break-after: auto;
-            }
         }
         
-        /* أعمدة الجدول محسنة */
-        .col-index { width: 30px; }
-        .col-employee { width: 140px; }
-        .col-job-number { width: 60px; }
-        .col-civil { width: 90px; }
-        .col-work-days { width: 50px; }
-        .col-day { width: 18px; }
-        .col-absence { width: 50px; }
-        
-        /* تحسين عرض الأيام */
-        .day-column {
-            min-width: 18px;
-            max-width: 18px;
-            overflow: hidden;
-        }
-        
-        .day-text {
-            writing-mode: vertical-rl;
-            transform: rotate(180deg);
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 7px;
-            line-height: 1.1;
-        }
-        
-        .day-date {
-            font-size: 6px;
-            margin-top: 2px;
-        }
+        /* أعمدة الجدول */
+        .col-index { width: 40px; }
+        .col-employee { width: 180px; }
+        .col-job-number { width: 80px; }
+        .col-civil { width: 120px; }
+        .col-work-days { width: 70px; }
+        .col-day { width: 25px; }
+        .col-absence { width: 70px; }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>تقرير الحضور والانصراف</h1>
-            <p>Attendance & Absence Report</p>
+            <h1>��� تقرير الحضور والانصراف المتقدم</h1>
+            <p>Advanced Employee Attendance & Absence Report</p>
         </div>
         
         <!-- Company Info -->
         <div class="company-info">
-            <div class="company-name">{{ $report->company->name_ar }}</div>
-            <div class="company-subtitle">{{ $report->company->name_en }}</div>
+            <div class="company-details">
+                <h2>{{ $report->company->name_ar }}</h2>
+                <p>{{ $report->company->name_en }}</p>
+            </div>
             @if ($base64logo)
-                <img src="{{ $base64logo }}" alt="Company Logo" class="logo" style="float: left; margin-top: -40px;">
+                <img src="{{ $base64logo }}" alt="Company Logo" class="logo">
             @endif
         </div>
         
         <!-- Report Details -->
         <div class="report-details">
             <div class="detail-card">
-                <div class="detail-label">رقم التقرير</div>
+                <div class="detail-label">��� رقم التقرير</div>
                 <div class="detail-value">{{ str_replace('ATR-', '', $report->number) }}</div>
             </div>
             <div class="detail-card">
-                <div class="detail-label">فترة التقرير</div>
+                <div class="detail-label">��� فترة التقرير</div>
                 <div class="detail-value">{{ $report->date_from->format('m/d') }} - {{ $report->date_to->format('m/d') }}</div>
             </div>
             <div class="detail-card">
-                <div class="detail-label">عدد الموظفين</div>
+                <div class="detail-label">��� عدد الموظفين</div>
                 <div class="detail-value">{{ $report->activeTraineesCount() }}</div>
             </div>
             <div class="detail-card">
-                <div class="detail-label">أيام العمل</div>
+                <div class="detail-label">���️ أيام العمل</div>
                 <div class="detail-value">{{ count($days) }}</div>
             </div>
         </div>
@@ -349,17 +276,17 @@
             <thead>
                 <tr>
                     <th class="col-index">م</th>
-                    <th class="col-employee">اسم الموظف</th>
+                    <th class="col-employee">معلومات الموظف</th>
                     @if ($report->trainees()->where('job_number', '!=', NULL)->count())
                         <th class="col-job-number">الرقم الوظيفي</th>
                     @endif
                     <th class="col-civil">الهوية المدنية</th>
                     <th class="col-work-days">أيام العمل</th>
                     @foreach ($days as $day)
-                        <th class="col-day day-column {{ $day['vacation_day'] ? 'vacation-day' : 'day-header' }}">
-                            <div class="day-text">
+                        <th class="col-day {{ $day['vacation_day'] ? 'vacation-day' : 'day-header' }}">
+                            <div style="writing-mode: vertical-rl; transform: rotate(180deg); height: 60px; display: flex; align-items: center; justify-content: center; font-size: 9px; line-height: 1.2;">
                                 {{ $day['name'] }}<br>
-                                <span class="day-date">{{ \Carbon\Carbon::parse($day['date'])->format('d/m') }}</span>
+                                <small style="font-size: 7px;">{{ \Carbon\Carbon::parse($day['date'])->format('d/m') }}</small>
                             </div>
                         </th>
                     @endforeach
@@ -396,7 +323,7 @@
                                 <strong>{{ $workDays }}</strong>
                             </td>
                             @for($i=0;$i<count($days);$i++)
-                                <td class="col-day day-column">
+                                <td class="col-day">
                                     @if ($days[$i]['vacation_day'])
                                         @if ($record->start_date && $days[$i]['date_carbon']->isAfter($record->end_date))
                                             {{-- Weekend after resignation date - show empty --}}
@@ -449,7 +376,7 @@
                                 <strong>{{ $workDays }}</strong>
                             </td>
                             @for($i=0;$i<count($days);$i++)
-                                <td class="col-day day-column">
+                                <td class="col-day">
                                     @if ($days[$i]['vacation_day'])
                                         @if ($record->start_date && $days[$i]['date_carbon']->isAfter($record->end_date))
                                             {{-- Weekend after resignation date - show empty --}}
@@ -477,11 +404,6 @@
                 @endif
             </tbody>
         </table>
-        
-        <!-- Footer -->
-        <div style="margin-top: 20px; text-align: center; padding: 15px; background: #f8f9fa; border-radius: 6px; border-top: 2px solid #007bff; page-break-before: avoid;">
-            <p style="color: #6c757d; font-size: 12px; margin: 0;">تم إنشاؤه تلقائياً بواسطة نظام إدارة التدريب</p>
-        </div>
     </div>
 </body>
 </html>
