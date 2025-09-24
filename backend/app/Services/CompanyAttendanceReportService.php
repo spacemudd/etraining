@@ -288,6 +288,13 @@ class CompanyAttendanceReportService
         ])) {
             // Use simplified design to avoid SSL issues
             $view = 'pdf.company-attendance-report.special-company-simple';
+        } elseif (in_array($report->company->id, [
+            // شركات التصميم الحديث - يمكن إضافة معرفات الشركات هنا
+            '2ea73041-e686-4093-b830-260b488eb014',
+            // أضف معرفات الشركات الجديدة التي تريد استخدام التصميم الحديث
+        ])) {
+            // Use modern design template
+            $view = 'pdf.company-attendance-report.special-company-modern';
         } else {
             $view = $report->activeTraineesCount() > 8 ? 'pdf.company-attendance-report.show' : 'pdf.company-attendance-report.one-table';
         }
@@ -369,6 +376,13 @@ class CompanyAttendanceReportService
         ])) {
             // Use simplified design to avoid SSL issues
             $view = 'pdf.company-attendance-report.special-company-individual-simple';
+        } elseif (in_array($record->company->id, [
+            // شركات التصميم الحديث - يمكن إضافة معرفات الشركات هنا
+            '2ea73041-e686-4093-b830-260b488eb014',
+            // أضف معرفات الشركات الجديدة التي تريد استخدام التصميم الحديث
+        ])) {
+            // Use modern design template for individual reports
+            $view = 'pdf.company-attendance-report.special-company-individual-modern';
         } else {
             $view = 'pdf.company-attendance-report.individual-table';
         }
