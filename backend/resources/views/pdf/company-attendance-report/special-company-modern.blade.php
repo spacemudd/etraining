@@ -35,6 +35,7 @@
             padding: 20px;
             border-radius: 6px;
             margin-bottom: 20px;
+            page-break-after: avoid;
         }
         
         .header h1 {
@@ -54,6 +55,7 @@
             border-radius: 6px;
             margin-bottom: 20px;
             border-right: 4px solid #007bff;
+            page-break-after: avoid;
         }
         
         .company-name {
@@ -73,6 +75,7 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 15px;
             margin-bottom: 20px;
+            page-break-after: avoid;
         }
         
         .detail-card {
@@ -103,24 +106,32 @@
             border: 1px solid #dee2e6;
             border-radius: 6px;
             overflow: hidden;
+            table-layout: fixed;
         }
         
         .attendance-table th {
             background: #495057;
             color: white;
-            padding: 12px 8px;
+            padding: 12px 6px;
             text-align: center;
             font-weight: bold;
-            font-size: 11px;
+            font-size: 10px;
             border: 1px solid #6c757d;
+            page-break-after: avoid;
         }
         
         .attendance-table td {
-            padding: 10px 6px;
+            padding: 8px 4px;
             text-align: center;
             border: 1px solid #dee2e6;
             background: white;
-            font-size: 10px;
+            font-size: 9px;
+            vertical-align: middle;
+            page-break-inside: avoid;
+        }
+        
+        .attendance-table tr {
+            page-break-inside: avoid;
         }
         
         .attendance-table tr:nth-child(even) td {
@@ -130,23 +141,25 @@
         .employee-name {
             font-weight: bold;
             color: #495057;
-            font-size: 12px;
+            font-size: 11px;
             margin-bottom: 2px;
+            line-height: 1.2;
         }
         
         .employee-id {
             color: #6c757d;
-            font-size: 9px;
+            font-size: 8px;
+            line-height: 1.1;
         }
         
         .attendance-mark {
             display: inline-block;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
-            line-height: 20px;
+            line-height: 18px;
             font-weight: bold;
-            font-size: 10px;
+            font-size: 9px;
             text-align: center;
         }
         
@@ -182,34 +195,116 @@
             border: 1px solid #dee2e6;
         }
         
-        /* تحسينات الطباعة */
+        /* تحسينات الطباعة والتقسيم */
         @media print {
             body {
                 background: white;
                 padding: 0;
+                margin: 0;
             }
             
             .container {
                 box-shadow: none;
-                border: 1px solid #000;
+                border: none;
                 margin: 0;
-                padding: 15px;
+                padding: 10px;
+                max-width: none;
+            }
+            
+            .header {
+                page-break-after: avoid;
+                margin-bottom: 15px;
+            }
+            
+            .company-info {
+                page-break-after: avoid;
+                margin-bottom: 15px;
+            }
+            
+            .report-details {
+                page-break-after: avoid;
+                margin-bottom: 15px;
+            }
+            
+            .attendance-table {
+                page-break-inside: auto;
+                border: 1px solid #000;
+            }
+            
+            .attendance-table thead {
+                display: table-header-group;
+                page-break-after: avoid;
+            }
+            
+            .attendance-table tbody {
+                display: table-row-group;
+            }
+            
+            .attendance-table tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+            }
+            
+            .attendance-table th {
+                page-break-after: avoid;
+                background: #495057 !important;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
+            .attendance-table td {
+                page-break-inside: avoid;
+                background: white !important;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
             }
             
             .present, .absent, .vacation {
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
             }
+            
+            /* تحسين التقسيم للصفحات */
+            .attendance-table tr:nth-child(odd) {
+                page-break-after: avoid;
+            }
+            
+            .attendance-table tr:nth-child(even) {
+                page-break-after: auto;
+            }
         }
         
-        /* أعمدة الجدول */
-        .col-index { width: 35px; }
-        .col-employee { width: 150px; }
-        .col-job-number { width: 70px; }
-        .col-civil { width: 100px; }
-        .col-work-days { width: 60px; }
-        .col-day { width: 20px; }
-        .col-absence { width: 60px; }
+        /* أعمدة الجدول محسنة */
+        .col-index { width: 30px; }
+        .col-employee { width: 140px; }
+        .col-job-number { width: 60px; }
+        .col-civil { width: 90px; }
+        .col-work-days { width: 50px; }
+        .col-day { width: 18px; }
+        .col-absence { width: 50px; }
+        
+        /* تحسين عرض الأيام */
+        .day-column {
+            min-width: 18px;
+            max-width: 18px;
+            overflow: hidden;
+        }
+        
+        .day-text {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 7px;
+            line-height: 1.1;
+        }
+        
+        .day-date {
+            font-size: 6px;
+            margin-top: 2px;
+        }
     </style>
 </head>
 <body>
@@ -261,10 +356,10 @@
                     <th class="col-civil">الهوية المدنية</th>
                     <th class="col-work-days">أيام العمل</th>
                     @foreach ($days as $day)
-                        <th class="col-day {{ $day['vacation_day'] ? 'vacation-day' : 'day-header' }}">
-                            <div style="writing-mode: vertical-rl; transform: rotate(180deg); height: 50px; display: flex; align-items: center; justify-content: center; font-size: 8px;">
+                        <th class="col-day day-column {{ $day['vacation_day'] ? 'vacation-day' : 'day-header' }}">
+                            <div class="day-text">
                                 {{ $day['name'] }}<br>
-                                <small style="font-size: 7px;">{{ \Carbon\Carbon::parse($day['date'])->format('d/m') }}</small>
+                                <span class="day-date">{{ \Carbon\Carbon::parse($day['date'])->format('d/m') }}</span>
                             </div>
                         </th>
                     @endforeach
@@ -301,7 +396,7 @@
                                 <strong>{{ $workDays }}</strong>
                             </td>
                             @for($i=0;$i<count($days);$i++)
-                                <td class="col-day">
+                                <td class="col-day day-column">
                                     @if ($days[$i]['vacation_day'])
                                         @if ($record->start_date && $days[$i]['date_carbon']->isAfter($record->end_date))
                                             {{-- Weekend after resignation date - show empty --}}
@@ -354,7 +449,7 @@
                                 <strong>{{ $workDays }}</strong>
                             </td>
                             @for($i=0;$i<count($days);$i++)
-                                <td class="col-day">
+                                <td class="col-day day-column">
                                     @if ($days[$i]['vacation_day'])
                                         @if ($record->start_date && $days[$i]['date_carbon']->isAfter($record->end_date))
                                             {{-- Weekend after resignation date - show empty --}}
@@ -384,7 +479,7 @@
         </table>
         
         <!-- Footer -->
-        <div style="margin-top: 20px; text-align: center; padding: 15px; background: #f8f9fa; border-radius: 6px; border-top: 2px solid #007bff;">
+        <div style="margin-top: 20px; text-align: center; padding: 15px; background: #f8f9fa; border-radius: 6px; border-top: 2px solid #007bff; page-break-before: avoid;">
             <p style="color: #6c757d; font-size: 12px; margin: 0;">تم إنشاؤه تلقائياً بواسطة نظام إدارة التدريب</p>
         </div>
     </div>
