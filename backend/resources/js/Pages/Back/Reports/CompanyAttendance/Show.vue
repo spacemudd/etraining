@@ -81,6 +81,65 @@
             </div>
         </div>
 
+        <!-- Template Selection Section -->
+        <div class="mt-10 container px-6 mx-auto">
+            <div class="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 class="text-lg font-semibold mb-4">{{ $t('words.template-settings') }}</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="border rounded-lg p-4 cursor-pointer transition-all duration-200"
+                         :class="templateForm.template_type === 'default' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'"
+                         @click="selectTemplate('default')">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto mb-2 bg-gray-100 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                            </div>
+                            <h4 class="font-medium text-gray-900">{{ $t('words.default-template') }}</h4>
+                            <p class="text-sm text-gray-500 mt-1">{{ $t('words.default-template-description') }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="border rounded-lg p-4 cursor-pointer transition-all duration-200"
+                         :class="templateForm.template_type === 'simple' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'"
+                         @click="selectTemplate('simple')">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto mb-2 bg-green-100 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <h4 class="font-medium text-gray-900">{{ $t('words.simple-template') }}</h4>
+                            <p class="text-sm text-gray-500 mt-1">{{ $t('words.simple-template-description') }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="border rounded-lg p-4 cursor-pointer transition-all duration-200"
+                         :class="templateForm.template_type === 'modern' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'"
+                         @click="selectTemplate('modern')">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto mb-2 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z"></path>
+                                </svg>
+                            </div>
+                            <h4 class="font-medium text-gray-900">{{ $t('words.modern-template') }}</h4>
+                            <p class="text-sm text-gray-500 mt-1">{{ $t('words.modern-template-description') }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 flex justify-end">
+                    <button @click="updateTemplate" 
+                            :disabled="templateForm.processing"
+                            class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 disabled:opacity-25">
+                        <span v-if="templateForm.processing">{{ $t('words.saving') }}...</span>
+                        <span v-else>{{ $t('words.save-template') }}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Email information for the company -->
         <div class="mt-10 container px-6 mx-auto grid grid-cols-12 gap-4">
             <div class="col-span-12 lg:col-span-6">
@@ -269,6 +328,12 @@ export default {
             emailsCcLoading: false,
             email_cc: '',
             email_to: '',
+            templateForm: this.$inertia.form({
+                template_type: this.report.template_type || 'default',
+            }, {
+                bag: 'templateForm',
+                resetOnSuccess: false,
+            }),
             createAttendanceReportForm: this.$inertia.form({
                 company_id: null,
                 period: {startDate, endDate},
@@ -386,6 +451,21 @@ export default {
         detachTrainee(report_id, trainee_id) {
             this.$inertia.post(route('back.reports.company-attendance.detach', this.report.id), {
                 trainee_id: trainee_id,
+            });
+        },
+        selectTemplate(templateType) {
+            this.templateForm.template_type = templateType;
+        },
+        updateTemplate() {
+            this.templateForm.patch(route('back.reports.company-attendance.update-template', this.report.id), {
+                preserveScroll: true,
+                onSuccess: () => {
+                    // Show success message
+                    this.$inertia.reload({ only: ['report'] });
+                },
+                onError: (errors) => {
+                    console.error('Template update failed:', errors);
+                }
             });
         },
     },
