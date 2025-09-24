@@ -75,7 +75,6 @@
                         <option value="default">{{ $t('words.default-template') }}</option>
                         <option value="simple">{{ $t('words.simple-template') }}</option>
                         <option value="modern">{{ $t('words.modern-template') }}</option>
-                        <option value="gradient">{{ $t('words.gradient-template') }}</option>
                     </select>
                     <jet-input-error class="mt-2" />
                 </div>
