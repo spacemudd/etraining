@@ -22,9 +22,9 @@
         </div>
 
         <!-- Success Message -->
-        <div v-if="successMessage" class="container px-6 mx-auto mt-4">
+        <div v-if="$page.props.flash.success" class="container px-6 mx-auto mt-4">
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                <span class="block sm:inline">{{ successMessage }}</span>
+                <span class="block sm:inline">{{ $page.props.flash.success }}</span>
             </div>
         </div>
 
@@ -91,7 +91,7 @@
         <!-- Template Selection Section -->
         <div class="mt-10 container px-6 mx-auto">
             <div class="bg-white border border-gray-200 rounded-lg p-6">
-                <h3 class="text-lg font-semibold mb-4">{{ $t('words.template-settings') }}</h3>
+                <h3 class="text-lg font-semibold mb-4">إعدادات القالب</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="border rounded-lg p-4 cursor-pointer transition-all duration-200"
                          :class="templateForm.template_type === 'default' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'"
@@ -102,8 +102,8 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                 </svg>
                             </div>
-                            <h4 class="font-medium text-gray-900">{{ $t('words.default-template') }}</h4>
-                            <p class="text-sm text-gray-500 mt-1">{{ $t('words.default-template-description') }}</p>
+                            <h4 class="font-medium text-gray-900">القالب الافتراضي</h4>
+                            <p class="text-sm text-gray-500 mt-1">للتقارير العادية والاستخدام العام</p>
                         </div>
                     </div>
                     
@@ -116,8 +116,8 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
                             </div>
-                            <h4 class="font-medium text-gray-900">{{ $t('words.simple-template') }}</h4>
-                            <p class="text-sm text-gray-500 mt-1">{{ $t('words.simple-template-description') }}</p>
+                            <h4 class="font-medium text-gray-900">القالب المبسط</h4>
+                            <p class="text-sm text-gray-500 mt-1">للشركات التي تواجه مشاكل SSL</p>
                         </div>
                     </div>
                     
@@ -130,8 +130,8 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z"></path>
                                 </svg>
                             </div>
-                            <h4 class="font-medium text-gray-900">{{ $t('words.modern-template') }}</h4>
-                            <p class="text-sm text-gray-500 mt-1">{{ $t('words.modern-template-description') }}</p>
+                            <h4 class="font-medium text-gray-900">القالب الحديث</h4>
+                            <p class="text-sm text-gray-500 mt-1">للتقارير الحديثة والمحسنة</p>
                         </div>
                     </div>
                 </div>
@@ -140,8 +140,8 @@
                     <button @click="updateTemplate" 
                             :disabled="templateForm.processing"
                             class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 disabled:opacity-25">
-                        <span v-if="templateForm.processing">{{ $t('words.saving') }}...</span>
-                        <span v-else>{{ $t('words.save-template') }}</span>
+                        <span v-if="templateForm.processing">جاري الحفظ...</span>
+                        <span v-else>حفظ القالب</span>
                     </button>
                 </div>
             </div>
@@ -470,11 +470,12 @@ export default {
             this.templateForm.patch(route('back.reports.company-attendance.update-template', this.report.id), {
                 preserveScroll: true,
                 onSuccess: () => {
-                    // Show success message
-                    this.$inertia.reload({ only: ['report'] });
+                    // Success message will be shown via flash message
+                    // The page will reload automatically due to redirect
                 },
                 onError: (errors) => {
                     console.error('Template update failed:', errors);
+                    alert('حدث خطأ في تحديث القالب. يرجى المحاولة مرة أخرى.');
                 }
             });
         },
