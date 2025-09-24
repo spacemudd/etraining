@@ -22,9 +22,9 @@
         </div>
 
         <!-- Success Message -->
-        <div v-if="$page.props.flash.success" class="container px-6 mx-auto mt-4">
+        <div v-if="successMessage" class="container px-6 mx-auto mt-4">
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                <span class="block sm:inline">{{ $page.props.flash.success }}</span>
+                <span class="block sm:inline">{{ successMessage }}</span>
             </div>
         </div>
 
@@ -319,6 +319,9 @@ export default {
             return this.report.trainees.filter((trainee) => {
                 return Boolean(Number(trainee.pivot.active));
             }).length;
+        },
+        successMessage() {
+            return this.$page.props.flash && this.$page.props.flash.success ? this.$page.props.flash.success : null;
         }
     },
     filters: {
