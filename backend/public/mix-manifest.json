@@ -1,6 +1,7 @@
 {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=2642a32b3d91aa55485c",
     "/css/app.css": "/css/app.css?id=38ae3b7f3e4aec6971c1",
 =======
@@ -8,6 +9,9 @@
 =======
     "/js/app.js": "/js/app.js?id=81d4a3323f352f7c98eb",
 >>>>>>> b29e474c (k)
+=======
+    "/js/app.js": "/js/app.js?id=759db50ba0958c180d17",
+>>>>>>> 92a52d22 (d)
     "/css/app.css": "/css/app.css?id=e944392055a71a23e73f",
 >>>>>>> 3490f935 (h)
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
