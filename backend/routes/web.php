@@ -888,6 +888,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::post('company-attendance/send-report/download', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'sendReportDownload'])->name('reports.company-attendance.send-report.download');
             Route::get('company-attendance/send-report', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'sendReport'])->name('reports.company-attendance.send-report');
             Route::put('company-attendance/{id}', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'update'])->name('reports.company-attendance.update');
+            Route::patch('company-attendance/{id}/template', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'updateTemplate'])->name('reports.company-attendance.update-template');
             Route::post('company-attendance/{id}/attach', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'attach'])->name('reports.company-attendance.attach');
             Route::post('company-attendance/{id}/detach', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'detach'])->name('reports.company-attendance.detach');
             Route::delete('company-attendance/{id}', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'destroy'])->name('reports.company-attendance.destroy');
