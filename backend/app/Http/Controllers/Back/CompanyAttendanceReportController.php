@@ -80,7 +80,7 @@ class CompanyAttendanceReportController extends Controller
             'date_from' => $date_from,
             'date_to' => $date_to,
             'with_logo' => false,
-            'template_type' => 'default',
+            'template_type' => $request->template_type ?? 'default',
         ]);
 
         // Get all trainees including deleted ones and those with resignations
@@ -256,7 +256,7 @@ class CompanyAttendanceReportController extends Controller
             'period' => 'nullable',
             'with_attendance_times' => 'nullable|boolean',
             'with_logo' => 'nullable|boolean',
-            'template_type' => 'nullable|in:default,simple,modern,gradient',
+            'template_type' => 'nullable|in:default,simple,modern',
         ]);
 
         $report = CompanyAttendanceReport::findOrFail($id);
