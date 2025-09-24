@@ -2,7 +2,7 @@
 <html dir="rtl">
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <title>تقرير الحضور الفردي - التصميم الحديث</title>
+    <title>تقرير الحضور الفردي</title>
     <style>
         * {
             margin: 0;
@@ -11,253 +11,199 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
             color: #333;
-            line-height: 1.5;
-            padding: 15px;
-            min-height: 100vh;
+            line-height: 1.4;
+            padding: 20px;
         }
         
         .container {
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            padding: 30px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 25px;
             margin: 0 auto;
             max-width: 1400px;
-            min-width: 1200px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #f9ca24, #f0932b);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
         .header {
             text-align: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #007bff;
             color: white;
-            padding: 25px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
         }
         
         .header h1 {
-            font-size: 32px;
-            margin-bottom: 8px;
-            font-weight: 700;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            font-size: 24px;
+            margin-bottom: 5px;
+            font-weight: bold;
         }
         
         .header p {
-            font-size: 16px;
+            font-size: 14px;
             opacity: 0.9;
-            font-weight: 300;
         }
         
         .employee-card {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            padding: 25px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            box-shadow: 0 8px 25px rgba(240, 147, 251, 0.3);
+            background: #e9ecef;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-right: 4px solid #007bff;
         }
         
-        .employee-info h2 {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        .employee-name {
+            font-size: 22px;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 10px;
         }
         
         .employee-details {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
-            margin-top: 15px;
         }
         
         .employee-detail {
-            background: rgba(255,255,255,0.2);
+            background: white;
             padding: 8px 12px;
-            border-radius: 8px;
+            border-radius: 4px;
             font-size: 14px;
+            border: 1px solid #dee2e6;
         }
         
         .company-info {
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 6px 20px rgba(168, 237, 234, 0.3);
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #dee2e6;
         }
         
-        .company-details h3 {
-            font-size: 24px;
-            font-weight: 700;
-            color: #2c3e50;
+        .company-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #495057;
             margin-bottom: 5px;
         }
         
-        .company-details p {
-            color: #7f8c8d;
+        .company-subtitle {
+            color: #6c757d;
             font-size: 14px;
-        }
-        
-        .logo {
-            max-width: 80px;
-            height: auto;
-            border-radius: 8px;
-            border: 2px solid rgba(44,62,80,0.1);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         
         .report-details {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 15px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         
         .detail-card {
-            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            border-radius: 6px;
             text-align: center;
-            box-shadow: 0 6px 20px rgba(116, 185, 255, 0.3);
         }
         
         .detail-label {
-            font-weight: 600;
+            font-weight: bold;
+            color: #495057;
             font-size: 12px;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            opacity: 0.9;
+            margin-bottom: 5px;
         }
         
         .detail-value {
-            font-size: 24px;
-            font-weight: 700;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff;
         }
         
         .attendance-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 25px;
-            border-radius: 12px;
+            margin-top: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
         
         .attendance-table th {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            background: #495057;
             color: white;
-            padding: 15px 8px;
+            padding: 12px 8px;
             text-align: center;
-            font-weight: 600;
+            font-weight: bold;
             font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            position: relative;
-        }
-        
-        .attendance-table th::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #3498db, #9b59b6, #e74c3c, #f39c12);
+            border: 1px solid #6c757d;
         }
         
         .attendance-table td {
-            padding: 15px 8px;
+            padding: 12px 8px;
             text-align: center;
-            border-bottom: 1px solid #ecf0f1;
+            border: 1px solid #dee2e6;
             background: white;
             font-size: 12px;
-            transition: background-color 0.3s ease;
         }
         
         .attendance-table tr:nth-child(even) td {
             background: #f8f9fa;
         }
         
-        .attendance-table tr:hover td {
-            background: #e3f2fd;
-        }
-        
         .attendance-mark {
             display: inline-block;
-            width: 30px;
-            height: 30px;
+            width: 25px;
+            height: 25px;
             border-radius: 50%;
-            line-height: 30px;
-            font-weight: 700;
-            font-size: 14px;
+            line-height: 25px;
+            font-weight: bold;
+            font-size: 12px;
             text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            transition: transform 0.2s ease;
-        }
-        
-        .attendance-mark:hover {
-            transform: scale(1.1);
         }
         
         .present {
-            background: linear-gradient(135deg, #00b894, #00cec9);
+            background: #28a745;
             color: white;
         }
         
         .absent {
-            background: linear-gradient(135deg, #e17055, #d63031);
+            background: #dc3545;
             color: white;
         }
         
         .vacation {
-            background: linear-gradient(135deg, #fdcb6e, #e17055);
-            color: white;
+            background: #ffc107;
+            color: #212529;
         }
         
         .day-header {
-            background: linear-gradient(135deg, #74b9ff, #0984e3) !important;
+            background: #007bff !important;
             color: white !important;
         }
         
         .vacation-day {
-            background: linear-gradient(135deg, #fab1a0, #e17055) !important;
+            background: #6c757d !important;
             color: white !important;
         }
         
         .summary-section {
-            margin-top: 30px;
-            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(255, 236, 210, 0.4);
+            margin-top: 20px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
         }
         
         .summary-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #2c3e50;
+            font-size: 18px;
+            font-weight: bold;
+            color: #495057;
             margin-bottom: 15px;
             text-align: center;
         }
@@ -271,43 +217,33 @@
         .stat-item {
             background: white;
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 6px;
             text-align: center;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border: 1px solid #dee2e6;
         }
         
         .stat-number {
             font-size: 24px;
-            font-weight: 700;
+            font-weight: bold;
             margin-bottom: 5px;
         }
         
-        .stat-present { color: #00b894; }
-        .stat-absent { color: #e17055; }
-        .stat-vacation { color: #fdcb6e; }
-        .stat-total { color: #74b9ff; }
+        .stat-present { color: #28a745; }
+        .stat-absent { color: #dc3545; }
+        .stat-vacation { color: #ffc107; }
+        .stat-total { color: #007bff; }
         
         .stat-label {
             font-size: 12px;
-            color: #7f8c8d;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-        
-        .footer {
-            margin-top: 30px;
-            text-align: center;
-            padding: 20px;
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border-radius: 12px;
-            border-top: 3px solid #3498db;
-        }
-        
-        .footer p {
             color: #6c757d;
-            font-size: 12px;
-            margin: 0;
-            font-style: italic;
+            font-weight: bold;
+        }
+        
+        .logo {
+            max-width: 70px;
+            height: auto;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
         }
         
         /* تحسينات الطباعة */
@@ -319,23 +255,9 @@
             
             .container {
                 box-shadow: none;
-                border: 1px solid #ddd;
+                border: 1px solid #000;
                 margin: 0;
-                padding: 20px;
-            }
-            
-            .header, .employee-card, .company-info, .detail-card, .summary-section {
-                background: #f8f9fa !important;
-                color: #333 !important;
-                -webkit-print-color-adjust: exact;
-                color-adjust: exact;
-            }
-            
-            .attendance-table th {
-                background: #2c3e50 !important;
-                color: white !important;
-                -webkit-print-color-adjust: exact;
-                color-adjust: exact;
+                padding: 15px;
             }
             
             .present, .absent, .vacation {
@@ -345,68 +267,64 @@
         }
         
         /* أعمدة الجدول */
-        .col-day { width: 25px; }
+        .col-day { width: 60px; }
         .col-date { width: 80px; }
         .col-day-name { width: 80px; }
         .col-status { width: 60px; }
-        .col-notes { width: 150px; }
+        .col-notes { width: 120px; }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>��� تقرير الحضور الفردي المتقدم</h1>
-            <p>Advanced Individual Attendance Report</p>
+            <h1>تقرير الحضور الفردي</h1>
+            <p>Individual Attendance Report</p>
         </div>
         
         <!-- Employee Card -->
         <div class="employee-card">
-            <div class="employee-info">
-                <h2>{{ $record->trainee->name }}</h2>
-                <div class="employee-details">
-                    <div class="employee-detail">
-                        <strong>الهوية:</strong> {{ $record->trainee->clean_identity_number }}
-                    </div>
-                    @if ($record->trainee->job_number)
-                    <div class="employee-detail">
-                        <strong>الرقم الوظيفي:</strong> {{ $record->trainee->job_number }}
-                    </div>
-                    @endif
-                    <div class="employee-detail">
-                        <strong>المعرف:</strong> {{ $record->trainee->id }}
-                    </div>
+            <div class="employee-name">{{ $record->trainee->name }}</div>
+            <div class="employee-details">
+                <div class="employee-detail">
+                    <strong>الهوية:</strong> {{ $record->trainee->clean_identity_number }}
+                </div>
+                @if ($record->trainee->job_number)
+                <div class="employee-detail">
+                    <strong>الرقم الوظيفي:</strong> {{ $record->trainee->job_number }}
+                </div>
+                @endif
+                <div class="employee-detail">
+                    <strong>المعرف:</strong> {{ $record->trainee->id }}
                 </div>
             </div>
         </div>
         
         <!-- Company Info -->
         <div class="company-info">
-            <div class="company-details">
-                <h3>{{ $record->company->name_ar }}</h3>
-                <p>{{ $record->company->name_en }}</p>
-            </div>
+            <div class="company-name">{{ $record->company->name_ar }}</div>
+            <div class="company-subtitle">{{ $record->company->name_en }}</div>
             @if ($base64logo)
-                <img src="{{ $base64logo }}" alt="Company Logo" class="logo">
+                <img src="{{ $base64logo }}" alt="Company Logo" class="logo" style="float: left; margin-top: -30px;">
             @endif
         </div>
         
         <!-- Report Details -->
         <div class="report-details">
             <div class="detail-card">
-                <div class="detail-label">��� من تاريخ</div>
+                <div class="detail-label">من تاريخ</div>
                 <div class="detail-value">{{ $report->date_from->format('Y/m/d') }}</div>
             </div>
             <div class="detail-card">
-                <div class="detail-label">��� إلى تاريخ</div>
+                <div class="detail-label">إلى تاريخ</div>
                 <div class="detail-value">{{ $report->date_to->format('Y/m/d') }}</div>
             </div>
             <div class="detail-card">
-                <div class="detail-label">���️ إجمالي الأيام</div>
+                <div class="detail-label">إجمالي الأيام</div>
                 <div class="detail-value">{{ count($days) }}</div>
             </div>
             <div class="detail-card">
-                <div class="detail-label">��� أيام العمل</div>
+                <div class="detail-label">أيام العمل</div>
                 <div class="detail-value">
                     @php
                         $workDays = 0;
@@ -448,7 +366,7 @@
                         <td class="col-status">
                             @if ($day['vacation_day'])
                                 @if ($record->start_date && $day['date_carbon']->isAfter($record->end_date))
-                                    <span style="color: #bdc3c7;">-</span>
+                                    <span style="color: #6c757d;">-</span>
                                 @else
                                     <span class="attendance-mark vacation">X</span>
                                 @endif
@@ -460,7 +378,7 @@
                                         @if ($record->status === 'new_registration')
                                             <span class="attendance-mark absent">✗</span>
                                         @else
-                                            <span style="color: #bdc3c7;">-</span>
+                                            <span style="color: #6c757d;">-</span>
                                         @endif
                                     @endif
                                 @else
@@ -471,23 +389,23 @@
                         <td class="col-notes">
                             @if ($day['vacation_day'])
                                 @if ($record->start_date && $day['date_carbon']->isAfter($record->end_date))
-                                    <span style="color: #7f8c8d;">بعد الاستقالة</span>
+                                    <span style="color: #6c757d;">بعد الاستقالة</span>
                                 @else
-                                    <span style="color: #f39c12;">عطلة أسبوعية</span>
+                                    <span style="color: #ffc107;">عطلة أسبوعية</span>
                                 @endif
                             @else
                                 @if ($record->start_date)
                                     @if ($day['date_carbon']->isBetween($record->start_date, $record->end_date))
-                                        <span style="color: #00b894;">حضور</span>
+                                        <span style="color: #28a745;">حضور</span>
                                     @else
                                         @if ($record->status === 'new_registration')
-                                            <span style="color: #e74c3c;">غياب</span>
+                                            <span style="color: #dc3545;">غياب</span>
                                         @else
-                                            <span style="color: #7f8c8d;">قبل الالتحاق</span>
+                                            <span style="color: #6c757d;">قبل الالتحاق</span>
                                         @endif
                                     @endif
                                 @else
-                                    <span style="color: #00b894;">حضور</span>
+                                    <span style="color: #28a745;">حضور</span>
                                 @endif
                             @endif
                         </td>
@@ -498,7 +416,7 @@
         
         <!-- Summary Section -->
         <div class="summary-section">
-            <div class="summary-title">��� ملخص الحضور والانصراف</div>
+            <div class="summary-title">ملخص الحضور والانصراف</div>
             <div class="summary-stats">
                 <div class="stat-item">
                     <div class="stat-number stat-present">
@@ -552,8 +470,8 @@
         </div>
         
         <!-- Footer -->
-        <div class="footer">
-            <p>��� تقرير فردي سري - تم إنشاؤه تلقائياً في {{ now()->format('Y-m-d H:i:s') }}</p>
+        <div style="margin-top: 20px; text-align: center; padding: 15px; background: #f8f9fa; border-radius: 6px; border-top: 2px solid #007bff;">
+            <p style="color: #6c757d; font-size: 12px; margin: 0;">تقرير فردي - تم إنشاؤه تلقائياً في {{ now()->format('Y-m-d H:i:s') }}</p>
         </div>
     </div>
 </body>
