@@ -80,7 +80,7 @@ class CompanyAttendanceReportController extends Controller
             'date_from' => $date_from,
             'date_to' => $date_to,
             'with_logo' => false,
-            'template_type' => $request->template_type ?? 'default',
+            'template_type' => 'default',
         ]);
 
         // Get all trainees including deleted ones and those with resignations
@@ -476,7 +476,7 @@ class CompanyAttendanceReportController extends Controller
 public function updateTemplate($id, Request $request)
 {
     $request->validate([
-        'template_type' => 'required|in:default,simple,modern,gradient',
+        'template_type' => 'required|in:default,simple,modern',
     ]);
 
     $report = CompanyAttendanceReport::findOrFail($id);
@@ -484,22 +484,11 @@ public function updateTemplate($id, Request $request)
         'template_type' => $request->template_type,
     ]);
 
-    return redirect()->route('back.reports.company-attendance.show', $id)
-        ->with('success', 'تم تحديث القالب بنجاح إلى: ' . $this->getTemplateName($request->template_type));
-}
-
-private function getTemplateName($templateType)
-{
-    switch ($templateType) {
-        case 'simple':
-            return 'القالب المبسط';
-        case 'modern':
-            return 'القالب الحديث';
-        case 'gradient':
-            return 'القالب المتدرج';
-        default:
-            return 'القالب الافتراضي';
-    }
+    return response()->json([
+        'success' => true,
+        'message' => 'تم تحديث القالب بنجاح',
+        'template_type' => $report->template_type
+    ]);
 }
 
 }
