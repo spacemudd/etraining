@@ -22,15 +22,9 @@
         </div>
 
         <!-- Success Message -->
-<<<<<<< HEAD
         <div v-if="successMessage" class="container px-6 mx-auto mt-4">
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
                 <span class="block sm:inline">{{ successMessage }}</span>
-=======
-        <div v-if="$page.props.flash.success" class="container px-6 mx-auto mt-4">
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                <span class="block sm:inline">{{ $page.props.flash.success }}</span>
->>>>>>> a9494c4f (k)
             </div>
         </div>
 
