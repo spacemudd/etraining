@@ -23,6 +23,10 @@
             page-break-inside: avoid;
             page-break-after: avoid;
         }
+        /* Hide headers on subsequent pages */
+        .hide-headers thead {
+            display: none !important;
+        }
         tfoot { 
             display:table-footer-group;
         }
@@ -85,7 +89,7 @@
     @endif
 
     <div class="row" style="margin-top: 10px;">
-        <table class="table" style="width:100%;">
+        <table class="table hide-headers" style="width:100%;">
             <colgroup>
                 <col style="width:35px">
                 <col style="width:70px">
@@ -271,7 +275,7 @@
             @endif
             </tbody>
             <!-- Second part of the table for remaining trainees -->
-            <tbody>
+            <tbody class="page-break-before">
                 @if(\App\Models\Back\Trainee::where('company_id', $report->company_id)->where('job_number', '!=', NULL)->count() > 0)
                     @foreach ($active_trainees as $counter => $record)
                         @if(($counter ===  (count($active_trainees) - 1) || $counter ===  (count($active_trainees) - 2)))
