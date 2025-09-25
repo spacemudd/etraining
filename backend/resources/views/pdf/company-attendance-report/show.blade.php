@@ -39,11 +39,21 @@
         /* Ensure headers repeat on each page */
         @media print {
             thead {
-                display: table-header-group;
+                display: table-header-group !important;
             }
             tbody {
                 page-break-inside: auto;
             }
+            table {
+                page-break-inside: auto;
+            }
+        }
+        /* Force headers to repeat on every page */
+        table thead {
+            display: table-header-group !important;
+        }
+        table tbody {
+            display: table-row-group;
         }
     </style>
 </head>
@@ -286,7 +296,7 @@
             </tbody>
         </table>
         <div style="page-break-before: always; page-break-inside: avoid !important;display:block;">
-            <table class="table" style="width:100%; border-collapse: collapse;">
+            <table class="table" style="width:100%; border-collapse: collapse; page-break-inside: auto;">
                 <colgroup>
                     <col style="width:35px">
                     <col style="width:70px">
@@ -295,7 +305,7 @@
                     <col style="width:100px">
                     <col style="width:110px">
                 </colgroup>
-                <thead>
+                <thead style="display: table-header-group !important; page-break-after: avoid; page-break-inside: avoid;">
                 <tr style="height:60px;">
                     <th colspan="38" style="text-align: center;padding: 10px;font-size: 38px;">
                         {{ $report->company->name_ar }}
