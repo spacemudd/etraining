@@ -476,7 +476,7 @@ class CompanyAttendanceReportController extends Controller
 public function updateTemplate($id, Request $request)
 {
     $request->validate([
-        'template_type' => 'required|in:default,simple,modern',
+        'template_type' => 'required|in:default,simple,modern,mini',
     ]);
 
     $report = CompanyAttendanceReport::findOrFail($id);
@@ -495,6 +495,8 @@ private function getTemplateName($templateType)
             return 'القالب المبسط';
         case 'modern':
             return 'القالب الحديث';
+        case 'mini':
+            return 'القالب المضغوط';
         default:
             return 'القالب الافتراضي';
     }

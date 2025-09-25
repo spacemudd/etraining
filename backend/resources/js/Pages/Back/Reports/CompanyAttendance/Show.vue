@@ -92,7 +92,7 @@
         <div class="mt-10 container px-6 mx-auto">
             <div class="bg-white border border-gray-200 rounded-lg p-6">
                 <h3 class="text-lg font-semibold mb-4">إعدادات القالب</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div class="border rounded-lg p-4 cursor-pointer transition-all duration-200"
                          :class="templateForm.template_type === 'default' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'"
                          @click="selectTemplate('default')">
@@ -132,6 +132,20 @@
                             </div>
                             <h4 class="font-medium text-gray-900">القالب الحديث</h4>
                             <p class="text-sm text-gray-500 mt-1">للتقارير الحديثة والمحسنة</p>
+                        </div>
+                    </div>
+                    
+                    <div class="border rounded-lg p-4 cursor-pointer transition-all duration-200"
+                         :class="templateForm.template_type === 'mini' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'"
+                         @click="selectTemplate('mini')">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto mb-2 bg-orange-100 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <h4 class="font-medium text-gray-900">القالب المضغوط</h4>
+                            <p class="text-sm text-gray-500 mt-1">تصميم مضغوط وسريع للمعاينة</p>
                         </div>
                     </div>
                 </div>
