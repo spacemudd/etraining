@@ -14,7 +14,7 @@ class AddTemplateTypeToCompanyAttendanceReportsTable extends Migration
     public function up()
     {
         Schema::table('company_attendance_reports', function (Blueprint $table) {
-            $table->enum('template_type', ['default', 'simple', 'modern'])->default('default')->after('with_logo');
+            $table->enum('template_type', ['default', 'simple', 'modern', 'mini'])->default('default')->after('with_logo');
         });
     }
 
