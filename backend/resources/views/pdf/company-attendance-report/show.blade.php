@@ -6,84 +6,15 @@
     <link rel="stylesheet" href="{{ public_path('pdf.css') }}">
     <title>Company attendance report</title>
     <style>
-        table { 
-            page-break-after: auto;
-            table-layout: fixed;
-            width: 100%;
-        }
-        tr { 
-            page-break-inside: avoid; 
-            page-break-after: auto;
-        }
-        td { 
-            page-break-inside: avoid; 
-            page-break-after: auto;
-        }
-        th {
-            page-break-inside: avoid;
-            page-break-after: avoid;
-        }
-        thead { 
-            display: table-header-group;
-            page-break-after: avoid;
-        }
-        tfoot { 
-            display: table-footer-group;
-        }
-        tbody {
-            page-break-inside: auto;
-        }
-        tbody tr {
-            page-break-inside: avoid;
-            page-break-after: auto;
-        }
+        table { page-break-after:auto }
+        tr    { page-break-inside:avoid; page-break-after:auto }
+        td    { page-break-inside:avoid; page-break-after:auto }
+        thead { display: table-header-group; }
+        tfoot { display:table-footer-group }
         .vertical-text {
             writing-mode: vertical-rl;
             -webkit-transform: rotate(90deg);
             -webkit-transform-origin: center bottom auto;
-        }
-        
-        /* إصلاح مشكلة الصفحة الثانية */
-        .second-table {
-            margin-top: 0;
-            border-top: none;
-        }
-        
-        .second-table thead {
-            display: none;
-        }
-        
-        /* تحسينات للطباعة */
-        @media print {
-            table {
-                table-layout: fixed;
-                border-collapse: collapse;
-                width: 100%;
-            }
-            
-            thead {
-                display: table-header-group;
-                page-break-after: avoid;
-            }
-            
-            tbody tr {
-                page-break-inside: avoid;
-                page-break-after: auto;
-            }
-            
-            tr {
-                page-break-inside: avoid;
-                page-break-after: auto;
-            }
-            
-            td, th {
-                page-break-inside: avoid;
-                page-break-after: auto;
-            }
-            
-            .second-table thead {
-                display: none !important;
-            }
         }
     </style>
 </head>
@@ -316,7 +247,7 @@
             </tbody>
         </table>
         <div style="page-break-inside: avoid !important;display:block;">
-            <table class="table second-table" style="width:100%;">
+            <table class="table" style="width:100%;">
                 <colgroup>
                     <col style="width:35px">
                     <col style="width:70px">
@@ -325,50 +256,6 @@
                     <col style="width:100px">
                     <col style="width:110px">
                 </colgroup>
-                <thead style="display: none;">
-                <tr style="height:60px;">
-                    <th colspan="38" style="text-align: center;padding: 10px;font-size: 38px;">
-                        {{ $report->company->name_ar }}
-                    </th>
-                </tr>
-                <tr style="height:100px;background:#e0e0e0;">
-                    <th dir="ltr" class="vertical-text" style="white-space: nowrap">SI #</th>
-                    @if ($report->trainees()->where('job_number', '!=', NULL)->count())
-                        <th dir="ltr" class="vertical-text">Emp. #</th>
-                    @endif
-                    <th class="vertical-text">Status</th>
-                    <th class="vertical-text">Employee<br/> name</th>
-                    <th class="vertical-text">ID</th>
-                    <th colspan="1"></th>
-                    @foreach ($days as $day)
-                        <th style="width:20px;{{ $day['vacation_day'] ? 'background:#e0e0e0;' : 'background: white;' }}">
-                            <div class="vertical-text" style="position:absolute;white-space:nowrap;height:35px;">{{ $day['name'] }}</div>
-                        </th>
-                    @endforeach
-                    <th rowspan="2" style="width:20px;">
-                        <div class="vertical-text" style="position:absolute;white-space:nowrap;height:55px;">عدد الغياب</div>
-                    </th>
-                </tr>
-                <tr style="height:120px;background:#e0e0e0;">
-                    <th class="vertical-text">م</th>
-                    @if ($report->trainees()->where('job_number', '!=', NULL)->count())
-                        <th class="vertical-text" style="white-space: nowrap">الرقم الوظيفي</th>
-                    @endif
-                    <th class="vertical-text">الحالة</th>
-                    <th class="vertical-text" style="width:500px;">اسم الموظف</th>
-                    <th class="vertical-text">السجل المدني</th>
-                    <th class="vertical-text" style="white-space: nowrap">
-                        <span>عدد ايام الدوام حسب</span>
-                        <br/>
-                        <span>الالتحاق بالتأمينات</span>
-                    </th>
-                    @foreach ($days as $day)
-                        <th style="width:20px;{{ $day['vacation_day'] ? 'background:#e0e0e0;' : 'background: white;' }}">
-                            <div class="vertical-text" style="position:absolute;white-space:nowrap;height:35px;width:30px;">{{ $day['date'] }}</div>
-                        </th>
-                    @endforeach
-                </tr>
-                </thead>
                 <tbody>
                 @if(\App\Models\Back\Trainee::where('company_id', $report->company_id)->where('job_number', '!=', NULL)->count() > 0)
                     @foreach ($active_trainees as $counter => $record)
