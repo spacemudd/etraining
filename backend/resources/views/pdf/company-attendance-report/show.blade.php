@@ -6,15 +6,40 @@
     <link rel="stylesheet" href="{{ public_path('pdf.css') }}">
     <title>Company attendance report</title>
     <style>
-        table { page-break-after:auto }
-        tr    { page-break-inside:avoid; page-break-after:auto }
-        td    { page-break-inside:avoid; page-break-after:auto }
-        thead { display: table-header-group; }
-        tfoot { display:table-footer-group }
+        table { 
+            page-break-after:auto;
+            border-collapse: collapse;
+        }
+        tr    { 
+            page-break-inside:avoid; 
+            page-break-after:auto;
+        }
+        td    { 
+            page-break-inside:avoid; 
+            page-break-after:auto;
+        }
+        thead { 
+            display: table-header-group;
+            page-break-inside: avoid;
+            page-break-after: avoid;
+        }
+        tfoot { 
+            display:table-footer-group;
+        }
         .vertical-text {
             writing-mode: vertical-rl;
             -webkit-transform: rotate(90deg);
             -webkit-transform-origin: center bottom auto;
+        }
+        /* Ensure headers repeat on each page */
+        .table-header {
+            display: table-header-group;
+            page-break-inside: avoid;
+            page-break-after: avoid;
+        }
+        /* Force page break before second table */
+        .page-break-before {
+            page-break-before: always;
         }
     </style>
 </head>
@@ -245,62 +270,8 @@
                 @endforeach
             @endif
             </tbody>
-        </table>
-        <div style="page-break-inside: avoid !important;display:block;">
-            <table class="table" style="width:100%;">
-                <colgroup>
-                    <col style="width:35px">
-                    <col style="width:70px">
-                    <col style="width:50px">
-                    <col style="width:305px">
-                    <col style="width:100px">
-                    <col style="width:110px">
-                </colgroup>
-                <thead>
-                <tr style="height:60px;">
-                    <th colspan="38" style="text-align: center;padding: 10px;font-size: 38px;">
-                        {{ $report->company->name_ar }}
-                    </th>
-                </tr>
-                <tr style="height:100px;background:#e0e0e0;">
-                    <th dir="ltr" class="vertical-text" style="white-space: nowrap">SI #</th>
-                    @if ($report->trainees()->where('job_number', '!=', NULL)->count())
-                        <th dir="ltr" class="vertical-text">Emp. #</th>
-                    @endif
-                    <th class="vertical-text">Status</th>
-                    <th class="vertical-text">Employee<br/> name</th>
-                    <th class="vertical-text">ID</th>
-                    <th colspan="1"></th>
-                    @foreach ($days as $day)
-                        <th style="width:20px;{{ $day['vacation_day'] ? 'background:#e0e0e0;' : 'background: white;' }}">
-                            <div class="vertical-text" style="position:absolute;white-space:nowrap;height:35px;">{{ $day['name'] }}</div>
-                        </th>
-                    @endforeach
-                    <th rowspan="2" style="width:20px;">
-                        <div class="vertical-text" style="position:absolute;white-space:nowrap;height:55px;">عدد الغياب</div>
-                    </th>
-                </tr>
-                <tr style="height:120px;background:#e0e0e0;">
-                    <th class="vertical-text">م</th>
-                    @if ($report->trainees()->where('job_number', '!=', NULL)->count())
-                        <th class="vertical-text" style="white-space: nowrap">الرقم الوظيفي</th>
-                    @endif
-                    <th class="vertical-text">الحالة</th>
-                    <th class="vertical-text" style="width:500px;">اسم الموظف</th>
-                    <th class="vertical-text">السجل المدني</th>
-                    <th class="vertical-text" style="white-space: nowrap">
-                        <span>عدد ايام الدوام حسب</span>
-                        <br/>
-                        <span>الالتحاق بالتأمينات</span>
-                    </th>
-                    @foreach ($days as $day)
-                        <th style="width:20px;{{ $day['vacation_day'] ? 'background:#e0e0e0;' : 'background: white;' }}">
-                            <div class="vertical-text" style="position:absolute;white-space:nowrap;height:35px;width:30px;">{{ $day['date'] }}</div>
-                        </th>
-                    @endforeach
-                </tr>
-                </thead>
-                <tbody>
+            <!-- Second part of the table for remaining trainees -->
+            <tbody>
                 @if(\App\Models\Back\Trainee::where('company_id', $report->company_id)->where('job_number', '!=', NULL)->count() > 0)
                     @foreach ($active_trainees as $counter => $record)
                         @if(($counter ===  (count($active_trainees) - 1) || $counter ===  (count($active_trainees) - 2)))
@@ -475,13 +446,12 @@
                     @endif
                 </tr>
                 </tbody>
-            </table>
-            @if ($report->with_logo && !$base64logo)
-                <div class="row" style="text-align:center;">
-{{--                    <img style="margin:0 auto;border:none;" src="{{ public_path('/img/ptc_stamp_2023.png')}}" alt="logo" width="200"/>--}}
-                </div>
-            @endif
-        </div>
+        </table>
+        @if ($report->with_logo && !$base64logo)
+            <div class="row" style="text-align:center;">
+{{--                <img style="margin:0 auto;border:none;" src="{{ public_path('/img/ptc_stamp_2023.png')}}" alt="logo" width="200"/>--}}
+            </div>
+        @endif
     </div>
 </div>
 </body>
