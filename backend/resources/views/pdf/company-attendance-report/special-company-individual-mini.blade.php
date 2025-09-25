@@ -48,9 +48,14 @@
             text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
         }
         
-        .mini-header .subtitle {
-            font-size: 13px;
-            opacity: 0.9;
+        /* Debug Info */
+        .debug-info {
+            background: rgba(255, 140, 0, 0.1);
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 8px;
+            font-size: 10px;
+            border: 1px solid rgba(255, 140, 0, 0.3);
         }
         
         /* Employee Spotlight Card */
@@ -71,60 +76,6 @@
             margin-bottom: 15px;
             text-align: center;
             text-shadow: 1px 1px 2px rgba(191, 54, 12, 0.1);
-        }
-        
-        .mini-employee-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 15px;
-        }
-        
-        .mini-employee-detail {
-            background: rgba(255, 140, 0, 0.1);
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid rgba(255, 140, 0, 0.3);
-            text-align: center;
-        }
-        
-        .mini-employee-detail strong {
-            display: block;
-            color: #e65100;
-            font-size: 11px;
-            margin-bottom: 5px;
-        }
-        
-        .mini-employee-detail span {
-            font-size: 13px;
-            font-weight: bold;
-            color: #333;
-        }
-        
-        /* Company Info Compact */
-        .mini-company-info {
-            background: rgba(255, 224, 179, 0.5);
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            border: 1px solid #ffcc80;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .mini-company-name {
-            font-size: 16px;
-            font-weight: bold;
-            color: #bf360c;
-        }
-        
-        .mini-report-period {
-            font-size: 12px;
-            color: #e65100;
-            background: rgba(255, 140, 0, 0.2);
-            padding: 5px 10px;
-            border-radius: 15px;
         }
         
         /* Ultra Compact Individual Table */
@@ -206,36 +157,6 @@
             color: #333 !important;
         }
         
-        /* Summary Stats */
-        .mini-stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .mini-stat-card {
-            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-            border: 1px solid #ffb74d;
-            box-shadow: 0 2px 5px rgba(255, 140, 0, 0.1);
-        }
-        
-        .mini-stat-number {
-            font-size: 20px;
-            font-weight: bold;
-            color: #bf360c;
-            display: block;
-        }
-        
-        .mini-stat-label {
-            font-size: 10px;
-            color: #e65100;
-            margin-top: 5px;
-        }
-        
         /* Print Optimization */
         @media print {
             body {
@@ -272,45 +193,15 @@
         <!-- Mini Header -->
         <div class="mini-header">
             <h1>��� التقرير الفردي المضغوط</h1>
-            <div class="subtitle">نظام إدارة التدريب الإلكتروني - القالب المصغر الفردي</div>
+            <div class="debug-info">
+                Template Type: {{ $record->report->template_type ?? 'NULL' }} | 
+                Company ID: {{ $record->company->id ?? 'NULL' }}
+            </div>
         </div>
         
         <!-- Employee Spotlight -->
         <div class="mini-employee-spotlight">
             <div class="mini-employee-name">��� {{ $trainee->name }}</div>
-            
-            <div class="mini-employee-grid">
-                <div class="mini-employee-detail">
-                    <strong>رقم الهوية</strong>
-                    <span>{{ $trainee->civil_number }}</span>
-                </div>
-                <div class="mini-employee-detail">
-                    <strong>الرقم الوظيفي</strong>
-                    <span>{{ $trainee->job_number ?? 'غير محدد' }}</span>
-                </div>
-                <div class="mini-employee-detail">
-                    <strong>رقم الهاتف</strong>
-                    <span>{{ $trainee->phone ?? 'غير محدد' }}</span>
-                </div>
-                <div class="mini-employee-detail">
-                    <strong>البريد الإلكتروني</strong>
-                    <span style="font-size: 10px;">{{ $trainee->email ?? 'غير محدد' }}</span>
-                </div>
-                <div class="mini-employee-detail">
-                    <strong>المدينة</strong>
-                    <span>{{ $trainee->city->name ?? 'غير محددة' }}</span>
-                </div>
-                <div class="mini-employee-detail">
-                    <strong>أيام العمل</strong>
-                    <span>{{ $trainee->working_days_count ?? 0 }}</span>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Company Info -->
-        <div class="mini-company-info">
-            <div class="mini-company-name">��� {{ $report->company->name }}</div>
-            <div class="mini-report-period">��� {{ $report->date_from }} إلى {{ $report->date_to }}</div>
         </div>
         
         <!-- Individual Attendance Table -->
@@ -371,26 +262,6 @@
                 @endforeach
             </tbody>
         </table>
-        
-        <!-- Mini Statistics -->
-        <div class="mini-stats-grid">
-            <div class="mini-stat-card">
-                <span class="mini-stat-number">{{ $attendanceDays }}</span>
-                <div class="mini-stat-label">أيام الحضور</div>
-            </div>
-            <div class="mini-stat-card">
-                <span class="mini-stat-number">{{ $absenceDays }}</span>
-                <div class="mini-stat-label">أيام الغياب</div>
-            </div>
-            <div class="mini-stat-card">
-                <span class="mini-stat-number">{{ count($vacations) }}</span>
-                <div class="mini-stat-label">أيام العطل</div>
-            </div>
-            <div class="mini-stat-card">
-                <span class="mini-stat-number">{{ number_format($attendancePercentage, 1) }}%</span>
-                <div class="mini-stat-label">نسبة الحضور</div>
-            </div>
-        </div>
         
         <!-- Mini Footer -->
         <div style="margin-top: 15px; text-align: center; font-size: 9px; color: #666; border-top: 1px solid #ffcc80; padding-top: 10px;">

@@ -53,47 +53,14 @@
             opacity: 0.9;
         }
         
-        /* Compact Info Cards */
-        .mini-info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .mini-card {
-            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #ffb74d;
-            border-left: 4px solid #ff8c00;
-        }
-        
-        .mini-card h3 {
-            font-size: 13px;
-            color: #e65100;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-        
-        .mini-details {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            font-size: 10px;
-        }
-        
-        .mini-detail {
+        /* Debug Info */
+        .debug-info {
             background: rgba(255, 140, 0, 0.1);
-            padding: 6px 8px;
+            padding: 8px;
             border-radius: 4px;
-            border: 1px solid rgba(255, 140, 0, 0.2);
-        }
-        
-        .mini-detail strong {
-            color: #bf360c;
-            display: block;
-            margin-bottom: 2px;
+            margin-top: 8px;
+            font-size: 10px;
+            border: 1px solid rgba(255, 140, 0, 0.3);
         }
         
         /* Ultra Compact Table */
@@ -130,10 +97,6 @@
         
         .mini-table tr:nth-child(even) {
             background: rgba(255, 224, 179, 0.3);
-        }
-        
-        .mini-table tr:hover {
-            background: rgba(255, 140, 0, 0.1);
         }
         
         /* Mini Attendance Marks */
@@ -231,54 +194,9 @@
         <div class="mini-header">
             <h1>��� تقرير الحضور والانصراف المضغوط</h1>
             <div class="subtitle">نظام إدارة التدريب الإلكتروني - القالب المصغر</div>
-        </div>
-        
-        <!-- Mini Info Grid -->
-        <div class="mini-info-grid">
-            <!-- Company Card -->
-            <div class="mini-card">
-                <h3>��� بيانات الشركة</h3>
-                <div class="mini-details">
-                    <div class="mini-detail">
-                        <strong>اسم الشركة:</strong>
-                        {{ $report->company->name }}
-                    </div>
-                    <div class="mini-detail">
-                        <strong>رقم السجل:</strong>
-                        {{ $report->company->commercial_registration_number ?? 'غير محدد' }}
-                    </div>
-                    <div class="mini-detail">
-                        <strong>رقم الهاتف:</strong>
-                        {{ $report->company->phone ?? 'غير محدد' }}
-                    </div>
-                    <div class="mini-detail">
-                        <strong>المدينة:</strong>
-                        {{ $report->company->city->name ?? 'غير محددة' }}
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Report Card -->
-            <div class="mini-card">
-                <h3>��� تفاصيل التقرير</h3>
-                <div class="mini-details">
-                    <div class="mini-detail">
-                        <strong>رقم التقرير:</strong>
-                        {{ $report->number }}
-                    </div>
-                    <div class="mini-detail">
-                        <strong>من تاريخ:</strong>
-                        {{ $report->date_from }}
-                    </div>
-                    <div class="mini-detail">
-                        <strong>إلى تاريخ:</strong>
-                        {{ $report->date_to }}
-                    </div>
-                    <div class="mini-detail">
-                        <strong>عدد المتدربين:</strong>
-                        {{ $report->activeTraineesCount() }}
-                    </div>
-                </div>
+            <div class="debug-info">
+                Template Type: {{ $report->template_type ?? 'NULL' }} | 
+                Company ID: {{ $report->company->id ?? 'NULL' }}
             </div>
         </div>
         
