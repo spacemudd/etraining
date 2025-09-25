@@ -60,7 +60,7 @@
     @endif
 
     <div class="row" style="margin-top: 10px;">
-        <table class="table" style="width:100%;border-collapse: collapse;">
+        <table class="table" style="width:100%;">
             <colgroup>
                 <col style="width:35px">
                 <col style="width:70px">
@@ -247,7 +247,7 @@
             </tbody>
         </table>
         <div style="page-break-inside: avoid !important;display:block;">
-            <table class="table" style="width:100%;border-collapse: collapse;">
+            <table class="table" style="width:100%;">
                 <colgroup>
                     <col style="width:35px">
                     <col style="width:70px">
