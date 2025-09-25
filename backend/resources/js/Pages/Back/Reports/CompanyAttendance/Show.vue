@@ -92,7 +92,7 @@
         <div class="mt-10 container px-6 mx-auto">
             <div class="bg-white border border-gray-200 rounded-lg p-6">
                 <h3 class="text-lg font-semibold mb-4">إعدادات القالب</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div class="border rounded-lg p-4 cursor-pointer transition-all duration-200"
                          :class="templateForm.template_type === 'default' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'"
                          @click="selectTemplate('default')">
@@ -134,7 +134,20 @@
                             <p class="text-sm text-gray-500 mt-1">للتقارير الحديثة والمحسنة</p>
                         </div>
                     </div>
-                </div>
+                    
+                    <div class="border rounded-lg p-4 cursor-pointer transition-all duration-200"
+                         :class="templateForm.template_type === 'gradient' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'"
+                         @click="selectTemplate('gradient')">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto mb-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                </svg>
+                            </div>
+                            <h4 class="font-medium text-gray-900">القالب المتدرج</h4>
+                            <p class="text-sm text-gray-500 mt-1">تصميم متدرج مع ألوان جذابة</p>
+                        </div>
+                    </div>
                 
                 <div class="mt-6 flex justify-end">
                     <button @click="updateTemplate" 
