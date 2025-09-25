@@ -105,6 +105,7 @@
             margin-top: 20px;
             border: 2px solid #ddd;
             table-layout: fixed;
+            page-break-inside: auto;
         }
         
         .attendance-table th {
@@ -117,6 +118,7 @@
             font-size: 11px;
             overflow: hidden;
             white-space: nowrap;
+            page-break-inside: avoid;
         }
         
         .attendance-table td {
@@ -127,10 +129,15 @@
             font-size: 10px;
             overflow: hidden;
             white-space: nowrap;
+            page-break-inside: avoid;
         }
         
         .attendance-table tr:nth-child(even) td {
             background: #f8f9fa;
+        }
+        
+        .attendance-table tr {
+            page-break-inside: avoid;
         }
         
         .present {
@@ -270,6 +277,57 @@
         .report-details {
             page-break-after: avoid;
         }
+        
+        /* تحسينات تقسيم الصفحات */
+        .attendance-table thead {
+            display: table-header-group;
+            page-break-after: avoid;
+        }
+        
+        .attendance-table tfoot {
+            display: table-footer-group;
+        }
+        
+        .attendance-table tbody tr {
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }
+        
+        /* تحسين عرض الأعمدة */
+        .col-day {
+            min-width: 22px;
+            max-width: 22px;
+        }
+        
+        .col-index {
+            min-width: 40px;
+            max-width: 40px;
+        }
+        
+        .col-employee {
+            min-width: 200px;
+            max-width: 200px;
+        }
+        
+        .col-job-number {
+            min-width: 80px;
+            max-width: 80px;
+        }
+        
+        .col-civil {
+            min-width: 100px;
+            max-width: 100px;
+        }
+        
+        .col-work-days {
+            min-width: 80px;
+            max-width: 80px;
+        }
+        
+        .col-absence {
+            min-width: 80px;
+            max-width: 80px;
+        }
 
         @media print {
             body {
@@ -301,14 +359,20 @@
             }
             
             .attendance-table {
-                table-layout: auto;
+                table-layout: fixed;
                 width: 100%;
                 page-break-after: auto;
+                border-collapse: collapse;
             }
             
             .attendance-table thead {
                 display: table-header-group;
                 page-break-after: avoid;
+            }
+            
+            .attendance-table tbody tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
             }
             
             .attendance-table tr {
@@ -321,11 +385,83 @@
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
                 page-break-after: avoid;
+                page-break-inside: avoid;
+            }
+            
+            .attendance-table td {
+                page-break-inside: avoid;
+                page-break-after: auto;
+            }
+            
+            /* إصلاح عرض الأعمدة في الطباعة */
+            .col-day {
+                width: 22px !important;
+                min-width: 22px !important;
+                max-width: 22px !important;
+            }
+            
+            .col-index {
+                width: 40px !important;
+                min-width: 40px !important;
+                max-width: 40px !important;
+            }
+            
+            .col-employee {
+                width: 200px !important;
+                min-width: 200px !important;
+                max-width: 200px !important;
+            }
+            
+            .col-job-number {
+                width: 80px !important;
+                min-width: 80px !important;
+                max-width: 80px !important;
+            }
+            
+            .col-civil {
+                width: 100px !important;
+                min-width: 100px !important;
+                max-width: 100px !important;
+            }
+            
+            .col-work-days {
+                width: 80px !important;
+                min-width: 80px !important;
+                max-width: 80px !important;
+            }
+            
+            .col-absence {
+                width: 80px !important;
+                min-width: 80px !important;
+                max-width: 80px !important;
             }
             
             .present, .absent, .vacation {
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
+            }
+            
+            /* تحسينات إضافية للطباعة */
+            .container {
+                page-break-inside: auto;
+            }
+            
+            .header, .company-info, .report-details {
+                page-break-after: avoid;
+            }
+            
+            /* تجنب تقسيم الجدول في منتصف الصف */
+            .attendance-table {
+                page-break-inside: auto;
+            }
+            
+            .attendance-table tbody {
+                page-break-inside: auto;
+            }
+            
+            .attendance-table tbody tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
             }
         }
     </style>
