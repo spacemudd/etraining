@@ -872,4 +872,9 @@ return [
     'failed' => 'Failed',
     'pending' => 'Pending',
     'unknown' => 'Unknown',
+    'template-type' => 'Template Type',
+    'default-template' => 'Default Template',
+    'simple-template' => 'Simple Template',
+    'modern-template' => 'Modern Template',
+    'gradient-template' => 'Gradient Template',
 ];
