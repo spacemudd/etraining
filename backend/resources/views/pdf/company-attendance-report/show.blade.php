@@ -156,7 +156,7 @@
             @if ($report->trainees()->where('job_number', '!=', NULL)->count())
                 @php
                     $totalTrainees = count($active_trainees);
-                    $firstPageCount = floor($totalTrainees / 2);
+                    $firstPageCount = floor($totalTrainees / 3);
                     $displayCounter = 0;
                 @endphp
                 @foreach ($active_trainees as $counter => $record)
@@ -228,7 +228,7 @@
             @else
                 @php
                     $totalTrainees = count($active_trainees);
-                    $firstPageCount = floor($totalTrainees / 2);
+                    $firstPageCount = floor($totalTrainees / 3);
                     $displayCounter = 0;
                 @endphp
                 @foreach ($active_trainees as $counter => $record)
@@ -296,7 +296,7 @@
             </tbody>
         </table>
         <div style="page-break-before: always; page-break-inside: avoid !important;display:block;">
-            <table class="table" style="width:100%; border-collapse: collapse; page-break-inside: auto;">
+            <table class="table" style="width:100%; border-collapse: collapse; page-break-inside: avoid;">
                 <colgroup>
                     <col style="width:35px">
                     <col style="width:70px">
@@ -353,11 +353,12 @@
                 @if(\App\Models\Back\Trainee::where('company_id', $report->company_id)->where('job_number', '!=', NULL)->count() > 0)
                     @php
                         $totalTrainees = count($active_trainees);
-                        $firstPageCount = floor($totalTrainees / 2);
+                        $firstPageCount = floor($totalTrainees / 3);
+                        $secondPageCount = floor($totalTrainees * 2 / 3);
                         $displayCounter = $firstPageCount;
                     @endphp
                     @foreach ($active_trainees as $counter => $record)
-                        @if($counter >= $firstPageCount)
+                        @if($counter >= $firstPageCount && $counter < $secondPageCount)
                             <tr>
                                 <td>{{ ++$displayCounter }}</td>
                                 <td>{{ $record->trainee->job_number }}</td>
@@ -435,11 +436,12 @@
                 @else
                     @php
                         $totalTrainees = count($active_trainees);
-                        $firstPageCount = floor($totalTrainees / 2);
+                        $firstPageCount = floor($totalTrainees / 3);
+                        $secondPageCount = floor($totalTrainees * 2 / 3);
                         $displayCounter = $firstPageCount;
                     @endphp
                     @foreach ($active_trainees as $counter => $record)
-                        @if($counter >= $firstPageCount)
+                        @if($counter >= $firstPageCount && $counter < $secondPageCount)
                             <tr>
                                 <td>{{ ++$displayCounter }}</td>
                                 <td>فعال</td>
@@ -535,6 +537,238 @@
                 </tr>
                 </tbody>
             </table>
+            
+            <!-- الجدول الثالث للبيانات المتبقية -->
+            <div style="page-break-before: always; page-break-inside: avoid !important;display:block;">
+                <table class="table" style="width:100%; border-collapse: collapse; page-break-inside: avoid;">
+                    <colgroup>
+                        <col style="width:35px">
+                        <col style="width:70px">
+                        <col style="width:50px">
+                        <col style="width:305px">
+                        <col style="width:100px">
+                        <col style="width:110px">
+                    </colgroup>
+                    <thead style="display: table-header-group !important; page-break-after: avoid; page-break-inside: avoid;">
+                    <tr style="height:60px;">
+                        <th colspan="38" style="text-align: center;padding: 10px;font-size: 38px;">
+                            {{ $report->company->name_ar }}
+                        </th>
+                    </tr>
+                    <tr style="height:100px;background:#e0e0e0;">
+                        <th dir="ltr" class="vertical-text" style="white-space: nowrap">SI #</th>
+                        @if ($report->trainees()->where('job_number', '!=', NULL)->count())
+                            <th dir="ltr" class="vertical-text">Emp. #</th>
+                        @endif
+                        <th class="vertical-text">Status</th>
+                        <th class="vertical-text">Employee<br/> name</th>
+                        <th class="vertical-text">ID</th>
+                        <th colspan="1"></th>
+                        @foreach ($days as $day)
+                            <th style="width:20px;{{ $day['vacation_day'] ? 'background:#e0e0e0;' : 'background: white;' }}">
+                                <div class="vertical-text" style="position:absolute;white-space:nowrap;height:35px;">{{ $day['name'] }}</div>
+                            </th>
+                        @endforeach
+                        <th rowspan="2" style="width:20px;">
+                            <div class="vertical-text" style="position:absolute;white-space:nowrap;height:55px;">عدد الغياب</div>
+                        </th>
+                    </tr>
+                    <tr style="height:120px;background:#e0e0e0;">
+                        <th class="vertical-text">م</th>
+                        @if ($report->trainees()->where('job_number', '!=', NULL)->count())
+                            <th class="vertical-text" style="white-space: nowrap">الرقم الوظيفي</th>
+                        @endif
+                        <th class="vertical-text">الحالة</th>
+                        <th class="vertical-text" style="width:500px;">اسم الموظف</th>
+                        <th class="vertical-text">السجل المدني</th>
+                        <th class="vertical-text" style="white-space: nowrap">
+                            <span>عدد ايام الدوام حسب</span>
+                            <br/>
+                            <span>الالتحاق بالتأمينات</span>
+                        </th>
+                        @foreach ($days as $day)
+                            <th style="width:20px;{{ $day['vacation_day'] ? 'background:#e0e0e0;' : 'background: white;' }}">
+                                <div class="vertical-text" style="position:absolute;white-space:nowrap;height:35px;width:30px;">{{ $day['date'] }}</div>
+                            </th>
+                        @endforeach
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @if(\App\Models\Back\Trainee::where('company_id', $report->company_id)->where('job_number', '!=', NULL)->count() > 0)
+                        @php
+                            $totalTrainees = count($active_trainees);
+                            $firstPageCount = floor($totalTrainees / 3);
+                            $secondPageCount = floor($totalTrainees * 2 / 3);
+                            $displayCounter = $secondPageCount;
+                        @endphp
+                        @foreach ($active_trainees as $counter => $record)
+                            @if($counter >= $secondPageCount)
+                                <tr>
+                                    <td>{{ ++$displayCounter }}</td>
+                                    <td>{{ $record->trainee->job_number }}</td>
+                                    <td>فعال</td>
+                                    <td>{{ $record->trainee->name }}</td>
+                                    <td>{{ $record->trainee->clean_identity_number }}</td>
+                                    <td style="text-align: center;">
+                                        @php
+                                            $workDays = 0;
+                                            foreach ($days as $day) {
+                                                if ($record->start_date) {
+                                                    if ($day['date_carbon']->isBetween($record->start_date, $record->end_date)) {
+                                                        $workDays++;
+                                                    }
+                                                } else {
+                                                    $workDays++;
+                                                }
+                                            }
+                                        @endphp
+                                        {{ $workDays }}
+                                        @if ($report->with_attendance_times)
+                                            <span style="font-size:12px;">
+                                                    <br/>
+                                                    دخول:
+                                                    <br/>
+                                                    خروج:
+                                                </span>
+                                        @endif
+                                    </td>
+                                    @for($i=0;$i<count($days);$i++)
+                                        <td style="{{ $days[$i]['vacation_day'] ? 'background:#e0e0e0;' : '' }}">
+                                            @if ($days[$i]['vacation_day'])
+                                                X
+                                            @else
+                                                @if ($record->start_date)
+                                                    @if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date))
+                                                        &#10003;
+                                                        @if ($report->with_attendance_times)
+                                                            <br/>
+                                                            <span style="font-size:8px;text-align: center;">08:{{sprintf("%02d",rand(1,10))}}</span>
+                                                            <br/>
+                                                            <span style="font-size:8px;text-align: center;">16:{{sprintf("%02d",rand(0,5))}}</span>
+                                                        @endif
+                                                    @else
+                                                        @if ($record->status === 'new_registration')
+                                                            &#120;
+                                                        @endif
+                                                    @endif
+                                                @else
+                                                    &#10003;
+                                                    @if ($report->with_attendance_times)
+                                                        <br/>
+                                                        <span style="font-size:8px;text-align: center;">08:{{sprintf("%02d",rand(1,10))}}</span>
+                                                        <br/>
+                                                        <span style="font-size:8px;text-align: center;">16:{{sprintf("%02d",rand(0,5))}}</span>
+                                                    @endif
+                                                @endif
+                                            @endif
+                                        </td>
+                                    @endfor
+                                    <td>
+                                        @if ($record->start_date)
+                                            {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
+                                        @else
+                                            0
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endif
+                        @endforeach
+                    @else
+                        @php
+                            $totalTrainees = count($active_trainees);
+                            $firstPageCount = floor($totalTrainees / 3);
+                            $secondPageCount = floor($totalTrainees * 2 / 3);
+                            $displayCounter = $secondPageCount;
+                        @endphp
+                        @foreach ($active_trainees as $counter => $record)
+                            @if($counter >= $secondPageCount)
+                                <tr>
+                                    <td>{{ ++$displayCounter }}</td>
+                                    <td>فعال</td>
+                                    <td>{{ $record->trainee->name }}</td>
+                                    <td>{{ $record->trainee->clean_identity_number }}</td>
+                                    <td style="text-align: center;">
+                                        @php
+                                            $workDays = 0;
+                                            foreach ($days as $day) {
+                                                if ($record->start_date) {
+                                                    if ($day['date_carbon']->isBetween($record->start_date, $record->end_date)) {
+                                                        $workDays++;
+                                                    }
+                                                } else {
+                                                    $workDays++;
+                                                }
+                                            }
+                                        @endphp
+                                        {{ $workDays }}
+                                        @if ($report->with_attendance_times)
+                                            <span style="font-size:12px;">
+                                                    <br/>
+                                                    دخول:
+                                                    <br/>
+                                                    خروج:
+                                                </span>
+                                        @endif
+                                    </td>
+                                    @for($i=0;$i<count($days);$i++)
+                                        <td style="{{ $days[$i]['vacation_day'] ? 'background:#e0e0e0;' : '' }}">
+                                            @if ($days[$i]['vacation_day'])
+                                                @if ($record->start_date && $days[$i]['date_carbon']->isAfter($record->end_date))
+                                                @else
+                                                    X
+                                                @endif
+                                            @else
+                                                @if ($record->start_date)
+                                                    @if ($days[$i]['date_carbon']->isBetween($record->start_date, $record->end_date))
+                                                        &#10003;
+                                                        @if ($report->with_attendance_times)
+                                                            <br/>
+                                                            <span style="font-size:8px;text-align: center;">08:{{sprintf("%02d",rand(1,10))}}</span>
+                                                            <br/>
+                                                            <span style="font-size:8px;text-align: center;">16:{{sprintf("%02d",rand(0,5))}}</span>
+                                                        @endif
+                                                    @else
+                                                        @if ($record->status === 'new_registration')
+                                                            &#120;
+                                                        @endif
+                                                    @endif
+                                                @else
+                                                    &#10003;
+                                                    @if ($report->with_attendance_times)
+                                                        <br/>
+                                                        <span style="font-size:8px;text-align: center;">08:{{sprintf("%02d",rand(1,10))}}</span>
+                                                        <br/>
+                                                        <span style="font-size:8px;text-align: center;">16:{{sprintf("%02d",rand(0,5))}}</span>
+                                                    @endif
+                                                @endif
+                                            @endif
+                                        </td>
+                                    @endfor
+                                    <td>
+                                        @if ($record->start_date)
+                                            {{ count($days) - $record->start_date->diffInDays($record->end_date) - 1 }}
+                                        @else
+                                            0
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endif
+                        @endforeach
+                    @endif
+                    <tr>
+                        @if ($report->with_logo && !$base64logo)
+                            @if ($report->falls_under_ptc_net)
+                                <td colspan="100%" style="background:#e0e0e0;text-align: center;">** هذا الكشف صحيح مالم تشعر الشركة من قبل العميل ببريد الكتروني يفيد بخلاف ذلك خلال ٥ ايام عمل من تاريخه.
+                                    في حال وجود اي استفسارات لا تترددو بالتواصل معنا على البريد الاكتروني.</td>
+                            @else
+                                <td colspan="100%" style="background:#e0e0e0;text-align: center;">** يعتبر الكشف صحيح ما لم يردنا اي ملاحظات خلال الاسبوع من الارسال</td>
+                            @endif
+                        @endif
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            
             @if ($report->with_logo && !$base64logo)
                 <div class="row" style="text-align:center;">
 {{--                    <img style="margin:0 auto;border:none;" src="{{ public_path('/img/ptc_stamp_2023.png')}}" alt="logo" width="200"/>--}}
