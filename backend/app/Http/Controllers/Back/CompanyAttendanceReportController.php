@@ -256,7 +256,7 @@ class CompanyAttendanceReportController extends Controller
             'period' => 'nullable',
             'with_attendance_times' => 'nullable|boolean',
             'with_logo' => 'nullable|boolean',
-            'template_type' => 'nullable|in:default,simple,modern',
+            'template_type' => 'nullable|in:default,simple,modern,gradient',
         ]);
 
         $report = CompanyAttendanceReport::findOrFail($id);
@@ -476,7 +476,7 @@ class CompanyAttendanceReportController extends Controller
 public function updateTemplate($id, Request $request)
 {
     $request->validate([
-        'template_type' => 'required|in:default,simple,modern',
+        'template_type' => 'required|in:default,simple,modern,gradient',
     ]);
 
     $report = CompanyAttendanceReport::findOrFail($id);
@@ -495,6 +495,8 @@ private function getTemplateName($templateType)
             return 'القالب المبسط';
         case 'modern':
             return 'القالب الحديث';
+        case 'gradient':
+            return 'القالب المتدرج';
         default:
             return 'القالب الافتراضي';
     }

@@ -870,4 +870,9 @@ return [
     'failed' => 'فشل',
     'pending' => 'في الانتظار',
     'unknown' => 'غير معروف',
+    'template-type' => 'نوع القالب',
+    'default-template' => 'القالب الافتراضي',
+    'simple-template' => 'القالب المبسط',
+    'modern-template' => 'القالب الحديث',
+    'gradient-template' => 'القالب المتدرج',
 ];
