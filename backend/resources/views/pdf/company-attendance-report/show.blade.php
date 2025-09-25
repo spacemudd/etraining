@@ -144,8 +144,12 @@
             </thead>
             <tbody style="page-break-inside: avoid;">
             @if ($report->trainees()->where('job_number', '!=', NULL)->count())
+                @php
+                    $totalTrainees = count($active_trainees);
+                    $firstPageCount = ceil($totalTrainees / 2);
+                @endphp
                 @foreach ($active_trainees as $counter => $record)
-                    @if(! ($counter ===  (count($active_trainees) - 1) || $counter ===  (count($active_trainees) - 2)) )
+                    @if($counter < $firstPageCount)
                         @if ($record->status === 'temporary_stop')
                             @continue
                         @endif
@@ -211,8 +215,12 @@
                     @endif
                 @endforeach
             @else
+                @php
+                    $totalTrainees = count($active_trainees);
+                    $firstPageCount = ceil($totalTrainees / 2);
+                @endphp
                 @foreach ($active_trainees as $counter => $record)
-                    @if(! ($counter ===  (count($active_trainees) - 1) || $counter ===  (count($active_trainees) - 2)) )
+                    @if($counter < $firstPageCount)
                         @if ($record->status === 'temporary_stop')
                             @continue
                         @endif
@@ -331,8 +339,12 @@
                 </thead>
                 <tbody>
                 @if(\App\Models\Back\Trainee::where('company_id', $report->company_id)->where('job_number', '!=', NULL)->count() > 0)
+                    @php
+                        $totalTrainees = count($active_trainees);
+                        $firstPageCount = ceil($totalTrainees / 2);
+                    @endphp
                     @foreach ($active_trainees as $counter => $record)
-                        @if(($counter ===  (count($active_trainees) - 1) || $counter ===  (count($active_trainees) - 2)))
+                        @if($counter >= $firstPageCount)
                             <tr>
                                 <td>{{ ++$counter }}</td>
                                 <td>{{ $record->trainee->job_number }}</td>
@@ -408,8 +420,12 @@
                         @endif
                     @endforeach
                 @else
+                    @php
+                        $totalTrainees = count($active_trainees);
+                        $firstPageCount = ceil($totalTrainees / 2);
+                    @endphp
                     @foreach ($active_trainees as $counter => $record)
-                        @if(($counter ===  (count($active_trainees) - 1) || $counter ===  (count($active_trainees) - 2)))
+                        @if($counter >= $firstPageCount)
                             <tr>
                                 <td>{{ ++$counter }}</td>
                                 <td>فعال</td>
