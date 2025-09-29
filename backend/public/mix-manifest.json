@@ -22,6 +22,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=2642a32b3d91aa55485c",
 =======
     "/js/app.js": "/js/app.js?id=70cb44948d42cd9a613a",
@@ -72,10 +73,13 @@
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
     "/js/vendor.js": "/js/vendor.js?id=03b9cd26198401ce0148"
 =======
+=======
+>>>>>>> 459cea45 (run prod)
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
     "/js/manifest.js": "/js/manifest.js",
     "/js/vendor.js": "/js/vendor.js"
+<<<<<<< HEAD
 >>>>>>> a650c4ed (run prod)
 =======
     "/js/app.js": "/js/app.js?id=cc9d232f0cf473909779",
@@ -118,4 +122,6 @@
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
     "/js/vendor.js": "/js/vendor.js?id=03b9cd26198401ce0148"
 >>>>>>> 35eccb44 (run prod)
+=======
+>>>>>>> 459cea45 (run prod)
 }
