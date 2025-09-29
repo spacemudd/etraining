@@ -176,6 +176,16 @@ class TraineesController extends Controller
             ],
         ]);
 
+        // Get users with specific roles for special document access
+        $allowedRoleIds = [
+            '209eb897-2385-43c8-970c-279c426c9b30', // مديرون شؤون متدربات
+            '7a9101c7-728f-4653-82f1-e6318359c344'  // شؤون متدربات
+        ];
+        
+        $allowedUsers = User::whereHas('roles', function($query) use ($allowedRoleIds) {
+            $query->whereIn('id', $allowedRoleIds);
+        })->pluck('email')->toArray();
+
         return Inertia::render('Back/Trainees/Show', [
             'companies' => Company::get(),
             'in_block_list' => $in_block_list,
@@ -206,6 +216,7 @@ class TraineesController extends Controller
             'cities' => City::orderBy('name_ar')->get(),
             'marital_statuses' => MaritalStatus::orderBy('order')->get(),
             'educational_levels' => EducationalLevel::orderBy('order')->get(),
+            'allowed_users_for_special_documents' => $allowedUsers,
         ]);
     }
 
