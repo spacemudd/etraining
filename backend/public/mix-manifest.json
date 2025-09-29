@@ -6,6 +6,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=2642a32b3d91aa55485c",
     "/css/app.css": "/css/app.css?id=38ae3b7f3e4aec6971c1",
 =======
@@ -40,6 +41,9 @@
 >>>>>>> a650c4ed (run prod)
 =======
     "/js/app.js": "/js/app.js?id=cc9d232f0cf473909779",
+=======
+    "/js/app.js": "/js/app.js?id=66d2dc0e024bce9e12b4",
+>>>>>>> e717139f (a)
     "/css/app.css": "/css/app.css?id=762961cf766673cc00ef",
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
     "/js/vendor.js": "/js/vendor.js?id=03b9cd26198401ce0148"
