@@ -784,6 +784,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::delete('trainees/{trainee_id}/attachments/cv', [\App\Http\Controllers\Back\TraineesController::class, 'deleteCv'])->name('trainees.attachments.cv.destroy');
         Route::post('trainees/{trainee_id}/attachments/gosi-certificate', [\App\Http\Controllers\Back\TraineesController::class, 'storeGosiCertificate'])->name('trainees.attachments.gosi-certificate');
         Route::delete('trainees/{trainee_id}/attachments/gosi-certificate', [\App\Http\Controllers\Back\TraineesController::class, 'deleteGosiCertificate'])->name('trainees.attachments.gosi-certificate.destroy');
+        Route::post('trainees/{trainee_id}/attachments/contract', [\App\Http\Controllers\Back\TraineesController::class, 'storeContract'])->name('trainees.attachments.contract');
+        Route::delete('trainees/{trainee_id}/attachments/contract', [\App\Http\Controllers\Back\TraineesController::class, 'deleteContract'])->name('trainees.attachments.contract.destroy');
         Route::post('trainees/{trainee_id}/attachments/qiwa-contract', [\App\Http\Controllers\Back\TraineesController::class, 'storeQiwaContract'])->name('trainees.attachments.qiwa-contract');
         Route::delete('trainees/{trainee_id}/attachments/qiwa-contract', [\App\Http\Controllers\Back\TraineesController::class, 'deleteQiwaContract'])->name('trainees.attachments.qiwa-contract.destroy');
         Route::get('trainees/{trainee_id}/check-optional-documents', [\App\Http\Controllers\Back\TraineesController::class, 'checkOptionalDocumentsStatus'])->name('trainees.check-optional-documents');

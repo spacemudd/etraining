@@ -519,6 +519,26 @@ class TraineesController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
+    public function storeContract(Request $request, $trainee_id)
+    {
+        $request->validate([
+            'contract' => 'required_without:file',
+            'file' => 'required_without:contract',
+        ]);
+
+        $trainee = Trainee::findOrFail($trainee_id);
+        $file = $request->file('contract') ?: $request->file('file');
+        $uploaded_file = $trainee->uploadToFolder($file, 'contract');
+
+        // Refresh the trainee model to get the updated URL after upload
+        $trainee->refresh();
+
+        // For optional documents, we don't change the status when uploaded
+        // The status will be managed by the approval process
+
+        return $uploaded_file;
+    }
+
     public function storeQiwaContract(Request $request, $trainee_id)
     {
         $request->validate([
@@ -546,6 +566,17 @@ class TraineesController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
+    public function deleteContract(Request $request, $trainee_id)
+    {
+        $trainee = Trainee::findOrFail($trainee_id);
+        $trainee->getMedia('contract')->each->forceDelete();
+
+        // For optional documents, we don't change the status when deleted
+        // The status will be managed by the approval process
+
+        return response()->redirectToRoute('back.trainees.show', $trainee->id);
+    }
+
     public function deleteQiwaContract(Request $request, $trainee_id)
     {
         $trainee = Trainee::findOrFail($trainee_id);

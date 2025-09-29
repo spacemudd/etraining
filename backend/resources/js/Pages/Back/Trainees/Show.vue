@@ -1031,6 +1031,34 @@
         </div>
 
         <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
+          <jet-label :value="$t('words.contract')" class="mb-2" />
+
+          <div
+            class="bg-white border-2 rounder-lg flex flex-col justify-center items-center min-container-upload"
+            v-if="trainee.contract_copy_url"
+          >
+            <a
+              class="bg-gray-700 text-white font-semibold p-2 text-center w-1/2 rounded my-1"
+              target="_blank"
+              :href="trainee.contract_copy_url"
+              >{{ $t("words.download") }}</a
+            >
+            <button
+              class="bg-red-500 text-white font-semibold p-2 text-center w-1/2 rounded my-1"
+              @click="deleteContract"
+            >
+              {{ $t("words.delete") }}
+            </button>
+          </div>
+          <vue-dropzone
+            v-else
+            id="dropzoneContract"
+            @vdropzone-sending="sendingCsrf"
+            :options="dropzoneOptionsContract"
+          ></vue-dropzone>
+        </div>
+
+        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
           <jet-label :value="$t('words.qiwa-contract')" class="mb-2" />
 
           <div
@@ -1318,6 +1346,17 @@ export default {
         thumbnailWidth: 150,
         maxFilesize: 20,
       },
+      dropzoneOptionsContract: {
+        destroyDropzone: false,
+        url: route("back.trainees.attachments.contract", {
+          trainee_id: this.trainee.id,
+        }),
+        dictDefaultMessage:
+          "<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> " +
+          this.$t("words.upload-files-here"),
+        thumbnailWidth: 150,
+        maxFilesize: 20,
+      },
       dropzoneOptionsQiwaContract: {
         destroyDropzone: false,
         url: route("back.trainees.attachments.qiwa-contract", {
@@ -1522,6 +1561,15 @@ export default {
       if (confirm(this.$t("words.are-you-sure"))) {
         this.$inertia.delete(
           route("back.trainees.attachments.gosi-certificate.destroy", {
+            trainee_id: this.trainee.id,
+          })
+        );
+      }
+    },
+    deleteContract() {
+      if (confirm(this.$t("words.are-you-sure"))) {
+        this.$inertia.delete(
+          route("back.trainees.attachments.contract.destroy", {
             trainee_id: this.trainee.id,
           })
         );
