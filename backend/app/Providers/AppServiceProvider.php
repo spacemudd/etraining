@@ -19,7 +19,11 @@ class AppServiceProvider extends ServiceProvider
     {
         Inertia::share([
             'user' => function () {
-                return optional(auth())->user();
+                $user = optional(auth())->user();
+                if ($user) {
+                    $user->load('roles');
+                }
+                return $user;
             },
             'locale' => function () {
                 return app()->getLocale();
