@@ -1001,7 +1001,7 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-7 gap-6 my-2">
+      <div class="grid grid-cols-1 md:grid-cols-7 gap-6 my-2" v-if="canViewSpecialDocuments">
         <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
           <jet-label :value="$t('words.gosi-certificate')" class="mb-2" />
 
@@ -1331,6 +1331,22 @@ export default {
       },
       companySelector: null,
     };
+  },
+  computed: {
+    canViewSpecialDocuments() {
+      if (!this.$page.props.user || !this.$page.props.user.roles) {
+        return false;
+      }
+      
+      const allowedRoleIds = [
+        '209eb897-2385-43c8-970c-279c426c9b30', // مديرون شؤون متدربات
+        '7a9101c7-728f-4653-82f1-e6318359c344'  // شؤون متدربات
+      ];
+      
+      return this.$page.props.user.roles.some(role => 
+        allowedRoleIds.includes(role.id)
+      );
+    }
   },
   mounted() {
     if (this.trainee.trainee_group) {
