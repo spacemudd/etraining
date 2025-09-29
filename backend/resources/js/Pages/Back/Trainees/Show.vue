@@ -1001,7 +1001,7 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-7 gap-6 my-2" v-if="canViewSpecialDocuments">
+      <div class="grid grid-cols-1 md:grid-cols-7 gap-6 my-2" v-if="canViewSpecialDocuments || $page.props.user?.email === 'mashael.a@hadaf-hq.com'">
         <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
           <jet-label :value="$t('words.gosi-certificate')" class="mb-2" />
 
@@ -1031,7 +1031,7 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-7 gap-6 my-2" v-if="canViewSpecialDocuments">
+      <div class="grid grid-cols-1 md:grid-cols-7 gap-6 my-2" v-if="canViewSpecialDocuments || $page.props.user?.email === 'mashael.a@hadaf-hq.com'">
         <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
           <jet-label :value="$t('words.qiwa-contract')" class="mb-2" />
 
@@ -1329,7 +1329,12 @@ export default {
   },
   computed: {
     canViewSpecialDocuments() {
+      // Debug: طباعة بيانات المستخدم
+      console.log('User data:', this.$page.props.user);
+      console.log('User roles:', this.$page.props.user?.roles);
+      
       if (!this.$page.props.user || !this.$page.props.user.roles) {
+        console.log('No user or roles found');
         return false;
       }
       
@@ -1338,9 +1343,14 @@ export default {
         '7a9101c7-728f-4653-82f1-e6318359c344'  // شؤون متدربات
       ];
       
-      return this.$page.props.user.roles.some(role => 
+      const hasRole = this.$page.props.user.roles.some(role => 
         allowedRoleIds.includes(role.id)
       );
+      
+      console.log('Has allowed role:', hasRole);
+      console.log('User role IDs:', this.$page.props.user.roles.map(r => r.id));
+      
+      return hasRole;
     }
   },
   mounted() {
