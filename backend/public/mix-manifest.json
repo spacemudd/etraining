@@ -4,6 +4,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=2642a32b3d91aa55485c",
     "/css/app.css": "/css/app.css?id=38ae3b7f3e4aec6971c1",
 =======
@@ -30,4 +31,10 @@
 >>>>>>> 54a3557b (run prod)
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
     "/js/vendor.js": "/js/vendor.js?id=03b9cd26198401ce0148"
+=======
+    "/js/app.js": "/js/app.js",
+    "/css/app.css": "/css/app.css",
+    "/js/manifest.js": "/js/manifest.js",
+    "/js/vendor.js": "/js/vendor.js"
+>>>>>>> a650c4ed (run prod)
 }
