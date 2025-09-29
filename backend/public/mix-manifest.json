@@ -22,8 +22,12 @@
 >>>>>>> e09b0ffb (h)
 =======
     "/js/app.js": "/js/app.js?id=d4f4b7027fc4dfeb00c8",
+<<<<<<< HEAD
     "/css/app.css": "/css/app.css?id=2dc4f87c346536c36999",
 >>>>>>> fb1e434b (.)
+=======
+    "/css/app.css": "/css/app.css?id=762961cf766673cc00ef",
+>>>>>>> 54a3557b (run prod)
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
     "/js/vendor.js": "/js/vendor.js?id=03b9cd26198401ce0148"
 }
