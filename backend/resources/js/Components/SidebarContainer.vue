@@ -101,6 +101,7 @@
   
 
         <li class="pr-8 text-xs"><a class="hover:text-blue-600" href="/terms">السياسات</a></li>
+        <li class="pr-8 mt-1 text-2xs text-gray-500" v-if="buildVersion">Version {{ buildVersion }}</li>
     </ul>
 </template>
 
@@ -118,7 +119,7 @@
         },
         data() {
             return {
-                //
+                buildVersion: (typeof process !== 'undefined' && process.env && process.env.BUILD_VERSION) ? process.env.BUILD_VERSION : null,
             }
         },
         mounted() {

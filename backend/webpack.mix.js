@@ -1,4 +1,6 @@
 const mix = require('laravel-mix');
+const webpack = require('webpack');
+const path = require('path');
 
 /*
  |--------------------------------------------------------------------------
@@ -33,6 +35,13 @@ mix.js('resources/js/app.js', 'public/js')
                 '@': path.resolve('resources/js'),
             },
         },
+        plugins: [
+            new webpack.DefinePlugin({
+                'process.env': {
+                    BUILD_VERSION: JSON.stringify(process.env.BUILD_VERSION || (new Date().toISOString().replace(/[-:TZ.]/g, '').slice(0, 12)))
+                }
+            })
+        ]
     });
 
 mix.extract()
