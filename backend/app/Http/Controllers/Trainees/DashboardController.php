@@ -18,22 +18,25 @@ class DashboardController extends Controller
 {
     public function dashboard()
     {
-        $user=Auth::user();
-        $trainee=Trainee::where('user_id',$user->id)->first();
+        $user = Auth::user();
+        $trainee = Trainee::where('user_id', $user->id)->first();
         
+        // Check if trainee exists, if not redirect or show error
+        if (!$trainee) {
+            return redirect()->route('login')->with('error', 'No trainee record found for this user.');
+        }
 
         // $agreement = TraineeAgreement::where('trainee_id', $trainee->id)->first();
         // if (!$agreement || is_null($agreement->accepted_at)) {
         //     return redirect()->route('agreement.show');
         // }
 
-
-        $instructor = optional(auth()->user()->trainee)->instructor;
+        $instructor = optional($trainee)->instructor;
         if ($instructor) {
             $coursesIds = Course::where('instructor_id', $instructor->id)->pluck('id');
 
             $courseBatchesIds = CourseBatch::whereIn('course_id', $coursesIds)
-                ->where('trainee_group_id', optional(auth()->user()->trainee)->trainee_group_id)
+                ->where('trainee_group_id', optional($trainee)->trainee_group_id)
                 ->pluck('id');
 
             $sessions = CourseBatchSession::whereIn('course_id', $coursesIds)
@@ -63,9 +66,9 @@ class DashboardController extends Controller
             $show_failed_payment = false;
         }
 
-        $class_timings = optional(auth()->user()->trainee->trainee_group)->class_timings;
+        $class_timings = optional($trainee->trainee_group)->class_timings;
 
-        $global_messages = GlobalMessages::where('company_id', auth()->user()->trainee->company_id)
+        $global_messages = GlobalMessages::where('company_id', $trainee->company_id)
             ->orWhere('company_id', null)
             ->available()
             ->latest()
