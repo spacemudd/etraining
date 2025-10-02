@@ -11,7 +11,7 @@ class ClearOldCookies
     {
         $response = $next($request);
         
-        // Always clear old cookies regardless of status code
+        // Only clear old cookies, don't interfere with session creation
         // Clear old session cookie with different domain variations
         $response->headers->setCookie(
             cookie('jasarah_session', '', -1, '/', '.jasarah-ksa.com', false, true, false, 'Lax')
@@ -37,15 +37,6 @@ class ClearOldCookies
         
         $response->headers->setCookie(
             cookie('WO2SItDCOibKE3wWKiuJXujUgLqgqpfK0XZOOhzB', '', -1, '/', 'jasarah-ksa.com', false, true, false, 'Lax')
-        );
-        
-        // Force set new cookies with correct domain
-        $response->headers->setCookie(
-            cookie('jasarah_session_v2', 'test', 0, '/', 'app.jasarah-ksa.com', true, true, false, 'Lax')
-        );
-        
-        $response->headers->setCookie(
-            cookie('XSRF-TOKEN', 'test', 0, '/', 'app.jasarah-ksa.com', true, false, false, 'Lax')
         );
         
         return $response;

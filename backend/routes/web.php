@@ -49,6 +49,18 @@ Route::get('/test-cookies', function () {
     return $response;
 });
 
+// Test session status
+Route::get('/test-session', function () {
+    return response()->json([
+        'session_id' => session()->getId(),
+        'csrf_token' => csrf_token(),
+        'session_data' => session()->all(),
+        'is_secure' => request()->isSecure(),
+        'session_domain' => config('session.domain'),
+        'session_secure' => config('session.secure'),
+    ]);
+});
+
 Route::get('/qr2', function() {
     return redirect('https://docs.google.com/forms/d/e/1FAIpQLSdjDCpcabswqgSLLo7gI-h0LC3pspt6CJw94vsV6sioHdwRXQ/viewform?usp=sf_link');
 });
