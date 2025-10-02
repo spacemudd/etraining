@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\ClearOldCookies;
 use App\Http\Middleware\IsDisabledWebsiteMiddleware;
 use App\Http\Middleware\RedirectToApplication;
 use App\Http\Middleware\RedirectTraineesToDashboard;
@@ -28,6 +29,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \App\Http\Middleware\ClearOldCookies::class,
     ];
 
     /**
