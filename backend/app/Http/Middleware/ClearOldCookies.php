@@ -14,32 +14,30 @@ class ClearOldCookies
         // Only clear old cookies if we're not on a login/verification page
         // This prevents interfering with session creation during login
         if (!str_contains($request->path(), 'login') && !str_contains($request->path(), 'verify')) {
-            // Clear old session cookie with different domain variations
-            $response->headers->setCookie(
-                cookie('jasarah_session', '', -1, '/', '.jasarah-ksa.com', false, true, false, 'Lax')
-            );
+            // Clear old session cookies with different domain variations
+            // This is now more targeted - only clear cookies that definitely shouldn't exist
+            $oldCookies = [
+                'jasarah_session', // Old session cookie name
+                'WO2SItDCOibKE3wWKiuJXujUgLqgqpfK0XZOOhzB', // Specific old cookie from DevTools
+                '5W2zeCSMI1FjMxIR6Yrv292Ka3adj5jHnRigZobB', // From DevTools screenshot
+                'H0XOP1OLhFFsr3fwuPMjRa6WI37FI7kRlwc48STw', // From DevTools screenshot
+                'OE33EnfT05Anwq71y1S0WfSz2DcCV3uemLI8Rb4s', // From DevTools screenshot
+                'YwHNhWTZuuhaTiGKZXQi6N8y1yqTWmiiF6Ha59dp'  // From DevTools screenshot
+            ];
             
-            $response->headers->setCookie(
-                cookie('jasarah_session', '', -1, '/', 'jasarah-ksa.com', false, true, false, 'Lax')
-            );
+            $domains = ['.jasarah-ksa.com', 'jasarah-ksa.com', 'app.jasarah-ksa.com'];
             
-            // Clear old XSRF token
-            $response->headers->setCookie(
-                cookie('XSRF-TOKEN', '', -1, '/', '.jasarah-ksa.com', false, false, false, 'Lax')
-            );
-            
-            $response->headers->setCookie(
-                cookie('XSRF-TOKEN', '', -1, '/', 'jasarah-ksa.com', false, false, false, 'Lax')
-            );
-            
-            // Clear any other old cookies
-            $response->headers->setCookie(
-                cookie('WO2SItDCOibKE3wWKiuJXujUgLqgqpfK0XZOOhzB', '', -1, '/', '.jasarah-ksa.com', false, true, false, 'Lax')
-            );
-            
-            $response->headers->setCookie(
-                cookie('WO2SItDCOibKE3wWKiuJXujUgLqgqpfK0XZOOhzB', '', -1, '/', 'jasarah-ksa.com', false, true, false, 'Lax')
-            );
+            foreach ($oldCookies as $cookieName) {
+                foreach ($domains as $domain) {
+                    // Clear with both secure and non-secure options
+                    $response->headers->setCookie(
+                        cookie($cookieName, '', -1, '/', $domain, false, true, false, 'Lax')
+                    );
+                    $response->headers->setCookie(
+                        cookie($cookieName, '', -1, '/', $domain, true, true, false, 'Lax')
+                    );
+                }
+            }
         }
         
         return $response;
