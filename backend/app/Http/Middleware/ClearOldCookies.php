@@ -11,33 +11,36 @@ class ClearOldCookies
     {
         $response = $next($request);
         
-        // Only clear old cookies, don't interfere with session creation
-        // Clear old session cookie with different domain variations
-        $response->headers->setCookie(
-            cookie('jasarah_session', '', -1, '/', '.jasarah-ksa.com', false, true, false, 'Lax')
-        );
-        
-        $response->headers->setCookie(
-            cookie('jasarah_session', '', -1, '/', 'jasarah-ksa.com', false, true, false, 'Lax')
-        );
-        
-        // Clear old XSRF token
-        $response->headers->setCookie(
-            cookie('XSRF-TOKEN', '', -1, '/', '.jasarah-ksa.com', false, false, false, 'Lax')
-        );
-        
-        $response->headers->setCookie(
-            cookie('XSRF-TOKEN', '', -1, '/', 'jasarah-ksa.com', false, false, false, 'Lax')
-        );
-        
-        // Clear any other old cookies
-        $response->headers->setCookie(
-            cookie('WO2SItDCOibKE3wWKiuJXujUgLqgqpfK0XZOOhzB', '', -1, '/', '.jasarah-ksa.com', false, true, false, 'Lax')
-        );
-        
-        $response->headers->setCookie(
-            cookie('WO2SItDCOibKE3wWKiuJXujUgLqgqpfK0XZOOhzB', '', -1, '/', 'jasarah-ksa.com', false, true, false, 'Lax')
-        );
+        // Only clear old cookies if we're not on a login/verification page
+        // This prevents interfering with session creation during login
+        if (!str_contains($request->path(), 'login') && !str_contains($request->path(), 'verify')) {
+            // Clear old session cookie with different domain variations
+            $response->headers->setCookie(
+                cookie('jasarah_session', '', -1, '/', '.jasarah-ksa.com', false, true, false, 'Lax')
+            );
+            
+            $response->headers->setCookie(
+                cookie('jasarah_session', '', -1, '/', 'jasarah-ksa.com', false, true, false, 'Lax')
+            );
+            
+            // Clear old XSRF token
+            $response->headers->setCookie(
+                cookie('XSRF-TOKEN', '', -1, '/', '.jasarah-ksa.com', false, false, false, 'Lax')
+            );
+            
+            $response->headers->setCookie(
+                cookie('XSRF-TOKEN', '', -1, '/', 'jasarah-ksa.com', false, false, false, 'Lax')
+            );
+            
+            // Clear any other old cookies
+            $response->headers->setCookie(
+                cookie('WO2SItDCOibKE3wWKiuJXujUgLqgqpfK0XZOOhzB', '', -1, '/', '.jasarah-ksa.com', false, true, false, 'Lax')
+            );
+            
+            $response->headers->setCookie(
+                cookie('WO2SItDCOibKE3wWKiuJXujUgLqgqpfK0XZOOhzB', '', -1, '/', 'jasarah-ksa.com', false, true, false, 'Lax')
+            );
+        }
         
         return $response;
     }

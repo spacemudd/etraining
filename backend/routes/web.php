@@ -58,6 +58,45 @@ Route::get('/test-session', function () {
         'is_secure' => request()->isSecure(),
         'session_domain' => config('session.domain'),
         'session_secure' => config('session.secure'),
+        'session_driver' => config('session.driver'),
+        'session_cookie' => config('session.cookie'),
+        'cookies_sent' => request()->cookies->all(),
+    ]);
+});
+
+// Force session start test
+Route::get('/force-session', function () {
+    // Force start session
+    session()->start();
+    
+    // Set some test data
+    session(['test_key' => 'test_value']);
+    
+    return response()->json([
+        'session_id' => session()->getId(),
+        'session_data' => session()->all(),
+        'message' => 'Session forced to start'
+    ]);
+});
+
+// Debug session configuration
+Route::get('/debug-session', function () {
+    $config = [
+        'driver' => config('session.driver'),
+        'cookie' => config('session.cookie'),
+        'domain' => config('session.domain'),
+        'secure' => config('session.secure'),
+        'http_only' => config('session.http_only'),
+        'same_site' => config('session.same_site'),
+        'lifetime' => config('session.lifetime'),
+        'connection' => config('session.connection'),
+    ];
+    
+    return response()->json([
+        'config' => $config,
+        'current_session_id' => session()->getId(),
+        'request_cookies' => request()->cookies->all(),
+        'response_cookies' => response()->headers->getCookies(),
     ]);
 });
 
