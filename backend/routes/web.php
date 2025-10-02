@@ -81,22 +81,59 @@ Route::get('/force-session', function () {
 
 // Debug session configuration
 Route::get('/debug-session', function () {
-    $config = [
-        'driver' => config('session.driver'),
-        'cookie' => config('session.cookie'),
-        'domain' => config('session.domain'),
-        'secure' => config('session.secure'),
-        'http_only' => config('session.http_only'),
-        'same_site' => config('session.same_site'),
-        'lifetime' => config('session.lifetime'),
-        'connection' => config('session.connection'),
-    ];
+    $session = session();
+    $config = config('session');
+    
+    // Force start session if not started
+    if (!$session->isStarted()) {
+        $session->start();
+    }
+    
+    // Set some test data
+    $session->put('debug_test', 'session_working_' . time());
     
     return response()->json([
-        'config' => $config,
-        'current_session_id' => session()->getId(),
+        'session_id' => $session->getId(),
+        'session_name' => $session->getName(),
+        'session_data' => $session->all(),
+        'session_started' => $session->isStarted(),
+        'session_config' => [
+            'driver' => $config['driver'],
+            'cookie' => $config['cookie'],
+            'domain' => $config['domain'],
+            'secure' => $config['secure'],
+            'http_only' => $config['http_only'],
+            'same_site' => $config['same_site'],
+            'lifetime' => $config['lifetime'],
+        ],
+        'env_vars' => [
+            'SESSION_DRIVER' => env('SESSION_DRIVER'),
+            'SESSION_COOKIE' => env('SESSION_COOKIE'),
+            'SESSION_DOMAIN' => env('SESSION_DOMAIN'),
+            'SESSION_SECURE_COOKIE' => env('SESSION_SECURE_COOKIE'),
+            'SESSION_CONNECTION' => env('SESSION_CONNECTION'),
+        ],
         'request_cookies' => request()->cookies->all(),
-        'response_cookies' => response()->headers->getCookies(),
+        'response_headers' => response()->headers->all(),
+        'redis_connection' => app('redis')->connection('default')->ping(),
+    ]);
+});
+
+// Simple session test
+Route::get('/test-session-simple', function () {
+    // Force session start
+    session()->start();
+    
+    // Set test data
+    session(['test_key' => 'test_value_' . time()]);
+    
+    // Get session ID
+    $sessionId = session()->getId();
+    
+    return response()->json([
+        'session_id' => $sessionId,
+        'session_data' => session()->all(),
+        'cookies_sent' => response()->headers->getCookies(),
     ]);
 });
 
