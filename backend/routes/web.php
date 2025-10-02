@@ -33,6 +33,22 @@ Route::get('/csrf-token', function () {
     return response()->json(['token' => csrf_token()]);
 });
 
+// Test cookie setting
+Route::get('/test-cookies', function () {
+    $response = response()->json(['message' => 'Testing cookies']);
+    
+    // Set test cookies
+    $response->headers->setCookie(
+        cookie('test_cookie', 'test_value', 60, '/', 'app.jasarah-ksa.com', true, true, false, 'Lax')
+    );
+    
+    $response->headers->setCookie(
+        cookie('jasarah_session_v2', 'test_session', 60, '/', 'app.jasarah-ksa.com', true, true, false, 'Lax')
+    );
+    
+    return $response;
+});
+
 Route::get('/qr2', function() {
     return redirect('https://docs.google.com/forms/d/e/1FAIpQLSdjDCpcabswqgSLLo7gI-h0LC3pspt6CJw94vsV6sioHdwRXQ/viewform?usp=sf_link');
 });
