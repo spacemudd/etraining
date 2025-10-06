@@ -164,6 +164,24 @@ export default {
     },
     methods: {
         submitForm() {
+            // التحقق من وجود الملف
+            if (!this.form.resignation_file) {
+                alert('يرجى اختيار ملف الاستقالة أولاً');
+                return;
+            }
+
+            // التحقق من حجم الملف (500MB = 524,288,000 bytes)
+            if (this.form.resignation_file.size > 524288000) {
+                alert('حجم الملف كبير جداً. الحد الأقصى المسموح به هو 500 ميجابايت');
+                return;
+            }
+
+            // التحقق من نوع الملف
+            if (this.form.resignation_file.type !== 'application/pdf') {
+                alert('يجب أن يكون الملف من نوع PDF');
+                return;
+            }
+
             if(confirm(this.$t('words.are-you-sure'))) {
                 this.form.post(route('back.resignations.upload.store', {company_id: this.company.id, id: this.resignation.id}), {
                     preserveScroll: true

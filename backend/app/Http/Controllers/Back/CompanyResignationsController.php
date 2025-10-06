@@ -90,13 +90,36 @@ class CompanyResignationsController extends Controller
     public function uploadStore($company_id, $id, Request $request)
     {
         try {
+            // التحقق من وجود الملف أولاً
+            if (!$request->hasFile('resignation_file')) {
+                \Log::error('No file provided in request');
+                return redirect()->back()
+                    ->with('error', 'لم يتم اختيار أي ملف للرفع')
+                    ->withInput();
+            }
+
+            $file = $request->file('resignation_file');
+            
+            // التحقق من صحة الملف
+            if (!$file || !$file->isValid()) {
+                \Log::error('Invalid file provided', [
+                    'file_valid' => $file ? $file->isValid() : 'No file',
+                    'file_error' => $file ? $file->getError() : 'No file',
+                ]);
+                return redirect()->back()
+                    ->with('error', 'الملف المرفق غير صالح أو تالف')
+                    ->withInput();
+            }
+
             // تسجيل معلومات الطلب
             \Log::info('Resignation file upload attempt', [
                 'company_id' => $company_id,
                 'resignation_id' => $id,
-                'file_size' => $request->file('resignation_file') ? $request->file('resignation_file')->getSize() : 'No file',
-                'file_name' => $request->file('resignation_file') ? $request->file('resignation_file')->getClientOriginalName() : 'No file',
-                'file_mime' => $request->file('resignation_file') ? $request->file('resignation_file')->getMimeType() : 'No file',
+                'file_size' => $file->getSize(),
+                'file_name' => $file->getClientOriginalName(),
+                'file_mime' => $file->getMimeType(),
+                'file_path' => $file->getPathname(),
+                'file_exists' => file_exists($file->getPathname()),
             ]);
 
             $request->validate([
@@ -117,11 +140,21 @@ class CompanyResignationsController extends Controller
             $resignation->media()->forceDelete();
             \Log::info('Previous media deleted');
 
-            if ($request->file('resignation_file', [])) {
-                \Log::info('Starting file upload to folder');
-                $media = $resignation->uploadToFolder($request->file('resignation_file'), 'resignation_files');
-                \Log::info('File uploaded successfully', ['media_id' => $media->id]);
+            // التحقق مرة أخرى من وجود الملف قبل الرفع
+            if (!$file->isValid() || !file_exists($file->getPathname())) {
+                \Log::error('File became invalid before upload', [
+                    'file_valid' => $file->isValid(),
+                    'file_exists' => file_exists($file->getPathname()),
+                    'file_size' => $file->getSize(),
+                ]);
+                return redirect()->back()
+                    ->with('error', 'الملف لم يعد صالحاً للرفع')
+                    ->withInput();
             }
+
+            \Log::info('Starting file upload to folder');
+            $media = $resignation->uploadToFolder($file, 'resignation_files');
+            \Log::info('File uploaded successfully', ['media_id' => $media->id]);
 
             return redirect()->route('back.companies.show', $resignation->company_id)
                 ->with('success', 'تم رفع ملف الاستقالة بنجاح');

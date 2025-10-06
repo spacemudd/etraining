@@ -122,6 +122,30 @@ class Resignation extends Model implements Auditable, HasMedia
      */
     public function uploadToFolder($file, $folder)
     {
+        // التحقق من وجود الملف وصحته
+        if (!$file) {
+            throw new \Exception('No file provided for upload');
+        }
+
+        if (!$file->isValid()) {
+            throw new \Exception('Invalid file provided: ' . $file->getError());
+        }
+
+        if (!file_exists($file->getPathname())) {
+            throw new \Exception('File does not exist: ' . $file->getPathname());
+        }
+
+        if ($file->getSize() === 0) {
+            throw new \Exception('File is empty');
+        }
+
+        \Log::info('Uploading file to folder', [
+            'file_name' => $file->getClientOriginalName(),
+            'file_size' => $file->getSize(),
+            'file_mime' => $file->getMimeType(),
+            'folder' => $folder,
+        ]);
+
         return $this->addMedia($file)
             ->sanitizingFileName(function ($fileName) {
                 return Str::slug(Str::beforeLast($fileName, '.')) . '.' . Str::afterLast($fileName, '.');
