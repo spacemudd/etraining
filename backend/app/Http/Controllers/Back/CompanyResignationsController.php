@@ -89,20 +89,37 @@ class CompanyResignationsController extends Controller
 
     public function uploadStore($company_id, $id, Request $request)
     {
-        $request->validate([
-            'resignation_file' => 'required|file|mimes:pdf|max:20000',
-        ]);
+        try {
+            $request->validate([
+                'resignation_file' => 'required|file|mimes:pdf|max:512000', // 500MB in KB
+            ], [
+                'resignation_file.required' => 'يجب اختيار ملف الاستقالة',
+                'resignation_file.file' => 'يجب أن يكون الملف صالحاً',
+                'resignation_file.mimes' => 'يجب أن يكون الملف من نوع PDF',
+                'resignation_file.max' => 'حجم الملف يجب أن يكون أقل من 500 ميجابايت',
+            ]);
 
-        $resignation = Resignation::with('trainees')
-            ->findOrFail($id);
+            $resignation = Resignation::with('trainees')
+                ->findOrFail($id);
 
-        $resignation->media()->forceDelete();
+            $resignation->media()->forceDelete();
 
-        if ($request->file('resignation_file', [])) {
-            $resignation->uploadToFolder($request->file('resignation_file'), 'resignation_files');
+            if ($request->file('resignation_file', [])) {
+                $resignation->uploadToFolder($request->file('resignation_file'), 'resignation_files');
+            }
+
+            return redirect()->route('back.companies.show', $resignation->company_id)
+                ->with('success', 'تم رفع ملف الاستقالة بنجاح');
+                
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->withInput();
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'حدث خطأ أثناء رفع الملف: ' . $e->getMessage())
+                ->withInput();
         }
-
-        return redirect()->route('back.companies.show', $resignation->company_id);
     }
 
     public function approve($company_id, $resignation_id)
