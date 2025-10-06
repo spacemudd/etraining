@@ -192,12 +192,32 @@ export default {
             }
 
             if(confirm(this.$t('words.are-you-sure'))) {
-                this.form.post(route('back.resignations.upload.store', {company_id: this.company.id, id: this.resignation.id}), {
-                    preserveScroll: true,
-                    forceFormData: true
+                // إنشاء FormData يدوياً لضمان إرسال الملف بشكل صحيح
+                const formData = new FormData();
+                formData.append('resignation_file', this.form.resignation_file);
+                formData.append('company_id', this.company.id);
+                
+                // إرسال البيانات باستخدام axios بدلاً من Inertia
+                this.form.processing = true;
+                
+                axios.post(route('back.resignations.upload.store', {
+                    company_id: this.company.id, 
+                    id: this.resignation.id
+                }), formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                }).then(response => {
+                    // إعادة توجيه إلى صفحة الشركة
+                    window.location.href = route('back.companies.show', this.company.id);
                 }).catch(error => {
                     console.error('Upload error:', error);
-                    this.form.processing = false;
+                    if (error.response && error.response.data && error.response.data.message) {
+                        alert('خطأ: ' + error.response.data.message);
+                    } else {
+                        alert('حدث خطأ أثناء رفع الملف');
+                    }
                 }).finally(() => {
                     this.form.processing = false;
                 });

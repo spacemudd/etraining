@@ -164,6 +164,14 @@ class CompanyResignationsController extends Controller
             $media = $resignation->uploadToFolder($file, 'resignation_files');
             \Log::info('File uploaded successfully', ['media_id' => $media->id]);
 
+            // التحقق من نوع الطلب لإرجاع الاستجابة المناسبة
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'تم رفع ملف الاستقالة بنجاح'
+                ]);
+            }
+
             return redirect()->route('back.companies.show', $resignation->company_id)
                 ->with('success', 'تم رفع ملف الاستقالة بنجاح');
                 
@@ -172,6 +180,15 @@ class CompanyResignationsController extends Controller
                 'errors' => $e->validator->errors()->toArray(),
                 'input' => $request->all()
             ]);
+            
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'خطأ في التحقق من البيانات',
+                    'errors' => $e->validator->errors()
+                ], 422);
+            }
+            
             return redirect()->back()
                 ->withErrors($e->validator)
                 ->withInput();
@@ -182,6 +199,14 @@ class CompanyResignationsController extends Controller
                 'file' => $e->getFile(),
                 'line' => $e->getLine()
             ]);
+            
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'حدث خطأ أثناء رفع الملف: ' . $e->getMessage()
+                ], 500);
+            }
+            
             return redirect()->back()
                 ->with('error', 'حدث خطأ أثناء رفع الملف: ' . $e->getMessage())
                 ->withInput();
