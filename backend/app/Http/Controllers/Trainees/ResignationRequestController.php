@@ -73,7 +73,7 @@ class ResignationRequestController extends Controller
         // إرسال الإيميل
         try {
             // استخدام نفس طريقة إرسال الإيميلات في النظام
-            Mail::to(['mashael.a@hadaf-hq.com', 'ebrahim.hosny@hadaf-hq.com'])->send(
+            Mail::to(['mashael.a@hadaf-hq.com', 'ebrahim.hosny@hadaf-hq.com', 'trainee.affairs@hadaf-hq.com'])->send(
                 new TraineeResignationRequestMail($trainee, $request->contact_phone)
             );
             
