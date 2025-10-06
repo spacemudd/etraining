@@ -90,6 +90,15 @@ class CompanyResignationsController extends Controller
     public function uploadStore($company_id, $id, Request $request)
     {
         try {
+            // تسجيل معلومات الطلب
+            \Log::info('Resignation file upload attempt', [
+                'company_id' => $company_id,
+                'resignation_id' => $id,
+                'file_size' => $request->file('resignation_file') ? $request->file('resignation_file')->getSize() : 'No file',
+                'file_name' => $request->file('resignation_file') ? $request->file('resignation_file')->getClientOriginalName() : 'No file',
+                'file_mime' => $request->file('resignation_file') ? $request->file('resignation_file')->getMimeType() : 'No file',
+            ]);
+
             $request->validate([
                 'resignation_file' => 'required|file|mimes:pdf|max:512000', // 500MB in KB
             ], [
@@ -102,20 +111,36 @@ class CompanyResignationsController extends Controller
             $resignation = Resignation::with('trainees')
                 ->findOrFail($id);
 
+            \Log::info('Resignation found', ['resignation_id' => $resignation->id]);
+
+            // حذف الملفات السابقة
             $resignation->media()->forceDelete();
+            \Log::info('Previous media deleted');
 
             if ($request->file('resignation_file', [])) {
-                $resignation->uploadToFolder($request->file('resignation_file'), 'resignation_files');
+                \Log::info('Starting file upload to folder');
+                $media = $resignation->uploadToFolder($request->file('resignation_file'), 'resignation_files');
+                \Log::info('File uploaded successfully', ['media_id' => $media->id]);
             }
 
             return redirect()->route('back.companies.show', $resignation->company_id)
                 ->with('success', 'تم رفع ملف الاستقالة بنجاح');
                 
         } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Validation error during file upload', [
+                'errors' => $e->validator->errors()->toArray(),
+                'input' => $request->all()
+            ]);
             return redirect()->back()
                 ->withErrors($e->validator)
                 ->withInput();
         } catch (\Exception $e) {
+            \Log::error('Exception during file upload', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
             return redirect()->back()
                 ->with('error', 'حدث خطأ أثناء رفع الملف: ' . $e->getMessage())
                 ->withInput();
