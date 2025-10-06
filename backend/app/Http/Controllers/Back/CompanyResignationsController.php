@@ -90,6 +90,14 @@ class CompanyResignationsController extends Controller
     public function uploadStore($company_id, $id, Request $request)
     {
         try {
+            \Log::info('Upload request received', [
+                'company_id' => $company_id,
+                'resignation_id' => $id,
+                'has_file' => $request->hasFile('resignation_file'),
+                'all_input' => $request->all(),
+                'files' => $request->files->all(),
+            ]);
+
             // التحقق من وجود الملف أولاً
             if (!$request->hasFile('resignation_file')) {
                 \Log::error('No file provided in request');

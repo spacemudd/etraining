@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test File Upload</title>
+</head>
+<body>
+    <h1>اختبار رفع الملف</h1>
+    <form action="/back/companies/2ea73041-e686-4093-b830-260b488eb014/resignations/a14324db-e2ff-4c8b-9a5b-123456789abc/upload" method="POST" enctype="multipart/form-data">
+        @csrf
+        <div>
+            <label for="resignation_file">ملف الاستقالة (PDF):</label>
+            <input type="file" id="resignation_file" name="resignation_file" accept=".pdf" required>
+        </div>
+        <div>
+            <button type="submit">رفع الملف</button>
+        </div>
+    </form>
+</body>
+</html>

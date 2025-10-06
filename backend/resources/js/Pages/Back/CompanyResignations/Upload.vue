@@ -160,10 +160,19 @@ export default {
         }
     },
     mounted() {
-
+        console.log('Component mounted');
+        console.log('Company:', this.company);
+        console.log('Resignation:', this.resignation);
+        
+        // تعيين البيانات المطلوبة في النموذج
+        this.form.company_id = this.company.id;
     },
     methods: {
         submitForm() {
+            console.log('Form data:', this.form.data());
+            console.log('Company ID:', this.company.id);
+            console.log('Resignation ID:', this.resignation.id);
+            
             // التحقق من وجود الملف
             if (!this.form.resignation_file) {
                 alert('يرجى اختيار ملف الاستقالة أولاً');
@@ -184,8 +193,10 @@ export default {
 
             if(confirm(this.$t('words.are-you-sure'))) {
                 this.form.post(route('back.resignations.upload.store', {company_id: this.company.id, id: this.resignation.id}), {
-                    preserveScroll: true
+                    preserveScroll: true,
+                    forceFormData: true
                 }).catch(error => {
+                    console.error('Upload error:', error);
                     this.form.processing = false;
                 }).finally(() => {
                     this.form.processing = false;
