@@ -76,7 +76,7 @@
                                         <div class="flex justify-center">
                                             <div class="mb-3 w-full">
                                                 <input class="form-control block w-full mt-2 px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                                                       @input="form.resignation_file = $event.target.files[0]"
+                                                       @input="handleFileChange($event)"
                                                        type="file"
                                                        id="files"
                                                        accept=".pdf"
@@ -129,6 +129,7 @@ import VueDropzone from 'vue2-dropzone'
 import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 import _ from "lodash";
 import { Skeleton } from 'vue-loading-skeleton';
+import axios from 'axios';
 
 export default {
     props: ['sessions', 'company', 'resignation'],
@@ -168,10 +169,22 @@ export default {
         this.form.company_id = this.company.id;
     },
     methods: {
+        handleFileChange(event) {
+            const file = event.target.files[0];
+            console.log('File selected:', file);
+            console.log('File name:', file ? file.name : 'No file');
+            console.log('File size:', file ? file.size : 'No file');
+            console.log('File type:', file ? file.type : 'No file');
+            
+            this.form.resignation_file = file;
+        },
+        
         submitForm() {
             console.log('Form data:', this.form.data());
             console.log('Company ID:', this.company.id);
             console.log('Resignation ID:', this.resignation.id);
+            console.log('File object:', this.form.resignation_file);
+            console.log('File type:', typeof this.form.resignation_file);
             
             // التحقق من وجود الملف
             if (!this.form.resignation_file) {
@@ -196,6 +209,11 @@ export default {
                 const formData = new FormData();
                 formData.append('resignation_file', this.form.resignation_file);
                 formData.append('company_id', this.company.id);
+                
+                console.log('FormData contents:');
+                for (let [key, value] of formData.entries()) {
+                    console.log(key, value);
+                }
                 
                 // إرسال البيانات باستخدام axios بدلاً من Inertia
                 this.form.processing = true;
