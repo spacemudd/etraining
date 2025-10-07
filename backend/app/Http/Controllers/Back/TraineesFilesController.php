@@ -44,11 +44,11 @@ class TraineesFilesController extends Controller
 
                 // More flexible file validation - check extension instead of MIME type
                 $validator = \Validator::make($request->all(), [
-                    'attached_file' => 'required|file|max:10240', // 10MB max
+                    'attached_file' => 'required|file|max:20480', // 20MB max
                 ], [
                     'attached_file.required' => 'يجب اختيار ملف للرفع',
                     'attached_file.file' => 'يجب أن يكون الملف صالحاً',
-                    'attached_file.max' => 'حجم الملف يجب أن يكون أقل من 10 ميجابايت',
+                    'attached_file.max' => 'حجم الملف يجب أن يكون أقل من 20 ميجابايت',
                 ]);
 
                 // Custom validation for file extension
@@ -76,12 +76,29 @@ class TraineesFilesController extends Controller
                 
                 // Check if file exists in request
                 if (!$request->hasFile('attached_file')) {
+                    // Check if the issue is due to file size limits
+                    $contentLength = $request->header('content-length');
+                    $maxPostSize = $this->parseSize(ini_get('post_max_size'));
+                    $maxUploadSize = $this->parseSize(ini_get('upload_max_filesize'));
+                    
+                    $errorMessage = 'لم يتم العثور على الملف المرفوع';
+                    
+                    if ($contentLength && $contentLength > $maxPostSize) {
+                        $errorMessage = 'حجم الملف كبير جداً. الحد الأقصى المسموح: ' . ini_get('post_max_size');
+                    } elseif ($contentLength && $contentLength > $maxUploadSize) {
+                        $errorMessage = 'حجم الملف كبير جداً. الحد الأقصى المسموح: ' . ini_get('upload_max_filesize');
+                    }
+                    
                     \Log::error('File not found in request', [
                         'trainee_id' => $trainee_id,
+                        'content_length' => $contentLength,
+                        'max_post_size' => $maxPostSize,
+                        'max_upload_size' => $maxUploadSize,
                         'all_files' => $request->allFiles(),
-                        'post_data' => $request->all()
+                        'post_data_keys' => array_keys($request->all())
                     ]);
-                    return response()->json(['error' => 'لم يتم العثور على الملف المرفوع'], 400);
+                    
+                    return response()->json(['error' => $errorMessage], 413);
                 }
 
                 $file = $request->file('attached_file');
