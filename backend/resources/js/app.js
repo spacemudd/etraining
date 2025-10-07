@@ -39,7 +39,17 @@ Vue.use(Skeleton);
 Vue.use(VModal);
 Vue.use(LottieAnimation);
 Vue.use(VueInternationalization);
-Vue.mixin({ methods: { route: window.route } });
+Vue.mixin({ 
+    methods: { 
+        route: function(name, params = {}) {
+            if (typeof window.route === 'function') {
+                return window.route(name, params);
+            }
+            console.error('Route helper not available. Make sure @routes is included in your blade template.');
+            return '#';
+        }
+    } 
+});
 Vue.mixin(DateMixin);
 
 // import { loadCldr, L10n } from '@syncfusion/ej2-base';

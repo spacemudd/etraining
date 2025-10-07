@@ -28,6 +28,16 @@
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
         @routes
+        <script>
+            // Ensure route helper is available
+            if (typeof window.route === 'undefined') {
+                console.error('Route helper not loaded. Check if @routes is working properly.');
+                window.route = function(name, params) {
+                    console.error('Route helper fallback called for:', name, params);
+                    return '#';
+                };
+            }
+        </script>
 
         <!-- Scripts -->
         <script src="https://unpkg.com/ionicons@5.2.3/dist/ionicons.js"></script>

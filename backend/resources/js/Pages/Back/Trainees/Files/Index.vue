@@ -96,8 +96,12 @@
             }
         },
         mounted() {
-
             this.$wait.end('SAVING_FILE');
+            
+            // Check if route helper is available
+            if (typeof this.route !== 'function') {
+                console.error('Route helper not available in Vue component');
+            }
         },
         methods: {
             importFileChanged(e, filename) {
@@ -107,8 +111,25 @@
                 this.formData.append('attached_file', this.attachedFile);
             },
             submitForm() {
+                // Check if file is selected
+                if (!this.attachedFile) {
+                    alert('يرجى اختيار ملف للرفع');
+                    return;
+                }
+
                 this.$wait.start('SAVING_FILE');
-                axios.post(route('back.trainees.files.store', this.trainee.id), this.formData, {
+                
+                // Get the route URL safely
+                const storeUrl = this.route('back.trainees.files.store', this.trainee.id);
+                const indexUrl = this.route('back.trainees.files.index', this.trainee.id);
+                
+                if (storeUrl === '#' || indexUrl === '#') {
+                    this.$wait.end('SAVING_FILE');
+                    alert('خطأ في تحميل الروابط. يرجى إعادة تحميل الصفحة.');
+                    return;
+                }
+
+                axios.post(storeUrl, this.formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -119,7 +140,7 @@
                         this.$refs.attached_file.value = '';
                         this.attachedFile = '';
                         this.formData = new FormData();
-                        this.$inertia.get(route('back.trainees.files.index', this.trainee.id));
+                        this.$inertia.get(indexUrl);
                     }).catch(error => {
                         this.$wait.end('SAVING_FILE');
                         if (error.response && error.response.status === 422) {
@@ -139,10 +160,19 @@
                     });
             },
             deleteFile(file_id) {
-                this.$inertia.delete(route('back.trainees.files.destroy', {
-                    trainee_id: this.trainee.id,
-                    file: file_id,
-                }))
+                if (confirm('هل أنت متأكد من حذف هذا الملف؟')) {
+                    const deleteUrl = this.route('back.trainees.files.destroy', {
+                        trainee_id: this.trainee.id,
+                        file: file_id,
+                    });
+                    
+                    if (deleteUrl === '#') {
+                        alert('خطأ في تحميل الروابط. يرجى إعادة تحميل الصفحة.');
+                        return;
+                    }
+                    
+                    this.$inertia.delete(deleteUrl);
+                }
             },
         },
     }
