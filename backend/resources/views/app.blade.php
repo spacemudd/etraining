@@ -31,17 +31,9 @@
         <script>
             // Ensure route helper is available
             if (typeof window.route === 'undefined') {
-<<<<<<< HEAD
-<<<<<<< HEAD
-                window.route = function(name, params) {
-=======
                 console.error('Route helper not loaded. Check if @routes is working properly.');
                 window.route = function(name, params) {
                     console.error('Route helper fallback called for:', name, params);
->>>>>>> d35bf5e4 (d)
-=======
-                window.route = function(name, params) {
->>>>>>> 43a28d56 (solve error mes)
                     return '#';
                 };
             }

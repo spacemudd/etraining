@@ -187,17 +187,23 @@
             submitForm() {
                 // Check if file is selected
                 if (!this.attachedFile) {
-                    this.errorMessage = 'يرجى اختيار ملف للرفع';
+                    alert('يرجى اختيار ملف للرفع');
                     return;
                 }
 
-                // Reset messages
-                this.errorMessage = '';
-                this.successMessage = '';
-                this.uploadProgress = 0;
-                
                 this.$wait.start('SAVING_FILE');
-                axios.post(route('back.trainees.files.store', this.trainee.id), this.formData, {
+                
+                // Get the route URL safely
+                const storeUrl = this.route('back.trainees.files.store', this.trainee.id);
+                const indexUrl = this.route('back.trainees.files.index', this.trainee.id);
+                
+                if (storeUrl === '#' || indexUrl === '#') {
+                    this.$wait.end('SAVING_FILE');
+                    alert('خطأ في تحميل الروابط. يرجى إعادة تحميل الصفحة.');
+                    return;
+                }
+
+                axios.post(storeUrl, this.formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -208,7 +214,7 @@
                         this.$refs.attached_file.value = '';
                         this.attachedFile = '';
                         this.formData = new FormData();
-                        this.$inertia.get(route('back.trainees.files.index', this.trainee.id));
+                        this.$inertia.get(indexUrl);
                     }).catch(error => {
                         this.$wait.end('SAVING_FILE');
                         if (error.response && error.response.status === 422) {
@@ -229,18 +235,17 @@
             },
             deleteFile(file_id) {
                 if (confirm('هل أنت متأكد من حذف هذا الملف؟')) {
-                    const deleteUrl = `/back/trainees/${this.trainee.id}/files/${file_id}`;
-                    
-                    axios.delete(deleteUrl, {
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        }
-                    }).then(() => {
-                        window.location.reload();
-                    }).catch(error => {
-                        alert('حدث خطأ أثناء حذف الملف');
-                        console.error('Delete error:', error);
+                    const deleteUrl = this.route('back.trainees.files.destroy', {
+                        trainee_id: this.trainee.id,
+                        file: file_id,
                     });
+                    
+                    if (deleteUrl === '#') {
+                        alert('خطأ في تحميل الروابط. يرجى إعادة تحميل الصفحة.');
+                        return;
+                    }
+                    
+                    this.$inertia.delete(deleteUrl);
                 }
             },
         },
