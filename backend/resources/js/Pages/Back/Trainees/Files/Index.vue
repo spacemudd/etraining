@@ -167,6 +167,14 @@
                     this.successMessage = '';
                     this.uploadProgress = 0;
                     
+                    // Debug info
+                    console.log('File selected:', {
+                        name: file.name,
+                        size: file.size,
+                        type: file.type,
+                        lastModified: file.lastModified
+                    });
+                    
                     // Validate file size (10MB = 10 * 1024 * 1024 bytes)
                     if (file.size > 10 * 1024 * 1024) {
                         this.errorMessage = 'حجم الملف يجب أن يكون أقل من 10 ميجابايت';
@@ -174,9 +182,29 @@
                         return;
                     }
                     
-                    // Validate file type
-                    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg', 'image/jpg', 'image/png'];
-                    if (!allowedTypes.includes(file.type)) {
+                    // Validate file type - check both MIME type and extension
+                    const allowedTypes = [
+                        'application/pdf', 
+                        'application/x-pdf',
+                        'application/acrobat',
+                        'applications/vnd.pdf',
+                        'text/pdf',
+                        'text/x-pdf',
+                        'application/msword', 
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
+                        'image/jpeg', 
+                        'image/jpg', 
+                        'image/png'
+                    ];
+                    
+                    const fileName = file.name.toLowerCase();
+                    const fileExtension = fileName.split('.').pop();
+                    const allowedExtensions = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'];
+                    
+                    // Check both MIME type and file extension
+                    const isValidType = allowedTypes.includes(file.type) || allowedExtensions.includes(fileExtension);
+                    
+                    if (!isValidType) {
                         this.errorMessage = 'نوع الملف غير مدعوم. يرجى اختيار ملف PDF, DOC, DOCX, JPG, JPEG, أو PNG';
                         this.clearFile();
                         return;
@@ -237,7 +265,14 @@
                     .then(response => {
                         this.$wait.end('SAVING_FILE');
                         this.uploadProgress = 100;
-                        this.successMessage = 'تم رفع الملف بنجاح!';
+                        
+                        console.log('Upload success response:', response.data);
+                        
+                        if (response.data && response.data.success) {
+                            this.successMessage = response.data.message || 'تم رفع الملف بنجاح!';
+                        } else {
+                            this.successMessage = 'تم رفع الملف بنجاح!';
+                        }
                         
                         // Clear the file input after a short delay
                         setTimeout(() => {
@@ -249,16 +284,32 @@
                         this.$wait.end('SAVING_FILE');
                         this.uploadProgress = 0;
                         
+                        // Debug error info
+                        console.error('Upload error details:', {
+                            error: error,
+                            response: error.response,
+                            status: error.response?.status,
+                            data: error.response?.data,
+                            message: error.message,
+                            code: error.code
+                        });
+                        
                         if (error.code === 'ECONNABORTED') {
                             this.errorMessage = 'انتهت مهلة الرفع. يرجى المحاولة مرة أخرى أو اختيار ملف أصغر.';
                         } else if (error.response && error.response.status === 422) {
                             // Validation errors
-                            const errors = error.response.data.errors;
-                            let errorMessage = 'خطأ في البيانات: ';
-                            for (let field in errors) {
-                                errorMessage += errors[field][0] + ' ';
+                            if (error.response.data.errors) {
+                                const errors = error.response.data.errors;
+                                let errorMessage = 'خطأ في البيانات: ';
+                                for (let field in errors) {
+                                    errorMessage += errors[field][0] + ' ';
+                                }
+                                this.errorMessage = errorMessage;
+                            } else if (error.response.data.error) {
+                                this.errorMessage = error.response.data.error;
+                            } else {
+                                this.errorMessage = 'خطأ في التحقق من الملف';
                             }
-                            this.errorMessage = errorMessage;
                         } else if (error.response && error.response.status === 413) {
                             this.errorMessage = 'حجم الملف كبير جداً. يرجى اختيار ملف أصغر.';
                         } else if (error.response && error.response.status === 500) {
