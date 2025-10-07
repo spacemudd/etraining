@@ -59,7 +59,7 @@
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
                                     </svg>
                                     <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">اضغط للرفع</span> أو اسحب الملف هنا</p>
-                                    <p class="text-xs text-gray-500">PDF, DOC, DOCX, JPG, JPEG, PNG (حد أقصى 10MB)</p>
+                                    <p class="text-xs text-gray-500">PDF, DOC, DOCX, JPG, JPEG, PNG (حد أقصى 20MB)</p>
                                 </div>
                                 <div class="flex flex-col items-center justify-center pt-5 pb-6" v-else>
                                     <svg class="w-8 h-8 mb-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -175,9 +175,9 @@
                         lastModified: file.lastModified
                     });
                     
-                    // Validate file size (10MB = 10 * 1024 * 1024 bytes)
-                    if (file.size > 10 * 1024 * 1024) {
-                        this.errorMessage = 'حجم الملف يجب أن يكون أقل من 10 ميجابايت';
+                    // Validate file size (20MB = 20 * 1024 * 1024 bytes)
+                    if (file.size > 20 * 1024 * 1024) {
+                        this.errorMessage = 'حجم الملف يجب أن يكون أقل من 20 ميجابايت';
                         this.clearFile();
                         return;
                     }
@@ -311,7 +311,11 @@
                                 this.errorMessage = 'خطأ في التحقق من الملف';
                             }
                         } else if (error.response && error.response.status === 413) {
-                            this.errorMessage = 'حجم الملف كبير جداً. يرجى اختيار ملف أصغر.';
+                            if (error.response.data && error.response.data.error) {
+                                this.errorMessage = error.response.data.error;
+                            } else {
+                                this.errorMessage = 'حجم الملف كبير جداً. يرجى اختيار ملف أصغر من 10MB.';
+                            }
                         } else if (error.response && error.response.status === 500) {
                             this.errorMessage = 'خطأ في الخادم. يرجى المحاولة مرة أخرى لاحقاً.';
                         } else if (error.response && error.response.data && error.response.data.error) {
