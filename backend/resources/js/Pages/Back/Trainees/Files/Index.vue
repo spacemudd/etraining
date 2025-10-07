@@ -3,9 +3,9 @@
         <div class="container px-6 mx-auto grid pt-6">
             <breadcrumb-container
                 :crumbs="[
-                    {title: 'dashboard', link: route('dashboard')},
-                    {title: 'trainees', link: route('back.trainees.index')},
-                    {title_raw: trainee.name, link: route('back.trainees.show', trainee.id)},
+                    {title: 'dashboard', link: '/dashboard'},
+                    {title: 'trainees', link: '/back/trainees'},
+                    {title_raw: trainee.name, link: `/back/trainees/${trainee.id}`},
                     {title_raw: $t('words.files')},
                 ]"
             ></breadcrumb-container>
@@ -31,7 +31,7 @@
                 			<tr v-for="file in trainee.general_files" :key="file.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
                 				<td class="border-t mt-2 p-1 px-2">
                                     <a target="_blank"
-                                       :href="route('back.trainees.files.show', {trainee_id: trainee.id, file: file.id})">
+                                       :href="`/back/trainees/${trainee.id}/files/${file.id}`">
                                         {{ file.file_name }}
                                     </a>
                                 </td>
@@ -119,19 +119,14 @@
 
                 this.$wait.start('SAVING_FILE');
                 
-                // Get the route URL safely
-                const storeUrl = this.route('back.trainees.files.store', this.trainee.id);
-                const indexUrl = this.route('back.trainees.files.index', this.trainee.id);
-                
-                if (storeUrl === '#' || indexUrl === '#') {
-                    this.$wait.end('SAVING_FILE');
-                    alert('خطأ في تحميل الروابط. يرجى إعادة تحميل الصفحة.');
-                    return;
-                }
+                // Use direct URLs as fallback
+                const storeUrl = `/back/trainees/${this.trainee.id}/files`;
+                const indexUrl = `/back/trainees/${this.trainee.id}/files`;
 
                 axios.post(storeUrl, this.formData, {
                     headers: {
-                        'Content-Type': 'multipart/form-data'
+                        'Content-Type': 'multipart/form-data',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     }
                 })
                     .then(response => {
@@ -140,7 +135,8 @@
                         this.$refs.attached_file.value = '';
                         this.attachedFile = '';
                         this.formData = new FormData();
-                        this.$inertia.get(indexUrl);
+                        // Reload the page to show updated files
+                        window.location.reload();
                     }).catch(error => {
                         this.$wait.end('SAVING_FILE');
                         if (error.response && error.response.status === 422) {
@@ -161,17 +157,18 @@
             },
             deleteFile(file_id) {
                 if (confirm('هل أنت متأكد من حذف هذا الملف؟')) {
-                    const deleteUrl = this.route('back.trainees.files.destroy', {
-                        trainee_id: this.trainee.id,
-                        file: file_id,
+                    const deleteUrl = `/back/trainees/${this.trainee.id}/files/${file_id}`;
+                    
+                    axios.delete(deleteUrl, {
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    }).then(() => {
+                        window.location.reload();
+                    }).catch(error => {
+                        alert('حدث خطأ أثناء حذف الملف');
+                        console.error('Delete error:', error);
                     });
-                    
-                    if (deleteUrl === '#') {
-                        alert('خطأ في تحميل الروابط. يرجى إعادة تحميل الصفحة.');
-                        return;
-                    }
-                    
-                    this.$inertia.delete(deleteUrl);
                 }
             },
         },
