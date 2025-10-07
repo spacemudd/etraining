@@ -193,19 +193,14 @@
 
                 this.$wait.start('SAVING_FILE');
                 
-                // Get the route URL safely
-                const storeUrl = this.route('back.trainees.files.store', this.trainee.id);
-                const indexUrl = this.route('back.trainees.files.index', this.trainee.id);
-                
-                if (storeUrl === '#' || indexUrl === '#') {
-                    this.$wait.end('SAVING_FILE');
-                    alert('خطأ في تحميل الروابط. يرجى إعادة تحميل الصفحة.');
-                    return;
-                }
+                // Use direct URLs as fallback
+                const storeUrl = `/back/trainees/${this.trainee.id}/files`;
+                const indexUrl = `/back/trainees/${this.trainee.id}/files`;
 
                 axios.post(storeUrl, this.formData, {
                     headers: {
-                        'Content-Type': 'multipart/form-data'
+                        'Content-Type': 'multipart/form-data',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     }
                 })
                     .then(response => {
@@ -214,7 +209,8 @@
                         this.$refs.attached_file.value = '';
                         this.attachedFile = '';
                         this.formData = new FormData();
-                        this.$inertia.get(indexUrl);
+                        // Reload the page to show updated files
+                        window.location.reload();
                     }).catch(error => {
                         this.$wait.end('SAVING_FILE');
                         if (error.response && error.response.status === 422) {
@@ -235,17 +231,18 @@
             },
             deleteFile(file_id) {
                 if (confirm('هل أنت متأكد من حذف هذا الملف؟')) {
-                    const deleteUrl = this.route('back.trainees.files.destroy', {
-                        trainee_id: this.trainee.id,
-                        file: file_id,
+                    const deleteUrl = `/back/trainees/${this.trainee.id}/files/${file_id}`;
+                    
+                    axios.delete(deleteUrl, {
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    }).then(() => {
+                        window.location.reload();
+                    }).catch(error => {
+                        alert('حدث خطأ أثناء حذف الملف');
+                        console.error('Delete error:', error);
                     });
-                    
-                    if (deleteUrl === '#') {
-                        alert('خطأ في تحميل الروابط. يرجى إعادة تحميل الصفحة.');
-                        return;
-                    }
-                    
-                    this.$inertia.delete(deleteUrl);
                 }
             },
         },
