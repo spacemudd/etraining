@@ -120,7 +120,7 @@
                     autoProcessQueue: false,
                     manuallyAddFile: true,
                     url: 'https://getShafiq.com', // Just required to initiate DropZone.
-                    dictDefaultMessage: "<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> "+this.$t('words.upload-files-here'),
+                    dictDefaultMessage: `<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> ${this.$t('words.upload-files-here')}`,
                     dictRemoveFile: this.$t('words.delete'),
                     thumbnailWidth: 150,
                     maxFilesize: 20,

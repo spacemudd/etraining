@@ -184,7 +184,7 @@
                 dropzoneOptionsTrainingPackage: {
                     destroyDropzone: false,
                     url: route('back.courses.training-package', {course_id: this.course.id}),
-                    dictDefaultMessage: "<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> "+this.$t('words.upload-files-here'),
+                    dictDefaultMessage: `<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> ${this.$t('words.upload-files-here')}`,
                     thumbnailWidth: 150,
                     maxFilesize: 50,
                     timeout: 0,

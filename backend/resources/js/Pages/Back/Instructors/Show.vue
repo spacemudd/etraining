@@ -194,14 +194,14 @@
                 dropzoneOptionsCvFull: {
                     destroyDropzone: false,
                     url: route('back.instructors.attachments.cv-full', {instructor_id: this.instructor.id}),
-                    dictDefaultMessage: "<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> "+this.$t('words.upload-files-here'),
+                    dictDefaultMessage: `<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> ${this.$t('words.upload-files-here')}`,
                     thumbnailWidth: 150,
                     maxFilesize: 20,
                 },
                 dropzoneOptionsCvSummary: {
                     destroyDropzone: false,
                     url: route('back.instructors.attachments.cv-summary', {instructor_id: this.instructor.id}),
-                    dictDefaultMessage: "<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> "+this.$t('words.upload-files-here'),
+                    dictDefaultMessage: `<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> ${this.$t('words.upload-files-here')}`,
                     thumbnailWidth: 150,
                     maxFilesize: 20,
                 },
