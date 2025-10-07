@@ -159,62 +159,11 @@
             }
         },
         methods: {
-            importFileChanged(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    // Reset messages
-                    this.errorMessage = '';
-                    this.successMessage = '';
-                    this.uploadProgress = 0;
-                    
-                    // Debug info
-                    console.log('File selected:', {
-                        name: file.name,
-                        size: file.size,
-                        type: file.type,
-                        lastModified: file.lastModified
-                    });
-                    
-                    // Validate file size (20MB = 20 * 1024 * 1024 bytes)
-                    if (file.size > 20 * 1024 * 1024) {
-                        this.errorMessage = 'حجم الملف يجب أن يكون أقل من 20 ميجابايت';
-                        this.clearFile();
-                        return;
-                    }
-                    
-                    // Validate file type - check both MIME type and extension
-                    const allowedTypes = [
-                        'application/pdf', 
-                        'application/x-pdf',
-                        'application/acrobat',
-                        'applications/vnd.pdf',
-                        'text/pdf',
-                        'text/x-pdf',
-                        'application/msword', 
-                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
-                        'image/jpeg', 
-                        'image/jpg', 
-                        'image/png'
-                    ];
-                    
-                    const fileName = file.name.toLowerCase();
-                    const fileExtension = fileName.split('.').pop();
-                    const allowedExtensions = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'];
-                    
-                    // Check both MIME type and file extension
-                    const isValidType = allowedTypes.includes(file.type) || allowedExtensions.includes(fileExtension);
-                    
-                    if (!isValidType) {
-                        this.errorMessage = 'نوع الملف غير مدعوم. يرجى اختيار ملف PDF, DOC, DOCX, JPG, JPEG, أو PNG';
-                        this.clearFile();
-                        return;
-                    }
-                    
-                    this.attachedFile = file;
-                    // Clear previous FormData and create new one
-                    this.formData = new FormData();
-                    this.formData.append('attached_file', this.attachedFile);
-                }
+            importFileChanged(e, filename) {
+                this.attachedFile = e.target.files[0];
+                // Clear previous FormData and create new one
+                this.formData = new FormData();
+                this.formData.append('attached_file', this.attachedFile);
             },
             
             clearFile() {
@@ -248,82 +197,32 @@
                 this.uploadProgress = 0;
                 
                 this.$wait.start('SAVING_FILE');
-                
-                // Use direct URLs as fallback
-                const storeUrl = `/back/trainees/${this.trainee.id}/files`;
-
-                axios.post(storeUrl, this.formData, {
+                axios.post(route('back.trainees.files.store', this.trainee.id), this.formData, {
                     headers: {
-                        'Content-Type': 'multipart/form-data',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    timeout: 300000, // 5 minutes timeout
-                    onUploadProgress: (progressEvent) => {
-                        this.uploadProgress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                        'Content-Type': 'multipart/form-data'
                     }
                 })
                     .then(response => {
                         this.$wait.end('SAVING_FILE');
-                        this.uploadProgress = 100;
-                        
-                        console.log('Upload success response:', response.data);
-                        
-                        if (response.data && response.data.success) {
-                            this.successMessage = response.data.message || 'تم رفع الملف بنجاح!';
-                        } else {
-                            this.successMessage = 'تم رفع الملف بنجاح!';
-                        }
-                        
-                        // Clear the file input after a short delay
-                        setTimeout(() => {
-                            this.clearFile();
-                            // Reload the page to show updated files
-                            window.location.reload();
-                        }, 2000);
+                        // Clear the file input
+                        this.$refs.attached_file.value = '';
+                        this.attachedFile = '';
+                        this.formData = new FormData();
+                        this.$inertia.get(route('back.trainees.files.index', this.trainee.id));
                     }).catch(error => {
                         this.$wait.end('SAVING_FILE');
-                        this.uploadProgress = 0;
-                        
-                        // Debug error info
-                        console.error('Upload error details:', {
-                            error: error,
-                            response: error.response,
-                            status: error.response?.status,
-                            data: error.response?.data,
-                            message: error.message,
-                            code: error.code
-                        });
-                        
-                        if (error.code === 'ECONNABORTED') {
-                            this.errorMessage = 'انتهت مهلة الرفع. يرجى المحاولة مرة أخرى أو اختيار ملف أصغر.';
-                        } else if (error.response && error.response.status === 422) {
+                        if (error.response && error.response.status === 422) {
                             // Validation errors
-                            if (error.response.data.errors) {
-                                const errors = error.response.data.errors;
-                                let errorMessage = 'خطأ في البيانات: ';
-                                for (let field in errors) {
-                                    errorMessage += errors[field][0] + ' ';
-                                }
-                                this.errorMessage = errorMessage;
-                            } else if (error.response.data.error) {
-                                this.errorMessage = error.response.data.error;
-                            } else {
-                                this.errorMessage = 'خطأ في التحقق من الملف';
+                            const errors = error.response.data.errors;
+                            let errorMessage = 'خطأ في البيانات: ';
+                            for (let field in errors) {
+                                errorMessage += errors[field][0] + ' ';
                             }
-                        } else if (error.response && error.response.status === 413) {
-                            if (error.response.data && error.response.data.error) {
-                                this.errorMessage = error.response.data.error;
-                            } else {
-                                this.errorMessage = 'حجم الملف كبير جداً. يرجى اختيار ملف أصغر من 10MB.';
-                            }
-                        } else if (error.response && error.response.status === 500) {
-                            this.errorMessage = 'خطأ في الخادم. يرجى المحاولة مرة أخرى لاحقاً.';
-                        } else if (error.response && error.response.data && error.response.data.error) {
-                            this.errorMessage = error.response.data.error;
+                            alert(errorMessage);
                         } else if (error.response && error.response.data && error.response.data.message) {
-                            this.errorMessage = 'خطأ: ' + error.response.data.message;
+                            alert('خطأ: ' + error.response.data.message);
                         } else {
-                            this.errorMessage = 'حدث خطأ في الشبكة. يرجى التحقق من الاتصال والمحاولة مرة أخرى.';
+                            alert('حدث خطأ غير متوقع أثناء رفع الملف');
                         }
                         console.error('File upload error:', error);
                     });
