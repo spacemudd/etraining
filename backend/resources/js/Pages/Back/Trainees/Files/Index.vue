@@ -59,7 +59,7 @@
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
                                     </svg>
                                     <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">اضغط للرفع</span> أو اسحب الملف هنا</p>
-                                    <p class="text-xs text-gray-500">PDF, DOC, DOCX, JPG, JPEG, PNG (حد أقصى 20MB)</p>
+                                    <p class="text-xs text-gray-500">PDF, DOC, DOCX, JPG, JPEG, PNG (حد أقصى 10MB)</p>
                                 </div>
                                 <div class="flex flex-col items-center justify-center pt-5 pb-6" v-else>
                                     <svg class="w-8 h-8 mb-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -159,11 +159,34 @@
             }
         },
         methods: {
-            importFileChanged(e, filename) {
-                this.attachedFile = e.target.files[0];
-                // Clear previous FormData and create new one
-                this.formData = new FormData();
-                this.formData.append('attached_file', this.attachedFile);
+            importFileChanged(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    // Reset messages
+                    this.errorMessage = '';
+                    this.successMessage = '';
+                    this.uploadProgress = 0;
+                    
+                    // Validate file size (10MB = 10 * 1024 * 1024 bytes)
+                    if (file.size > 10 * 1024 * 1024) {
+                        this.errorMessage = 'حجم الملف يجب أن يكون أقل من 10 ميجابايت';
+                        this.clearFile();
+                        return;
+                    }
+                    
+                    // Validate file type
+                    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg', 'image/jpg', 'image/png'];
+                    if (!allowedTypes.includes(file.type)) {
+                        this.errorMessage = 'نوع الملف غير مدعوم. يرجى اختيار ملف PDF, DOC, DOCX, JPG, JPEG, أو PNG';
+                        this.clearFile();
+                        return;
+                    }
+                    
+                    this.attachedFile = file;
+                    // Clear previous FormData and create new one
+                    this.formData = new FormData();
+                    this.formData.append('attached_file', this.attachedFile);
+                }
             },
             
             clearFile() {
@@ -187,44 +210,63 @@
             submitForm() {
                 // Check if file is selected
                 if (!this.attachedFile) {
-                    alert('يرجى اختيار ملف للرفع');
+                    this.errorMessage = 'يرجى اختيار ملف للرفع';
                     return;
                 }
 
+                // Reset messages
+                this.errorMessage = '';
+                this.successMessage = '';
+                this.uploadProgress = 0;
+                
                 this.$wait.start('SAVING_FILE');
                 
                 // Use direct URLs as fallback
                 const storeUrl = `/back/trainees/${this.trainee.id}/files`;
-                const indexUrl = `/back/trainees/${this.trainee.id}/files`;
 
                 axios.post(storeUrl, this.formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    timeout: 300000, // 5 minutes timeout
+                    onUploadProgress: (progressEvent) => {
+                        this.uploadProgress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
                     }
                 })
                     .then(response => {
                         this.$wait.end('SAVING_FILE');
-                        // Clear the file input
-                        this.$refs.attached_file.value = '';
-                        this.attachedFile = '';
-                        this.formData = new FormData();
-                        // Reload the page to show updated files
-                        window.location.reload();
+                        this.uploadProgress = 100;
+                        this.successMessage = 'تم رفع الملف بنجاح!';
+                        
+                        // Clear the file input after a short delay
+                        setTimeout(() => {
+                            this.clearFile();
+                            // Reload the page to show updated files
+                            window.location.reload();
+                        }, 2000);
                     }).catch(error => {
                         this.$wait.end('SAVING_FILE');
-                        if (error.response && error.response.status === 422) {
+                        this.uploadProgress = 0;
+                        
+                        if (error.code === 'ECONNABORTED') {
+                            this.errorMessage = 'انتهت مهلة الرفع. يرجى المحاولة مرة أخرى أو اختيار ملف أصغر.';
+                        } else if (error.response && error.response.status === 422) {
                             // Validation errors
                             const errors = error.response.data.errors;
                             let errorMessage = 'خطأ في البيانات: ';
                             for (let field in errors) {
                                 errorMessage += errors[field][0] + ' ';
                             }
-                            alert(errorMessage);
+                            this.errorMessage = errorMessage;
+                        } else if (error.response && error.response.status === 413) {
+                            this.errorMessage = 'حجم الملف كبير جداً. يرجى اختيار ملف أصغر.';
+                        } else if (error.response && error.response.status === 500) {
+                            this.errorMessage = 'خطأ في الخادم. يرجى المحاولة مرة أخرى لاحقاً.';
                         } else if (error.response && error.response.data && error.response.data.message) {
-                            alert('خطأ: ' + error.response.data.message);
+                            this.errorMessage = 'خطأ: ' + error.response.data.message;
                         } else {
-                            alert('حدث خطأ غير متوقع أثناء رفع الملف');
+                            this.errorMessage = 'حدث خطأ في الشبكة. يرجى التحقق من الاتصال والمحاولة مرة أخرى.';
                         }
                         console.error('File upload error:', error);
                     });
