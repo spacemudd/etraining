@@ -24,43 +24,102 @@ class TraineesFilesController extends Controller
         public function store(Request $request, $trainee_id)
         {
             try {
-                // Log file upload attempt
+                // Log file upload attempt with detailed info
                 \Log::info('File upload attempt', [
                     'trainee_id' => $trainee_id,
                     'has_file' => $request->hasFile('attached_file'),
+                    'request_size' => $request->header('content-length'),
+                    'max_file_size' => ini_get('upload_max_filesize'),
+                    'max_post_size' => ini_get('post_max_size'),
                     'file_info' => $request->hasFile('attached_file') ? [
                         'original_name' => $request->file('attached_file')->getClientOriginalName(),
                         'size' => $request->file('attached_file')->getSize(),
                         'mime_type' => $request->file('attached_file')->getMimeType(),
                         'extension' => $request->file('attached_file')->getClientOriginalExtension(),
+                        'is_valid' => $request->file('attached_file')->isValid(),
+                        'error' => $request->file('attached_file')->getError(),
+                        'path' => $request->file('attached_file')->getPath(),
                     ] : null
                 ]);
 
-                // Validate the uploaded file
-                $request->validate([
-                    'attached_file' => 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240', // 10MB max
+                // More flexible file validation - check extension instead of MIME type
+                $validator = \Validator::make($request->all(), [
+                    'attached_file' => 'required|file|max:10240', // 10MB max
                 ], [
                     'attached_file.required' => 'يجب اختيار ملف للرفع',
                     'attached_file.file' => 'يجب أن يكون الملف صالحاً',
-                    'attached_file.mimes' => 'يجب أن يكون الملف من نوع: PDF, DOC, DOCX, JPG, JPEG, PNG',
                     'attached_file.max' => 'حجم الملف يجب أن يكون أقل من 10 ميجابايت',
                 ]);
+
+                // Custom validation for file extension
+                $validator->after(function ($validator) use ($request) {
+                    if ($request->hasFile('attached_file')) {
+                        $file = $request->file('attached_file');
+                        $extension = strtolower($file->getClientOriginalExtension());
+                        $allowedExtensions = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'];
+                        
+                        if (!in_array($extension, $allowedExtensions)) {
+                            $validator->errors()->add('attached_file', 'يجب أن يكون الملف من نوع: PDF, DOC, DOCX, JPG, JPEG, PNG');
+                        }
+                    }
+                });
+
+                if ($validator->fails()) {
+                    \Log::error('File validation failed', [
+                        'trainee_id' => $trainee_id,
+                        'errors' => $validator->errors()->toArray()
+                    ]);
+                    throw new \Illuminate\Validation\ValidationException($validator);
+                }
 
                 $trainee = Trainee::withTrashed()->findOrFail($trainee_id);
                 
                 // Check if file exists in request
                 if (!$request->hasFile('attached_file')) {
-                    \Log::error('File not found in request', ['trainee_id' => $trainee_id]);
+                    \Log::error('File not found in request', [
+                        'trainee_id' => $trainee_id,
+                        'all_files' => $request->allFiles(),
+                        'post_data' => $request->all()
+                    ]);
                     return response()->json(['error' => 'لم يتم العثور على الملف المرفوع'], 400);
                 }
 
                 $file = $request->file('attached_file');
                 
+                // Check for PHP upload errors
+                $uploadError = $file->getError();
+                if ($uploadError !== UPLOAD_ERR_OK) {
+                    $errorMessages = [
+                        UPLOAD_ERR_INI_SIZE => 'الملف كبير جداً (تجاوز upload_max_filesize)',
+                        UPLOAD_ERR_FORM_SIZE => 'الملف كبير جداً (تجاوز MAX_FILE_SIZE)',
+                        UPLOAD_ERR_PARTIAL => 'تم رفع جزء من الملف فقط',
+                        UPLOAD_ERR_NO_FILE => 'لم يتم رفع أي ملف',
+                        UPLOAD_ERR_NO_TMP_DIR => 'مجلد مؤقت مفقود',
+                        UPLOAD_ERR_CANT_WRITE => 'فشل في كتابة الملف على القرص',
+                        UPLOAD_ERR_EXTENSION => 'إضافة PHP أوقفت رفع الملف',
+                    ];
+                    
+                    $errorMessage = $errorMessages[$uploadError] ?? 'خطأ غير معروف في رفع الملف';
+                    
+                    \Log::error('PHP upload error', [
+                        'trainee_id' => $trainee_id,
+                        'error_code' => $uploadError,
+                        'error_message' => $errorMessage,
+                        'file_size' => $file->getSize(),
+                        'max_upload_size' => ini_get('upload_max_filesize'),
+                        'max_post_size' => ini_get('post_max_size')
+                    ]);
+                    
+                    return response()->json(['error' => $errorMessage], 400);
+                }
+                
                 // Additional file validation
                 if (!$file->isValid()) {
                     \Log::error('Invalid file uploaded', [
                         'trainee_id' => $trainee_id,
-                        'error' => $file->getError()
+                        'error' => $file->getError(),
+                        'file_path' => $file->getPath(),
+                        'file_size' => $file->getSize()
                     ]);
                     return response()->json(['error' => 'الملف المرفوع غير صالح'], 400);
                 }

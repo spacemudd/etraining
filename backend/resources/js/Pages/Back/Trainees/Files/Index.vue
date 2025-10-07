@@ -314,6 +314,8 @@
                             this.errorMessage = 'حجم الملف كبير جداً. يرجى اختيار ملف أصغر.';
                         } else if (error.response && error.response.status === 500) {
                             this.errorMessage = 'خطأ في الخادم. يرجى المحاولة مرة أخرى لاحقاً.';
+                        } else if (error.response && error.response.data && error.response.data.error) {
+                            this.errorMessage = error.response.data.error;
                         } else if (error.response && error.response.data && error.response.data.message) {
                             this.errorMessage = 'خطأ: ' + error.response.data.message;
                         } else {
