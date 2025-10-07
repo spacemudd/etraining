@@ -7,6 +7,7 @@ Vue.config.productionTip = false
 
 import { InertiaApp } from '@inertiajs/inertia-vue';
 import { InertiaForm } from 'laravel-jetstream';
+import { plugin } from '@inertiajs/inertia-vue';
 import PortalVue from 'portal-vue';
 import VueMeta from 'vue-meta'
 import Skeleton from 'vue-loading-skeleton';
@@ -29,7 +30,7 @@ InertiaProgress.init({
     showSpinner: false,
 })
 
-Vue.use(InertiaApp);
+Vue.use(plugin);
 Vue.use(InertiaForm);
 Vue.use(PortalVue);
 Vue.use(VueMeta);
