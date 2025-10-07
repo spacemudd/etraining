@@ -21,14 +21,42 @@ class TraineesFilesController extends Controller
         ]);
     }
 
-        public function store($trainee_id)
+        public function store(Request $request, $trainee_id)
         {
+            try {
+                // Validate the uploaded file
+                $request->validate([
+                    'attached_file' => 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240', // 10MB max
+                ], [
+                    'attached_file.required' => 'يجب اختيار ملف للرفع',
+                    'attached_file.file' => 'يجب أن يكون الملف صالحاً',
+                    'attached_file.mimes' => 'يجب أن يكون الملف من نوع: PDF, DOC, DOCX, JPG, JPEG, PNG',
+                    'attached_file.max' => 'حجم الملف يجب أن يكون أقل من 10 ميجابايت',
+                ]);
 
-            $trainee = Trainee::withTrashed()->findOrFail($trainee_id);
-            $trainee->addMediaFromRequest('attached_file')
-                ->usingFileName(request()->file('attached_file')->hashName())
-                ->toMediaCollection('general_files');
-                return redirect()->route('back.trainees.files.index', $trainee->id);
+                $trainee = Trainee::withTrashed()->findOrFail($trainee_id);
+                
+                // Check if file exists in request
+                if (!$request->hasFile('attached_file')) {
+                    return redirect()->back()->with('error', 'لم يتم العثور على الملف المرفوع');
+                }
+
+                $trainee->addMediaFromRequest('attached_file')
+                    ->usingFileName(request()->file('attached_file')->hashName())
+                    ->toMediaCollection('general_files');
+                    
+                return redirect()->route('back.trainees.files.index', $trainee->id)
+                    ->with('success', 'تم رفع الملف بنجاح');
+                    
+            } catch (\Illuminate\Validation\ValidationException $e) {
+                return redirect()->back()
+                    ->withErrors($e->validator)
+                    ->withInput();
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->with('error', 'حدث خطأ أثناء رفع الملف: ' . $e->getMessage())
+                    ->withInput();
+            }
         }
 
     public function show($trainee_id, $file)

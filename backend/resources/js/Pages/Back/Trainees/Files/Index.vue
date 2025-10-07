@@ -28,7 +28,7 @@
                 </tr>
                 </thead>
                 	<tbody>
-                			<tr v-for="file in trainee.general_files" class="hover:bg-gray-100 focus-within:bg-gray-100">
+                			<tr v-for="file in trainee.general_files" :key="file.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
                 				<td class="border-t mt-2 p-1 px-2">
                                     <a target="_blank"
                                        :href="route('back.trainees.files.show', {trainee_id: trainee.id, file: file.id})">
@@ -102,15 +102,40 @@
         methods: {
             importFileChanged(e, filename) {
                 this.attachedFile = e.target.files[0];
+                // Clear previous FormData and create new one
+                this.formData = new FormData();
                 this.formData.append('attached_file', this.attachedFile);
             },
             submitForm() {
                 this.$wait.start('SAVING_FILE');
-                axios.post(route('back.trainees.files.store', this.trainee.id), this.formData)
+                axios.post(route('back.trainees.files.store', this.trainee.id), this.formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
                     .then(response => {
+                        this.$wait.end('SAVING_FILE');
+                        // Clear the file input
+                        this.$refs.attached_file.value = '';
+                        this.attachedFile = '';
+                        this.formData = new FormData();
                         this.$inertia.get(route('back.trainees.files.index', this.trainee.id));
                     }).catch(error => {
-                        throw error;
+                        this.$wait.end('SAVING_FILE');
+                        if (error.response && error.response.status === 422) {
+                            // Validation errors
+                            const errors = error.response.data.errors;
+                            let errorMessage = 'خطأ في البيانات: ';
+                            for (let field in errors) {
+                                errorMessage += errors[field][0] + ' ';
+                            }
+                            alert(errorMessage);
+                        } else if (error.response && error.response.data && error.response.data.message) {
+                            alert('خطأ: ' + error.response.data.message);
+                        } else {
+                            alert('حدث خطأ غير متوقع أثناء رفع الملف');
+                        }
+                        console.error('File upload error:', error);
                     });
             },
             deleteFile(file_id) {
