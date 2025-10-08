@@ -49,6 +49,7 @@ Vue.mixin({
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
             console.error('Route helper not available. Make sure @routes is included in your blade template.');
 >>>>>>> d35bf5e4 (d)
@@ -57,6 +58,8 @@ Vue.mixin({
 =======
             console.error('Route helper not available. Make sure @routes is included in your blade template.');
 >>>>>>> d8ef90d2 (d)
+=======
+>>>>>>> eeb8ab65 (solve error mes)
             return '#';
         }
     } 
