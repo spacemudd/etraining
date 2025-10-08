@@ -352,7 +352,7 @@ export default {
             email_cc: '',
             email_to: '',
             templateForm: this.$inertia.form({
-                template_type: this.report.template_type || 'default',
+                template_type: this.report.template_type && this.report.template_type !== '' ? this.report.template_type : 'default',
             }, {
                 bag: 'templateForm',
                 resetOnSuccess: false,

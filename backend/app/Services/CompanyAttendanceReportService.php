@@ -297,7 +297,11 @@ class CompanyAttendanceReportService
             $view = 'pdf.company-attendance-report.special-company-modern';
         } else {
             // Use template based on user selection or default
-            switch ($report->template_type ?? 'default') {
+            $templateType = $report->template_type;
+            if (empty($templateType) || $templateType === '') {
+                $templateType = 'default';
+            }
+            switch ($templateType) {
                 case 'simple':
                     $view = 'pdf.company-attendance-report.special-company-simple';
                     break;
@@ -399,7 +403,11 @@ class CompanyAttendanceReportService
             $view = 'pdf.company-attendance-report.special-company-individual-modern';
         } else {
             // Use template based on user selection or default
-            switch ($record->report->template_type ?? 'default') {
+            $templateType = $record->report->template_type;
+            if (empty($templateType) || $templateType === '') {
+                $templateType = 'default';
+            }
+            switch ($templateType) {
                 case 'simple':
                     $view = 'pdf.company-attendance-report.special-company-individual-simple';
                     break;
