@@ -49,8 +49,8 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\SetLocale::class,
             IsDisabledWebsiteMiddleware::class,
             SuspendedAccountsMiddleware::class,
-            \App\Http\Middleware\ClearOldCookies::class,
-            \App\Http\Middleware\FixSessionCookies::class,
+            //\App\Http\Middleware\ClearOldCookies::class,
+            //\App\Http\Middleware\FixSessionCookies::class,
             Middleware::class,
         ],
 
