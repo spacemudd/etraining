@@ -477,16 +477,12 @@ export default {
             });
         },
         selectTemplate(templateType) {
-            console.log('Selecting template:', templateType);
             this.templateForm.template_type = templateType;
-            console.log('Form data after selection:', this.templateForm.data());
         },
         updateTemplate() {
-            console.log('Updating template with data:', this.templateForm.data());
             this.templateForm.patch(route('back.reports.company-attendance.update-template', this.report.id), {
                 preserveScroll: true,
                 onSuccess: () => {
-                    console.log('Template updated successfully');
                     // Success message will be shown via flash message
                     // The page will reload automatically due to redirect
                 },

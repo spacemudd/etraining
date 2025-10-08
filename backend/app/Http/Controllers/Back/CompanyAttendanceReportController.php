@@ -490,24 +490,17 @@ class CompanyAttendanceReportController extends Controller
 
 public function updateTemplate($id, Request $request)
 {
-    // Debug: تسجيل البيانات المستلمة
-    \Log::info('Template update request:', [
-        'id' => $id,
-        'template_type' => $request->template_type,
-        'all_data' => $request->all()
-    ]);
-    
     $request->validate([
         'template_type' => 'required|in:default,simple,modern,gradient',
     ]);
 
     $report = CompanyAttendanceReport::findOrFail($id);
     $templateType = $request->template_type;
-    if (empty($templateType) || $templateType === '') {
+    
+    // التأكد من أن القيمة صحيحة
+    if (!in_array($templateType, ['default', 'simple', 'modern', 'gradient'])) {
         $templateType = 'default';
     }
-    
-    \Log::info('Updating template to:', ['template_type' => $templateType]);
     
     $report->update([
         'template_type' => $templateType,
