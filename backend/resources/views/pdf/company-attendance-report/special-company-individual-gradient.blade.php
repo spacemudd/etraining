@@ -671,34 +671,14 @@
                                 <td style="font-weight: 600;">{{ $day['date']->format('Y-m-d') }}</td>
                                 <td style="font-weight: 600;">{{ $day['name'] }}</td>
                                 <td>
-                                    @php
-                                    $attendance = $record->trainee->attendances()
-                                        ->whereDate('session_starts_at', $day['date'])
-                                        ->first();
-                                    @endphp
-                                    
                                     @if ($day['vacation_day'])
                                         <span class="attendance-badge vacation">عطلة</span>
-                                    @elseif ($attendance)
-                                        @if ($attendance->attendance_status === 'present')
-                                            <span class="attendance-badge present">حضور</span>
-                                        @elseif ($attendance->attendance_status === 'absent')
-                                            <span class="attendance-badge absent">غياب</span>
-                                        @elseif ($attendance->attendance_status === 'absent_forgiven')
-                                            <span class="attendance-badge vacation">إجازة</span>
-                                        @else
-                                            <span class="attendance-badge absent">غياب</span>
-                                        @endif
                                     @else
-                                        <span class="attendance-badge absent">غياب</span>
+                                        <span class="attendance-badge present">حضور</span>
                                     @endif
                                 </td>
                                 <td style="font-size: 10px;">
-                                    @if ($attendance && $attendance->comment)
-                                        {{ $attendance->comment }}
-                                    @else
-                                        -
-                                    @endif
+                                    -
                                 </td>
                             </tr>
                         @endforeach
@@ -713,26 +693,9 @@
                     @php
                         $totalDays = count($days);
                         $workingDays = collect($days)->where('vacation_day', false)->count();
-                        $presentDays = 0;
+                        $vacationDays = collect($days)->where('vacation_day', true)->count();
+                        $presentDays = $workingDays;
                         $absentDays = 0;
-                        $vacationDays = 0;
-                        
-                        foreach ($days as $day) {
-                            if ($day['vacation_day']) {
-                                $vacationDays++;
-                            } else {
-                                    $attendance = $record->trainee->attendances()
-                                        ->whereDate('session_starts_at', $day['date'])
-                                        ->first();
-                                if ($attendance && $attendance->attendance_status === 'present') {
-                                    $presentDays++;
-                                } elseif ($attendance && $attendance->attendance_status === 'absent_forgiven') {
-                                    $vacationDays++;
-                                } else {
-                                    $absentDays++;
-                                }
-                            }
-                        }
                     @endphp
                     
                     <div class="summary-item">
