@@ -121,7 +121,7 @@ class FixSessionCookies
                     config('session.lifetime', 480) * 60, // Convert to seconds
                     '/',
                     '.jasarah-ksa.com', // Use wildcard domain
-                    true, // Secure for HTTPS (CloudFlare ensures HTTPS)
+                    config('session.secure', false), // Allow HTTP and HTTPS
                     true, // HttpOnly
                     false, // Raw
                     'Lax' // SameSite
@@ -146,7 +146,7 @@ class FixSessionCookies
                     0, // Session cookie
                     '/',
                     '.jasarah-ksa.com', // Use wildcard domain
-                    true, // Secure for HTTPS (CloudFlare ensures HTTPS)
+                    config('session.secure', false), // Allow HTTP and HTTPS
                     false, // Not HttpOnly (needed for JS access)
                     false, // Raw
                     'Lax' // SameSite
