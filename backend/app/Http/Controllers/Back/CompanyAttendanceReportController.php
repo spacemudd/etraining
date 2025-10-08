@@ -480,12 +480,16 @@ public function updateTemplate($id, Request $request)
     ]);
 
     $report = CompanyAttendanceReport::findOrFail($id);
+    $templateType = $request->template_type;
+    if (empty($templateType) || $templateType === '') {
+        $templateType = 'default';
+    }
     $report->update([
-        'template_type' => $request->template_type,
+        'template_type' => $templateType,
     ]);
 
     return redirect()->route('back.reports.company-attendance.show', $id)
-        ->with('success', 'تم تحديث القالب بنجاح إلى: ' . $this->getTemplateName($request->template_type));
+        ->with('success', 'تم تحديث القالب بنجاح إلى: ' . $this->getTemplateName($templateType));
 }
 
 private function getTemplateName($templateType)
