@@ -347,8 +347,23 @@ class CompanyAttendanceReportService
         
         $activeTrainees = $report->getAllTraineesWithResignations();
         
+        // Get base64 logo with SSL context
+        $base64logo = null;
+        if ($report->company->logo_files->count()) {
+            $context = stream_context_create([
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                ],
+            ]);
+            $logoContent = @file_get_contents('https://prod.jisr-ksa.com/back/media/'.$report->company->logo_files->first()->id, false, $context);
+            if ($logoContent) {
+                $base64logo = 'data:image/jpeg;base64,'.base64_encode($logoContent);
+            }
+        }
+        
         $pdf = $pdf->loadView($view, [
-                'base64logo' => $report->company->logo_files->count() ? 'data:image/jpeg;base64,'.base64_encode(@file_get_contents('https://prod.jisr-ksa.com/back/media/'.$report->company->logo_files->first()->id)) : null,
+                'base64logo' => $base64logo,
                 'report' => $report,
                 'active_trainees' => $activeTrainees,
                 'days' => $days,
@@ -423,6 +438,21 @@ class CompanyAttendanceReportService
             }
         }
 
+        // Get base64 logo with SSL context
+        $base64logo = null;
+        if ($record->report->company->logo_files->count()) {
+            $context = stream_context_create([
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                ],
+            ]);
+            $logoContent = @file_get_contents('https://prod.ptc-ksa.com/back/media/'.$record->report->company->logo_files->first()->id, false, $context);
+            if ($logoContent) {
+                $base64logo = 'data:image/jpeg;base64,'.base64_encode($logoContent);
+            }
+        }
+        
         $pdf = PDF::setOption('margin-bottom', 30)
             ->setOption('page-size', 'A4')
             ->setOption('orientation', 'landscape')
@@ -444,7 +474,7 @@ class CompanyAttendanceReportService
             ->setOption('zoom', 0.78)
             ->setOption('footer-html', resource_path('views/pdf/company-attendance-report/company-attendance-report-footer.html'))
             ->loadView($view, [
-                'base64logo' => $record->company->logo_files->count() ? 'data:image/jpeg;base64,'.base64_encode(@file_get_contents('https://prod.ptc-ksa.com/back/media/'.$record->report->company->logo_files->first()->id)) : null,
+                'base64logo' => $base64logo,
                 'report' => $record->report,
                 'active_trainees' => $record->report->getAllTraineesWithResignations()->where('trainee.id', $trainee_id),
                 'days' => $days,
