@@ -31,9 +31,7 @@
         <script>
             // Ensure route helper is available
             if (typeof window.route === 'undefined') {
-                console.error('Route helper not loaded. Check if @routes is working properly.');
                 window.route = function(name, params) {
-                    console.error('Route helper fallback called for:', name, params);
                     return '#';
                 };
             }
@@ -93,10 +91,10 @@
                             window.axios.defaults.headers.common['X-CSRF-TOKEN'] = data.token;
                         }
                         
-                        console.log('CSRF token refreshed successfully');
+                        // CSRF token refreshed successfully
                     })
                     .catch(error => {
-                        console.log('CSRF token refresh failed:', error);
+                        // CSRF token refresh failed
                     });
             }, 30 * 60 * 1000); // Every 30 minutes
         </script>
