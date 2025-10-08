@@ -695,19 +695,21 @@
                                     <td>
                                         @php
                                             $attendance = $trainee->trainee->attendances()
-                                                ->where('date', $day['date'])
+                                                ->whereDate('session_starts_at', $day['date'])
                                                 ->first();
                                         @endphp
                                         
                                         @if ($day['vacation_day'])
                                             <span class="attendance-badge vacation">ع</span>
                                         @elseif ($attendance)
-                                            @if ($attendance->status === 'present')
+                                            @if ($attendance->attendance_status === 'present')
                                                 <span class="attendance-badge present">ح</span>
-                                            @elseif ($attendance->status === 'absent')
+                                            @elseif ($attendance->attendance_status === 'absent')
                                                 <span class="attendance-badge absent">غ</span>
-                                            @elseif ($attendance->status === 'vacation')
+                                            @elseif ($attendance->attendance_status === 'absent_forgiven')
                                                 <span class="attendance-badge vacation">إ</span>
+                                            @else
+                                                <span class="attendance-badge absent">غ</span>
                                             @endif
                                         @else
                                             <span class="attendance-badge absent">غ</span>
@@ -719,9 +721,9 @@
                                         $absentCount = 0;
                                         foreach ($days as $day) {
                                             if (!$day['vacation_day']) {
-                                                $attendance = $trainee->trainee->attendances()
-                                                    ->where('date', $day['date'])
-                                                    ->first();
+                                        $attendance = $trainee->trainee->attendances()
+                                            ->whereDate('session_starts_at', $day['date'])
+                                            ->first();
                                                 if (!$attendance || $attendance->status === 'absent') {
                                                     $absentCount++;
                                                 }
@@ -750,10 +752,10 @@
                         foreach ($active_trainees as $trainee) {
                             foreach ($days as $day) {
                                 if (!$day['vacation_day']) {
-                                    $attendance = $trainee->trainee->attendances()
-                                        ->where('date', $day['date'])
-                                        ->first();
-                                    if ($attendance && $attendance->status === 'present') {
+                                        $attendance = $trainee->trainee->attendances()
+                                            ->whereDate('session_starts_at', $day['date'])
+                                            ->first();
+                                    if ($attendance && $attendance->attendance_status === 'present') {
                                         $totalPresentDays++;
                                     } else {
                                         $totalAbsentDays++;
