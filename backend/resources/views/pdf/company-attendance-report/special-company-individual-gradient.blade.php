@@ -672,20 +672,22 @@
                                 <td style="font-weight: 600;">{{ $day['name'] }}</td>
                                 <td>
                                     @php
-                                        $attendance = $record->trainee->attendances()
-                                            ->where('date', $day['date'])
-                                            ->first();
+                                    $attendance = $record->trainee->attendances()
+                                        ->whereDate('session_starts_at', $day['date'])
+                                        ->first();
                                     @endphp
                                     
                                     @if ($day['vacation_day'])
                                         <span class="attendance-badge vacation">عطلة</span>
                                     @elseif ($attendance)
-                                        @if ($attendance->status === 'present')
+                                        @if ($attendance->attendance_status === 'present')
                                             <span class="attendance-badge present">حضور</span>
-                                        @elseif ($attendance->status === 'absent')
+                                        @elseif ($attendance->attendance_status === 'absent')
                                             <span class="attendance-badge absent">غياب</span>
-                                        @elseif ($attendance->status === 'vacation')
+                                        @elseif ($attendance->attendance_status === 'absent_forgiven')
                                             <span class="attendance-badge vacation">إجازة</span>
+                                        @else
+                                            <span class="attendance-badge absent">غياب</span>
                                         @endif
                                     @else
                                         <span class="attendance-badge absent">غياب</span>
@@ -719,12 +721,12 @@
                             if ($day['vacation_day']) {
                                 $vacationDays++;
                             } else {
-                                $attendance = $record->trainee->attendances()
-                                    ->where('date', $day['date'])
-                                    ->first();
-                                if ($attendance && $attendance->status === 'present') {
+                                    $attendance = $record->trainee->attendances()
+                                        ->whereDate('session_starts_at', $day['date'])
+                                        ->first();
+                                if ($attendance && $attendance->attendance_status === 'present') {
                                     $presentDays++;
-                                } elseif ($attendance && $attendance->status === 'vacation') {
+                                } elseif ($attendance && $attendance->attendance_status === 'absent_forgiven') {
                                     $vacationDays++;
                                 } else {
                                     $absentDays++;
