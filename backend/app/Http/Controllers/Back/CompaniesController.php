@@ -56,7 +56,7 @@ class CompaniesController extends Controller
 
         return Inertia::render('Back/Companies/Create',[
             'regions' => Region::orderBy('name')->get(),
-            'centers' => Center::orderBy('name')->get(),
+            'centers' => Center::orderBy('name')->where('domain_name', 'jasarah-ksa.com')->get(),
             'recruitmentCompanies' => RecruitmentCompany::orderBy('name')->get(),
         ]);
     }
