@@ -3,6 +3,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=c77e8ef5f30bb983ea7f",
     "/css/app.css": "/css/app.css?id=e54c1ae96a2a3c97cb53",
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
@@ -31,4 +32,10 @@
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
     "/js/vendor.js": "/js/vendor.js?id=2e81a1b37d922a2f5741"
 >>>>>>> cc775a37 (try)
+=======
+    "/js/app.js": "/js/app.js?id=db73b37be53e2ba0d6e3",
+    "/css/app.css": "/css/app.css?id=9bd78de84df79c4b608c",
+    "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
+    "/js/vendor.js": "/js/vendor.js?id=49021fcf6f5b3b519307"
+>>>>>>> bdc53227 (run prod)
 }
