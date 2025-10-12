@@ -78,10 +78,63 @@ class TraineeLeavesController extends Controller
 
         // إرسال الإيميل إذا كان مطلوباً وكان نوع الإجازة هو إجازة وضع
         if ($request->boolean('send_email') && $request->leave_type === 'أجازة وضع') {
-            $this->sendMaternityLeaveEmail($trainee, $leave, [
-                'to' => $request->email_to,
-                'cc' => $request->email_cc,
-                'bcc' => $request->email_bcc,
+            \Log::info('Maternity Leave Email Process Started', [
+                'trainee_id' => $trainee_id,
+                'trainee_name' => $trainee->name,
+                'leave_id' => $leave->id,
+                'company_name' => $trainee->company ? $trainee->company->name_ar : 'No company',
+                'email_data' => [
+                    'to' => $request->email_to,
+                    'cc' => $request->email_cc,
+                    'bcc' => $request->email_bcc,
+                ],
+                'user_id' => auth()->id(),
+                'timestamp' => now()->toDateTimeString()
+            ]);
+
+            try {
+                $emailSent = $this->sendMaternityLeaveEmail($trainee, $leave, [
+                    'to' => $request->email_to,
+                    'cc' => $request->email_cc,
+                    'bcc' => $request->email_bcc,
+                ]);
+
+                if ($emailSent) {
+                    \Log::info('Maternity Leave Email Sent Successfully', [
+                        'trainee_id' => $trainee_id,
+                        'leave_id' => $leave->id,
+                        'trainee_name' => $trainee->name
+                    ]);
+                } else {
+                    \Log::error('Maternity Leave Email Failed - No Recipients or Other Issue', [
+                        'trainee_id' => $trainee_id,
+                        'leave_id' => $leave->id,
+                        'email_data' => [
+                            'to' => $request->email_to,
+                            'cc' => $request->email_cc,
+                            'bcc' => $request->email_bcc,
+                        ]
+                    ]);
+                }
+            } catch (\Exception $e) {
+                \Log::error('Maternity Leave Email Exception', [
+                    'trainee_id' => $trainee_id,
+                    'leave_id' => $leave->id,
+                    'error_message' => $e->getMessage(),
+                    'error_trace' => $e->getTraceAsString(),
+                    'email_data' => [
+                        'to' => $request->email_to,
+                        'cc' => $request->email_cc,
+                        'bcc' => $request->email_bcc,
+                    ]
+                ]);
+            }
+        } else {
+            \Log::info('Maternity Leave Email Not Sent', [
+                'trainee_id' => $trainee_id,
+                'reason' => 'Email not requested or leave type is not maternity',
+                'send_email_requested' => $request->boolean('send_email'),
+                'leave_type' => $request->leave_type
             ]);
         }
 
@@ -200,25 +253,58 @@ class TraineeLeavesController extends Controller
      */
     public function getEmailDefaults($trainee_id)
     {
-        $trainee = Trainee::with('company')->findOrFail($trainee_id);
-        
-        $defaultEmails = [
-            'ceo@hadaf-hq.com',
-            'afnan@hadaf-hq.com',
-            'M_SHEHATAH@hadaf-hq.com',
-            'sara@hadaf-hq.com',
-            'mashael.a@hadaf-hq.com',
-            'eslam@hadaf-hq.com',
-            'mahmoud.h@hadaf-hq.com',
-            'halim@hadaf-hq.com'
-        ];
-
-        return response()->json([
-            'company_email' => $trainee->company ? $trainee->company->email : '',
-            'default_bcc_emails' => implode(', ', $defaultEmails),
-            'trainee_name' => $trainee->name,
-            'company_name' => $trainee->company ? $trainee->company->name_ar : ''
+        \Log::info('getEmailDefaults Called', [
+            'trainee_id' => $trainee_id,
+            'user_id' => auth()->id(),
+            'timestamp' => now()->toDateTimeString()
         ]);
+
+        try {
+            $trainee = Trainee::with('company')->findOrFail($trainee_id);
+            
+            \Log::info('Trainee Found for Email Defaults', [
+                'trainee_id' => $trainee->id,
+                'trainee_name' => $trainee->name,
+                'company_id' => $trainee->company_id,
+                'company_name' => $trainee->company ? $trainee->company->name_ar : 'No company',
+                'company_email' => $trainee->company ? $trainee->company->email : 'No email'
+            ]);
+            
+            $defaultEmails = [
+                'ceo@hadaf-hq.com',
+                'afnan@hadaf-hq.com',
+                'M_SHEHATAH@hadaf-hq.com',
+                'sara@hadaf-hq.com',
+                'mashael.a@hadaf-hq.com',
+                'eslam@hadaf-hq.com',
+                'mahmoud.h@hadaf-hq.com',
+                'halim@hadaf-hq.com'
+            ];
+
+            $responseData = [
+                'company_email' => $trainee->company ? $trainee->company->email : '',
+                'default_bcc_emails' => implode(', ', $defaultEmails),
+                'trainee_name' => $trainee->name,
+                'company_name' => $trainee->company ? $trainee->company->name_ar : ''
+            ];
+
+            \Log::info('Email Defaults Prepared Successfully', [
+                'trainee_id' => $trainee_id,
+                'response_data' => $responseData
+            ]);
+
+            return response()->json($responseData);
+        } catch (\Exception $e) {
+            \Log::error('Error Getting Email Defaults', [
+                'trainee_id' => $trainee_id,
+                'error_message' => $e->getMessage(),
+                'error_trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'error' => 'فشل في تحميل بيانات البريد الإلكتروني'
+            ], 500);
+        }
     }
 
     /**
@@ -226,41 +312,123 @@ class TraineeLeavesController extends Controller
      */
     private function sendMaternityLeaveEmail(Trainee $trainee, TraineeLeave $leave, array $emailData)
     {
+        \Log::info('sendMaternityLeaveEmail Method Called', [
+            'trainee_id' => $trainee->id,
+            'trainee_name' => $trainee->name,
+            'leave_id' => $leave->id,
+            'email_data' => $emailData
+        ]);
+
         try {
+            // تحضير قوائم المستلمين
+            $toEmails = [];
+            $ccEmails = [];
+            $bccEmails = [];
+
+            // معالجة TO emails
+            if (!empty($emailData['to'])) {
+                $toEmails = array_filter(array_map('trim', explode(',', $emailData['to'])));
+                \Log::info('TO Emails Prepared', ['emails' => $toEmails]);
+            }
+            
+            // معالجة CC emails
+            if (!empty($emailData['cc'])) {
+                $ccEmails = array_filter(array_map('trim', explode(',', $emailData['cc'])));
+                \Log::info('CC Emails Prepared', ['emails' => $ccEmails]);
+            }
+            
+            // معالجة BCC emails
+            if (!empty($emailData['bcc'])) {
+                $bccEmails = array_filter(array_map('trim', explode(',', $emailData['bcc'])));
+                \Log::info('BCC Emails Prepared', ['emails' => $bccEmails]);
+            }
+
             // التأكد من وجود مستلمين
-            if (empty($emailData['to']) && empty($emailData['cc']) && empty($emailData['bcc'])) {
+            $totalRecipients = count($toEmails) + count($ccEmails) + count($bccEmails);
+            if ($totalRecipients === 0) {
+                \Log::warning('No Recipients Found for Email', [
+                    'email_data' => $emailData,
+                    'to_count' => count($toEmails),
+                    'cc_count' => count($ccEmails),
+                    'bcc_count' => count($bccEmails)
+                ]);
                 return false;
             }
 
+            \Log::info('Recipients Summary', [
+                'to_count' => count($toEmails),
+                'cc_count' => count($ccEmails),
+                'bcc_count' => count($bccEmails),
+                'total_recipients' => $totalRecipients
+            ]);
+
+            // إنشاء كائن الإيميل
             $mail = new MaternityLeaveMail($trainee, $leave, $emailData);
-            
-            // إعداد المستلمين
-            $mailBuilder = Mail::to([]);
-            
-            if (!empty($emailData['to'])) {
-                $toEmails = array_filter(array_map('trim', explode(',', $emailData['to'])));
-                $mailBuilder = Mail::to($toEmails);
-            }
-            
-            if (!empty($emailData['cc'])) {
-                $ccEmails = array_filter(array_map('trim', explode(',', $emailData['cc'])));
-                foreach ($ccEmails as $ccEmail) {
-                    $mailBuilder->cc($ccEmail);
+            \Log::info('MaternityLeaveMail Object Created');
+
+            // إرسال الإيميل باستخدام نفس طريقة الاستقالات
+            if (!empty($toEmails)) {
+                // إرسال إلى TO مع CC و BCC
+                $mailInstance = Mail::to($toEmails);
+                
+                if (!empty($ccEmails)) {
+                    foreach ($ccEmails as $ccEmail) {
+                        $mailInstance->cc($ccEmail);
+                    }
                 }
-            }
-            
-            if (!empty($emailData['bcc'])) {
-                $bccEmails = array_filter(array_map('trim', explode(',', $emailData['bcc'])));
-                foreach ($bccEmails as $bccEmail) {
-                    $mailBuilder->bcc($bccEmail);
+                
+                if (!empty($bccEmails)) {
+                    foreach ($bccEmails as $bccEmail) {
+                        $mailInstance->bcc($bccEmail);
+                    }
                 }
+                
+                \Log::info('About to Send Email', [
+                    'to_emails' => $toEmails,
+                    'cc_emails' => $ccEmails,
+                    'bcc_emails' => $bccEmails
+                ]);
+                
+                $mailInstance->send($mail);
+                
+            } else if (!empty($ccEmails) || !empty($bccEmails)) {
+                // إذا لم تكن هناك TO emails، استخدم أول CC أو BCC كـ TO
+                $primaryEmail = !empty($ccEmails) ? array_shift($ccEmails) : array_shift($bccEmails);
+                
+                \Log::info('Using Primary Email as TO', ['primary_email' => $primaryEmail]);
+                
+                $mailInstance = Mail::to($primaryEmail);
+                
+                if (!empty($ccEmails)) {
+                    foreach ($ccEmails as $ccEmail) {
+                        $mailInstance->cc($ccEmail);
+                    }
+                }
+                
+                if (!empty($bccEmails)) {
+                    foreach ($bccEmails as $bccEmail) {
+                        $mailInstance->bcc($bccEmail);
+                    }
+                }
+                
+                $mailInstance->send($mail);
             }
-            
-            $mailBuilder->send($mail);
+
+            \Log::info('Maternity Leave Email Sent Successfully', [
+                'trainee_id' => $trainee->id,
+                'leave_id' => $leave->id,
+                'total_recipients' => $totalRecipients
+            ]);
+
             return true;
         } catch (\Exception $e) {
-            // يمكن إضافة تسجيل الأخطاء هنا
-            \Log::error('Error sending maternity leave email: ' . $e->getMessage());
+            \Log::error('Error Sending Maternity Leave Email', [
+                'trainee_id' => $trainee->id,
+                'leave_id' => $leave->id,
+                'error_message' => $e->getMessage(),
+                'error_trace' => $e->getTraceAsString(),
+                'email_data' => $emailData
+            ]);
             return false;
         }
     }

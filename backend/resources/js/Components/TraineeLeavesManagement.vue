@@ -542,15 +542,28 @@ export default {
         },
 
         loadEmailDefaults() {
+            console.log('Loading email defaults for trainee:', this.trainee_id);
+            
             axios.get(route('back.trainees.leaves.email-defaults', { trainee_id: this.trainee_id }))
             .then(response => {
+                console.log('Email defaults loaded successfully:', response.data);
+                
                 this.emailDefaults = response.data;
                 // ملء الحقول تلقائياً
                 this.form.email_to = response.data.company_email;
                 this.form.email_bcc = response.data.default_bcc_emails;
+                
+                console.log('Email form fields populated:', {
+                    email_to: this.form.email_to,
+                    email_bcc: this.form.email_bcc,
+                    company_name: response.data.company_name,
+                    trainee_name: response.data.trainee_name
+                });
             })
             .catch(error => {
                 console.error('Error loading email defaults:', error);
+                console.error('Error response:', error.response);
+                console.error('Error data:', error.response?.data);
             });
         },
         
@@ -569,6 +582,20 @@ export default {
         createLeave() {
             this.loading = true;
             
+            // تسجيل بداية العملية
+            console.log('Creating maternity leave request:', {
+                trainee_id: this.trainee_id,
+                leave_type: this.form.leave_type,
+                from_date: this.form.from_date,
+                to_date: this.form.to_date,
+                send_email: this.form.send_email,
+                email_data: {
+                    to: this.form.email_to,
+                    cc: this.form.email_cc,
+                    bcc: this.form.email_bcc
+                }
+            });
+            
             const formData = new FormData();
             formData.append('leave_type', this.form.leave_type);
             formData.append('from_date', this.form.from_date);
@@ -576,6 +603,7 @@ export default {
             formData.append('notes', this.form.notes);
             if (this.form.leave_file) {
                 formData.append('leave_file', this.form.leave_file);
+                console.log('File attached:', this.form.leave_file.name, 'Size:', this.form.leave_file.size);
             }
             
             // إضافة حقول البريد الإلكتروني
@@ -584,7 +612,18 @@ export default {
                 formData.append('email_to', this.form.email_to);
                 formData.append('email_cc', this.form.email_cc);
                 formData.append('email_bcc', this.form.email_bcc);
+                
+                console.log('Email data being sent:', {
+                    send_email: true,
+                    email_to: this.form.email_to,
+                    email_cc: this.form.email_cc,
+                    email_bcc: this.form.email_bcc
+                });
+            } else {
+                console.log('Email sending is disabled');
             }
+            
+            console.log('Sending request to:', route('back.trainees.leaves.store', { trainee_id: this.trainee_id }));
             
             axios.post(route('back.trainees.leaves.store', { trainee_id: this.trainee_id }), formData, {
                 headers: {
@@ -592,21 +631,29 @@ export default {
                 }
             })
             .then(response => {
+                console.log('Leave request created successfully:', response.data);
                 this.getLeaves();
                 this.closeModal();
                 this.$inertia.reload();
             })
             .catch(error => {
                 console.error('Error creating leave:', error);
+                console.error('Error response:', error.response);
+                console.error('Error data:', error.response?.data);
+                
                 if (error.response?.data?.errors) {
                     // Handle validation errors
                     Object.keys(error.response.data.errors).forEach(key => {
+                        console.error('Validation error for', key, ':', error.response.data.errors[key]);
                         alert(error.response.data.errors[key][0]);
                     });
+                } else {
+                    alert('حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.');
                 }
             })
             .finally(() => {
                 this.loading = false;
+                console.log('Leave creation request completed');
             });
         },
         
