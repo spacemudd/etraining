@@ -27,6 +27,16 @@ class MaternityLeaveMail extends Mailable
         $this->trainee = $trainee;
         $this->leave = $leave;
         $this->emailData = $emailData;
+
+        \Log::info('MaternityLeaveMail Constructor Called', [
+            'trainee_id' => $trainee->id,
+            'trainee_name' => $trainee->name,
+            'leave_id' => $leave->id,
+            'leave_type' => $leave->leave_type,
+            'from_date' => $leave->from_date,
+            'to_date' => $leave->to_date,
+            'company_name' => $trainee->company ? $trainee->company->name_ar : 'No company'
+        ]);
     }
 
     /**
@@ -36,8 +46,23 @@ class MaternityLeaveMail extends Mailable
      */
     public function build()
     {
-        $mail = $this->subject('إشعار إجازة وضع - ' . $this->trainee->name)
+        \Log::info('MaternityLeaveMail Build Method Called', [
+            'trainee_id' => $this->trainee->id,
+            'trainee_name' => $this->trainee->name,
+            'leave_id' => $this->leave->id
+        ]);
+
+        $subject = 'إشعار إجازة وضع - ' . $this->trainee->name;
+        
+        \Log::info('Email Subject Prepared', [
+            'subject' => $subject,
+            'view' => 'emails.maternity-leave'
+        ]);
+
+        $mail = $this->subject($subject)
                     ->view('emails.maternity-leave');
+
+        \Log::info('MaternityLeaveMail Build Completed Successfully');
 
         return $mail;
     }
