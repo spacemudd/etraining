@@ -326,6 +326,77 @@
                                 placeholder="أضف أي ملاحظات إضافية..."
                             ></textarea>
                         </div>
+
+                        <!-- إعدادات البريد الإلكتروني -->
+                        <div v-if="form.leave_type === 'أجازة وضع'" class="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-4">
+                            <div class="flex items-center gap-3">
+                                <input 
+                                    type="checkbox" 
+                                    id="send-email"
+                                    v-model="form.send_email"
+                                    class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                                />
+                                <label for="send-email" class="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    إرسال إشعار بالبريد الإلكتروني
+                                </label>
+                            </div>
+
+                            <div v-if="form.send_email" class="space-y-4 pt-2">
+                                <!-- إلى (TO) -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">إلى (TO)</label>
+                                    <textarea 
+                                        v-model="form.email_to"
+                                        rows="2"
+                                        class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none text-sm"
+                                        placeholder="أدخل عناوين البريد الإلكتروني مفصولة بفواصل"
+                                    ></textarea>
+                                    <p class="text-xs text-gray-500 mt-1">يتم ملء هذا الحقل تلقائياً بإيميل الشركة</p>
+                                </div>
+
+                                <!-- نسخة (CC) -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">نسخة (CC)</label>
+                                    <textarea 
+                                        v-model="form.email_cc"
+                                        rows="2"
+                                        class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none text-sm"
+                                        placeholder="أدخل عناوين البريد الإلكتروني مفصولة بفواصل"
+                                    ></textarea>
+                                </div>
+
+                                <!-- نسخة مخفية (BCC) -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">نسخة مخفية (BCC)</label>
+                                    <textarea 
+                                        v-model="form.email_bcc"
+                                        rows="3"
+                                        class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none text-sm"
+                                        placeholder="أدخل عناوين البريد الإلكتروني مفصولة بفواصل"
+                                    ></textarea>
+                                    <p class="text-xs text-gray-500 mt-1">يتم ملء هذا الحقل تلقائياً بالإيميلات المحددة</p>
+                                </div>
+
+                                <!-- معاينة محتوى الإيميل -->
+                                <div class="bg-gray-50 border border-gray-200 rounded-lg p-3">
+                                    <h4 class="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                        </svg>
+                                        معاينة محتوى الإيميل
+                                    </h4>
+                                    <div class="text-xs text-gray-600 leading-relaxed">
+                                        <p><strong>الموضوع:</strong> إشعار إجازة وضع - {{ emailDefaults.trainee_name }}</p>
+                                        <p class="mt-2">نود إحاطتكم علماً بأن السيدة <strong>{{ emailDefaults.trainee_name }}</strong> قد تم منحها إجازة وضع اعتباراً من تاريخ <strong>{{ form.from_date }}</strong> وحتى تاريخ <strong>{{ form.to_date }}</strong>.</p>
+                                        <p class="mt-2 text-gray-500">وبناءً على نظام التأمينات الاجتماعية واللوائح المعمول بها، نود إحاطتكم علماً بأن هذه الإجازة مدفوعة الأجر من التأمينات الاجتماعية...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         
                         <!-- أزرار الإجراءات -->
                         <div class="flex gap-3 pt-4">
@@ -378,12 +449,32 @@ export default {
                 from_date: '',
                 to_date: '',
                 notes: '',
-                leave_file: null
+                leave_file: null,
+                send_email: false,
+                email_to: '',
+                email_cc: '',
+                email_bcc: ''
+            },
+            emailDefaults: {
+                company_email: '',
+                default_bcc_emails: '',
+                trainee_name: '',
+                company_name: ''
             }
         }
     },
     mounted() {
         this.getLeaves();
+    },
+    watch: {
+        'form.leave_type'(newVal) {
+            if (newVal === 'أجازة وضع') {
+                this.form.send_email = true;
+                this.loadEmailDefaults();
+            } else {
+                this.form.send_email = false;
+            }
+        }
     },
     methods: {
         getLeaves() {
@@ -409,6 +500,7 @@ export default {
         openCreateModal() {
             this.editingLeave = null;
             this.resetForm();
+            this.loadEmailDefaults();
             this.showModal = true;
         },
         
@@ -419,8 +511,13 @@ export default {
                 from_date: leave.from_date_formatted,
                 to_date: leave.to_date_formatted,
                 notes: leave.notes || '',
-                leave_file: null
+                leave_file: null,
+                send_email: false,
+                email_to: '',
+                email_cc: '',
+                email_bcc: ''
             };
+            this.loadEmailDefaults();
             this.showModal = true;
         },
         
@@ -436,8 +533,25 @@ export default {
                 from_date: '',
                 to_date: '',
                 notes: '',
-                leave_file: null
+                leave_file: null,
+                send_email: false,
+                email_to: '',
+                email_cc: '',
+                email_bcc: ''
             };
+        },
+
+        loadEmailDefaults() {
+            axios.get(route('back.trainees.leaves.email-defaults', { trainee_id: this.trainee_id }))
+            .then(response => {
+                this.emailDefaults = response.data;
+                // ملء الحقول تلقائياً
+                this.form.email_to = response.data.company_email;
+                this.form.email_bcc = response.data.default_bcc_emails;
+            })
+            .catch(error => {
+                console.error('Error loading email defaults:', error);
+            });
         },
         
         handleFileChange(event) {
@@ -462,6 +576,14 @@ export default {
             formData.append('notes', this.form.notes);
             if (this.form.leave_file) {
                 formData.append('leave_file', this.form.leave_file);
+            }
+            
+            // إضافة حقول البريد الإلكتروني
+            formData.append('send_email', this.form.send_email ? '1' : '0');
+            if (this.form.send_email) {
+                formData.append('email_to', this.form.email_to);
+                formData.append('email_cc', this.form.email_cc);
+                formData.append('email_bcc', this.form.email_bcc);
             }
             
             axios.post(route('back.trainees.leaves.store', { trainee_id: this.trainee_id }), formData, {
