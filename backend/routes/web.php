@@ -818,6 +818,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('trainees/{trainee_id}/leaves', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'index'])->name('trainees.leaves.index');
         Route::post('trainees/{trainee_id}/leaves', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'store'])->name('trainees.leaves.store');
         Route::get('trainees/{trainee_id}/leaves/create', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'create'])->name('trainees.leaves.create');
+        Route::get('trainees/{trainee_id}/leaves/email-defaults', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'getEmailDefaults'])->name('trainees.leaves.email-defaults');
         Route::get('trainees/{trainee_id}/leaves/{id}', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'show'])->name('trainees.leaves.show');
         Route::get('trainees/{trainee_id}/leaves/{id}/edit', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'edit'])->name('trainees.leaves.edit');
         Route::put('trainees/{trainee_id}/leaves/{id}', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'update'])->name('trainees.leaves.update');

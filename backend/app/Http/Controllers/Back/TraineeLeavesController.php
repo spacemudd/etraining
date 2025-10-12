@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Back;
 use App\Http\Controllers\Controller;
 use App\Models\Back\TraineeLeave;
 use App\Models\Back\Trainee;
+use App\Models\Back\Company;
+use App\Mail\MaternityLeaveMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
 class TraineeLeavesController extends Controller
@@ -52,6 +55,10 @@ class TraineeLeavesController extends Controller
             'to_date' => 'required|date|after_or_equal:from_date',
             'notes' => 'nullable|string',
             'leave_file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:10240',
+            'send_email' => 'nullable|boolean',
+            'email_to' => 'nullable|string',
+            'email_cc' => 'nullable|string',
+            'email_bcc' => 'nullable|string',
         ]);
 
         $trainee = Trainee::findOrFail($trainee_id);
@@ -67,6 +74,15 @@ class TraineeLeavesController extends Controller
         if ($request->hasFile('leave_file')) {
             $leave->addMediaFromRequest('leave_file')
                 ->toMediaCollection('leave_file');
+        }
+
+        // إرسال الإيميل إذا كان مطلوباً وكان نوع الإجازة هو إجازة وضع
+        if ($request->boolean('send_email') && $request->leave_type === 'أجازة وضع') {
+            $this->sendMaternityLeaveEmail($trainee, $leave, [
+                'to' => $request->email_to,
+                'cc' => $request->email_cc,
+                'bcc' => $request->email_bcc,
+            ]);
         }
 
         return redirect()->route('back.trainees.show', $trainee_id)
@@ -177,6 +193,76 @@ class TraineeLeavesController extends Controller
         $leave->update(['status' => $request->status]);
 
         return response()->json(['message' => 'تم تحديث حالة طلب الإجازة بنجاح']);
+    }
+
+    /**
+     * Get company email and default email data for maternity leave
+     */
+    public function getEmailDefaults($trainee_id)
+    {
+        $trainee = Trainee::with('company')->findOrFail($trainee_id);
+        
+        $defaultEmails = [
+            'ceo@hadaf-hq.com',
+            'afnan@hadaf-hq.com',
+            'M_SHEHATAH@hadaf-hq.com',
+            'sara@hadaf-hq.com',
+            'mashael.a@hadaf-hq.com',
+            'eslam@hadaf-hq.com',
+            'mahmoud.h@hadaf-hq.com',
+            'halim@hadaf-hq.com'
+        ];
+
+        return response()->json([
+            'company_email' => $trainee->company ? $trainee->company->email : '',
+            'default_bcc_emails' => implode(', ', $defaultEmails),
+            'trainee_name' => $trainee->name,
+            'company_name' => $trainee->company ? $trainee->company->name_ar : ''
+        ]);
+    }
+
+    /**
+     * Send maternity leave email
+     */
+    private function sendMaternityLeaveEmail(Trainee $trainee, TraineeLeave $leave, array $emailData)
+    {
+        try {
+            // التأكد من وجود مستلمين
+            if (empty($emailData['to']) && empty($emailData['cc']) && empty($emailData['bcc'])) {
+                return false;
+            }
+
+            $mail = new MaternityLeaveMail($trainee, $leave, $emailData);
+            
+            // إعداد المستلمين
+            $mailBuilder = Mail::to([]);
+            
+            if (!empty($emailData['to'])) {
+                $toEmails = array_filter(array_map('trim', explode(',', $emailData['to'])));
+                $mailBuilder = Mail::to($toEmails);
+            }
+            
+            if (!empty($emailData['cc'])) {
+                $ccEmails = array_filter(array_map('trim', explode(',', $emailData['cc'])));
+                foreach ($ccEmails as $ccEmail) {
+                    $mailBuilder->cc($ccEmail);
+                }
+            }
+            
+            if (!empty($emailData['bcc'])) {
+                $bccEmails = array_filter(array_map('trim', explode(',', $emailData['bcc'])));
+                foreach ($bccEmails as $bccEmail) {
+                    $mailBuilder->bcc($bccEmail);
+                }
+            }
+            
+            $mailBuilder->send($mail);
+            return true;
+        } catch (\Exception $e) {
+            // يمكن إضافة تسجيل الأخطاء هنا
+            \Log::error('Error sending maternity leave email: ' . $e->getMessage());
+            return false;
+        }
     }
 }
 
