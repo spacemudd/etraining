@@ -59,13 +59,26 @@
             padding: 15px;
             border-radius: 5px;
             margin: 15px 0;
+            text-align: right;
+        }
+        .details h3 {
+            text-align: right;
+            margin-top: 0;
         }
         .details ul {
             margin: 0;
             padding-right: 20px;
+            direction: rtl;
         }
         .details li {
             margin-bottom: 8px;
+            text-align: right;
+        }
+        .content {
+            text-align: right;
+        }
+        .content p {
+            text-align: right;
         }
     </style>
 </head>
