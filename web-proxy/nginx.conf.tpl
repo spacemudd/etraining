@@ -4,7 +4,7 @@ upstream app {
 
 server {
   listen 443 ssl http2;
-  server_name app.jasara-ksa.com www.app.jasarah-ksa.com;
+  server_name app.jasarah-ksa.com www.app.jasarah-ksa.com;
 
   proxy_http_version 1.1;
   fastcgi_hide_header X-Powered-By;
