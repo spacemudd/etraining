@@ -326,25 +326,67 @@ class TraineeLeavesController extends Controller
             $bccEmails = [];
 
             // معالجة TO emails
-            if (!empty($emailData['to'])) {
-                $toEmails = array_filter(array_map('trim', explode(',', $emailData['to'])));
+            $toEmails = [];
+            if (!empty($emailData['to']) && $emailData['to'] !== null && trim($emailData['to']) !== '') {
+                $toEmails = array_filter(array_map('trim', explode(',', $emailData['to'])), function($email) {
+                    return !empty(trim($email)) && filter_var(trim($email), FILTER_VALIDATE_EMAIL);
+                });
                 \Log::info('TO Emails Prepared', ['emails' => $toEmails]);
+            } else {
+                \Log::info('TO Emails Empty or Null', [
+                    'to_value' => $emailData['to'],
+                    'to_empty' => empty($emailData['to']),
+                    'to_null' => $emailData['to'] === null,
+                    'to_trimmed' => $emailData['to'] ? trim($emailData['to']) : 'N/A'
+                ]);
             }
             
             // معالجة CC emails
-            if (!empty($emailData['cc'])) {
-                $ccEmails = array_filter(array_map('trim', explode(',', $emailData['cc'])));
+            $ccEmails = [];
+            if (!empty($emailData['cc']) && $emailData['cc'] !== null && trim($emailData['cc']) !== '') {
+                $ccEmails = array_filter(array_map('trim', explode(',', $emailData['cc'])), function($email) {
+                    return !empty(trim($email)) && filter_var(trim($email), FILTER_VALIDATE_EMAIL);
+                });
                 \Log::info('CC Emails Prepared', ['emails' => $ccEmails]);
+            } else {
+                \Log::info('CC Emails Empty or Null', [
+                    'cc_value' => $emailData['cc'],
+                    'cc_empty' => empty($emailData['cc']),
+                    'cc_null' => $emailData['cc'] === null,
+                    'cc_trimmed' => $emailData['cc'] ? trim($emailData['cc']) : 'N/A'
+                ]);
             }
             
             // معالجة BCC emails
-            if (!empty($emailData['bcc'])) {
-                $bccEmails = array_filter(array_map('trim', explode(',', $emailData['bcc'])));
+            $bccEmails = [];
+            if (!empty($emailData['bcc']) && $emailData['bcc'] !== null && trim($emailData['bcc']) !== '') {
+                $bccEmails = array_filter(array_map('trim', explode(',', $emailData['bcc'])), function($email) {
+                    return !empty(trim($email)) && filter_var(trim($email), FILTER_VALIDATE_EMAIL);
+                });
                 \Log::info('BCC Emails Prepared', ['emails' => $bccEmails]);
+            } else {
+                \Log::info('BCC Emails Empty or Null', [
+                    'bcc_value' => $emailData['bcc'],
+                    'bcc_empty' => empty($emailData['bcc']),
+                    'bcc_null' => $emailData['bcc'] === null,
+                    'bcc_trimmed' => $emailData['bcc'] ? trim($emailData['bcc']) : 'N/A'
+                ]);
             }
 
             // التأكد من وجود مستلمين
             $totalRecipients = count($toEmails) + count($ccEmails) + count($bccEmails);
+            
+            \Log::info('Email Processing Debug', [
+                'original_email_data' => $emailData,
+                'to_emails_processed' => $toEmails,
+                'cc_emails_processed' => $ccEmails,
+                'bcc_emails_processed' => $bccEmails,
+                'to_count' => count($toEmails),
+                'cc_count' => count($ccEmails),
+                'bcc_count' => count($bccEmails),
+                'total_recipients' => $totalRecipients
+            ]);
+            
             if ($totalRecipients === 0) {
                 \Log::warning('No Recipients Found for Email', [
                     'email_data' => $emailData,
@@ -383,7 +425,7 @@ class TraineeLeavesController extends Controller
                     }
                 }
                 
-                \Log::info('About to Send Email', [
+                \Log::info('About to Send Email with TO recipients', [
                     'to_emails' => $toEmails,
                     'cc_emails' => $ccEmails,
                     'bcc_emails' => $bccEmails
@@ -395,7 +437,14 @@ class TraineeLeavesController extends Controller
                 // إذا لم تكن هناك TO emails، استخدم أول CC أو BCC كـ TO
                 $primaryEmail = !empty($ccEmails) ? array_shift($ccEmails) : array_shift($bccEmails);
                 
-                \Log::info('Using Primary Email as TO', ['primary_email' => $primaryEmail]);
+                \Log::info('Using Primary Email as TO (no TO emails provided)', [
+                    'primary_email' => $primaryEmail,
+                    'remaining_cc' => $ccEmails,
+                    'remaining_bcc' => $bccEmails,
+                    'reason' => 'TO emails were empty or null, using CC/BCC as primary',
+                    'original_to' => $emailData['to'],
+                    'original_bcc' => $emailData['bcc']
+                ]);
                 
                 $mailInstance = Mail::to($primaryEmail);
                 
@@ -412,6 +461,22 @@ class TraineeLeavesController extends Controller
                 }
                 
                 $mailInstance->send($mail);
+            } else {
+                \Log::error('No valid email addresses found after processing', [
+                    'original_data' => $emailData,
+                    'processed_to' => $toEmails,
+                    'processed_cc' => $ccEmails,
+                    'processed_bcc' => $bccEmails,
+                    'to_empty' => empty($emailData['to']),
+                    'to_null' => $emailData['to'] === null,
+                    'bcc_empty' => empty($emailData['bcc']),
+                    'bcc_null' => $emailData['bcc'] === null,
+                    'cc_empty' => empty($emailData['cc']),
+                    'cc_null' => $emailData['cc'] === null,
+                    'to_trimmed' => $emailData['to'] ? trim($emailData['to']) : 'N/A',
+                    'bcc_trimmed' => $emailData['bcc'] ? trim($emailData['bcc']) : 'N/A'
+                ]);
+                return false;
             }
 
             \Log::info('Maternity Leave Email Sent Successfully', [
