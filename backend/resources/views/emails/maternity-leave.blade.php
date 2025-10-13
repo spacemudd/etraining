@@ -114,7 +114,6 @@
         </div>
         <div class="footer">
             <p><strong>مع تحياتنا،</strong></p>
-            <p><strong>فريق إدارة التدريب</strong></p>
         </div>
     </div>
 </body>
