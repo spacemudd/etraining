@@ -312,187 +312,91 @@ class TraineeLeavesController extends Controller
      */
     private function sendMaternityLeaveEmail(Trainee $trainee, TraineeLeave $leave, array $emailData)
     {
-        \Log::info('sendMaternityLeaveEmail Method Called', [
+        \Log::info('sendMaternityLeaveEmail called', [
             'trainee_id' => $trainee->id,
-            'trainee_name' => $trainee->name,
-            'leave_id' => $leave->id,
             'email_data' => $emailData
         ]);
 
         try {
-            // تحضير قوائم المستلمين
-            $toEmails = [];
-            $ccEmails = [];
-            $bccEmails = [];
 
-            // معالجة TO emails
+            // معالجة TO emails - حل مبسط وفعال
             $toEmails = [];
-            if (!empty($emailData['to']) && $emailData['to'] !== null && trim($emailData['to']) !== '') {
+            if (!empty($emailData['to']) && $emailData['to'] !== null) {
                 $toEmails = array_filter(array_map('trim', explode(',', $emailData['to'])), function($email) {
-                    return !empty(trim($email)) && filter_var(trim($email), FILTER_VALIDATE_EMAIL);
+                    $email = trim($email);
+                    return !empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL);
                 });
-                \Log::info('TO Emails Prepared', ['emails' => $toEmails]);
-            } else {
-                \Log::info('TO Emails Empty or Null', [
-                    'to_value' => $emailData['to'],
-                    'to_empty' => empty($emailData['to']),
-                    'to_null' => $emailData['to'] === null,
-                    'to_trimmed' => $emailData['to'] ? trim($emailData['to']) : 'N/A'
-                ]);
             }
             
             // معالجة CC emails
             $ccEmails = [];
-            if (!empty($emailData['cc']) && $emailData['cc'] !== null && trim($emailData['cc']) !== '') {
+            if (!empty($emailData['cc']) && $emailData['cc'] !== null) {
                 $ccEmails = array_filter(array_map('trim', explode(',', $emailData['cc'])), function($email) {
-                    return !empty(trim($email)) && filter_var(trim($email), FILTER_VALIDATE_EMAIL);
+                    $email = trim($email);
+                    return !empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL);
                 });
-                \Log::info('CC Emails Prepared', ['emails' => $ccEmails]);
-            } else {
-                \Log::info('CC Emails Empty or Null', [
-                    'cc_value' => $emailData['cc'],
-                    'cc_empty' => empty($emailData['cc']),
-                    'cc_null' => $emailData['cc'] === null,
-                    'cc_trimmed' => $emailData['cc'] ? trim($emailData['cc']) : 'N/A'
-                ]);
             }
             
-            // معالجة BCC emails
+            // معالجة BCC emails - حل مبسط وفعال
             $bccEmails = [];
-            if (!empty($emailData['bcc']) && $emailData['bcc'] !== null && trim($emailData['bcc']) !== '') {
+            if (!empty($emailData['bcc']) && $emailData['bcc'] !== null) {
                 $bccEmails = array_filter(array_map('trim', explode(',', $emailData['bcc'])), function($email) {
-                    return !empty(trim($email)) && filter_var(trim($email), FILTER_VALIDATE_EMAIL);
+                    $email = trim($email);
+                    return !empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL);
                 });
-                \Log::info('BCC Emails Prepared', ['emails' => $bccEmails]);
-            } else {
-                \Log::info('BCC Emails Empty or Null', [
-                    'bcc_value' => $emailData['bcc'],
-                    'bcc_empty' => empty($emailData['bcc']),
-                    'bcc_null' => $emailData['bcc'] === null,
-                    'bcc_trimmed' => $emailData['bcc'] ? trim($emailData['bcc']) : 'N/A'
-                ]);
             }
+            
 
             // التأكد من وجود مستلمين
             $totalRecipients = count($toEmails) + count($ccEmails) + count($bccEmails);
             
-            \Log::info('Email Processing Debug', [
-                'original_email_data' => $emailData,
-                'to_emails_processed' => $toEmails,
-                'cc_emails_processed' => $ccEmails,
-                'bcc_emails_processed' => $bccEmails,
-                'to_count' => count($toEmails),
-                'cc_count' => count($ccEmails),
-                'bcc_count' => count($bccEmails),
-                'total_recipients' => $totalRecipients
-            ]);
-            
             if ($totalRecipients === 0) {
-                \Log::warning('No Recipients Found for Email', [
-                    'email_data' => $emailData,
-                    'to_count' => count($toEmails),
-                    'cc_count' => count($ccEmails),
-                    'bcc_count' => count($bccEmails)
-                ]);
-                return false;
-            }
-
-            \Log::info('Recipients Summary', [
-                'to_count' => count($toEmails),
-                'cc_count' => count($ccEmails),
-                'bcc_count' => count($bccEmails),
-                'total_recipients' => $totalRecipients
-            ]);
-
-            // إنشاء كائن الإيميل
-            $mail = new MaternityLeaveMail($trainee, $leave, $emailData);
-            \Log::info('MaternityLeaveMail Object Created');
-
-            // إرسال الإيميل باستخدام نفس طريقة الاستقالات
-            if (!empty($toEmails)) {
-                // إرسال إلى TO مع CC و BCC
-                $mailInstance = Mail::to($toEmails);
-                
-                if (!empty($ccEmails)) {
-                    foreach ($ccEmails as $ccEmail) {
-                        $mailInstance->cc($ccEmail);
-                    }
-                }
-                
-                if (!empty($bccEmails)) {
-                    foreach ($bccEmails as $bccEmail) {
-                        $mailInstance->bcc($bccEmail);
-                    }
-                }
-                
-                \Log::info('About to Send Email with TO recipients', [
+                \Log::error('No recipients found', [
                     'to_emails' => $toEmails,
                     'cc_emails' => $ccEmails,
                     'bcc_emails' => $bccEmails
                 ]);
-                
-                $mailInstance->send($mail);
-                
-            } else if (!empty($ccEmails) || !empty($bccEmails)) {
-                // إذا لم تكن هناك TO emails، استخدم أول CC أو BCC كـ TO
-                $primaryEmail = !empty($ccEmails) ? array_shift($ccEmails) : array_shift($bccEmails);
-                
-                \Log::info('Using Primary Email as TO (no TO emails provided)', [
-                    'primary_email' => $primaryEmail,
-                    'remaining_cc' => $ccEmails,
-                    'remaining_bcc' => $bccEmails,
-                    'reason' => 'TO emails were empty or null, using CC/BCC as primary',
-                    'original_to' => $emailData['to'],
-                    'original_bcc' => $emailData['bcc']
-                ]);
-                
-                $mailInstance = Mail::to($primaryEmail);
-                
-                if (!empty($ccEmails)) {
-                    foreach ($ccEmails as $ccEmail) {
-                        $mailInstance->cc($ccEmail);
-                    }
-                }
-                
-                if (!empty($bccEmails)) {
-                    foreach ($bccEmails as $bccEmail) {
-                        $mailInstance->bcc($bccEmail);
-                    }
-                }
-                
-                $mailInstance->send($mail);
-            } else {
-                \Log::error('No valid email addresses found after processing', [
-                    'original_data' => $emailData,
-                    'processed_to' => $toEmails,
-                    'processed_cc' => $ccEmails,
-                    'processed_bcc' => $bccEmails,
-                    'to_empty' => empty($emailData['to']),
-                    'to_null' => $emailData['to'] === null,
-                    'bcc_empty' => empty($emailData['bcc']),
-                    'bcc_null' => $emailData['bcc'] === null,
-                    'cc_empty' => empty($emailData['cc']),
-                    'cc_null' => $emailData['cc'] === null,
-                    'to_trimmed' => $emailData['to'] ? trim($emailData['to']) : 'N/A',
-                    'bcc_trimmed' => $emailData['bcc'] ? trim($emailData['bcc']) : 'N/A'
-                ]);
                 return false;
             }
 
-            \Log::info('Maternity Leave Email Sent Successfully', [
-                'trainee_id' => $trainee->id,
-                'leave_id' => $leave->id,
-                'total_recipients' => $totalRecipients
-            ]);
 
+            // إنشاء كائن الإيميل
+            $mail = new MaternityLeaveMail($trainee, $leave, $emailData);
+
+            // إرسال الإيميل - حل مبسط
+            $mailInstance = null;
+            
+            if (!empty($toEmails)) {
+                $mailInstance = Mail::to($toEmails);
+            } else if (!empty($ccEmails)) {
+                $mailInstance = Mail::to($ccEmails[0]);
+                array_shift($ccEmails);
+            } else if (!empty($bccEmails)) {
+                $mailInstance = Mail::to($bccEmails[0]);
+                array_shift($bccEmails);
+            }
+            
+            // إضافة CC emails
+            if (!empty($ccEmails)) {
+                foreach ($ccEmails as $ccEmail) {
+                    $mailInstance->cc($ccEmail);
+                }
+            }
+            
+            // إضافة BCC emails
+            if (!empty($bccEmails)) {
+                foreach ($bccEmails as $bccEmail) {
+                    $mailInstance->bcc($bccEmail);
+                }
+            }
+            
+            $mailInstance->send($mail);
+            
             return true;
         } catch (\Exception $e) {
-            \Log::error('Error Sending Maternity Leave Email', [
-                'trainee_id' => $trainee->id,
-                'leave_id' => $leave->id,
-                'error_message' => $e->getMessage(),
-                'error_trace' => $e->getTraceAsString(),
-                'email_data' => $emailData
+            \Log::error('Exception in sendMaternityLeaveEmail', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
             return false;
         }
