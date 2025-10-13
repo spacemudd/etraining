@@ -146,11 +146,14 @@ class ProcessSingleGoogleDriveFileJob implements ShouldQueue
             $this->downloadAndUploadFile($this->fileData['download_url'], $s3Path);
 
             // Create row record with sanitized filename
+            // Use trainee name from database if filename doesn't contain name
+            $displayName = !empty($traineeName) ? $traineeName : $trainee->name;
+            
             $row = UkCertificateRow::create([
                 'uk_certificate_id' => $this->ukCertificate->id,
                 'trainee_id' => $trainee->id,
                 'identity_number' => $identityNumber,
-                'trainee_name' => $traineeName,
+                'trainee_name' => $displayName,
                 'filename' => $sanitizedFilename,
                 'pdf_path' => $s3Path,
                 'source' => 'gdrive',
@@ -199,11 +202,14 @@ class ProcessSingleGoogleDriveFileJob implements ShouldQueue
         ]);
 
         // Create unmatched row record with sanitized filename
+        // Use "Unknown" if no name provided in filename
+        $displayName = !empty($traineeName) ? $traineeName : 'Unknown';
+        
         $row = UkCertificateRow::create([
             'uk_certificate_id' => $this->ukCertificate->id,
             'trainee_id' => null,
             'identity_number' => $identityNumber,
-            'trainee_name' => $traineeName,
+            'trainee_name' => $displayName,
             'filename' => $sanitizedFilename,
             'source' => 'gdrive',
             'source_ref' => $this->fileData['id'] ?? null,
