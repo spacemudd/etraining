@@ -1080,7 +1080,7 @@
 
       <jet-section-border></jet-section-border>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-2" v-if="$page.props.user.email === 'mashael.a@hadaf-hq.com' || $page.props.user.email === 'admin@admin.com' || $page.props.user.email === 'ebrahim.hosny@hadaf-hq.com' ">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-2" v-if="canViewSpecialDocuments">
         <div class="md:col-span-4 lg:col-span-1 sm:col-span-3">
           <div class="px-4 sm:px-0">
             <h3 class="text-lg font-medium text-gray-900">
