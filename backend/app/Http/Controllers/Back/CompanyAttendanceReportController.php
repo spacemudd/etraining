@@ -285,6 +285,13 @@ class CompanyAttendanceReportController extends Controller
     {
         $pdf = CompanyAttendanceReportService::makePdf($id);
 
+        // Debug: Log the wkhtmltopdf binary path being used
+        \Log::info('WKHTMLTOPDF Binary Path Debug (CompanyAttendance)', [
+            'config_value' => config('snappy.pdf.binary'),
+            'env_value' => env('WKHTML_PDF_BINARY'),
+            'default_path' => base_path('vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64'),
+        ]);
+
         return $pdf->inline();
     }
 
@@ -379,6 +386,14 @@ class CompanyAttendanceReportController extends Controller
     public function individualPdf($report_id, $trainee_id)
     {
         $pdf = CompanyAttendanceReportService::makeIndividualPdf($report_id, $trainee_id, request()->boolean('with_attendance_times'));
+        
+        // Debug: Log the wkhtmltopdf binary path being used
+        \Log::info('WKHTMLTOPDF Binary Path Debug (Individual)', [
+            'config_value' => config('snappy.pdf.binary'),
+            'env_value' => env('WKHTML_PDF_BINARY'),
+            'default_path' => base_path('vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64'),
+        ]);
+        
         return $pdf->inline();
     }
 

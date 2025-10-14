@@ -205,6 +205,13 @@ class  FinancialInvoicesController extends Controller
 //            'invoice' => $invoice,
 //        ]);
 
+        // Debug: Log the wkhtmltopdf binary path being used
+        \Log::info('WKHTMLTOPDF Binary Path Debug (FinancialInvoices)', [
+            'config_value' => config('snappy.pdf.binary'),
+            'env_value' => env('WKHTML_PDF_BINARY'),
+            'default_path' => base_path('vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64'),
+        ]);
+
         return $pdf->inline();
     }
 

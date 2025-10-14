@@ -216,6 +216,13 @@ class CompanyInvoicesController extends Controller
                 'invoices' => $invoices,
             ]);
 
+        // Debug: Log the wkhtmltopdf binary path being used
+        \Log::info('WKHTMLTOPDF Binary Path Debug', [
+            'config_value' => config('snappy.pdf.binary'),
+            'env_value' => env('WKHTML_PDF_BINARY'),
+            'default_path' => base_path('vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64'),
+        ]);
+
         return $pdf->inline();
     }
 
@@ -258,6 +265,12 @@ class CompanyInvoicesController extends Controller
                 'grand_total' => $invoices->sum('grand_total'),
             ]);
 
+        // Debug: Log the wkhtmltopdf binary path being used
+        \Log::info('WKHTMLTOPDF Binary Path Debug (Bulk)', [
+            'config_value' => config('snappy.pdf.binary'),
+            'env_value' => env('WKHTML_PDF_BINARY'),
+            'default_path' => base_path('vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64'),
+        ]);
 
         return $pdf->inline();
     }

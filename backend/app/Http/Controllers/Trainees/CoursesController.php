@@ -66,6 +66,13 @@ class CoursesController extends Controller
 
        $pdf = PDF::loadView("pdf.trainees.certificate", ['course_name'=>$course->name_en, 'trainee_name'=>$trainee_name]);
 
+        // Debug: Log the wkhtmltopdf binary path being used
+        \Log::info('WKHTMLTOPDF Binary Path Debug (TraineesCertificate)', [
+            'config_value' => config('snappy.pdf.binary'),
+            'env_value' => env('WKHTML_PDF_BINARY'),
+            'default_path' => base_path('vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64'),
+        ]);
+
         return $pdf->download();
     }
 }
