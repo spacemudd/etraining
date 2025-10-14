@@ -39,12 +39,14 @@ RUN pip3 install supervisor
 # For wkhtmltopdf
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get install -yq build-essential
-RUN apt-get install -yq xorg libssl-dev libxrender-dev wget gdebi
+RUN apt-get install -yq xorg libssl-dev libxrender-dev wget gdebi fontconfig
 
-# Install Windows fonts.
+# Install Windows fonts (Arial, Times New Roman, etc.)
+RUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections
 RUN wget http://ftp.nl.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.8.1_all.deb
 RUN apt-get -y install cabextract
 RUN dpkg -i ttf-mscorefonts-installer_3.8.1_all.deb
+RUN fc-cache -f -v
 RUN wget https://github.com/h4cc/wkhtmltopdf-amd64/blob/master/bin/wkhtmltopdf-amd64?raw=true -O /usr/local/bin/wkhtmltopdf2 \
     && chmod +x /usr/local/bin/wkhtmltopdf2
 
