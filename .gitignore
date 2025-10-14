@@ -3,3 +3,4 @@
 etraining-db
 .phpunit.result.cache
 .DS_Store
+.cursor/mcp.json
