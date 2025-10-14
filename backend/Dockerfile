@@ -1,3 +1,14 @@
+# Stage 1: Build MS Core Fonts in Debian (more reliable)
+FROM debian:bullseye-slim as fonts
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && \
+    echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections && \
+    apt-get install -y wget cabextract fontconfig && \
+    wget -q http://ftp.nl.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.8.1_all.deb && \
+    dpkg -i ttf-mscorefonts-installer_3.8.1_all.deb || apt-get install -f -y && \
+    fc-cache -f -v
+
+# Stage 2: Main application image
 FROM trafex/php-nginx:3.4.0
 
 # Supervisord settings
@@ -60,8 +71,6 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progre
 RUN apk add --no-cache \
         wkhtmltopdf \
         xvfb \
-        wget \
-        cabextract \
         ttf-dejavu ttf-droid ttf-freefont ttf-liberation \
         ttf-ubuntu-font-family \
         fontconfig \
@@ -74,22 +83,10 @@ RUN apk add --no-cache \
         qt5-qtwebkit \
         openssl1.1-compat
 
-# Install Microsoft Core Fonts (Arial, Times New Roman, etc.)
-RUN mkdir -p /usr/share/fonts/truetype/msttcorefonts && \
-    cd /tmp && \
-    wget -q http://downloads.sourceforge.net/corefonts/arial32.exe && \
-    wget -q http://downloads.sourceforge.net/corefonts/arialb32.exe && \
-    wget -q http://downloads.sourceforge.net/corefonts/comic32.exe && \
-    wget -q http://downloads.sourceforge.net/corefonts/courie32.exe && \
-    wget -q http://downloads.sourceforge.net/corefonts/georgi32.exe && \
-    wget -q http://downloads.sourceforge.net/corefonts/impact32.exe && \
-    wget -q http://downloads.sourceforge.net/corefonts/times32.exe && \
-    wget -q http://downloads.sourceforge.net/corefonts/trebuc32.exe && \
-    wget -q http://downloads.sourceforge.net/corefonts/verdan32.exe && \
-    wget -q http://downloads.sourceforge.net/corefonts/webdin32.exe && \
-    cabextract -q -d /usr/share/fonts/truetype/msttcorefonts *.exe && \
-    rm -f *.exe && \
-    fc-cache -f -v
+# Copy Microsoft Core Fonts (Arial, Times New Roman, etc.) from Debian stage
+COPY --from=fonts /usr/share/fonts/truetype/msttcorefonts /usr/share/fonts/truetype/msttcorefonts
+RUN fc-cache -f -v && \
+    fc-list | grep -i arial || echo "Warning: Arial fonts may not be installed"
 
 #download wkhtmltopdf
 COPY --from=madnight/alpine-wkhtmltopdf-builder:0.12.5-alpine3.10-606718795 /bin/wkhtmltopdf /usr/bin/wkhtmltopdf2
