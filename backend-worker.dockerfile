@@ -66,8 +66,6 @@ RUN mkdir -p /home/www/.composer && \
 # Set working directory
 WORKDIR /var/www
 
-USER $user
-
 RUN composer install --no-dev && \
     chgrp -R www-data storage bootstrap/cache && \
     chmod -R ug+rwx storage bootstrap/cache
