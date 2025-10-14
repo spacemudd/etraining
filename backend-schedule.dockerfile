@@ -34,9 +34,10 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get install -yq build-essential xorg libssl-dev libxrender-dev wget gdebi
 
 # Install Windows fonts.
-RUN wget http://ftp.br.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.6_all.deb
-RUN apt-get -y install cabextract
-RUN dpkg -i ttf-mscorefonts-installer_3.6_all.deb
+RUN echo "deb http://deb.debian.org/debian bullseye contrib" >> /etc/apt/sources.list
+RUN apt-get update && apt-get install -y cabextract
+RUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections
+RUN apt-get install -y ttf-mscorefonts-installer
 
 # 15 minutes execution time.
 RUN echo "memory_limit=2048M" > $PHP_INI_DIR/conf.d/memory-limit.ini
