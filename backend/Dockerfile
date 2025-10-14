@@ -85,8 +85,26 @@ RUN apk add --no-cache \
 
 # Copy Microsoft Core Fonts (Arial, Times New Roman, etc.) from Debian stage
 COPY --from=fonts /usr/share/fonts/truetype/msttcorefonts /usr/share/fonts/truetype/msttcorefonts
-RUN fc-cache -f -v && \
-    fc-list | grep -i arial || echo "Warning: Arial fonts may not be installed"
+
+# Also copy to Qt fonts directory for wkhtmltopdf and set up fontconfig
+RUN mkdir -p /usr/lib/qt5/fonts /etc/fonts/conf.d && \
+    cp -r /usr/share/fonts/truetype/msttcorefonts/* /usr/lib/qt5/fonts/ || true && \
+    fc-cache -f -v && \
+    fc-list | grep -i arial && \
+    echo "Fonts installed successfully"
+
+# Create fontconfig file to prioritize Arial
+RUN echo '<?xml version="1.0"?>' > /etc/fonts/local.conf && \
+    echo '<!DOCTYPE fontconfig SYSTEM "fonts.dtd">' >> /etc/fonts/local.conf && \
+    echo '<fontconfig>' >> /etc/fonts/local.conf && \
+    echo '  <dir>/usr/share/fonts/truetype/msttcorefonts</dir>' >> /etc/fonts/local.conf && \
+    echo '  <dir>/usr/lib/qt5/fonts</dir>' >> /etc/fonts/local.conf && \
+    echo '  <alias>' >> /etc/fonts/local.conf && \
+    echo '    <family>sans-serif</family>' >> /etc/fonts/local.conf && \
+    echo '    <prefer><family>Arial</family></prefer>' >> /etc/fonts/local.conf && \
+    echo '  </alias>' >> /etc/fonts/local.conf && \
+    echo '</fontconfig>' >> /etc/fonts/local.conf && \
+    fc-cache -f -v
 
 #download wkhtmltopdf
 COPY --from=madnight/alpine-wkhtmltopdf-builder:0.12.5-alpine3.10-606718795 /bin/wkhtmltopdf /usr/bin/wkhtmltopdf2
