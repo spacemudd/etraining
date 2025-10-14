@@ -60,8 +60,11 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progre
 RUN apk add --no-cache \
         wkhtmltopdf \
         xvfb \
+        wget \
+        cabextract \
         ttf-dejavu ttf-droid ttf-freefont ttf-liberation \
-        msttcorefonts-installer ttf-dejavu ttf-droid ttf-ubuntu-font-family fontconfig update-ms-fonts ttf-liberation \
+        ttf-ubuntu-font-family \
+        fontconfig \
         libgcc \
         libstdc++ \
         musl \
@@ -69,10 +72,24 @@ RUN apk add --no-cache \
         qt5-qtbase-x11 \
         qt5-qtsvg \
         qt5-qtwebkit \
-        ttf-freefont \
-        ttf-ubuntu-font-family \
-        openssl1.1-compat \
-        fc-cache -f
+        openssl1.1-compat
+
+# Install Microsoft Core Fonts (Arial, Times New Roman, etc.)
+RUN mkdir -p /usr/share/fonts/truetype/msttcorefonts && \
+    cd /tmp && \
+    wget -q http://downloads.sourceforge.net/corefonts/arial32.exe && \
+    wget -q http://downloads.sourceforge.net/corefonts/arialb32.exe && \
+    wget -q http://downloads.sourceforge.net/corefonts/comic32.exe && \
+    wget -q http://downloads.sourceforge.net/corefonts/courie32.exe && \
+    wget -q http://downloads.sourceforge.net/corefonts/georgi32.exe && \
+    wget -q http://downloads.sourceforge.net/corefonts/impact32.exe && \
+    wget -q http://downloads.sourceforge.net/corefonts/times32.exe && \
+    wget -q http://downloads.sourceforge.net/corefonts/trebuc32.exe && \
+    wget -q http://downloads.sourceforge.net/corefonts/verdan32.exe && \
+    wget -q http://downloads.sourceforge.net/corefonts/webdin32.exe && \
+    cabextract -q -d /usr/share/fonts/truetype/msttcorefonts *.exe && \
+    rm -f *.exe && \
+    fc-cache -f -v
 
 #download wkhtmltopdf
 COPY --from=madnight/alpine-wkhtmltopdf-builder:0.12.5-alpine3.10-606718795 /bin/wkhtmltopdf /usr/bin/wkhtmltopdf2
