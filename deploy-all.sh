@@ -3,15 +3,15 @@ docker-compose build backend backend-worker
 
 # Tagging
 docker tag etraining_backend:latest 912413319130.dkr.ecr.eu-central-1.amazonaws.com/backend
-docker tag etraining_backend-worker:latest 175380537962.dkr.ecr.eu-central-1.amazonaws.com/worker
-docker tag etraining_backend-schedule:latest 175380537962.dkr.ecr.eu-central-1.amazonaws.com/schedule
-docker tag etraining_backend-web:latest 175380537962.dkr.ecr.eu-central-1.amazonaws.com/frontend
+docker tag etraining_backend-worker:latest 912413319130.dkr.ecr.eu-central-1.amazonaws.com/worker
+docker tag etraining_backend-schedule:latest 912413319130.dkr.ecr.eu-central-1.amazonaws.com/schedule
+docker tag etraining_backend-web:latest 912413319130.dkr.ecr.eu-central-1.amazonaws.com/frontend
 
 # Pushing
 docker push 912413319130.dkr.ecr.eu-central-1.amazonaws.com/backend
-docker push 175380537962.dkr.ecr.eu-central-1.amazonaws.com/worker
-docker push 175380537962.dkr.ecr.eu-central-1.amazonaws.com/schedule
-docker push 175380537962.dkr.ecr.eu-central-1.amazonaws.com/frontend
+docker push 912413319130.dkr.ecr.eu-central-1.amazonaws.com/worker
+docker push 912413319130.dkr.ecr.eu-central-1.amazonaws.com/schedule
+docker push 912413319130.dkr.ecr.eu-central-1.amazonaws.com/frontend
 
 # Updating cluster
 aws ecs update-service --cluster prod-ecs-cluster --service backend-service --force-new-deployment
