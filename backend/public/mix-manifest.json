@@ -7,6 +7,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=c77e8ef5f30bb983ea7f",
     "/css/app.css": "/css/app.css?id=e54c1ae96a2a3c97cb53",
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
@@ -59,4 +60,10 @@
     "/js/manifest.js": "/js/manifest.js",
     "/js/vendor.js": "/js/vendor.js"
 >>>>>>> 7894adf6 (roles)
+=======
+    "/js/app.js": "/js/app.js?id=d5a820b2cfee453b82ae",
+    "/css/app.css": "/css/app.css?id=38ae3b7f3e4aec6971c1",
+    "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
+    "/js/vendor.js": "/js/vendor.js?id=97b1011eb308100faa67"
+>>>>>>> 252fad69 (run build)
 }
