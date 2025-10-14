@@ -274,7 +274,34 @@
                         <!-- ملف الإجازة -->
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">ملف الإجازة</label>
-                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors duration-200">
+                            
+                            <!-- عرض الملف المختار -->
+                            <div v-if="form.leave_file" class="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <svg class="w-8 h-8 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        <div>
+                                            <p class="text-sm font-medium text-green-800">{{ form.leave_file.name }}</p>
+                                            <p class="text-xs text-green-600">{{ formatFileSize(form.leave_file.size) }}</p>
+                                        </div>
+                                    </div>
+                                    <button 
+                                        type="button" 
+                                        @click="removeFile"
+                                        class="text-red-600 hover:text-red-800 transition-colors duration-200"
+                                    >
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- منطقة رفع الملف -->
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors duration-200"
+                                 :class="{ 'border-green-400 bg-green-50': form.leave_file }">
                                 <input 
                                     type="file" 
                                     @change="handleFileChange"
@@ -284,10 +311,15 @@
                                     :required="!editingLeave"
                                 />
                                 <label for="file-input" class="cursor-pointer">
-                                    <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-12 h-12 mx-auto mb-4 transition-colors duration-200"
+                                         :class="form.leave_file ? 'text-green-500' : 'text-gray-400'"
+                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                                     </svg>
-                                    <p class="text-sm text-gray-600 mb-2">انقر لاختيار الملف أو اسحبه هنا</p>
+                                    <p class="text-sm mb-2 transition-colors duration-200"
+                                       :class="form.leave_file ? 'text-green-600' : 'text-gray-600'">
+                                        {{ form.leave_file ? 'تم اختيار الملف بنجاح' : 'انقر لاختيار الملف أو اسحبه هنا' }}
+                                    </p>
                                     <p class="text-xs text-gray-500">PDF, JPG, PNG (حد أقصى 10 ميجابايت)</p>
                                 </label>
                             </div>
@@ -569,6 +601,23 @@ export default {
         
         handleFileChange(event) {
             this.form.leave_file = event.target.files[0];
+        },
+        
+        removeFile() {
+            this.form.leave_file = null;
+            // إعادة تعيين input file
+            const fileInput = document.getElementById('file-input');
+            if (fileInput) {
+                fileInput.value = '';
+            }
+        },
+        
+        formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         },
         
         submitForm() {
