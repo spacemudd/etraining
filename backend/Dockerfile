@@ -71,6 +71,7 @@ RUN apk add --no-cache \
         qt5-qtwebkit \
         ttf-freefont \
         ttf-ubuntu-font-family \
+        openssl1.1-compat \
         fc-cache -f
 
 #download wkhtmltopdf
