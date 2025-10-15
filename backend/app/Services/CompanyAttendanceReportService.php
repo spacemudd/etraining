@@ -244,10 +244,78 @@ class CompanyAttendanceReportService
         CompanyAttendanceReportsEmail::where('company_attendance_report_id', $report->id)->where('email', '')->delete();
         CompanyAttendanceReportsEmail::where('company_attendance_report_id', $report->id)->where('email', 'mahmoud.m@ptc-ksa.net')->delete();
 
-        Mail::to($report->emails_to()->pluck('email') ?: null)
-            ->bcc($report->emails_cc()->pluck('email') ?: null)
-            ->bcc($report->emails_bcc()->pluck('email') ?: null)
-            ->send(new CompanyAttendanceReportMail($report->id));
+        // معالجة TO emails
+        $toEmails = $report->emails_to()->pluck('email')->filter(function($email) {
+            return !empty(trim($email)) && filter_var(trim($email), FILTER_VALIDATE_EMAIL);
+        })->map(function($email) {
+            return trim($email);
+        })->toArray();
+
+        // معالجة CC emails
+        $ccEmails = $report->emails_cc()->pluck('email')->filter(function($email) {
+            return !empty(trim($email)) && filter_var(trim($email), FILTER_VALIDATE_EMAIL);
+        })->map(function($email) {
+            return trim($email);
+        })->toArray();
+
+        // معالجة BCC emails
+        $bccEmails = $report->emails_bcc()->pluck('email')->filter(function($email) {
+            return !empty(trim($email)) && filter_var(trim($email), FILTER_VALIDATE_EMAIL);
+        })->map(function($email) {
+            return trim($email);
+        })->toArray();
+
+        // التأكد من وجود مستلمين
+        $totalRecipients = count($toEmails) + count($ccEmails) + count($bccEmails);
+        
+        if ($totalRecipients === 0) {
+            \Log::error('No recipients found for attendance report email (Service)', [
+                'report_id' => $report->id,
+                'to_emails' => $toEmails,
+                'cc_emails' => $ccEmails,
+                'bcc_emails' => $bccEmails
+            ]);
+            throw new \Exception('لا توجد عناوين بريد إلكتروني صحيحة للإرسال');
+        }
+
+        // إنشاء instance الإيميل
+        $mailInstance = null;
+        
+        if (!empty($toEmails)) {
+            $mailInstance = Mail::to($toEmails);
+        } else if (!empty($ccEmails)) {
+            // إذا لم تكن هناك TO emails، استخدم أول CC كـ TO
+            $mailInstance = Mail::to($ccEmails[0]);
+            array_shift($ccEmails);
+        } else if (!empty($bccEmails)) {
+            // إذا لم تكن هناك TO أو CC emails، استخدم أول BCC كـ TO
+            $mailInstance = Mail::to($bccEmails[0]);
+            array_shift($bccEmails);
+        }
+        
+        // إضافة CC emails
+        if (!empty($ccEmails)) {
+            foreach ($ccEmails as $ccEmail) {
+                $mailInstance->cc($ccEmail);
+            }
+        }
+        
+        // إضافة BCC emails
+        if (!empty($bccEmails)) {
+            foreach ($bccEmails as $bccEmail) {
+                $mailInstance->bcc($bccEmail);
+            }
+        }
+
+        // تسجيل تفاصيل الإرسال
+        \Log::info('Sending attendance report email (Service)', [
+            'report_id' => $report->id,
+            'to_count' => count($toEmails),
+            'cc_count' => count($ccEmails),
+            'bcc_count' => count($bccEmails)
+        ]);
+
+        $mailInstance->send(new CompanyAttendanceReportMail($report->id));
 
         return $report;
     }
