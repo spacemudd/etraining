@@ -40,7 +40,27 @@ server {
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
+    
+    # Pass through or set X-Forwarded-Proto (preserve from ALB or default to http)
+    set $forwarded_proto $http_x_forwarded_proto;
+    if ($forwarded_proto = "") {
+      set $forwarded_proto $scheme;
+    }
+    proxy_set_header X-Forwarded-Proto $forwarded_proto;
+    
+    # Pass through or set X-Forwarded-Port (preserve from ALB or infer from proto)
+    set $forwarded_port $http_x_forwarded_port;
+    if ($forwarded_port = "") {
+      set $forwarded_port 443;
+    }
+    proxy_set_header X-Forwarded-Port $forwarded_port;
+    
+    # Pass through or set X-Forwarded-Host (preserve from ALB or use current host)
+    set $forwarded_host $http_x_forwarded_host;
+    if ($forwarded_host = "") {
+      set $forwarded_host $host;
+    }
+    proxy_set_header X-Forwarded-Host $forwarded_host;
   }
 
   location ~ /\. {
