@@ -376,19 +376,28 @@ class TraineeLeavesController extends Controller
                 array_shift($bccEmails);
             }
             
-            // إضافة CC emails
+            // إضافة CC emails - استخدام مصفوفة واحدة
             if (!empty($ccEmails)) {
-                foreach ($ccEmails as $ccEmail) {
-                    $mailInstance->cc($ccEmail);
-                }
+                $mailInstance->cc($ccEmails);
             }
             
-            // إضافة BCC emails
+            // إضافة BCC emails - استخدام مصفوفة واحدة بدلاً من loop
             if (!empty($bccEmails)) {
-                foreach ($bccEmails as $bccEmail) {
-                    $mailInstance->bcc($bccEmail);
-                }
+                $mailInstance->bcc($bccEmails);
             }
+
+            // تسجيل تفاصيل الإرسال قبل الإرسال
+            \Log::info('About to send maternity leave email', [
+                'trainee_id' => $trainee->id,
+                'leave_id' => $leave->id,
+                'to_emails' => $toEmails,
+                'cc_emails' => $ccEmails,
+                'bcc_emails' => $bccEmails,
+                'to_count' => count($toEmails),
+                'cc_count' => count($ccEmails),
+                'bcc_count' => count($bccEmails),
+                'total_recipients' => count($toEmails) + count($ccEmails) + count($bccEmails)
+            ]);
             
             $mailInstance->send($mail);
             
