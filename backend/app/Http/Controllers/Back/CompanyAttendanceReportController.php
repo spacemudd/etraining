@@ -343,11 +343,9 @@ class CompanyAttendanceReportController extends Controller
             array_shift($bccEmails);
         }
         
-        // إضافة BCC emails
+        // إضافة BCC emails - استخدام مصفوفة واحدة بدلاً من loop
         if (!empty($bccEmails)) {
-            foreach ($bccEmails as $bccEmail) {
-                $mailInstance->bcc($bccEmail);
-            }
+            $mailInstance->bcc($bccEmails);
         }
 
         // تسجيل تفاصيل الإرسال
