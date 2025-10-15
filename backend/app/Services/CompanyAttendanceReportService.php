@@ -293,18 +293,14 @@ class CompanyAttendanceReportService
             array_shift($bccEmails);
         }
         
-        // إضافة CC emails
+        // إضافة CC emails - استخدام مصفوفة واحدة
         if (!empty($ccEmails)) {
-            foreach ($ccEmails as $ccEmail) {
-                $mailInstance->cc($ccEmail);
-            }
+            $mailInstance->cc($ccEmails);
         }
         
-        // إضافة BCC emails
+        // إضافة BCC emails - استخدام مصفوفة واحدة بدلاً من loop
         if (!empty($bccEmails)) {
-            foreach ($bccEmails as $bccEmail) {
-                $mailInstance->bcc($bccEmail);
-            }
+            $mailInstance->bcc($bccEmails);
         }
 
         // تسجيل تفاصيل الإرسال
