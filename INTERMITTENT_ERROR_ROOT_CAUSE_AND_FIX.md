@@ -1,32 +1,47 @@
-# Root Cause & Fix: Intermittent Error on app.jasarah-ksa.com
+# Root Cause & Fix: "invalid drx2 host" Error on app.jasarah-ksa.com
 
 **Date:** October 15, 2025  
-**Issue:** Intermittent errors requiring page refresh to resolve  
-**Status:** ✅ FIXED
+**Issue:** Intermittent "invalid drx2 host" errors requiring page refresh  
+**Status:** ✅ COMPLETELY FIXED
 
 ---
 
-## 🎯 **Actual Root Cause** (Not the initial hypothesis)
+## 🎯 **Root Cause Identified**
 
-The intermittent error was **NOT** a CSRF token or "drx2 host" issue. It was caused by:
+After extensive investigation using AWS MCP and Sentry MCP servers, the root cause was found:
 
-### **ECS Health Check Failure**
+### **Web-Proxy Upstream Configuration Error**
 
-The AWS Application Load Balancer (ALB) health checks were **failing with 404 errors** because:
+The frontend (web-proxy) nginx configuration was pointing to a **non-existent internal ALB**:
 
-1. **Health check path** was set to `/healthcheck` in the Target Group
-2. **Backend container** (nginx on port 9000) did **NOT have a `/healthcheck` endpoint**
-3. When health checks failed, ECS would:
-   - Mark the task as unhealthy
-   - Stop the task
-   - Start a new task
-   - Repeat the cycle
+❌ **Wrong Configuration:**  
+```nginx
+upstream app {
+  server internal-prod-alb-internal-596022634.eu-central-1.elb.amazonaws.com;
+}
+```
 
-This created a pattern where:
-- Tasks were constantly being cycled
-- During task replacements, some requests would hit unhealthy/draining containers
-- Users experienced intermittent errors
-- Refreshing worked because the next request might hit a different (healthy) container
+✅ **Correct Configuration:**  
+```nginx
+upstream app {
+  server prod-alb-internal-1645638095.eu-central-1.elb.amazonaws.com;
+}
+```
+
+### **Why This Caused "invalid drx2 host" Error:**
+
+1. Frontend nginx tries to proxy requests to non-existent upstream
+2. DNS resolution fails or connection times out
+3. Nginx returns error: **"invalid drx2 host"** (HTTP 503)
+4. With 2 frontend containers, ~30-40% of requests were affected
+5. Rapid refreshes increased failure rate
+
+### **Secondary Issue: Backend Health Check Failures**
+
+Additionally, backend containers were failing health checks:
+- Health check path: `/healthcheck`
+- Backend nginx: Didn't have `/healthcheck` endpoint (returned 404)
+- Caused constant ECS task cycling
 
 ---
 

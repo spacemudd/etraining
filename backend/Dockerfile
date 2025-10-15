@@ -15,6 +15,8 @@ FROM trafex/php-nginx:3.4.0
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # NGINX settings
+ARG CACHE_BUST=1
+ARG CACHE_BUST=1
 COPY nginx.default.conf /etc/nginx/nginx.conf
 COPY nginx.server.conf /etc/nginx/conf.d/server.conf
 
@@ -69,10 +71,10 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progre
 
 # For wkhtmltopdf
 RUN apk add --no-cache \
-        wkhtmltopdf \
+        
         xvfb \
         ttf-dejavu ttf-droid ttf-freefont ttf-liberation \
-        ttf-ubuntu-font-family \
+        
         fontconfig \
         libgcc \
         libstdc++ \
@@ -80,7 +82,7 @@ RUN apk add --no-cache \
         qt5-qtbase \
         qt5-qtbase-x11 \
         qt5-qtsvg \
-        qt5-qtwebkit \
+        
         openssl1.1-compat
 
 # Copy Microsoft Core Fonts (Arial, Times New Roman, etc.) from Debian stage
@@ -113,7 +115,7 @@ RUN ln -s /usr/bin/wkhtmltopdf2 /usr/local/bin/wkhtmltopdf2
 RUN chmod +x /usr/local/bin/wkhtmltopdf2
 RUN chmod 1777 /usr/local/bin/wkhtmltopdf2
 
-#RUN wget https://github.com/h4cc/wkhtmltopdf-amd64/blob/master/bin/wkhtmltopdf-amd64?raw=true -O /usr/local/bin/wkhtmltopdf \
+#RUN wget https://github.com/h4cc/wkhtmltopdf-amd64/blob/master/bin/wkhtmltopdf-amd64?raw=true -O /usr/local/bin/
 #    && chmod +x /usr/local/bin/wkhtmltopdf
 
 USER nobody
