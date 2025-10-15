@@ -50,6 +50,8 @@ class AppServiceProvider extends ServiceProvider
                 return $url->current();
             });
             URL::forceScheme('https');
+            // Force root URL to remove port from generated URLs
+            URL::forceRootUrl(config('app.url'));
         }
         
         // إعداد Media Library للعمل مع المنفذ الصحيح في البيئة المحلية
