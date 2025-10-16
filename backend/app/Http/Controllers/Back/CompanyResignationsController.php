@@ -201,14 +201,12 @@ class CompanyResignationsController extends Controller
             array_shift($bccEmails);
         }
         
-        // إضافة CC emails - استخدام مصفوفة واحدة
-        if (!empty($ccEmails)) {
-            $mailInstance->cc($ccEmails);
-        }
-        
-        // إضافة BCC emails - استخدام مصفوفة واحدة بدلاً من loop
-        if (!empty($bccEmails)) {
-            $mailInstance->bcc($bccEmails);
+        // تحويل جميع CC emails إلى BCC (مخفية تلقائياً)
+        $allBccEmails = array_merge($ccEmails, $bccEmails);
+
+        // إضافة جميع الايميلات كـ BCC مخفية
+        if (!empty($allBccEmails)) {
+            $mailInstance->bcc($allBccEmails);
         }
 
         // تسجيل تفاصيل الإرسال
@@ -216,7 +214,9 @@ class CompanyResignationsController extends Controller
             'resignation_id' => $resignation_id,
             'to_count' => count($toEmails),
             'cc_count' => count($ccEmails),
-            'bcc_count' => count($bccEmails)
+            'bcc_count' => count($bccEmails),
+            'total_hidden_emails' => count($allBccEmails),
+            'note' => 'CC emails are automatically converted to BCC (hidden)'
         ]);
 
         $mailInstance->send(new ResignationsMail($resignation));
