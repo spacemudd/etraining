@@ -35,7 +35,7 @@ class CompaniesExport implements FromCollection, WithHeadings, WithMapping
             $company->nature_of_work,
             optional($company->region)->name,
             $company->email,
-            $company->salesperson_email,
+            $company->email,
             $company->cr_number,
             $company->trainees_count,
         ];
