@@ -19,7 +19,7 @@ class CompaniesExport implements FromCollection, WithHeadings, WithMapping
             'طبيعة العمل',
             'المنطقة',
             'الايميل',
-            'ايميل المندوب',
+            'اسم المندوب',
             'السجل التجاري',
             'عدد المتدربين',
         ];
@@ -35,7 +35,7 @@ class CompaniesExport implements FromCollection, WithHeadings, WithMapping
             $company->nature_of_work,
             optional($company->region)->name,
             $company->email,
-            $company->email,
+            $company->salesperson_name,
             $company->cr_number,
             $company->trainees_count,
         ];
