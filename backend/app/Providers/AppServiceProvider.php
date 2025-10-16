@@ -50,7 +50,10 @@ class AppServiceProvider extends ServiceProvider
                 return $url->current();
             });
             URL::forceScheme('https');
-            // Force root URL to remove port from generated URLs
+        }
+        
+        // Force Laravel to use APP_URL for all generated URLs (prevents port issues)
+        if (config('app.url')) {
             URL::forceRootUrl(config('app.url'));
         }
         

@@ -1,5 +1,5 @@
 upstream app {
-    server prod-alb-internal-1645638095.eu-central-1.elb.amazonaws.com:9000;
+    server prod-alb-internal-1645638095.eu-central-1.elb.amazonaws.com;
     #server backend:9000;
 }
 
@@ -37,37 +37,10 @@ server {
 
   location / {
     proxy_pass http://app;
-    
-    # Strip port from Host header if present
-    set $host_without_port $host;
-    if ($host ~* ^(.+):(\d+)$) {
-      set $host_without_port $1;
-    }
-    proxy_set_header Host $host_without_port;
-    
+    proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    
-    # Pass through or set X-Forwarded-Proto (preserve from ALB or default to https)
-    set $forwarded_proto $http_x_forwarded_proto;
-    if ($forwarded_proto = "") {
-      set $forwarded_proto "https";
-    }
-    proxy_set_header X-Forwarded-Proto $forwarded_proto;
-    
-    # Pass through or set X-Forwarded-Port (preserve from ALB or default to 443)
-    set $forwarded_port $http_x_forwarded_port;
-    if ($forwarded_port = "") {
-      set $forwarded_port "443";
-    }
-    proxy_set_header X-Forwarded-Port $forwarded_port;
-    
-    # Pass through or set X-Forwarded-Host (preserve from ALB or use current host without port)
-    set $forwarded_host $http_x_forwarded_host;
-    if ($forwarded_host = "") {
-      set $forwarded_host $host_without_port;
-    }
-    proxy_set_header X-Forwarded-Host $forwarded_host;
+    proxy_set_header X-Forwarded-Proto $scheme;
   }
 
   location ~ /\. {
