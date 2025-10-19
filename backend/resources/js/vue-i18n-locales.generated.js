@@ -619,6 +619,9 @@ export default {
             "issue-invoice": "اصدار فاتورة",
             "issue-invoice-trainee": "اصدار فاتورة للمتدرب",
             "issue-invoice-trainee-description": "هنا يمكن لك اصدار فاتورة للمتدرب",
+            "refresh": "تحديث",
+            "invoices-updated-successfully": "تم تحديث الفواتير بنجاح",
+            "error-updating-invoices": "حدث خطأ في تحديث الفواتير",
             "new-invoice": "فاتورة جديدة",
             "expected-invoice-value-per-trainee": "متوقع تكلفة الإشتراك لكل متدرب",
             "month": "شهر",
@@ -735,7 +738,6 @@ export default {
             "receipt-date": "تاريخ الإيصال",
             "history": "التاريخ",
             "day": "اليوم",
-            "refresh": "تحديث",
             "post-trainees": "ترحيل",
             "settle": "سداد",
             "dues": "مستحقات",
@@ -1019,7 +1021,12 @@ export default {
             "back-to-imports": "العودة إلى الاستيرادات",
             "delivery-status": "حالة التسليم",
             "delivered": "تم التسليم",
-            "unknown": "غير معروف"
+            "unknown": "غير معروف",
+            "template-type": "نوع القالب",
+            "default-template": "القالب الافتراضي",
+            "simple-template": "القالب المبسط",
+            "modern-template": "القالب الحديث",
+            "gradient-template": "القالب المتدرج"
         }
     },
     "en": {
@@ -1600,6 +1607,9 @@ export default {
             "issue-monthly-invoices": "Issue Monthly Invoices",
             "issue-invoice": "Issue Invoice",
             "issue-invoice-trainee": "Issue Invoice to Trainee",
+            "refresh": "Refresh",
+            "invoices-updated-successfully": "Invoices updated successfully",
+            "error-updating-invoices": "Error updating invoices",
             "issue-invoice-trainee-description": "Here you can issue a new invoice to trainee based on date",
             "new-invoice": "New Invoice",
             "expected-invoice-value-per-trainee": "Expected invoice value per trainee",
@@ -1710,7 +1720,6 @@ export default {
             "receipt-date": "Receipt date",
             "history": "History",
             "day": "Day",
-            "refresh": "Refresh",
             "post-trainees": "Post trainees",
             "settle": "Settle",
             "dues": "Dues",
@@ -2006,7 +2015,12 @@ export default {
             "back-to-imports": "Back to imports",
             "delivery-status": "Delivery Status",
             "delivered": "Delivered",
-            "unknown": "Unknown"
+            "unknown": "Unknown",
+            "template-type": "Template Type",
+            "default-template": "Default Template",
+            "simple-template": "Simple Template",
+            "modern-template": "Modern Template",
+            "gradient-template": "Gradient Template"
         }
     }
 }

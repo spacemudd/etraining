@@ -910,6 +910,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('trainees/archived', [\App\Http\Controllers\Back\TraineesController::class, 'indexArchived'])->name('trainees.index.archived');
         Route::resource('trainees', \App\Http\Controllers\Back\TraineesController::class);
         Route::resource('trainees.invoices', \App\Http\Controllers\Back\TraineeInvoicesController::class)->only(['create', 'store']);
+        Route::post('trainees/{trainee_id}/refresh-invoices', [\App\Http\Controllers\Back\TraineesController::class, 'refreshInvoices'])->name('trainees.refresh-invoices');
         Route::get('candidates', [\App\Http\Controllers\Back\CandidatesController::class, 'index'])->name('candidates.index');
         Route::post('trainees/{trainee_id}/suspendSelectedTrainees', [\App\Http\Controllers\Back\TraineesController::class, 'suspendSelectedTrainees'])->name('trainees.suspend.selected.trainees');
         // Export trainees

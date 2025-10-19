@@ -28,6 +28,7 @@ use App\Models\User;
 use App\Notifications\CustomTraineeNotification;
 use App\Notifications\TraineeApplicationApprovedNotification;
 use App\Notifications\TraineePrivateMessage;
+use App\Services\NoonService;
 use App\Notifications\TraineeRestoredNotification;
 use App\Notifications\TraineeSetupAccountNotification;
 use App\Notifications\TraineeWelcomeNotification;
@@ -1549,6 +1550,73 @@ class TraineesController extends Controller
         } else {
             return redirect()->route('back.trainees.show', $trainee->id)
                 ->with('error', 'Trainee status set to pending approval due to missing optional documents.');
+        }
+    }
+
+    /**
+     * Refresh invoices from Noon payment gateway for a specific trainee
+     *
+     * @param string $trainee_id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function refreshInvoices($trainee_id)
+    {
+        $trainee = Trainee::findOrFail($trainee_id);
+        
+        // Get all invoices for this trainee that have payment_reference_id (Noon orders)
+        $invoices = $trainee->invoices()
+            ->whereNotNull('payment_reference_id')
+            ->where('payment_method', Invoice::PAYMENT_METHOD_CREDIT_CARD)
+            ->get();
+
+        $updatedCount = 0;
+        $errors = [];
+
+        foreach ($invoices as $invoice) {
+            try {
+                // Get order details from Noon
+                $noonService = app(NoonService::class);
+                $order = $noonService->getOrder($invoice->payment_reference_id, 5676); // Try Jasarah first
+                
+                if (is_null($order) || $order->resultCode === 5021 || $order->resultCode === 19089 || $order->resultCode === 19001) {
+                    $order = $noonService->getOrder($invoice->payment_reference_id, 0); // Try Jisr
+                }
+
+                if ($order && $noonService->isPaymentSuccess($order)) {
+                    // Update invoice with latest payment details
+                    $invoice->update([
+                        'payment_detail_method' => $order->result->paymentDetails->mode ?? $invoice->payment_detail_method,
+                        'payment_detail_brand' => $order->result->paymentDetails->brand ?? $invoice->payment_detail_brand,
+                        'status' => Invoice::STATUS_PAID,
+                        'paid_at' => $invoice->paid_at ?? now(),
+                    ]);
+                    $updatedCount++;
+                } elseif ($order) {
+                    // Order exists but payment might have failed
+                    $invoice->update([
+                        'status' => Invoice::STATUS_UNPAID,
+                        'paid_at' => null,
+                    ]);
+                }
+            } catch (\Exception $e) {
+                $errors[] = "Error updating invoice {$invoice->number_formatted}: " . $e->getMessage();
+                \Log::error("Error refreshing invoice {$invoice->id} from Noon", [
+                    'invoice_id' => $invoice->id,
+                    'payment_reference_id' => $invoice->payment_reference_id,
+                    'error' => $e->getMessage()
+                ]);
+            }
+        }
+
+        if ($updatedCount > 0) {
+            return redirect()->route('back.trainees.show', $trainee_id)
+                ->with('success', "تم تحديث {$updatedCount} فاتورة بنجاح من نون");
+        } elseif (count($errors) > 0) {
+            return redirect()->route('back.trainees.show', $trainee_id)
+                ->with('error', 'حدث خطأ في تحديث بعض الفواتير: ' . implode(', ', $errors));
+        } else {
+            return redirect()->route('back.trainees.show', $trainee_id)
+                ->with('info', 'لا توجد فواتير تحتاج تحديث من نون');
         }
     }
 }

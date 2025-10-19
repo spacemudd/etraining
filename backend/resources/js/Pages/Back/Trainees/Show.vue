@@ -1114,7 +1114,7 @@
         </div>
 
         <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
-          <div class="flex w-full justify-end">
+          <div class="flex w-full justify-end gap-2">
             <inertia-link
               :href="route('back.trainees.invoices.create', trainee.id)"
             >
@@ -1122,6 +1122,16 @@
                 {{ $t("words.issue-invoice") }}
               </jet-button>
             </inertia-link>
+            
+            <jet-button 
+              type="button" 
+              @click="refreshInvoices"
+              :disabled="isRefreshing"
+              class="bg-green-600 hover:bg-green-700"
+            >
+              <span v-if="isRefreshing" class="animate-spin">⟳</span>
+              {{ $t("words.refresh") }}
+            </jet-button>
           </div>
 
           <table
@@ -1235,6 +1245,7 @@ export default {
   },
   data() {
     return {
+      isRefreshing: false,
       new_trainee_group: {
         name: "",
         id: "",
@@ -1351,6 +1362,26 @@ export default {
     }
   },
   methods: {
+    refreshInvoices() {
+      this.isRefreshing = true;
+      
+      this.$inertia.post(
+        route('back.trainees.refresh-invoices', this.trainee.id),
+        {},
+        {
+          preserveState: true,
+          preserveScroll: true,
+          onSuccess: () => {
+            this.isRefreshing = false;
+            this.$toast.success(this.$t('words.invoices-updated-successfully'));
+          },
+          onError: () => {
+            this.isRefreshing = false;
+            this.$toast.error(this.$t('words.error-updating-invoices'));
+          }
+        }
+      );
+    },
     deleteFromBlockList() {
       this.$inertia.delete(
         route("back.trainees.delete-from-block-list", { id: this.trainee.id })
