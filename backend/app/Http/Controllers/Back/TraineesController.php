@@ -1554,6 +1554,8 @@ class TraineesController extends Controller
      */
     public function refreshInvoices($trainee_id)
     {
+        \Log::info("Starting refresh invoices for trainee: {$trainee_id}");
+        
         $trainee = Trainee::findOrFail($trainee_id);
         
         // Get all invoices for this trainee that have payment_reference_id (Noon orders)
@@ -1561,6 +1563,8 @@ class TraineesController extends Controller
             ->whereNotNull('payment_reference_id')
             ->where('payment_method', Invoice::PAYMENT_METHOD_CREDIT_CARD)
             ->get();
+
+        \Log::info("Found {$invoices->count()} invoices to check");
 
         $updatedCount = 0;
         $errors = [];
@@ -1601,15 +1605,26 @@ class TraineesController extends Controller
             }
         }
 
+        \Log::info("Refresh completed. Updated: {$updatedCount}, Errors: " . count($errors));
+
         if ($updatedCount > 0) {
-            return redirect()->route('back.trainees.show', $trainee_id)
-                ->with('success', "تم تحديث {$updatedCount} فاتورة بنجاح من نون");
+            return response()->json([
+                'success' => true,
+                'message' => "تم تحديث {$updatedCount} فاتورة بنجاح من نون",
+                'updated_count' => $updatedCount
+            ]);
         } elseif (count($errors) > 0) {
-            return redirect()->route('back.trainees.show', $trainee_id)
-                ->with('error', 'حدث خطأ في تحديث بعض الفواتير: ' . implode(', ', $errors));
+            return response()->json([
+                'success' => false,
+                'message' => 'حدث خطأ في تحديث بعض الفواتير: ' . implode(', ', $errors),
+                'errors' => $errors
+            ], 400);
         } else {
-            return redirect()->route('back.trainees.show', $trainee_id)
-                ->with('info', 'لا توجد فواتير تحتاج تحديث من نون');
+            return response()->json([
+                'success' => true,
+                'message' => 'لا توجد فواتير تحتاج تحديث من نون',
+                'updated_count' => 0
+            ]);
         }
     }
 }

@@ -1128,6 +1128,8 @@
               @click="refreshInvoices"
               :disabled="isRefreshing"
               class="bg-green-600 hover:bg-green-700"
+              style="margin-left: 10px;"
+              id="refresh-button"
             >
               <span v-if="isRefreshing" class="animate-spin">⟳</span>
               {{ $t("words.refresh") }}
@@ -1355,6 +1357,10 @@ export default {
     }
   },
   mounted() {
+    console.log('Component mounted');
+    console.log('Trainee ID:', this.trainee.id);
+    console.log('Refresh button should be visible');
+    
     if (this.trainee.trainee_group) {
       this.trainee.trainee_group_object = this.trainee_group;
     } else {
@@ -1363,24 +1369,40 @@ export default {
   },
   methods: {
     refreshInvoices() {
+      console.log('Refresh invoices clicked');
+      alert('تم الضغط على زر التحديث!');
+      
       this.isRefreshing = true;
       
-      this.$inertia.post(
-        route('back.trainees.refresh-invoices', this.trainee.id),
-        {},
-        {
-          preserveState: true,
-          preserveScroll: true,
-          onSuccess: () => {
-            this.isRefreshing = false;
-            this.$toast.success(this.$t('words.invoices-updated-successfully'));
-          },
-          onError: () => {
-            this.isRefreshing = false;
-            this.$toast.error(this.$t('words.error-updating-invoices'));
-          }
+      // Use a simple fetch request instead of Inertia
+      fetch(route('back.trainees.refresh-invoices', this.trainee.id), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({})
+      })
+      .then(response => {
+        console.log('Response received:', response);
+        if (response.ok) {
+          return response.json();
         }
-      );
+        throw new Error('Network response was not ok');
+      })
+      .then(data => {
+        console.log('Success:', data);
+        this.isRefreshing = false;
+        alert('تم تحديث الفواتير بنجاح!');
+        // Reload the page to show updated invoices
+        window.location.reload();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        this.isRefreshing = false;
+        alert('حدث خطأ في تحديث الفواتير: ' + error.message);
+      });
     },
     deleteFromBlockList() {
       this.$inertia.delete(
