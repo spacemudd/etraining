@@ -1123,17 +1123,17 @@
               </jet-button>
             </inertia-link>
             
-            <jet-button 
+            <button 
               type="button" 
               @click="refreshInvoices"
               :disabled="isRefreshing"
-              class="bg-green-600 hover:bg-green-700"
+              class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-normal transition ease-in-out duration-150 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50"
               style="margin-left: 10px;"
               id="refresh-button"
             >
-              <span v-if="isRefreshing" class="animate-spin">⟳</span>
+              <span v-if="isRefreshing" class="animate-spin mr-2">⟳</span>
               {{ $t("words.refresh") }}
-            </jet-button>
+            </button>
           </div>
 
           <table
@@ -1361,6 +1361,24 @@ export default {
     console.log('Trainee ID:', this.trainee.id);
     console.log('Refresh button should be visible');
     
+    // Test if the button exists
+    setTimeout(() => {
+      const refreshButton = document.getElementById('refresh-button');
+      if (refreshButton) {
+        console.log('Refresh button found in DOM');
+        console.log('Button element:', refreshButton);
+        
+        // Add direct event listener as backup
+        refreshButton.addEventListener('click', (e) => {
+          console.log('Direct event listener triggered');
+          e.preventDefault();
+          this.refreshInvoices();
+        });
+      } else {
+        console.error('Refresh button NOT found in DOM');
+      }
+    }, 1000);
+    
     if (this.trainee.trainee_group) {
       this.trainee.trainee_group_object = this.trainee_group;
     } else {
@@ -1369,6 +1387,7 @@ export default {
   },
   methods: {
     refreshInvoices() {
+      console.log('=== REFRESH INVOICES FUNCTION CALLED ===');
       console.log('Refresh invoices clicked');
       alert('تم الضغط على زر التحديث!');
       
