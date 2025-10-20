@@ -120,6 +120,6 @@ RUN chmod 1777 /usr/local/bin/wkhtmltopdf2
 
 USER nobody
 
-EXPOSE 8900
+EXPOSE 8085
 
-HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1:9000/fpm-ping
+HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1:8085/healthcheck
