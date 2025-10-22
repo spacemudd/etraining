@@ -11,6 +11,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=c77e8ef5f30bb983ea7f",
     "/css/app.css": "/css/app.css?id=e54c1ae96a2a3c97cb53",
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
@@ -87,4 +88,10 @@
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
     "/js/vendor.js": "/js/vendor.js?id=6c0fa86bc407aabd12db"
 >>>>>>> 3f0588af (check button)
+=======
+    "/js/app.js": "/js/app.js?id=ff9d3c257d2a5e1e515b",
+    "/css/app.css": "/css/app.css?id=2854fcc85f3c979e0820",
+    "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
+    "/js/vendor.js": "/js/vendor.js?id=2cc2ae8f6c7cb39888bd"
+>>>>>>> 31550286 (s3 file show)
 }

@@ -308,6 +308,52 @@ class TraineeLeavesController extends Controller
     }
 
     /**
+     * Get signed URL for leave file
+     */
+    public function getFileUrl($trainee_id, $id)
+    {
+        try {
+            $leave = TraineeLeave::where('trainee_id', $trainee_id)
+                ->where('id', $id)
+                ->firstOrFail();
+
+            $media = $leave->getFirstMedia('leave_file');
+            
+            if (!$media) {
+                return response()->json(['error' => 'الملف غير موجود'], 404);
+            }
+
+            if ($media->disk === 's3') {
+                // إنشاء signed URL صالح لمدة ساعة
+                $signedUrl = $media->getTemporaryUrl(now()->addHour(), '', [
+                    'ResponseContentDisposition' => 'inline; filename="' . $media->name . '"',
+                ]);
+                
+                return response()->json([
+                    'file_url' => $signedUrl,
+                    'file_name' => $media->name,
+                    'expires_at' => now()->addHour()->toISOString()
+                ]);
+            } else {
+                // للملفات المحلية
+                return response()->json([
+                    'file_url' => $media->getUrl(),
+                    'file_name' => $media->name,
+                    'expires_at' => null
+                ]);
+            }
+        } catch (\Exception $e) {
+            \Log::error('Error getting file URL', [
+                'trainee_id' => $trainee_id,
+                'leave_id' => $id,
+                'error' => $e->getMessage()
+            ]);
+            
+            return response()->json(['error' => 'حدث خطأ أثناء الحصول على رابط الملف'], 500);
+        }
+    }
+
+    /**
      * Send maternity leave email
      */
     private function sendMaternityLeaveEmail(Trainee $trainee, TraineeLeave $leave, array $emailData)
