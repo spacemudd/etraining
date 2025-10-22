@@ -37,16 +37,15 @@
                                 <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
-                                <a 
-                                    :href="leave.leave_file_url" 
-                                    target="_blank"
-                                    class="text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                                <button 
+                                    @click="openCurrentFile"
+                                    class="text-blue-600 hover:text-blue-800 flex items-center gap-1 cursor-pointer"
                                 >
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
                                     </svg>
                                     {{ leave.leave_file_name || 'عرض الملف الحالي' }}
-                                </a>
+                                </button>
                             </div>
                             
                             <div class="mt-3">
@@ -197,6 +196,53 @@ export default {
             const fileInput = document.getElementById('file-upload');
             if (fileInput) {
                 fileInput.value = '';
+            }
+        },
+        
+        async openCurrentFile() {
+            if (!this.leave.has_file) {
+                alert('عذراً، لا يوجد ملف مرفق.');
+                return;
+            }
+            
+            try {
+                // إظهار رسالة تحميل
+                const loadingMessage = document.createElement('div');
+                loadingMessage.innerHTML = 'جاري تحميل الملف...';
+                loadingMessage.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #333; color: white; padding: 20px; border-radius: 8px; z-index: 9999;';
+                document.body.appendChild(loadingMessage);
+                
+                // الحصول على signed URL من الخادم
+                const response = await axios.get(route('back.trainees.leaves.file-url', {
+                    trainee_id: this.leave.trainee_id,
+                    id: this.leave.id
+                }));
+                
+                // إزالة رسالة التحميل
+                document.body.removeChild(loadingMessage);
+                
+                if (response.data && response.data.file_url) {
+                    // فتح الملف في نافذة جديدة
+                    window.open(response.data.file_url, '_blank');
+                } else {
+                    alert('عذراً، لا يمكن الوصول إلى الملف في الوقت الحالي. يرجى المحاولة لاحقاً.');
+                }
+            } catch (error) {
+                // إزالة رسالة التحميل في حالة الخطأ
+                const loadingMessage = document.querySelector('div[style*="position: fixed"]');
+                if (loadingMessage) {
+                    document.body.removeChild(loadingMessage);
+                }
+                
+                console.error('Error getting file URL:', error);
+                
+                if (error.response && error.response.status === 404) {
+                    alert('الملف غير موجود.');
+                } else if (error.response && error.response.data && error.response.data.error) {
+                    alert('خطأ: ' + error.response.data.error);
+                } else {
+                    alert('عذراً، حدث خطأ أثناء فتح الملف. يرجى المحاولة مرة أخرى.');
+                }
             }
         },
         

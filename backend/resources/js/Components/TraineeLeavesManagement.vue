@@ -106,27 +106,17 @@
 
                                                  <!-- الملف المرفوع -->
                          <td class="px-6 py-4">
-                             <div v-if="leave.has_file && leave.leave_file_url" class="flex items-center">
-                                 <a 
-                                     :href="leave.leave_file_url" 
-                                     target="_blank"
+                             <div v-if="leave.has_file" class="flex items-center">
+                                 <button 
                                      @click="handleFileClick($event, leave)"
-                                     class="inline-flex items-center px-3 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors duration-200 border border-green-200 group"
+                                     class="inline-flex items-center px-3 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors duration-200 border border-green-200 group cursor-pointer"
                                      title="انقر لفتح الملف"
                                  >
                                      <svg class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
                                      </svg>
                                      <span class="text-sm font-medium">{{ leave.leave_file_name || 'عرض الملف' }}</span>
-                                 </a>
-                             </div>
-                             <div v-else-if="leave.has_file && !leave.leave_file_url" class="flex items-center">
-                                 <span class="inline-flex items-center px-3 py-2 bg-red-50 text-red-600 rounded-lg border border-red-200">
-                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-                                     </svg>
-                                     <span class="text-sm">خطأ في تحميل الملف</span>
-                                 </span>
+                                 </button>
                              </div>
                              <div v-else class="flex items-center">
                                  <span class="inline-flex items-center px-3 py-2 bg-gray-50 text-gray-500 rounded-lg border border-gray-200">
@@ -769,20 +759,53 @@ export default {
             }
         },
         
-        handleFileClick(event, leave) {
-            // التحقق من أن الملف متاح قبل فتحه
-            if (!leave.leave_file_url) {
-                event.preventDefault();
-                alert('عذراً، لا يمكن الوصول إلى الملف في الوقت الحالي. يرجى المحاولة لاحقاً.');
+        async handleFileClick(event, leave) {
+            event.preventDefault();
+            
+            // التحقق من وجود الملف
+            if (!leave.has_file) {
+                alert('عذراً، لا يوجد ملف مرفق.');
                 return;
             }
             
-            // محاولة فتح الملف في نافذة جديدة
             try {
-                window.open(leave.leave_file_url, '_blank');
+                // إظهار رسالة تحميل
+                const loadingMessage = document.createElement('div');
+                loadingMessage.innerHTML = 'جاري تحميل الملف...';
+                loadingMessage.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #333; color: white; padding: 20px; border-radius: 8px; z-index: 9999;';
+                document.body.appendChild(loadingMessage);
+                
+                // الحصول على signed URL من الخادم
+                const response = await axios.get(route('back.trainees.leaves.file-url', {
+                    trainee_id: this.trainee_id,
+                    id: leave.id
+                }));
+                
+                // إزالة رسالة التحميل
+                document.body.removeChild(loadingMessage);
+                
+                if (response.data && response.data.file_url) {
+                    // فتح الملف في نافذة جديدة
+                    window.open(response.data.file_url, '_blank');
+                } else {
+                    alert('عذراً، لا يمكن الوصول إلى الملف في الوقت الحالي. يرجى المحاولة لاحقاً.');
+                }
             } catch (error) {
-                console.error('Error opening file:', error);
-                alert('عذراً، حدث خطأ أثناء فتح الملف. يرجى المحاولة مرة أخرى.');
+                // إزالة رسالة التحميل في حالة الخطأ
+                const loadingMessage = document.querySelector('div[style*="position: fixed"]');
+                if (loadingMessage) {
+                    document.body.removeChild(loadingMessage);
+                }
+                
+                console.error('Error getting file URL:', error);
+                
+                if (error.response && error.response.status === 404) {
+                    alert('الملف غير موجود.');
+                } else if (error.response && error.response.data && error.response.data.error) {
+                    alert('خطأ: ' + error.response.data.error);
+                } else {
+                    alert('عذراً، حدث خطأ أثناء فتح الملف. يرجى المحاولة مرة أخرى.');
+                }
             }
         }
     }

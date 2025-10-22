@@ -821,6 +821,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('trainees/{trainee_id}/leaves/email-defaults', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'getEmailDefaults'])->name('trainees.leaves.email-defaults');
         Route::get('trainees/{trainee_id}/leaves/{id}', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'show'])->name('trainees.leaves.show');
         Route::get('trainees/{trainee_id}/leaves/{id}/edit', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'edit'])->name('trainees.leaves.edit');
+        Route::get('trainees/{trainee_id}/leaves/{id}/file-url', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'getFileUrl'])->name('trainees.leaves.file-url');
         Route::put('trainees/{trainee_id}/leaves/{id}', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'update'])->name('trainees.leaves.update');
         Route::delete('trainees/{trainee_id}/leaves/{id}', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'destroy'])->name('trainees.leaves.destroy');
         Route::put('trainees/{trainee_id}/leaves/{id}/status', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'updateStatus'])->name('trainees.leaves.update-status');
