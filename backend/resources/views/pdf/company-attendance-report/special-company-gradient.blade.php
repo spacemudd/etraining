@@ -22,33 +22,43 @@
         
         body {
             font-family: Arial, sans-serif;
-            background: #f8f9fa;
-            color: #2c3e50;
+            background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 25%, #fecfef 50%, #fecfef 75%, #ff9a9e 100%);
+            color: #2d3748;
             line-height: 1.6;
             padding: 15px;
         }
         
         .main-container {
             background: white;
-            border-radius: 8px;
+            border-radius: 20px;
             padding: 0;
             margin: 0 auto;
             max-width: 1500px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 15px 35px rgba(74, 144, 226, 0.3);
             overflow: hidden;
-            border: 1px solid #dee2e6;
+            border: 3px solid #4A90E2;
         }
         
         .header-accent {
-            background: #2c3e50;
-            height: 4px;
+            background: linear-gradient(90deg, #4A90E2 0%, #5BA0F2 25%, #6BB0FF 50%, #5BA0F2 75%, #4A90E2 100%);
+            height: 12px;
             position: relative;
         }
         
+        .header-accent::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ffd93d 0%, #4A90E2 50%, #ffd93d 100%);
+        }
+        
         .hero-section {
-            background: #2c3e50;
+            background: linear-gradient(135deg, #4A90E2 0%, #5BA0F2 50%, #6BB0FF 100%);
             color: white;
-            padding: 30px;
+            padding: 35px;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -85,19 +95,19 @@
         
         .content-wrapper {
             padding: 30px;
-            background: #ffffff;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
         }
         
         .company-showcase {
             display: table;
             width: 100%;
-            background: #f8f9fa !important;
-            background-color: #f8f9fa !important;
-            border-radius: 8px;
-            padding: 25px;
-            margin-bottom: 25px;
-            border: 1px solid #dee2e6;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            background: #ffd93d !important;
+            background-color: #ffd93d !important;
+            border-radius: 18px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 4px solid #4A90E2;
+            box-shadow: 0 8px 20px rgba(74, 144, 226, 0.2);
             -webkit-print-color-adjust: exact !important;
             color-adjust: exact !important;
             print-color-adjust: exact !important;
@@ -110,17 +120,17 @@
         }
         
         .company-name {
-            font-size: 28px;
+            font-size: 30px;
             font-weight: bold;
-            color: #2c3e50 !important;
+            color: #2c5282 !important;
             margin-bottom: 8px;
-            text-shadow: none;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         
         .company-subtitle {
-            font-size: 16px;
-            color: #6c757d !important;
-            font-weight: 500;
+            font-size: 18px;
+            color: #3182ce !important;
+            font-weight: 600;
         }
         
         .logo-container {
@@ -131,11 +141,11 @@
         }
         
         .logo {
-            max-width: 120px;
-            max-height: 100px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border: 1px solid #dee2e6;
+            max-width: 130px;
+            max-height: 110px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+            border: 3px solid #4A90E2;
         }
         
         .stats-grid {
@@ -147,13 +157,13 @@
         
         .stat-card {
             display: table-cell;
-            background: #ffffff !important;
-            background-color: #ffffff !important;
-            padding: 20px;
-            border-radius: 8px;
+            background: #a8e6cf !important;
+            background-color: #a8e6cf !important;
+            padding: 25px;
+            border-radius: 18px;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            border: 1px solid #dee2e6;
+            box-shadow: 0 8px 20px rgba(168, 230, 207, 0.3);
+            border: 3px solid #00b894;
             position: relative;
             overflow: hidden;
             -webkit-print-color-adjust: exact !important;
@@ -182,40 +192,40 @@
         }
         
         .stat-label {
-            font-weight: 600;
-            color: #6c757d !important;
-            font-size: 13px;
-            margin-bottom: 8px;
+            font-weight: 700;
+            color: #2d3748 !important;
+            font-size: 14px;
+            margin-bottom: 10px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1.5px;
         }
         
         .stat-value {
-            font-size: 20px;
+            font-size: 26px;
             font-weight: bold;
-            color: #2c3e50 !important;
-            margin-top: 5px;
+            color: #00b894 !important;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         
         .attendance-container {
             background: white;
-            border-radius: 8px;
+            border-radius: 18px;
             padding: 0;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 25px rgba(168, 230, 207, 0.15);
             overflow: hidden;
             margin-bottom: 25px;
-            border: 1px solid #dee2e6;
+            border: 3px solid #00b894;
         }
         
         .table-header {
-            background: #2c3e50 !important;
-            background-color: #2c3e50 !important;
+            background: #00b894 !important;
+            background-color: #00b894 !important;
             color: #ffffff !important;
-            padding: 20px;
+            padding: 22px;
             text-align: center;
-            font-size: 20px;
+            font-size: 22px;
             font-weight: bold;
-            text-shadow: none;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
             -webkit-print-color-adjust: exact !important;
             color-adjust: exact !important;
             print-color-adjust: exact !important;
@@ -227,39 +237,39 @@
         }
         
         .attendance-table th {
-            background: #2c3e50 !important;
-            background-color: #2c3e50 !important;
+            background: #00b894 !important;
+            background-color: #00b894 !important;
             color: #ffffff !important;
-            padding: 12px 8px;
+            padding: 14px 10px;
             text-align: center;
             font-weight: bold;
             font-size: 12px;
-            border: 1px solid #dee2e6;
+            border: 2px solid rgba(255, 255, 255, 0.3);
             -webkit-print-color-adjust: exact !important;
             color-adjust: exact !important;
             print-color-adjust: exact !important;
         }
         
         .attendance-table td {
-            padding: 10px 6px;
+            padding: 12px 8px;
             text-align: center;
-            border: 1px solid #dee2e6;
+            border: 2px solid #ffe8e8;
             font-size: 11px;
-            color: #2c3e50 !important;
+            color: #2d3748 !important;
             background: #ffffff;
         }
         
         .attendance-table tbody tr:nth-child(even) {
-            background: #f8f9fa;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
         }
         
         .attendance-table tbody tr:hover {
-            background: #e9ecef;
+            background: linear-gradient(135deg, #ffe8e8 0%, #ffd1d1 100%);
         }
         
         .day-header {
-            background: #2c3e50 !important;
-            background-color: #2c3e50 !important;
+            background: #00b894 !important;
+            background-color: #00b894 !important;
             font-weight: bold;
             color: #ffffff !important;
             -webkit-print-color-adjust: exact !important;
@@ -286,7 +296,7 @@
         }
         
         .status-active {
-            background: #28a745 !important;
+            background: #00b894 !important;
             background-color: #00b894 !important;
             color: #ffffff !important;
             -webkit-print-color-adjust: exact !important;
@@ -295,7 +305,7 @@
         }
         
         .status-inactive {
-            background: #dc3545 !important;
+            background: #e17055 !important;
             background-color: #e17055 !important;
             color: #ffffff !important;
             -webkit-print-color-adjust: exact !important;
@@ -337,8 +347,8 @@
         }
         
         .mark-present {
-            background: #28a745 !important;
-            background-color: #28a745 !important;
+            background: #00b894 !important;
+            background-color: #00b894 !important;
             color: #ffffff !important;
             -webkit-print-color-adjust: exact !important;
             color-adjust: exact !important;
@@ -346,8 +356,8 @@
         }
         
         .mark-absent {
-            background: #dc3545 !important;
-            background-color: #dc3545 !important;
+            background: #e17055 !important;
+            background-color: #e17055 !important;
             color: #ffffff !important;
             -webkit-print-color-adjust: exact !important;
             color-adjust: exact !important;
@@ -355,17 +365,17 @@
         }
         
         .mark-vacation {
-            background: #ffc107 !important;
-            background-color: #ffc107 !important;
-            color: #212529 !important;
+            background: #fdcb6e !important;
+            background-color: #fdcb6e !important;
+            color: #ffffff !important;
             -webkit-print-color-adjust: exact !important;
             color-adjust: exact !important;
             print-color-adjust: exact !important;
         }
         
         .mark-excuse {
-            background: #17a2b8 !important;
-            background-color: #17a2b8 !important;
+            background: #74b9ff !important;
+            background-color: #74b9ff !important;
             color: #ffffff !important;
             -webkit-print-color-adjust: exact !important;
             color-adjust: exact !important;
@@ -373,8 +383,8 @@
         }
         
         .mark-resignation {
-            background: #6c757d !important;
-            background-color: #6c757d !important;
+            background: #636e72 !important;
+            background-color: #636e72 !important;
             color: #ffffff !important;
             -webkit-print-color-adjust: exact !important;
             color-adjust: exact !important;
@@ -383,7 +393,7 @@
         
         .total-cell {
             font-weight: bold;
-            background: #ffc107 !important;
+            background: #fdcb6e !important;
             background-color: #fdcb6e !important;
             color: #ffffff !important;
             font-size: 13px;
@@ -582,19 +592,19 @@
                 <div class="legend-title">📌 دليل الرموز</div>
                 <div class="legend-items">
                     <div class="legend-item">
-                        <span style="width: 28px; height: 28px; border-radius: 50%; margin-bottom: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8); line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; display: inline-block; background: #28a745 !important; color: #ffffff !important;">ح</span>
+                        <span style="width: 28px; height: 28px; border-radius: 50%; margin-bottom: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8); line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; display: inline-block; background: #00b894 !important; color: #ffffff !important;">ح</span>
                         <div>حضور</div>
                     </div>
                     <div class="legend-item">
-                        <span style="width: 28px; height: 28px; border-radius: 50%; margin-bottom: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8); line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; display: inline-block; background: #dc3545 !important; color: #ffffff !important;">غ</span>
+                        <span style="width: 28px; height: 28px; border-radius: 50%; margin-bottom: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8); line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; display: inline-block; background: #e17055 !important; color: #ffffff !important;">غ</span>
                         <div>غياب</div>
                     </div>
                     <div class="legend-item">
-                        <span style="width: 28px; height: 28px; border-radius: 50%; margin-bottom: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8); line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; display: inline-block; background: #ffc107 !important; color: #ffffff !important;">إ</span>
+                        <span style="width: 28px; height: 28px; border-radius: 50%; margin-bottom: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8); line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; display: inline-block; background: #fdcb6e !important; color: #ffffff !important;">إ</span>
                         <div>إجازة</div>
                     </div>
                     <div class="legend-item">
-                        <span style="width: 28px; height: 28px; border-radius: 50%; margin-bottom: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8); line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; display: inline-block; background: #6c757d !important; color: #ffffff !important;">س</span>
+                        <span style="width: 28px; height: 28px; border-radius: 50%; margin-bottom: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8); line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; display: inline-block; background: #636e72 !important; color: #ffffff !important;">س</span>
                         <div>استقالة</div>
                     </div>
                 </div>
@@ -636,15 +646,15 @@
                         @endif
                         @foreach ($active_trainees as $index => $trainee)
                             <tr>
-                                <td style="font-weight: bold; color: #2c3e50 !important;">{{ $index + 1 }}</td>
+                                <td style="font-weight: bold; color: #00b894 !important;">{{ $index + 1 }}</td>
                                 @if ($report->trainees()->where('job_number', '!=', NULL)->count())
                                     <td style="font-weight: 600; color: #2d3748 !important;">{{ $trainee->trainee->job_number ?? '-' }}</td>
                                 @endif
                                 <td>
                                     @if ($trainee->active)
-                                        <span style="background: #28a745 !important; color: #ffffff !important; padding: 6px 12px; border-radius: 15px; font-size: 11px; font-weight: bold; display: inline-block; box-shadow: 0 3px 8px rgba(0,0,0,0.2);">نشط</span>
+                                        <span style="background: #00b894 !important; color: #ffffff !important; padding: 6px 12px; border-radius: 15px; font-size: 11px; font-weight: bold; display: inline-block; box-shadow: 0 3px 8px rgba(0,0,0,0.2);">نشط</span>
                                     @else
-                                        <span style="background: #dc3545 !important; color: #ffffff !important; padding: 6px 12px; border-radius: 15px; font-size: 11px; font-weight: bold; display: inline-block; box-shadow: 0 3px 8px rgba(0,0,0,0.2);">غير نشط</span>
+                                        <span style="background: #e17055 !important; color: #ffffff !important; padding: 6px 12px; border-radius: 15px; font-size: 11px; font-weight: bold; display: inline-block; box-shadow: 0 3px 8px rgba(0,0,0,0.2);">غير نشط</span>
                                     @endif
                                 </td>
                                 <td class="employee-info">
@@ -680,27 +690,27 @@
                                             
                                             @if ($isAfterResignation)
                                                 {{-- After resignation date - show resignation mark --}}
-                                                <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #6c757d !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">س</span>
+                                                <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #636e72 !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">س</span>
                                             @elseif ($isBeforeStart)
                                                 {{-- Before start date - show empty --}}
                                                 <span style="color: #ccc;">-</span>
                                             @elseif ($attendance)
                                                 @if ($attendance->status == 'حضور')
-                                                    <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #28a745 !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">ح</span>
+                                                    <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #00b894 !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">ح</span>
                                                 @elseif ($attendance->status == 'غياب')
                                                     {{-- تغيير الغياب إلى حضور --}}
-                                                    <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #28a745 !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">ح</span>
+                                                    <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #00b894 !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">ح</span>
                                                 @elseif ($attendance->status == 'إجازة')
-                                                    <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #ffc107 !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">إ</span>
+                                                    <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #fdcb6e !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">إ</span>
                                                 @elseif ($attendance->status == 'عذر')
                                                     {{-- تغيير العذر إلى حضور --}}
-                                                    <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #28a745 !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">ح</span>
+                                                    <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #00b894 !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">ح</span>
                                                 @else
-                                                    <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #28a745 !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">ح</span>
+                                                    <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #00b894 !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">ح</span>
                                                 @endif
                                             @else
                                                 {{-- No attendance record - show present by default --}}
-                                                <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #28a745 !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">ح</span>
+                                                <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #00b894 !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">ح</span>
                                             @endif
                                         @endif
                                     </td>
