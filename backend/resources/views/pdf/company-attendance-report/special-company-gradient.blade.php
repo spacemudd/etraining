@@ -199,26 +199,43 @@
             color: #2d3748 !important;
             font-size: 14px;
             margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
+            text-transform: none;
+            letter-spacing: 0;
             word-wrap: break-word;
             white-space: nowrap;
             overflow: visible;
             text-overflow: unset;
-            line-height: 1.2;
+            line-height: 1.3;
             padding: 2px 0;
         }
         
         /* تحسين النصوص العربية */
         .stat-label {
-            font-family: 'Arial', 'Tahoma', sans-serif;
+            font-family: 'Arial', 'Tahoma', 'Cairo', sans-serif;
             direction: rtl;
             unicode-bidi: bidi-override;
+            font-feature-settings: "liga" 1, "calt" 1;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
-        .stat-value {
-            font-family: 'Arial', 'Tahoma', sans-serif;
-            direction: ltr;
+        /* إصلاح شامل لمشكلة المسافات بين الحروف العربية */
+        .stat-label {
+            letter-spacing: 0 !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            font-variant-ligatures: common-ligatures;
+            font-kerning: auto;
+            -webkit-text-stroke: 0;
+            text-stroke: 0;
+        }
+        
+        /* إصلاح خاص لمتصفحات مختلفة */
+        .stat-label {
+            -webkit-font-feature-settings: "liga" 1, "calt" 1;
+            -moz-font-feature-settings: "liga" 1, "calt" 1;
+            font-feature-settings: "liga" 1, "calt" 1;
         }
         
         .attendance-container {
@@ -527,6 +544,9 @@
                 overflow: visible;
                 text-overflow: unset;
                 white-space: nowrap;
+                letter-spacing: 0 !important;
+                word-spacing: normal !important;
+                text-transform: none !important;
             }
             
             .stat-card {
