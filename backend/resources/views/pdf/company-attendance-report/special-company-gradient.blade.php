@@ -211,15 +211,15 @@
             background: white;
             border-radius: 18px;
             padding: 0;
-            box-shadow: 0 10px 25px rgba(74, 144, 226, 0.15);
+            box-shadow: 0 10px 25px rgba(168, 230, 207, 0.15);
             overflow: hidden;
             margin-bottom: 25px;
-            border: 3px solid #4A90E2;
+            border: 3px solid #00b894;
         }
         
         .table-header {
-            background: #4A90E2 !important;
-            background-color: #4A90E2 !important;
+            background: #00b894 !important;
+            background-color: #00b894 !important;
             color: #ffffff !important;
             padding: 22px;
             text-align: center;
@@ -237,8 +237,8 @@
         }
         
         .attendance-table th {
-            background: #4A90E2 !important;
-            background-color: #4A90E2 !important;
+            background: #00b894 !important;
+            background-color: #00b894 !important;
             color: #ffffff !important;
             padding: 14px 10px;
             text-align: center;
@@ -268,8 +268,8 @@
         }
         
         .day-header {
-            background: #4A90E2 !important;
-            background-color: #4A90E2 !important;
+            background: #00b894 !important;
+            background-color: #00b894 !important;
             font-weight: bold;
             color: #ffffff !important;
             -webkit-print-color-adjust: exact !important;
@@ -590,27 +590,22 @@
             <!-- Statistics Grid -->
             <div class="stats-grid">
                 <div class="stat-card">
-                    <span class="stat-icon" style="color: #2d3748 !important; font-size: 32px !important;">📊</span>
                     <div class="stat-label">رقم التقرير</div>
                     <div class="stat-value">{{ $report->number }}</div>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-icon" style="color: #2d3748 !important; font-size: 32px !important;">📅</span>
                     <div class="stat-label">من تاريخ</div>
                     <div class="stat-value">{{ $report->date_from->format('Y-m-d') }}</div>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-icon" style="color: #2d3748 !important; font-size: 32px !important;">📅</span>
                     <div class="stat-label">إلى تاريخ</div>
                     <div class="stat-value">{{ $report->date_to->format('Y-m-d') }}</div>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-icon" style="color: #2d3748 !important; font-size: 32px !important;">👥</span>
                     <div class="stat-label">عدد المتدربين</div>
                     <div class="stat-value">{{ $report->activeTraineesCount() }}</div>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-icon" style="color: #2d3748 !important; font-size: 32px !important;">📊</span>
                     <div class="stat-label">أيام العمل</div>
                     <div class="stat-value">{{ count($days) }}</div>
                 </div>
@@ -675,7 +670,7 @@
                         @endif
                         @foreach ($active_trainees as $index => $trainee)
                             <tr>
-                                <td style="font-weight: bold; color: #4A90E2 !important;">{{ $index + 1 }}</td>
+                                <td style="font-weight: bold; color: #00b894 !important;">{{ $index + 1 }}</td>
                                 @if ($report->trainees()->where('job_number', '!=', NULL)->count())
                                     <td style="font-weight: 600; color: #2d3748 !important;">{{ $trainee->trainee->job_number ?? '-' }}</td>
                                 @endif
