@@ -401,6 +401,12 @@
     </style>
 </head>
 <body>
+    @if(!$report)
+        <div style="padding: 50px; text-align: center; color: red;">
+            <h1>خطأ في تحميل التقرير</h1>
+            <p>لم يتم العثور على بيانات التقرير</p>
+        </div>
+    @else
     <div class="main-container">
         <!-- Header Accent Line -->
         <div class="header-accent"></div>
@@ -485,7 +491,7 @@
                     <thead>
                         <tr>
                             <th style="width: 40px;">م</th>
-                            @if ($report->trainees()->where('job_number', '!=', NULL)->count())
+                            @if ($report && $report->trainees && $report->trainees()->where('job_number', '!=', NULL)->count())
                                 <th style="width: 70px;">الرقم الوظيفي</th>
                             @endif
                             <th style="width: 80px;">الحالة</th>
@@ -503,7 +509,7 @@
                         @foreach ($active_trainees as $index => $trainee)
                             <tr>
                                 <td style="font-weight: bold; color: #ff6b6b;">{{ $index + 1 }}</td>
-                                @if ($report->trainees()->where('job_number', '!=', NULL)->count())
+                                @if ($report && $report->trainees && $report->trainees()->where('job_number', '!=', NULL)->count())
                                     <td style="font-weight: 600;">{{ $trainee->trainee->job_number ?? '-' }}</td>
                                 @endif
                                 <td>
@@ -578,5 +584,6 @@
             <p class="footer-brand">🌟 {{ config('app.name') }} - Training Management System</p>
         </div>
     </div>
+    @endif
 </body>
 </html>

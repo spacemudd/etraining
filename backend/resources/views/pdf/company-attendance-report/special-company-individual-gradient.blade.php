@@ -433,6 +433,12 @@
     </style>
 </head>
 <body>
+    @if(!$record || !$record->report)
+        <div style="padding: 50px; text-align: center; color: red;">
+            <h1>خطأ في تحميل التقرير</h1>
+            <p>لم يتم العثور على بيانات التقرير</p>
+        </div>
+    @else
     <div class="main-container">
         <!-- Header Accent Line -->
         <div class="header-accent"></div>
@@ -609,5 +615,6 @@
             <p class="footer-brand">🌟 {{ config('app.name') }} - Training Management System</p>
         </div>
     </div>
+    @endif
 </body>
 </html>

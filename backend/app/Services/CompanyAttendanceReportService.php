@@ -318,8 +318,12 @@ class CompanyAttendanceReportService
 
     static public function makePdf($id)
     {
-        $report = CompanyAttendanceReport::findOrFail($id);
+        $report = CompanyAttendanceReport::with(['company', 'trainees.trainee'])->findOrFail($id);
         
+        // التحقق من وجود البيانات المطلوبة
+        if (!$report || !$report->company) {
+            throw new \Exception('Report or company data not found');
+        }
 
         $days = [];
         Carbon::setLocale('ar');
