@@ -2,12 +2,22 @@
 <html dir="rtl">
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>تقرير الحضور والانصراف - التصميم المتدرج العصري</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+        
+        /* إعدادات أساسية لضمان وضوح الألوان */
+        html, body {
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         
         body {
@@ -91,12 +101,16 @@
         .company-showcase {
             display: table;
             width: 100%;
-            background: linear-gradient(135deg, #ffd93d 0%, #ffed4e 50%, #ffd93d 100%);
+            background: #ffd93d !important;
+            background-color: #ffd93d !important;
             border-radius: 18px;
             padding: 30px;
             margin-bottom: 30px;
             border: 4px solid #ff6b6b;
             box-shadow: 0 8px 20px rgba(255, 107, 107, 0.2);
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         
         .company-info {
@@ -143,7 +157,8 @@
         
         .stat-card {
             display: table-cell;
-            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 50%, #a8e6cf 100%);
+            background: #a8e6cf !important;
+            background-color: #a8e6cf !important;
             padding: 25px;
             border-radius: 18px;
             text-align: center;
@@ -151,6 +166,9 @@
             border: 3px solid #00b894;
             position: relative;
             overflow: hidden;
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         
         .stat-card::before {
@@ -196,13 +214,17 @@
         }
         
         .table-header {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 50%, #ff6b6b 100%);
+            background: #ff6b6b !important;
+            background-color: #ff6b6b !important;
             color: #ffffff !important;
             padding: 22px;
             text-align: center;
             font-size: 22px;
             font-weight: bold;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         
         .attendance-table {
@@ -211,13 +233,17 @@
         }
         
         .attendance-table th {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+            background: #ff6b6b !important;
+            background-color: #ff6b6b !important;
             color: #ffffff !important;
             padding: 14px 10px;
             text-align: center;
             font-weight: bold;
             font-size: 12px;
             border: 2px solid rgba(255, 255, 255, 0.3);
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         
         .attendance-table td {
@@ -238,14 +264,22 @@
         }
         
         .day-header {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%) !important;
+            background: #ff6b6b !important;
+            background-color: #ff6b6b !important;
             font-weight: bold;
             color: #ffffff !important;
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         
         .vacation-day {
-            background: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%) !important;
+            background: #fd79a8 !important;
+            background-color: #fd79a8 !important;
             color: #ffffff !important;
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         
         .status-badge {
@@ -258,13 +292,21 @@
         }
         
         .status-active {
-            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            background: #00b894 !important;
+            background-color: #00b894 !important;
             color: #ffffff !important;
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         
         .status-inactive {
-            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
+            background: #e17055 !important;
+            background-color: #e17055 !important;
             color: #ffffff !important;
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         
         .employee-info {
@@ -301,45 +343,73 @@
         }
         
         .mark-present {
-            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            background: #00b894 !important;
+            background-color: #00b894 !important;
             color: #ffffff !important;
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         
         .mark-absent {
-            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
+            background: #e17055 !important;
+            background-color: #e17055 !important;
             color: #ffffff !important;
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         
         .mark-vacation {
-            background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
+            background: #fdcb6e !important;
+            background-color: #fdcb6e !important;
             color: #ffffff !important;
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         
         .mark-excuse {
-            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            background: #74b9ff !important;
+            background-color: #74b9ff !important;
             color: #ffffff !important;
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         
         .mark-resignation {
-            background: linear-gradient(135deg, #636e72 0%, #2d3436 100%);
+            background: #636e72 !important;
+            background-color: #636e72 !important;
             color: #ffffff !important;
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         
         .total-cell {
             font-weight: bold;
-            background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
+            background: #fdcb6e !important;
+            background-color: #fdcb6e !important;
             color: #ffffff !important;
             font-size: 13px;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         
         .legend-container {
-            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
+            background: #a8e6cf !important;
+            background-color: #a8e6cf !important;
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 25px;
             border: 3px solid #00b894;
             box-shadow: 0 6px 15px rgba(168, 230, 207, 0.3);
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         
         .legend-title {
@@ -380,10 +450,14 @@
         }
         
         .footer-section {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+            background: #ff6b6b !important;
+            background-color: #ff6b6b !important;
             padding: 25px;
             text-align: center;
             color: white;
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         
         .footer-text {
@@ -536,23 +610,23 @@
                 <div class="legend-title">📌 دليل الرموز</div>
                 <div class="legend-items">
                     <div class="legend-item">
-                        <span class="legend-symbol mark-present">ح</span>
+                        <span style="width: 28px; height: 28px; border-radius: 50%; margin-bottom: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8); line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; display: inline-block; background: #00b894 !important; color: #ffffff !important;">ح</span>
                         <div>حضور</div>
                     </div>
                     <div class="legend-item">
-                        <span class="legend-symbol mark-absent">غ</span>
+                        <span style="width: 28px; height: 28px; border-radius: 50%; margin-bottom: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8); line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; display: inline-block; background: #e17055 !important; color: #ffffff !important;">غ</span>
                         <div>غياب</div>
                     </div>
                     <div class="legend-item">
-                        <span class="legend-symbol mark-vacation">إ</span>
+                        <span style="width: 28px; height: 28px; border-radius: 50%; margin-bottom: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8); line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; display: inline-block; background: #fdcb6e !important; color: #ffffff !important;">إ</span>
                         <div>إجازة</div>
                     </div>
                     <div class="legend-item">
-                        <span class="legend-symbol mark-excuse">ع</span>
+                        <span style="width: 28px; height: 28px; border-radius: 50%; margin-bottom: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8); line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; display: inline-block; background: #74b9ff !important; color: #ffffff !important;">ع</span>
                         <div>عذر</div>
                     </div>
                     <div class="legend-item">
-                        <span class="legend-symbol mark-resignation">س</span>
+                        <span style="width: 28px; height: 28px; border-radius: 50%; margin-bottom: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8); line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; display: inline-block; background: #636e72 !important; color: #ffffff !important;">س</span>
                         <div>استقالة</div>
                     </div>
                 </div>
@@ -594,15 +668,15 @@
                         @endif
                         @foreach ($active_trainees as $index => $trainee)
                             <tr>
-                                <td style="font-weight: bold; color: #ff6b6b;">{{ $index + 1 }}</td>
+                                <td style="font-weight: bold; color: #ff6b6b !important;">{{ $index + 1 }}</td>
                                 @if ($report->trainees()->where('job_number', '!=', NULL)->count())
-                                    <td style="font-weight: 600;">{{ $trainee->trainee->job_number ?? '-' }}</td>
+                                    <td style="font-weight: 600; color: #2d3748 !important;">{{ $trainee->trainee->job_number ?? '-' }}</td>
                                 @endif
                                 <td>
                                     @if ($trainee->active)
-                                        <span class="status-badge status-active">نشط</span>
+                                        <span style="background: #00b894 !important; color: #ffffff !important; padding: 6px 12px; border-radius: 15px; font-size: 11px; font-weight: bold; display: inline-block; box-shadow: 0 3px 8px rgba(0,0,0,0.2);">نشط</span>
                                     @else
-                                        <span class="status-badge status-inactive">غير نشط</span>
+                                        <span style="background: #e17055 !important; color: #ffffff !important; padding: 6px 12px; border-radius: 15px; font-size: 11px; font-weight: bold; display: inline-block; box-shadow: 0 3px 8px rgba(0,0,0,0.2);">غير نشط</span>
                                     @endif
                                 </td>
                                 <td class="employee-info">
@@ -638,25 +712,25 @@
                                             
                                             @if ($isAfterResignation)
                                                 {{-- After resignation date - show resignation mark --}}
-                                                <span class="attendance-mark mark-resignation">س</span>
+                                                <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #636e72 !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">س</span>
                                             @elseif ($isBeforeStart)
                                                 {{-- Before start date - show empty --}}
                                                 <span style="color: #ccc;">-</span>
                                             @elseif ($attendance)
                                                 @if ($attendance->status == 'حضور')
-                                                    <span class="attendance-mark mark-present">ح</span>
+                                                    <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #00b894 !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">ح</span>
                                                 @elseif ($attendance->status == 'غياب')
-                                                    <span class="attendance-mark mark-absent">غ</span>
+                                                    <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #e17055 !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">غ</span>
                                                 @elseif ($attendance->status == 'إجازة')
-                                                    <span class="attendance-mark mark-vacation">إ</span>
+                                                    <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #fdcb6e !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">إ</span>
                                                 @elseif ($attendance->status == 'عذر')
-                                                    <span class="attendance-mark mark-excuse">ع</span>
+                                                    <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #74b9ff !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">ع</span>
                                                 @else
-                                                    <span class="attendance-mark mark-present">{{ $attendance->status }}</span>
+                                                    <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #00b894 !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">{{ $attendance->status }}</span>
                                                 @endif
                                             @else
                                                 {{-- No attendance record - show absent by default --}}
-                                                <span class="attendance-mark mark-absent">غ</span>
+                                                <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #e17055 !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">غ</span>
                                             @endif
                                         @endif
                                     </td>
