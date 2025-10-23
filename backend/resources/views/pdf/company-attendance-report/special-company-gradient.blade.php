@@ -234,6 +234,20 @@
         .attendance-table {
             width: 100%;
             border-collapse: collapse;
+            page-break-inside: auto;
+        }
+        
+        .attendance-table thead {
+            display: table-header-group;
+        }
+        
+        .attendance-table tbody {
+            display: table-row-group;
+        }
+        
+        .attendance-table tr {
+            page-break-inside: avoid;
+            page-break-after: auto;
         }
         
         .attendance-table th {
@@ -248,6 +262,8 @@
             -webkit-print-color-adjust: exact !important;
             color-adjust: exact !important;
             print-color-adjust: exact !important;
+            page-break-after: avoid;
+            page-break-inside: avoid;
         }
         
         .attendance-table td {
@@ -257,14 +273,21 @@
             font-size: 11px;
             color: #2d3748 !important;
             background: #ffffff;
+            page-break-inside: avoid;
         }
         
         .attendance-table tbody tr:nth-child(even) {
             background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+            page-break-inside: avoid;
         }
         
         .attendance-table tbody tr:hover {
             background: linear-gradient(135deg, #ffe8e8 0%, #ffd1d1 100%);
+        }
+        
+        .attendance-table tbody tr {
+            page-break-inside: avoid;
+            page-break-after: avoid;
         }
         
         .day-header {
@@ -498,12 +521,28 @@
                 color: #000000 !important;
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
+                page-break-after: avoid;
+                page-break-inside: avoid;
+            }
+            
+            .attendance-table thead {
+                display: table-header-group !important;
+            }
+            
+            .attendance-table tbody {
+                display: table-row-group !important;
+            }
+            
+            .attendance-table tr {
+                page-break-inside: avoid;
+                page-break-after: avoid;
             }
             
             .attendance-table td {
                 color: #000000 !important;
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
+                page-break-inside: avoid;
             }
             
             .employee-name, .employee-id {
