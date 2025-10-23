@@ -528,7 +528,7 @@
                                             @endif
                                         @else
                                             @php
-                                                $attendance = $trainee->trainee_attendance_records
+                                                $attendance = $trainee->trainee->attendanceReportRecords
                                                     ->where('date', $day['date'])
                                                     ->first();
                                                 
@@ -563,7 +563,7 @@
                                     </td>
                                 @endforeach
                                 <td class="total-cell">
-                                    {{ $trainee->trainee_attendance_records->where('status', 'غياب')->count() }}
+                                    {{ $trainee->trainee->attendanceReportRecords->where('status', 'غياب')->count() }}
                                 </td>
                             </tr>
                         @endforeach
