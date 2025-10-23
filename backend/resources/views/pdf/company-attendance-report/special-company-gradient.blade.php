@@ -34,13 +34,13 @@
             padding: 0;
             margin: 0 auto;
             max-width: 1500px;
-            box-shadow: 0 15px 35px rgba(255, 154, 158, 0.3);
+            box-shadow: 0 15px 35px rgba(74, 144, 226, 0.3);
             overflow: hidden;
-            border: 3px solid #ff6b6b;
+            border: 3px solid #4A90E2;
         }
         
         .header-accent {
-            background: linear-gradient(90deg, #ff6b6b 0%, #ff8e8e 25%, #ffa8a8 50%, #ff8e8e 75%, #ff6b6b 100%);
+            background: linear-gradient(90deg, #4A90E2 0%, #5BA0F2 25%, #6BB0FF 50%, #5BA0F2 75%, #4A90E2 100%);
             height: 12px;
             position: relative;
         }
@@ -52,11 +52,11 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: linear-gradient(90deg, #ffd93d 0%, #ff6b6b 50%, #ffd93d 100%);
+            background: linear-gradient(90deg, #ffd93d 0%, #4A90E2 50%, #ffd93d 100%);
         }
         
         .hero-section {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 50%, #ffa8a8 100%);
+            background: linear-gradient(135deg, #4A90E2 0%, #5BA0F2 50%, #6BB0FF 100%);
             color: white;
             padding: 35px;
             text-align: center;
@@ -106,8 +106,8 @@
             border-radius: 18px;
             padding: 30px;
             margin-bottom: 30px;
-            border: 4px solid #ff6b6b;
-            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.2);
+            border: 4px solid #4A90E2;
+            box-shadow: 0 8px 20px rgba(74, 144, 226, 0.2);
             -webkit-print-color-adjust: exact !important;
             color-adjust: exact !important;
             print-color-adjust: exact !important;
@@ -122,14 +122,14 @@
         .company-name {
             font-size: 30px;
             font-weight: bold;
-            color: #d63031 !important;
+            color: #2c5282 !important;
             margin-bottom: 8px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         
         .company-subtitle {
             font-size: 18px;
-            color: #e17055 !important;
+            color: #3182ce !important;
             font-weight: 600;
         }
         
@@ -145,7 +145,7 @@
             max-height: 110px;
             border-radius: 15px;
             box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-            border: 3px solid #ff6b6b;
+            border: 3px solid #4A90E2;
         }
         
         .stats-grid {
@@ -185,6 +185,10 @@
             font-size: 32px;
             margin-bottom: 12px;
             display: block;
+            color: #2d3748 !important;
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         
         .stat-label {
@@ -207,15 +211,15 @@
             background: white;
             border-radius: 18px;
             padding: 0;
-            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.15);
+            box-shadow: 0 10px 25px rgba(74, 144, 226, 0.15);
             overflow: hidden;
             margin-bottom: 25px;
-            border: 3px solid #ff6b6b;
+            border: 3px solid #4A90E2;
         }
         
         .table-header {
-            background: #ff6b6b !important;
-            background-color: #ff6b6b !important;
+            background: #4A90E2 !important;
+            background-color: #4A90E2 !important;
             color: #ffffff !important;
             padding: 22px;
             text-align: center;
@@ -233,8 +237,8 @@
         }
         
         .attendance-table th {
-            background: #ff6b6b !important;
-            background-color: #ff6b6b !important;
+            background: #4A90E2 !important;
+            background-color: #4A90E2 !important;
             color: #ffffff !important;
             padding: 14px 10px;
             text-align: center;
@@ -264,8 +268,8 @@
         }
         
         .day-header {
-            background: #ff6b6b !important;
-            background-color: #ff6b6b !important;
+            background: #4A90E2 !important;
+            background-color: #4A90E2 !important;
             font-weight: bold;
             color: #ffffff !important;
             -webkit-print-color-adjust: exact !important;
@@ -450,8 +454,8 @@
         }
         
         .footer-section {
-            background: #ff6b6b !important;
-            background-color: #ff6b6b !important;
+            background: #4A90E2 !important;
+            background-color: #4A90E2 !important;
             padding: 25px;
             text-align: center;
             color: white;
@@ -548,6 +552,13 @@
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
             }
+            
+            .stat-icon {
+                color: #000000 !important;
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
         }
     </style>
 </head>
@@ -579,27 +590,27 @@
             <!-- Statistics Grid -->
             <div class="stats-grid">
                 <div class="stat-card">
-                    <span class="stat-icon">📊</span>
+                    <span class="stat-icon" style="color: #2d3748 !important; font-size: 32px !important;">📊</span>
                     <div class="stat-label">رقم التقرير</div>
                     <div class="stat-value">{{ $report->number }}</div>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-icon">📅</span>
+                    <span class="stat-icon" style="color: #2d3748 !important; font-size: 32px !important;">📅</span>
                     <div class="stat-label">من تاريخ</div>
                     <div class="stat-value">{{ $report->date_from->format('Y-m-d') }}</div>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-icon">📅</span>
+                    <span class="stat-icon" style="color: #2d3748 !important; font-size: 32px !important;">📅</span>
                     <div class="stat-label">إلى تاريخ</div>
                     <div class="stat-value">{{ $report->date_to->format('Y-m-d') }}</div>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-icon">👥</span>
+                    <span class="stat-icon" style="color: #2d3748 !important; font-size: 32px !important;">👥</span>
                     <div class="stat-label">عدد المتدربين</div>
                     <div class="stat-value">{{ $report->activeTraineesCount() }}</div>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-icon">📊</span>
+                    <span class="stat-icon" style="color: #2d3748 !important; font-size: 32px !important;">📊</span>
                     <div class="stat-label">أيام العمل</div>
                     <div class="stat-value">{{ count($days) }}</div>
                 </div>
@@ -612,6 +623,10 @@
                     <div class="legend-item">
                         <span style="width: 28px; height: 28px; border-radius: 50%; margin-bottom: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8); line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; display: inline-block; background: #00b894 !important; color: #ffffff !important;">ح</span>
                         <div>حضور</div>
+                    </div>
+                    <div class="legend-item">
+                        <span style="width: 28px; height: 28px; border-radius: 50%; margin-bottom: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8); line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; display: inline-block; background: #e17055 !important; color: #ffffff !important;">غ</span>
+                        <div>غياب</div>
                     </div>
                     <div class="legend-item">
                         <span style="width: 28px; height: 28px; border-radius: 50%; margin-bottom: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8); line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; display: inline-block; background: #fdcb6e !important; color: #ffffff !important;">إ</span>
@@ -660,7 +675,7 @@
                         @endif
                         @foreach ($active_trainees as $index => $trainee)
                             <tr>
-                                <td style="font-weight: bold; color: #ff6b6b !important;">{{ $index + 1 }}</td>
+                                <td style="font-weight: bold; color: #4A90E2 !important;">{{ $index + 1 }}</td>
                                 @if ($report->trainees()->where('job_number', '!=', NULL)->count())
                                     <td style="font-weight: 600; color: #2d3748 !important;">{{ $trainee->trainee->job_number ?? '-' }}</td>
                                 @endif
