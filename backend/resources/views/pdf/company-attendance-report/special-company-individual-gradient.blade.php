@@ -2,7 +2,7 @@
 <html dir="rtl">
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <title>تقرير الحضور الفردي - التصميم المتدرج</title>
+    <title>تقرير الحضور الفردي - التصميم المتدرج العصري</title>
     <style>
         * {
             margin: 0;
@@ -12,58 +12,89 @@
         
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #2c3e50;
+            background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 25%, #fecfef 50%, #fecfef 75%, #ff9a9e 100%);
+            color: #2d3748;
             line-height: 1.6;
             padding: 20px;
         }
         
         .main-container {
             background: white;
-            border-radius: 15px;
+            border-radius: 20px;
             padding: 0;
             margin: 0 auto;
             max-width: 1200px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 15px 35px rgba(255, 154, 158, 0.3);
             overflow: hidden;
+            border: 3px solid #ff6b6b;
         }
         
-        .header-gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 8px;
+        .header-accent {
+            background: linear-gradient(90deg, #ff6b6b 0%, #ff8e8e 25%, #ffa8a8 50%, #ff8e8e 75%, #ff6b6b 100%);
+            height: 12px;
+            position: relative;
+        }
+        
+        .header-accent::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ffd93d 0%, #ff6b6b 50%, #ffd93d 100%);
         }
         
         .hero-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 50%, #ffa8a8 100%);
             color: white;
-            padding: 30px;
+            padding: 35px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
         }
         
         .hero-title {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: bold;
-            margin-bottom: 8px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
         }
         
         .hero-subtitle {
-            font-size: 14px;
+            font-size: 16px;
             opacity: 0.95;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
         }
         
         .content-wrapper {
             padding: 30px;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
         }
         
         .company-showcase {
             display: table;
             width: 100%;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            border-radius: 12px;
+            background: linear-gradient(135deg, #ffd93d 0%, #ffed4e 50%, #ffd93d 100%);
+            border-radius: 18px;
             padding: 25px;
             margin-bottom: 25px;
-            border: 2px solid #667eea;
+            border: 4px solid #ff6b6b;
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.2);
         }
         
         .company-info {
@@ -73,15 +104,17 @@
         }
         
         .company-name {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: bold;
-            color: #667eea;
+            color: #d63031;
             margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         
         .company-subtitle {
-            font-size: 14px;
-            color: #6c757d;
+            font-size: 16px;
+            color: #e17055;
+            font-weight: 600;
         }
         
         .logo-container {
@@ -92,58 +125,74 @@
         }
         
         .logo {
-            max-width: 120px;
-            max-height: 100px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            max-width: 130px;
+            max-height: 110px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+            border: 3px solid #ff6b6b;
         }
         
         .trainee-profile {
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 25px;
-            border: 3px solid #667eea;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 50%, #a8e6cf 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 4px solid #00b894;
+            box-shadow: 0 10px 25px rgba(168, 230, 207, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .trainee-profile::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, #00b894 0%, #00cec9 50%, #00b894 100%);
         }
         
         .profile-header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         
         .profile-avatar {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
             color: white;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
+            font-size: 48px;
             font-weight: bold;
-            margin-bottom: 15px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+            border: 4px solid white;
         }
         
         .profile-name {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 5px;
+            color: #2d3748;
+            margin-bottom: 8px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         
         .profile-name-en {
-            font-size: 16px;
-            color: #6c757d;
-            margin-bottom: 10px;
+            font-size: 18px;
+            color: #636e72;
+            margin-bottom: 15px;
+            font-weight: 600;
         }
         
         .profile-details {
             display: table;
             width: 100%;
-            border-spacing: 15px 10px;
+            border-spacing: 20px 15px;
         }
         
         .detail-row {
@@ -153,76 +202,95 @@
         .detail-label {
             display: table-cell;
             font-weight: bold;
-            color: #667eea;
+            color: #00b894;
             width: 40%;
-            padding: 10px;
+            padding: 15px;
             background: white;
-            border-radius: 8px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: 2px solid #00b894;
         }
         
         .detail-value {
             display: table-cell;
-            color: #2c3e50;
-            padding: 10px;
+            color: #2d3748;
+            padding: 15px;
             background: white;
-            border-radius: 8px;
+            border-radius: 12px;
             font-weight: 600;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: 2px solid #a8e6cf;
         }
         
         .stats-grid {
             display: table;
             width: 100%;
-            margin-bottom: 25px;
-            border-spacing: 15px 0;
+            margin-bottom: 30px;
+            border-spacing: 20px 0;
         }
         
         .stat-card {
             display: table-cell;
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-            padding: 20px;
-            border-radius: 12px;
+            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 50%, #a8e6cf 100%);
+            padding: 25px;
+            border-radius: 18px;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            border-top: 4px solid #667eea;
+            box-shadow: 0 8px 20px rgba(168, 230, 207, 0.3);
+            border: 3px solid #00b894;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #00b894 0%, #00cec9 50%, #00b894 100%);
         }
         
         .stat-icon {
-            font-size: 28px;
-            margin-bottom: 10px;
+            font-size: 32px;
+            margin-bottom: 12px;
             display: block;
         }
         
         .stat-label {
-            font-weight: 600;
-            color: #2c3e50;
-            font-size: 12px;
-            margin-bottom: 8px;
+            font-weight: 700;
+            color: #2d3748;
+            font-size: 13px;
+            margin-bottom: 10px;
             text-transform: uppercase;
+            letter-spacing: 1.5px;
         }
         
         .stat-value {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: bold;
-            color: #667eea;
+            color: #00b894;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         
         .attendance-container {
             background: white;
-            border-radius: 12px;
+            border-radius: 18px;
             padding: 0;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.15);
             overflow: hidden;
-            margin-bottom: 20px;
-            border: 2px solid #e9ecef;
+            margin-bottom: 25px;
+            border: 3px solid #ff6b6b;
         }
         
         .table-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 50%, #ff6b6b 100%);
             color: white;
-            padding: 18px;
+            padding: 20px;
             text-align: center;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         
         .attendance-table {
@@ -231,119 +299,124 @@
         }
         
         .attendance-table th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
             color: white;
-            padding: 12px;
+            padding: 14px;
             text-align: center;
             font-weight: bold;
-            font-size: 12px;
-            border: 1px solid rgba(255,255,255,0.2);
+            font-size: 13px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
         }
         
         .attendance-table td {
-            padding: 12px;
+            padding: 14px;
             text-align: center;
-            border: 1px solid #dee2e6;
-            font-size: 11px;
+            border: 2px solid #ffe8e8;
+            font-size: 12px;
         }
         
         .attendance-table tbody tr:nth-child(even) {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
         }
         
         .day-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
         }
         
         .vacation-day {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            background: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%);
             color: white;
         }
         
         .attendance-mark {
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             display: inline-block;
-            line-height: 24px;
+            line-height: 28px;
             font-weight: bold;
-            font-size: 12px;
+            font-size: 13px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
         
         .mark-present {
-            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
             color: white;
         }
         
         .mark-absent {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
             color: white;
         }
         
         .mark-vacation {
-            background: linear-gradient(135deg, #ffd43b 0%, #fab005 100%);
+            background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
             color: white;
         }
         
         .mark-excuse {
-            background: linear-gradient(135deg, #74c0fc 0%, #339af0 100%);
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
             color: white;
         }
         
         .legend-container {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 2px solid #dee2e6;
+            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 3px solid #00b894;
+            box-shadow: 0 6px 15px rgba(168, 230, 207, 0.3);
         }
         
         .legend-title {
             font-weight: bold;
-            color: #667eea;
-            margin-bottom: 12px;
-            font-size: 14px;
+            color: #00b894;
+            margin-bottom: 15px;
+            font-size: 16px;
             text-align: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         
         .legend-items {
             display: table;
             width: 100%;
-            border-spacing: 10px 0;
+            border-spacing: 15px 0;
         }
         
         .legend-item {
             display: table-cell;
             text-align: center;
-            font-size: 11px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #2d3748;
         }
         
         .legend-symbol {
             display: inline-block;
-            width: 22px;
-            height: 22px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
         }
         
         .footer-section {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            padding: 20px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+            padding: 25px;
             text-align: center;
-            border-radius: 0 0 12px 12px;
-            border-top: 3px solid #667eea;
+            color: white;
         }
         
         .footer-text {
-            font-size: 12px;
-            color: #6c757d;
-            margin-bottom: 8px;
+            font-size: 14px;
+            margin-bottom: 10px;
+            opacity: 0.95;
         }
         
         .footer-brand {
             font-weight: bold;
-            color: #667eea;
-            font-size: 14px;
+            font-size: 16px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         
         @media print {
@@ -361,13 +434,13 @@
 </head>
 <body>
     <div class="main-container">
-        <!-- Header Gradient Line -->
-        <div class="header-gradient"></div>
+        <!-- Header Accent Line -->
+        <div class="header-accent"></div>
         
         <!-- Hero Section -->
         <div class="hero-section">
             <h1 class="hero-title">تقرير الحضور الفردي</h1>
-            <p class="hero-subtitle">Individual Attendance Report - Gradient Design</p>
+            <p class="hero-subtitle">Individual Attendance Report - Modern Gradient Design</p>
         </div>
         
         <div class="content-wrapper">
