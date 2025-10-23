@@ -270,24 +270,28 @@
         .employee-name {
             font-weight: bold;
             color: #2d3748;
-            font-size: 12px;
+            font-size: 13px;
             margin-bottom: 4px;
+            line-height: 1.3;
         }
         
         .employee-id {
-            font-size: 10px;
+            font-size: 11px;
             color: #636e72;
+            line-height: 1.2;
         }
         
         .attendance-mark {
-            width: 22px;
-            height: 22px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
             display: inline-block;
-            line-height: 22px;
+            line-height: 26px;
             font-weight: bold;
-            font-size: 11px;
+            font-size: 13px;
             box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+            text-align: center;
+            vertical-align: middle;
         }
         
         .mark-present {
@@ -447,6 +451,11 @@
                     <div class="stat-label">عدد المتدربين</div>
                     <div class="stat-value">{{ $report->activeTraineesCount() }}</div>
                 </div>
+                <div class="stat-card">
+                    <span class="stat-icon">📊</span>
+                    <div class="stat-label">أيام العمل</div>
+                    <div class="stat-value">{{ count($days) }}</div>
+                </div>
             </div>
             
             <!-- Legend -->
@@ -492,14 +501,24 @@
                             <th style="width: 200px;">اسم المتدرب</th>
                             <th style="width: 100px;">رقم الهوية</th>
                             @foreach ($days as $day)
-                                <th style="width: 25px;" class="{{ $day['vacation_day'] ? 'vacation-day' : 'day-header' }}">
-                                    {{ $day['name'] }}
+                                <th style="width: 30px;" class="{{ $day['vacation_day'] ? 'vacation-day' : 'day-header' }}">
+                                    <div style="font-size: 9px; line-height: 1.2;">
+                                        {{ $day['name'] }}<br>
+                                        <span style="font-size: 7px;">{{ \Carbon\Carbon::parse($day['date'])->format('d/m') }}</span>
+                                    </div>
                                 </th>
                             @endforeach
                             <th style="width: 60px;">إجمالي الغياب</th>
                         </tr>
                     </thead>
                     <tbody>
+                        @if($active_trainees->count() == 0)
+                            <tr>
+                                <td colspan="{{ 5 + count($days) }}" style="text-align: center; padding: 20px; color: #666;">
+                                    لا توجد بيانات متدربين متاحة
+                                </td>
+                            </tr>
+                        @endif
                         @foreach ($active_trainees as $index => $trainee)
                             <tr>
                                 <td style="font-weight: bold; color: #ff6b6b;">{{ $index + 1 }}</td>
@@ -514,10 +533,15 @@
                                     @endif
                                 </td>
                                 <td class="employee-info">
-                                    <div class="employee-name">{{ $trainee->trainee->name_ar }}</div>
-                                    <div class="employee-id">{{ $trainee->trainee->name_en }}</div>
+                                    <div class="employee-name">{{ $trainee->trainee->name_ar ?? $trainee->trainee->name ?? 'غير محدد' }}</div>
+                                    <div class="employee-id">{{ $trainee->trainee->name_en ?? $trainee->trainee->english_name ?? '' }}</div>
+                                    @if($trainee->trainee->attendanceReportRecords->count() > 0)
+                                        <div style="font-size: 8px; color: #28a745; margin-top: 2px;">
+                                            {{ $trainee->trainee->attendanceReportRecords->count() }} سجل حضور
+                                        </div>
+                                    @endif
                                 </td>
-                                <td style="font-weight: 600;">{{ $trainee->trainee->national_id }}</td>
+                                <td style="font-weight: 600;">{{ $trainee->trainee->national_id ?? $trainee->trainee->identity_number ?? 'غير محدد' }}</td>
                                 @foreach ($days as $day)
                                     <td>
                                         @if ($day['vacation_day'])
@@ -534,11 +558,17 @@
                                                 
                                                 // Check if this date is after resignation date
                                                 $isAfterResignation = $trainee->end_date && $day['date_carbon']->isAfter($trainee->end_date);
+                                                
+                                                // Check if this date is before start date
+                                                $isBeforeStart = $trainee->start_date && $day['date_carbon']->isBefore($trainee->start_date);
                                             @endphp
                                             
                                             @if ($isAfterResignation)
                                                 {{-- After resignation date - show resignation mark --}}
                                                 <span class="attendance-mark mark-resignation">س</span>
+                                            @elseif ($isBeforeStart)
+                                                {{-- Before start date - show empty --}}
+                                                <span style="color: #ccc;">-</span>
                                             @elseif ($attendance)
                                                 @if ($attendance->status == 'حضور')
                                                     <span class="attendance-mark mark-present">ح</span>
@@ -549,21 +579,36 @@
                                                 @elseif ($attendance->status == 'عذر')
                                                     <span class="attendance-mark mark-excuse">ع</span>
                                                 @else
-                                                    {{ $attendance->status }}
+                                                    <span class="attendance-mark mark-present">{{ $attendance->status }}</span>
                                                 @endif
                                             @else
-                                                @if ($trainee->start_date && $day['date_carbon']->isBefore($trainee->start_date))
-                                                    {{-- Before start date - show empty --}}
-                                                @else
-                                                    {{-- No attendance record - show absent --}}
-                                                    <span class="attendance-mark mark-absent">غ</span>
-                                                @endif
+                                                {{-- No attendance record - show absent by default --}}
+                                                <span class="attendance-mark mark-absent">غ</span>
                                             @endif
                                         @endif
                                     </td>
                                 @endforeach
                                 <td class="total-cell">
-                                    {{ $trainee->trainee->attendanceReportRecords->where('status', 'غياب')->count() }}
+                                    @php
+                                        $absenceCount = 0;
+                                        foreach ($days as $day) {
+                                            if (!$day['vacation_day']) {
+                                                $attendance = $trainee->trainee->attendanceReportRecords
+                                                    ->where('date', $day['date'])
+                                                    ->first();
+                                                
+                                                $isAfterResignation = $trainee->end_date && $day['date_carbon']->isAfter($trainee->end_date);
+                                                $isBeforeStart = $trainee->start_date && $day['date_carbon']->isBefore($trainee->start_date);
+                                                
+                                                if (!$isAfterResignation && !$isBeforeStart) {
+                                                    if (!$attendance || $attendance->status == 'غياب') {
+                                                        $absenceCount++;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    @endphp
+                                    <strong>{{ $absenceCount }}</strong>
                                 </td>
                             </tr>
                         @endforeach
