@@ -71,14 +71,16 @@
             text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
             position: relative;
             z-index: 1;
+            color: #ffffff !important;
         }
         
         .hero-subtitle {
             font-size: 18px;
-            opacity: 0.95;
+            opacity: 1;
             font-weight: 300;
             position: relative;
             z-index: 1;
+            color: #ffffff !important;
         }
         
         .content-wrapper {
@@ -106,14 +108,14 @@
         .company-name {
             font-size: 30px;
             font-weight: bold;
-            color: #d63031;
+            color: #d63031 !important;
             margin-bottom: 8px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         
         .company-subtitle {
             font-size: 18px;
-            color: #e17055;
+            color: #e17055 !important;
             font-weight: 600;
         }
         
@@ -169,7 +171,7 @@
         
         .stat-label {
             font-weight: 700;
-            color: #2d3748;
+            color: #2d3748 !important;
             font-size: 14px;
             margin-bottom: 10px;
             text-transform: uppercase;
@@ -179,7 +181,7 @@
         .stat-value {
             font-size: 26px;
             font-weight: bold;
-            color: #00b894;
+            color: #00b894 !important;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         
@@ -195,7 +197,7 @@
         
         .table-header {
             background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 50%, #ff6b6b 100%);
-            color: white;
+            color: #ffffff !important;
             padding: 22px;
             text-align: center;
             font-size: 22px;
@@ -210,7 +212,7 @@
         
         .attendance-table th {
             background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
-            color: white;
+            color: #ffffff !important;
             padding: 14px 10px;
             text-align: center;
             font-weight: bold;
@@ -223,6 +225,8 @@
             text-align: center;
             border: 2px solid #ffe8e8;
             font-size: 11px;
+            color: #2d3748 !important;
+            background: #ffffff;
         }
         
         .attendance-table tbody tr:nth-child(even) {
@@ -234,13 +238,14 @@
         }
         
         .day-header {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%) !important;
             font-weight: bold;
+            color: #ffffff !important;
         }
         
         .vacation-day {
-            background: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%);
-            color: white;
+            background: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%) !important;
+            color: #ffffff !important;
         }
         
         .status-badge {
@@ -254,12 +259,12 @@
         
         .status-active {
             background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
-            color: white;
+            color: #ffffff !important;
         }
         
         .status-inactive {
             background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
-            color: white;
+            color: #ffffff !important;
         }
         
         .employee-info {
@@ -269,7 +274,7 @@
         
         .employee-name {
             font-weight: bold;
-            color: #2d3748;
+            color: #2d3748 !important;
             font-size: 13px;
             margin-bottom: 4px;
             line-height: 1.3;
@@ -277,52 +282,53 @@
         
         .employee-id {
             font-size: 11px;
-            color: #636e72;
+            color: #636e72 !important;
             line-height: 1.2;
         }
         
         .attendance-mark {
-            width: 26px;
-            height: 26px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             display: inline-block;
-            line-height: 26px;
+            line-height: 28px;
             font-weight: bold;
-            font-size: 13px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+            font-size: 14px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
             text-align: center;
             vertical-align: middle;
+            border: 2px solid rgba(255, 255, 255, 0.8);
         }
         
         .mark-present {
             background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
-            color: white;
+            color: #ffffff !important;
         }
         
         .mark-absent {
             background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
-            color: white;
+            color: #ffffff !important;
         }
         
         .mark-vacation {
             background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
-            color: white;
+            color: #ffffff !important;
         }
         
         .mark-excuse {
             background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
-            color: white;
+            color: #ffffff !important;
         }
         
         .mark-resignation {
             background: linear-gradient(135deg, #636e72 0%, #2d3436 100%);
-            color: white;
+            color: #ffffff !important;
         }
         
         .total-cell {
             font-weight: bold;
             background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
-            color: white;
+            color: #ffffff !important;
             font-size: 13px;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
         }
@@ -338,7 +344,7 @@
         
         .legend-title {
             font-weight: bold;
-            color: #00b894;
+            color: #00b894 !important;
             margin-bottom: 15px;
             font-size: 16px;
             text-align: center;
@@ -356,16 +362,21 @@
             text-align: center;
             font-size: 12px;
             font-weight: 600;
-            color: #2d3748;
+            color: #2d3748 !important;
         }
         
         .legend-symbol {
             display: inline-block;
-            width: 26px;
-            height: 26px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             margin-bottom: 8px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            line-height: 28px;
+            font-weight: bold;
+            font-size: 14px;
+            text-align: center;
         }
         
         .footer-section {
@@ -378,13 +389,15 @@
         .footer-text {
             font-size: 14px;
             margin-bottom: 10px;
-            opacity: 0.95;
+            opacity: 1;
+            color: #ffffff !important;
         }
         
         .footer-brand {
             font-weight: bold;
             font-size: 16px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            color: #ffffff !important;
         }
         
         .page-break {
@@ -400,6 +413,66 @@
             .main-container {
                 box-shadow: none;
                 border-radius: 0;
+            }
+            
+            /* ضمان وضوح الألوان في الطباعة */
+            .hero-title, .hero-subtitle {
+                color: #000000 !important;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
+            .company-name, .company-subtitle {
+                color: #000000 !important;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
+            .stat-label, .stat-value {
+                color: #000000 !important;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
+            .table-header {
+                color: #000000 !important;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
+            .attendance-table th {
+                color: #000000 !important;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
+            .attendance-table td {
+                color: #000000 !important;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
+            .employee-name, .employee-id {
+                color: #000000 !important;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
+            .legend-title, .legend-item {
+                color: #000000 !important;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
+            .footer-text, .footer-brand {
+                color: #000000 !important;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
+            .mark-present, .mark-absent, .mark-vacation, .mark-excuse, .mark-resignation {
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
             }
         }
     </style>
