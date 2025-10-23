@@ -152,7 +152,8 @@
             display: table;
             width: 100%;
             margin-bottom: 30px;
-            border-spacing: 20px 0;
+            border-spacing: 15px 0;
+            table-layout: fixed;
         }
         
         .stat-card {
@@ -165,10 +166,12 @@
             box-shadow: 0 8px 20px rgba(168, 230, 207, 0.3);
             border: 3px solid #00b894;
             position: relative;
-            overflow: hidden;
+            overflow: visible;
             -webkit-print-color-adjust: exact !important;
             color-adjust: exact !important;
             print-color-adjust: exact !important;
+            min-height: 120px;
+            vertical-align: top;
         }
         
         .stat-card::before {
@@ -198,13 +201,24 @@
             margin-bottom: 10px;
             text-transform: uppercase;
             letter-spacing: 1.5px;
+            word-wrap: break-word;
+            white-space: nowrap;
+            overflow: visible;
+            text-overflow: unset;
+            line-height: 1.2;
+            padding: 2px 0;
+        }
+        
+        /* تحسين النصوص العربية */
+        .stat-label {
+            font-family: 'Arial', 'Tahoma', sans-serif;
+            direction: rtl;
+            unicode-bidi: bidi-override;
         }
         
         .stat-value {
-            font-size: 26px;
-            font-weight: bold;
-            color: #00b894 !important;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            font-family: 'Arial', 'Tahoma', sans-serif;
+            direction: ltr;
         }
         
         .attendance-container {
@@ -509,6 +523,15 @@
                 color: #000000 !important;
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
+                word-wrap: break-word;
+                overflow: visible;
+                text-overflow: unset;
+                white-space: nowrap;
+            }
+            
+            .stat-card {
+                overflow: visible !important;
+                page-break-inside: avoid;
             }
             
             .table-header {
