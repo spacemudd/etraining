@@ -614,16 +614,8 @@
                         <div>حضور</div>
                     </div>
                     <div class="legend-item">
-                        <span style="width: 28px; height: 28px; border-radius: 50%; margin-bottom: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8); line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; display: inline-block; background: #e17055 !important; color: #ffffff !important;">غ</span>
-                        <div>غياب</div>
-                    </div>
-                    <div class="legend-item">
                         <span style="width: 28px; height: 28px; border-radius: 50%; margin-bottom: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8); line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; display: inline-block; background: #fdcb6e !important; color: #ffffff !important;">إ</span>
                         <div>إجازة</div>
-                    </div>
-                    <div class="legend-item">
-                        <span style="width: 28px; height: 28px; border-radius: 50%; margin-bottom: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8); line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; display: inline-block; background: #74b9ff !important; color: #ffffff !important;">ع</span>
-                        <div>عذر</div>
                     </div>
                     <div class="legend-item">
                         <span style="width: 28px; height: 28px; border-radius: 50%; margin-bottom: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8); line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; display: inline-block; background: #636e72 !important; color: #ffffff !important;">س</span>
@@ -655,7 +647,7 @@
                                     </div>
                                 </th>
                             @endforeach
-                            <th style="width: 60px;">إجمالي الغياب</th>
+                            <th style="width: 60px;">إجمالي الحضور</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -720,24 +712,26 @@
                                                 @if ($attendance->status == 'حضور')
                                                     <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #00b894 !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">ح</span>
                                                 @elseif ($attendance->status == 'غياب')
-                                                    <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #e17055 !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">غ</span>
+                                                    {{-- تغيير الغياب إلى حضور --}}
+                                                    <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #00b894 !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">ح</span>
                                                 @elseif ($attendance->status == 'إجازة')
                                                     <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #fdcb6e !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">إ</span>
                                                 @elseif ($attendance->status == 'عذر')
-                                                    <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #74b9ff !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">ع</span>
+                                                    {{-- تغيير العذر إلى حضور --}}
+                                                    <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #00b894 !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">ح</span>
                                                 @else
-                                                    <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #00b894 !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">{{ $attendance->status }}</span>
+                                                    <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #00b894 !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">ح</span>
                                                 @endif
                                             @else
-                                                {{-- No attendance record - show absent by default --}}
-                                                <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #e17055 !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">غ</span>
+                                                {{-- No attendance record - show present by default --}}
+                                                <span style="width: 28px; height: 28px; border-radius: 50%; display: inline-block; line-height: 28px; font-weight: bold; font-size: 14px; text-align: center; vertical-align: middle; background: #00b894 !important; color: #ffffff !important; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.8);">ح</span>
                                             @endif
                                         @endif
                                     </td>
                                 @endforeach
                                 <td class="total-cell">
                                     @php
-                                        $absenceCount = 0;
+                                        $presentCount = 0;
                                         foreach ($days as $day) {
                                             if (!$day['vacation_day']) {
                                                 $attendance = $trainee->trainee->attendanceReportRecords
@@ -748,14 +742,13 @@
                                                 $isBeforeStart = $trainee->start_date && $day['date_carbon']->isBefore($trainee->start_date);
                                                 
                                                 if (!$isAfterResignation && !$isBeforeStart) {
-                                                    if (!$attendance || $attendance->status == 'غياب') {
-                                                        $absenceCount++;
-                                                    }
+                                                    // حساب الحضور (جميع الحالات تعتبر حضور الآن)
+                                                    $presentCount++;
                                                 }
                                             }
                                         }
                                     @endphp
-                                    <strong>{{ $absenceCount }}</strong>
+                                    <strong>{{ $presentCount }}</strong>
                                 </td>
                             </tr>
                         @endforeach
