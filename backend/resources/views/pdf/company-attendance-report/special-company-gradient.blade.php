@@ -2,7 +2,7 @@
 <html dir="rtl">
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <title>تقرير الحضور والانصراف - التصميم المتدرج</title>
+    <title>تقرير الحضور والانصراف - التصميم المتدرج العصري</title>
     <style>
         * {
             margin: 0;
@@ -12,59 +12,89 @@
         
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #2c3e50;
+            background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 25%, #fecfef 50%, #fecfef 75%, #ff9a9e 100%);
+            color: #2d3748;
             line-height: 1.6;
             padding: 15px;
         }
         
         .main-container {
             background: white;
-            border-radius: 15px;
+            border-radius: 20px;
             padding: 0;
             margin: 0 auto;
             max-width: 1500px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 15px 35px rgba(255, 154, 158, 0.3);
             overflow: hidden;
+            border: 3px solid #ff6b6b;
         }
         
-        .header-gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 8px;
+        .header-accent {
+            background: linear-gradient(90deg, #ff6b6b 0%, #ff8e8e 25%, #ffa8a8 50%, #ff8e8e 75%, #ff6b6b 100%);
+            height: 12px;
+            position: relative;
+        }
+        
+        .header-accent::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ffd93d 0%, #ff6b6b 50%, #ffd93d 100%);
         }
         
         .hero-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 50%, #ffa8a8 100%);
             color: white;
-            padding: 30px;
+            padding: 35px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
         }
         
         .hero-title {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: bold;
-            margin-bottom: 8px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
         }
         
         .hero-subtitle {
-            font-size: 16px;
+            font-size: 18px;
             opacity: 0.95;
             font-weight: 300;
+            position: relative;
+            z-index: 1;
         }
         
         .content-wrapper {
-            padding: 25px;
+            padding: 30px;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
         }
         
         .company-showcase {
             display: table;
             width: 100%;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 25px;
-            border: 2px solid #667eea;
+            background: linear-gradient(135deg, #ffd93d 0%, #ffed4e 50%, #ffd93d 100%);
+            border-radius: 18px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 4px solid #ff6b6b;
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.2);
         }
         
         .company-info {
@@ -74,87 +104,103 @@
         }
         
         .company-name {
-            font-size: 26px;
+            font-size: 30px;
             font-weight: bold;
-            color: #667eea;
-            margin-bottom: 5px;
+            color: #d63031;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         
         .company-subtitle {
-            font-size: 16px;
-            color: #6c757d;
-            font-weight: 500;
+            font-size: 18px;
+            color: #e17055;
+            font-weight: 600;
         }
         
         .logo-container {
             display: table-cell;
             vertical-align: middle;
             text-align: left;
-            width: 150px;
+            width: 160px;
         }
         
         .logo {
-            max-width: 120px;
-            max-height: 100px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            max-width: 130px;
+            max-height: 110px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+            border: 3px solid #ff6b6b;
         }
         
         .stats-grid {
             display: table;
             width: 100%;
-            margin-bottom: 25px;
-            border-spacing: 15px 0;
+            margin-bottom: 30px;
+            border-spacing: 20px 0;
         }
         
         .stat-card {
             display: table-cell;
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-            padding: 20px;
-            border-radius: 12px;
+            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 50%, #a8e6cf 100%);
+            padding: 25px;
+            border-radius: 18px;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            border-top: 4px solid #667eea;
+            box-shadow: 0 8px 20px rgba(168, 230, 207, 0.3);
+            border: 3px solid #00b894;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #00b894 0%, #00cec9 50%, #00b894 100%);
         }
         
         .stat-icon {
-            font-size: 28px;
-            margin-bottom: 10px;
+            font-size: 32px;
+            margin-bottom: 12px;
             display: block;
         }
         
         .stat-label {
-            font-weight: 600;
-            color: #2c3e50;
-            font-size: 13px;
-            margin-bottom: 8px;
+            font-weight: 700;
+            color: #2d3748;
+            font-size: 14px;
+            margin-bottom: 10px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
         }
         
         .stat-value {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: bold;
-            color: #667eea;
+            color: #00b894;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         
         .attendance-container {
             background: white;
-            border-radius: 12px;
+            border-radius: 18px;
             padding: 0;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.15);
             overflow: hidden;
-            margin-bottom: 20px;
-            border: 2px solid #e9ecef;
+            margin-bottom: 25px;
+            border: 3px solid #ff6b6b;
         }
         
         .table-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 50%, #ff6b6b 100%);
             color: white;
-            padding: 18px;
+            padding: 22px;
             text-align: center;
-            font-size: 20px;
+            font-size: 22px;
             font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         
         .attendance-table {
@@ -163,172 +209,178 @@
         }
         
         .attendance-table th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
             color: white;
-            padding: 12px 8px;
+            padding: 14px 10px;
             text-align: center;
             font-weight: bold;
-            font-size: 11px;
-            border: 1px solid rgba(255,255,255,0.2);
+            font-size: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
         }
         
         .attendance-table td {
-            padding: 10px 6px;
+            padding: 12px 8px;
             text-align: center;
-            border: 1px solid #dee2e6;
-            font-size: 10px;
+            border: 2px solid #ffe8e8;
+            font-size: 11px;
         }
         
         .attendance-table tbody tr:nth-child(even) {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
         }
         
         .attendance-table tbody tr:hover {
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            background: linear-gradient(135deg, #ffe8e8 0%, #ffd1d1 100%);
         }
         
         .day-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
             font-weight: bold;
         }
         
         .vacation-day {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            background: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%);
             color: white;
         }
         
         .status-badge {
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 10px;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 11px;
             font-weight: bold;
             display: inline-block;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
         }
         
         .status-active {
-            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
             color: white;
         }
         
         .status-inactive {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
             color: white;
         }
         
         .employee-info {
             text-align: right !important;
-            padding-right: 12px !important;
+            padding-right: 15px !important;
         }
         
         .employee-name {
             font-weight: bold;
-            color: #2c3e50;
-            font-size: 11px;
-            margin-bottom: 3px;
+            color: #2d3748;
+            font-size: 12px;
+            margin-bottom: 4px;
         }
         
         .employee-id {
-            font-size: 9px;
-            color: #6c757d;
+            font-size: 10px;
+            color: #636e72;
         }
         
         .attendance-mark {
-            width: 18px;
-            height: 18px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             display: inline-block;
-            line-height: 18px;
+            line-height: 22px;
             font-weight: bold;
-            font-size: 10px;
+            font-size: 11px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
         }
         
         .mark-present {
-            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
             color: white;
         }
         
         .mark-absent {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
             color: white;
         }
         
         .mark-vacation {
-            background: linear-gradient(135deg, #ffd43b 0%, #fab005 100%);
+            background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
             color: white;
         }
         
         .mark-excuse {
-            background: linear-gradient(135deg, #74c0fc 0%, #339af0 100%);
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
             color: white;
         }
         
         .mark-resignation {
-            background: linear-gradient(135deg, #868e96 0%, #495057 100%);
+            background: linear-gradient(135deg, #636e72 0%, #2d3436 100%);
             color: white;
         }
         
         .total-cell {
             font-weight: bold;
-            background: linear-gradient(135deg, #fff3bf 0%, #ffe066 100%);
-            color: #2c3e50;
-            font-size: 12px;
-        }
-        
-        .footer-section {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            padding: 20px;
-            text-align: center;
-            border-radius: 0 0 12px 12px;
-            border-top: 3px solid #667eea;
-        }
-        
-        .footer-text {
-            font-size: 12px;
-            color: #6c757d;
-            margin-bottom: 8px;
-        }
-        
-        .footer-brand {
-            font-weight: bold;
-            color: #667eea;
-            font-size: 14px;
+            background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
+            color: white;
+            font-size: 13px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
         }
         
         .legend-container {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 2px solid #dee2e6;
+            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 3px solid #00b894;
+            box-shadow: 0 6px 15px rgba(168, 230, 207, 0.3);
         }
         
         .legend-title {
             font-weight: bold;
-            color: #667eea;
-            margin-bottom: 12px;
-            font-size: 14px;
+            color: #00b894;
+            margin-bottom: 15px;
+            font-size: 16px;
             text-align: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         
         .legend-items {
             display: table;
             width: 100%;
-            border-spacing: 10px 0;
+            border-spacing: 15px 0;
         }
         
         .legend-item {
             display: table-cell;
             text-align: center;
-            font-size: 11px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #2d3748;
         }
         
         .legend-symbol {
             display: inline-block;
-            width: 22px;
-            height: 22px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
-            margin-bottom: 5px;
-            vertical-align: middle;
+            margin-bottom: 8px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+        }
+        
+        .footer-section {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+            padding: 25px;
+            text-align: center;
+            color: white;
+        }
+        
+        .footer-text {
+            font-size: 14px;
+            margin-bottom: 10px;
+            opacity: 0.95;
+        }
+        
+        .footer-brand {
+            font-weight: bold;
+            font-size: 16px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         
         .page-break {
@@ -350,13 +402,13 @@
 </head>
 <body>
     <div class="main-container">
-        <!-- Header Gradient Line -->
-        <div class="header-gradient"></div>
+        <!-- Header Accent Line -->
+        <div class="header-accent"></div>
         
         <!-- Hero Section -->
         <div class="hero-section">
             <h1 class="hero-title">تقرير الحضور والانصراف</h1>
-            <p class="hero-subtitle">Attendance & Absence Report - Gradient Design</p>
+            <p class="hero-subtitle">Attendance & Absence Report - Modern Gradient Design</p>
         </div>
         
         <div class="content-wrapper">
@@ -450,7 +502,7 @@
                     <tbody>
                         @foreach ($active_trainees as $index => $trainee)
                             <tr>
-                                <td style="font-weight: bold; color: #667eea;">{{ $index + 1 }}</td>
+                                <td style="font-weight: bold; color: #ff6b6b;">{{ $index + 1 }}</td>
                                 @if ($report->trainees()->where('job_number', '!=', NULL)->count())
                                     <td style="font-weight: 600;">{{ $trainee->trainee->job_number ?? '-' }}</td>
                                 @endif
