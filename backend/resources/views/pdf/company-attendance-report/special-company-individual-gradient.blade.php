@@ -512,12 +512,12 @@
                 <div class="stat-card">
                     <span class="stat-icon">✅</span>
                     <div class="stat-label">أيام الحضور</div>
-                    <div class="stat-value">{{ $record->trainee_attendance_records->where('status', 'حضور')->count() }}</div>
+                    <div class="stat-value">{{ $record->trainee->attendanceReportRecords->where('status', 'حضور')->count() }}</div>
                 </div>
                 <div class="stat-card">
                     <span class="stat-icon">❌</span>
                     <div class="stat-label">أيام الغياب</div>
-                    <div class="stat-value">{{ $record->trainee_attendance_records->where('status', 'غياب')->count() }}</div>
+                    <div class="stat-value">{{ $record->trainee->attendanceReportRecords->where('status', 'غياب')->count() }}</div>
                 </div>
             </div>
             
@@ -564,7 +564,7 @@
                     <tbody>
                         @foreach ($days as $day)
                             @php
-                                $attendance = $record->trainee_attendance_records
+                                $attendance = $record->trainee->attendanceReportRecords
                                     ->where('date', $day['date'])
                                     ->first();
                             @endphp

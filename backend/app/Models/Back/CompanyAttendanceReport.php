@@ -135,7 +135,7 @@ class CompanyAttendanceReport extends Model implements Auditable
         // Get ALL trainees from the report (both active and inactive) with their status
         $allReportTrainees = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->id)
             ->with(['trainee' => function($q) {
-                $q->withTrashed();
+                $q->withTrashed()->with('attendanceReportRecords');
             }])->get();
         
         
@@ -169,9 +169,9 @@ class CompanyAttendanceReport extends Model implements Auditable
                                 ->first();
                             
                             if ($actualRecord) {
-                                // Load the trainee relationship with trashed
+                                // Load the trainee relationship with trashed and attendance records
                                 $actualRecord->load(['trainee' => function($q) {
-                                    $q->withTrashed();
+                                    $q->withTrashed()->with('attendanceReportRecords');
                                 }]);
                                 $actualRecord->is_resignation = true;
                                 $actualRecord->resignation_date = $resignation->resignation_date;
@@ -186,7 +186,7 @@ class CompanyAttendanceReport extends Model implements Auditable
                             } else {
                                 // Fallback: Create a mock CompanyAttendanceReportsTrainee object for display
                                 $mockAttendance = new \stdClass();
-                                $mockAttendance->trainee = $trainee;
+                                $mockAttendance->trainee = $trainee->load('attendanceReportRecords');
                                 $mockAttendance->is_resignation = true;
                                 $mockAttendance->resignation_date = $resignation->resignation_date;
                                 $mockAttendance->active = true; // Set as active for display purposes

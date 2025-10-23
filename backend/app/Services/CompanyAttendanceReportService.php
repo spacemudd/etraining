@@ -440,7 +440,9 @@ class CompanyAttendanceReportService
     {
         $record = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $report_id)
             ->where('trainee_id', $trainee_id)
-            ->with('trainee', 'report')
+            ->with(['trainee' => function($q) {
+                $q->withTrashed()->with('attendanceReportRecords');
+            }, 'report'])
             ->first();
 
         $days = [];
