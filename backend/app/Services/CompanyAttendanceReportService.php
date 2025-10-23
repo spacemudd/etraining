@@ -407,6 +407,9 @@ class CompanyAttendanceReportService
             ->setOption('disable-smart-shrinking', true)
             ->setOption('viewport-size', '1024×768')
             ->setOption('zoom', 0.78)
+            ->setOption('print-media-type', true)
+            ->setOption('disable-smart-shrinking', true)
+            ->setOption('enable-local-file-access', true)
             ->setOption('footer-html', $report->with_logo ? resource_path('views/pdf/company-attendance-report/company-attendance-report-footer.html') : false);
         
         $activeTrainees = $report->getAllTraineesWithResignations();
