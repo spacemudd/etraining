@@ -354,7 +354,7 @@ class CompanyAttendanceReportService
             $view = 'pdf.company-attendance-report.special-company-simple';
         } elseif (in_array($report->company->id, [
             // شركات التصميم الحديث - يمكن إضافة معرفات الشركات هنا
-            '2ea73041-e686-4093-b830-260b488eb014',
+            // '2ea73041-e686-4093-b830-260b488eb014', // تم إزالتها للسماح باختيار القالب حسب template_type
             // أضف معرفات الشركات الجديدة التي تريد استخدام التصميم الحديث
         ])) {
             // Use modern design template
@@ -475,7 +475,7 @@ class CompanyAttendanceReportService
             $view = 'pdf.company-attendance-report.special-company-individual-simple';
         } elseif (in_array($record->company->id, [
             // شركات التصميم الحديث - يمكن إضافة معرفات الشركات هنا
-            '2ea73041-e686-4093-b830-260b488eb014',
+            // '2ea73041-e686-4093-b830-260b488eb014', // تم إزالتها للسماح باختيار القالب حسب template_type
             // أضف معرفات الشركات الجديدة التي تريد استخدام التصميم الحديث
         ])) {
             // Use modern design template for individual reports
