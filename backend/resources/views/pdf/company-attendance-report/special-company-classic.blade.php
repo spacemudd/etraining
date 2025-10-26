@@ -324,7 +324,7 @@
                     <th style="width: 120px;">الهوية المدنية</th>
                     <th style="width: 80px;">أيام العمل</th>
                     <th style="width: 60px;">غياب</th>
-                    @foreach($days as $day)
+                    @foreach(($days ?? []) as $day)
                         <th class="{{ $day['vacation_day'] ? 'vacation-day' : 'day-header' }}" style="width: 25px;">
                             {{ \Carbon\Carbon::parse($day['date'])->format('d') }}
                         </th>
@@ -334,7 +334,8 @@
             <tbody>
                 @foreach($report->activeTrainees as $index => $trainee)
                     @php
-                        $attendances = $trainee->attendances->whereIn('date', $dates);
+                        $dates_array = collect($days)->pluck('date')->toArray();
+                        $attendances = $trainee->attendances->whereIn('date', $dates_array);
                         $presentCount = $attendances->where('status', 'present')->count();
                         $absentCount = $attendances->where('status', 'absent')->count();
                     @endphp
@@ -347,7 +348,7 @@
                         <td style="font-weight: 600; color: #5a6c7d;">{{ $trainee->national_id ?? 'غير محدد' }}</td>
                         <td style="font-weight: 700; color: #28a745;">{{ $presentCount }}</td>
                         <td style="font-weight: 700; color: #dc3545;">{{ $absentCount }}</td>
-                        @foreach($days as $day)
+                        @foreach(($days ?? []) as $day)
                             @php
                                 $attendance = $attendances->where('date', $day['date'])->first();
                             @endphp

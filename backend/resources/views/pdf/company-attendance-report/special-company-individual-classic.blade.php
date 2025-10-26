@@ -314,7 +314,7 @@
         <table class="attendance-table">
             <thead>
                 <tr>
-                    @foreach($days as $day)
+                    @foreach(($days ?? []) as $day)
                         <th class="{{ $day['vacation_day'] ? 'vacation-day' : 'day-header' }}" style="width: 25px;">
                             {{ \Carbon\Carbon::parse($day['date'])->format('d') }}
                         </th>
@@ -323,7 +323,7 @@
             </thead>
             <tbody>
                 <tr>
-                    @foreach($days as $day)
+                    @foreach(($days ?? []) as $day)
                         @php
                             $attendance = $record->attendances->where('date', $day['date'])->first();
                         @endphp
