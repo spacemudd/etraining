@@ -256,7 +256,7 @@ class CompanyAttendanceReportController extends Controller
             'period' => 'nullable',
             'with_attendance_times' => 'nullable|boolean',
             'with_logo' => 'nullable|boolean',
-            'template_type' => 'nullable|in:default,simple,modern,gradient',
+            'template_type' => 'nullable|in:default,simple,modern,gradient,classic',
         ]);
 
         $report = CompanyAttendanceReport::findOrFail($id);
