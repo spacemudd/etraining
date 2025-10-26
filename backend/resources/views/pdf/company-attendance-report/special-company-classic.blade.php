@@ -13,7 +13,7 @@
         body {
             font-family: 'Arial', 'Helvetica', sans-serif;
             background: #ffffff;
-            color: #000000;
+            color: #2c3e50;
             line-height: 1.4;
             padding: 15px;
         }
@@ -22,13 +22,13 @@
             background: #ffffff;
             max-width: 100%;
             margin: 0 auto;
-            border: 2px solid #000000;
+            border: 2px solid #34495e;
         }
         
         /* Header Section - Excel Style */
         .report-header {
-            background: #d9d9d9;
-            border-bottom: 2px solid #000000;
+            background: #c5d5d5;
+            border-bottom: 2px solid #34495e;
             padding: 20px;
         }
         
@@ -42,7 +42,7 @@
         .header-title {
             font-size: 24px;
             font-weight: bold;
-            color: #000000;
+            color: #2c3e50;
             text-align: center;
             flex: 1;
         }
@@ -54,7 +54,7 @@
         .company-logo {
             max-width: 100px;
             height: auto;
-            border: 1px solid #000000;
+            border: 1px solid #34495e;
             background: #ffffff;
             padding: 3px;
         }
@@ -64,13 +64,13 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 1px;
-            background: #000000;
-            border: 1px solid #000000;
+            background: #34495e;
+            border: 1px solid #34495e;
             margin-bottom: 0;
         }
         
         .info-cell {
-            background: #f2f2f2;
+            background: #e8f0f0;
             padding: 10px;
             border: none;
         }
@@ -78,14 +78,14 @@
         .info-label {
             font-size: 10px;
             font-weight: bold;
-            color: #000000;
+            color: #2c3e50;
             margin-bottom: 5px;
         }
         
         .info-value {
             font-size: 14px;
             font-weight: bold;
-            color: #000000;
+            color: #2c3e50;
         }
         
         /* Table Section - Excel Style */
@@ -98,26 +98,26 @@
         
         .attendance-table th,
         .attendance-table td {
-            border: 1px solid #000000;
+            border: 1px solid #34495e;
             padding: 8px 4px;
             text-align: center;
             vertical-align: middle;
         }
         
         .attendance-table thead th {
-            background: #bfbfbf;
-            color: #000000;
+            background: #7f8c8d;
+            color: #ffffff;
             font-weight: bold;
             font-size: 10px;
         }
         
         .attendance-table thead th.header-main {
-            background: #808080;
+            background: #34495e;
             color: #ffffff;
         }
         
         .attendance-table tbody tr:nth-child(even) {
-            background: #f9f9f9;
+            background: #f0f5f5;
         }
         
         .attendance-table tbody tr:nth-child(odd) {
@@ -145,7 +145,7 @@
         
         .col-work-days {
             width: 70px;
-            background: #e6e6e6;
+            background: #c8ddd8;
         }
         
         .col-day {
@@ -155,34 +155,34 @@
         
         .col-absence {
             width: 70px;
-            background: #e6e6e6;
+            background: #c8ddd8;
         }
         
         /* Day Headers */
         .day-normal {
-            background: #d9d9d9;
+            background: #95a5a6;
         }
         
         .day-weekend {
-            background: #a6a6a6;
+            background: #5d6d7e;
             color: #ffffff;
         }
         
         /* Attendance Marks - Excel Style */
         .mark-present {
-            color: #000000;
+            color: #2c3e50;
             font-weight: bold;
             font-size: 14px;
         }
         
         .mark-absent {
-            color: #000000;
+            color: #2c3e50;
             font-weight: bold;
             font-size: 14px;
         }
         
         .mark-vacation {
-            color: #666666;
+            color: #5a6c7d;
             font-weight: bold;
             font-size: 12px;
         }
@@ -190,12 +190,12 @@
         /* Employee Info */
         .employee-name {
             font-weight: bold;
-            color: #000000;
+            color: #2c3e50;
             font-size: 11px;
         }
         
         .employee-id {
-            color: #666666;
+            color: #7f8c8d;
             font-size: 9px;
             margin-top: 2px;
         }
@@ -219,7 +219,7 @@
             }
             
             .report-container {
-                border: 1px solid #000000;
+                border: 1px solid #34495e;
             }
         }
     </style>
