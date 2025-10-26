@@ -364,12 +364,12 @@
                 <div class="stat-value">{{ count($days ?? []) }}</div>
             </div>
             <div class="stat-card top-border-orange">
-                <div class="stat-label">إجمالي الحضور</div>
-                <div class="stat-value">{{ $report->totalPresentCount() }}</div>
+                <div class="stat-label">من تاريخ</div>
+                <div class="stat-value" style="font-size: 16px;">{{ $report->date_from->format('d/m') }}</div>
             </div>
             <div class="stat-card top-border-red">
-                <div class="stat-label">إجمالي الغياب</div>
-                <div class="stat-value">{{ $report->totalAbsentCount() }}</div>
+                <div class="stat-label">إلى تاريخ</div>
+                <div class="stat-value" style="font-size: 16px;">{{ $report->date_to->format('d/m') }}</div>
             </div>
         </div>
         
