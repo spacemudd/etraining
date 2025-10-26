@@ -332,22 +332,24 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($report->activeTrainees as $index => $trainee)
-                    @php
-                        $dates_array = collect($days)->pluck('date')->toArray();
-                        $attendances = $trainee->attendances->whereIn('date', $dates_array);
-                        $presentCount = $attendances->where('status', 'present')->count();
-                        $absentCount = $attendances->where('status', 'absent')->count();
-                    @endphp
-                    <tr>
-                        <td style="font-weight: 700; color: #2c3e50;">{{ $index + 1 }}</td>
-                        <td>
-                            <div class="employee-name">{{ $trainee->first_name_ar }} {{ $trainee->last_name_ar }}</div>
-                            <div class="employee-id">{{ $trainee->national_id ?? 'غير محدد' }}</div>
-                        </td>
-                        <td style="font-weight: 600; color: #5a6c7d;">{{ $trainee->national_id ?? 'غير محدد' }}</td>
-                        <td style="font-weight: 700; color: #28a745;">{{ $presentCount }}</td>
-                        <td style="font-weight: 700; color: #dc3545;">{{ $absentCount }}</td>
+                @if(isset($active_trainees))
+                    @foreach($active_trainees as $index => $record)
+                        @php
+                            $trainee = $record->trainee ?? $record;
+                            $dates_array = collect($days ?? [])->pluck('date')->toArray();
+                            $attendances = $trainee->attendances->whereIn('date', $dates_array) ?? collect([]);
+                            $presentCount = $attendances->where('status', 'present')->count();
+                            $absentCount = $attendances->where('status', 'absent')->count();
+                        @endphp
+                        <tr>
+                            <td style="font-weight: 700; color: #2c3e50;">{{ $index + 1 }}</td>
+                            <td>
+                                <div class="employee-name">{{ $trainee->first_name_ar }} {{ $trainee->last_name_ar }}</div>
+                                <div class="employee-id">{{ $trainee->national_id ?? 'غير محدد' }}</div>
+                            </td>
+                            <td style="font-weight: 600; color: #5a6c7d;">{{ $trainee->national_id ?? 'غير محدد' }}</td>
+                            <td style="font-weight: 700; color: #28a745;">{{ $presentCount }}</td>
+                            <td style="font-weight: 700; color: #dc3545;">{{ $absentCount }}</td>
                         @foreach(($days ?? []) as $day)
                             @php
                                 $attendance = $attendances->where('date', $day['date'])->first();
@@ -369,7 +371,8 @@
                             </td>
                         @endforeach
                     </tr>
-                @endforeach
+                    @endforeach
+                @endif
             </tbody>
         </table>
     </div>
