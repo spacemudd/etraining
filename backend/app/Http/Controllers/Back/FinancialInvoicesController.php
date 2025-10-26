@@ -588,11 +588,9 @@ class  FinancialInvoicesController extends Controller
 
         $invoice = Invoice::findOrFail($invoice_id);
         
-        // Check if invoice is not paid to allow company change
-        if ($invoice->paid_at) {
-            return redirect()->route('back.finance.invoices.show', $invoice->id)->with('error', 'لا يمكن تغيير الشركة للفاتورة المدفوعة');
-        }
-
+        // Allow company change regardless of payment status
+        // (Previously restricted for paid invoices)
+        
         DB::beginTransaction();
 
         try {
