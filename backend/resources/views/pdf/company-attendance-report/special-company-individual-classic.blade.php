@@ -361,10 +361,6 @@
             </tbody>
         </table>
         
-        <!-- Footer -->
-        <div style="margin-top: 25px; text-align: center; padding: 15px; background: white; border-top: 2px solid #000; page-break-before: avoid;">
-            <p style="color: #666; font-size: 12px; margin: 0;">تم إنشاؤه تلقائياً بواسطة نظام إدارة التدريب</p>
-        </div>
     </div>
 </body>
 </html>
