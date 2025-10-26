@@ -11,30 +11,30 @@
         }
         
         body {
-            font-family: 'Arial', sans-serif;
-            background: #fdfdfd;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffffff;
             color: #1a1a1a;
-            line-height: 1.8;
-            padding: 30px;
+            line-height: 1.6;
+            padding: 15px;
         }
         
         .container {
-            background: white;
-            padding: 40px;
+            background: #ffffff;
+            max-width: 1200px;
             margin: 0 auto;
-            max-width: 1400px;
-            border: 1px solid #e0e0e0;
-            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            border: 2px solid #2c3e50;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         
+        /* Header Styles */
         .header {
-            text-align: center;
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
             color: white;
-            padding: 40px;
-            margin: -40px -40px 40px -40px;
-            position: relative;
+            padding: 35px 20px;
+            text-align: center;
             border-bottom: 5px solid #1a252f;
+            position: relative;
+            overflow: hidden;
         }
         
         .header::before {
@@ -44,14 +44,19 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1" fill="rgba(255,255,255,0.03)"/><circle cx="80" cy="80" r="1" fill="rgba(255,255,255,0.03)"/><circle cx="40" cy="60" r="1" fill="rgba(255,255,255,0.03)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-            opacity: 0.3;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,.03) 10px,
+                rgba(255,255,255,.03) 20px
+            );
         }
         
         .header h1 {
-            font-size: 28px;
-            margin-bottom: 12px;
-            font-weight: 300;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
             letter-spacing: 2px;
             text-transform: uppercase;
             position: relative;
@@ -59,279 +64,211 @@
         }
         
         .header p {
-            font-size: 16px;
-            opacity: 0.9;
-            font-weight: 300;
-            letter-spacing: 1px;
+            font-size: 14px;
+            opacity: 0.95;
+            font-weight: 400;
+            letter-spacing: 1.5px;
             position: relative;
             z-index: 1;
         }
         
+        /* Company Info Styles */
         .company-info {
-            background: #f8f9fa;
-            padding: 30px;
-            margin-bottom: 40px;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
+            background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
+            padding: 30px 25px;
+            border-bottom: 3px solid #2c3e50;
             position: relative;
-            page-break-after: avoid;
-        }
-        
-        .company-info::before {
-            content: '';
-            position: absolute;
-            top: -1px;
-            left: -1px;
-            right: -1px;
-            height: 4px;
-            background: linear-gradient(90deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
-            border-radius: 8px 8px 0 0;
         }
         
         .company-name {
-            font-size: 26px;
-            font-weight: 600;
+            font-size: 28px;
+            font-weight: 700;
             color: #2c3e50;
             margin-bottom: 8px;
-            position: relative;
-            display: block;
-        }
-        
-        .company-name::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background: #34495e;
+            text-align: center;
         }
         
         .company-subtitle {
-            color: #6c757d;
-            font-size: 16px;
+            font-size: 18px;
+            color: #5a6c7d;
+            text-align: center;
             font-weight: 400;
-            margin-top: 15px;
         }
         
+        .logo {
+            max-width: 100px;
+            height: auto;
+            display: block;
+            margin: -80px auto 15px auto;
+            border: 3px solid #2c3e50;
+            padding: 8px;
+            background: white;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        /* Trainee Info Styles */
         .trainee-info {
-            background: #f8f9fa;
-            padding: 30px;
-            margin-bottom: 40px;
-            border: 1px solid #e9ecef;
-            border-radius: 12px;
-            page-break-after: avoid;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.06);
+            background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
+            padding: 30px 25px;
+            border-bottom: 3px solid #2c3e50;
         }
         
         .trainee-name {
-            font-size: 22px;
-            font-weight: 600;
+            font-size: 32px;
+            font-weight: 700;
             color: #2c3e50;
-            margin-bottom: 15px;
-            position: relative;
-        }
-        
-        .trainee-name::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 0;
-            width: 50px;
-            height: 2px;
-            background: #34495e;
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #2c3e50;
         }
         
         .trainee-details {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
-            margin-top: 25px;
+            margin-top: 20px;
         }
         
         .detail-item {
-            text-align: center;
-            padding: 20px 15px;
             background: white;
-            border: 1px solid #e9ecef;
+            border: 2px solid #2c3e50;
             border-radius: 8px;
-            position: relative;
-            box-shadow: 0 1px 8px rgba(0,0,0,0.04);
-        }
-        
-        .detail-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 30px;
-            height: 3px;
-            background: linear-gradient(90deg, #2c3e50, #34495e);
-            border-radius: 0 0 3px 3px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.1);
         }
         
         .detail-label {
-            font-size: 11px;
-            color: #6c757d;
-            margin-bottom: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #5a6c7d;
+            margin-bottom: 12px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 500;
+            letter-spacing: 0.5px;
         }
         
         .detail-value {
-            font-size: 18px;
+            font-size: 28px;
             font-weight: 700;
             color: #2c3e50;
         }
         
+        /* Table Styles */
         .attendance-table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
-            margin-top: 30px;
-            border: 1px solid #dee2e6;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin: 0;
+            background: white;
         }
         
         .attendance-table th {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
             color: white;
-            padding: 18px 8px;
+            padding: 12px 6px;
             text-align: center;
             font-weight: 600;
             font-size: 11px;
-            border-bottom: 1px solid #1a252f;
-            page-break-after: avoid;
-            position: relative;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            vertical-align: middle;
         }
         
-        .attendance-table th:not(:last-child) {
-            border-right: 1px solid rgba(255,255,255,0.1);
+        .attendance-table th:last-child {
+            border-right: none;
         }
         
         .attendance-table td {
-            padding: 14px 6px;
+            padding: 12px 6px;
             text-align: center;
-            border-bottom: 1px solid #f1f3f4;
-            background: white;
+            border: 1px solid #e9ecef;
             font-size: 10px;
             vertical-align: middle;
-            page-break-inside: avoid;
-        }
-        
-        .attendance-table td:not(:last-child) {
-            border-right: 1px solid #f8f9fa;
-        }
-        
-        .attendance-table tbody tr {
-            page-break-inside: avoid;
-            transition: background-color 0.2s ease;
-        }
-        
-        .attendance-table tbody tr:hover td {
-            background: #f8f9fa !important;
-        }
-        
-        .attendance-table tbody tr:nth-child(even) td {
-            background: #fbfcfd;
-        }
-        
-        .attendance-table tbody tr:nth-child(odd) td {
             background: white;
         }
         
-        .attendance-table tbody tr:last-child td {
-            border-bottom: none;
+        .attendance-table tbody tr:nth-child(even) {
+            background: #f8f9fa;
         }
         
+        .attendance-table tbody tr:nth-child(odd) {
+            background: white;
+        }
+        
+        /* Attendance Marks */
         .attendance-mark {
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-            border-radius: 6px;
-            line-height: 20px;
-            font-weight: 600;
-            font-size: 12px;
-            text-align: center;
-            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 13px;
+            border: 2px solid;
         }
         
         .present {
-            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
-            color: #2d5016;
-            border: 2px solid #4a7c59;
-            box-shadow: 0 2px 4px rgba(74,124,89,0.2);
+            background: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+            box-shadow: 0 2px 5px rgba(21,87,36,0.15);
         }
         
         .absent {
-            background: linear-gradient(135deg, #f8e8e8 0%, #f5f0f0 100%);
-            color: #8b1538;
-            border: 2px solid #c53030;
-            box-shadow: 0 2px 4px rgba(197,48,48,0.2);
+            background: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+            box-shadow: 0 2px 5px rgba(114,28,36,0.15);
         }
         
         .vacation {
-            background: linear-gradient(135deg, #f0f0f0 0%, #f8f8f8 100%);
-            color: #4a5568;
-            border: 2px solid #718096;
-            box-shadow: 0 2px 4px rgba(113,128,150,0.2);
+            background: #fff3cd;
+            color: #856404;
+            border-color: #ffeaa7;
+            box-shadow: 0 2px 5px rgba(133,100,4,0.15);
         }
         
         .day-header {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%) !important;
             color: white !important;
         }
         
         .vacation-day {
-            background: linear-gradient(135deg, #5a6c7d 0%, #6c7b7d 100%) !important;
+            background: linear-gradient(135deg, #5a6c7d 0%, #4a5d6d 100%) !important;
             color: white !important;
         }
         
-        .logo {
-            max-width: 80px;
-            height: auto;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        /* تحسينات الطباعة */
+        /* Print Optimizations */
         @media print {
             body {
                 background: white;
-                margin: 0;
-                padding: 15px;
+                padding: 0;
             }
             
             .container {
+                border: 2px solid #000;
                 box-shadow: none;
-                border: 1px solid #ccc;
-                padding: 20px;
+                margin: 0;
             }
             
             .header {
-                margin: -20px -20px 30px -20px;
-                padding: 30px;
+                page-break-after: avoid;
+                background: #000 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .company-info, .trainee-info {
+                page-break-after: avoid;
             }
             
             .attendance-table {
-                font-size: 8px;
+                page-break-inside: auto;
             }
             
-            .attendance-table th,
-            .attendance-table td {
-                padding: 8px 4px;
-            }
-            
-            .attendance-mark {
-                width: 18px;
-                height: 18px;
-                line-height: 14px;
-                font-size: 10px;
+            .attendance-table tbody tr {
+                page-break-inside: avoid;
             }
         }
     </style>
@@ -341,16 +278,16 @@
         <!-- Header -->
         <div class="header">
             <h1>تقرير الحضور والانصراف الفردي</h1>
-            <p>{{ $record->course->title }}</p>
+            <p>Individual Attendance & Absence Report</p>
         </div>
         
         <!-- Company Info -->
         <div class="company-info">
+            @if ($base64logo)
+                <img src="{{ $base64logo }}" alt="Company Logo" class="logo">
+            @endif
             <div class="company-name">{{ $record->company->name_ar }}</div>
             <div class="company-subtitle">{{ $record->company->name_en }}</div>
-            @if ($base64logo)
-                <img src="{{ $base64logo }}" alt="Company Logo" class="logo" style="float: left; margin-top: -25px;">
-            @endif
         </div>
         
         <!-- Trainee Info -->
@@ -359,12 +296,12 @@
             
             <div class="trainee-details">
                 <div class="detail-item">
-                    <div class="detail-label">المتدرب</div>
-                    <div class="detail-value">{{ $record->user->first_name_ar }} {{ $record->user->last_name_ar }}</div>
+                    <div class="detail-label">الاسم الكامل</div>
+                    <div class="detail-value" style="font-size: 22px;">{{ $record->user->first_name_ar }} {{ $record->user->last_name_ar }}</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">رقم الهوية</div>
-                    <div class="detail-value">{{ $record->user->national_id ?? 'غير محدد' }}</div>
+                    <div class="detail-value" style="font-size: 22px;">{{ $record->user->national_id ?? 'غير محدد' }}</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">معدل الحضور</div>
@@ -383,9 +320,8 @@
                             $dayNumber = \Carbon\Carbon::parse($date)->format('d');
                             $isVacation = in_array(\Carbon\Carbon::parse($date)->dayOfWeek, [5, 6]);
                         @endphp
-                        <th class="{{ $isVacation ? 'vacation-day' : 'day-header' }}">
-                            <div style="font-size: 9px;">{{ $dayName }}</div>
-                            <div style="font-size: 11px; margin-top: 3px;">{{ $dayNumber }}</div>
+                        <th class="{{ $isVacation ? 'vacation-day' : 'day-header' }}" style="width: 25px;">
+                            {{ $dayNumber }}
                         </th>
                     @endforeach
                 </tr>
