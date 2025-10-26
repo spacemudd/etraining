@@ -162,6 +162,7 @@
                             <p class="text-sm text-gray-500 mt-1">تصميم كلاسيكي واضح ومنظم</p>
                         </div>
                     </div>
+                </div>
                 
                 <div class="mt-6 flex justify-end">
                     <button @click="updateTemplate" 
