@@ -11,60 +11,68 @@
         }
         
         body {
-            font-family: 'Times New Roman', serif;
-            background: white;
-            color: #000;
-            line-height: 1.6;
-            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            background: #fdfdfd;
+            color: #1a1a1a;
+            line-height: 1.8;
+            padding: 30px;
         }
         
         .container {
             background: white;
-            padding: 20px;
+            padding: 40px;
             margin: 0 auto;
             max-width: 1400px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
         }
         
         .header {
             text-align: center;
-            background: #000;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             color: white;
-            padding: 30px;
-            margin-bottom: 25px;
-            border-bottom: 4px solid #333;
+            padding: 40px;
+            margin: -40px -40px 40px -40px;
             position: relative;
+            border-bottom: 5px solid #1a252f;
         }
         
-        .header::after {
+        .header::before {
             content: '';
             position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 4px;
-            background: #000;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1" fill="rgba(255,255,255,0.03)"/><circle cx="80" cy="80" r="1" fill="rgba(255,255,255,0.03)"/><circle cx="40" cy="60" r="1" fill="rgba(255,255,255,0.03)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
         }
         
         .header h1 {
-            font-size: 24px;
-            margin-bottom: 8px;
-            font-weight: bold;
-            letter-spacing: 1px;
+            font-size: 28px;
+            margin-bottom: 12px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
         }
         
         .header p {
-            font-size: 14px;
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 300;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
         }
         
         .company-info {
-            background: #fafafa;
-            padding: 25px;
-            margin-bottom: 25px;
-            border-left: 6px solid #000;
-            border-right: 1px solid #ddd;
-            border-top: 1px solid #ddd;
-            border-bottom: 1px solid #ddd;
+            background: #f8f9fa;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
             position: relative;
             page-break-after: avoid;
         }
@@ -72,193 +80,213 @@
         .company-info::before {
             content: '';
             position: absolute;
-            top: 0;
-            right: -6px;
-            width: 6px;
-            height: 100%;
-            background: #333;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            height: 4px;
+            background: linear-gradient(90deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
+            border-radius: 8px 8px 0 0;
         }
         
         .company-name {
-            font-size: 24px;
-            font-weight: bold;
-            color: #000;
-            margin-bottom: 5px;
-            border-bottom: 3px solid #333;
-            display: inline-block;
-            padding-bottom: 5px;
+            font-size: 26px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            position: relative;
+            display: block;
+        }
+        
+        .company-name::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: #34495e;
         }
         
         .company-subtitle {
-            color: #666;
-            font-size: 14px;
-            font-style: italic;
+            color: #6c757d;
+            font-size: 16px;
+            font-weight: 400;
+            margin-top: 15px;
         }
         
         .report-details {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
+            gap: 25px;
+            margin-bottom: 50px;
             page-break-after: avoid;
         }
         
         .detail-card {
             background: white;
-            border: 1px solid #ddd;
-            border-top: 4px solid #000;
-            padding: 18px;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 25px 20px;
             text-align: center;
             position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
         }
         
-        .detail-card::after {
+        .detail-card::before {
             content: '';
             position: absolute;
-            bottom: 0;
+            top: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 30px;
-            height: 2px;
-            background: #333;
+            width: 40px;
+            height: 4px;
+            background: linear-gradient(90deg, #2c3e50, #34495e);
+            border-radius: 0 0 4px 4px;
         }
         
         .detail-label {
-            font-weight: bold;
-            color: #333;
-            font-size: 11px;
-            margin-bottom: 10px;
+            font-weight: 500;
+            color: #6c757d;
+            font-size: 12px;
+            margin-bottom: 15px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
         }
         
         .detail-value {
-            font-size: 20px;
-            font-weight: bold;
-            color: #000;
-            margin-top: 5px;
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            line-height: 1.2;
         }
         
         .attendance-table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
-            margin-top: 25px;
-            border: 1px solid #000;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-top: 30px;
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
         
         .attendance-table th {
-            background: #1a1a1a;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             color: white;
-            padding: 15px 6px;
+            padding: 18px 8px;
             text-align: center;
-            font-weight: bold;
-            font-size: 10px;
-            border: 1px solid #000;
-            border-bottom: 3px solid #000;
+            font-weight: 600;
+            font-size: 11px;
+            border-bottom: 1px solid #1a252f;
             page-break-after: avoid;
             position: relative;
         }
         
         .attendance-table th:not(:last-child) {
-            border-right: 2px solid #333;
+            border-right: 1px solid rgba(255,255,255,0.1);
         }
         
         .attendance-table td {
-            padding: 10px 4px;
+            padding: 14px 6px;
             text-align: center;
-            border: 1px solid #ddd;
+            border-bottom: 1px solid #f1f3f4;
             background: white;
-            font-size: 9px;
+            font-size: 10px;
             vertical-align: middle;
             page-break-inside: avoid;
-            position: relative;
         }
         
         .attendance-table td:not(:last-child) {
-            border-right: 1px solid #eee;
+            border-right: 1px solid #f8f9fa;
         }
         
-        .attendance-table tr {
+        .attendance-table tbody tr {
             page-break-inside: avoid;
-            border-bottom: 1px solid #e5e5e5;
+            transition: background-color 0.2s ease;
         }
         
-        .attendance-table tr:hover td {
-            background: #f5f5f5 !important;
+        .attendance-table tbody tr:hover td {
+            background: #f8f9fa !important;
         }
         
-        .attendance-table tr:nth-child(even) td {
-            background: #fafafa;
+        .attendance-table tbody tr:nth-child(even) td {
+            background: #fbfcfd;
         }
         
-        .attendance-table tr:nth-child(odd) td {
+        .attendance-table tbody tr:nth-child(odd) td {
             background: white;
         }
         
+        .attendance-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
         .employee-name {
-            font-weight: bold;
-            color: #000;
+            font-weight: 600;
+            color: #2c3e50;
             font-size: 11px;
-            margin-bottom: 2px;
-            line-height: 1.3;
+            margin-bottom: 4px;
+            line-height: 1.4;
         }
         
         .employee-id {
-            color: #666;
+            color: #6c757d;
             font-size: 8px;
             line-height: 1.2;
-            font-style: italic;
+            font-weight: 400;
         }
         
         .attendance-mark {
             display: inline-block;
-            width: 22px;
-            height: 22px;
-            border-radius: 3px;
-            line-height: 18px;
-            font-weight: bold;
-            font-size: 11px;
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            line-height: 20px;
+            font-weight: 600;
+            font-size: 12px;
             text-align: center;
             position: relative;
         }
         
         .present {
-            background: #f8f8f8;
-            color: #000;
-            border: 2px solid #333;
-            box-shadow: inset 0 0 3px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
+            color: #2d5016;
+            border: 2px solid #4a7c59;
+            box-shadow: 0 2px 4px rgba(74,124,89,0.2);
         }
         
         .absent {
-            background: #555;
-            color: white;
-            border: 2px solid #000;
-            box-shadow: inset 0 0 3px rgba(0,0,0,0.3);
+            background: linear-gradient(135deg, #f8e8e8 0%, #f5f0f0 100%);
+            color: #8b1538;
+            border: 2px solid #c53030;
+            box-shadow: 0 2px 4px rgba(197,48,48,0.2);
         }
         
         .vacation {
-            background: #e0e0e0;
-            color: #333;
-            border: 2px solid #999;
-            box-shadow: inset 0 0 3px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #f0f0f0 0%, #f8f8f8 100%);
+            color: #4a5568;
+            border: 2px solid #718096;
+            box-shadow: 0 2px 4px rgba(113,128,150,0.2);
         }
         
         .day-header {
-            background: #000 !important;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
             color: white !important;
         }
         
         .vacation-day {
-            background: #333 !important;
+            background: linear-gradient(135deg, #5a6c7d 0%, #6c7b7d 100%) !important;
             color: white !important;
         }
         
         .logo {
-            max-width: 70px;
+            max-width: 80px;
             height: auto;
-            border: 2px solid #000;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         
         /* تحسينات الطباعة */
@@ -392,7 +420,7 @@
             <div class="company-name">{{ $report->company->name_ar }}</div>
             <div class="company-subtitle">{{ $report->company->name_en }}</div>
             @if ($base64logo)
-                <img src="{{ $base64logo }}" alt="Company Logo" class="logo" style="float: left; margin-top: -40px; border: 2px solid #000;">
+                <img src="{{ $base64logo }}" alt="Company Logo" class="logo" style="float: left; margin-top: -25px;">
             @endif
         </div>
         
