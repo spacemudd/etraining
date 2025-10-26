@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class AddGradientTemplateToCompanyAttendanceReportsTable extends Migration
 {
@@ -13,10 +14,8 @@ class AddGradientTemplateToCompanyAttendanceReportsTable extends Migration
      */
     public function up()
     {
-        Schema::table('company_attendance_reports', function (Blueprint $table) {
-            // تحديث نوع القالب لإضافة الخيار الجديد
-            $table->enum('template_type', ['default', 'simple', 'modern', 'gradient'])->default('default')->change();
-        });
+        // استخدام DB::statement لتعديل ENUM
+        DB::statement("ALTER TABLE company_attendance_reports MODIFY COLUMN template_type ENUM('default', 'simple', 'modern', 'gradient') DEFAULT 'default'");
     }
 
     /**
@@ -26,9 +25,7 @@ class AddGradientTemplateToCompanyAttendanceReportsTable extends Migration
      */
     public function down()
     {
-        Schema::table('company_attendance_reports', function (Blueprint $table) {
-            // إرجاع نوع القالب إلى الحالة السابقة
-            $table->enum('template_type', ['default', 'simple', 'modern'])->default('default')->change();
-        });
+        // إرجاع الـ ENUM إلى الحالة السابقة
+        DB::statement("ALTER TABLE company_attendance_reports MODIFY COLUMN template_type ENUM('default', 'simple', 'modern') DEFAULT 'default'");
     }
 }
