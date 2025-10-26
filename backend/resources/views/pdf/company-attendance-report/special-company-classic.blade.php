@@ -20,7 +20,6 @@
         
         .container {
             background: white;
-            border: 2px solid #000;
             padding: 20px;
             margin: 0 auto;
             max-width: 1400px;
@@ -30,10 +29,21 @@
             text-align: center;
             background: #000;
             color: white;
-            padding: 25px;
-            margin-bottom: 20px;
-            border: 3px solid #333;
-            page-break-after: avoid;
+            padding: 30px;
+            margin-bottom: 25px;
+            border-bottom: 4px solid #333;
+            position: relative;
+        }
+        
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: #000;
         }
         
         .header h1 {
@@ -48,20 +58,35 @@
         }
         
         .company-info {
-            background: #f5f5f5;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 2px solid #333;
-            border-right: 5px solid #000;
+            background: #fafafa;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 6px solid #000;
+            border-right: 1px solid #ddd;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            position: relative;
             page-break-after: avoid;
         }
         
+        .company-info::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -6px;
+            width: 6px;
+            height: 100%;
+            background: #333;
+        }
+        
         .company-name {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: bold;
             color: #000;
-            margin-bottom: 8px;
-            text-decoration: underline;
+            margin-bottom: 5px;
+            border-bottom: 3px solid #333;
+            display: inline-block;
+            padding-bottom: 5px;
         }
         
         .company-subtitle {
@@ -73,67 +98,103 @@
         .report-details {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
+            gap: 20px;
+            margin-bottom: 30px;
             page-break-after: avoid;
         }
         
         .detail-card {
             background: white;
-            border: 2px solid #333;
-            padding: 15px;
+            border: 1px solid #ddd;
+            border-top: 4px solid #000;
+            padding: 18px;
             text-align: center;
+            position: relative;
+        }
+        
+        .detail-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 2px;
+            background: #333;
         }
         
         .detail-label {
             font-weight: bold;
-            color: #000;
-            font-size: 12px;
-            margin-bottom: 8px;
-            text-decoration: underline;
+            color: #333;
+            font-size: 11px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .detail-value {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             color: #000;
+            margin-top: 5px;
         }
         
         .attendance-table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0;
             margin-top: 25px;
-            border: 2px solid #000;
+            border: 1px solid #000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         
         .attendance-table th {
-            background: #000;
+            background: #1a1a1a;
             color: white;
-            padding: 12px 6px;
+            padding: 15px 6px;
             text-align: center;
             font-weight: bold;
             font-size: 10px;
             border: 1px solid #000;
+            border-bottom: 3px solid #000;
             page-break-after: avoid;
+            position: relative;
+        }
+        
+        .attendance-table th:not(:last-child) {
+            border-right: 2px solid #333;
         }
         
         .attendance-table td {
-            padding: 8px 4px;
+            padding: 10px 4px;
             text-align: center;
-            border: 1px solid #333;
+            border: 1px solid #ddd;
             background: white;
             font-size: 9px;
             vertical-align: middle;
             page-break-inside: avoid;
+            position: relative;
+        }
+        
+        .attendance-table td:not(:last-child) {
+            border-right: 1px solid #eee;
         }
         
         .attendance-table tr {
             page-break-inside: avoid;
-            border-bottom: 1px solid #ccc;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        
+        .attendance-table tr:hover td {
+            background: #f5f5f5 !important;
         }
         
         .attendance-table tr:nth-child(even) td {
-            background: #f9f9f9;
+            background: #fafafa;
+        }
+        
+        .attendance-table tr:nth-child(odd) td {
+            background: white;
         }
         
         .employee-name {
@@ -153,31 +214,35 @@
         
         .attendance-mark {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #333;
-            line-height: 16px;
+            width: 22px;
+            height: 22px;
+            border-radius: 3px;
+            line-height: 18px;
             font-weight: bold;
-            font-size: 10px;
+            font-size: 11px;
             text-align: center;
+            position: relative;
         }
         
         .present {
-            background: white;
+            background: #f8f8f8;
             color: #000;
-            border: 2px solid #000;
+            border: 2px solid #333;
+            box-shadow: inset 0 0 3px rgba(0,0,0,0.1);
         }
         
         .absent {
-            background: #666;
+            background: #555;
             color: white;
             border: 2px solid #000;
+            box-shadow: inset 0 0 3px rgba(0,0,0,0.3);
         }
         
         .vacation {
-            background: #ccc;
-            color: #000;
-            border: 2px solid #000;
+            background: #e0e0e0;
+            color: #333;
+            border: 2px solid #999;
+            box-shadow: inset 0 0 3px rgba(0,0,0,0.1);
         }
         
         .day-header {
@@ -485,10 +550,6 @@
             </tbody>
         </table>
         
-        <!-- Footer -->
-        <div style="margin-top: 25px; text-align: center; padding: 15px; background: white; border-top: 2px solid #000; page-break-before: avoid;">
-            <p style="color: #666; font-size: 12px; margin: 0;">تم إنشاؤه تلقائياً بواسطة نظام إدارة التدريب</p>
-        </div>
     </div>
 </body>
 </html>
