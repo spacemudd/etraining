@@ -324,14 +324,9 @@
                     <th style="width: 120px;">الهوية المدنية</th>
                     <th style="width: 80px;">أيام العمل</th>
                     <th style="width: 60px;">غياب</th>
-                    @foreach($dates as $date)
-                        @php
-                            $dayName = \Carbon\Carbon::parse($date)->translatedFormat('l');
-                            $dayNumber = \Carbon\Carbon::parse($date)->format('d');
-                            $isVacation = in_array(\Carbon\Carbon::parse($date)->dayOfWeek, [5, 6]);
-                        @endphp
-                        <th class="{{ $isVacation ? 'vacation-day' : 'day-header' }}" style="width: 25px;">
-                            {{ $dayNumber }}
+                    @foreach($days as $day)
+                        <th class="{{ $day['vacation_day'] ? 'vacation-day' : 'day-header' }}" style="width: 25px;">
+                            {{ \Carbon\Carbon::parse($day['date'])->format('d') }}
                         </th>
                     @endforeach
                 </tr>
@@ -352,13 +347,12 @@
                         <td style="font-weight: 600; color: #5a6c7d;">{{ $trainee->national_id ?? 'غير محدد' }}</td>
                         <td style="font-weight: 700; color: #28a745;">{{ $presentCount }}</td>
                         <td style="font-weight: 700; color: #dc3545;">{{ $absentCount }}</td>
-                        @foreach($dates as $date)
+                        @foreach($days as $day)
                             @php
-                                $attendance = $attendances->where('date', $date)->first();
-                                $isVacation = in_array(\Carbon\Carbon::parse($date)->dayOfWeek, [5, 6]);
+                                $attendance = $attendances->where('date', $day['date'])->first();
                             @endphp
                             <td>
-                                @if($isVacation)
+                                @if($day['vacation_day'])
                                     <span class="attendance-mark vacation">أ</span>
                                 @elseif($attendance)
                                     @if($attendance->status == 'present')
