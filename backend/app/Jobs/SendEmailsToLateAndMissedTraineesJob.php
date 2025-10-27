@@ -90,6 +90,19 @@ class SendEmailsToLateAndMissedTraineesJob implements ShouldQueue
                 continue;
             }
 
+            // Skip warning if trainee is currently on leave
+            $sessionDateOnly = $this->courseBatchSession->starts_at->toDateString();
+            $hasActiveLeave = $punchIn->leaves()
+                ->where('status', '!=', 'cancelled')
+                ->where('from_date', '<=', $sessionDateOnly)
+                ->where('to_date', '>=', $sessionDateOnly)
+                ->exists();
+
+            if ($hasActiveLeave) {
+                Log::debug('Skipping warning - trainee is on leave: '.$punchIn->email);
+                continue;
+            }
+
             if (Str::startsWith($punchIn->phone, '05')) {
                 $punchIn->phone = Str::replaceFirst('05', '9665', $punchIn->phone);
                 $punchIn->save();
@@ -131,6 +144,19 @@ class SendEmailsToLateAndMissedTraineesJob implements ShouldQueue
             
             if ($daysDifference <= 2) {
                 Log::debug('Skipping late warning - trainee created '.$daysDifference.' days before session: '.$punchIn->email);
+                continue;
+            }
+
+            // Skip warning if trainee is currently on leave
+            $sessionDateOnly = $this->courseBatchSession->starts_at->toDateString();
+            $hasActiveLeave = $punchIn->leaves()
+                ->where('status', '!=', 'cancelled')
+                ->where('from_date', '<=', $sessionDateOnly)
+                ->where('to_date', '>=', $sessionDateOnly)
+                ->exists();
+
+            if ($hasActiveLeave) {
+                Log::debug('Skipping late warning - trainee is on leave: '.$punchIn->email);
                 continue;
             }
 

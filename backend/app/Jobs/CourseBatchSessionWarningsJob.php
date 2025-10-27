@@ -78,6 +78,19 @@ class CourseBatchSessionWarningsJob implements ShouldQueue
                     continue;
                 }
 
+                // Skip warning if trainee is currently on leave
+                $sessionDateOnly = $this->courseBatchSession->starts_at->toDateString();
+                $hasActiveLeave = $attendance->trainee->leaves()
+                    ->where('status', '!=', 'cancelled')
+                    ->where('from_date', '<=', $sessionDateOnly)
+                    ->where('to_date', '>=', $sessionDateOnly)
+                    ->exists();
+
+                if ($hasActiveLeave) {
+                    Log::debug('[CourseBatchSessionWarningsJob] Skipping warning - trainee is on leave: '.$attendance->trainee->email);
+                    continue;
+                }
+
                 $warning = new AttendanceReportRecordWarning();
                 $warning->team_id = $attendance->team_id;
                 $warning->attendance_report_id = $this->report->id;
@@ -138,6 +151,19 @@ class CourseBatchSessionWarningsJob implements ShouldQueue
                 
                 if ($daysDifference <= 2) {
                     Log::debug('[CourseBatchSessionWarningsJob] Skipping late warning - trainee created '.$daysDifference.' days before session: '.$attendance->trainee->email);
+                    continue;
+                }
+
+                // Skip warning if trainee is currently on leave
+                $sessionDateOnly = $this->courseBatchSession->starts_at->toDateString();
+                $hasActiveLeave = $attendance->trainee->leaves()
+                    ->where('status', '!=', 'cancelled')
+                    ->where('from_date', '<=', $sessionDateOnly)
+                    ->where('to_date', '>=', $sessionDateOnly)
+                    ->exists();
+
+                if ($hasActiveLeave) {
+                    Log::debug('[CourseBatchSessionWarningsJob] Skipping late warning - trainee is on leave: '.$attendance->trainee->email);
                     continue;
                 }
 
