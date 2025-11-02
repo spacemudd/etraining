@@ -109,6 +109,7 @@
             color: #ffffff;
             font-weight: bold;
             font-size: 10px;
+            position: relative;
         }
         
         .attendance-table thead th.header-main {
@@ -210,6 +211,15 @@
             justify-content: center;
             font-size: 8px;
             line-height: 1.2;
+            position: relative;
+        }
+        
+        @media print {
+            .day-name-vertical {
+                transform: rotate(180deg) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
         }
         
         /* Print Styles */
@@ -221,6 +231,80 @@
             .report-container {
                 border: 1px solid #34495e;
             }
+            
+            /* Ensure header only appears on first page */
+            .report-header {
+                page-break-after: avoid;
+                page-break-inside: avoid;
+            }
+            
+            /* Force table header to repeat on every page */
+            .attendance-table {
+                page-break-inside: auto;
+            }
+            
+            .attendance-table thead {
+                display: table-header-group !important;
+                page-break-after: avoid;
+                page-break-inside: avoid;
+            }
+            
+            .attendance-table tbody {
+                display: table-row-group;
+                page-break-inside: auto;
+            }
+            
+            .attendance-table tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+            }
+            
+            .attendance-table th,
+            .attendance-table td {
+                page-break-inside: avoid;
+            }
+            
+            /* Ensure header colors are printed correctly */
+            .attendance-table thead th {
+                background: #7f8c8d !important;
+                color: #ffffff !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .attendance-table thead th.header-main {
+                background: #34495e !important;
+                color: #ffffff !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .day-normal {
+                background: #95a5a6 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .day-weekend {
+                background: #5d6d7e !important;
+                color: #ffffff !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+        
+        /* General print rules - even outside @media print for better compatibility */
+        .attendance-table thead {
+            display: table-header-group !important;
+        }
+        
+        .attendance-table tbody {
+            display: table-row-group;
+        }
+        
+        .report-header {
+            page-break-after: avoid;
+            page-break-inside: avoid;
         }
     </style>
 </head>
