@@ -16,6 +16,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=c77e8ef5f30bb983ea7f",
     "/css/app.css": "/css/app.css?id=e54c1ae96a2a3c97cb53",
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
@@ -63,10 +64,13 @@
     "/js/vendor.js": "/js/vendor.js?id=1152d949b96cc01cdf94"
 >>>>>>> d172c88d (upload wad3 vacation file)
 =======
+=======
+>>>>>>> f0c5dc748 (fix error)
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
     "/js/manifest.js": "/js/manifest.js",
     "/js/vendor.js": "/js/vendor.js"
+<<<<<<< HEAD
 >>>>>>> 7894adf6 (roles)
 =======
     "/js/app.js": "/js/app.js?id=d5a820b2cfee453b82ae",
@@ -122,4 +126,6 @@
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
     "/js/vendor.js": "/js/vendor.js?id=1ce338e2b694a5733fff"
 >>>>>>> fa4d576d (try)
+=======
+>>>>>>> f0c5dc748 (fix error)
 }
