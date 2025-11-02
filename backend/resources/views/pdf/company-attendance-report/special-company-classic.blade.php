@@ -27,6 +27,11 @@
             overflow: visible;
         }
         
+        /* Allow table to break container for page breaks */
+        .report-container table {
+            position: relative;
+        }
+        
         /* Header Section - Excel Style */
         .report-header {
             background: #c5d5d5;
@@ -99,6 +104,7 @@
             font-size: 10px;
             background: #ffffff;
             page-break-inside: auto;
+            border-spacing: 0;
         }
         
         .attendance-table th,
@@ -254,6 +260,13 @@
                 -webkit-table-header-group: table-header-group !important;
                 page-break-after: avoid;
                 page-break-inside: avoid;
+                position: relative;
+            }
+            
+            /* Force thead to repeat - critical for wkhtmltopdf */
+            thead {
+                display: table-header-group !important;
+                -webkit-table-header-group: table-header-group !important;
             }
             
             table.attendance-table thead tr {
@@ -380,10 +393,11 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Attendance Table -->
-        <table class="attendance-table" style="page-break-inside: auto;">
-            <thead style="display: table-header-group !important;">
+    </div>
+    
+    <!-- Attendance Table - Outside container for better page break handling -->
+    <table class="attendance-table" style="page-break-inside: auto; border-collapse: collapse; width: 100%; margin: 0;">
+            <thead style="display: table-header-group !important; -webkit-table-header-group: table-header-group !important;">
                 <tr style="display: table-row !important; page-break-after: avoid; page-break-inside: avoid;">
                     <th class="col-number header-main">م</th>
                     <th class="col-name header-main">اسم الموظف</th>
@@ -516,6 +530,5 @@
                 @endif
             </tbody>
         </table>
-    </div>
 </body>
 </html>
