@@ -22,6 +22,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=c77e8ef5f30bb983ea7f",
     "/css/app.css": "/css/app.css?id=e54c1ae96a2a3c97cb53",
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
@@ -163,4 +164,10 @@
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
     "/js/vendor.js": "/js/vendor.js?id=6b0e992d731aee8a6187"
 >>>>>>> 343a286d (s)
+=======
+    "/js/app.js": "/js/app.js?id=e0ddeccb85d19fb0d7b2",
+    "/css/app.css": "/css/app.css?id=e3254524769988848dba",
+    "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
+    "/js/vendor.js": "/js/vendor.js?id=8020aeec451de56ad0cc"
+>>>>>>> 8328102d (change invoivce value by sara)
 }

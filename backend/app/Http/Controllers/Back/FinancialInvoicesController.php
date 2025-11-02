@@ -494,6 +494,71 @@ class  FinancialInvoicesController extends Controller
         return redirect()->route('back.finance.invoices.show', $new->id);
     }
 
+    public function updateAmount(Request $request, string $invoice_id)
+    {
+        // التحقق من أن المستخدم هو أحد الحسابات المصرح لها
+        $allowedEmails = [
+            'admin@admin.com',
+            'ebrahim.hosny@hadaf-hq.com',
+            'sara@hadaf-hq.com',
+        ];
+        
+        if (!in_array(auth()->user()->email, $allowedEmails)) {
+            abort(403, 'This action is unauthorized.');
+        }
+
+        $request->validate([
+            'grand_total' => 'required|numeric|min:0',
+        ]);
+
+        $invoice = Invoice::findOrFail($invoice_id);
+
+        DB::beginTransaction();
+        try {
+            // حساب sub_total و tax بناءً على grand_total
+            $grand_total = (float) $request->grand_total;
+            $sub_total = $grand_total / 1.15; // Assuming 15% tax
+            $tax = $grand_total - $sub_total;
+
+            // تحديث المبلغ في الفاتورة
+            $invoice->grand_total = $grand_total;
+            $invoice->sub_total = round($sub_total, 2);
+            $invoice->tax = round($tax, 2);
+            $invoice->save();
+
+            // تحديث items إذا كانت موجودة
+            if ($invoice->items()->exists()) {
+                $invoice->items()->update([
+                    'grand_total' => $grand_total,
+                    'sub_total' => round($sub_total, 2),
+                    'tax' => round($tax, 2),
+                ]);
+            }
+
+            DB::commit();
+
+            // إعادة تحميل الفاتورة مع البيانات المحدثة
+            $invoice->refresh();
+            $invoice->load([
+                'items',
+                'company',
+                'trainee',
+                'trainee_bank_payment_receipt',
+                'verified_by',
+                'chased_by',
+            ]);
+
+            return redirect()
+                ->route('back.finance.invoices.show', $invoice_id)
+                ->with('success', __('words.updated-successfully'));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()
+                ->route('back.finance.invoices.show', $invoice_id)
+                ->with('error', 'حدث خطأ أثناء التحديث: ' . $e->getMessage());
+        }
+    }
+
     public function datePeriod(Request $request, string $invoice_id)
     {
 
