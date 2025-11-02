@@ -665,6 +665,7 @@ return [
     'reports-count' => 'Reports count',
     'manage-trainee-groups' => 'Manage trainee groups',
     'link-groups' => 'Link Groups',
+    'link-groups-help' => 'Here you can link each group to an instructor permanently. When you link a group to an instructor, all trainees in that group will be automatically linked to that instructor.',
     'services' => 'Services',
     'services_manager' => 'Services Manager',
     'view-permissions' => 'View Permissions',

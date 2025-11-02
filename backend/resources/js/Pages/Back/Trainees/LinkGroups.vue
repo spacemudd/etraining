@@ -14,11 +14,11 @@
             </div>
 
             <!-- Success/Error Messages -->
-            <div v-if="$page.props.flash.success" class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
-                {{ $page.props.flash.success }}
+            <div v-if="successMessage" class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                {{ successMessage }}
             </div>
-            <div v-if="$page.props.flash.error" class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                {{ $page.props.flash.error }}
+            <div v-if="errorMessage" class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                {{ errorMessage }}
             </div>
 
             <div class="bg-white rounded shadow overflow-hidden">
@@ -31,12 +31,9 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             <div v-for="group in form.groups" :key="group.group_id" class="border border-gray-200 rounded-lg p-4">
                                 <div class="mb-4">
-                                    <h3 class="font-bold text-lg mb-2">{{ group.name }}</h3>
+                                    <h3 class="font-bold text-lg mb-2">{{ group.group_name }}</h3>
                                     <p class="text-sm text-gray-600 mb-2">
                                         {{ $t('words.trainees-count') }}: <span class="font-semibold">{{ group.trainees_count }}</span>
-                                    </p>
-                                    <p v-if="group.current_instructor_name" class="text-sm text-gray-500 mb-2">
-                                        {{ $t('words.current-instructor') || 'المدرب الحالي' }}: <span class="font-semibold">{{ group.current_instructor_name }}</span>
                                     </p>
                                 </div>
 
@@ -89,6 +86,20 @@
         props: {
             traineeGroups: Array,
             instructors: Array,
+        },
+        computed: {
+            successMessage() {
+                if (!this.$page || !this.$page.props || !this.$page.props.flash) {
+                    return null;
+                }
+                return this.$page.props.flash.success || null;
+            },
+            errorMessage() {
+                if (!this.$page || !this.$page.props || !this.$page.props.flash) {
+                    return null;
+                }
+                return this.$page.props.flash.error || null;
+            },
         },
         data() {
             return {
