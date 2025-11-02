@@ -23,6 +23,8 @@
             max-width: 100%;
             margin: 0 auto;
             border: 2px solid #34495e;
+            page-break-inside: auto;
+            overflow: visible;
         }
         
         /* Header Section - Excel Style */
@@ -30,6 +32,8 @@
             background: #c5d5d5;
             border-bottom: 2px solid #34495e;
             padding: 20px;
+            page-break-after: avoid;
+            page-break-inside: avoid;
         }
         
         .header-row {
@@ -94,6 +98,7 @@
             border-collapse: collapse;
             font-size: 10px;
             background: #ffffff;
+            page-break-inside: auto;
         }
         
         .attendance-table th,
@@ -238,29 +243,38 @@
                 page-break-inside: avoid;
             }
             
-            /* Force table header to repeat on every page */
-            .attendance-table {
+            /* Force table header to repeat on every page - critical for wkhtmltopdf */
+            table.attendance-table {
                 page-break-inside: auto;
+                -webkit-page-break-inside: auto;
             }
             
-            .attendance-table thead {
+            table.attendance-table thead {
                 display: table-header-group !important;
+                -webkit-table-header-group: table-header-group !important;
                 page-break-after: avoid;
                 page-break-inside: avoid;
             }
             
-            .attendance-table tbody {
-                display: table-row-group;
+            table.attendance-table thead tr {
+                display: table-row !important;
+                page-break-after: avoid;
+                page-break-inside: avoid;
+            }
+            
+            table.attendance-table tbody {
+                display: table-row-group !important;
+                -webkit-table-row-group: table-row-group !important;
                 page-break-inside: auto;
             }
             
-            .attendance-table tr {
+            table.attendance-table tr {
                 page-break-inside: avoid;
                 page-break-after: auto;
             }
             
-            .attendance-table th,
-            .attendance-table td {
+            table.attendance-table th,
+            table.attendance-table td {
                 page-break-inside: avoid;
             }
             
@@ -294,17 +308,39 @@
         }
         
         /* General print rules - even outside @media print for better compatibility */
+        /* Critical: Force table header to repeat on every page */
         .attendance-table thead {
             display: table-header-group !important;
+            -webkit-table-header-group: table-header-group !important;
         }
         
         .attendance-table tbody {
             display: table-row-group;
+            -webkit-table-row-group: table-row-group;
         }
         
         .report-header {
             page-break-after: avoid;
             page-break-inside: avoid;
+        }
+        
+        /* Additional rules for wkhtmltopdf compatibility */
+        table.attendance-table {
+            page-break-after: auto;
+            page-break-inside: auto;
+        }
+        
+        table.attendance-table thead {
+            display: table-header-group !important;
+        }
+        
+        table.attendance-table thead tr {
+            page-break-after: avoid;
+            page-break-inside: avoid;
+        }
+        
+        table.attendance-table tbody {
+            display: table-row-group !important;
         }
     </style>
 </head>
@@ -346,9 +382,9 @@
         </div>
         
         <!-- Attendance Table -->
-        <table class="attendance-table">
-            <thead>
-                <tr>
+        <table class="attendance-table" style="page-break-inside: auto;">
+            <thead style="display: table-header-group !important;">
+                <tr style="display: table-row !important; page-break-after: avoid; page-break-inside: avoid;">
                     <th class="col-number header-main">م</th>
                     <th class="col-name header-main">اسم الموظف</th>
                     @if ($report->trainees()->where('job_number', '!=', NULL)->count())
@@ -367,7 +403,7 @@
                     <th class="col-absence header-main">أيام الغياب</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody style="display: table-row-group !important;">
                 @if(isset($active_trainees))
                     @if ($report->trainees()->where('job_number', '!=', NULL)->count())
                         @foreach ($active_trainees as $counter => $record)
