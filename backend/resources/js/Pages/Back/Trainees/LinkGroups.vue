@@ -35,6 +35,10 @@
                                     <p class="text-sm text-gray-600 mb-2">
                                         {{ $t('words.trainees-count') }}: <span class="font-semibold">{{ group.trainees_count }}</span>
                                     </p>
+                                    <p v-if="group.current_instructor_name || getInstructorName(group.instructor_id)" class="text-sm text-green-600 mb-2">
+                                        <span class="font-semibold">{{ $t('words.current-instructor') }}:</span>
+                                        <span class="font-bold">{{ group.current_instructor_name || getInstructorName(group.instructor_id) }}</span>
+                                    </p>
                                 </div>
 
                                 <div>
@@ -44,7 +48,7 @@
                                         v-model="group.instructor_id"
                                         class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                                     >
-                                        <option :value="null">{{ $t('words.no-instructor') || 'لا يوجد مدرب' }}</option>
+                                        <option :value="null">{{ $t('words.no-instructor') }}</option>
                                         <option v-for="instructor in instructors" :key="instructor.id" :value="instructor.id">
                                             {{ instructor.name }}
                                         </option>
@@ -109,15 +113,48 @@
                         group_name: group.name,
                         trainees_count: group.trainees_count,
                         instructor_id: group.current_instructor_id,
+                        current_instructor_name: group.current_instructor_name,
                     })),
                 }),
             }
+        },
+        watch: {
+            traineeGroups: {
+                handler(newGroups) {
+                    // تحديث form.groups عند تحديث traineeGroups
+                    this.form.groups = newGroups.map(group => ({
+                        group_id: group.id,
+                        group_name: group.name,
+                        trainees_count: group.trainees_count,
+                        instructor_id: group.current_instructor_id,
+                        current_instructor_name: group.current_instructor_name,
+                    }));
+                },
+                deep: true,
+            },
         },
         methods: {
             submit() {
                 this.form.post(route('back.trainees.link-groups.store'), {
                     preserveScroll: true,
+                    onSuccess: (page) => {
+                        // تحديث form.groups بالبيانات الجديدة من الخادم
+                        if (page.props.traineeGroups) {
+                            this.form.groups = page.props.traineeGroups.map(group => ({
+                                group_id: group.id,
+                                group_name: group.name,
+                                trainees_count: group.trainees_count,
+                                instructor_id: group.current_instructor_id,
+                                current_instructor_name: group.current_instructor_name,
+                            }));
+                        }
+                    }
                 })
+            },
+            getInstructorName(instructorId) {
+                if (!instructorId) return null;
+                const instructor = this.instructors.find(inst => inst.id === instructorId);
+                return instructor ? instructor.name : null;
             },
         },
     }
