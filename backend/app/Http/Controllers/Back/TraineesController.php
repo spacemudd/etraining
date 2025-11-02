@@ -688,20 +688,35 @@ class TraineesController extends Controller
     public function linkGroups()
     {
         $traineeGroups = TraineeGroup::withCount('trainees')
-            ->with(['trainees' => function($q) {
-                $q->select('id', 'trainee_group_id', 'instructor_id', 'name')
-                  ->with(['instructor' => function($instructorQuery) {
-                      $instructorQuery->select('id', 'name');
-                  }])
-                  ->limit(1);
-            }])
             ->orderBy('name')
             ->get()
             ->map(function($group) {
-                // Get the instructor_id from the first trainee in the group (if exists)
-                $firstTrainee = $group->trainees->first();
-                $group->current_instructor_id = optional($firstTrainee)->instructor_id;
-                $group->current_instructor_name = optional(optional($firstTrainee)->instructor)->name;
+                // الحصول على instructor_id الأكثر شيوعاً في المجموعة
+                // إذا كان جميع المتدربين لديهم نفس instructor_id، فهذا هو المدرب المربوط بالشعبة
+                $instructorCounts = Trainee::where('trainee_group_id', $group->id)
+                    ->whereNotNull('instructor_id')
+                    ->selectRaw('instructor_id, COUNT(*) as count')
+                    ->groupBy('instructor_id')
+                    ->orderByDesc('count')
+                    ->first();
+
+                if ($instructorCounts && isset($instructorCounts->instructor_id)) {
+                    $instructor = Instructor::select(['id', 'name'])->find($instructorCounts->instructor_id);
+                    $group->current_instructor_id = $instructorCounts->instructor_id;
+                    $group->current_instructor_name = optional($instructor)->name;
+                } else {
+                    // إذا لم يكن هناك مدرب مرتبط، ابحث عن أي متدرب لديه instructor_id
+                    $anyTrainee = Trainee::where('trainee_group_id', $group->id)
+                        ->whereNotNull('instructor_id')
+                        ->with(['instructor' => function($q) {
+                            $q->select(['id', 'name']);
+                        }])
+                        ->first();
+                    
+                    $group->current_instructor_id = optional($anyTrainee)->instructor_id;
+                    $group->current_instructor_name = optional(optional($anyTrainee)->instructor)->name;
+                }
+                
                 return $group;
             });
 
