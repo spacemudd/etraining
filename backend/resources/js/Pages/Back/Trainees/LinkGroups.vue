@@ -35,9 +35,9 @@
                                     <p class="text-sm text-gray-600 mb-2">
                                         {{ $t('words.trainees-count') }}: <span class="font-semibold">{{ group.trainees_count }}</span>
                                     </p>
-                                    <p v-if="group.current_instructor_name || getInstructorName(group.instructor_id)" class="text-sm text-green-600 mb-2">
+                                    <p v-if="getDisplayedInstructorName(group)" class="text-sm text-green-600 mb-2">
                                         <span class="font-semibold">{{ $t('words.current-instructor') }}:</span>
-                                        <span class="font-bold">{{ group.current_instructor_name || getInstructorName(group.instructor_id) }}</span>
+                                        <span class="font-bold">{{ getDisplayedInstructorName(group) }}</span>
                                     </p>
                                 </div>
 
@@ -131,23 +131,47 @@
                     }));
                 },
                 deep: true,
+                immediate: true,
+            },
+            'form.groups': {
+                handler(groups) {
+                    // تحديث current_instructor_name عند تغيير instructor_id
+                    groups.forEach(group => {
+                        if (group.instructor_id) {
+                            const instructor = this.instructors.find(inst => inst.id === group.instructor_id);
+                            if (instructor) {
+                                group.current_instructor_name = instructor.name;
+                            }
+                        } else {
+                            group.current_instructor_name = null;
+                        }
+                    });
+                },
+                deep: true,
             },
         },
         methods: {
             submit() {
+                // تحديث current_instructor_name لكل group قبل الإرسال
+                this.form.groups.forEach(group => {
+                    if (group.instructor_id) {
+                        const instructor = this.instructors.find(inst => inst.id === group.instructor_id);
+                        if (instructor) {
+                            group.current_instructor_name = instructor.name;
+                        }
+                    } else {
+                        group.current_instructor_name = null;
+                    }
+                });
+
                 this.form.post(route('back.trainees.link-groups.store'), {
                     preserveScroll: true,
-                    onSuccess: (page) => {
-                        // تحديث form.groups بالبيانات الجديدة من الخادم
-                        if (page.props.traineeGroups) {
-                            this.form.groups = page.props.traineeGroups.map(group => ({
-                                group_id: group.id,
-                                group_name: group.name,
-                                trainees_count: group.trainees_count,
-                                instructor_id: group.current_instructor_id,
-                                current_instructor_name: group.current_instructor_name,
-                            }));
-                        }
+                    onSuccess: () => {
+                        // إعادة تحميل البيانات من الخادم بعد الحفظ الناجح
+                        this.$inertia.reload({
+                            only: ['traineeGroups'],
+                            preserveScroll: true,
+                        });
                     }
                 })
             },
@@ -155,6 +179,16 @@
                 if (!instructorId) return null;
                 const instructor = this.instructors.find(inst => inst.id === instructorId);
                 return instructor ? instructor.name : null;
+            },
+            getDisplayedInstructorName(group) {
+                // إرجاع اسم المدرب الحالي من البيانات المحدثة أو من القائمة
+                if (group.current_instructor_name) {
+                    return group.current_instructor_name;
+                }
+                if (group.instructor_id) {
+                    return this.getInstructorName(group.instructor_id);
+                }
+                return null;
             },
         },
     }
