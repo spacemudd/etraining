@@ -664,6 +664,7 @@ return [
     'send-report' => 'Send report',
     'reports-count' => 'Reports count',
     'manage-trainee-groups' => 'Manage trainee groups',
+    'link-groups' => 'Link Groups',
     'services' => 'Services',
     'services_manager' => 'Services Manager',
     'view-permissions' => 'View Permissions',

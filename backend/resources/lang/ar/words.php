@@ -677,6 +677,7 @@ return [
     'send-report' => 'تقرير الارسال',
     'reports-count' => 'عدد التقارير',
     'manage-trainee-groups' => 'إدارة مجموعات المتدربات',
+    'link-groups' => 'ربط الشعب',
     'services' => 'شؤون المتدربات',
     'services_manager' => 'مديرون شؤون المتدربات',
     'view-permissions' => 'عرض الصلاحيات',

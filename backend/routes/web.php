@@ -808,6 +808,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::put('/trainees/{id}/update-deleted-remark', [\App\Http\Controllers\Back\TraineesController::class, 'updatedDeletedRemark'])->name('trainees.update-deleted-remark');
 
         Route::get('/trainees/groups', [TraineesGroupsController::class, 'index'])->name('trainees.groups.index');
+        Route::get('/trainees/link-groups', [\App\Http\Controllers\Back\TraineesController::class, 'linkGroups'])->name('trainees.link-groups');
+        Route::post('/trainees/link-groups', [\App\Http\Controllers\Back\TraineesController::class, 'storeLinkGroups'])->name('trainees.link-groups.store');
 
         // Attendance management of trainee.
         Route::get('trainees/{trainee_id}/warnings', [\App\Http\Controllers\Back\TraineesController::class, 'warnings'])->name('trainees.warnings');

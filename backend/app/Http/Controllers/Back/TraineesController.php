@@ -681,6 +681,84 @@ class TraineesController extends Controller
     }
 
     /**
+     * Display the page for linking trainee groups to instructors.
+     *
+     * @return \Inertia\Response
+     */
+    public function linkGroups()
+    {
+        $traineeGroups = TraineeGroup::withCount('trainees')
+            ->with(['trainees' => function($q) {
+                $q->select('id', 'trainee_group_id', 'instructor_id', 'name')
+                  ->with(['instructor' => function($instructorQuery) {
+                      $instructorQuery->select('id', 'name');
+                  }])
+                  ->limit(1);
+            }])
+            ->orderBy('name')
+            ->get()
+            ->map(function($group) {
+                // Get the instructor_id from the first trainee in the group (if exists)
+                $firstTrainee = $group->trainees->first();
+                $group->current_instructor_id = optional($firstTrainee)->instructor_id;
+                $group->current_instructor_name = optional(optional($firstTrainee)->instructor)->name;
+                return $group;
+            });
+
+        $instructors = Instructor::select(['id', 'name'])->orderBy('name')->get();
+
+        return Inertia::render('Back/Trainees/LinkGroups', [
+            'traineeGroups' => $traineeGroups,
+            'instructors' => $instructors,
+        ]);
+    }
+
+    /**
+     * Store the linking of trainee groups to instructors.
+     * Links all trainees in each group to the assigned instructor permanently.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function storeLinkGroups(Request $request)
+    {
+        $request->validate([
+            'groups' => 'required|array',
+            'groups.*.group_id' => 'required|exists:trainee_groups,id',
+            'groups.*.instructor_id' => 'nullable|exists:instructors,id',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            foreach ($request->groups as $groupData) {
+                $groupId = $groupData['group_id'];
+                $instructorId = $groupData['instructor_id'] ?? null;
+
+                // ربط جميع متدربي هذه الشعبة بالمدرب بشكل دائم
+                if ($instructorId) {
+                    Trainee::where('trainee_group_id', $groupId)
+                        ->update(['instructor_id' => $instructorId]);
+                } else {
+                    // إذا لم يتم تحديد مدرب، إزالة الربط
+                    Trainee::where('trainee_group_id', $groupId)
+                        ->update(['instructor_id' => null]);
+                }
+            }
+
+            DB::commit();
+
+            return redirect()
+                ->route('back.trainees.link-groups')
+                ->with('success', __('words.updated-successfully'));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()
+                ->route('back.trainees.link-groups')
+                ->with('error', 'حدث خطأ أثناء الحفظ: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Open a new account for the trainee where they can login with it.
      *
      * @param $trainee_id
