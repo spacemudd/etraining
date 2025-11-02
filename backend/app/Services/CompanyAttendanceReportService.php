@@ -401,7 +401,7 @@ class CompanyAttendanceReportService
             ->setOption('no-background', false)
             ->setOption('enable-internal-links', true)
             ->setOption('enable-external-links', true)
-            ->setOption('javascript-delay', 1000)
+            ->setOption('javascript-delay', 2000)
             ->setOption('no-stop-slow-scripts', true)
             ->setOption('no-background', false)
             ->setOption('margin-left', 10)

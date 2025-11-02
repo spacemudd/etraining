@@ -341,19 +341,37 @@
         table.attendance-table {
             page-break-after: auto;
             page-break-inside: auto;
+            -webkit-table-layout: auto;
+            table-layout: auto;
         }
         
         table.attendance-table thead {
             display: table-header-group !important;
+            -webkit-table-header-group: table-header-group !important;
         }
         
         table.attendance-table thead tr {
             page-break-after: avoid;
             page-break-inside: avoid;
+            display: table-row !important;
         }
         
         table.attendance-table tbody {
             display: table-row-group !important;
+            -webkit-table-row-group: table-row-group !important;
+        }
+        
+        /* Force thead on every page - use CSS repeat */
+        @page {
+            @top-center {
+                content: "";
+            }
+        }
+        
+        /* Alternative: Use tbody::before to add header on page breaks */
+        table.attendance-table tbody::before {
+            content: "";
+            display: table-row-group;
         }
     </style>
 </head>
@@ -396,9 +414,9 @@
     </div>
     
     <!-- Attendance Table - Outside container for better page break handling -->
-    <table class="attendance-table" style="page-break-inside: auto; border-collapse: collapse; width: 100%; margin: 0;">
-            <thead style="display: table-header-group !important; -webkit-table-header-group: table-header-group !important;">
-                <tr style="display: table-row !important; page-break-after: avoid; page-break-inside: avoid;">
+    <table class="attendance-table" style="page-break-inside: auto; border-collapse: collapse; width: 100%; margin: 0; border-spacing: 0;">
+            <thead style="display: table-header-group !important; -webkit-table-header-group: table-header-group !important; position: relative;">
+                <tr style="display: table-row !important; page-break-after: avoid !important; page-break-inside: avoid !important;">
                     <th class="col-number header-main">م</th>
                     <th class="col-name header-main">اسم الموظف</th>
                     @if ($report->trainees()->where('job_number', '!=', NULL)->count())
@@ -419,11 +437,44 @@
             </thead>
             <tbody style="display: table-row-group !important;">
                 @if(isset($active_trainees))
+                    @php
+                        $rowsPerPage = 7; // عدد الصفوف في كل صفحة
+                        $currentRow = 0;
+                    @endphp
                     @if ($report->trainees()->where('job_number', '!=', NULL)->count())
                         @foreach ($active_trainees as $counter => $record)
                             @if ($record->status === 'temporary_stop')
                                 @continue
                             @endif
+                            @php
+                                $currentRow++;
+                                // إضافة رأس الجدول كل 7 صفوف (بعد أول 7 صفوف)
+                                if ($currentRow > $rowsPerPage && ($currentRow - $rowsPerPage) % $rowsPerPage == 1) {
+                                    echo '</tbody></table>';
+                                    echo '<div style="page-break-before: always; margin-top: 0;">';
+                                    echo '<table class="attendance-table" style="page-break-inside: auto; border-collapse: collapse; width: 100%; margin: 0; border-spacing: 0;">';
+                                    echo '<thead style="display: table-header-group !important; -webkit-table-header-group: table-header-group !important; position: relative;">';
+                                    echo '<tr style="display: table-row !important; page-break-after: avoid !important; page-break-inside: avoid !important;">';
+                                    echo '<th class="col-number header-main">م</th>';
+                                    echo '<th class="col-name header-main">اسم الموظف</th>';
+                                    if ($report->trainees()->where('job_number', '!=', NULL)->count()) {
+                                        echo '<th class="col-job-number header-main">الرقم الوظيفي</th>';
+                                    }
+                                    echo '<th class="col-national-id header-main">السجل المدني</th>';
+                                    echo '<th class="col-work-days header-main">أيام العمل</th>';
+                                    foreach (($days ?? []) as $day) {
+                                        $dayClass = $day['vacation_day'] ? 'day-weekend' : 'day-normal';
+                                        echo '<th class="col-day ' . $dayClass . '">';
+                                        echo '<div class="day-name-vertical">';
+                                        echo $day['name'] . '<br>';
+                                        echo '<small style="font-size: 7px;">' . \Carbon\Carbon::parse($day['date'])->format('d/m') . '</small>';
+                                        echo '</div></th>';
+                                    }
+                                    echo '<th class="col-absence header-main">أيام الغياب</th>';
+                                    echo '</tr></thead>';
+                                    echo '<tbody style="display: table-row-group !important;">';
+                                }
+                            @endphp
                             <tr>
                                 <td class="col-number">{{ $loop->iteration }}</td>
                                 <td class="col-name">
@@ -474,10 +525,39 @@
                             </tr>
                         @endforeach
                     @else
+                        @php
+                            $rowsPerPage = 7;
+                            $currentRow = 0;
+                        @endphp
                         @foreach ($active_trainees as $counter => $record)
                             @if ($record->status === 'temporary_stop')
                                 @continue
                             @endif
+                            @php
+                                $currentRow++;
+                                if ($currentRow > $rowsPerPage && ($currentRow - $rowsPerPage) % $rowsPerPage == 1) {
+                                    echo '</tbody></table>';
+                                    echo '<div style="page-break-before: always; margin-top: 0;">';
+                                    echo '<table class="attendance-table" style="page-break-inside: auto; border-collapse: collapse; width: 100%; margin: 0; border-spacing: 0;">';
+                                    echo '<thead style="display: table-header-group !important; -webkit-table-header-group: table-header-group !important; position: relative;">';
+                                    echo '<tr style="display: table-row !important; page-break-after: avoid !important; page-break-inside: avoid !important;">';
+                                    echo '<th class="col-number header-main">م</th>';
+                                    echo '<th class="col-name header-main">اسم الموظف</th>';
+                                    echo '<th class="col-national-id header-main">السجل المدني</th>';
+                                    echo '<th class="col-work-days header-main">أيام العمل</th>';
+                                    foreach (($days ?? []) as $day) {
+                                        $dayClass = $day['vacation_day'] ? 'day-weekend' : 'day-normal';
+                                        echo '<th class="col-day ' . $dayClass . '">';
+                                        echo '<div class="day-name-vertical">';
+                                        echo $day['name'] . '<br>';
+                                        echo '<small style="font-size: 7px;">' . \Carbon\Carbon::parse($day['date'])->format('d/m') . '</small>';
+                                        echo '</div></th>';
+                                    }
+                                    echo '<th class="col-absence header-main">أيام الغياب</th>';
+                                    echo '</tr></thead>';
+                                    echo '<tbody style="display: table-row-group !important;">';
+                                }
+                            @endphp
                             <tr>
                                 <td class="col-number">{{ $loop->iteration }}</td>
                                 <td class="col-name">
