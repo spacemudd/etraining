@@ -11,16 +11,30 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        if (Str::contains(auth()->user()->roles()->first()->name, 'instructors')) {
-            if (!auth()->user()->instructor) {
-                auth('web')->logout();
-                return redirect()->to('/');
-            }
-            return app()->make(TeachingController::class)->dashboard();
+        $user = auth()->user();
+        
+        // Check if user is authenticated
+        if (!$user) {
+            return redirect()->to('/login');
         }
 
-        if (Str::contains(auth()->user()->roles()->first()->name, 'trainees')) {
-            return app()->make(Trainees\DashboardController::class)->dashboard();
+        // Get the first role safely
+        $firstRole = $user->roles()->first();
+        
+        if ($firstRole) {
+            $roleName = $firstRole->name ?? '';
+            
+            if (Str::contains($roleName, 'instructors')) {
+                if (!$user->instructor) {
+                    auth('web')->logout();
+                    return redirect()->to('/');
+                }
+                return app()->make(TeachingController::class)->dashboard();
+            }
+
+            if (Str::contains($roleName, 'trainees')) {
+                return app()->make(Trainees\DashboardController::class)->dashboard();
+            }
         }
 
         return Inertia::render('Dashboard', [
