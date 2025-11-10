@@ -23,6 +23,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=c77e8ef5f30bb983ea7f",
     "/css/app.css": "/css/app.css?id=e54c1ae96a2a3c97cb53",
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
@@ -72,10 +73,13 @@
 =======
 =======
 >>>>>>> f0c5dc748 (fix error)
+=======
+>>>>>>> 2d4b5810 (company update)
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
     "/js/manifest.js": "/js/manifest.js",
     "/js/vendor.js": "/js/vendor.js"
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 7894adf6 (roles)
 =======
@@ -170,4 +174,6 @@
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
     "/js/vendor.js": "/js/vendor.js?id=8020aeec451de56ad0cc"
 >>>>>>> 8328102d (change invoivce value by sara)
+=======
+>>>>>>> 2d4b5810 (company update)
 }

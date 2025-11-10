@@ -699,7 +699,7 @@ export default {
             
             if (confirm(`هل أنت متأكد من تغيير الشركة من "${this.invoice.company ? this.invoice.company.name_ar : 'غير محدد'}" إلى "${this.selectedCompany.name_ar}"؟`)) {
                 
-                this.$inertia.put(route('back.finance.invoices.update-company', this.invoice.id), {
+                this.$inertia.put(route('back.finance.invoices.update-company-direct', this.invoice.id), {
                     company_id: this.selectedCompany.id
                 }, {
                     onStart: () => {
