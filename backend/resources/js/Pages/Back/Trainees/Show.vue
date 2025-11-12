@@ -775,7 +775,7 @@
               </inertia-link>
           </div>
 
-          <div class="col-span-6 sm:col-span-1" v-can="'override-training-costs'">
+          <div class="col-span-6 sm:col-span-1" v-if="canViewCertificates">
               <jet-label 
                   for="name" 
                   :value="$t('words.certificates')" 
@@ -1354,6 +1354,25 @@ export default {
       console.log('Has access to special documents:', hasAccess);
       
       return hasAccess;
+    },
+    canViewCertificates() {
+      // Check if user has permission 'override-training-costs'
+      const permissions = document.head.querySelector('meta[name="user-permissions"]');
+      const hasPermission = permissions && permissions.content.indexOf('override-training-costs') !== -1;
+      
+      // Check if user has any of the specific role ids
+      const user = this.$page.props.user;
+      if (!user) return hasPermission;
+      
+      const userRoles = user.roles || [];
+      const allowedRoleIds = [
+        'c89e8671-9f3a-427a-90ca-bd2443f04df2',
+        'b87b7924-64da-492f-afb1-e54a49f0d800',
+        '097438c1-2614-42db-95f2-6402bb607fdc'
+      ];
+      const hasRole = userRoles.some(role => role && allowedRoleIds.includes(role.id));
+      
+      return hasPermission || hasRole;
     }
   },
   mounted() {

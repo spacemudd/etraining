@@ -25,6 +25,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=c77e8ef5f30bb983ea7f",
     "/css/app.css": "/css/app.css?id=e54c1ae96a2a3c97cb53",
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
@@ -183,4 +184,10 @@
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
     "/js/vendor.js": "/js/vendor.js?id=9bd0a7e868bc86f4ee3a"
 >>>>>>> 29d6a5be (run prod)
+=======
+    "/js/app.js": "/js/app.js?id=d29402d1c7b13cf6a58b",
+    "/css/app.css": "/css/app.css?id=e3254524769988848dba",
+    "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
+    "/js/vendor.js": "/js/vendor.js?id=a97683fc5d9a4b82a031"
+>>>>>>> c3a6202c (certificate show role)
 }
