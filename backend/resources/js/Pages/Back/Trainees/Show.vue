@@ -1368,9 +1368,26 @@ export default {
       const allowedRoleIds = [
         'c89e8671-9f3a-427a-90ca-bd2443f04df2',
         'b87b7924-64da-492f-afb1-e54a49f0d800',
-        '097438c1-2614-42db-95f2-6402bb607fdc'
+        '097438c1-2614-42db-95f2-6402bb607fdc',
+        '7a9101c7-728f-4653-82f1-e6318359c344' // شؤون متدربات
       ];
-      const hasRole = userRoles.some(role => role && allowedRoleIds.includes(role.id));
+      
+      // Debug: log roles for troubleshooting
+      if (userRoles.length > 0) {
+        console.log('User roles:', userRoles.map(r => ({ id: r?.id, name: r?.name })));
+        console.log('Allowed role IDs:', allowedRoleIds);
+        console.log('User roles full:', JSON.stringify(userRoles, null, 2));
+      }
+      
+      // Check if user has any of the allowed role ids
+      const hasRole = userRoles.some(role => {
+        if (!role) return false;
+        // Try different ways to access the id
+        const roleId = role.id || role.role_id || role.pivot?.role_id;
+        return roleId && allowedRoleIds.includes(roleId);
+      });
+      
+      console.log('Can view certificates - Permission:', hasPermission, 'Role:', hasRole, 'Total:', hasPermission || hasRole);
       
       return hasPermission || hasRole;
     }
