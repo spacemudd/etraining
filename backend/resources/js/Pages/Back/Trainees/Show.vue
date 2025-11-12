@@ -1360,9 +1360,14 @@ export default {
       const permissions = document.head.querySelector('meta[name="user-permissions"]');
       const hasPermission = permissions && permissions.content.indexOf('override-training-costs') !== -1;
       
+      // Check if user is in the allowed users list (for special documents access)
+      const currentUserEmail = this.$page.props.user?.email;
+      const allowedUsers = this.$page.props.allowed_users_for_special_documents || [];
+      const isInAllowedUsers = allowedUsers.includes(currentUserEmail);
+      
       // Check if user has any of the specific role ids
       const user = this.$page.props.user;
-      if (!user) return hasPermission;
+      if (!user) return hasPermission || isInAllowedUsers;
       
       const userRoles = user.roles || [];
       const allowedRoleIds = [
@@ -1401,9 +1406,9 @@ export default {
         return false;
       });
       
-      console.log('Can view certificates - Permission:', hasPermission, 'Role:', hasRole, 'Total:', hasPermission || hasRole);
+      console.log('Can view certificates - Permission:', hasPermission, 'Role:', hasRole, 'Allowed Users:', isInAllowedUsers, 'Total:', hasPermission || hasRole || isInAllowedUsers);
       
-      return hasPermission || hasRole;
+      return hasPermission || hasRole || isInAllowedUsers;
     }
   },
   mounted() {
