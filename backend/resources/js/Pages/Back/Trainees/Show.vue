@@ -1372,6 +1372,9 @@ export default {
         '7a9101c7-728f-4653-82f1-e6318359c344' // شؤون متدربات
       ];
       
+      // Also check by role name pattern (for roles that contain "services" which is شؤون متدربات)
+      const allowedRoleNamePatterns = ['services']; // This matches team_id_services
+      
       // Debug: log roles for troubleshooting
       if (userRoles.length > 0) {
         console.log('User roles:', userRoles.map(r => ({ id: r?.id, name: r?.name })));
@@ -1379,12 +1382,23 @@ export default {
         console.log('User roles full:', JSON.stringify(userRoles, null, 2));
       }
       
-      // Check if user has any of the allowed role ids
+      // Check if user has any of the allowed role ids OR role name patterns
       const hasRole = userRoles.some(role => {
         if (!role) return false;
-        // Try different ways to access the id
+        
+        // Check by role id
         const roleId = role.id || role.role_id || role.pivot?.role_id;
-        return roleId && allowedRoleIds.includes(roleId);
+        if (roleId && allowedRoleIds.includes(roleId)) {
+          return true;
+        }
+        
+        // Check by role name pattern (contains "services")
+        const roleName = role.name || '';
+        if (allowedRoleNamePatterns.some(pattern => roleName.includes(pattern))) {
+          return true;
+        }
+        
+        return false;
       });
       
       console.log('Can view certificates - Permission:', hasPermission, 'Role:', hasRole, 'Total:', hasPermission || hasRole);
