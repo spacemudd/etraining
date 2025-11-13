@@ -17,7 +17,7 @@ class DefaultResignationEmailsSeeder extends Seeder
         // Default CC emails for resignations
         AppSetting::updateOrCreate(
             ['name' => 'resignation_default_cc_emails'],
-            ['value' => 'ceo@hadaf-hq.com, sara@hadaf-hq.com, M_SHEHATAH@hadaf-hq.com, mashael.a@hadaf-hq.com, eslam@hadaf-hq.com, mahmoud.h@hadaf-hq.com, halim@hadaf-hq.com']
+            ['value' => 'ceo@hadaf-hq.com, afnan@hadaf-hq.com, sara@hadaf-hq.com, mashael.a@hadaf-hq.com, mahmoud.h@hadaf-hq.com, halim@hadaf-hq.com, m.zinah@hadaf-hq.com, rahmah@hadaf-hq.com']
         );
 
         // Default BCC emails for resignations
