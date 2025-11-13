@@ -107,6 +107,23 @@ class CompanyAttendanceReportController extends Controller
         // Remove duplicates and attach to report
         $uniqueTraineeIds = $allTrainees->unique('id')->pluck('id');
         
+        // Filter out trainees who have leave during the report period
+        $traineesWithoutLeave = $uniqueTraineeIds->filter(function($traineeId) use ($date_from, $date_to) {
+            $hasLeave = \App\Models\Back\TraineeLeave::where('trainee_id', $traineeId)
+                ->where(function($query) use ($date_from, $date_to) {
+                    // Check if leave overlaps with report period
+                    $query->where(function($q) use ($date_from, $date_to) {
+                        // Leave starts before or during report period and ends during or after report period
+                        $q->where('from_date', '<=', $date_to)
+                          ->where('to_date', '>=', $date_from);
+                    });
+                })
+                ->whereIn('status', ['pending', 'approved']) // Only consider pending or approved leaves
+                ->exists();
+            
+            return !$hasLeave; // Return true if trainee doesn't have leave (should be included)
+        });
+        
         // Get settings from previous report to preserve user preferences (if exists)
         $previousTraineesSettings = collect();
         if ($previousReport) {
@@ -125,7 +142,7 @@ class CompanyAttendanceReportController extends Controller
         // Prepare trainee data with start_date and end_date for resigned trainees
         // AND preserve previous settings if they exist
         $traineeData = [];
-        foreach ($uniqueTraineeIds as $traineeId) {
+        foreach ($traineesWithoutLeave as $traineeId) {
             $trainee = $allTrainees->firstWhere('id', $traineeId);
             
             // Check if this trainee has a resignation

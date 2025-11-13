@@ -52,9 +52,24 @@ class CompanyAttendanceReportService
         // Remove duplicates and attach to report
         $uniqueTraineeIds = $allTrainees->unique('id')->pluck('id');
         
+        // Filter out trainees who have leave during the report period
+        $traineesWithoutLeave = $uniqueTraineeIds->filter(function($traineeId) use ($report) {
+            $hasLeave = \App\Models\Back\TraineeLeave::where('trainee_id', $traineeId)
+                ->where(function($query) use ($report) {
+                    $query->where(function($q) use ($report) {
+                        $q->where('from_date', '<=', $report->date_to)
+                          ->where('to_date', '>=', $report->date_from);
+                    });
+                })
+                ->whereIn('status', ['pending', 'approved'])
+                ->exists();
+            
+            return !$hasLeave;
+        });
+        
         // Prepare trainee data with start_date and end_date for resigned trainees
         $traineeData = [];
-        foreach ($uniqueTraineeIds as $traineeId) {
+        foreach ($traineesWithoutLeave as $traineeId) {
             $trainee = $allTrainees->firstWhere('id', $traineeId);
             
             // Check if this trainee has a resignation
@@ -141,6 +156,21 @@ class CompanyAttendanceReportService
         // Remove duplicates and attach to report
         $uniqueTraineeIds = $allTrainees->unique('id')->pluck('id');
         
+        // Filter out trainees who have leave during the report period
+        $traineesWithoutLeave = $uniqueTraineeIds->filter(function($traineeId) use ($clone) {
+            $hasLeave = \App\Models\Back\TraineeLeave::where('trainee_id', $traineeId)
+                ->where(function($query) use ($clone) {
+                    $query->where(function($q) use ($clone) {
+                        $q->where('from_date', '<=', $clone->date_to)
+                          ->where('to_date', '>=', $clone->date_from);
+                    });
+                })
+                ->whereIn('status', ['pending', 'approved'])
+                ->exists();
+            
+            return !$hasLeave;
+        });
+        
         // Get settings from original report to preserve user preferences
         $originalTraineesSettings = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $original->id)
             ->get()
@@ -156,7 +186,7 @@ class CompanyAttendanceReportService
         // Prepare trainee data with start_date and end_date for resigned trainees
         // AND preserve previous settings (active status, comment, etc.)
         $traineeData = [];
-        foreach ($uniqueTraineeIds as $traineeId) {
+        foreach ($traineesWithoutLeave as $traineeId) {
             $trainee = $allTrainees->firstWhere('id', $traineeId);
             
             // Check if this trainee has a resignation
