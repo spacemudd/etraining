@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendWhatsAppVerification;
 use App\Models\User;
 use App\Models\Verification;
 use Illuminate\Http\Request;
@@ -33,51 +34,7 @@ class VerificationsController extends Controller
             'code' => rand(2000, 9999),
         ]);
 
-        $body = '{
-          "messaging_product": "whatsapp",
-          "recipient_type": "individual",
-          "to": "'.$user->phone.'",
-          "type": "template",
-          "template": {
-            "name": "laravel_otp",
-            "language": {
-                "code": "ar"
-            },
-            "components": [
-              {
-                "type": "body",
-                "parameters": [
-                  {
-                    "type": "text",
-                    "text": "'.$verify->code.'"
-                  }
-                ]
-              },
-              {
-                "type": "button",
-                "sub_type": "url",
-                "index": "0",
-                "parameters": [
-                  {
-                    "type": "text",
-                    "text": "'.$verify->code.'"
-                  }
-                ]
-              }
-            ]
-          }
-        }';
-
-        $client = new \GuzzleHttp\Client([
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . config('whatsapp.access_token'),
-            ]
-        ]);
-
-        $response = $client->post('https://graph.facebook.com/v15.0/106103318984035/messages', [
-            'body' => $body,
-        ]);
+        SendWhatsAppVerification::dispatch($user->id, (string) $verify->code);
 
         return $verify;
     }
