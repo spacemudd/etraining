@@ -22,7 +22,7 @@ class SendWhatsAppVerification implements ShouldQueue
     protected int $userId;
     protected string $code;
 
-    public function __construct(int $userId, string $code)
+    public function __construct(string $userId, string $code)
     {
         $this->userId = $userId;
         $this->code = $code;
