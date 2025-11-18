@@ -12,3 +12,6 @@ npm-debug.log
 yarn-error.log
 .idea/*
 .webpack.mix.js
+/public/js/vendor.js
+/public/js/app.js
+/public/js/manifest.js
