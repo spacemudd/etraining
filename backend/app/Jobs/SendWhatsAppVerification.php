@@ -19,7 +19,7 @@ class SendWhatsAppVerification implements ShouldQueue
 
     public int $tries = 3;
 
-    protected int $userId;
+    protected string $userId;
     protected string $code;
 
     public function __construct(string $userId, string $code)
