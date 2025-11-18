@@ -19,7 +19,7 @@ class DashboardController extends Controller
     public function dashboard()
     {
         $user = Auth::user();
-        $trainee = Trainee::where('user_id', $user->id)->first();
+        $trainee = Trainee::withTrashed()->where('user_id', $user->id)->first();
         
         // Check if trainee exists, if not redirect or show error
         if (!$trainee) {
