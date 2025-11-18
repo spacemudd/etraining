@@ -8,6 +8,7 @@ use App\Models\Back\CompanyContract;
 use App\Models\Back\Instructor;
 use App\Models\Back\TraineeGroup;
 use App\Models\Back\Trainee;
+use Illuminate\Support\Facades\Log;
 
 class CreateMultipleCompanyContracts extends Command
 {
@@ -76,11 +77,37 @@ class CreateMultipleCompanyContracts extends Command
                 $contract->save();
                 $contract->instructors()->attach($instructor->id);
                 // ربط متدربي هذه الشعبة بالمدرب
+                // Get affected trainees before update for logging
+                $trainees = Trainee::where('company_id', $company->id)
+                    ->where('trainee_group_id', $group->id)
+                    ->get(['id', 'name', 'instructor_id']);
+                
                 Trainee::where('company_id', $company->id)
                     ->where('trainee_group_id', $group->id)
                     ->update([
                         'instructor_id' => $instructor->id
                     ]);
+                
+                // Log assignment
+                foreach ($trainees as $trainee) {
+                    Log::info('INSTRUCTOR_ID_CHANGED: CreateMultipleCompanyContracts Command - Assigning instructor to group trainees', [
+                        'trainee_id' => $trainee->id,
+                        'trainee_name' => $trainee->name,
+                        'old_instructor_id' => $trainee->instructor_id,
+                        'new_instructor_id' => $instructor->id,
+                        'company_id' => $company->id,
+                        'company_name' => $company->name_ar ?? null,
+                        'trainee_group_id' => $group->id,
+                        'trainee_group_name' => $group->name ?? null,
+                        'company_contract_id' => $contract->id,
+                        'reason' => 'إنشاء عقد شركة متعدد - تم ربط متدربي الشعبة بالمدرب',
+                        'location' => __FILE__ . ':' . __LINE__,
+                        'method' => 'CreateMultipleCompanyContracts::handle',
+                        'user_id' => null, // Command runs from CLI
+                        'user_name' => null,
+                        'command_signature' => $this->signature,
+                    ]);
+                }
                 $createdContracts++;
                 $this->info("    ✅ تم إنشاء عقد للشركة: {$company->name_ar} - الشعبة: {$group->name} وربطه بالمدرب: {$instructor->name} بنجاح.");
             }

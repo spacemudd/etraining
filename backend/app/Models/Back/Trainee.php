@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use JamesMills\LaravelTimezone\Facades\Timezone;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -150,6 +151,44 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         static::updated(function ($model) {
             if ($model->isDirty('phone') && config('yakeen.enabled', false)) {
                 VerifyPhoneOwnershipJob::dispatch($model->id);
+            }
+            
+            // Log any change to instructor_id (catches changes from foreign key constraints, direct updates, etc.)
+            if ($model->isDirty('instructor_id')) {
+                $oldInstructorId = $model->getOriginal('instructor_id');
+                $newInstructorId = $model->instructor_id;
+                
+                // Get stack trace to identify the caller
+                $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 10);
+                $caller = null;
+                foreach ($backtrace as $trace) {
+                    if (isset($trace['file']) && 
+                        !str_contains($trace['file'], 'Trainee.php') && 
+                        !str_contains($trace['file'], 'vendor')) {
+                        $caller = [
+                            'file' => $trace['file'] ?? null,
+                            'line' => $trace['line'] ?? null,
+                            'function' => $trace['function'] ?? null,
+                            'class' => $trace['class'] ?? null,
+                        ];
+                        break;
+                    }
+                }
+                
+                Log::info('INSTRUCTOR_ID_CHANGED: Trainee Model Observer - Generic instructor_id change detected', [
+                    'trainee_id' => $model->id,
+                    'trainee_name' => $model->name,
+                    'old_instructor_id' => $oldInstructorId,
+                    'new_instructor_id' => $newInstructorId,
+                    'reason' => 'تغيير instructor_id تم اكتشافه من Trainee Model Observer - قد يكون من foreign key constraint أو update مباشر',
+                    'location' => __FILE__ . ':' . __LINE__,
+                    'method' => 'Trainee::boot() - updated event',
+                    'user_id' => auth()->id(),
+                    'user_name' => auth()->user()->name ?? null,
+                    'caller' => $caller,
+                    'changed_attributes' => $model->getChanges(),
+                    'note' => 'هذا الـ log يلتقط أي تغيير في instructor_id من أي مصدر. تحقق من الـ logs الأخرى لمعرفة السبب المحدد.',
+                ]);
             }
         });
 

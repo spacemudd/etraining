@@ -672,8 +672,59 @@ class TraineesController extends Controller
             }
         }
 
+        // Get affected trainees before update for logging
+        $traineesToRemove = Trainee::withoutGlobalScopes()
+            ->where('instructor_id', $request->instructor_id)
+            ->get(['id', 'name', 'instructor_id']);
+        
+        $traineesToAssign = Trainee::withoutGlobalScopes()
+            ->whereIn('id', $trainee_ids)
+            ->get(['id', 'name', 'instructor_id']);
+        
+        // Remove instructor from old trainees
         Trainee::withoutGlobalScopes()->where('instructor_id', $request->instructor_id)->update(['instructor_id' => null]);
+        
+        // Log removal
+        foreach ($traineesToRemove as $trainee) {
+            Log::info('INSTRUCTOR_ID_CHANGED: TraineesController::assignInstructor - Removing instructor', [
+                'trainee_id' => $trainee->id,
+                'trainee_name' => $trainee->name,
+                'old_instructor_id' => $trainee->instructor_id,
+                'new_instructor_id' => null,
+                'instructor_id_being_removed' => $request->instructor_id,
+                'reason' => 'إعادة تعيين مدرب - تم إزالة المدرب القديم من المتدربين قبل تعيين مدرب جديد',
+                'location' => __FILE__ . ':' . __LINE__,
+                'method' => 'TraineesController::assignInstructor',
+                'user_id' => auth()->id(),
+                'user_name' => auth()->user()->name ?? null,
+                'request_data' => [
+                    'trainees' => $request->trainees,
+                    'trainee_ids' => $trainee_ids,
+                ],
+            ]);
+        }
+        
+        // Assign instructor to new trainees
         Trainee::withoutGlobalScopes()->whereIn('id', $trainee_ids)->update(['instructor_id' => $request->instructor_id]);
+        
+        // Log assignment
+        foreach ($traineesToAssign as $trainee) {
+            Log::info('INSTRUCTOR_ID_CHANGED: TraineesController::assignInstructor - Assigning instructor', [
+                'trainee_id' => $trainee->id,
+                'trainee_name' => $trainee->name,
+                'old_instructor_id' => $trainee->instructor_id,
+                'new_instructor_id' => $request->instructor_id,
+                'reason' => 'إعادة تعيين مدرب - تم تعيين مدرب جديد للمتدرب',
+                'location' => __FILE__ . ':' . __LINE__,
+                'method' => 'TraineesController::assignInstructor',
+                'user_id' => auth()->id(),
+                'user_name' => auth()->user()->name ?? null,
+                'request_data' => [
+                    'trainees' => $request->trainees,
+                    'trainee_ids' => $trainee_ids,
+                ],
+            ]);
+        }
 
         \DB::commit();
 
@@ -751,12 +802,57 @@ class TraineesController extends Controller
 
                 // ربط جميع متدربي هذه الشعبة بالمدرب بشكل دائم
                 if ($instructorId) {
+                    // Get trainees before update for logging
+                    $trainees = Trainee::where('trainee_group_id', $groupId)
+                        ->get(['id', 'name', 'instructor_id']);
+                    
                     Trainee::where('trainee_group_id', $groupId)
                         ->update(['instructor_id' => $instructorId]);
+                    
+                    // Log assignment
+                    foreach ($trainees as $trainee) {
+                        Log::info('INSTRUCTOR_ID_CHANGED: TraineesController::storeLinkGroups - Assigning instructor to group', [
+                            'trainee_id' => $trainee->id,
+                            'trainee_name' => $trainee->name,
+                            'old_instructor_id' => $trainee->instructor_id,
+                            'new_instructor_id' => $instructorId,
+                            'trainee_group_id' => $groupId,
+                            'trainee_group_name' => TraineeGroup::find($groupId)->name ?? null,
+                            'reason' => 'ربط مجموعة متدربين بمدرب - تم تعيين مدرب للمجموعة',
+                            'location' => __FILE__ . ':' . __LINE__,
+                            'method' => 'TraineesController::storeLinkGroups',
+                            'user_id' => auth()->id(),
+                            'user_name' => auth()->user()->name ?? null,
+                            'request_data' => $groupData,
+                        ]);
+                    }
                 } else {
                     // إذا لم يتم تحديد مدرب، إزالة الربط
+                    // Get trainees before update for logging
+                    $trainees = Trainee::where('trainee_group_id', $groupId)
+                        ->whereNotNull('instructor_id')
+                        ->get(['id', 'name', 'instructor_id']);
+                    
                     Trainee::where('trainee_group_id', $groupId)
                         ->update(['instructor_id' => null]);
+                    
+                    // Log removal
+                    foreach ($trainees as $trainee) {
+                        Log::info('INSTRUCTOR_ID_CHANGED: TraineesController::storeLinkGroups - Removing instructor from group', [
+                            'trainee_id' => $trainee->id,
+                            'trainee_name' => $trainee->name,
+                            'old_instructor_id' => $trainee->instructor_id,
+                            'new_instructor_id' => null,
+                            'trainee_group_id' => $groupId,
+                            'trainee_group_name' => TraineeGroup::find($groupId)->name ?? null,
+                            'reason' => 'ربط مجموعة متدربين بمدرب - لم يتم تحديد مدرب، تم إزالة instructor_id',
+                            'location' => __FILE__ . ':' . __LINE__,
+                            'method' => 'TraineesController::storeLinkGroups',
+                            'user_id' => auth()->id(),
+                            'user_name' => auth()->user()->name ?? null,
+                            'request_data' => $groupData,
+                        ]);
+                    }
                 }
             }
 

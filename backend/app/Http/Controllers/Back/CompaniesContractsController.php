@@ -12,6 +12,7 @@ use App\Models\Numbering;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Spatie\MediaLibrary\Support\MediaStream;
@@ -251,9 +252,36 @@ class CompaniesContractsController extends Controller
 
             // ربط تلقائي للمتدربين: ربط جميع متدربي الشركة الذين ليس لهم مدرب بالمدرب الجديد
             // This ensures trainees can see courses immediately without manual linking
+            // Get affected trainees before update for logging
+            $trainees = Trainee::where('company_id', $contract->company_id)
+                ->whereNull('instructor_id') // فقط الذين ليس لهم مدرب حالياً
+                ->get(['id', 'name', 'instructor_id']);
+            
             Trainee::where('company_id', $contract->company_id)
                 ->whereNull('instructor_id') // فقط الذين ليس لهم مدرب حالياً
                 ->update(['instructor_id' => $request->instructor_id]);
+            
+            // Log assignment
+            foreach ($trainees as $trainee) {
+                Log::info('INSTRUCTOR_ID_CHANGED: CompaniesContractsController::attachInstructor - Auto-assigning instructor to company trainees', [
+                    'trainee_id' => $trainee->id,
+                    'trainee_name' => $trainee->name,
+                    'old_instructor_id' => $trainee->instructor_id,
+                    'new_instructor_id' => $request->instructor_id,
+                    'company_id' => $contract->company_id,
+                    'company_name' => $contract->company->name_ar ?? null,
+                    'company_contract_id' => $contract->id,
+                    'reason' => 'ربط مدرب بعقد شركة - تم ربط تلقائي لجميع متدربي الشركة الذين ليس لهم مدرب',
+                    'location' => __FILE__ . ':' . __LINE__,
+                    'method' => 'CompaniesContractsController::attachInstructor',
+                    'user_id' => auth()->id(),
+                    'user_name' => auth()->user()->name ?? null,
+                    'request_data' => [
+                        'instructor_id' => $request->instructor_id,
+                        'company_contract_id' => $request->company_contract_id,
+                    ],
+                ]);
+            }
 
             DB::commit();
 
