@@ -22,6 +22,12 @@ class AppServiceProvider extends ServiceProvider
                 $user = optional(auth())->user();
                 if ($user) {
                     $user->load('roles');
+                    // Ensure roles are serialized with id
+                    if ($user->relationLoaded('roles')) {
+                        $user->roles->each(function ($role) {
+                            $role->makeVisible(['id']);
+                        });
+                    }
                 }
                 return $user;
             },

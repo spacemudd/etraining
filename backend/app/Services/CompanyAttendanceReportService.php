@@ -52,9 +52,24 @@ class CompanyAttendanceReportService
         // Remove duplicates and attach to report
         $uniqueTraineeIds = $allTrainees->unique('id')->pluck('id');
         
+        // Filter out trainees who have leave during the report period
+        $traineesWithoutLeave = $uniqueTraineeIds->filter(function($traineeId) use ($report) {
+            $hasLeave = \App\Models\Back\TraineeLeave::where('trainee_id', $traineeId)
+                ->where(function($query) use ($report) {
+                    $query->where(function($q) use ($report) {
+                        $q->where('from_date', '<=', $report->date_to)
+                          ->where('to_date', '>=', $report->date_from);
+                    });
+                })
+                ->whereIn('status', ['pending', 'approved'])
+                ->exists();
+            
+            return !$hasLeave;
+        });
+        
         // Prepare trainee data with start_date and end_date for resigned trainees
         $traineeData = [];
-        foreach ($uniqueTraineeIds as $traineeId) {
+        foreach ($traineesWithoutLeave as $traineeId) {
             $trainee = $allTrainees->firstWhere('id', $traineeId);
             
             // Check if this trainee has a resignation
@@ -141,6 +156,21 @@ class CompanyAttendanceReportService
         // Remove duplicates and attach to report
         $uniqueTraineeIds = $allTrainees->unique('id')->pluck('id');
         
+        // Filter out trainees who have leave during the report period
+        $traineesWithoutLeave = $uniqueTraineeIds->filter(function($traineeId) use ($clone) {
+            $hasLeave = \App\Models\Back\TraineeLeave::where('trainee_id', $traineeId)
+                ->where(function($query) use ($clone) {
+                    $query->where(function($q) use ($clone) {
+                        $q->where('from_date', '<=', $clone->date_to)
+                          ->where('to_date', '>=', $clone->date_from);
+                    });
+                })
+                ->whereIn('status', ['pending', 'approved'])
+                ->exists();
+            
+            return !$hasLeave;
+        });
+        
         // Get settings from original report to preserve user preferences
         $originalTraineesSettings = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $original->id)
             ->get()
@@ -156,7 +186,7 @@ class CompanyAttendanceReportService
         // Prepare trainee data with start_date and end_date for resigned trainees
         // AND preserve previous settings (active status, comment, etc.)
         $traineeData = [];
-        foreach ($uniqueTraineeIds as $traineeId) {
+        foreach ($traineesWithoutLeave as $traineeId) {
             $trainee = $allTrainees->firstWhere('id', $traineeId);
             
             // Check if this trainee has a resignation
@@ -244,10 +274,74 @@ class CompanyAttendanceReportService
         CompanyAttendanceReportsEmail::where('company_attendance_report_id', $report->id)->where('email', '')->delete();
         CompanyAttendanceReportsEmail::where('company_attendance_report_id', $report->id)->where('email', 'mahmoud.m@ptc-ksa.net')->delete();
 
-        Mail::to($report->emails_to()->pluck('email') ?: null)
-            ->bcc($report->emails_cc()->pluck('email') ?: null)
-            ->bcc($report->emails_bcc()->pluck('email') ?: null)
-            ->send(new CompanyAttendanceReportMail($report->id));
+        // معالجة TO emails
+        $toEmails = $report->emails_to()->pluck('email')->filter(function($email) {
+            return !empty(trim($email)) && filter_var(trim($email), FILTER_VALIDATE_EMAIL);
+        })->map(function($email) {
+            return trim($email);
+        })->toArray();
+
+        // معالجة CC emails
+        $ccEmails = $report->emails_cc()->pluck('email')->filter(function($email) {
+            return !empty(trim($email)) && filter_var(trim($email), FILTER_VALIDATE_EMAIL);
+        })->map(function($email) {
+            return trim($email);
+        })->toArray();
+
+        // معالجة BCC emails
+        $bccEmails = $report->emails_bcc()->pluck('email')->filter(function($email) {
+            return !empty(trim($email)) && filter_var(trim($email), FILTER_VALIDATE_EMAIL);
+        })->map(function($email) {
+            return trim($email);
+        })->toArray();
+
+        // التأكد من وجود مستلمين
+        $totalRecipients = count($toEmails) + count($ccEmails) + count($bccEmails);
+        
+        if ($totalRecipients === 0) {
+            \Log::error('No recipients found for attendance report email (Service)', [
+                'report_id' => $report->id,
+                'to_emails' => $toEmails,
+                'cc_emails' => $ccEmails,
+                'bcc_emails' => $bccEmails
+            ]);
+            throw new \Exception('لا توجد عناوين بريد إلكتروني صحيحة للإرسال');
+        }
+
+        // إنشاء instance الإيميل
+        $mailInstance = null;
+        
+        if (!empty($toEmails)) {
+            $mailInstance = Mail::to($toEmails);
+        } else if (!empty($ccEmails)) {
+            // إذا لم تكن هناك TO emails، استخدم أول CC كـ TO
+            $mailInstance = Mail::to($ccEmails[0]);
+            array_shift($ccEmails);
+        } else if (!empty($bccEmails)) {
+            // إذا لم تكن هناك TO أو CC emails، استخدم أول BCC كـ TO
+            $mailInstance = Mail::to($bccEmails[0]);
+            array_shift($bccEmails);
+        }
+        
+        // إضافة CC emails - استخدام مصفوفة واحدة
+        if (!empty($ccEmails)) {
+            $mailInstance->cc($ccEmails);
+        }
+        
+        // إضافة BCC emails - استخدام مصفوفة واحدة بدلاً من loop
+        if (!empty($bccEmails)) {
+            $mailInstance->bcc($bccEmails);
+        }
+
+        // تسجيل تفاصيل الإرسال
+        \Log::info('Sending attendance report email (Service)', [
+            'report_id' => $report->id,
+            'to_count' => count($toEmails),
+            'cc_count' => count($ccEmails),
+            'bcc_count' => count($bccEmails)
+        ]);
+
+        $mailInstance->send(new CompanyAttendanceReportMail($report->id));
 
         return $report;
     }
@@ -274,43 +368,27 @@ class CompanyAttendanceReportService
             $current_day = $current_day->addDay();
         }
 
-        // To fix formatting issue on 2nd page when the table is split.
-        // Check if this is the special company to use different design
-        if (in_array($report->company->id, [
-            '9ef83749-d1ba-44a5-82a9-f726840e02db', // مصنع هلال مشبب العتيبي
-            '92d30511-77a8-4290-8d20-419f93ede3fd', // الشركة الجديدة
-            '19762266-e0fc-43e5-b6ae-b4deec886bb1',
-            '73017d20-40c8-401f-8dc1-b36ca0416e35',
-            '077e3421-a623-49f4-b3f2-dcf80c9d295f',
-            'b455f112-ff48-4647-8db6-a3d365a3d0a3',
-            '2d8b0e51-5ea6-4c4d-9c38-ec38429cb74e',
-            '0e0e3d03-a9ad-4964-8c5a-6826cc5b0c6f',
-        ])) {
-            // Use simplified design to avoid SSL issues
-            $view = 'pdf.company-attendance-report.special-company-simple';
-        } elseif (in_array($report->company->id, [
-            // شركات التصميم الحديث - يمكن إضافة معرفات الشركات هنا
-            '2ea73041-e686-4093-b830-260b488eb014',
-            // أضف معرفات الشركات الجديدة التي تريد استخدام التصميم الحديث
-        ])) {
-            // Use modern design template
-            $view = 'pdf.company-attendance-report.special-company-modern';
-        } else {
-            // Use template based on user selection or default
-            switch ($report->template_type ?? 'default') {
-                case 'simple':
-                    $view = 'pdf.company-attendance-report.special-company-simple';
-                    break;
-                case 'modern':
-                    $view = 'pdf.company-attendance-report.special-company-modern';
-                    break;
-                case 'gradient':
-                    $view = 'pdf.company-attendance-report.special-company-gradient';
-                    break;
-                default:
-                    $view = $report->activeTraineesCount() > 8 ? 'pdf.company-attendance-report.show' : 'pdf.company-attendance-report.one-table';
-                    break;
-            }
+        // Use template based on user selection or default
+        $templateType = $report->template_type;
+        if (empty($templateType) || $templateType === '') {
+            $templateType = 'default';
+        }
+        switch ($templateType) {
+            case 'simple':
+                $view = 'pdf.company-attendance-report.special-company-simple';
+                break;
+            case 'modern':
+                $view = 'pdf.company-attendance-report.special-company-modern';
+                break;
+            case 'gradient':
+                $view = 'pdf.company-attendance-report.special-company-gradient';
+                break;
+            case 'classic':
+                $view = 'pdf.company-attendance-report.special-company-classic';
+                break;
+            default:
+                $view = $report->activeTraineesCount() > 8 ? 'pdf.company-attendance-report.show' : 'pdf.company-attendance-report.one-table';
+                break;
         }
 
         //if ($report->company->logo_files->count()) {
@@ -330,7 +408,7 @@ class CompanyAttendanceReportService
             ->setOption('no-background', false)
             ->setOption('enable-internal-links', true)
             ->setOption('enable-external-links', true)
-            ->setOption('javascript-delay', 1000)
+            ->setOption('javascript-delay', 2000)
             ->setOption('no-stop-slow-scripts', true)
             ->setOption('no-background', false)
             ->setOption('margin-left', 10)
@@ -339,12 +417,30 @@ class CompanyAttendanceReportService
             ->setOption('disable-smart-shrinking', true)
             ->setOption('viewport-size', '1024×768')
             ->setOption('zoom', 0.78)
+            ->setOption('print-media-type', true)
+            ->setOption('disable-smart-shrinking', true)
+            ->setOption('enable-local-file-access', true)
             ->setOption('footer-html', $report->with_logo ? resource_path('views/pdf/company-attendance-report/company-attendance-report-footer.html') : false);
         
         $activeTrainees = $report->getAllTraineesWithResignations();
         
+        // Get base64 logo with SSL context
+        $base64logo = null;
+        if ($report->company->logo_files->count()) {
+            $context = stream_context_create([
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                ],
+            ]);
+            $logoContent = @file_get_contents('https://prod.jisr-ksa.com/back/media/'.$report->company->logo_files->first()->id, false, $context);
+            if ($logoContent) {
+                $base64logo = 'data:image/jpeg;base64,'.base64_encode($logoContent);
+            }
+        }
+        
         $pdf = $pdf->loadView($view, [
-                'base64logo' => $report->company->logo_files->count() ? 'data:image/jpeg;base64,'.base64_encode(@file_get_contents('https://prod.jisr-ksa.com/back/media/'.$report->company->logo_files->first()->id)) : null,
+                'base64logo' => $base64logo,
                 'report' => $report,
                 'active_trainees' => $activeTrainees,
                 'days' => $days,
@@ -357,7 +453,9 @@ class CompanyAttendanceReportService
     {
         $record = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $report_id)
             ->where('trainee_id', $trainee_id)
-            ->with('trainee', 'report')
+            ->with(['trainee' => function($q) {
+                $q->withTrashed()->with('attendanceReportRecords');
+            }, 'report'])
             ->first();
 
         $days = [];
@@ -377,44 +475,44 @@ class CompanyAttendanceReportService
             $current_day = $current_day->addDay();
         }
 
-        // Check if this is the special company to use different design
-        if (in_array($record->company->id, [
-            '9ef83749-d1ba-44a5-82a9-f726840e02db', // مصنع هلال مشبب العتيبي
-            '92d30511-77a8-4290-8d20-419f93ede3fd', // الشركة الجديدة
-            '19762266-e0fc-43e5-b6ae-b4deec886bb1',
-            '73017d20-40c8-401f-8dc1-b36ca0416e35',
-            '077e3421-a623-49f4-b3f2-dcf80c9d295f', 
-            'b455f112-ff48-4647-8db6-a3d365a3d0a3',
-            '2d8b0e51-5ea6-4c4d-9c38-ec38429cb74e',
-            '0e0e3d03-a9ad-4964-8c5a-6826cc5b0c6f',
-        ])) {
-            // Use simplified design to avoid SSL issues
-            $view = 'pdf.company-attendance-report.special-company-individual-simple';
-        } elseif (in_array($record->company->id, [
-            // شركات التصميم الحديث - يمكن إضافة معرفات الشركات هنا
-            '2ea73041-e686-4093-b830-260b488eb014',
-            // أضف معرفات الشركات الجديدة التي تريد استخدام التصميم الحديث
-        ])) {
-            // Use modern design template for individual reports
-            $view = 'pdf.company-attendance-report.special-company-individual-modern';
-        } else {
-            // Use template based on user selection or default
-            switch ($record->report->template_type ?? 'default') {
-                case 'simple':
-                    $view = 'pdf.company-attendance-report.special-company-individual-simple';
-                    break;
-                case 'modern':
-                    $view = 'pdf.company-attendance-report.special-company-individual-modern';
-                    break;
-                case 'gradient':
-                    $view = 'pdf.company-attendance-report.special-company-individual-gradient';
-                    break;
-                default:
-                    $view = 'pdf.company-attendance-report.individual-table';
-                    break;
-            }
+        // Use template based on user selection or default
+        $templateType = $record->report->template_type;
+        if (empty($templateType) || $templateType === '') {
+            $templateType = 'default';
+        }
+        switch ($templateType) {
+            case 'simple':
+                $view = 'pdf.company-attendance-report.special-company-individual-simple';
+                break;
+            case 'modern':
+                $view = 'pdf.company-attendance-report.special-company-individual-modern';
+                break;
+            case 'gradient':
+                $view = 'pdf.company-attendance-report.special-company-individual-gradient';
+                break;
+            case 'classic':
+                $view = 'pdf.company-attendance-report.special-company-individual-classic';
+                break;
+            default:
+                $view = 'pdf.company-attendance-report.individual-table';
+                break;
         }
 
+        // Get base64 logo with SSL context
+        $base64logo = null;
+        if ($record->report->company->logo_files->count()) {
+            $context = stream_context_create([
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                ],
+            ]);
+            $logoContent = @file_get_contents('https://prod.ptc-ksa.com/back/media/'.$record->report->company->logo_files->first()->id, false, $context);
+            if ($logoContent) {
+                $base64logo = 'data:image/jpeg;base64,'.base64_encode($logoContent);
+            }
+        }
+        
         $pdf = PDF::setOption('margin-bottom', 30)
             ->setOption('page-size', 'A4')
             ->setOption('orientation', 'landscape')
@@ -436,7 +534,7 @@ class CompanyAttendanceReportService
             ->setOption('zoom', 0.78)
             ->setOption('footer-html', resource_path('views/pdf/company-attendance-report/company-attendance-report-footer.html'))
             ->loadView($view, [
-                'base64logo' => $record->company->logo_files->count() ? 'data:image/jpeg;base64,'.base64_encode(@file_get_contents('https://prod.ptc-ksa.com/back/media/'.$record->report->company->logo_files->first()->id)) : null,
+                'base64logo' => $base64logo,
                 'report' => $record->report,
                 'active_trainees' => $record->report->getAllTraineesWithResignations()->where('trainee.id', $trainee_id),
                 'days' => $days,

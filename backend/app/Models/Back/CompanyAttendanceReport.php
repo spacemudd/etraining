@@ -135,12 +135,30 @@ class CompanyAttendanceReport extends Model implements Auditable
         // Get ALL trainees from the report (both active and inactive) with their status
         $allReportTrainees = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->id)
             ->with(['trainee' => function($q) {
-                $q->withTrashed();
+                $q->withTrashed()->with('attendanceReportRecords');
             }])->get();
         
         
         // Filter only ACTIVE trainees
         $activeTrainees = $allReportTrainees->where('active', true);
+        
+        // Filter out trainees who have leave during the report period
+        $activeTrainees = $activeTrainees->filter(function($record) {
+            $hasLeave = \App\Models\Back\TraineeLeave::where('trainee_id', $record->trainee_id)
+                ->where(function($query) {
+                    // Check if leave overlaps with report period
+                    $query->where(function($q) {
+                        // Leave starts before or during report period and ends during or after report period
+                        $q->where('from_date', '<=', $this->date_to)
+                          ->where('to_date', '>=', $this->date_from);
+                    });
+                })
+                ->whereIn('status', ['pending', 'approved']) // Only consider pending or approved leaves
+                ->exists();
+            
+            return !$hasLeave; // Return true if trainee doesn't have leave (should be included)
+        });
+        
         $allTrainees = collect($activeTrainees);
         
         // Create a map of existing trainees with their active status for quick lookup
@@ -163,15 +181,31 @@ class CompanyAttendanceReport extends Model implements Auditable
                 ->flatMap(function($resignation) {
                     return $resignation->trainees
                         ->map(function($trainee) use ($resignation) {
+                            // Check if trainee has leave during report period
+                            $hasLeave = \App\Models\Back\TraineeLeave::where('trainee_id', $trainee->id)
+                                ->where(function($query) {
+                                    $query->where(function($q) {
+                                        $q->where('from_date', '<=', $this->date_to)
+                                          ->where('to_date', '>=', $this->date_from);
+                                    });
+                                })
+                                ->whereIn('status', ['pending', 'approved'])
+                                ->exists();
+                            
+                            // Skip if trainee has leave
+                            if ($hasLeave) {
+                                return null;
+                            }
+                            
                             // Get the actual record from database to preserve all properties
                             $actualRecord = CompanyAttendanceReportsTrainee::where('company_attendance_report_id', $this->id)
                                 ->where('trainee_id', $trainee->id)
                                 ->first();
                             
                             if ($actualRecord) {
-                                // Load the trainee relationship with trashed
+                                // Load the trainee relationship with trashed and attendance records
                                 $actualRecord->load(['trainee' => function($q) {
-                                    $q->withTrashed();
+                                    $q->withTrashed()->with('attendanceReportRecords');
                                 }]);
                                 $actualRecord->is_resignation = true;
                                 $actualRecord->resignation_date = $resignation->resignation_date;
@@ -186,7 +220,7 @@ class CompanyAttendanceReport extends Model implements Auditable
                             } else {
                                 // Fallback: Create a mock CompanyAttendanceReportsTrainee object for display
                                 $mockAttendance = new \stdClass();
-                                $mockAttendance->trainee = $trainee;
+                                $mockAttendance->trainee = $trainee->load('attendanceReportRecords');
                                 $mockAttendance->is_resignation = true;
                                 $mockAttendance->resignation_date = $resignation->resignation_date;
                                 $mockAttendance->active = true; // Set as active for display purposes
@@ -196,7 +230,8 @@ class CompanyAttendanceReport extends Model implements Auditable
                                 $mockAttendance->end_date = \Carbon\Carbon::parse($resignation->resignation_date)->endOfDay(); // End at resignation date
                                 return $mockAttendance;
                             }
-                        });
+                        })
+                        ->filter(); // Remove null values (trainees with leave)
                 });
         }
         

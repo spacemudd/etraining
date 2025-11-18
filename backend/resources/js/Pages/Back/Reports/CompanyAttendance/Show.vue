@@ -92,7 +92,7 @@
         <div class="mt-10 container px-6 mx-auto">
             <div class="bg-white border border-gray-200 rounded-lg p-6">
                 <h3 class="text-lg font-semibold mb-4">إعدادات القالب</h3>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                     <div class="border rounded-lg p-4 cursor-pointer transition-all duration-200"
                          :class="templateForm.template_type === 'default' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'"
                          @click="selectTemplate('default')">
@@ -148,6 +148,21 @@
                             <p class="text-sm text-gray-500 mt-1">تصميم متدرج مع ألوان جذابة</p>
                         </div>
                     </div>
+                    
+                    <div class="border rounded-lg p-4 cursor-pointer transition-all duration-200"
+                         :class="templateForm.template_type === 'classic' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'"
+                         @click="selectTemplate('classic')">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto mb-2 bg-black rounded-lg flex items-center justify-center border-2 border-gray-600">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                            </div>
+                            <h4 class="font-medium text-gray-900">القالب الكلاسيكي</h4>
+                            <p class="text-sm text-gray-500 mt-1">تصميم كلاسيكي واضح ومنظم</p>
+                        </div>
+                    </div>
+                </div>
                 
                 <div class="mt-6 flex justify-end">
                     <button @click="updateTemplate" 
@@ -352,7 +367,7 @@ export default {
             email_cc: '',
             email_to: '',
             templateForm: this.$inertia.form({
-                template_type: this.report.template_type || 'default',
+                template_type: this.report.template_type && this.report.template_type !== '' ? this.report.template_type : 'default',
             }, {
                 bag: 'templateForm',
                 resetOnSuccess: false,

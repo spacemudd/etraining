@@ -107,6 +107,23 @@ class CompanyAttendanceReportController extends Controller
         // Remove duplicates and attach to report
         $uniqueTraineeIds = $allTrainees->unique('id')->pluck('id');
         
+        // Filter out trainees who have leave during the report period
+        $traineesWithoutLeave = $uniqueTraineeIds->filter(function($traineeId) use ($date_from, $date_to) {
+            $hasLeave = \App\Models\Back\TraineeLeave::where('trainee_id', $traineeId)
+                ->where(function($query) use ($date_from, $date_to) {
+                    // Check if leave overlaps with report period
+                    $query->where(function($q) use ($date_from, $date_to) {
+                        // Leave starts before or during report period and ends during or after report period
+                        $q->where('from_date', '<=', $date_to)
+                          ->where('to_date', '>=', $date_from);
+                    });
+                })
+                ->whereIn('status', ['pending', 'approved']) // Only consider pending or approved leaves
+                ->exists();
+            
+            return !$hasLeave; // Return true if trainee doesn't have leave (should be included)
+        });
+        
         // Get settings from previous report to preserve user preferences (if exists)
         $previousTraineesSettings = collect();
         if ($previousReport) {
@@ -125,7 +142,7 @@ class CompanyAttendanceReportController extends Controller
         // Prepare trainee data with start_date and end_date for resigned trainees
         // AND preserve previous settings if they exist
         $traineeData = [];
-        foreach ($uniqueTraineeIds as $traineeId) {
+        foreach ($traineesWithoutLeave as $traineeId) {
             $trainee = $allTrainees->firstWhere('id', $traineeId);
             
             // Check if this trainee has a resignation
@@ -256,7 +273,7 @@ class CompanyAttendanceReportController extends Controller
             'period' => 'nullable',
             'with_attendance_times' => 'nullable|boolean',
             'with_logo' => 'nullable|boolean',
-            'template_type' => 'nullable|in:default,simple,modern,gradient',
+            'template_type' => 'nullable|in:default,simple,modern,gradient,classic',
         ]);
 
         $report = CompanyAttendanceReport::findOrFail($id);
@@ -313,11 +330,58 @@ class CompanyAttendanceReportController extends Controller
             ]);
         }
 
-        Mail::to($report->emails_to()->pluck('email') ?: null)
-            ->bcc($report->emails_cc()->pluck('email') ?: null)
-            ->send(new CompanyAttendanceReportMail($report->id));
-            \Log::info('Emails To:', $report->emails_to()->pluck('email')->toArray());
-            \Log::info('Emails BCC:', $report->emails_cc()->pluck('email')->toArray());
+        // معالجة TO emails
+        $toEmails = $report->emails_to()->pluck('email')->filter(function($email) {
+            return !empty(trim($email)) && filter_var(trim($email), FILTER_VALIDATE_EMAIL);
+        })->map(function($email) {
+            return trim($email);
+        })->toArray();
+
+        // معالجة CC emails (BCC في الواقع)
+        $bccEmails = $report->emails_cc()->pluck('email')->filter(function($email) {
+            return !empty(trim($email)) && filter_var(trim($email), FILTER_VALIDATE_EMAIL);
+        })->map(function($email) {
+            return trim($email);
+        })->toArray();
+
+        // التأكد من وجود مستلمين
+        $totalRecipients = count($toEmails) + count($bccEmails);
+        
+        if ($totalRecipients === 0) {
+            \Log::error('No recipients found for attendance report email', [
+                'report_id' => $id,
+                'to_emails' => $toEmails,
+                'bcc_emails' => $bccEmails
+            ]);
+            throw new \Exception('لا توجد عناوين بريد إلكتروني صحيحة للإرسال');
+        }
+
+        // إنشاء instance الإيميل
+        $mailInstance = null;
+        
+        if (!empty($toEmails)) {
+            $mailInstance = Mail::to($toEmails);
+        } else if (!empty($bccEmails)) {
+            // إذا لم تكن هناك TO emails، استخدم أول BCC كـ TO
+            $mailInstance = Mail::to($bccEmails[0]);
+            array_shift($bccEmails);
+        }
+        
+        // إضافة BCC emails - استخدام مصفوفة واحدة بدلاً من loop
+        if (!empty($bccEmails)) {
+            $mailInstance->bcc($bccEmails);
+        }
+
+        // تسجيل تفاصيل الإرسال
+        \Log::info('Sending attendance report email', [
+            'report_id' => $id,
+            'to_count' => count($toEmails),
+            'bcc_count' => count($bccEmails),
+            'to_emails' => $toEmails,
+            'bcc_emails' => $bccEmails
+        ]);
+
+        $mailInstance->send(new CompanyAttendanceReportMail($report->id));
 
 
 
@@ -491,16 +555,23 @@ class CompanyAttendanceReportController extends Controller
 public function updateTemplate($id, Request $request)
 {
     $request->validate([
-        'template_type' => 'required|in:default,simple,modern,gradient',
+        'template_type' => 'required|in:default,simple,modern,gradient,classic',
     ]);
 
     $report = CompanyAttendanceReport::findOrFail($id);
+    $templateType = $request->template_type;
+    
+    // التأكد من أن القيمة صحيحة
+    if (!in_array($templateType, ['default', 'simple', 'modern', 'gradient', 'classic'])) {
+        $templateType = 'default';
+    }
+    
     $report->update([
-        'template_type' => $request->template_type,
+        'template_type' => $templateType,
     ]);
 
     return redirect()->route('back.reports.company-attendance.show', $id)
-        ->with('success', 'تم تحديث القالب بنجاح إلى: ' . $this->getTemplateName($request->template_type));
+        ->with('success', 'تم تحديث القالب بنجاح إلى: ' . $this->getTemplateName($templateType));
 }
 
 private function getTemplateName($templateType)
@@ -512,6 +583,8 @@ private function getTemplateName($templateType)
             return 'القالب الحديث';
         case 'gradient':
             return 'القالب المتدرج';
+        case 'classic':
+            return 'القالب الكلاسيكي';
         default:
             return 'القالب الافتراضي';
     }

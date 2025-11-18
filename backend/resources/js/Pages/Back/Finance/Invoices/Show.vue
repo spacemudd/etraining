@@ -136,10 +136,42 @@
                         <div class="w-full p-4">
                             <div class="grid grid-cols-2">
                                 <div class="text-2xl font-bold my-1.5">{{ $t('words.total-amount') }}</div>
-                                <div class="text-2xl img {display:block} inline-flex font-bold my-2 mb-4">{{ invoice.grand_total }}
+                                <div class="text-2xl img {display:block} inline-flex font-bold my-2 mb-4">
+                                    <span v-if="!editAmountButton.editOption">{{ invoice.grand_total }}</span>
+                                    <input 
+                                        v-else
+                                        type="number" 
+                                        step="0.01"
+                                        v-model="editAmountForm.grand_total" 
+                                        class="w-32 text-2xl font-bold border-2 border-blue-400 rounded px-2"
+                                        placeholder="0.00"
+                                    />
                                     <svg width="25" height="25" class="mx-1 mt-2">
                                         <image class="inline " xlink:href="https://upload.wikimedia.org/wikipedia/commons/2/2b/Rial_Sign.PNG" src="https://upload.wikimedia.org/wikipedia/commons/2/2b/Rial_Sign.PNG" width="25" height="25"/>
-                                    </svg></div>
+                                    </svg>
+                                    <button
+                                        v-if="$page.props.user && canEditAmount"
+                                        @click="editAmount"
+                                        class="ml-3 px-3 py-1 text-sm bg-blue-200 hover:bg-blue-300 rounded"
+                                    >
+                                        <span v-if="!editAmountButton.editOption">{{ $t('words.edit') }}</span>
+                                    </button>
+                                    <button
+                                        v-if="editAmountButton.editOption && $page.props.user && canEditAmount"
+                                        @click="saveAmount"
+                                        :disabled="editAmountForm.processing"
+                                        class="ml-2 px-3 py-1 text-sm bg-green-300 hover:bg-green-400 rounded"
+                                    >
+                                        {{ $t('words.save') }}
+                                    </button>
+                                    <button
+                                        v-if="editAmountButton.editOption && $page.props.user && canEditAmount"
+                                        @click="cancelEditAmount"
+                                        class="ml-2 px-3 py-1 text-sm bg-red-300 hover:bg-red-400 rounded"
+                                    >
+                                        {{ $t('words.cancel') }}
+                                    </button>
+                                </div>
                                 <div class="font-bold my-1">{{ $t('words.client-name') }}</div>
                                 <div class="my-0.5">
                                     <inertia-link class="text-blue-500 hover:text-blue-600" :href="invoice.trainee.show_url">{{ invoice.trainee ? invoice.trainee.name : '-' }}</inertia-link>
@@ -359,7 +391,7 @@
 
 
             <!-- Edit Company Section -->
-            <div class="mt-8 flex flex-col md:flex-row md:space-x-5 mt-8 mb-8" v-if="$page.props.user.email === 'ebrahim.hosny@hadaf-hq.com' || $page.props.user.email === 'acc2@jisr-ksa.com' || $page.props.user.email === 'admin@admin.com'">
+            <div class="mt-8 flex flex-col md:flex-row md:space-x-5 mt-8 mb-8" v-if="$page.props.user.email === 'ebrahim.hosny@hadaf-hq.com' || $page.props.user.email === 'acc2@jisr-ksa.com' || $page.props.user.email === 'admin@admin.com' || $page.props.user.email === 'rahmah@hadaf-hq.com'">
                 <div class="w-full md:w-8/12">
                     <div class="grid grid-cols-2 gap-6">
                         <div>
@@ -508,12 +540,27 @@ export default {
                 editOption: false,
             },
             selectedCompany: null,
-            editCompanyButton: {
+            editAmountButton: {
                 text: this.$t('words.edit'),
                 editOption: false,
             },
-            selectedCompany: null,
+            editAmountForm: this.$inertia.form({
+                grand_total: null,
+            }),
         }
+    },
+    computed: {
+        canEditAmount() {
+            if (!this.$page.props.user || !this.$page.props.user.email) {
+                return false;
+            }
+            const allowedEmails = [
+                'admin@admin.com',
+                'ebrahim.hosny@hadaf-hq.com',
+                'sara@hadaf-hq.com',
+            ];
+            return allowedEmails.includes(this.$page.props.user.email);
+        },
     },
     mounted() {
         this.loadPaymentUrl();
@@ -652,7 +699,7 @@ export default {
             
             if (confirm(`هل أنت متأكد من تغيير الشركة من "${this.invoice.company ? this.invoice.company.name_ar : 'غير محدد'}" إلى "${this.selectedCompany.name_ar}"؟`)) {
                 
-                this.$inertia.put(route('back.finance.invoices.update-company', this.invoice.id), {
+                this.$inertia.put(route('back.finance.invoices.update-company-direct', this.invoice.id), {
                     company_id: this.selectedCompany.id
                 }, {
                     onStart: () => {
@@ -680,6 +727,54 @@ export default {
         
         onCompanyChange(company) {
             this.selectedCompany = company;
+        },
+        
+        // Amount editing functions
+        editAmount() {
+            if (!this.editAmountButton.editOption) {
+                this.editAmountButton.editOption = true;
+                this.editAmountButton.text = this.$t('words.save');
+                this.editAmountForm.grand_total = this.invoice.grand_total;
+            }
+        },
+        
+        saveAmount() {
+            if (!this.editAmountForm.grand_total || this.editAmountForm.grand_total <= 0) {
+                alert('يرجى إدخال مبلغ صحيح');
+                return;
+            }
+            
+            if (confirm(`هل أنت متأكد من تغيير المبلغ من ${this.invoice.grand_total} ريال إلى ${this.editAmountForm.grand_total} ريال؟`)) {
+                // تحويل grand_total إلى رقم
+                this.editAmountForm.grand_total = parseFloat(this.editAmountForm.grand_total);
+                
+                this.editAmountForm.put(route('back.finance.invoices.update-amount-direct', this.invoice.id), {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        this.editAmountButton.editOption = false;
+                        this.editAmountButton.text = this.$t('words.edit');
+                        // إعادة تحميل الصفحة للحصول على البيانات المحدثة
+                        this.$inertia.reload({
+                            only: ['invoice'],
+                            preserveScroll: true,
+                        });
+                    },
+                    onError: (errors) => {
+                        console.error('Error updating amount:', errors);
+                        if (errors && errors.grand_total) {
+                            alert('خطأ: ' + errors.grand_total[0]);
+                        } else {
+                            alert('حدث خطأ أثناء التحديث');
+                        }
+                    }
+                });
+            }
+        },
+        
+        cancelEditAmount() {
+            this.editAmountButton.editOption = false;
+            this.editAmountButton.text = this.$t('words.edit');
+            this.editAmountForm.grand_total = null;
         },
     }
 }

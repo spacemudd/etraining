@@ -99,9 +99,8 @@
                                         </div>
                                         
                                         <div class="flex gap-3">
-                                            <a 
-                                                :href="leave.leave_file_url" 
-                                                target="_blank"
+                                            <button 
+                                                @click="openFile"
                                                 class="flex-1 bg-blue-500 text-white font-semibold px-4 py-2 rounded-md hover:bg-blue-600 transition-colors text-center flex items-center justify-center gap-2"
                                             >
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -109,18 +108,17 @@
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                                 </svg>
                                                 عرض الملف
-                                            </a>
+                                            </button>
                                             
-                                            <a 
-                                                :href="leave.leave_file_url" 
-                                                download
+                                            <button 
+                                                @click="downloadFile"
                                                 class="flex-1 bg-green-500 text-white font-semibold px-4 py-2 rounded-md hover:bg-green-600 transition-colors text-center flex items-center justify-center gap-2"
                                             >
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                                 </svg>
                                                 تحميل
-                                            </a>
+                                            </button>
                                         </div>
                                     </div>
                                     
@@ -168,6 +166,106 @@ export default {
     components: {
         AppLayout,
         BreadcrumbContainer,
+    },
+    methods: {
+        async openFile() {
+            if (!this.leave.has_file) {
+                alert('عذراً، لا يوجد ملف مرفق.');
+                return;
+            }
+            
+            try {
+                // إظهار رسالة تحميل
+                const loadingMessage = document.createElement('div');
+                loadingMessage.innerHTML = 'جاري تحميل الملف...';
+                loadingMessage.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #333; color: white; padding: 20px; border-radius: 8px; z-index: 9999;';
+                document.body.appendChild(loadingMessage);
+                
+                // الحصول على signed URL من الخادم
+                const response = await axios.get(route('back.trainees.leaves.file-url', {
+                    trainee_id: this.leave.trainee_id,
+                    id: this.leave.id
+                }));
+                
+                // إزالة رسالة التحميل
+                document.body.removeChild(loadingMessage);
+                
+                if (response.data && response.data.file_url) {
+                    // فتح الملف في نافذة جديدة
+                    window.open(response.data.file_url, '_blank');
+                } else {
+                    alert('عذراً، لا يمكن الوصول إلى الملف في الوقت الحالي. يرجى المحاولة لاحقاً.');
+                }
+            } catch (error) {
+                // إزالة رسالة التحميل في حالة الخطأ
+                const loadingMessage = document.querySelector('div[style*="position: fixed"]');
+                if (loadingMessage) {
+                    document.body.removeChild(loadingMessage);
+                }
+                
+                console.error('Error getting file URL:', error);
+                
+                if (error.response && error.response.status === 404) {
+                    alert('الملف غير موجود.');
+                } else if (error.response && error.response.data && error.response.data.error) {
+                    alert('خطأ: ' + error.response.data.error);
+                } else {
+                    alert('عذراً، حدث خطأ أثناء فتح الملف. يرجى المحاولة مرة أخرى.');
+                }
+            }
+        },
+        
+        async downloadFile() {
+            if (!this.leave.has_file) {
+                alert('عذراً، لا يوجد ملف مرفق.');
+                return;
+            }
+            
+            try {
+                // إظهار رسالة تحميل
+                const loadingMessage = document.createElement('div');
+                loadingMessage.innerHTML = 'جاري تحضير الملف للتحميل...';
+                loadingMessage.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #333; color: white; padding: 20px; border-radius: 8px; z-index: 9999;';
+                document.body.appendChild(loadingMessage);
+                
+                // الحصول على signed URL من الخادم
+                const response = await axios.get(route('back.trainees.leaves.file-url', {
+                    trainee_id: this.leave.trainee_id,
+                    id: this.leave.id
+                }));
+                
+                // إزالة رسالة التحميل
+                document.body.removeChild(loadingMessage);
+                
+                if (response.data && response.data.file_url) {
+                    // إنشاء رابط تحميل
+                    const link = document.createElement('a');
+                    link.href = response.data.file_url;
+                    link.download = response.data.file_name || 'ملف الإجازة';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                } else {
+                    alert('عذراً، لا يمكن الوصول إلى الملف في الوقت الحالي. يرجى المحاولة لاحقاً.');
+                }
+            } catch (error) {
+                // إزالة رسالة التحميل في حالة الخطأ
+                const loadingMessage = document.querySelector('div[style*="position: fixed"]');
+                if (loadingMessage) {
+                    document.body.removeChild(loadingMessage);
+                }
+                
+                console.error('Error getting file URL:', error);
+                
+                if (error.response && error.response.status === 404) {
+                    alert('الملف غير موجود.');
+                } else if (error.response && error.response.data && error.response.data.error) {
+                    alert('خطأ: ' + error.response.data.error);
+                } else {
+                    alert('عذراً، حدث خطأ أثناء تحميل الملف. يرجى المحاولة مرة أخرى.');
+                }
+            }
+        }
     }
 }
 </script>

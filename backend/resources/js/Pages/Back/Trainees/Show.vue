@@ -775,7 +775,7 @@
               </inertia-link>
           </div>
 
-          <div class="col-span-6 sm:col-span-1" v-can="'override-training-costs'">
+          <div class="col-span-6 sm:col-span-1" v-if="canViewCertificates">
               <jet-label 
                   for="name" 
                   :value="$t('words.certificates')" 
@@ -1080,7 +1080,7 @@
 
       <jet-section-border></jet-section-border>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-2" v-if="$page.props.user.email === 'mashael.a@hadaf-hq.com' || $page.props.user.email === 'admin@admin.com' || $page.props.user.email === 'ebrahim.hosny@hadaf-hq.com' ">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-2" v-if="canViewSpecialDocuments">
         <div class="md:col-span-4 lg:col-span-1 sm:col-span-3">
           <div class="px-4 sm:px-0">
             <h3 class="text-lg font-medium text-gray-900">
@@ -1114,7 +1114,7 @@
         </div>
 
         <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
-          <div class="flex w-full justify-end">
+          <div class="flex w-full justify-end gap-2">
             <inertia-link
               :href="route('back.trainees.invoices.create', trainee.id)"
             >
@@ -1122,6 +1122,18 @@
                 {{ $t("words.issue-invoice") }}
               </jet-button>
             </inertia-link>
+            
+            <button 
+              type="button" 
+              @click="refreshInvoices"
+              :disabled="isRefreshing"
+              class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-normal transition ease-in-out duration-150 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50"
+              style="margin-left: 10px;"
+              id="refresh-button"
+            >
+              <span v-if="isRefreshing" class="animate-spin mr-2">⟳</span>
+              {{ $t("words.refresh") }}
+            </button>
           </div>
 
           <table
@@ -1235,6 +1247,7 @@ export default {
   },
   data() {
     return {
+      isRefreshing: false,
       new_trainee_group: {
         name: "",
         id: "",
@@ -1341,9 +1354,86 @@ export default {
       console.log('Has access to special documents:', hasAccess);
       
       return hasAccess;
+    },
+    canViewCertificates() {
+      // Check if user has permission 'override-training-costs'
+      const permissions = document.head.querySelector('meta[name="user-permissions"]');
+      const hasPermission = permissions && permissions.content.indexOf('override-training-costs') !== -1;
+      
+      // Check if user is in the allowed users list (for special documents access)
+      const currentUserEmail = this.$page.props.user?.email;
+      const allowedUsers = this.$page.props.allowed_users_for_special_documents || [];
+      const isInAllowedUsers = allowedUsers.includes(currentUserEmail);
+      
+      // Check if user has any of the specific role ids
+      const user = this.$page.props.user;
+      if (!user) return hasPermission || isInAllowedUsers;
+      
+      const userRoles = user.roles || [];
+      const allowedRoleIds = [
+        'c89e8671-9f3a-427a-90ca-bd2443f04df2',
+        'b87b7924-64da-492f-afb1-e54a49f0d800',
+        '097438c1-2614-42db-95f2-6402bb607fdc',
+        '7a9101c7-728f-4653-82f1-e6318359c344' // شؤون متدربات
+      ];
+      
+      // Also check by role name pattern (for roles that contain "services" which is شؤون متدربات)
+      const allowedRoleNamePatterns = ['services']; // This matches team_id_services
+      
+      // Debug: log roles for troubleshooting
+      if (userRoles.length > 0) {
+        console.log('User roles:', userRoles.map(r => ({ id: r?.id, name: r?.name })));
+        console.log('Allowed role IDs:', allowedRoleIds);
+        console.log('User roles full:', JSON.stringify(userRoles, null, 2));
+      }
+      
+      // Check if user has any of the allowed role ids OR role name patterns
+      const hasRole = userRoles.some(role => {
+        if (!role) return false;
+        
+        // Check by role id
+        const roleId = role.id || role.role_id || role.pivot?.role_id;
+        if (roleId && allowedRoleIds.includes(roleId)) {
+          return true;
+        }
+        
+        // Check by role name pattern (contains "services")
+        const roleName = role.name || '';
+        if (allowedRoleNamePatterns.some(pattern => roleName.includes(pattern))) {
+          return true;
+        }
+        
+        return false;
+      });
+      
+      console.log('Can view certificates - Permission:', hasPermission, 'Role:', hasRole, 'Allowed Users:', isInAllowedUsers, 'Total:', hasPermission || hasRole || isInAllowedUsers);
+      
+      return hasPermission || hasRole || isInAllowedUsers;
     }
   },
   mounted() {
+    console.log('Component mounted');
+    console.log('Trainee ID:', this.trainee.id);
+    console.log('Refresh button should be visible');
+    
+    // Test if the button exists
+    setTimeout(() => {
+      const refreshButton = document.getElementById('refresh-button');
+      if (refreshButton) {
+        console.log('Refresh button found in DOM');
+        console.log('Button element:', refreshButton);
+        
+        // Add direct event listener as backup
+        refreshButton.addEventListener('click', (e) => {
+          console.log('Direct event listener triggered');
+          e.preventDefault();
+          this.refreshInvoices();
+        });
+      } else {
+        console.error('Refresh button NOT found in DOM');
+      }
+    }, 1000);
+    
     if (this.trainee.trainee_group) {
       this.trainee.trainee_group_object = this.trainee_group;
     } else {
@@ -1351,6 +1441,43 @@ export default {
     }
   },
   methods: {
+    refreshInvoices() {
+      console.log('=== REFRESH INVOICES FUNCTION CALLED ===');
+      console.log('Refresh invoices clicked');
+      alert('تم الضغط على زر التحديث!');
+      
+      this.isRefreshing = true;
+      
+      // Use a simple fetch request instead of Inertia
+      fetch(route('back.trainees.refresh-invoices', this.trainee.id), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({})
+      })
+      .then(response => {
+        console.log('Response received:', response);
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error('Network response was not ok');
+      })
+      .then(data => {
+        console.log('Success:', data);
+        this.isRefreshing = false;
+        alert('تم تحديث الفواتير بنجاح!');
+        // Reload the page to show updated invoices
+        window.location.reload();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        this.isRefreshing = false;
+        alert('حدث خطأ في تحديث الفواتير: ' + error.message);
+      });
+    },
     deleteFromBlockList() {
       this.$inertia.delete(
         route("back.trainees.delete-from-block-list", { id: this.trainee.id })

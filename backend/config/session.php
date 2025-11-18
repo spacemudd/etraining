@@ -155,7 +155,7 @@ return [
     |
     */
 
-    'domain' => env('SESSION_DOMAIN', '.jasarah-ksa.com'),
+    'domain' => env('SESSION_DOMAIN', env('APP_ENV') === 'local' ? null : '.jasarah-ksa.com'),
 
     /*
     |--------------------------------------------------------------------------

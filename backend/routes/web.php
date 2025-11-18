@@ -785,7 +785,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::post('invoices/{id}/reset-status', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'resetStatus'])->name('invoices.reset-status');
             Route::resource('invoices', \App\Http\Controllers\Back\FinancialInvoicesController::class);
             Route::post('expected-amount-per-invoice', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'expectedAmountPerInvoice']);
-            Route::put('invoices/{invoice_id}/update-company', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'updateCompany'])->name('invoices.update-company');
+            Route::put('invoices/{invoice_id}/update-amount', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'updateAmount'])->name('invoices.update-amount-direct');
+            Route::put('invoices/{invoice_id}/update-company', [\App\Http\Controllers\Back\FinancialInvoicesController::class, 'updateCompany'])->name('invoices.update-company-direct');
 
         });
 
@@ -808,6 +809,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::put('/trainees/{id}/update-deleted-remark', [\App\Http\Controllers\Back\TraineesController::class, 'updatedDeletedRemark'])->name('trainees.update-deleted-remark');
 
         Route::get('/trainees/groups', [TraineesGroupsController::class, 'index'])->name('trainees.groups.index');
+        Route::get('/trainees/link-groups', [\App\Http\Controllers\Back\TraineesController::class, 'linkGroups'])->name('trainees.link-groups');
+        Route::post('/trainees/link-groups', [\App\Http\Controllers\Back\TraineesController::class, 'storeLinkGroups'])->name('trainees.link-groups.store');
 
         // Attendance management of trainee.
         Route::get('trainees/{trainee_id}/warnings', [\App\Http\Controllers\Back\TraineesController::class, 'warnings'])->name('trainees.warnings');
@@ -818,8 +821,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('trainees/{trainee_id}/leaves', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'index'])->name('trainees.leaves.index');
         Route::post('trainees/{trainee_id}/leaves', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'store'])->name('trainees.leaves.store');
         Route::get('trainees/{trainee_id}/leaves/create', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'create'])->name('trainees.leaves.create');
+        Route::get('trainees/{trainee_id}/leaves/email-defaults', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'getEmailDefaults'])->name('trainees.leaves.email-defaults');
         Route::get('trainees/{trainee_id}/leaves/{id}', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'show'])->name('trainees.leaves.show');
         Route::get('trainees/{trainee_id}/leaves/{id}/edit', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'edit'])->name('trainees.leaves.edit');
+        Route::get('trainees/{trainee_id}/leaves/{id}/file-url', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'getFileUrl'])->name('trainees.leaves.file-url');
         Route::put('trainees/{trainee_id}/leaves/{id}', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'update'])->name('trainees.leaves.update');
         Route::delete('trainees/{trainee_id}/leaves/{id}', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'destroy'])->name('trainees.leaves.destroy');
         Route::put('trainees/{trainee_id}/leaves/{id}/status', [\App\Http\Controllers\Back\TraineeLeavesController::class, 'updateStatus'])->name('trainees.leaves.update-status');
@@ -909,6 +914,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('trainees/archived', [\App\Http\Controllers\Back\TraineesController::class, 'indexArchived'])->name('trainees.index.archived');
         Route::resource('trainees', \App\Http\Controllers\Back\TraineesController::class);
         Route::resource('trainees.invoices', \App\Http\Controllers\Back\TraineeInvoicesController::class)->only(['create', 'store']);
+        Route::post('trainees/{trainee_id}/refresh-invoices', [\App\Http\Controllers\Back\TraineesController::class, 'refreshInvoices'])->name('trainees.refresh-invoices');
         Route::get('candidates', [\App\Http\Controllers\Back\CandidatesController::class, 'index'])->name('candidates.index');
         Route::post('trainees/{trainee_id}/suspendSelectedTrainees', [\App\Http\Controllers\Back\TraineesController::class, 'suspendSelectedTrainees'])->name('trainees.suspend.selected.trainees');
         // Export trainees
@@ -1110,6 +1116,19 @@ Route::get('/attendance/export-by-group/{courseBatch}', [\App\Http\Controllers\A
  Route::get('export-some-trainees',function(){
     return Excel::download(new \App\Exports\ExportSomeTraineesFromGada(),'trainees.xlsx');
 });
+
+Route::get('export-trainee-audits', function(\Illuminate\Http\Request $request) {
+    $userId = $request->get('user_id', '53a66c49-f6b4-4dee-952f-71f4d096a9ba');
+    $field = $request->get('field');
+    $weeks = $request->get('weeks', 2);
+    
+    $fileName = 'trainee-audits-' . now()->format('Y-m-d-H-i-s') . '.xlsx';
+    
+    return \Maatwebsite\Excel\Facades\Excel::download(
+        new \App\Exports\Back\TraineeAuditExport($userId, $field, $weeks),
+        $fileName
+    );
+})->name('export.trainee-audits');
 
 
 

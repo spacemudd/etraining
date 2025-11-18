@@ -12,14 +12,20 @@ class FixSessionCookies
     {
         $response = $next($request);
         
-        // Only apply fixes for the main application domain
-        if (str_contains($request->getHost(), 'jasarah-ksa.com')) {
+        $host = $request->getHost();
+        $isProduction = str_contains($host, 'jasarah-ksa.com');
+        $isLocal = in_array($host, ['localhost', '127.0.0.1']) || 
+                   preg_match('/^(localhost|127\.0\.0\.1)(:\d+)?$/', $host) ||
+                   env('APP_ENV') === 'local';
+        
+        // Apply fixes for production domain or local development
+        if ($isProduction || $isLocal) {
             // First, aggressively clear all problematic cookies
             $this->clearProblematicCookies($request, $response);
             
             // Then set the correct cookies
-            $this->fixSessionCookie($request, $response);
-            $this->fixXSRFToken($request, $response);
+            $this->fixSessionCookie($request, $response, $isLocal);
+            $this->fixXSRFToken($request, $response, $isLocal);
         }
         
         return $response;
@@ -103,7 +109,7 @@ class FixSessionCookies
         }
     }
     
-    private function fixSessionCookie(Request $request, $response)
+    private function fixSessionCookie(Request $request, $response, $isLocal = false)
     {
         $sessionName = config('session.cookie', 'jasarah_session_v2');
         $sessionId = session()->getId();
@@ -114,13 +120,14 @@ class FixSessionCookies
             $this->removeOldCookies($response, $sessionName);
             
             // Set the correct session cookie
+            $domain = $isLocal ? null : '.jasarah-ksa.com';
             $response->headers->setCookie(
                 cookie(
                     $sessionName,
                     $sessionId,
                     config('session.lifetime', 480) * 60, // Convert to seconds
                     '/',
-                    '.jasarah-ksa.com', // Use wildcard domain
+                    $domain, // Use null for local, wildcard domain for production
                     config('session.secure', false), // Allow HTTP and HTTPS
                     true, // HttpOnly
                     false, // Raw
@@ -130,7 +137,7 @@ class FixSessionCookies
         }
     }
     
-    private function fixXSRFToken(Request $request, $response)
+    private function fixXSRFToken(Request $request, $response, $isLocal = false)
     {
         $token = csrf_token();
         
@@ -139,13 +146,14 @@ class FixSessionCookies
             $this->removeOldCookies($response, 'XSRF-TOKEN');
             
             // Set the correct XSRF cookie
+            $domain = $isLocal ? null : '.jasarah-ksa.com';
             $response->headers->setCookie(
                 cookie(
                     'XSRF-TOKEN',
                     $token,
                     0, // Session cookie
                     '/',
-                    '.jasarah-ksa.com', // Use wildcard domain
+                    $domain, // Use null for local, wildcard domain for production
                     config('session.secure', false), // Allow HTTP and HTTPS
                     false, // Not HttpOnly (needed for JS access)
                     false, // Raw

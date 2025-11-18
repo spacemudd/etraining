@@ -586,45 +586,69 @@ class UkCertificatesController extends Controller
         $basename = preg_replace('/\x{00A0}+/u', ' ', $basename);
         $basename = preg_replace('/\s+/u', ' ', $basename);
 
-        // Accept either underscores or any whitespace between ID and name
+        // First try: Accept either underscores or any whitespace between ID and name
         // Examples: "10000000 Name", "10000000\tName", "10000000   Name", "10000000_Name"
-        if (preg_match('/^\s*([0-9]+)[\s_]+(.+?)\s*$/u', $basename, $matches) !== 1) {
+        if (preg_match('/^\s*([0-9]+)[\s_]+(.+?)\s*$/u', $basename, $matches) === 1) {
+            $identityNumber = trim($matches[1]);
+            $traineeName = trim($matches[2]);
+            
+            // Additional validation
+            if (empty($identityNumber) || empty($traineeName)) {
+                return [
+                    'valid' => false,
+                    'identity_number' => $identityNumber,
+                    'trainee_name' => $traineeName,
+                    'error' => 'Identity number or trainee name is empty'
+                ];
+            }
+            
+            // Validate identity number format (should be numeric)
+            if (!is_numeric($identityNumber)) {
+                return [
+                    'valid' => false,
+                    'identity_number' => $identityNumber,
+                    'trainee_name' => $traineeName,
+                    'error' => 'Identity number must be numeric'
+                ];
+            }
+            
             return [
-                'valid' => false,
-                'identity_number' => '',
-                'trainee_name' => '',
-                'error' => 'Invalid filename format. Expected: {identity_number} {name}.pdf or {identity_number}_{name}.pdf'
+                'valid' => true,
+                'identity_number' => $identityNumber,
+                'trainee_name' => $traineeName,
+                'error' => null
             ];
         }
 
-        $identityNumber = trim($matches[1]);
-        $traineeName = trim($matches[2]);
-        
-        // Additional validation
-        if (empty($identityNumber) || empty($traineeName)) {
+        // Second try: Accept identity number only (without name)
+        // Examples: "10000000.pdf", " 10000000 .pdf"
+        if (preg_match('/^\s*([0-9]+)\s*$/u', $basename, $matches) === 1) {
+            $identityNumber = trim($matches[1]);
+            
+            // Validate identity number format (should be numeric)
+            if (!is_numeric($identityNumber)) {
+                return [
+                    'valid' => false,
+                    'identity_number' => $identityNumber,
+                    'trainee_name' => '',
+                    'error' => 'Identity number must be numeric'
+                ];
+            }
+            
             return [
-                'valid' => false,
+                'valid' => true,
                 'identity_number' => $identityNumber,
-                'trainee_name' => $traineeName,
-                'error' => 'Identity number or trainee name is empty'
+                'trainee_name' => '', // Empty name for identity-only files
+                'error' => null
             ];
         }
-        
-        // Validate identity number format (should be numeric)
-        if (!is_numeric($identityNumber)) {
-            return [
-                'valid' => false,
-                'identity_number' => $identityNumber,
-                'trainee_name' => $traineeName,
-                'error' => 'Identity number must be numeric'
-            ];
-        }
-        
+
+        // If neither pattern matches, return error
         return [
-            'valid' => true,
-            'identity_number' => $identityNumber,
-            'trainee_name' => $traineeName,
-            'error' => null
+            'valid' => false,
+            'identity_number' => '',
+            'trainee_name' => '',
+            'error' => 'Invalid filename format. Expected: {identity_number}.pdf or {identity_number} {name}.pdf or {identity_number}_{name}.pdf'
         ];
     }
 

@@ -106,27 +106,17 @@
 
                                                  <!-- الملف المرفوع -->
                          <td class="px-6 py-4">
-                             <div v-if="leave.has_file && leave.leave_file_url" class="flex items-center">
-                                 <a 
-                                     :href="leave.leave_file_url" 
-                                     target="_blank"
+                             <div v-if="leave.has_file" class="flex items-center">
+                                 <button 
                                      @click="handleFileClick($event, leave)"
-                                     class="inline-flex items-center px-3 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors duration-200 border border-green-200 group"
+                                     class="inline-flex items-center px-3 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors duration-200 border border-green-200 group cursor-pointer"
                                      title="انقر لفتح الملف"
                                  >
                                      <svg class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
                                      </svg>
                                      <span class="text-sm font-medium">{{ leave.leave_file_name || 'عرض الملف' }}</span>
-                                 </a>
-                             </div>
-                             <div v-else-if="leave.has_file && !leave.leave_file_url" class="flex items-center">
-                                 <span class="inline-flex items-center px-3 py-2 bg-red-50 text-red-600 rounded-lg border border-red-200">
-                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-                                     </svg>
-                                     <span class="text-sm">خطأ في تحميل الملف</span>
-                                 </span>
+                                 </button>
                              </div>
                              <div v-else class="flex items-center">
                                  <span class="inline-flex items-center px-3 py-2 bg-gray-50 text-gray-500 rounded-lg border border-gray-200">
@@ -274,7 +264,34 @@
                         <!-- ملف الإجازة -->
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">ملف الإجازة</label>
-                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors duration-200">
+                            
+                            <!-- عرض الملف المختار -->
+                            <div v-if="form.leave_file" class="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <svg class="w-8 h-8 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        <div>
+                                            <p class="text-sm font-medium text-green-800">{{ form.leave_file.name }}</p>
+                                            <p class="text-xs text-green-600">{{ formatFileSize(form.leave_file.size) }}</p>
+                                        </div>
+                                    </div>
+                                    <button 
+                                        type="button" 
+                                        @click="removeFile"
+                                        class="text-red-600 hover:text-red-800 transition-colors duration-200"
+                                    >
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- منطقة رفع الملف -->
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors duration-200"
+                                 :class="{ 'border-green-400 bg-green-50': form.leave_file }">
                                 <input 
                                     type="file" 
                                     @change="handleFileChange"
@@ -284,10 +301,15 @@
                                     :required="!editingLeave"
                                 />
                                 <label for="file-input" class="cursor-pointer">
-                                    <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-12 h-12 mx-auto mb-4 transition-colors duration-200"
+                                         :class="form.leave_file ? 'text-green-500' : 'text-gray-400'"
+                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                                     </svg>
-                                    <p class="text-sm text-gray-600 mb-2">انقر لاختيار الملف أو اسحبه هنا</p>
+                                    <p class="text-sm mb-2 transition-colors duration-200"
+                                       :class="form.leave_file ? 'text-green-600' : 'text-gray-600'">
+                                        {{ form.leave_file ? 'تم اختيار الملف بنجاح' : 'انقر لاختيار الملف أو اسحبه هنا' }}
+                                    </p>
                                     <p class="text-xs text-gray-500">PDF, JPG, PNG (حد أقصى 10 ميجابايت)</p>
                                 </label>
                             </div>
@@ -325,6 +347,77 @@
                                 class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
                                 placeholder="أضف أي ملاحظات إضافية..."
                             ></textarea>
+                        </div>
+
+                        <!-- إعدادات البريد الإلكتروني -->
+                        <div v-if="form.leave_type === 'أجازة وضع'" class="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-4">
+                            <div class="flex items-center gap-3">
+                                <input 
+                                    type="checkbox" 
+                                    id="send-email"
+                                    v-model="form.send_email"
+                                    class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                                />
+                                <label for="send-email" class="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    إرسال إشعار بالبريد الإلكتروني
+                                </label>
+                            </div>
+
+                            <div v-if="form.send_email" class="space-y-4 pt-2">
+                                <!-- إلى (TO) -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">إلى (TO)</label>
+                                    <textarea 
+                                        v-model="form.email_to"
+                                        rows="2"
+                                        class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none text-sm"
+                                        placeholder="أدخل عناوين البريد الإلكتروني مفصولة بفواصل"
+                                    ></textarea>
+                                    <p class="text-xs text-gray-500 mt-1">يتم ملء هذا الحقل تلقائياً بإيميل الشركة</p>
+                                </div>
+
+                                <!-- نسخة (CC) -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">نسخة (CC)</label>
+                                    <textarea 
+                                        v-model="form.email_cc"
+                                        rows="2"
+                                        class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none text-sm"
+                                        placeholder="أدخل عناوين البريد الإلكتروني مفصولة بفواصل"
+                                    ></textarea>
+                                </div>
+
+                                <!-- نسخة مخفية (BCC) -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">نسخة مخفية (BCC)</label>
+                                    <textarea 
+                                        v-model="form.email_bcc"
+                                        rows="3"
+                                        class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none text-sm"
+                                        placeholder="أدخل عناوين البريد الإلكتروني مفصولة بفواصل"
+                                    ></textarea>
+                                    <p class="text-xs text-gray-500 mt-1">يتم ملء هذا الحقل تلقائياً بالإيميلات المحددة</p>
+                                </div>
+
+                                <!-- معاينة محتوى الإيميل -->
+                                <div class="bg-gray-50 border border-gray-200 rounded-lg p-3">
+                                    <h4 class="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                        </svg>
+                                        معاينة محتوى الإيميل
+                                    </h4>
+                                    <div class="text-xs text-gray-600 leading-relaxed">
+                                        <p><strong>الموضوع:</strong> إشعار إجازة وضع - {{ emailDefaults.trainee_name }}</p>
+                                        <p class="mt-2">نود إحاطتكم علماً بأن السيدة <strong>{{ emailDefaults.trainee_name }}</strong> قد تم منحها إجازة وضع اعتباراً من تاريخ <strong>{{ form.from_date }}</strong> وحتى تاريخ <strong>{{ form.to_date }}</strong>.</p>
+                                        <p class="mt-2 text-gray-500">وبناءً على نظام التأمينات الاجتماعية واللوائح المعمول بها، نود إحاطتكم علماً بأن هذه الإجازة مدفوعة الأجر من التأمينات الاجتماعية...</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- أزرار الإجراءات -->
@@ -378,12 +471,32 @@ export default {
                 from_date: '',
                 to_date: '',
                 notes: '',
-                leave_file: null
+                leave_file: null,
+                send_email: false,
+                email_to: '',
+                email_cc: '',
+                email_bcc: ''
+            },
+            emailDefaults: {
+                company_email: '',
+                default_bcc_emails: '',
+                trainee_name: '',
+                company_name: ''
             }
         }
     },
     mounted() {
         this.getLeaves();
+    },
+    watch: {
+        'form.leave_type'(newVal) {
+            if (newVal === 'أجازة وضع') {
+                this.form.send_email = true;
+                this.loadEmailDefaults();
+            } else {
+                this.form.send_email = false;
+            }
+        }
     },
     methods: {
         getLeaves() {
@@ -409,6 +522,7 @@ export default {
         openCreateModal() {
             this.editingLeave = null;
             this.resetForm();
+            this.loadEmailDefaults();
             this.showModal = true;
         },
         
@@ -419,8 +533,13 @@ export default {
                 from_date: leave.from_date_formatted,
                 to_date: leave.to_date_formatted,
                 notes: leave.notes || '',
-                leave_file: null
+                leave_file: null,
+                send_email: false,
+                email_to: '',
+                email_cc: '',
+                email_bcc: ''
             };
+            this.loadEmailDefaults();
             this.showModal = true;
         },
         
@@ -436,12 +555,59 @@ export default {
                 from_date: '',
                 to_date: '',
                 notes: '',
-                leave_file: null
+                leave_file: null,
+                send_email: false,
+                email_to: '',
+                email_cc: '',
+                email_bcc: ''
             };
+        },
+
+        loadEmailDefaults() {
+            console.log('Loading email defaults for trainee:', this.trainee_id);
+            
+            axios.get(route('back.trainees.leaves.email-defaults', { trainee_id: this.trainee_id }))
+            .then(response => {
+                console.log('Email defaults loaded successfully:', response.data);
+                
+                this.emailDefaults = response.data;
+                // ملء الحقول تلقائياً
+                this.form.email_to = response.data.company_email;
+                this.form.email_bcc = response.data.default_bcc_emails;
+                
+                console.log('Email form fields populated:', {
+                    email_to: this.form.email_to,
+                    email_bcc: this.form.email_bcc,
+                    company_name: response.data.company_name,
+                    trainee_name: response.data.trainee_name
+                });
+            })
+            .catch(error => {
+                console.error('Error loading email defaults:', error);
+                console.error('Error response:', error.response);
+                console.error('Error data:', error.response?.data);
+            });
         },
         
         handleFileChange(event) {
             this.form.leave_file = event.target.files[0];
+        },
+        
+        removeFile() {
+            this.form.leave_file = null;
+            // إعادة تعيين input file
+            const fileInput = document.getElementById('file-input');
+            if (fileInput) {
+                fileInput.value = '';
+            }
+        },
+        
+        formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         },
         
         submitForm() {
@@ -455,6 +621,20 @@ export default {
         createLeave() {
             this.loading = true;
             
+            // تسجيل بداية العملية
+            console.log('Creating maternity leave request:', {
+                trainee_id: this.trainee_id,
+                leave_type: this.form.leave_type,
+                from_date: this.form.from_date,
+                to_date: this.form.to_date,
+                send_email: this.form.send_email,
+                email_data: {
+                    to: this.form.email_to,
+                    cc: this.form.email_cc,
+                    bcc: this.form.email_bcc
+                }
+            });
+            
             const formData = new FormData();
             formData.append('leave_type', this.form.leave_type);
             formData.append('from_date', this.form.from_date);
@@ -462,7 +642,27 @@ export default {
             formData.append('notes', this.form.notes);
             if (this.form.leave_file) {
                 formData.append('leave_file', this.form.leave_file);
+                console.log('File attached:', this.form.leave_file.name, 'Size:', this.form.leave_file.size);
             }
+            
+            // إضافة حقول البريد الإلكتروني
+            formData.append('send_email', this.form.send_email ? '1' : '0');
+            if (this.form.send_email) {
+                formData.append('email_to', this.form.email_to);
+                formData.append('email_cc', this.form.email_cc);
+                formData.append('email_bcc', this.form.email_bcc);
+                
+                console.log('Email data being sent:', {
+                    send_email: true,
+                    email_to: this.form.email_to,
+                    email_cc: this.form.email_cc,
+                    email_bcc: this.form.email_bcc
+                });
+            } else {
+                console.log('Email sending is disabled');
+            }
+            
+            console.log('Sending request to:', route('back.trainees.leaves.store', { trainee_id: this.trainee_id }));
             
             axios.post(route('back.trainees.leaves.store', { trainee_id: this.trainee_id }), formData, {
                 headers: {
@@ -470,21 +670,29 @@ export default {
                 }
             })
             .then(response => {
+                console.log('Leave request created successfully:', response.data);
                 this.getLeaves();
                 this.closeModal();
                 this.$inertia.reload();
             })
             .catch(error => {
                 console.error('Error creating leave:', error);
+                console.error('Error response:', error.response);
+                console.error('Error data:', error.response?.data);
+                
                 if (error.response?.data?.errors) {
                     // Handle validation errors
                     Object.keys(error.response.data.errors).forEach(key => {
+                        console.error('Validation error for', key, ':', error.response.data.errors[key]);
                         alert(error.response.data.errors[key][0]);
                     });
+                } else {
+                    alert('حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.');
                 }
             })
             .finally(() => {
                 this.loading = false;
+                console.log('Leave creation request completed');
             });
         },
         
@@ -551,20 +759,53 @@ export default {
             }
         },
         
-        handleFileClick(event, leave) {
-            // التحقق من أن الملف متاح قبل فتحه
-            if (!leave.leave_file_url) {
-                event.preventDefault();
-                alert('عذراً، لا يمكن الوصول إلى الملف في الوقت الحالي. يرجى المحاولة لاحقاً.');
+        async handleFileClick(event, leave) {
+            event.preventDefault();
+            
+            // التحقق من وجود الملف
+            if (!leave.has_file) {
+                alert('عذراً، لا يوجد ملف مرفق.');
                 return;
             }
             
-            // محاولة فتح الملف في نافذة جديدة
             try {
-                window.open(leave.leave_file_url, '_blank');
+                // إظهار رسالة تحميل
+                const loadingMessage = document.createElement('div');
+                loadingMessage.innerHTML = 'جاري تحميل الملف...';
+                loadingMessage.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #333; color: white; padding: 20px; border-radius: 8px; z-index: 9999;';
+                document.body.appendChild(loadingMessage);
+                
+                // الحصول على signed URL من الخادم
+                const response = await axios.get(route('back.trainees.leaves.file-url', {
+                    trainee_id: this.trainee_id,
+                    id: leave.id
+                }));
+                
+                // إزالة رسالة التحميل
+                document.body.removeChild(loadingMessage);
+                
+                if (response.data && response.data.file_url) {
+                    // فتح الملف في نافذة جديدة
+                    window.open(response.data.file_url, '_blank');
+                } else {
+                    alert('عذراً، لا يمكن الوصول إلى الملف في الوقت الحالي. يرجى المحاولة لاحقاً.');
+                }
             } catch (error) {
-                console.error('Error opening file:', error);
-                alert('عذراً، حدث خطأ أثناء فتح الملف. يرجى المحاولة مرة أخرى.');
+                // إزالة رسالة التحميل في حالة الخطأ
+                const loadingMessage = document.querySelector('div[style*="position: fixed"]');
+                if (loadingMessage) {
+                    document.body.removeChild(loadingMessage);
+                }
+                
+                console.error('Error getting file URL:', error);
+                
+                if (error.response && error.response.status === 404) {
+                    alert('الملف غير موجود.');
+                } else if (error.response && error.response.data && error.response.data.error) {
+                    alert('خطأ: ' + error.response.data.error);
+                } else {
+                    alert('عذراً، حدث خطأ أثناء فتح الملف. يرجى المحاولة مرة أخرى.');
+                }
             }
         }
     }

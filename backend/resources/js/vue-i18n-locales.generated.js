@@ -619,6 +619,9 @@ export default {
             "issue-invoice": "اصدار فاتورة",
             "issue-invoice-trainee": "اصدار فاتورة للمتدرب",
             "issue-invoice-trainee-description": "هنا يمكن لك اصدار فاتورة للمتدرب",
+            "refresh": "تحديث",
+            "invoices-updated-successfully": "تم تحديث الفواتير بنجاح",
+            "error-updating-invoices": "حدث خطأ في تحديث الفواتير",
             "new-invoice": "فاتورة جديدة",
             "expected-invoice-value-per-trainee": "متوقع تكلفة الإشتراك لكل متدرب",
             "month": "شهر",
@@ -735,7 +738,6 @@ export default {
             "receipt-date": "تاريخ الإيصال",
             "history": "التاريخ",
             "day": "اليوم",
-            "refresh": "تحديث",
             "post-trainees": "ترحيل",
             "settle": "سداد",
             "dues": "مستحقات",
@@ -837,6 +839,10 @@ export default {
             "send-report": "تقرير الارسال",
             "reports-count": "عدد التقارير",
             "manage-trainee-groups": "إدارة مجموعات المتدربات",
+            "link-groups": "ربط الشعب",
+            "link-groups-help": "هنا يمكنك ربط كل شعبة بمدرب بشكل دائم. عند ربط شعبة بمدرب، سيتم ربط جميع المتدربين في هذه الشعبة بهذا المدرب تلقائياً.",
+            "no-instructor": "لا يوجد مدرب",
+            "current-instructor": "المدرب الحالي",
             "services": "شؤون المتدربات",
             "services_manager": "مديرون شؤون المتدربات",
             "view-permissions": "عرض الصلاحيات",
@@ -1019,7 +1025,12 @@ export default {
             "back-to-imports": "العودة إلى الاستيرادات",
             "delivery-status": "حالة التسليم",
             "delivered": "تم التسليم",
-            "unknown": "غير معروف"
+            "unknown": "غير معروف",
+            "template-type": "نوع القالب",
+            "default-template": "القالب الافتراضي",
+            "simple-template": "القالب المبسط",
+            "modern-template": "القالب الحديث",
+            "gradient-template": "القالب المتدرج"
         }
     },
     "en": {
@@ -1600,6 +1611,9 @@ export default {
             "issue-monthly-invoices": "Issue Monthly Invoices",
             "issue-invoice": "Issue Invoice",
             "issue-invoice-trainee": "Issue Invoice to Trainee",
+            "refresh": "Refresh",
+            "invoices-updated-successfully": "Invoices updated successfully",
+            "error-updating-invoices": "Error updating invoices",
             "issue-invoice-trainee-description": "Here you can issue a new invoice to trainee based on date",
             "new-invoice": "New Invoice",
             "expected-invoice-value-per-trainee": "Expected invoice value per trainee",
@@ -1710,7 +1724,6 @@ export default {
             "receipt-date": "Receipt date",
             "history": "History",
             "day": "Day",
-            "refresh": "Refresh",
             "post-trainees": "Post trainees",
             "settle": "Settle",
             "dues": "Dues",
@@ -1809,6 +1822,10 @@ export default {
             "send-report": "Send report",
             "reports-count": "Reports count",
             "manage-trainee-groups": "Manage trainee groups",
+            "link-groups": "Link Groups",
+            "link-groups-help": "Here you can link each group to an instructor permanently. When you link a group to an instructor, all trainees in that group will be automatically linked to that instructor.",
+            "no-instructor": "No Instructor",
+            "current-instructor": "Current Instructor",
             "services": "Services",
             "services_manager": "Services Manager",
             "view-permissions": "View Permissions",
@@ -2006,7 +2023,12 @@ export default {
             "back-to-imports": "Back to imports",
             "delivery-status": "Delivery Status",
             "delivered": "Delivered",
-            "unknown": "Unknown"
+            "unknown": "Unknown",
+            "template-type": "Template Type",
+            "default-template": "Default Template",
+            "simple-template": "Simple Template",
+            "modern-template": "Modern Template",
+            "gradient-template": "Gradient Template"
         }
     }
 }

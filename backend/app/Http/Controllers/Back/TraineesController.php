@@ -28,6 +28,7 @@ use App\Models\User;
 use App\Notifications\CustomTraineeNotification;
 use App\Notifications\TraineeApplicationApprovedNotification;
 use App\Notifications\TraineePrivateMessage;
+use App\Services\NoonService;
 use App\Notifications\TraineeRestoredNotification;
 use App\Notifications\TraineeSetupAccountNotification;
 use App\Notifications\TraineeWelcomeNotification;
@@ -179,7 +180,8 @@ class TraineesController extends Controller
         // Get users with specific roles for special document access
         $allowedRoleIds = [
             '209eb897-2385-43c8-970c-279c426c9b30', // مديرون شؤون متدربات
-            '7a9101c7-728f-4653-82f1-e6318359c344'  // شؤون متدربات
+            '7a9101c7-728f-4653-82f1-e6318359c344', // شؤون متدربات
+            '05a1703e-2672-4b6d-866c-20702a00c3a5', // دور إضافي مصرح له
         ];
         
         $allowedUsers = User::whereHas('roles', function($query) use ($allowedRoleIds) {
@@ -676,6 +678,99 @@ class TraineesController extends Controller
         \DB::commit();
 
         return redirect()->back();
+    }
+
+    /**
+     * Display the page for linking trainee groups to instructors.
+     *
+     * @return \Inertia\Response
+     */
+    public function linkGroups()
+    {
+        $traineeGroups = TraineeGroup::withCount('trainees')
+            ->orderBy('name')
+            ->get()
+            ->map(function($group) {
+                // الحصول على instructor_id الأكثر شيوعاً في المجموعة
+                // إذا كان جميع المتدربين لديهم نفس instructor_id، فهذا هو المدرب المربوط بالشعبة
+                $instructorCounts = Trainee::where('trainee_group_id', $group->id)
+                    ->whereNotNull('instructor_id')
+                    ->selectRaw('instructor_id, COUNT(*) as count')
+                    ->groupBy('instructor_id')
+                    ->orderByDesc('count')
+                    ->first();
+
+                if ($instructorCounts && isset($instructorCounts->instructor_id)) {
+                    $instructor = Instructor::select(['id', 'name'])->find($instructorCounts->instructor_id);
+                    $group->current_instructor_id = $instructorCounts->instructor_id;
+                    $group->current_instructor_name = optional($instructor)->name;
+                } else {
+                    // إذا لم يكن هناك مدرب مرتبط، ابحث عن أي متدرب لديه instructor_id
+                    $anyTrainee = Trainee::where('trainee_group_id', $group->id)
+                        ->whereNotNull('instructor_id')
+                        ->with(['instructor' => function($q) {
+                            $q->select(['id', 'name']);
+                        }])
+                        ->first();
+                    
+                    $group->current_instructor_id = optional($anyTrainee)->instructor_id;
+                    $group->current_instructor_name = optional(optional($anyTrainee)->instructor)->name;
+                }
+                
+                return $group;
+            });
+
+        $instructors = Instructor::select(['id', 'name'])->orderBy('name')->get();
+
+        return Inertia::render('Back/Trainees/LinkGroups', [
+            'traineeGroups' => $traineeGroups,
+            'instructors' => $instructors,
+        ]);
+    }
+
+    /**
+     * Store the linking of trainee groups to instructors.
+     * Links all trainees in each group to the assigned instructor permanently.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function storeLinkGroups(Request $request)
+    {
+        $request->validate([
+            'groups' => 'required|array',
+            'groups.*.group_id' => 'required|exists:trainee_groups,id',
+            'groups.*.instructor_id' => 'nullable|exists:instructors,id',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            foreach ($request->groups as $groupData) {
+                $groupId = $groupData['group_id'];
+                $instructorId = $groupData['instructor_id'] ?? null;
+
+                // ربط جميع متدربي هذه الشعبة بالمدرب بشكل دائم
+                if ($instructorId) {
+                    Trainee::where('trainee_group_id', $groupId)
+                        ->update(['instructor_id' => $instructorId]);
+                } else {
+                    // إذا لم يتم تحديد مدرب، إزالة الربط
+                    Trainee::where('trainee_group_id', $groupId)
+                        ->update(['instructor_id' => null]);
+                }
+            }
+
+            DB::commit();
+
+            return redirect()
+                ->route('back.trainees.link-groups')
+                ->with('success', __('words.updated-successfully'));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()
+                ->route('back.trainees.link-groups')
+                ->with('error', 'حدث خطأ أثناء الحفظ: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -1549,6 +1644,88 @@ class TraineesController extends Controller
         } else {
             return redirect()->route('back.trainees.show', $trainee->id)
                 ->with('error', 'Trainee status set to pending approval due to missing optional documents.');
+        }
+    }
+
+    /**
+     * Refresh invoices from Noon payment gateway for a specific trainee
+     *
+     * @param string $trainee_id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function refreshInvoices($trainee_id)
+    {
+        \Log::info("Starting refresh invoices for trainee: {$trainee_id}");
+        
+        $trainee = Trainee::findOrFail($trainee_id);
+        
+        // Get all invoices for this trainee that have payment_reference_id (Noon orders)
+        $invoices = $trainee->invoices()
+            ->whereNotNull('payment_reference_id')
+            ->where('payment_method', Invoice::PAYMENT_METHOD_CREDIT_CARD)
+            ->get();
+
+        \Log::info("Found {$invoices->count()} invoices to check");
+
+        $updatedCount = 0;
+        $errors = [];
+
+        foreach ($invoices as $invoice) {
+            try {
+                // Get order details from Noon
+                $noonService = app(NoonService::class);
+                $order = $noonService->getOrder($invoice->payment_reference_id, 5676); // Try Jasarah first
+                
+                if (is_null($order) || $order->resultCode === 5021 || $order->resultCode === 19089 || $order->resultCode === 19001) {
+                    $order = $noonService->getOrder($invoice->payment_reference_id, 0); // Try Jisr
+                }
+
+                if ($order && $noonService->isPaymentSuccess($order)) {
+                    // Update invoice with latest payment details
+                    $invoice->update([
+                        'payment_detail_method' => $order->result->paymentDetails->mode ?? $invoice->payment_detail_method,
+                        'payment_detail_brand' => $order->result->paymentDetails->brand ?? $invoice->payment_detail_brand,
+                        'status' => Invoice::STATUS_PAID,
+                        'paid_at' => $invoice->paid_at ?? now(),
+                    ]);
+                    $updatedCount++;
+                } elseif ($order) {
+                    // Order exists but payment might have failed
+                    $invoice->update([
+                        'status' => Invoice::STATUS_UNPAID,
+                        'paid_at' => null,
+                    ]);
+                }
+            } catch (\Exception $e) {
+                $errors[] = "Error updating invoice {$invoice->number_formatted}: " . $e->getMessage();
+                \Log::error("Error refreshing invoice {$invoice->id} from Noon", [
+                    'invoice_id' => $invoice->id,
+                    'payment_reference_id' => $invoice->payment_reference_id,
+                    'error' => $e->getMessage()
+                ]);
+            }
+        }
+
+        \Log::info("Refresh completed. Updated: {$updatedCount}, Errors: " . count($errors));
+
+        if ($updatedCount > 0) {
+            return response()->json([
+                'success' => true,
+                'message' => "تم تحديث {$updatedCount} فاتورة بنجاح من نون",
+                'updated_count' => $updatedCount
+            ]);
+        } elseif (count($errors) > 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'حدث خطأ في تحديث بعض الفواتير: ' . implode(', ', $errors),
+                'errors' => $errors
+            ], 400);
+        } else {
+            return response()->json([
+                'success' => true,
+                'message' => 'لا توجد فواتير تحتاج تحديث من نون',
+                'updated_count' => 0
+            ]);
         }
     }
 }

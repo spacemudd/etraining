@@ -146,16 +146,80 @@ class CompanyResignationsController extends Controller
             $trainee->delete();
         }
 
-        // explode emails to array with comma separated and then join both emails_cc and emails_cc
-        $emails_cc = $resignation->emails_cc ? explode(', ', $resignation->emails_cc) : null;
-        $emails_bcc = $resignation->emails_bcc ? explode(', ', $resignation->emails_bcc) : null;
+        // معالجة TO emails
+        $toEmails = [];
+        if (!empty($resignation->emails_to)) {
+            $toEmails = array_filter(array_map('trim', explode(',', $resignation->emails_to)), function($email) {
+                $email = trim($email);
+                return !empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL);
+            });
+        }
 
-        // join emails_cc and emails_cc arrays
-        $emails = array_merge($emails_cc, $emails_bcc);
+        // معالجة CC emails
+        $ccEmails = [];
+        if (!empty($resignation->emails_cc)) {
+            $ccEmails = array_filter(array_map('trim', explode(',', $resignation->emails_cc)), function($email) {
+                $email = trim($email);
+                return !empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL);
+            });
+        }
 
-        Mail::to($resignation->emails_to ? explode(', ', $resignation->emails_to) : null)
-            ->bcc($emails)
-            ->send(new ResignationsMail($resignation));
+        // معالجة BCC emails
+        $bccEmails = [];
+        if (!empty($resignation->emails_bcc)) {
+            $bccEmails = array_filter(array_map('trim', explode(',', $resignation->emails_bcc)), function($email) {
+                $email = trim($email);
+                return !empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL);
+            });
+        }
+
+        // التأكد من وجود مستلمين
+        $totalRecipients = count($toEmails) + count($ccEmails) + count($bccEmails);
+        
+        if ($totalRecipients === 0) {
+            \Log::error('No recipients found for resignation email', [
+                'resignation_id' => $resignation_id,
+                'to_emails' => $toEmails,
+                'cc_emails' => $ccEmails,
+                'bcc_emails' => $bccEmails
+            ]);
+            throw new \Exception('لا توجد عناوين بريد إلكتروني صحيحة للإرسال');
+        }
+
+        // إنشاء instance الإيميل
+        $mailInstance = null;
+        
+        if (!empty($toEmails)) {
+            $mailInstance = Mail::to($toEmails);
+        } else if (!empty($ccEmails)) {
+            // إذا لم تكن هناك TO emails، استخدم أول CC كـ TO
+            $mailInstance = Mail::to($ccEmails[0]);
+            array_shift($ccEmails);
+        } else if (!empty($bccEmails)) {
+            // إذا لم تكن هناك TO أو CC emails، استخدم أول BCC كـ TO
+            $mailInstance = Mail::to($bccEmails[0]);
+            array_shift($bccEmails);
+        }
+        
+        // تحويل جميع CC emails إلى BCC (مخفية تلقائياً)
+        $allBccEmails = array_merge($ccEmails, $bccEmails);
+
+        // إضافة جميع الايميلات كـ BCC مخفية
+        if (!empty($allBccEmails)) {
+            $mailInstance->bcc($allBccEmails);
+        }
+
+        // تسجيل تفاصيل الإرسال
+        \Log::info('Sending resignation email', [
+            'resignation_id' => $resignation_id,
+            'to_count' => count($toEmails),
+            'cc_count' => count($ccEmails),
+            'bcc_count' => count($bccEmails),
+            'total_hidden_emails' => count($allBccEmails),
+            'note' => 'CC emails are automatically converted to BCC (hidden)'
+        ]);
+
+        $mailInstance->send(new ResignationsMail($resignation));
 
         DB::commit();
 

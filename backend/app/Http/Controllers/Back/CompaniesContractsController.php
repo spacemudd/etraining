@@ -7,6 +7,7 @@ use App\Models\Back\Audit;
 use App\Models\Back\Company;
 use App\Models\Back\CompanyContract;
 use App\Models\Back\Instructor;
+use App\Models\Back\Trainee;
 use App\Models\Numbering;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -231,9 +232,10 @@ class CompaniesContractsController extends Controller
 
     /**
      * Attaches instructors to a company's contract.
+     * Automatically links trainees to the instructor when instructor is attached to contract.
      *
      * @param \Illuminate\Http\Request $request
-     * @return Instructor[]
+     * @return CompanyContract
      */
     public function attachInstructor(Request $request)
     {
@@ -242,12 +244,25 @@ class CompaniesContractsController extends Controller
             'company_contract_id' => 'required|exists:company_contracts,id',
         ]);
 
-        $contract = CompanyContract::findOrFail($request->company_contract_id);
-        $contract->instructors()->attach([$request->instructor_id]);
+        DB::beginTransaction();
+        try {
+            $contract = CompanyContract::findOrFail($request->company_contract_id);
+            $contract->instructors()->attach([$request->instructor_id]);
 
-        $contract->load('instructors');
+            // ربط تلقائي للمتدربين: ربط جميع متدربي الشركة الذين ليس لهم مدرب بالمدرب الجديد
+            // This ensures trainees can see courses immediately without manual linking
+            Trainee::where('company_id', $contract->company_id)
+                ->whereNull('instructor_id') // فقط الذين ليس لهم مدرب حالياً
+                ->update(['instructor_id' => $request->instructor_id]);
 
-        return $contract;
+            DB::commit();
+
+            $contract->load('instructors');
+            return $contract;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
     /**
