@@ -75,6 +75,18 @@ class NoonService implements PaymentServiceInterface
         return NoonPaymentService::getInstance()->getOrder($order_id, $center_id);
     }
 
+    /**
+     * Get order(s) by reference (invoice ID)
+     *
+     * @param string $reference The invoice ID used as reference
+     * @param int $center_id The center ID (5676 for Jasarah, 0 for Jisr)
+     * @return mixed
+     */
+    public function getOrderByReference($reference, $center_id)
+    {
+        return NoonPaymentService::getInstance()->getOrderByReference($reference, $center_id);
+    }
+
     public function isOrderSuccessful(string $order_id, $center_id): bool
     {
         $order = $this->getOrder($order_id, $center_id);

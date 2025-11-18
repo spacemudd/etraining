@@ -40,6 +40,11 @@ class NoonPaymentService
         return json_decode(CurlHelper::get(config("noon_payment." . ($center_id == 5676 ? 'jasarah' : 'jisr') . ".payment_api") . "order/" . $orderId, $this->getHeaders($center_id)));
     }
 
+    public function getOrderByReference($reference, $center_id)
+    {
+        return json_decode(CurlHelper::get(config("noon_payment." . ($center_id == 5676 ? 'jasarah' : 'jisr') . ".payment_api") . "order/reference/" . $reference, $this->getHeaders($center_id)));
+    }
+
     private function getHeaders($centerId)
     {
         return [
