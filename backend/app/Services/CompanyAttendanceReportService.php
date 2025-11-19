@@ -281,28 +281,30 @@ class CompanyAttendanceReportService
             return trim($email);
         })->toArray();
 
-        // معالجة CC emails
-        $ccEmails = $report->emails_cc()->pluck('email')->filter(function($email) {
+        // معالجة CC emails (BCC في الواقع)
+        $bccEmails = $report->emails_cc()->pluck('email')->filter(function($email) {
             return !empty(trim($email)) && filter_var(trim($email), FILTER_VALIDATE_EMAIL);
         })->map(function($email) {
             return trim($email);
         })->toArray();
 
-        // معالجة BCC emails
-        $bccEmails = $report->emails_bcc()->pluck('email')->filter(function($email) {
+        // معالجة BCC emails - دمج مع CC المحول
+        $existingBccEmails = $report->emails_bcc()->pluck('email')->filter(function($email) {
             return !empty(trim($email)) && filter_var(trim($email), FILTER_VALIDATE_EMAIL);
         })->map(function($email) {
             return trim($email);
         })->toArray();
+
+        // دمج CC المحول مع BCC الموجود
+        $bccEmails = array_merge($bccEmails, $existingBccEmails);
 
         // التأكد من وجود مستلمين
-        $totalRecipients = count($toEmails) + count($ccEmails) + count($bccEmails);
+        $totalRecipients = count($toEmails) + count($bccEmails);
         
         if ($totalRecipients === 0) {
             \Log::error('No recipients found for attendance report email (Service)', [
                 'report_id' => $report->id,
                 'to_emails' => $toEmails,
-                'cc_emails' => $ccEmails,
                 'bcc_emails' => $bccEmails
             ]);
             throw new \Exception('لا توجد عناوين بريد إلكتروني صحيحة للإرسال');
@@ -313,19 +315,10 @@ class CompanyAttendanceReportService
         
         if (!empty($toEmails)) {
             $mailInstance = Mail::to($toEmails);
-        } else if (!empty($ccEmails)) {
-            // إذا لم تكن هناك TO emails، استخدم أول CC كـ TO
-            $mailInstance = Mail::to($ccEmails[0]);
-            array_shift($ccEmails);
         } else if (!empty($bccEmails)) {
-            // إذا لم تكن هناك TO أو CC emails، استخدم أول BCC كـ TO
+            // إذا لم تكن هناك TO emails، استخدم أول BCC كـ TO
             $mailInstance = Mail::to($bccEmails[0]);
             array_shift($bccEmails);
-        }
-        
-        // إضافة CC emails - استخدام مصفوفة واحدة
-        if (!empty($ccEmails)) {
-            $mailInstance->cc($ccEmails);
         }
         
         // إضافة BCC emails - استخدام مصفوفة واحدة بدلاً من loop
@@ -337,8 +330,9 @@ class CompanyAttendanceReportService
         \Log::info('Sending attendance report email (Service)', [
             'report_id' => $report->id,
             'to_count' => count($toEmails),
-            'cc_count' => count($ccEmails),
-            'bcc_count' => count($bccEmails)
+            'bcc_count' => count($bccEmails),
+            'to_emails' => $toEmails,
+            'bcc_emails' => $bccEmails
         ]);
 
         $mailInstance->send(new CompanyAttendanceReportMail($report->id));
