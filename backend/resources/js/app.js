@@ -70,21 +70,17 @@ Vue.use(DateTimePickerPlugin);
 Vue.directive('can', function (el, binding) {
     let permissions = document.head.querySelector('meta[name="user-permissions"]');
 
-    if (permissions) {
-        return permissions.content.indexOf(binding) !== -1;
-    }
-
-    return false;
-})
-
-Vue.directive('can', function (el, binding) {
-    let permissions = document.head.querySelector('meta[name="user-permissions"]');
-
-    if(permissions.content.indexOf(binding.value) == -1){
+    if (!permissions) {
         el.style.display = 'none';
+        return false;
     }
 
-    return permissions.content.indexOf(binding.value) !== -1;
+    if (permissions.content.indexOf(binding.value) == -1) {
+        el.style.display = 'none';
+        return false;
+    }
+
+    return true;
 });
 
 const app = document.getElementById('app');
