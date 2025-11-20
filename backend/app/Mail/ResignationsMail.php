@@ -39,7 +39,7 @@ class ResignationsMail extends Mailable
         $this->attachResignationFile();
 
         return $this
-            ->subject('(#'.$this->resignation->number.') انسحاب متدربة - '.$this->resignation->company->name_ar)
+            ->subject('(#'.$this->resignation->number.') إيقاف برنامج - '.$this->resignation->company->name_ar)
             ->markdown('emails.resignations');
     }
 
