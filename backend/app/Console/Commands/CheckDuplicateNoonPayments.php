@@ -19,6 +19,13 @@ class CheckDuplicateNoonPayments extends Command
     protected $signature = 'noon:check-duplicate-payments';
 
     /**
+     * File path for the results file
+     *
+     * @var string
+     */
+    private $resultsFilePath;
+
+    /**
      * The console command description.
      *
      * @var string
@@ -47,10 +54,9 @@ class CheckDuplicateNoonPayments extends Command
         $startDate = Carbon::create(2025, 10, 1)->startOfDay();
         $this->info("Checking invoices created on or after: {$startDate->toDateString()}");
 
-        // Query invoices from October 1, 2025 (limited to 2 for testing)
+        // Query invoices from October 1, 2025
         $invoices = Invoice::withoutGlobalScopes()
             ->where('created_at', '>=', $startDate)
-            ->limit(2)
             ->get();
 
         $this->info("Found {$invoices->count()} invoices to check");
@@ -61,7 +67,11 @@ class CheckDuplicateNoonPayments extends Command
         }
 
         $noonService = app()->make(NoonService::class);
-        $duplicates = [];
+        $duplicateCount = 0;
+        
+        // Initialize file and write headers
+        $fileHandle = $this->initializeResultsFile($startDate);
+        
         $bar = $this->output->createProgressBar($invoices->count());
         $bar->start();
 
@@ -71,12 +81,8 @@ class CheckDuplicateNoonPayments extends Command
                 
                 if (count($successfulOrders) > 1) {
                     foreach ($successfulOrders as $order) {
-                        $duplicates[] = [
-                            'invoice_id' => $invoice->id,
-                            'order_id' => $order['order_id'],
-                            'amount' => $order['amount'],
-                            'date' => $order['date'],
-                        ];
+                        $this->writeDuplicateToFile($fileHandle, $invoice->id, $order);
+                        $duplicateCount++;
                     }
                 }
             } catch (\Exception $e) {
@@ -93,14 +99,16 @@ class CheckDuplicateNoonPayments extends Command
         $bar->finish();
         $this->newLine(2);
 
-        // Save results to file (always create file, even if no duplicates found)
-        $this->saveResultsToFile($duplicates, $startDate);
+        // Finalize file
+        $filePath = $this->finalizeResultsFile($fileHandle, $duplicateCount);
         
-        if (count($duplicates) > 0) {
-            $this->info("Found " . count($duplicates) . " duplicate payment entries.");
+        if ($duplicateCount > 0) {
+            $this->info("Found {$duplicateCount} duplicate payment entries.");
         } else {
             $this->info("No duplicate payments found.");
         }
+        
+        $this->info("Results saved to: {$filePath}");
 
         return 0;
     }
@@ -221,13 +229,12 @@ class CheckDuplicateNoonPayments extends Command
     }
 
     /**
-     * Save duplicate payment results to file
+     * Initialize results file and write headers
      *
-     * @param array $duplicates
      * @param Carbon $startDate
-     * @return void
+     * @return resource File handle
      */
-    private function saveResultsToFile(array $duplicates, Carbon $startDate): void
+    private function initializeResultsFile(Carbon $startDate)
     {
         // Ensure directory exists
         $directory = 'invoice';
@@ -237,36 +244,65 @@ class CheckDuplicateNoonPayments extends Command
 
         $timestamp = now()->format('Y_m_d_His');
         $filename = "duplicate_payments_{$timestamp}.txt";
-        $filepath = "{$directory}/{$filename}";
+        $this->resultsFilePath = storage_path("app/{$directory}/{$filename}");
 
-        // Build file content
-        $content = "Duplicate Noon Payments Report\n";
-        $content .= "Generated: " . now()->toDateTimeString() . "\n";
-        $content .= "Date Range: From {$startDate->toDateString()}\n";
-        $content .= "Total Duplicate Entries: " . count($duplicates) . "\n";
-        $content .= str_repeat("=", 80) . "\n\n";
+        $fileHandle = fopen($this->resultsFilePath, 'w');
 
-        if (count($duplicates) > 0) {
-            $content .= sprintf("%-40s %-25s %-15s %-15s\n", "Invoice ID", "Order ID", "Amount", "Date");
-            $content .= str_repeat("-", 80) . "\n";
+        // Write headers
+        fwrite($fileHandle, "Duplicate Noon Payments Report\n");
+        fwrite($fileHandle, "Generated: " . now()->toDateTimeString() . "\n");
+        fwrite($fileHandle, "Date Range: From {$startDate->toDateString()}\n");
+        fwrite($fileHandle, "Total Duplicate Entries: (counting...)\n");
+        fwrite($fileHandle, str_repeat("=", 80) . "\n\n");
+        fwrite($fileHandle, sprintf("%-40s %-25s %-15s %-15s\n", "Invoice ID", "Order ID", "Amount", "Date"));
+        fwrite($fileHandle, str_repeat("-", 80) . "\n");
 
-            foreach ($duplicates as $duplicate) {
-                $content .= sprintf(
-                    "%-40s %-25s %-15s %-15s\n",
-                    $duplicate['invoice_id'],
-                    $duplicate['order_id'] ?? 'N/A',
-                    number_format($duplicate['amount'], 2),
-                    $duplicate['date']
-                );
-            }
-        } else {
-            $content .= "No duplicate payments found for the checked invoices.\n";
+        return $fileHandle;
+    }
+
+    /**
+     * Write a duplicate entry to the file
+     *
+     * @param resource $fileHandle
+     * @param string $invoiceId
+     * @param array $order
+     * @return void
+     */
+    private function writeDuplicateToFile($fileHandle, string $invoiceId, array $order): void
+    {
+        fwrite($fileHandle, sprintf(
+            "%-40s %-25s %-15s %-15s\n",
+            $invoiceId,
+            $order['order_id'] ?? 'N/A',
+            number_format($order['amount'], 2),
+            $order['date']
+        ));
+        fflush($fileHandle); // Flush to disk immediately so it can be watched
+    }
+
+    /**
+     * Finalize results file and update total count
+     *
+     * @param resource $fileHandle
+     * @param int $duplicateCount
+     * @return string Full file path
+     */
+    private function finalizeResultsFile($fileHandle, int $duplicateCount): string
+    {
+        fclose($fileHandle);
+
+        // Update the total count line
+        $content = file_get_contents($this->resultsFilePath);
+        $content = str_replace("Total Duplicate Entries: (counting...)", "Total Duplicate Entries: {$duplicateCount}", $content);
+        
+        // If no duplicates found, add a message
+        if ($duplicateCount === 0) {
+            $content .= "\nNo duplicate payments found for the checked invoices.\n";
         }
 
-        Storage::put($filepath, $content);
+        file_put_contents($this->resultsFilePath, $content);
 
-        $fullPath = storage_path("app/{$filepath}");
-        $this->info("Results saved to: {$fullPath}");
+        return $this->resultsFilePath;
     }
 }
 
