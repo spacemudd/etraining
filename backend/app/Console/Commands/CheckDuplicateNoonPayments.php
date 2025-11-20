@@ -93,9 +93,10 @@ class CheckDuplicateNoonPayments extends Command
         $bar->finish();
         $this->newLine(2);
 
-        // Save results to file
+        // Save results to file (always create file, even if no duplicates found)
+        $this->saveResultsToFile($duplicates, $startDate);
+        
         if (count($duplicates) > 0) {
-            $this->saveResultsToFile($duplicates, $startDate);
             $this->info("Found " . count($duplicates) . " duplicate payment entries.");
         } else {
             $this->info("No duplicate payments found.");
@@ -244,17 +245,22 @@ class CheckDuplicateNoonPayments extends Command
         $content .= "Date Range: From {$startDate->toDateString()}\n";
         $content .= "Total Duplicate Entries: " . count($duplicates) . "\n";
         $content .= str_repeat("=", 80) . "\n\n";
-        $content .= sprintf("%-40s %-25s %-15s %-15s\n", "Invoice ID", "Order ID", "Amount", "Date");
-        $content .= str_repeat("-", 80) . "\n";
 
-        foreach ($duplicates as $duplicate) {
-            $content .= sprintf(
-                "%-40s %-25s %-15s %-15s\n",
-                $duplicate['invoice_id'],
-                $duplicate['order_id'] ?? 'N/A',
-                number_format($duplicate['amount'], 2),
-                $duplicate['date']
-            );
+        if (count($duplicates) > 0) {
+            $content .= sprintf("%-40s %-25s %-15s %-15s\n", "Invoice ID", "Order ID", "Amount", "Date");
+            $content .= str_repeat("-", 80) . "\n";
+
+            foreach ($duplicates as $duplicate) {
+                $content .= sprintf(
+                    "%-40s %-25s %-15s %-15s\n",
+                    $duplicate['invoice_id'],
+                    $duplicate['order_id'] ?? 'N/A',
+                    number_format($duplicate['amount'], 2),
+                    $duplicate['date']
+                );
+            }
+        } else {
+            $content .= "No duplicate payments found for the checked invoices.\n";
         }
 
         Storage::put($filepath, $content);
