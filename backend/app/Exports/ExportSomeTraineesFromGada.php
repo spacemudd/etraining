@@ -26,7 +26,7 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
         // })->get();
 
 
-        $trainees = Trainee::onlyTrashed()
+        $trainees = Trainee::withTrashed()
             ->where('educational_level_id', '3a995aa0-94aa-4081-97d2-2e4c559cea22')
             ->where('city_id', 'e5a4a741-302f-44fa-8c44-06df64e68b6d')
             ->where('status', '!=', '2')
