@@ -26,15 +26,19 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
         // })->get();
 
 
-        $trainees=Trainee::onlyTrashed()->where('educational_level_id','3a995aa0-94aa-4081-97d2-2e4c559cea22')->where('city_id','e5a4a741-302f-44fa-8c44-06df64e68b6d')->where('status','!=','2')->get();
-            
+        $trainees = Trainee::onlyTrashed()
+            ->where('educational_level_id', '3a995aa0-94aa-4081-97d2-2e4c559cea22')
+            ->where('city_id', 'e5a4a741-302f-44fa-8c44-06df64e68b6d')
+            ->where('status', '!=', '2')
+            ->with('company') // إضافة eager loading لتجنب N+1 problem
+            ->get();
 
         return $trainees->map(function ($trainee) {
             return [
-                'name' => $trainee->name,
-                'phone' => $trainee->phone,
-                'company' => $trainee->company->name_ar,
-                'identity_number' => $trainee->identity_number,
+                'identity_number' => $trainee->identity_number, // الهوية
+                'company' => $trainee->company?->name_ar ?? 'غير محدد', // الشركة - استخدام null-safe operator
+                'phone' => $trainee->phone, // الجوال
+                'name' => $trainee->name, // الإسم
             ];
         });
     }
