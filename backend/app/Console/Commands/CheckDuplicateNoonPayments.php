@@ -47,9 +47,10 @@ class CheckDuplicateNoonPayments extends Command
         $startDate = Carbon::create(2025, 10, 1)->startOfDay();
         $this->info("Checking invoices created on or after: {$startDate->toDateString()}");
 
-        // Query invoices from October 1, 2025
+        // Query invoices from October 1, 2025 (limited to 2 for testing)
         $invoices = Invoice::withoutGlobalScopes()
             ->where('created_at', '>=', $startDate)
+            ->limit(2)
             ->get();
 
         $this->info("Found {$invoices->count()} invoices to check");
@@ -113,7 +114,7 @@ class CheckDuplicateNoonPayments extends Command
     private function checkInvoiceForDuplicatePayments(Invoice $invoice, NoonService $noonService): array
     {
         $successfulOrders = [];
-        $centers = [5676, 0]; // Jasarah first, then Jisr
+        $centers = [5676]; // Jasarah only
 
         foreach ($centers as $centerId) {
             try {
