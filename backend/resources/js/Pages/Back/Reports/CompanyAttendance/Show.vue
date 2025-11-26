@@ -509,6 +509,11 @@ export default {
             this.templateForm.template_type = templateType;
         },
         updateTemplate() {
+            // التأكد من أن القيمة موجودة
+            if (!this.templateForm.template_type) {
+                this.templateForm.template_type = 'default';
+            }
+            
             this.templateForm.patch(route('back.reports.company-attendance.update-template', this.report.id), {
                 preserveScroll: true,
                 onSuccess: () => {
@@ -517,6 +522,7 @@ export default {
                 },
                 onError: (errors) => {
                     console.error('Template update failed:', errors);
+                    console.error('Template form data:', this.templateForm.data());
                     alert('حدث خطأ في تحديث القالب. يرجى المحاولة مرة أخرى.');
                 }
             });

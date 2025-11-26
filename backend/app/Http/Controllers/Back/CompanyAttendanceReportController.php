@@ -273,7 +273,7 @@ class CompanyAttendanceReportController extends Controller
             'period' => 'nullable',
             'with_attendance_times' => 'nullable|boolean',
             'with_logo' => 'nullable|boolean',
-            'template_type' => 'nullable|in:default,simple,modern,gradient,classic',
+            'template_type' => 'nullable|in:default,simple,modern,gradient,classic,royal',
         ]);
 
         $report = CompanyAttendanceReport::findOrFail($id);
@@ -559,16 +559,17 @@ public function updateTemplate($id, Request $request)
     ]);
 
     $report = CompanyAttendanceReport::findOrFail($id);
-    $templateType = $request->template_type;
+    $templateType = $request->input('template_type');
     
-    // التأكد من أن القيمة صحيحة
-    if (!in_array($templateType, ['default', 'simple', 'modern', 'gradient', 'classic', 'royal'])) {
+    // تنظيف القيمة والتأكد من أنها صحيحة
+    $templateType = trim($templateType);
+    if (empty($templateType) || !in_array($templateType, ['default', 'simple', 'modern', 'gradient', 'classic', 'royal'])) {
         $templateType = 'default';
     }
     
-    $report->update([
-        'template_type' => $templateType,
-    ]);
+    // تحديث القيمة مباشرة
+    $report->template_type = $templateType;
+    $report->save();
 
     return redirect()->route('back.reports.company-attendance.show', $id)
         ->with('success', 'تم تحديث القالب بنجاح إلى: ' . $this->getTemplateName($templateType));
