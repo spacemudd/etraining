@@ -18,20 +18,20 @@
         
         body {
             font-family: 'Arial', 'Tahoma', sans-serif;
-            background: #EFE8D8;
-            color: #0C2D66;
+            background: #0C2D66;
+            color: #FFFFFF;
             line-height: 1.4;
             padding: 20px;
         }
         
         .container {
-            background: #EFE8D8;
+            background: #0C2D66;
             border: 3px solid #E2C044;
             border-radius: 12px;
             padding: 25px;
             margin: 0 auto;
             max-width: 1400px;
-            box-shadow: 0 8px 24px rgba(12, 45, 102, 0.3);
+            box-shadow: 0 8px 24px rgba(12, 45, 102, 0.5);
         }
         
         .header {
@@ -61,23 +61,23 @@
             font-size: 28px;
             margin-bottom: 8px;
             font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            color: #E2C044 !important;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            color: #FFFFFF !important;
         }
         
         .header p {
             font-size: 16px;
-            color: #EFE8D8 !important;
+            color: #FFFFFF !important;
             font-weight: 300;
         }
         
         .company-info {
-            background: #EFE8D8;
+            background: linear-gradient(135deg, #0C2D66 0%, #1a4a8a 100%);
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 25px;
             border: 2px solid #E2C044;
-            box-shadow: 0 4px 8px rgba(12, 45, 102, 0.15);
+            box-shadow: 0 4px 8px rgba(226, 192, 68, 0.3);
             page-break-after: avoid;
             position: relative;
         }
@@ -89,19 +89,19 @@
             top: 0;
             bottom: 0;
             width: 5px;
-            background: linear-gradient(180deg, #0C2D66 0%, #E2C044 100%);
+            background: linear-gradient(180deg, #E2C044 0%, #f4d76e 100%);
         }
         
         .company-name {
             font-size: 24px;
             font-weight: bold;
-            color: #0C2D66 !important;
+            color: #FFFFFF !important;
             margin-bottom: 8px;
-            text-shadow: 1px 1px 2px rgba(12, 45, 102, 0.1);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
         
         .company-subtitle {
-            color: #1a4a8a !important;
+            color: #E2C044 !important;
             font-size: 16px;
             font-weight: 500;
         }
@@ -115,12 +115,12 @@
         }
         
         .detail-card {
-            background: #EFE8D8;
+            background: linear-gradient(135deg, #0C2D66 0%, #1a4a8a 100%);
             border: 2px solid #E2C044;
             padding: 18px;
             border-radius: 8px;
             text-align: center;
-            box-shadow: 0 3px 8px rgba(12, 45, 102, 0.15);
+            box-shadow: 0 3px 8px rgba(226, 192, 68, 0.3);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -133,12 +133,12 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: linear-gradient(90deg, #0C2D66 0%, #E2C044 50%, #0C2D66 100%);
+            background: linear-gradient(90deg, #E2C044 0%, #f4d76e 50%, #E2C044 100%);
         }
         
         .detail-label {
             font-weight: bold;
-            color: #0C2D66 !important;
+            color: #FFFFFF !important;
             font-size: 12px;
             margin-bottom: 8px;
             text-transform: uppercase;
@@ -148,8 +148,8 @@
         .detail-value {
             font-size: 20px;
             font-weight: bold;
-            color: #0C2D66 !important;
-            text-shadow: 1px 1px 2px rgba(12, 45, 102, 0.1);
+            color: #E2C044 !important;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
         
         .attendance-table {
@@ -179,11 +179,11 @@
             padding: 10px 4px;
             text-align: center;
             border: 1px solid #E2C044;
-            background: #EFE8D8;
+            background: #1a4a8a;
             font-size: 10px;
             vertical-align: middle;
             page-break-inside: avoid;
-            color: #0C2D66 !important;
+            color: #FFFFFF !important;
         }
         
         .attendance-table tr {
@@ -191,19 +191,19 @@
         }
         
         .attendance-table tr:nth-child(even) td {
-            background: #f5efe5;
+            background: #0C2D66;
         }
         
         .employee-name {
             font-weight: bold;
-            color: #0C2D66 !important;
+            color: #FFFFFF !important;
             font-size: 12px;
             margin-bottom: 3px;
             line-height: 1.3;
         }
         
         .employee-id {
-            color: #1a4a8a !important;
+            color: #E2C044 !important;
             font-size: 9px;
             line-height: 1.2;
         }
@@ -268,7 +268,7 @@
         }
         
         .footer p {
-            color: #E2C044 !important;
+            color: #FFFFFF !important;
             font-size: 12px;
             margin: 0;
             font-weight: 500;
@@ -277,7 +277,7 @@
         /* تحسينات الطباعة والتقسيم */
         @media print {
             body {
-                background: #EFE8D8;
+                background: #0C2D66;
                 padding: 0;
                 margin: 0;
             }
@@ -288,6 +288,7 @@
                 margin: 0;
                 padding: 10px;
                 max-width: none;
+                background: #0C2D66 !important;
             }
             
             .header {
@@ -338,13 +339,15 @@
             
             .attendance-table td {
                 page-break-inside: avoid;
-                background: #EFE8D8 !important;
+                background: #1a4a8a !important;
+                color: #FFFFFF !important;
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
             }
             
             .attendance-table tr:nth-child(even) td {
-                background: #f5efe5 !important;
+                background: #0C2D66 !important;
+                color: #FFFFFF !important;
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
             }

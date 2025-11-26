@@ -18,20 +18,20 @@
         
         body {
             font-family: 'Arial', 'Tahoma', sans-serif;
-            background: #EFE8D8;
-            color: #0C2D66;
+            background: #0C2D66;
+            color: #FFFFFF;
             line-height: 1.4;
             padding: 20px;
         }
         
         .container {
-            background: #EFE8D8;
+            background: #0C2D66;
             border: 3px solid #E2C044;
             border-radius: 12px;
             padding: 25px;
             margin: 0 auto;
             max-width: 1400px;
-            box-shadow: 0 8px 24px rgba(12, 45, 102, 0.3);
+            box-shadow: 0 8px 24px rgba(12, 45, 102, 0.5);
         }
         
         .header {
@@ -60,23 +60,23 @@
             font-size: 28px;
             margin-bottom: 8px;
             font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            color: #E2C044 !important;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            color: #FFFFFF !important;
         }
         
         .header p {
             font-size: 16px;
-            color: #EFE8D8 !important;
+            color: #FFFFFF !important;
             font-weight: 300;
         }
         
         .employee-card {
-            background: #EFE8D8;
+            background: linear-gradient(135deg, #0C2D66 0%, #1a4a8a 100%);
             padding: 25px;
             border-radius: 8px;
             margin-bottom: 25px;
             border: 2px solid #E2C044;
-            box-shadow: 0 4px 8px rgba(12, 45, 102, 0.15);
+            box-shadow: 0 4px 8px rgba(226, 192, 68, 0.3);
             position: relative;
         }
         
@@ -87,15 +87,15 @@
             top: 0;
             bottom: 0;
             width: 5px;
-            background: linear-gradient(180deg, #0C2D66 0%, #E2C044 100%);
+            background: linear-gradient(180deg, #E2C044 0%, #f4d76e 100%);
         }
         
         .employee-name {
             font-size: 26px;
             font-weight: bold;
-            color: #0C2D66 !important;
+            color: #FFFFFF !important;
             margin-bottom: 15px;
-            text-shadow: 1px 1px 2px rgba(12, 45, 102, 0.1);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
         
         .employee-details {
@@ -105,33 +105,33 @@
         }
         
         .employee-detail {
-            background: #f5efe5;
+            background: rgba(26, 74, 138, 0.5);
             padding: 12px 15px;
             border-radius: 6px;
             font-size: 14px;
             border: 2px solid #E2C044;
-            color: #0C2D66 !important;
+            color: #FFFFFF !important;
             font-weight: 500;
         }
         
         .company-info {
-            background: #EFE8D8;
+            background: linear-gradient(135deg, #0C2D66 0%, #1a4a8a 100%);
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 25px;
             border: 2px solid #E2C044;
-            box-shadow: 0 4px 8px rgba(12, 45, 102, 0.15);
+            box-shadow: 0 4px 8px rgba(226, 192, 68, 0.3);
         }
         
         .company-name {
             font-size: 20px;
             font-weight: bold;
-            color: #0C2D66 !important;
+            color: #FFFFFF !important;
             margin-bottom: 8px;
         }
         
         .company-subtitle {
-            color: #1a4a8a !important;
+            color: #E2C044 !important;
             font-size: 16px;
             font-weight: 500;
         }
@@ -144,12 +144,12 @@
         }
         
         .detail-card {
-            background: #EFE8D8;
+            background: linear-gradient(135deg, #0C2D66 0%, #1a4a8a 100%);
             border: 2px solid #E2C044;
             padding: 18px;
             border-radius: 8px;
             text-align: center;
-            box-shadow: 0 3px 8px rgba(12, 45, 102, 0.15);
+            box-shadow: 0 3px 8px rgba(226, 192, 68, 0.3);
             position: relative;
             overflow: hidden;
         }
@@ -161,12 +161,12 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: linear-gradient(90deg, #0C2D66 0%, #E2C044 50%, #0C2D66 100%);
+            background: linear-gradient(90deg, #E2C044 0%, #f4d76e 50%, #E2C044 100%);
         }
         
         .detail-label {
             font-weight: bold;
-            color: #0C2D66 !important;
+            color: #FFFFFF !important;
             font-size: 12px;
             margin-bottom: 8px;
             text-transform: uppercase;
@@ -176,8 +176,8 @@
         .detail-value {
             font-size: 20px;
             font-weight: bold;
-            color: #0C2D66 !important;
-            text-shadow: 1px 1px 2px rgba(12, 45, 102, 0.1);
+            color: #E2C044 !important;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
         
         .attendance-table {
@@ -205,13 +205,13 @@
             padding: 14px 10px;
             text-align: center;
             border: 1px solid #E2C044;
-            background: #EFE8D8;
+            background: #1a4a8a;
             font-size: 13px;
-            color: #0C2D66 !important;
+            color: #FFFFFF !important;
         }
         
         .attendance-table tr:nth-child(even) td {
-            background: #f5efe5;
+            background: #0C2D66;
         }
         
         .attendance-mark {
@@ -257,20 +257,20 @@
         
         .summary-section {
             margin-top: 25px;
-            background: #EFE8D8;
+            background: linear-gradient(135deg, #0C2D66 0%, #1a4a8a 100%);
             padding: 25px;
             border-radius: 8px;
             border: 2px solid #E2C044;
-            box-shadow: 0 4px 8px rgba(12, 45, 102, 0.15);
+            box-shadow: 0 4px 8px rgba(226, 192, 68, 0.3);
         }
         
         .summary-title {
             font-size: 20px;
             font-weight: bold;
-            color: #0C2D66 !important;
+            color: #FFFFFF !important;
             margin-bottom: 20px;
             text-align: center;
-            text-shadow: 1px 1px 2px rgba(12, 45, 102, 0.1);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
         
         .summary-stats {
@@ -280,12 +280,12 @@
         }
         
         .stat-item {
-            background: #f5efe5;
+            background: rgba(26, 74, 138, 0.5);
             padding: 20px;
             border-radius: 8px;
             text-align: center;
             border: 2px solid #E2C044;
-            box-shadow: 0 3px 6px rgba(12, 45, 102, 0.1);
+            box-shadow: 0 3px 6px rgba(226, 192, 68, 0.2);
         }
         
         .stat-number {
@@ -294,14 +294,14 @@
             margin-bottom: 8px;
         }
         
-        .stat-present { color: #0C2D66 !important; }
-        .stat-absent { color: #c0392b !important; }
-        .stat-vacation { color: #d68910 !important; }
-        .stat-total { color: #0C2D66 !important; }
+        .stat-present { color: #E2C044 !important; }
+        .stat-absent { color: #ff6b6b !important; }
+        .stat-vacation { color: #feca57 !important; }
+        .stat-total { color: #E2C044 !important; }
         
         .stat-label {
             font-size: 13px;
-            color: #0C2D66 !important;
+            color: #FFFFFF !important;
             font-weight: bold;
         }
         
@@ -323,7 +323,7 @@
         }
         
         .footer p {
-            color: #E2C044 !important;
+            color: #FFFFFF !important;
             font-size: 12px;
             margin: 0;
             font-weight: 500;
@@ -332,7 +332,7 @@
         /* تحسينات الطباعة */
         @media print {
             body {
-                background: #EFE8D8;
+                background: #0C2D66;
                 padding: 0;
             }
             
@@ -341,6 +341,7 @@
                 border: 2px solid #E2C044;
                 margin: 0;
                 padding: 15px;
+                background: #0C2D66 !important;
             }
             
             .present, .absent, .vacation {
@@ -361,13 +362,15 @@
             }
             
             .attendance-table td {
-                background: #EFE8D8 !important;
+                background: #1a4a8a !important;
+                color: #FFFFFF !important;
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
             }
             
             .attendance-table tr:nth-child(even) td {
-                background: #f5efe5 !important;
+                background: #0C2D66 !important;
+                color: #FFFFFF !important;
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
             }
@@ -473,7 +476,7 @@
                         <td class="col-status">
                             @if ($day['vacation_day'])
                                 @if ($record->start_date && $day['date_carbon']->isAfter($record->end_date))
-                                    <span style="color: #1a4a8a;">-</span>
+                                    <span style="color: #E2C044;">-</span>
                                 @else
                                     <span class="attendance-mark vacation">X</span>
                                 @endif
@@ -485,7 +488,7 @@
                                         @if ($record->status === 'new_registration')
                                             <span class="attendance-mark absent">✗</span>
                                         @else
-                                            <span style="color: #1a4a8a;">-</span>
+                                            <span style="color: #E2C044;">-</span>
                                         @endif
                                     @endif
                                 @else
@@ -496,23 +499,23 @@
                         <td class="col-notes">
                             @if ($day['vacation_day'])
                                 @if ($record->start_date && $day['date_carbon']->isAfter($record->end_date))
-                                    <span style="color: #1a4a8a;">بعد الاستقالة</span>
+                                    <span style="color: #E2C044;">بعد الاستقالة</span>
                                 @else
-                                    <span style="color: #d68910; font-weight: bold;">عطلة أسبوعية</span>
+                                    <span style="color: #feca57; font-weight: bold;">عطلة أسبوعية</span>
                                 @endif
                             @else
                                 @if ($record->start_date)
                                     @if ($day['date_carbon']->isBetween($record->start_date, $record->end_date))
-                                        <span style="color: #0C2D66; font-weight: bold;">حضور</span>
+                                        <span style="color: #E2C044; font-weight: bold;">حضور</span>
                                     @else
                                         @if ($record->status === 'new_registration')
-                                            <span style="color: #c0392b; font-weight: bold;">غياب</span>
+                                            <span style="color: #ff6b6b; font-weight: bold;">غياب</span>
                                         @else
-                                            <span style="color: #1a4a8a;">قبل الالتحاق</span>
+                                            <span style="color: #E2C044;">قبل الالتحاق</span>
                                         @endif
                                     @endif
                                 @else
-                                    <span style="color: #0C2D66; font-weight: bold;">حضور</span>
+                                    <span style="color: #E2C044; font-weight: bold;">حضور</span>
                                 @endif
                             @endif
                         </td>
