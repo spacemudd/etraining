@@ -555,14 +555,14 @@ class CompanyAttendanceReportController extends Controller
 public function updateTemplate($id, Request $request)
 {
     $request->validate([
-        'template_type' => 'required|in:default,simple,modern,gradient,classic',
+        'template_type' => 'required|in:default,simple,modern,gradient,classic,royal',
     ]);
 
     $report = CompanyAttendanceReport::findOrFail($id);
     $templateType = $request->template_type;
     
     // التأكد من أن القيمة صحيحة
-    if (!in_array($templateType, ['default', 'simple', 'modern', 'gradient', 'classic'])) {
+    if (!in_array($templateType, ['default', 'simple', 'modern', 'gradient', 'classic', 'royal'])) {
         $templateType = 'default';
     }
     
@@ -585,6 +585,8 @@ private function getTemplateName($templateType)
             return 'القالب المتدرج';
         case 'classic':
             return 'القالب الكلاسيكي';
+        case 'royal':
+            return 'القالب الملكي';
         default:
             return 'القالب الافتراضي';
     }

@@ -92,7 +92,7 @@
         <div class="mt-10 container px-6 mx-auto">
             <div class="bg-white border border-gray-200 rounded-lg p-6">
                 <h3 class="text-lg font-semibold mb-4">إعدادات القالب</h3>
-                <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
                     <div class="border rounded-lg p-4 cursor-pointer transition-all duration-200"
                          :class="templateForm.template_type === 'default' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'"
                          @click="selectTemplate('default')">
@@ -160,6 +160,20 @@
                             </div>
                             <h4 class="font-medium text-gray-900">القالب الكلاسيكي</h4>
                             <p class="text-sm text-gray-500 mt-1">تصميم كلاسيكي واضح ومنظم</p>
+                        </div>
+                    </div>
+                    
+                    <div class="border rounded-lg p-4 cursor-pointer transition-all duration-200"
+                         :class="templateForm.template_type === 'royal' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'"
+                         @click="selectTemplate('royal')">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto mb-2 bg-gradient-to-br from-blue-900 to-blue-700 rounded-lg flex items-center justify-center border-2 border-yellow-400 shadow-lg">
+                                <svg class="w-6 h-6 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2L9 8l-7 1 5 5-1 7 6-3 6 3-1-7 5-5-7-1L12 2z"/>
+                                </svg>
+                            </div>
+                            <h4 class="font-medium text-gray-900">القالب الملكي</h4>
+                            <p class="text-sm text-gray-500 mt-1">تصميم ملكي فاخر بألوان ملكية</p>
                         </div>
                     </div>
                 </div>

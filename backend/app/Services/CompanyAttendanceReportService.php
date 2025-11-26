@@ -380,6 +380,9 @@ class CompanyAttendanceReportService
             case 'classic':
                 $view = 'pdf.company-attendance-report.special-company-classic';
                 break;
+            case 'royal':
+                $view = 'pdf.company-attendance-report.special-company-royal';
+                break;
             default:
                 $view = $report->activeTraineesCount() > 8 ? 'pdf.company-attendance-report.show' : 'pdf.company-attendance-report.one-table';
                 break;
@@ -486,6 +489,9 @@ class CompanyAttendanceReportService
                 break;
             case 'classic':
                 $view = 'pdf.company-attendance-report.special-company-individual-classic';
+                break;
+            case 'royal':
+                $view = 'pdf.company-attendance-report.special-company-individual-royal';
                 break;
             default:
                 $view = 'pdf.company-attendance-report.individual-table';
