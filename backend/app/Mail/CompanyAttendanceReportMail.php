@@ -45,7 +45,7 @@ class CompanyAttendanceReportMail extends Mailable
         // $center = CompanyAttendanceReport::find($this->report_id)->company->center;
 
         return $this
-            ->from('system@mg.noreplycenter.com', 'Training Center')
+            ->from('system@mg.noreplycenter.com', 'PMC')
             ->subject('تقرير الحضور للمتدربات - '.$report->company->name_ar.' - '.$report->date_from->format('Y-m-d'). ' - '.$report->date_to->format('Y-m-d'))
             ->markdown('emails.company-attendance-report', [
                 'report' => $report,
