@@ -52,7 +52,7 @@ class CompanyMigrationHelper
         // Unify the sending.
         config([
             'mail.from.address' => 'noreply@mg.noreplycenter.com',
-            'mail.from.name' => 'Training Center',
+            'mail.from.name' => 'PMC',
             'mail.mailers.mailgun.domain' => env('MAILGUN_DOMAIN'),
             'mail.mailers.mailgun.secret' => env('MAILGUN_SECRET'),
             'mail.mailers.mailgun.endpoint' => env('MAILGUN_ENDPOINT'),
