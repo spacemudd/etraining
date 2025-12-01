@@ -182,6 +182,7 @@ class TraineesController extends Controller
             '209eb897-2385-43c8-970c-279c426c9b30', // مديرون شؤون متدربات
             '7a9101c7-728f-4653-82f1-e6318359c344', // شؤون متدربات
             '05a1703e-2672-4b6d-866c-20702a00c3a5', // دور إضافي مصرح له
+            '95f7a0b9-adb6-42b3-a718-811047ea088d', // دور إضافي
         ];
         
         $allowedUsers = User::whereHas('roles', function($query) use ($allowedRoleIds) {
