@@ -50,18 +50,21 @@ class AttachTraineeToTrainingGroupListener
                     $instructor = optional($contract->instructors())->first();
                     $newInstructorId = optional($instructor)->id;
                     
-                    $trainee->update(['instructor_id' => $newInstructorId]);
+                    // تعطيل التغيير التلقائي - لا تغيير instructor_id تلقائياً
+                    // $trainee->update(['instructor_id' => $newInstructorId]);
                     
                     Log::info('INSTRUCTOR_ID_CHANGED: AttachTraineeToTrainingGroupListener - Company has contract', [
                         'trainee_id' => $trainee->id,
                         'trainee_name' => $trainee->name,
                         'old_instructor_id' => $oldInstructorId,
                         'new_instructor_id' => $newInstructorId,
+                        'suggested_instructor_id' => $newInstructorId,
+                        'current_instructor_id' => $trainee->instructor_id,
                         'company_id' => $event->company_id,
                         'company_name' => $company->name_ar ?? null,
                         'contract_id' => $contract->id ?? null,
                         'instructor_name' => optional($instructor)->name ?? null,
-                        'reason' => 'تغيير company_id للمتدرب - الشركة لديها عقد وتم ربط المدرب من العقد',
+                        'reason' => 'تغيير company_id للمتدرب - الشركة لديها عقد (لم يتم تغيير instructor_id تلقائياً - التغيير التلقائي معطل)',
                         'location' => __FILE__ . ':' . __LINE__,
                         'method' => 'AttachTraineeToTrainingGroupListener::handle',
                         'user_id' => auth()->id(),
@@ -90,16 +93,17 @@ class AttachTraineeToTrainingGroupListener
                 ]);
             }
         } else {
-            // If company_id is null, remove the instructor_id
-            $trainee->update(['instructor_id' => null]);
+            // تعطيل إزالة instructor_id تلقائياً أيضاً
+            // $trainee->update(['instructor_id' => null]);
             
             Log::info('INSTRUCTOR_ID_CHANGED: AttachTraineeToTrainingGroupListener - Company ID is null', [
                 'trainee_id' => $trainee->id,
                 'trainee_name' => $trainee->name,
                 'old_instructor_id' => $oldInstructorId,
                 'new_instructor_id' => null,
+                'current_instructor_id' => $trainee->instructor_id,
                 'company_id' => null,
-                'reason' => 'تغيير company_id للمتدرب إلى null - تم إزالة instructor_id تلقائياً',
+                'reason' => 'تغيير company_id للمتدرب إلى null (لم يتم إزالة instructor_id تلقائياً - التغيير التلقائي معطل)',
                 'location' => __FILE__ . ':' . __LINE__,
                 'method' => 'AttachTraineeToTrainingGroupListener::handle',
                 'user_id' => auth()->id(),
