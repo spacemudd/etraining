@@ -192,7 +192,7 @@ class TraineesController extends Controller
         return Inertia::render('Back/Trainees/Show', [
             'companies' => Company::get(),
             'in_block_list' => $in_block_list,
-            'trainee' => Trainee::query()
+            'trainee' => Trainee::withTrashed()
                 ->with([
                     'company',
                     'educational_level',
