@@ -181,6 +181,49 @@
 
                     </p>
                 </div>
+
+                <div class="col-span-6 sm:col-span-1" v-if="canViewCertificates">
+                    <jet-label 
+                        for="name" 
+                        :value="$t('words.certificates')" 
+                        @click="navigateToCreateCertificate"
+                        class="cursor-pointer"
+                    />
+                    <div 
+                        @click="navigateToCreateCertificate"
+                        class="cursor-pointer hover:bg-gray-100 rounded"
+                    >
+                        <div v-if="trainee.custom_certificates && trainee.custom_certificates.length > 0" 
+                             class="text-sm mt-2 p-1 px-2 bg-gray-200 rounded-lg">
+                            <div v-for="certificate in trainee.custom_certificates" :key="certificate.id" class="mt-1">
+                                {{ certificate.title }} - {{ certificate.issued_at_formatted }}
+                            </div>
+                        </div>
+                        
+                        <!-- UK Certificates -->
+                        <div v-if="trainee.uk_certificates && trainee.uk_certificates.length > 0" 
+                             class="text-sm mt-2 p-1 px-2 bg-blue-100 rounded-lg">
+                            <div v-for="certificate in trainee.uk_certificates" :key="certificate.id" class="mt-1 flex items-center justify-between">
+                                <span>{{ certificate.uk_certificate.course.name_ar }} - {{ certificate.sent_at ? new Date(certificate.sent_at).toLocaleDateString() : '' }}</span>
+                                <a 
+                                    :href="route('back.uk-certificates.download', certificate.id)"
+                                    target="_blank"
+                                    class="text-blue-600 hover:text-blue-800 ml-2"
+                                    @click.stop
+                                >
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div v-if="(!trainee.custom_certificates || trainee.custom_certificates.length === 0) && (!trainee.uk_certificates || trainee.uk_certificates.length === 0)" 
+                             class="text-sm inline-block mt-2 p-1 px-2 bg-gray-200 rounded-lg hover:bg-gray-300">
+                            {{ $t("words.no-certificates") }}
+                        </div>
+                    </div>
+                </div>
             </div>
 
 
@@ -404,6 +447,54 @@
                 },
             }
         },
+        computed: {
+            canViewCertificates() {
+                // Check if user has permission 'override-training-costs'
+                const permissions = document.head.querySelector('meta[name="user-permissions"]');
+                const hasPermission = permissions && permissions.content.indexOf('override-training-costs') !== -1;
+                
+                // Check if user is in the allowed users list (for special documents access)
+                const currentUserEmail = this.$page.props.user?.email;
+                const allowedUsers = this.$page.props.allowed_users_for_special_documents || [];
+                const isInAllowedUsers = allowedUsers.includes(currentUserEmail);
+                
+                // Check if user has any of the specific role ids
+                const user = this.$page.props.user;
+                if (!user) return hasPermission || isInAllowedUsers;
+                
+                const userRoles = user.roles || [];
+                const allowedRoleIds = [
+                    'c89e8671-9f3a-427a-90ca-bd2443f04df2',
+                    'b87b7924-64da-492f-afb1-e54a49f0d800',
+                    '097438c1-2614-42db-95f2-6402bb607fdc',
+                    '7a9101c7-728f-4653-82f1-e6318359c344' // شؤون متدربات
+                ];
+                
+                // Also check by role name pattern (for roles that contain "services" which is شؤون متدربات)
+                const allowedRoleNamePatterns = ['services']; // This matches team_id_services
+                
+                // Check if user has any of the allowed role ids OR role name patterns
+                const hasRole = userRoles.some(role => {
+                    if (!role) return false;
+                    
+                    // Check by role id
+                    const roleId = role.id || role.role_id || role.pivot?.role_id;
+                    if (roleId && allowedRoleIds.includes(roleId)) {
+                        return true;
+                    }
+                    
+                    // Check by role name pattern (contains "services")
+                    const roleName = role.name || '';
+                    if (allowedRoleNamePatterns.some(pattern => roleName.includes(pattern))) {
+                        return true;
+                    }
+                    
+                    return false;
+                });
+                
+                return hasPermission || hasRole || isInAllowedUsers;
+            }
+        },
         mounted() {
             // if(!this.trainee.trainee_group_object) {
             //     this.trainee.trainee_group_object = this.new_trainee_group;
@@ -442,6 +533,9 @@
                 if (confirm(this.$t('words.are-you-sure') + ' ' + this.trainee.deleted_remark)) {
                     this.$inertia.post(route('back.trainees.unblock', {trainee_id: this.trainee.id}));
                 }
+            },
+            navigateToCreateCertificate() {
+                this.$inertia.visit(route('back.trainees.custom-certificates.create', this.trainee.id));
             },
         }
     }

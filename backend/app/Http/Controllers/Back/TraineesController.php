@@ -1042,6 +1042,15 @@ class TraineesController extends Controller
         $trainee = Trainee::with(['educational_level', 'city', 'marital_status', 'trainee_group', 'company'])
                 ->withCount('general_files')
                 ->with('invoices')
+                ->with(['custom_certificates' => function($q) {
+                    $q->orderBy('created_at', 'desc')->limit(2);
+                }])
+                ->with(['uk_certificates' => function($q) {
+                    $q->where('status', 'sent')
+                      ->with(['ukCertificate.course'])
+                      ->orderBy('sent_at', 'desc')
+                      ->limit(5);
+                }])
                 ->withTrashed()
                 ->findOrFail($id);
 
@@ -1056,12 +1065,25 @@ class TraineesController extends Controller
             ],
         ]);
 
+        // Get users with specific roles for special document access
+        $allowedRoleIds = [
+            '209eb897-2385-43c8-970c-279c426c9b30', // مديرون شؤون متدربات
+            '7a9101c7-728f-4653-82f1-e6318359c344', // شؤون متدربات
+            '05a1703e-2672-4b6d-866c-20702a00c3a5', // دور إضافي مصرح له
+            '95f7a0b9-adb6-42b3-a718-811047ea088d', // دور إضافي
+        ];
+        
+        $allowedUsers = User::whereHas('roles', function($query) use ($allowedRoleIds) {
+            $query->whereIn('id', $allowedRoleIds);
+        })->pluck('email')->toArray();
+
         return Inertia::render('Back/Trainees/ShowBlocked', [
             'trainee' => $trainee,
             'trainee_groups' => TraineeGroup::get(),
             'cities' => City::orderBy('name_ar')->get(),
             'marital_statuses' => MaritalStatus::orderBy('order')->get(),
             'educational_levels' => EducationalLevel::orderBy('order')->get(),
+            'allowed_users_for_special_documents' => $allowedUsers,
         ]);
     }
 
