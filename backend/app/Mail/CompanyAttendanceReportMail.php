@@ -46,7 +46,7 @@ class CompanyAttendanceReportMail extends Mailable
 
         return $this
             ->from('system@mg.noreplycenter.com', 'PMC')
-            ->subject('تقرير الحضور للمتدربات - '.$report->company->name_ar.' - '.$report->date_from->format('Y-m-d'). ' - '.$report->date_to->format('Y-m-d'))
+            ->subject('تقرير الحضور - '.$report->company->name_ar.' - '.$report->date_from->format('Y-m-d'). ' - '.$report->date_to->format('Y-m-d'))
             ->markdown('emails.company-attendance-report', [
                 'report' => $report,
             ])

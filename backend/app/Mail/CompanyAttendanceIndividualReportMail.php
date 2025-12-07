@@ -53,7 +53,7 @@ class CompanyAttendanceIndividualReportMail extends Mailable implements ShouldQu
         $this->attachReportFile($report, $trainee);
 
         return $this
-            ->subject('تقرير الحضور للمتدربة - '.$trainee->identity_number.' - '.$report->date_from->format('Y-m-d'). ' - '.$report->date_to->format('Y-m-d'))
+            ->subject('تقرير الحضور - '.$trainee->identity_number.' - '.$report->date_from->format('Y-m-d'). ' - '.$report->date_to->format('Y-m-d'))
             ->markdown('emails.company-attendance-individual-report', [
                 'report' => $report,
                 'trainee' => $trainee,
