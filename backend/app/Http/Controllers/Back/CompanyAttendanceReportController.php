@@ -429,6 +429,10 @@ class CompanyAttendanceReportController extends Controller
     }
     public function excel($report_id)
     {
+        // زيادة الذاكرة والوقت للتعامل مع البيانات الكبيرة
+        ini_set('memory_limit', '1024M');
+        set_time_limit(600); // 10 دقائق
+        
         $report = CompanyAttendanceReport::findOrFail($report_id);
         $courseName = $report->company->name_ar;
         $sessionDate = $report->date_from->format('Y-m-d');
