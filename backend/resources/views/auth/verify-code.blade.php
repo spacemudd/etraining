@@ -13,7 +13,7 @@
         @endif
 
         <div class="mb-4 text-sm text-gray-600">
-            <p>تم إرسال رمز التحقق إلى بريدك الإلكتروني: <strong>{{ $email }}</strong></p>
+            <p>تم ارسال التحقق</p>
         </div>
 
         <form method="POST" action="{{ route('login.verify-code') }}" id="verifyCodeForm">
