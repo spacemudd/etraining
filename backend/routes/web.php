@@ -967,6 +967,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             //trainees without invoices export
             Route::get('trainees-witout-invoices/export', [\App\Http\Controllers\Back\ReportsController::class, 'export'])->name('reports.trainees-witout-invoices.export');
 
+            // Company invoices summary report routes
+            Route::get('company-invoices-summary', [\App\Http\Controllers\Back\ReportsController::class, 'formCompanyInvoicesSummaryReport'])->name('reports.company-invoices-summary.index');
+            Route::get('company-invoices-summary/export', [\App\Http\Controllers\Back\ReportsController::class, 'exportCompanyInvoicesSummary'])->name('reports.company-invoices-summary.export');
+
             // Certificates issued report routes
             Route::get('certificates-issued', [\App\Http\Controllers\Back\ReportsController::class, 'formCertificatesIssuedReport'])->name('reports.certificates-issued.index');
             Route::get('certificates-issued/export', [\App\Http\Controllers\Back\ReportsController::class, 'exportCertificatesIssued'])->name('reports.certificates-issued.export');

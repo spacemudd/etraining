@@ -884,4 +884,5 @@ return [
     'simple-template' => 'Simple Template',
     'modern-template' => 'Modern Template',
     'gradient-template' => 'Gradient Template',
+    'issued-company-invoices-summary' => 'Issued Company Invoices Summary',
 ];

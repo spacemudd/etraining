@@ -42,6 +42,10 @@
                     {{ $t('words.trainees-without-invoice') }}
                 </inertia-link>
 
+                <inertia-link :href="route('back.reports.company-invoices-summary.index')"
+                              class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
+                    {{ $t('words.issued-company-invoices-summary') }}
+                </inertia-link>
 
                 <inertia-link :href="route('back.reports.company-certificates.index')"
                               class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">

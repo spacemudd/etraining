@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Back;
 
+use App\Exports\CompanyInvoicesSummaryExport;
 use App\Exports\TraineeAttendanceExportByGroup;
 use App\Exports\TraineesWithoutInvoicesExport;
 use App\Http\Controllers\Controller;
@@ -150,6 +151,36 @@ class ReportsController extends Controller
 
         return Excel::download(new TraineesWithoutInvoicesExport($data), now()->format('Y-m-d').'-traineees-without-invoices.xlsx');
 
+    }
+
+    public function formCompanyInvoicesSummaryReport()
+    {
+        $this->authorize('view-backoffice-reports');
+        return Inertia::render('Back/Reports/CompanyInvoicesSummary/Index');
+    }
+
+    public function exportCompanyInvoicesSummary(Request $request)
+    {
+        $this->authorize('view-backoffice-reports');
+        
+        $request->validate([
+            'date_from' => 'required',
+            'date_to' => 'required',
+        ]);
+        $data = $request->all();
+
+        Audit::create([
+            'event' => 'companyInvoicesSummary.export.csv',
+            'auditable_id' => auth()->user()->id,
+            'auditable_type' => User::class,
+            'new_values' => [],
+        ]);
+
+        return Excel::download(
+            new CompanyInvoicesSummaryExport($data),
+            now()->format('Y-m-d') . '-company-invoices-summary.csv',
+            \Maatwebsite\Excel\Excel::CSV
+        );
     }
 
     public function formCertificatesIssuedReport()

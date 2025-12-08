@@ -882,4 +882,5 @@ return [
     'simple-template' => 'القالب المبسط',
     'modern-template' => 'القالب الحديث',
     'gradient-template' => 'القالب المتدرج',
+    'issued-company-invoices-summary' => 'ملخص فواتير الشركات الصادرة',
 ];
