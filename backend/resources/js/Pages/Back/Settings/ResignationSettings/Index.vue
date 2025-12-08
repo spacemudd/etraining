@@ -96,10 +96,27 @@ export default {
     data() {
         return {
             form: this.$inertia.form({
-                default_cc_emails: this.default_cc_emails,
-                default_bcc_emails: this.default_bcc_emails,
+                default_cc_emails: this.default_cc_emails || '',
+                default_bcc_emails: this.default_bcc_emails || '',
+            }, {
+                resetOnSuccess: false,
             })
         }
+    },
+
+    watch: {
+        default_cc_emails(newVal) {
+            this.form.default_cc_emails = newVal || '';
+        },
+        default_bcc_emails(newVal) {
+            this.form.default_bcc_emails = newVal || '';
+        },
+    },
+
+    mounted() {
+        // Sync form with props on mount
+        this.form.default_cc_emails = this.default_cc_emails || '';
+        this.form.default_bcc_emails = this.default_bcc_emails || '';
     },
 
     methods: {
