@@ -278,15 +278,15 @@ export default {
     mounted() {
         if (this.company.id) {
             this.form.company_id = this.company.id;
+            
+            // TO: Use from last resignation if exists, otherwise leave empty
             if (this.company.resignations.length) {
                 this.form.emails_to = this.company.resignations[0].emails_to;
-                this.form.emails_cc = this.company.resignations[0].emails_cc;
-                this.form.emails_bcc = this.company.resignations[0].emails_bcc;
-            } else {
-                // Set default emails if no previous resignations exist
-                this.form.emails_cc = this.default_cc_emails || '';
-                this.form.emails_bcc = this.default_bcc_emails || '';
             }
+            
+            // CC and BCC: Always use default emails from settings (not from last resignation)
+            this.form.emails_cc = this.default_cc_emails || '';
+            this.form.emails_bcc = this.default_bcc_emails || '';
         }
     },
     methods: {
