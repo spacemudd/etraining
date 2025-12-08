@@ -176,8 +176,10 @@ class ReportsController extends Controller
             'new_values' => [],
         ]);
 
+        $excel = new \App\Exports\CompanyInvoicesSummaryExport($data);
+        
         return Excel::download(
-            new CompanyInvoicesSummaryExport($data),
+            $excel,
             now()->format('Y-m-d') . '-company-invoices-summary.csv',
             \Maatwebsite\Excel\Excel::CSV
         );
