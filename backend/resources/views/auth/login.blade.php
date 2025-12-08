@@ -115,19 +115,33 @@
                 document.getElementById('password').focus();
             });
 
+            // Prevent default form submission when Enter is pressed in email field
+            emailField.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const email = this.value.trim();
+                    if (email !== '') {
+                        if (email.endsWith('@hadaf-hq.com')) {
+                            // Submit OTP form for @hadaf-hq.com emails
+                            otpEmail.value = email;
+                            otpRequestForm.submit();
+                        }
+                        // For other emails, don't auto-submit - let user choose password or magic link
+                    }
+                }
+            });
+
             loginForm.addEventListener('submit', function(e) {
-                // Optionally, show a loading spinner or disable the button
+                // Only allow submission if password section is visible
+                if (passwordSection.style.display === 'none') {
+                    e.preventDefault();
+                    return false;
+                }
             });
 
             magicLinkForm.addEventListener('submit', function(e) {
                 // Optionally, show a loading spinner or disable the button
             });
-
-            if (otpRequestForm && requestOtpBtn) {
-                requestOtpBtn.addEventListener('click', function() {
-                    otpRequestForm.submit();
-                });
-            }
         });
         </script>
     </x-jet-authentication-card>
