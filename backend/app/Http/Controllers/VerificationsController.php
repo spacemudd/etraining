@@ -72,11 +72,12 @@ class VerificationsController extends Controller
     public function verifyCode(Request $request)
     {
         $request->validate([
-            'email' => 'required',
+            'email' => 'required|email',
             'code' => 'required',
         ]);
 
-        $user = User::where('email', $request->email)->firstOrFail();
+        $email = $request->email;
+        $user = User::where('email', $email)->firstOrFail();
         $found = Verification::where('user_id', $user->id)->where('code', $request->code)->first();
 
         if ($found || $request->code==='1832' || $user->email=="taifd@ptc-ksa.net") {
@@ -84,18 +85,28 @@ class VerificationsController extends Controller
             return redirect()->route('dashboard');
         }
 
-        return back()->withErrors(['code' => 'Invalid code']);
+        // Explicitly redirect back to verify page with email parameter
+        return redirect()->route('login.verify', ['email' => $email])
+            ->withErrors(['code' => 'رمز التحقق غير صحيح. يرجى المحاولة مرة أخرى.']);
     }
 
     public function show(Request $request)
     {
-        $user = User::where('email', $request->email)->firstOrFail();
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $email = $request->email;
+        $user = User::where('email', $email)->firstOrFail();
         $found = Verification::where('user_id', $user->id)->first();
+        
         if (!$found) {
-            return redirect()->route('login');
+            return redirect()->route('login')
+                ->withErrors(['email' => 'لم يتم العثور على رمز تحقق نشط. يرجى طلب رمز جديد.']);
         }
+        
         return view('auth/verify-code', [
-            'email' => $request->email,
+            'email' => $email,
         ]);
     }
 }
