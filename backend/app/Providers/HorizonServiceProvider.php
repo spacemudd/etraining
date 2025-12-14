@@ -37,6 +37,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
             return in_array($user->email, [
                 'info@ptc-ksa.net',
                 'billing@ptc-ksa.net',
+                'ebrahim.hosny@hadaf-hq.com',
             ]);
         });
     }
