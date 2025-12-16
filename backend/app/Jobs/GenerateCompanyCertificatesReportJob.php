@@ -22,8 +22,9 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $timeout = 3600;
+    public $timeout = 7200; // ساعتان
     public $tries = 1;
+    public $memory = 512; // MB
 
     protected $requestData;
     protected $userId;
@@ -36,152 +37,178 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
 
     public function handle()
     {
-        $selectedCourseIds = array_column($this->requestData['courseId'], 'id');
-        $selectedCourses = Course::whereIn('id', $selectedCourseIds)->get();
-        $courseNames = $selectedCourses->pluck('name_ar')->unique()->toArray();
-        $courses = Course::whereIn('name_ar', $courseNames)->get();
+        try {
+            Log::info('GenerateCompanyCertificatesReportJob started', [
+                'user_id' => $this->userId,
+                'timestamp' => now()->toDateTimeString(),
+            ]);
 
-        $results = [];
-        ini_set('memory_limit', '512M');
-        set_time_limit(300);
+            $selectedCourseIds = array_column($this->requestData['courseId'], 'id');
+            $selectedCourses = Course::whereIn('id', $selectedCourseIds)->get();
+            $courseNames = $selectedCourses->pluck('name_ar')->unique()->toArray();
+            $courses = Course::whereIn('name_ar', $courseNames)->get();
 
-        $companyIds = array_column($this->requestData['companyId'], 'id');
-        $companyName = '';
+            $results = [];
+            ini_set('memory_limit', '1024M');
+            // set_time_limit لا يعمل مع queue jobs، يتم التحكم بالوقت عبر $timeout property
 
-        foreach ($courses as $course) {
-            $batches = $course->batches;
+            $companyIds = array_column($this->requestData['companyId'], 'id');
+            $companyName = '';
 
-            foreach ($batches as $batch) {
-                Log::info('Batch ID: ' . $batch->id);
-                if (!$batch->trainee_group) {
-                    Log::warning("Batch {$batch->id} has no trainee group.");
-                    continue;
-                }
-                $courseEndDate = Carbon::parse($batch->ends_at);
-                $startOfMonth = $courseEndDate->copy()->startOfMonth();
-                $daysDifference = $courseEndDate->diffInDays($startOfMonth);
+            foreach ($courses as $course) {
+                $batches = $course->batches;
 
-                if ($daysDifference >= 15) {
-                    $targetMonth = $courseEndDate->month;
-                    $targetYear = $courseEndDate->year;
-                } else {
-                    $targetMonth = $courseEndDate->subMonth()->month;
-                    $targetYear = $courseEndDate->year;
-                }
-
-                $startOfTargetMonth = Carbon::createFromDate($targetYear, $targetMonth, 1)->startOfMonth();
-                $endOfTargetMonth = Carbon::createFromDate($targetYear, $targetMonth, 1)->endOfMonth();
-
-                $totalSessionsCount = $batch->course_batch_sessions()->count();
-
-                $traineesQuery = $batch->trainee_group->traineesWithTrashed();
-
-                if (!empty($companyIds)) {
-                    $traineesQuery->whereIn('company_id', $companyIds);
-                    $companies = Company::whereIn('id', $companyIds)->get();
-                    $companyName = $companies->pluck('name_ar')->implode(', ');
-                }
-
-                $traineesQueryClone = clone $traineesQuery;
-                Log::info('Trainees count before chunk: ' . $traineesQueryClone->with(['user', 'company'])->count());
-
-                $traineesQuery->with('user')->with('company')->chunk(100, function ($traineesChunk) use (
-                    &$results,
-                    $batch,
-                    $totalSessionsCount,
-                    $startOfTargetMonth,
-                    $endOfTargetMonth,
-                    $course,
-                    $companyName,
-                    $companyIds
-                ) {
-                    foreach ($traineesChunk as $trainee) {
-                        $attendanceRecords = $trainee->attendanceReportRecords()
-                            ->where('course_batch_id', $batch->id)
-                            ->get()
-                            ->unique('course_batch_session_id');
-
-                        Log::info('Attendance records count: ' . $attendanceRecords->count());
-
-                        $presentCount = $attendanceRecords->whereIn('status', [1, 2, 3])->count();
-                        $absentCount = $attendanceRecords->where('status', 0)->count();
-
-                        $attendancePercentage = $totalSessionsCount > 0 ? ($presentCount / $totalSessionsCount) * 100 : 0;
-
-                        $invoiceQuery = Invoice::where('trainee_id', $trainee->id);
-
-                        if (!empty($companyIds)) {
-                            $invoiceQuery->whereIn('company_id', $companyIds);
-                        }
-
-                        $invoice = $invoiceQuery->where(function ($query) use ($startOfTargetMonth, $endOfTargetMonth) {
-                            $query->whereBetween('from_date', [$startOfTargetMonth, $endOfTargetMonth])
-                                ->orWhereBetween('to_date', [$startOfTargetMonth, $endOfTargetMonth])
-                                ->orWhere(function ($query) use ($startOfTargetMonth, $endOfTargetMonth) {
-                                    $query->where('from_date', '<=', $startOfTargetMonth)
-                                        ->where('to_date', '>=', $endOfTargetMonth);
-                                });
-                        })->first();
-
-                        $invoiceStatus = $invoice ? $invoice->status_formatted : 'لا توجد فاتورة';
-                        $paidDate = $invoice ? $invoice->paid_at : '';
-                        $invoiceFromDate = $invoice ? $invoice->from_date : '';
-                        $invoiceToDate = $invoice ? $invoice->to_date : '';
-
-                        $traineeCompanyName = $trainee->company ? $trainee->company->name_ar : 'غير مربوط بشركة';
-
-                        if ($trainee->name) {
-                            Log::info('Adding trainee to report: ' . $trainee->name);
-                            $results[] = [
-                                'paid_date' => $paidDate,
-                                'invoice_to_date' => $invoiceToDate,
-                                'invoice_from_date' => $invoiceFromDate,
-                                'invoice_status' => $invoiceStatus,
-                                'attendance_percentage' => round($attendancePercentage, 2) . ' %',
-                                'present_count' => $presentCount,
-                                'absent_count' => $absentCount,
-                                'course_name' => $course->name_ar,
-                                'company_name' => $traineeCompanyName,
-                                'email' => $trainee->email,
-                                'phone' => $trainee->phone,
-                                'identity_number' => $trainee->identity_number,
-                                'trainee_name' => $trainee->name,
-                                'deleted_at' => $trainee->deleted_at,
-                                'last_login_at' => optional($trainee->user)->last_login_at,
-                            ];
-                        } else {
-                            Log::info('Skipped trainee, name missing or invoice not matched: ' . json_encode([
-                                'trainee_id' => $trainee->id,
-                                'name' => $trainee->name,
-                                'invoice' => $invoice ? $invoice->id : null,
-                            ]));
-                        }
+                foreach ($batches as $batch) {
+                    Log::info('Batch ID: ' . $batch->id);
+                    if (!$batch->trainee_group) {
+                        Log::warning("Batch {$batch->id} has no trainee group.");
+                        continue;
                     }
-                });
+                    $courseEndDate = Carbon::parse($batch->ends_at);
+                    $startOfMonth = $courseEndDate->copy()->startOfMonth();
+                    $daysDifference = $courseEndDate->diffInDays($startOfMonth);
+
+                    if ($daysDifference >= 15) {
+                        $targetMonth = $courseEndDate->month;
+                        $targetYear = $courseEndDate->year;
+                    } else {
+                        $targetMonth = $courseEndDate->subMonth()->month;
+                        $targetYear = $courseEndDate->year;
+                    }
+
+                    $startOfTargetMonth = Carbon::createFromDate($targetYear, $targetMonth, 1)->startOfMonth();
+                    $endOfTargetMonth = Carbon::createFromDate($targetYear, $targetMonth, 1)->endOfMonth();
+
+                    $totalSessionsCount = $batch->course_batch_sessions()->count();
+
+                    $traineesQuery = $batch->trainee_group->traineesWithTrashed();
+
+                    if (!empty($companyIds)) {
+                        $traineesQuery->whereIn('company_id', $companyIds);
+                        $companies = Company::whereIn('id', $companyIds)->get();
+                        $companyName = $companies->pluck('name_ar')->implode(', ');
+                    }
+
+                    $traineesQueryClone = clone $traineesQuery;
+                    Log::info('Trainees count before chunk: ' . $traineesQueryClone->with(['user', 'company'])->count());
+
+                    // تحسين الاستعلامات باستخدام eager loading
+                    $traineesQuery->with(['user', 'company'])->chunk(100, function ($traineesChunk) use (
+                        &$results,
+                        $batch,
+                        $totalSessionsCount,
+                        $startOfTargetMonth,
+                        $endOfTargetMonth,
+                        $course,
+                        $companyName,
+                        $companyIds
+                    ) {
+                        foreach ($traineesChunk as $trainee) {
+                            $attendanceRecords = $trainee->attendanceReportRecords()
+                                ->where('course_batch_id', $batch->id)
+                                ->get()
+                                ->unique('course_batch_session_id');
+
+                            Log::info('Attendance records count: ' . $attendanceRecords->count());
+
+                            $presentCount = $attendanceRecords->whereIn('status', [1, 2, 3])->count();
+                            $absentCount = $attendanceRecords->where('status', 0)->count();
+
+                            $attendancePercentage = $totalSessionsCount > 0 ? ($presentCount / $totalSessionsCount) * 100 : 0;
+
+                            $invoiceQuery = Invoice::where('trainee_id', $trainee->id);
+
+                            if (!empty($companyIds)) {
+                                $invoiceQuery->whereIn('company_id', $companyIds);
+                            }
+
+                            $invoice = $invoiceQuery->where(function ($query) use ($startOfTargetMonth, $endOfTargetMonth) {
+                                $query->whereBetween('from_date', [$startOfTargetMonth, $endOfTargetMonth])
+                                    ->orWhereBetween('to_date', [$startOfTargetMonth, $endOfTargetMonth])
+                                    ->orWhere(function ($query) use ($startOfTargetMonth, $endOfTargetMonth) {
+                                        $query->where('from_date', '<=', $startOfTargetMonth)
+                                            ->where('to_date', '>=', $endOfTargetMonth);
+                                    });
+                            })->first();
+
+                            $invoiceStatus = $invoice ? $invoice->status_formatted : 'لا توجد فاتورة';
+                            $paidDate = $invoice ? $invoice->paid_at : '';
+                            $invoiceFromDate = $invoice ? $invoice->from_date : '';
+                            $invoiceToDate = $invoice ? $invoice->to_date : '';
+
+                            $traineeCompanyName = $trainee->company ? $trainee->company->name_ar : 'غير مربوط بشركة';
+
+                            if ($trainee->name) {
+                                Log::info('Adding trainee to report: ' . $trainee->name);
+                                $results[] = [
+                                    'paid_date' => $paidDate,
+                                    'invoice_to_date' => $invoiceToDate,
+                                    'invoice_from_date' => $invoiceFromDate,
+                                    'invoice_status' => $invoiceStatus,
+                                    'attendance_percentage' => round($attendancePercentage, 2) . ' %',
+                                    'present_count' => $presentCount,
+                                    'absent_count' => $absentCount,
+                                    'course_name' => $course->name_ar,
+                                    'company_name' => $traineeCompanyName,
+                                    'email' => $trainee->email,
+                                    'phone' => $trainee->phone,
+                                    'identity_number' => $trainee->identity_number,
+                                    'trainee_name' => $trainee->name,
+                                    'deleted_at' => $trainee->deleted_at,
+                                    'last_login_at' => optional($trainee->user)->last_login_at,
+                                ];
+                            } else {
+                                Log::info('Skipped trainee, name missing or invoice not matched: ' . json_encode([
+                                    'trainee_id' => $trainee->id,
+                                    'name' => $trainee->name,
+                                    'invoice' => $invoice ? $invoice->id : null,
+                                ]));
+                            }
+                        }
+                    });
+                }
             }
+
+            $results = collect($results)->sortByDesc(function ($trainee) {
+                $attendanceNumeric = floatval(str_replace(' %', '', $trainee['attendance_percentage']));
+                return ($attendanceNumeric >= 50 && $trainee['invoice_status'] == 'مدفوع') ? 1 : 0;
+            })->values()->toArray();
+
+            $fileName = 'attendance_report_' . now()->timestamp . '.xlsx';
+
+            $filePath = 'reports/' . $fileName;
+            Excel::store(new TraineeAttendanceExportByGroup($results), $filePath, 's3');
+
+            $temporaryUrl = Storage::disk('s3')->temporaryUrl($filePath, now()->addMinutes(30));
+
+            Log::info('GenerateCompanyCertificatesReportJob completed', [
+                'timestamp' => now()->toDateTimeString(),
+                'user_id' => $this->userId,
+                'report_file' => $filePath,
+            ]);
+            
+            // Notify the user
+            $user = User::find($this->userId);
+            if ($user) {
+                $user->notify(new ReportReadyNotification($temporaryUrl));
+            }
+        } catch (\Exception $e) {
+            Log::error('GenerateCompanyCertificatesReportJob failed', [
+                'user_id' => $this->userId,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            throw $e; // إعادة رمي الخطأ ليتم تسجيله كـ failed job
         }
+    }
 
-        $results = collect($results)->sortByDesc(function ($trainee) {
-            $attendanceNumeric = floatval(str_replace(' %', '', $trainee['attendance_percentage']));
-            return ($attendanceNumeric >= 50 && $trainee['invoice_status'] == 'مدفوع') ? 1 : 0;
-        })->values()->toArray();
-
-        $fileName = 'attendance_report_' . now()->timestamp . '.xlsx';
-
-        $filePath = 'reports/' . $fileName;
-        Excel::store(new TraineeAttendanceExportByGroup($results), $filePath, 's3');
-
-        $temporaryUrl = Storage::disk('s3')->temporaryUrl($filePath, now()->addMinutes(30));
-
-        \Log::info('GenerateCompanyCertificatesReportJob completed', [
-            'timestamp' => now()->toDateTimeString(),
+    public function failed(\Throwable $exception)
+    {
+        Log::error('GenerateCompanyCertificatesReportJob permanently failed', [
             'user_id' => $this->userId,
-            'report_file' => $filePath,
+            'error' => $exception->getMessage(),
         ]);
-        // Notify the user
-        $user = User::find($this->userId);
-        if ($user) {
-            $user->notify(new ReportReadyNotification($temporaryUrl));
-        }
+        
+        // يمكنك إضافة إشعار للمستخدم بالفشل هنا إذا أردت
     }
 }

@@ -63,7 +63,7 @@ return [
             'driver' => 'redis',
             'connection' => 'default',
             'queue' => env('REDIS_QUEUE', 'default'),
-            'retry_after' => 3700,
+            'retry_after' => 7500, // يجب أن يكون أكبر من job timeout
             'block_for' => null,
         ],
 
