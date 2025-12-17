@@ -973,7 +973,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
             // Certificates issued report routes
             Route::get('certificates-issued', [\App\Http\Controllers\Back\ReportsController::class, 'formCertificatesIssuedReport'])->name('reports.certificates-issued.index');
-            Route::get('certificates-issued/export', [\App\Http\Controllers\Back\ReportsController::class, 'exportCertificatesIssued'])->name('reports.certificates-issued.export');
+            Route::post('certificates-issued/export', [\App\Http\Controllers\Back\ReportsController::class, 'exportCertificatesIssued'])->name('reports.certificates-issued.export');
 
             // Trainees report routes
             Route::get('trainees', [\App\Http\Controllers\Back\TraineesReportController::class, 'index'])->name('reports.trainees.index');

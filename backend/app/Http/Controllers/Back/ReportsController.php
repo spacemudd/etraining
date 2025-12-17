@@ -188,21 +188,32 @@ class ReportsController extends Controller
     public function formCertificatesIssuedReport()
     {
         $this->authorize('view-backoffice-reports');
-        return Inertia::render('Back/Reports/CertificatesIssued/Index');
+        return Inertia::render('Back/Reports/CertificatesIssued/Index', [
+            'companies' => Company::select('id', 'name_ar')->orderBy('name_ar')->get(),
+        ]);
     }
 
     public function exportCertificatesIssued(Request $request)
     {
         $this->authorize('view-backoffice-reports');
 
+        $request->validate([
+            'company_id' => 'required|exists:companies,id',
+        ]);
+
         Audit::create([
             'event' => 'certificatesIssued.export.excel',
             'auditable_id' => auth()->user()->id,
             'auditable_type' => User::class,
-            'new_values' => [],
+            'new_values' => [
+                'company_id' => $request->company_id,
+            ],
         ]);
 
-        return Excel::download(new \App\Exports\CertificatesIssuedExport(), now()->format('Y-m-d').'-certificates-issued.xlsx');
+        $company = Company::findOrFail($request->company_id);
+        $fileName = now()->format('Y-m-d') . '-certificates-issued-' . $company->name_ar . '.xlsx';
+
+        return Excel::download(new \App\Exports\CompanyCertificatesExport($request->company_id), $fileName);
     }
 
 
