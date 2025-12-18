@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Back\AttendanceReportRecord;
 use App\Models\Back\Company;
 use App\Models\Back\Course;
 use App\Models\Back\Invoice;
@@ -22,9 +23,9 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $timeout = 7200; // ساعتان
+    public $timeout = 10800; // 3 ساعات
     public $tries = 1;
-    public $memory = 512; // MB
+    public $memory = 2048; // MB
 
     public $tracker;
 
@@ -53,24 +54,29 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
             $selectedCourseIds = array_column($requestData['courseId'], 'id');
             $selectedCourses = Course::whereIn('id', $selectedCourseIds)->get();
             $courseNames = $selectedCourses->pluck('name_ar')->unique()->toArray();
-            $courses = Course::whereIn('name_ar', $courseNames)->get();
 
             $results = [];
-            ini_set('memory_limit', '1024M');
+            ini_set('memory_limit', '2048M');
             // set_time_limit لا يعمل مع queue jobs، يتم التحكم بالوقت عبر $timeout property
 
             $companyIds = array_column($requestData['companyId'], 'id');
             $companyName = '';
 
+            // Eager load courses with batches and sessions
+            $courses = Course::whereIn('name_ar', $courseNames)
+                ->with(['batches' => function ($query) {
+                    $query->with(['course_batch_sessions', 'trainee_group']);
+                }])
+                ->get();
+
             foreach ($courses as $course) {
                 $batches = $course->batches;
 
                 foreach ($batches as $batch) {
-                    Log::info('Batch ID: ' . $batch->id);
                     if (!$batch->trainee_group) {
-                        Log::warning("Batch {$batch->id} has no trainee group.");
                         continue;
                     }
+
                     $courseEndDate = Carbon::parse($batch->ends_at);
                     $startOfMonth = $courseEndDate->copy()->startOfMonth();
                     $daysDifference = $courseEndDate->diffInDays($startOfMonth);
@@ -86,7 +92,7 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
                     $startOfTargetMonth = Carbon::createFromDate($targetYear, $targetMonth, 1)->startOfMonth();
                     $endOfTargetMonth = Carbon::createFromDate($targetYear, $targetMonth, 1)->endOfMonth();
 
-                    $totalSessionsCount = $batch->course_batch_sessions()->count();
+                    $totalSessionsCount = $batch->course_batch_sessions->count();
 
                     $traineesQuery = $batch->trainee_group->traineesWithTrashed();
 
@@ -96,47 +102,71 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
                         $companyName = $companies->pluck('name_ar')->implode(', ');
                     }
 
-                    $traineesQueryClone = clone $traineesQuery;
-                    Log::info('Trainees count before chunk: ' . $traineesQueryClone->with(['user', 'company'])->count());
+                    // Get all trainee IDs for this batch to load data in bulk
+                    $traineeIds = $traineesQuery->pluck('id')->toArray();
 
-                    // تحسين الاستعلامات باستخدام eager loading
-                    $traineesQuery->with(['user', 'company'])->chunk(100, function ($traineesChunk) use (
+                    if (empty($traineeIds)) {
+                        continue;
+                    }
+
+                    // Load all attendance records for this batch in one query
+                    $allAttendanceRecords = AttendanceReportRecord::where('course_batch_id', $batch->id)
+                        ->whereIn('trainee_id', $traineeIds)
+                        ->get()
+                        ->groupBy('trainee_id')
+                        ->map(function ($records) {
+                            return $records->unique('course_batch_session_id');
+                        });
+
+                    // Load all invoices for trainees in this batch in one query
+                    $invoiceQuery = Invoice::whereIn('trainee_id', $traineeIds)
+                        ->where(function ($query) use ($startOfTargetMonth, $endOfTargetMonth) {
+                            $query->whereBetween('from_date', [$startOfTargetMonth, $endOfTargetMonth])
+                                ->orWhereBetween('to_date', [$startOfTargetMonth, $endOfTargetMonth])
+                                ->orWhere(function ($q) use ($startOfTargetMonth, $endOfTargetMonth) {
+                                    $q->where('from_date', '<=', $startOfTargetMonth)
+                                        ->where('to_date', '>=', $endOfTargetMonth);
+                                });
+                        });
+
+                    if (!empty($companyIds)) {
+                        $invoiceQuery->whereIn('company_id', $companyIds);
+                    }
+
+                    // Get first invoice per trainee (matching original behavior)
+                    $allInvoices = $invoiceQuery->get()
+                        ->groupBy('trainee_id')
+                        ->map(function ($invoices) {
+                            return $invoices->first();
+                        });
+
+                    // Create a fresh query for chunking
+                    $traineesChunkQuery = $batch->trainee_group->traineesWithTrashed();
+                    if (!empty($companyIds)) {
+                        $traineesChunkQuery->whereIn('company_id', $companyIds);
+                    }
+
+                    // Process trainees in chunks using chunkById for better performance
+                    $traineesChunkQuery->with(['user', 'company'])->chunkById(50, function ($traineesChunk) use (
                         &$results,
                         $batch,
                         $totalSessionsCount,
-                        $startOfTargetMonth,
-                        $endOfTargetMonth,
+                        $allAttendanceRecords,
+                        $allInvoices,
                         $course,
-                        $companyName,
                         $companyIds
                     ) {
                         foreach ($traineesChunk as $trainee) {
-                            $attendanceRecords = $trainee->attendanceReportRecords()
-                                ->where('course_batch_id', $batch->id)
-                                ->get()
-                                ->unique('course_batch_session_id');
-
-                            Log::info('Attendance records count: ' . $attendanceRecords->count());
+                            // Get attendance records from pre-loaded collection
+                            $attendanceRecords = $allAttendanceRecords->get($trainee->id, collect());
 
                             $presentCount = $attendanceRecords->whereIn('status', [1, 2, 3])->count();
                             $absentCount = $attendanceRecords->where('status', 0)->count();
 
                             $attendancePercentage = $totalSessionsCount > 0 ? ($presentCount / $totalSessionsCount) * 100 : 0;
 
-                            $invoiceQuery = Invoice::where('trainee_id', $trainee->id);
-
-                            if (!empty($companyIds)) {
-                                $invoiceQuery->whereIn('company_id', $companyIds);
-                            }
-
-                            $invoice = $invoiceQuery->where(function ($query) use ($startOfTargetMonth, $endOfTargetMonth) {
-                                $query->whereBetween('from_date', [$startOfTargetMonth, $endOfTargetMonth])
-                                    ->orWhereBetween('to_date', [$startOfTargetMonth, $endOfTargetMonth])
-                                    ->orWhere(function ($query) use ($startOfTargetMonth, $endOfTargetMonth) {
-                                        $query->where('from_date', '<=', $startOfTargetMonth)
-                                            ->where('to_date', '>=', $endOfTargetMonth);
-                                    });
-                            })->first();
+                            // Get invoice from pre-loaded collection
+                            $invoice = $allInvoices->get($trainee->id);
 
                             $invoiceStatus = $invoice ? $invoice->status_formatted : 'لا توجد فاتورة';
                             $paidDate = $invoice ? $invoice->paid_at : '';
@@ -146,7 +176,6 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
                             $traineeCompanyName = $trainee->company ? $trainee->company->name_ar : 'غير مربوط بشركة';
 
                             if ($trainee->name) {
-                                Log::info('Adding trainee to report: ' . $trainee->name);
                                 $results[] = [
                                     'paid_date' => $paidDate,
                                     'invoice_to_date' => $invoiceToDate,
@@ -164,15 +193,15 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
                                     'deleted_at' => $trainee->deleted_at,
                                     'last_login_at' => optional($trainee->user)->last_login_at,
                                 ];
-                            } else {
-                                Log::info('Skipped trainee, name missing or invoice not matched: ' . json_encode([
-                                    'trainee_id' => $trainee->id,
-                                    'name' => $trainee->name,
-                                    'invoice' => $invoice ? $invoice->id : null,
-                                ]));
                             }
                         }
+
+                        // Free memory after processing chunk
+                        unset($traineesChunk);
                     });
+
+                    // Free memory after processing batch
+                    unset($allAttendanceRecords, $allInvoices, $traineeIds);
                 }
             }
 
