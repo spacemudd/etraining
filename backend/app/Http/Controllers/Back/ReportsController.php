@@ -219,14 +219,24 @@ class ReportsController extends Controller
 
     public function formCompanyCertificateseGenerateReport(Request $request)
     {
-        
-        GenerateCompanyCertificatesReportJob::dispatch($request->all(), auth()->id());
-        return response()->json(['message' => 'Report generation started.']);
+        $tracker = new JobTracker();
+        $tracker->user_id = auth()->user()->id;
+        $tracker->metadata = $request->except('_token');
+        $tracker->reportable_id = null;
+        $tracker->reportable_type = GenerateCompanyCertificatesReportJob::class;
+        $tracker->queued_at = now();
+        $tracker->save();
+
+        $tracker = $tracker->refresh();
+
+        GenerateCompanyCertificatesReportJob::dispatch($tracker);
+
+        return response()->json($tracker);
 
         // $course = Course::find($request->input('courseId.id'));
 
         // if (!$course) {
-        //     return response()->json(['error' => 'Course not found'], 404);
+        //     return response()->json(['error' => 'Course not found'], 404;
         // }
 
         // $courseName = $course->name_ar;

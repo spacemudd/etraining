@@ -6,8 +6,8 @@ use App\Models\Back\Company;
 use App\Models\Back\Course;
 use App\Models\Back\Invoice;
 use App\Exports\TraineeAttendanceExportByGroup;
+use App\Models\JobTracker;
 use App\Models\User;
-use App\Notifications\ReportReadyNotification;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -16,7 +16,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Storage;
+use Throwable;
 
 class GenerateCompanyCertificatesReportJob implements ShouldQueue
 {
@@ -26,24 +26,31 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
     public $tries = 1;
     public $memory = 512; // MB
 
-    protected $requestData;
-    protected $userId;
+    public $tracker;
 
-    public function __construct(array $requestData, $userId)
+    /**
+     * Create a new job instance.
+     *
+     * @param \App\Models\JobTracker $tracker
+     */
+    public function __construct(JobTracker $tracker)
     {
-        $this->requestData = $requestData;
-        $this->userId = $userId;
+        $this->tracker = $tracker;
     }
 
     public function handle()
     {
         try {
             Log::info('GenerateCompanyCertificatesReportJob started', [
-                'user_id' => $this->userId,
+                'tracker_id' => $this->tracker->id,
+                'user_id' => $this->tracker->user_id,
                 'timestamp' => now()->toDateTimeString(),
             ]);
 
-            $selectedCourseIds = array_column($this->requestData['courseId'], 'id');
+            $this->tracker->update(['started_at' => now()]);
+
+            $requestData = $this->tracker->metadata;
+            $selectedCourseIds = array_column($requestData['courseId'], 'id');
             $selectedCourses = Course::whereIn('id', $selectedCourseIds)->get();
             $courseNames = $selectedCourses->pluck('name_ar')->unique()->toArray();
             $courses = Course::whereIn('name_ar', $courseNames)->get();
@@ -52,7 +59,7 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
             ini_set('memory_limit', '1024M');
             // set_time_limit لا يعمل مع queue jobs، يتم التحكم بالوقت عبر $timeout property
 
-            $companyIds = array_column($this->requestData['companyId'], 'id');
+            $companyIds = array_column($requestData['companyId'], 'id');
             $companyName = '';
 
             foreach ($courses as $course) {
@@ -175,26 +182,26 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
             })->values()->toArray();
 
             $fileName = 'attendance_report_' . now()->timestamp . '.xlsx';
+            $localFilePath = storage_path('app/' . $fileName);
 
-            $filePath = 'reports/' . $fileName;
-            Excel::store(new TraineeAttendanceExportByGroup($results), $filePath, 's3');
+            Excel::store(new TraineeAttendanceExportByGroup($results), $fileName, 'local');
 
-            $temporaryUrl = Storage::disk('s3')->temporaryUrl($filePath, now()->addMinutes(30));
+            $this->tracker->addMedia($localFilePath)
+                ->withAttributes([
+                    'team_id' => $this->tracker->team_id,
+                ])->toMediaCollection('excel');
+
+            $this->tracker->update(['finished_at' => now()]);
 
             Log::info('GenerateCompanyCertificatesReportJob completed', [
                 'timestamp' => now()->toDateTimeString(),
-                'user_id' => $this->userId,
-                'report_file' => $filePath,
+                'tracker_id' => $this->tracker->id,
+                'user_id' => $this->tracker->user_id,
             ]);
-            
-            // Notify the user
-            $user = User::find($this->userId);
-            if ($user) {
-                $user->notify(new ReportReadyNotification($temporaryUrl));
-            }
         } catch (\Exception $e) {
             Log::error('GenerateCompanyCertificatesReportJob failed', [
-                'user_id' => $this->userId,
+                'tracker_id' => $this->tracker->id,
+                'user_id' => $this->tracker->user_id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);
@@ -202,13 +209,15 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
         }
     }
 
-    public function failed(\Throwable $exception)
+    public function failed(Throwable $exception)
     {
         Log::error('GenerateCompanyCertificatesReportJob permanently failed', [
-            'user_id' => $this->userId,
+            'tracker_id' => $this->tracker->id,
+            'user_id' => $this->tracker->user_id,
             'error' => $exception->getMessage(),
         ]);
-        
-        // يمكنك إضافة إشعار للمستخدم بالفشل هنا إذا أردت
+
+        $this->tracker->failure_reason = $exception->getMessage();
+        $this->tracker->save();
     }
 }
