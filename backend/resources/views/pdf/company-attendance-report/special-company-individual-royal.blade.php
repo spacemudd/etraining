@@ -18,32 +18,33 @@
         
         body {
             font-family: 'Arial', 'Tahoma', sans-serif;
-            background: #0C2D66;
-            color: #FFFFFF;
-            line-height: 1.4;
+            background: #f5f5f5;
+            color: #2c3e50;
+            line-height: 1.5;
             padding: 20px;
         }
         
         .container {
-            background: #0C2D66;
-            border: 3px solid #E2C044;
-            border-radius: 12px;
-            padding: 25px;
+            background: #ffffff;
+            border: 4px solid #d4af37;
+            border-radius: 16px;
+            padding: 30px;
             margin: 0 auto;
             max-width: 1400px;
-            box-shadow: 0 8px 24px rgba(12, 45, 102, 0.5);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), inset 0 0 60px rgba(212, 175, 55, 0.02);
         }
         
         .header {
             text-align: center;
-            background: linear-gradient(135deg, #0C2D66 0%, #1a4a8a 100%);
-            color: #E2C044;
-            padding: 25px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            border: 3px solid #E2C044;
-            box-shadow: 0 4px 12px rgba(12, 45, 102, 0.4);
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f8f9fa 100%);
+            color: #2c3e50;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 3px solid #d4af37;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
             position: relative;
+            overflow: hidden;
         }
         
         .header::before {
@@ -52,32 +53,47 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #E2C044 0%, #f4d76e 50%, #E2C044 100%);
+            height: 5px;
+            background: linear-gradient(90deg, #d4af37 0%, #f4d76e 30%, #d4af37 70%, #f4d76e 100%);
+            box-shadow: 0 2px 8px rgba(212, 175, 55, 0.6);
+        }
+        
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.5) 50%, transparent 100%);
         }
         
         .header h1 {
-            font-size: 28px;
-            margin-bottom: 8px;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            color: #FFFFFF !important;
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            color: #2c3e50 !important;
+            letter-spacing: 1px;
         }
         
         .header p {
-            font-size: 16px;
-            color: #FFFFFF !important;
-            font-weight: 300;
+            font-size: 17px;
+            color: #d4af37 !important;
+            font-weight: 500;
+            text-shadow: none;
+            letter-spacing: 0.5px;
         }
         
         .employee-card {
-            background: linear-gradient(135deg, #0C2D66 0%, #1a4a8a 100%);
-            padding: 25px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            border: 2px solid #E2C044;
-            box-shadow: 0 4px 8px rgba(226, 192, 68, 0.3);
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f8f9fa 100%);
+            padding: 28px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 3px solid #d4af37;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
             position: relative;
+            overflow: hidden;
         }
         
         .employee-card::before {
@@ -86,72 +102,102 @@
             right: 0;
             top: 0;
             bottom: 0;
-            width: 5px;
-            background: linear-gradient(180deg, #E2C044 0%, #f4d76e 100%);
+            width: 6px;
+            background: linear-gradient(180deg, #d4af37 0%, #f4d76e 50%, #d4af37 100%);
+            box-shadow: -2px 0 8px rgba(212, 175, 55, 0.5);
+        }
+        
+        .employee-card::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, transparent 0%, rgba(212, 175, 55, 0.3) 50%, transparent 100%);
         }
         
         .employee-name {
-            font-size: 26px;
-            font-weight: bold;
-            color: #FFFFFF !important;
-            margin-bottom: 15px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            font-size: 28px;
+            font-weight: 700;
+            color: #2c3e50 !important;
+            margin-bottom: 18px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            letter-spacing: 0.5px;
         }
         
         .employee-details {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
+            gap: 18px;
         }
         
         .employee-detail {
-            background: rgba(26, 74, 138, 0.5);
-            padding: 12px 15px;
-            border-radius: 6px;
-            font-size: 14px;
-            border: 2px solid #E2C044;
-            color: #FFFFFF !important;
+            background: #ffffff;
+            padding: 15px 18px;
+            border-radius: 10px;
+            font-size: 15px;
+            border: 2px solid #d4af37;
+            color: #2c3e50 !important;
             font-weight: 500;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
         }
         
         .company-info {
-            background: linear-gradient(135deg, #0C2D66 0%, #1a4a8a 100%);
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            border: 2px solid #E2C044;
-            box-shadow: 0 4px 8px rgba(226, 192, 68, 0.3);
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f8f9fa 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 3px solid #d4af37;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
         }
         
         .company-name {
-            font-size: 20px;
-            font-weight: bold;
-            color: #FFFFFF !important;
-            margin-bottom: 8px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #2c3e50 !important;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            letter-spacing: 0.5px;
         }
         
         .company-subtitle {
-            color: #E2C044 !important;
-            font-size: 16px;
-            font-weight: 500;
+            color: #d4af37 !important;
+            font-size: 17px;
+            font-weight: 600;
+            text-shadow: none;
         }
         
         .report-details {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+            width: 100%;
             margin-bottom: 25px;
+            overflow: hidden;
+            display: block;
         }
         
         .detail-card {
-            background: linear-gradient(135deg, #0C2D66 0%, #1a4a8a 100%);
-            border: 2px solid #E2C044;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #ffffff 100%);
+            border: 3px solid #d4af37;
             padding: 18px;
-            border-radius: 8px;
+            border-radius: 12px;
             text-align: center;
-            box-shadow: 0 3px 8px rgba(226, 192, 68, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
             position: relative;
             overflow: hidden;
+            float: right;
+            width: 23%;
+            margin-left: 2.66%;
+            box-sizing: border-box;
+        }
+        
+        .detail-card:first-child {
+            margin-left: 0;
+        }
+        
+        .report-details::after {
+            content: "";
+            display: table;
+            clear: both;
         }
         
         .detail-card::before {
@@ -160,191 +206,277 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #E2C044 0%, #f4d76e 50%, #E2C044 100%);
+            height: 4px;
+            background: linear-gradient(90deg, #d4af37 0%, #f4d76e 40%, #d4af37 80%, #f4d76e 100%);
+            box-shadow: 0 2px 6px rgba(212, 175, 55, 0.5);
+        }
+        
+        .detail-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.3) 50%, transparent 100%);
         }
         
         .detail-label {
-            font-weight: bold;
-            color: #FFFFFF !important;
-            font-size: 12px;
-            margin-bottom: 8px;
+            font-weight: 600;
+            color: #6c757d !important;
+            font-size: 13px;
+            margin-bottom: 10px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
+            text-shadow: none;
         }
         
         .detail-value {
-            font-size: 20px;
-            font-weight: bold;
-            color: #E2C044 !important;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            font-size: 24px;
+            font-weight: 700;
+            color: #d4af37 !important;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         
         .attendance-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 25px;
-            border: 2px solid #E2C044;
-            border-radius: 8px;
+            margin-top: 30px;
+            border: 3px solid #d4af37;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(12, 45, 102, 0.2);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), inset 0 0 40px rgba(212, 175, 55, 0.05);
         }
         
         .attendance-table th {
-            background: linear-gradient(135deg, #0C2D66 0%, #1a4a8a 100%) !important;
-            color: #E2C044 !important;
-            padding: 14px 10px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f8f9fa 100%) !important;
+            color: #2c3e50 !important;
+            padding: 16px 10px;
             text-align: center;
-            font-weight: bold;
-            font-size: 13px;
-            border: 1px solid #E2C044;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            font-weight: 700;
+            font-size: 14px;
+            border: 2px solid #d4af37;
+            text-shadow: none;
+            letter-spacing: 0.5px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
         }
         
         .attendance-table td {
-            padding: 14px 10px;
+            padding: 16px 10px;
             text-align: center;
-            border: 1px solid #E2C044;
-            background: #1a4a8a;
-            font-size: 13px;
-            color: #FFFFFF !important;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            background: #ffffff;
+            font-size: 14px;
+            color: #2c3e50 !important;
         }
         
         .attendance-table tr:nth-child(even) td {
-            background: #0C2D66;
+            background: #f8f9fa;
         }
         
         .attendance-mark {
             display: inline-block;
-            width: 28px;
-            height: 28px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
-            line-height: 28px;
-            font-weight: bold;
-            font-size: 13px;
+            line-height: 30px;
+            font-weight: 700;
+            font-size: 14px;
             text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            border: 1px solid rgba(12, 45, 102, 0.3);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(0, 0, 0, 0.2);
         }
         
         .present {
-            background: #E2C044 !important;
-            color: #0C2D66 !important;
-            font-weight: bold;
+            background: linear-gradient(135deg, #d4af37 0%, #f4d76e 100%) !important;
+            color: #0a1f3d !important;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
         }
         
         .absent {
-            background: #c0392b !important;
-            color: #ffffff !important;
+            background: #ffffff !important;
+            color: #dc3545 !important;
+            border: 2px solid #dc3545 !important;
+            font-weight: 700 !important;
+            text-shadow: none;
+        }
+        
+        .attendance-mark.absent {
+            background: #ffffff !important;
+            color: #dc3545 !important;
+            border: 2px solid #dc3545 !important;
+            font-weight: 700 !important;
+            text-shadow: none !important;
+        }
+        
+        span.attendance-mark.absent {
+            background: #ffffff !important;
+            color: #dc3545 !important;
+            border: 2px solid #dc3545 !important;
+            font-weight: 700 !important;
+            text-shadow: none !important;
         }
         
         .vacation {
-            background: #d68910 !important;
-            color: #ffffff !important;
+            background: #ffffff !important;
+            color: #dc3545 !important;
+            border: 2px solid #dc3545 !important;
+            font-weight: 700 !important;
+            text-shadow: none;
+        }
+        
+        .attendance-mark.vacation {
+            background: #ffffff !important;
+            color: #dc3545 !important;
+            border: 2px solid #dc3545 !important;
+            font-weight: 700 !important;
+            text-shadow: none !important;
+        }
+        
+        span.attendance-mark.vacation {
+            background: #ffffff !important;
+            color: #dc3545 !important;
+            border: 2px solid #dc3545 !important;
+            font-weight: 700 !important;
+            text-shadow: none !important;
         }
         
         .day-header {
-            background: linear-gradient(135deg, #0C2D66 0%, #1a4a8a 100%) !important;
-            color: #E2C044 !important;
-            border: 1px solid #E2C044 !important;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f8f9fa 100%) !important;
+            color: #2c3e50 !important;
+            border: 2px solid #d4af37 !important;
         }
         
         .vacation-day {
-            background: #8b6914 !important;
-            color: #E2C044 !important;
-            border: 1px solid #E2C044 !important;
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%) !important;
+            color: #856404 !important;
+            border: 2px solid #d4af37 !important;
         }
         
         .summary-section {
-            margin-top: 25px;
-            background: linear-gradient(135deg, #0C2D66 0%, #1a4a8a 100%);
-            padding: 25px;
-            border-radius: 8px;
-            border: 2px solid #E2C044;
-            box-shadow: 0 4px 8px rgba(226, 192, 68, 0.3);
+            margin-top: 30px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f8f9fa 100%);
+            padding: 28px;
+            border-radius: 12px;
+            border: 3px solid #d4af37;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
         }
         
         .summary-title {
-            font-size: 20px;
-            font-weight: bold;
-            color: #FFFFFF !important;
-            margin-bottom: 20px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #2c3e50 !important;
+            margin-bottom: 22px;
             text-align: center;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            letter-spacing: 0.5px;
         }
         
         .summary-stats {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+            gap: 18px;
         }
         
         .stat-item {
-            background: rgba(26, 74, 138, 0.5);
-            padding: 20px;
-            border-radius: 8px;
+            background: #ffffff;
+            padding: 22px;
+            border-radius: 12px;
             text-align: center;
-            border: 2px solid #E2C044;
-            box-shadow: 0 3px 6px rgba(226, 192, 68, 0.2);
+            border: 3px solid #d4af37;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
         }
         
         .stat-number {
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 8px;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         
-        .stat-present { color: #E2C044 !important; }
-        .stat-absent { color: #ff6b6b !important; }
-        .stat-vacation { color: #feca57 !important; }
-        .stat-total { color: #E2C044 !important; }
+        .stat-present { color: #d4af37 !important; }
+        .stat-absent { color: #dc3545 !important; }
+        .stat-vacation { color: #f39c12 !important; }
+        .stat-total { color: #d4af37 !important; }
         
         .stat-label {
-            font-size: 13px;
-            color: #FFFFFF !important;
-            font-weight: bold;
+            font-size: 14px;
+            color: #6c757d !important;
+            font-weight: 600;
+            text-shadow: none;
         }
         
         .logo {
-            max-width: 80px;
+            max-width: 100px;
             height: auto;
-            border-radius: 6px;
-            border: 2px solid #E2C044;
-            box-shadow: 0 3px 6px rgba(12, 45, 102, 0.2);
+            border-radius: 8px;
+            border: 3px solid #d4af37;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4), 0 0 20px rgba(212, 175, 55, 0.3);
         }
         
         .footer {
-            margin-top: 25px;
+            margin-top: 30px;
             text-align: center;
-            padding: 18px;
-            background: linear-gradient(135deg, #0C2D66 0%, #1a4a8a 100%);
-            border-radius: 8px;
-            border-top: 3px solid #E2C044;
+            padding: 22px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f8f9fa 100%);
+            border-radius: 12px;
+            border-top: 4px solid #d4af37;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            position: relative;
+        }
+        
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #d4af37 0%, #f4d76e 50%, #d4af37 100%);
         }
         
         .footer p {
-            color: #FFFFFF !important;
-            font-size: 12px;
+            color: #6c757d !important;
+            font-size: 13px;
             margin: 0;
             font-weight: 500;
+            text-shadow: none;
+            letter-spacing: 0.3px;
         }
         
         /* تحسينات الطباعة */
         @media print {
             body {
-                background: #0C2D66;
+                background: #ffffff;
                 padding: 0;
             }
             
             .container {
                 box-shadow: none;
-                border: 2px solid #E2C044;
+                border: 3px solid #d4af37;
                 margin: 0;
                 padding: 15px;
-                background: #0C2D66 !important;
+                background: #ffffff !important;
             }
             
             .present, .absent, .vacation {
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
+            .absent, .attendance-mark.absent, span.attendance-mark.absent {
+                background: #ffffff !important;
+                color: #dc3545 !important;
+                border: 2px solid #dc3545 !important;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
+            .vacation, .attendance-mark.vacation, span.attendance-mark.vacation {
+                background: #ffffff !important;
+                color: #dc3545 !important;
+                border: 2px solid #dc3545 !important;
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
             }
@@ -355,22 +487,22 @@
             }
             
             .attendance-table th {
-                background: linear-gradient(135deg, #0C2D66 0%, #1a4a8a 100%) !important;
-                color: #E2C044 !important;
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f8f9fa 100%) !important;
+                color: #2c3e50 !important;
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
             }
             
             .attendance-table td {
-                background: #1a4a8a !important;
-                color: #FFFFFF !important;
+                background: #ffffff !important;
+                color: #2c3e50 !important;
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
             }
             
             .attendance-table tr:nth-child(even) td {
-                background: #0C2D66 !important;
-                color: #FFFFFF !important;
+                background: #f8f9fa !important;
+                color: #2c3e50 !important;
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
             }
@@ -478,7 +610,7 @@
                                 @if ($record->start_date && $day['date_carbon']->isAfter($record->end_date))
                                     <span style="color: #E2C044;">-</span>
                                 @else
-                                    <span class="attendance-mark vacation">X</span>
+                                    <span class="attendance-mark vacation" style="background: #ffffff !important; color: #dc3545 !important; border: 2px solid #dc3545 !important;">X</span>
                                 @endif
                             @else
                                 @if ($record->start_date)
@@ -486,7 +618,7 @@
                                         <span class="attendance-mark present">✓</span>
                                     @else
                                         @if ($record->status === 'new_registration')
-                                            <span class="attendance-mark absent">✗</span>
+                                            <span class="attendance-mark absent" style="background: #ffffff !important; color: #dc3545 !important; border: 2px solid #dc3545 !important;">✗</span>
                                         @else
                                             <span style="color: #E2C044;">-</span>
                                         @endif
@@ -581,7 +713,6 @@
         
         <!-- Footer -->
         <div class="footer">
-            <p>تقرير فردي - تم إنشاؤه تلقائياً في {{ now()->format('Y-m-d H:i:s') }} - التصميم الملكي</p>
         </div>
     </div>
 </body>
