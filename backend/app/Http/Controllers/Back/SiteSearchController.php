@@ -40,6 +40,25 @@ class SiteSearchController extends Controller
             'search' => 'required|max:200',
         ]);
 
+        // Check if user has limited search permission (identity only)
+        // User should have search permission but may or may not have view permission
+        $hasLimitedSearch = auth()->user()->can('search-trainees-by-identity');
+
+        if ($hasLimitedSearch) {
+            // Only search by identity number for limited users
+            $trainees = Trainee::where('identity_number', 'LIKE', '%'.$request->search.'%')
+                ->with('company')
+                ->withTrashed()
+                ->take(30)
+                ->get();
+
+            if ($request->trainees) return $trainees;
+
+            // Return only trainees, no companies for limited users
+            return $trainees;
+        }
+
+        // Full search for users with full permissions
         $trainees = Trainee::where('name', 'LIKE', '%'.$request->search.'%')
             ->orWhere('email', 'LIKE', '%'.$request->search.'%')
             ->orWhere('phone', 'LIKE', '%'.$request->search.'%')

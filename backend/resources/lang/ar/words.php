@@ -883,4 +883,7 @@ return [
     'modern-template' => 'القالب الحديث',
     'gradient-template' => 'القالب المتدرج',
     'issued-company-invoices-summary' => 'ملخص فواتير الشركات الصادرة',
+    'trainee-information' => 'معلومات المتدرب',
+    'use-search-to-find-trainees' => 'استخدم البحث للعثور على المتدربين',
+    'no-identity-file' => 'لا يوجد ملف هوية',
 ];

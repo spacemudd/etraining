@@ -189,6 +189,78 @@ class TraineesController extends Controller
             $query->whereIn('id', $allowedRoleIds);
         })->pluck('email')->toArray();
 
+        // Check if user has limited view permission (identity only)
+        // This user can only view identity file and basic info
+        $hasLimitedView = auth()->user()->can('view-trainee-identity-only');
+
+        if ($hasLimitedView) {
+            // Limited view: only show name, identity number, and identity file
+            // But we need to send a full trainee object with default values for Vue component
+            $trainee = Trainee::withTrashed()
+                ->select('id', 'name', 'identity_number', 'created_at', 'updated_at', 'deleted_at')
+                ->findOrFail($id);
+
+            // Get identity file URL if exists
+            $identityCopyUrl = $trainee->identity_copy_url;
+
+            // Create a minimal trainee object with required properties for Vue component
+            $traineeData = [
+                'id' => $trainee->id,
+                'name' => $trainee->name,
+                'identity_number' => $trainee->identity_number,
+                'identity_copy_url' => $identityCopyUrl,
+                // Add default values for required properties
+                'company' => null,
+                'company_id' => null,
+                'educational_level' => null,
+                'educational_level_id' => null,
+                'city' => null,
+                'city_id' => null,
+                'marital_status' => null,
+                'marital_status_id' => null,
+                'trainee_group' => null,
+                'trainee_group_id' => null,
+                'user' => null,
+                'invoices' => [],
+                'custom_certificates' => [],
+                'uk_certificates' => [],
+                'general_files_count' => 0,
+                'email' => null,
+                'english_name' => null,
+                'birthday' => null,
+                'phone' => null,
+                'phone_additional' => null,
+                'national_address' => null,
+                'children_count' => null,
+                'bill_from_date' => null,
+                'linked_date' => null,
+                'trainee_message' => null,
+                'job_number' => null,
+                'dont_edit_notice' => false,
+                'phone_is_owned' => null,
+                'phone_ownership_status' => null,
+                'whatsapp_link' => null,
+                'qualification_copy_url' => null,
+                'bank_account_copy_url' => null,
+                'national_address_copy_url' => null,
+                'cv_url' => null,
+                'gosi_certificate_copy_url' => null,
+                'qiwa_contract_copy_url' => null,
+            ];
+
+            return Inertia::render('Back/Trainees/Show', [
+                'is_limited_view' => true,
+                'trainee' => $traineeData,
+                'companies' => collect([]),
+                'in_block_list' => null,
+                'trainee_groups' => collect([]),
+                'cities' => collect([]),
+                'marital_statuses' => collect([]),
+                'educational_levels' => collect([]),
+                'allowed_users_for_special_documents' => $allowedUsers,
+            ]);
+        }
+
         return Inertia::render('Back/Trainees/Show', [
             'companies' => Company::get(),
             'in_block_list' => $in_block_list,

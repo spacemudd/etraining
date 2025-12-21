@@ -67,7 +67,9 @@ class RolesService
         'view-all-companies',
         'view-gosi',
         'edit-date-period',
-        'can-create-recruitment-companies'
+        'can-create-recruitment-companies',
+        'search-trainees-by-identity',
+        'view-trainee-identity-only'
     ];
 
     public $instructorPermissions = [

@@ -37,6 +37,9 @@ class DashboardController extends Controller
             }
         }
 
+        // Check if user has limited view permission (identity only)
+        $hasLimitedView = $user->can('view-trainee-identity-only');
+
         return Inertia::render('Dashboard', [
             'companies_count' => \App\Models\Back\Company::count(),
             'trainees_count' => \App\Models\Back\Trainee::count(),
@@ -45,6 +48,7 @@ class DashboardController extends Controller
             'trainees_incomplete_count' => \App\Models\Back\Trainee::incomplete()->count(),
             'instructors_count' => \App\Models\Back\Instructor::count(),
             'courses_count' => \App\Models\Back\Course::count(),
+            'is_limited_view' => $hasLimitedView,
         ]);
     }
 }

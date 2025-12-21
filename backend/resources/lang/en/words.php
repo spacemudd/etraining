@@ -885,4 +885,7 @@ return [
     'modern-template' => 'Modern Template',
     'gradient-template' => 'Gradient Template',
     'issued-company-invoices-summary' => 'Issued Company Invoices Summary',
+    'trainee-information' => 'Trainee Information',
+    'use-search-to-find-trainees' => 'Use search to find trainees',
+    'no-identity-file' => 'No identity file',
 ];

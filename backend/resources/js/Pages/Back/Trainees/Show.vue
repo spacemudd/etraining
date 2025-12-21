@@ -1,5 +1,111 @@
 <template>
-  <app-layout>
+  <!-- Limited view: Simple layout without sidebar -->
+  <div v-if="is_limited_view" class="min-h-screen bg-gray-50">
+    <!-- Header with search bar -->
+    <header class="z-10 py-4 bg-white shadow-md">
+      <div class="container flex items-center justify-between h-full px-6 mx-auto text-red-600">
+        <!-- Search input -->
+        <div class="flex justify-center flex-1">
+          <admin-searchbar />
+        </div>
+        <language-selector></language-selector>
+        <ul class="flex items-center flex-shrink-0 space-x-6">
+          <!-- Profile menu -->
+          <li class="relative">
+            <button
+              class="align-middle rounded-full focus:shadow-outline-red focus:outline-none"
+              @click="toggleProfileMenu"
+              @keydown.escape="closeProfileMenu"
+              aria-label="Account"
+              aria-haspopup="true"
+            >
+              <img class="object-cover w-8 h-8 rounded-full" :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name" aria-hidden="true" />
+            </button>
+            <template v-if="isProfileMenuOpen">
+              <ul
+                @keydown.escape="closeProfileMenu"
+                class="absolute right-0 w-56 p-2 mt-2 space-y-2 text-gray-600 bg-white border border-gray-100 rounded-md shadow-md z-50"
+                aria-label="submenu"
+                ref="profileMenu"
+              >
+                <li>
+                  <inertia-link :href="route('profile.show')" @click="closeProfileMenu" class="block px-4 py-2 text-sm transition-colors duration-150 hover:bg-gray-100">
+                    {{ $t('words.profile') }}
+                  </inertia-link>
+                </li>
+                <li>
+                  <button @click="logout" class="block w-full text-left px-4 py-2 text-sm transition-colors duration-150 hover:bg-gray-100">
+                    {{ $t('words.logout') }}
+                  </button>
+                </li>
+              </ul>
+            </template>
+          </li>
+        </ul>
+      </div>
+    </header>
+
+    <!-- Main content -->
+    <div class="container mx-auto px-6 py-8">
+      <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-8">
+        <h1 class="text-2xl font-bold mb-6 text-gray-800">{{ $t('words.trainee-information') }}</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <jet-label for="name" :value="$t('words.name')" />
+            <jet-input
+              id="name"
+              type="text"
+              class="mt-1 block w-full bg-gray-100"
+              :value="trainee.name"
+              disabled
+            />
+          </div>
+          <div>
+            <jet-label
+              for="identity_number"
+              :value="$t('words.identity_number')"
+            />
+            <jet-input
+              id="identity_number"
+              type="text"
+              class="mt-1 block w-full bg-gray-100"
+              :value="trainee.identity_number"
+              disabled
+            />
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <jet-label
+            :value="$t('words.identity-card-photocopy')"
+            class="mb-2"
+          />
+          <div
+            class="bg-white border-2 rounded-lg flex flex-col justify-center items-center min-h-[200px]"
+            v-if="trainee.identity_copy_url"
+          >
+            <a
+              class="bg-gray-700 text-white font-semibold p-3 text-center w-1/2 rounded my-2 hover:bg-gray-800"
+              target="_blank"
+              :href="trainee.identity_copy_url"
+            >
+              {{ $t("words.download") }}
+            </a>
+          </div>
+          <div
+            v-else
+            class="bg-gray-100 border-2 border-dashed rounded-lg flex flex-col justify-center items-center min-h-[200px] text-gray-500"
+          >
+            <p>{{ $t("words.no-identity-file") }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full view: Normal layout with sidebar -->
+  <app-layout v-else>
     <div class="container px-6 mx-auto grid pt-6">
       <breadcrumb-container
         :crumbs="[
@@ -15,9 +121,10 @@
       ></validation-errors>
 
       <div class="grid grid-cols-6 gap-6">
+
         <div
           class="col-span-6 items-center justify-end bg-gray-50 text-right flex gap-6"
-          v-if="trainee.dont_edit_notice"
+          v-if="trainee.dont_edit_notice && !is_limited_view"
         >
           <div
             class="bg-red-600 font-bold text-white p-2 rounded-sm flex gap-2"
@@ -46,7 +153,7 @@
 
         <div
           class="col-span-6 items-center justify-end bg-gray-50 text-right flex gap-6"
-          v-if="in_block_list"
+          v-if="in_block_list && !is_limited_view"
         >
           <div class="bg-red-600 p-2">
             <div class="font-bold text-white p-2 rounded-sm flex gap-2">
@@ -118,6 +225,7 @@
 
         <div
           class="col-span-6 items-center justify-end bg-gray-50 text-right flex gap-6"
+          v-if="!is_limited_view"
         >
           <inertia-link
             :href="
@@ -315,13 +423,14 @@
 
         <div
           class="col-span-6 items-center justify-end bg-gray-50 text-right flex gap-6"
+          v-if="!is_limited_view"
         >
           <gosi-container
             :nin-or-iqama="trainee.clean_identity_number"
           ></gosi-container>
         </div>
 
-        <div v-if="!editButton.editOption" class="col-span-6 sm:col-span-2">
+        <div v-if="!editButton.editOption && !is_limited_view" class="col-span-6 sm:col-span-2">
           <jet-label for="trainee_group_name" :value="$t('words.group-name')" />
           <template v-if="trainee.trainee_group_id">
             <jet-input
@@ -344,7 +453,7 @@
             />
           </template>
         </div>
-        <div v-else class="col-span-6 sm:col-span-2">
+        <div v-else class="col-span-6 sm:col-span-2" v-if="!is_limited_view">
           <jet-label for="trainee_group_name" :value="$t('words.group-name')" />
           <select
             :class="editButton.selectInputClass"
@@ -363,7 +472,7 @@
           </select>
         </div>
 
-        <div v-if="!editButton.editOption" class="col-span-6 sm:col-span-2">
+        <div v-if="!editButton.editOption && !is_limited_view" class="col-span-6 sm:col-span-2">
           <jet-label for="company_id" :value="$t('words.company')" />
           <inertia-link
             v-if="trainee.company"
@@ -384,7 +493,7 @@
             هذه الشركة تعمل عن بعد
           </div>
         </div>
-        <div v-else class="col-span-6 sm:col-span-2">
+        <div v-else class="col-span-6 sm:col-span-2" v-if="!is_limited_view">
           <jet-label for="company_id" :value="$t('words.company')" />
           <select
             :class="editButton.selectInputClass"
@@ -404,7 +513,7 @@
           </select>
         </div>
 
-        <div class="col-span-6 sm:col-span-2">
+        <div class="col-span-6 sm:col-span-2" v-if="!is_limited_view">
           <jet-label for="name" :value="$t('words.name')" />
           <jet-input
             id="name"
@@ -416,7 +525,7 @@
           />
         </div>
 
-        <div class="col-span-6 sm:col-span-2">
+        <div class="col-span-6 sm:col-span-2" v-if="!is_limited_view">
           <jet-label for="english_name" :value="$t('words.name_en')" />
           <jet-input
             id="english_name"
@@ -432,7 +541,7 @@
 
 
 
-        <div class="col-span-6 sm:col-span-2">
+        <div class="col-span-6 sm:col-span-2" v-if="!is_limited_view">
           <jet-label
             for="identity_number"
             :value="$t('words.identity_number')"
@@ -446,7 +555,7 @@
           />
         </div>
 
-        <div class="col-span-6 sm:col-span-2">
+        <div class="col-span-6 sm:col-span-2" v-if="!is_limited_view">
           <jet-label for="birthday" :value="$t('words.birthday')" />
           <jet-input
             id="birthday"
@@ -457,7 +566,7 @@
           />
         </div>
 
-        <div class="col-span-6 sm:col-span-2">
+        <div class="col-span-6 sm:col-span-2" v-if="!is_limited_view">
           <label
             for="phone"
             class="block font-medium text-sm text-gray-700 flex justify-between"
@@ -493,7 +602,7 @@
           />
         </div>
 
-        <div class="col-span-6 sm:col-span-2">
+        <div class="col-span-6 sm:col-span-2" v-if="!is_limited_view">
           <jet-label
             for="phone_additional"
             :value="$t('words.phone_additional')"
@@ -822,7 +931,7 @@
       <jet-section-border></jet-section-border>
 
       <div class="grid grid-cols-1 md:grid-cols-7 gap-6 my-2">
-        <div class="md:col-span-7 lg:col-span-1 sm:col-span-3">
+        <div class="md:col-span-7 lg:col-span-1 sm:col-span-3" v-if="!is_limited_view">
           <div class="px-4 sm:px-0">
             <h3 class="text-lg font-medium text-gray-900">
               {{ $t("words.documents") }}
@@ -838,7 +947,7 @@
                 :href="route('back.trainees.files.index', trainee.id)"
               >
                 {{ $t("words.other-files") }} ({{
-                  trainee.general_files_count
+                  trainee.general_files_count || 0
                 }})
               </inertia-link>
             </div>
@@ -872,6 +981,7 @@
               >{{ $t("words.download") }}</a
             >
             <button
+              v-if="!is_limited_view"
               class="bg-red-500 text-white font-semibold p-2 text-center w-1/2 rounded my-1"
               @click="deleteIdentity"
             >
@@ -880,13 +990,14 @@
           </div>
           <vue-dropzone
             v-else
+            v-if="!is_limited_view"
             id="dropzoneIdentity"
             @vdropzone-sending="sendingCsrf"
             :options="dropzoneOptionsIdentity"
           ></vue-dropzone>
         </div>
 
-        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
+        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3" v-if="!is_limited_view">
           <jet-label
             :value="$t('words.qualification-photocopy')"
             class="mb-2"
@@ -916,7 +1027,7 @@
           ></vue-dropzone>
         </div>
 
-        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
+        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3" v-if="!is_limited_view">
           <jet-label :value="$t('words.bank-account-photocopy')" class="mb-2" />
 
           <div
@@ -944,7 +1055,7 @@
           ></vue-dropzone>
         </div>
 
-        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
+        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3" v-if="!is_limited_view">
           <jet-label :value="$t('words.national-address-copy')" class="mb-2" />
 
           <div
@@ -972,7 +1083,7 @@
           ></vue-dropzone>
         </div>
 
-        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
+        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3" v-if="!is_limited_view">
           <jet-label :value="$t('words.cv')" class="mb-2" />
 
           <div
@@ -1099,6 +1210,7 @@
 
       <div
         v-can="'issue-monthly-invoices'"
+        v-if="!is_limited_view"
         class="grid grid-cols-1 md:grid-cols-2 gap-6 my-2"
       >
         <div class="md:col-span-4 lg:col-span-1 sm:col-span-3">
@@ -1147,7 +1259,7 @@
               <th class="px-6 pt-6 pb-4">{{ $t("words.status") }}</th>
             </tr>
             <tr
-              v-for="invoice in trainee.invoices"
+              v-for="invoice in (trainee.invoices || [])"
               :key="invoice.id"
               class="border-t hover:bg-gray-100 focus-within:bg-gray-100 text-center"
             >
@@ -1168,7 +1280,7 @@
               </td>
             </tr>
 
-            <tr v-if="trainee.invoices.length === 0">
+            <tr v-if="!trainee.invoices || trainee.invoices.length === 0">
               <td class="border-t px-4 py-4" colspan="4">
                 <empty-slate />
               </td>
@@ -1180,6 +1292,7 @@
       <jet-section-border></jet-section-border>
 
       <trainee-audit-container
+        v-if="!is_limited_view"
         :trainee_id="trainee.id"
       ></trainee-audit-container>
     </div>
@@ -1199,6 +1312,8 @@ import JetLabel from "@/Jetstream/Label";
 import CompanyContractsPagination from "@/Components/CompanyContractsPagination";
 import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
 import VueDropzone from "vue2-dropzone";
+import AdminSearchbar from "@/Components/AdminSearchbar";
+import LanguageSelector from "@/Shared/LanguageSelector";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import SelectTraineeGroup from "@/Components/SelectTraineeGroup";
 import ChangeTraineePassword from "@/Components/ChangeTraineePassword";
@@ -1222,6 +1337,7 @@ export default {
     "trainee_groups",
     "trainee_group_trainees",
     "companies",
+    "is_limited_view",
   ],
   components: {
     GosiContainer,
@@ -1244,10 +1360,13 @@ export default {
     SelectTraineeGroup,
     VueDropzone,
     EmptySlate,
+    AdminSearchbar,
+    LanguageSelector,
   },
   data() {
     return {
       isRefreshing: false,
+      isProfileMenuOpen: false,
       new_trainee_group: {
         name: "",
         id: "",
@@ -1416,6 +1535,9 @@ export default {
     console.log('Trainee ID:', this.trainee.id);
     console.log('Refresh button should be visible');
     
+    // Add click outside listener for profile menu
+    document.addEventListener('click', this.handleClickOutside);
+    
     // Test if the button exists
     setTimeout(() => {
       const refreshButton = document.getElementById('refresh-button');
@@ -1440,7 +1562,45 @@ export default {
       this.trainee.trainee_group_object = this.new_trainee_group;
     }
   },
+  beforeDestroy() {
+    // Remove click outside listener
+    document.removeEventListener('click', this.handleClickOutside);
+  },
   methods: {
+    toggleProfileMenu() {
+      this.isProfileMenuOpen = !this.isProfileMenuOpen;
+    },
+    closeProfileMenu() {
+      this.isProfileMenuOpen = false;
+    },
+    handleClickOutside(event) {
+      if (this.isProfileMenuOpen && this.$refs.profileMenu) {
+        // Check if click is not on the profile menu or profile button
+        const profileButton = event.target.closest('button[aria-label="Account"]');
+        const profileMenu = this.$refs.profileMenu;
+        
+        if (!profileMenu.contains(event.target) && !profileButton) {
+          this.closeProfileMenu();
+        }
+      }
+    },
+    logout() {
+      const csrfToken = document.querySelector('meta[name="csrf-token"]');
+      const token = csrfToken ? csrfToken.getAttribute('content') : '';
+      
+      axios.post('/logout', {}, {
+        headers: {
+          'X-CSRF-TOKEN': token,
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      }).then(response => {
+        window.location = '/';
+      }).catch(error => {
+        console.error('Logout error:', error);
+        // Fallback: try direct redirect even on error
+        window.location = '/';
+      });
+    },
     refreshInvoices() {
       console.log('=== REFRESH INVOICES FUNCTION CALLED ===');
       console.log('Refresh invoices clicked');
