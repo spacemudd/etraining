@@ -430,88 +430,92 @@
           ></gosi-container>
         </div>
 
-        <div v-if="!editButton.editOption && !is_limited_view" class="col-span-6 sm:col-span-2">
-          <jet-label for="trainee_group_name" :value="$t('words.group-name')" />
-          <template v-if="trainee.trainee_group_id">
-            <jet-input
-              id="group-name"
-              type="text"
-              :class="editButton.inputClass"
-              v-model="trainee.trainee_group.name"
-              autocomplete="off"
-              :disabled="!editButton.editOption"
-            />
-          </template>
-          <template v-else>
-            <jet-input
-              id="group-name"
-              type="text"
-              :class="editButton.inputClass"
-              v-model="trainee.trainee_group"
-              autocomplete="off"
-              :disabled="!editButton.editOption"
-            />
-          </template>
-        </div>
-        <div v-else class="col-span-6 sm:col-span-2" v-if="!is_limited_view">
-          <jet-label for="trainee_group_name" :value="$t('words.group-name')" />
-          <select
-            :class="editButton.selectInputClass"
-            v-model="trainee.trainee_group"
-            id="trainee_group_id"
-            :disabled="!editButton.editOption"
-          >
-            <option value=""></option>
-            <option
-              v-for="group in trainee_groups"
-              :key="group.id"
-              :value="group"
-            >
-              {{ group.name }}
-            </option>
-          </select>
-        </div>
-
-        <div v-if="!editButton.editOption && !is_limited_view" class="col-span-6 sm:col-span-2">
-          <jet-label for="company_id" :value="$t('words.company')" />
-          <inertia-link
-            v-if="trainee.company"
-            class="block text-blue-600 hover:text-blue-800 border rounded-lg p-2 mt-1 bg-gray-100"
-            :href="route('back.companies.show', trainee.company.id)"
-            >{{ trainee.company.name_ar }}</inertia-link
-          >
-          <jet-input
-            v-else
-            id="company_id"
-            type="text"
-            :class="editButton.inputClass"
-            :value="trainee.company ? trainee.company.name_ar : ''"
-            autocomplete="off"
-            :disabled="!editButton.editOption"
-          />
-          <div v-if="trainee.company && trainee.company.nature_of_work === 'عمل عن بعد'" class="mt-2 p-2 bg-red-100 text-red-800 rounded-md text-sm">
-            هذه الشركة تعمل عن بعد
+        <template v-if="!is_limited_view">
+          <div v-if="!editButton.editOption" class="col-span-6 sm:col-span-2">
+            <jet-label for="trainee_group_name" :value="$t('words.group-name')" />
+            <template v-if="trainee.trainee_group_id">
+              <jet-input
+                id="group-name"
+                type="text"
+                :class="editButton.inputClass"
+                v-model="trainee.trainee_group.name"
+                autocomplete="off"
+                :disabled="!editButton.editOption"
+              />
+            </template>
+            <template v-else>
+              <jet-input
+                id="group-name"
+                type="text"
+                :class="editButton.inputClass"
+                v-model="trainee.trainee_group"
+                autocomplete="off"
+                :disabled="!editButton.editOption"
+              />
+            </template>
           </div>
-        </div>
-        <div v-else class="col-span-6 sm:col-span-2" v-if="!is_limited_view">
-          <jet-label for="company_id" :value="$t('words.company')" />
-          <select
-            :class="editButton.selectInputClass"
-            v-model="trainee.company_id"
-            ref="company_id_selector"
-            id="company_id_selector"
-            :disabled="!editButton.editOption"
-          >
-            <option value=""></option>
-            <option
-              v-for="company in companies"
-              :key="company.id"
-              :value="company.id"
+          <div v-else class="col-span-6 sm:col-span-2">
+            <jet-label for="trainee_group_name" :value="$t('words.group-name')" />
+            <select
+              :class="editButton.selectInputClass"
+              v-model="trainee.trainee_group"
+              id="trainee_group_id"
+              :disabled="!editButton.editOption"
             >
-              {{ company.name_ar }}
-            </option>
-          </select>
-        </div>
+              <option value=""></option>
+              <option
+                v-for="group in trainee_groups"
+                :key="group.id"
+                :value="group"
+              >
+                {{ group.name }}
+              </option>
+            </select>
+          </div>
+        </template>
+
+        <template v-if="!is_limited_view">
+          <div v-if="!editButton.editOption" class="col-span-6 sm:col-span-2">
+            <jet-label for="company_id" :value="$t('words.company')" />
+            <inertia-link
+              v-if="trainee.company"
+              class="block text-blue-600 hover:text-blue-800 border rounded-lg p-2 mt-1 bg-gray-100"
+              :href="route('back.companies.show', trainee.company.id)"
+              >{{ trainee.company.name_ar }}</inertia-link
+            >
+            <jet-input
+              v-else
+              id="company_id"
+              type="text"
+              :class="editButton.inputClass"
+              :value="trainee.company ? trainee.company.name_ar : ''"
+              autocomplete="off"
+              :disabled="!editButton.editOption"
+            />
+            <div v-if="trainee.company && trainee.company.nature_of_work === 'عمل عن بعد'" class="mt-2 p-2 bg-red-100 text-red-800 rounded-md text-sm">
+              هذه الشركة تعمل عن بعد
+            </div>
+          </div>
+          <div v-else class="col-span-6 sm:col-span-2">
+            <jet-label for="company_id" :value="$t('words.company')" />
+            <select
+              :class="editButton.selectInputClass"
+              v-model="trainee.company_id"
+              ref="company_id_selector"
+              id="company_id_selector"
+              :disabled="!editButton.editOption"
+            >
+              <option value=""></option>
+              <option
+                v-for="company in companies"
+                :key="company.id"
+                :value="company.id"
+              >
+                {{ company.name_ar }}
+              </option>
+            </select>
+          </div>
+        </template>
 
         <div class="col-span-6 sm:col-span-2" v-if="!is_limited_view">
           <jet-label for="name" :value="$t('words.name')" />

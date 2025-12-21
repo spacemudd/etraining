@@ -886,4 +886,6 @@ return [
     'trainee-information' => 'معلومات المتدرب',
     'use-search-to-find-trainees' => 'استخدم البحث للعثور على المتدربين',
     'no-identity-file' => 'لا يوجد ملف هوية',
+    'nature_of_work' => 'طبيعة العمل',
+    'region' => 'المنطقة',
 ];
