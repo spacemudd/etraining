@@ -176,6 +176,20 @@
                             <p class="text-sm text-gray-500 mt-1">تصميم ملكي فاخر بألوان ملكية</p>
                         </div>
                     </div>
+                    
+                    <div class="border rounded-lg p-4 cursor-pointer transition-all duration-200"
+                         :class="templateForm.template_type === 'elegant' ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-gray-300'"
+                         @click="selectTemplate('elegant')">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto mb-2 bg-gradient-to-br from-purple-400 to-purple-300 rounded-lg flex items-center justify-center border-2 border-purple-500 shadow-lg">
+                                <svg class="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                </svg>
+                            </div>
+                            <h4 class="font-medium text-gray-900">القالب الأنيق</h4>
+                            <p class="text-sm text-gray-500 mt-1">تصميم أنيق بألوان بنفسجية فاتحة</p>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="mt-6 flex justify-end">

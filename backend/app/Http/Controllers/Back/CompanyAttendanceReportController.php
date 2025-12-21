@@ -559,7 +559,7 @@ class CompanyAttendanceReportController extends Controller
 public function updateTemplate($id, Request $request)
 {
     $request->validate([
-        'template_type' => 'required|in:default,simple,modern,gradient,classic,royal',
+        'template_type' => 'required|in:default,simple,modern,gradient,classic,royal,elegant',
     ]);
 
     $report = CompanyAttendanceReport::findOrFail($id);
@@ -567,7 +567,7 @@ public function updateTemplate($id, Request $request)
     
     // تنظيف القيمة والتأكد من أنها صحيحة
     $templateType = trim($templateType);
-    if (empty($templateType) || !in_array($templateType, ['default', 'simple', 'modern', 'gradient', 'classic', 'royal'])) {
+    if (empty($templateType) || !in_array($templateType, ['default', 'simple', 'modern', 'gradient', 'classic', 'royal', 'elegant'])) {
         $templateType = 'default';
     }
     
@@ -592,6 +592,8 @@ private function getTemplateName($templateType)
             return 'القالب الكلاسيكي';
         case 'royal':
             return 'القالب الملكي';
+        case 'elegant':
+            return 'القالب الأنيق';
         default:
             return 'القالب الافتراضي';
     }
