@@ -80,7 +80,7 @@ class CompanyInvoicesSummaryExport implements FromArray, WithHeadings, WithCusto
 
     public function headings(): array
     {
-        $headings = ['اسم الشركة'];
+        $headings = ['اسم الشركة', 'طبيعة العمل', 'المنطقة'];
 
         foreach ($this->months as $month) {
             $headings[] = $month['name_ar'];
@@ -99,15 +99,20 @@ class CompanyInvoicesSummaryExport implements FromArray, WithHeadings, WithCusto
         $startDate = Carbon::parse($this->data['date_from'])->startOfDay();
         $endDate = Carbon::parse($this->data['date_to'])->endOfDay();
 
-        // Get all companies (excluding soft-deleted)
+        // Get all companies (excluding soft-deleted) with region relationship
         $companies = Company::whereNull('deleted_at')
+            ->with('region')
             ->orderBy('name_ar')
             ->get();
 
         $results = [];
 
         foreach ($companies as $company) {
-            $row = [$company->name_ar];
+            $row = [
+                $company->name_ar,
+                $company->nature_of_work ?? '',
+                $company->region ? $company->region->name : '',
+            ];
 
             // Get all invoices for this company within the date range
             $invoices = Invoice::where('company_id', $company->id)
