@@ -453,7 +453,7 @@
             />
           </template>
         </div>
-        <div v-else class="col-span-6 sm:col-span-2" v-if="!is_limited_view">
+        <div v-else-if="editButton.editOption && !is_limited_view" class="col-span-6 sm:col-span-2">
           <jet-label for="trainee_group_name" :value="$t('words.group-name')" />
           <select
             :class="editButton.selectInputClass"
@@ -493,7 +493,7 @@
             هذه الشركة تعمل عن بعد
           </div>
         </div>
-        <div v-else class="col-span-6 sm:col-span-2" v-if="!is_limited_view">
+        <div v-else-if="editButton.editOption && !is_limited_view" class="col-span-6 sm:col-span-2">
           <jet-label for="company_id" :value="$t('words.company')" />
           <select
             :class="editButton.selectInputClass"
