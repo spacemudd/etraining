@@ -43,7 +43,7 @@ class ExportCompaniesPaidInvoices2024Job implements ShouldQueue
 
         $this->excelJob->update(['started_at' => now()]);
 
-        $fileName = uniqid('companies-paid-invoices-2024-', true).'.xlsx';
+        $fileName = uniqid('companies-paid-invoices-2024-2025-', true).'.xlsx';
         Excel::store(new CompaniesPaidInvoices2024Export(), $fileName, 'local');
 
         $this->excelJob->addMedia(storage_path('app/'.$fileName))
