@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Back;
 
+use App\Exports\CompaniesPaidInvoices2024Export;
 use App\Exports\CompanyInvoicesSummaryExport;
 use App\Exports\TraineeAttendanceExportByGroup;
 use App\Exports\TraineesWithoutInvoicesExport;
@@ -451,6 +452,22 @@ class ReportsController extends Controller
         }
 
         return Storage::disk('public')->download($path);
+    }
+
+    public function exportCompaniesPaidInvoices2024()
+    {
+        $this->authorize('view-backoffice-reports');
+
+        Audit::create([
+            'event' => 'companiesPaidInvoices2024.export.excel',
+            'auditable_id' => auth()->user()->id,
+            'auditable_type' => User::class,
+            'new_values' => [],
+        ]);
+
+        $fileName = now()->format('Y-m-d') . '-companies-paid-invoices-2024.xlsx';
+
+        return Excel::download(new CompaniesPaidInvoices2024Export(), $fileName);
     }
 
 }

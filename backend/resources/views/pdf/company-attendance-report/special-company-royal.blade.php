@@ -539,7 +539,7 @@
         <!-- Header -->
         <div class="header">
             <h1>تقرير الحضور والانصراف</h1>
-            <p>Attendance & Absence Report - Royal Design</p>
+            <p>Attendance & Absence Report</p>
         </div>
         
         <!-- Company Info -->

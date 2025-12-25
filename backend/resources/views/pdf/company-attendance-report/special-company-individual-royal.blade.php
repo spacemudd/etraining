@@ -521,7 +521,7 @@
         <!-- Header -->
         <div class="header">
             <h1>تقرير الحضور الفردي</h1>
-            <p>Individual Attendance Report - Royal Design</p>
+            <p>Individual Attendance Report</p>
         </div>
         
         <!-- Employee Card -->
