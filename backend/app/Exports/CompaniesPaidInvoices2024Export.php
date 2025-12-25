@@ -16,10 +16,12 @@ class CompaniesPaidInvoices2024Export implements FromCollection, WithHeadings, W
 
     public function __construct()
     {
-        // جلب جميع الفواتير المدفوعة في سنة 2024
+        // استخدام استعلام أكثر كفاءة مع select محدد
         $invoices = Invoice::where('status', Invoice::STATUS_PAID)
             ->whereYear('from_date', 2024)
-            ->with(['company.region'])
+            ->whereNotNull('company_id')
+            ->select('id', 'company_id', 'from_date')
+            ->with(['company:id,name_ar,salesperson_name,region_id', 'company.region:id,name'])
             ->get();
 
         // تجميع البيانات حسب الشركة والشهر
@@ -45,9 +47,11 @@ class CompaniesPaidInvoices2024Export implements FromCollection, WithHeadings, W
 
             // تجميع الفواتير حسب الشهر
             foreach ($companyInvoices as $invoice) {
-                $month = (int) $invoice->from_date->format('n'); // n = month without leading zeros (1-12)
-                if ($month >= 1 && $month <= 12) {
-                    $monthlyCounts[$month]++;
+                if ($invoice->from_date) {
+                    $month = (int) $invoice->from_date->format('n'); // n = month without leading zeros (1-12)
+                    if ($month >= 1 && $month <= 12) {
+                        $monthlyCounts[$month]++;
+                    }
                 }
             }
 
