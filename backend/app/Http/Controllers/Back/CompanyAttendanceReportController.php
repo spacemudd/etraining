@@ -224,6 +224,7 @@ class CompanyAttendanceReportController extends Controller
             ->with('trainees')
             ->with('emails_to')
             ->with('emails_cc')
+            ->with('emails_bcc')
             ->findOrFail($id);
 
         return Inertia::render('Back/Reports/CompanyAttendance/Show',[
@@ -525,6 +526,13 @@ class CompanyAttendanceReportController extends Controller
     public function removeEmail($report_id, $id)
     {
         CompanyAttendanceReportsEmail::findOrFail($id)->delete();
+        return redirect()->route('back.reports.company-attendance.show', $report_id);
+    }
+
+    public function clearAllEmails($report_id)
+    {
+        $report = CompanyAttendanceReport::findOrFail($report_id);
+        $report->emails()->delete();
         return redirect()->route('back.reports.company-attendance.show', $report_id);
     }
 

@@ -987,6 +987,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
             Route::post('company-attendance/{report_id}/add-trainee', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'addTrainee'])->name('reports.company-attendance.add-trainee');
             Route::delete('company-attendance/{report_id}/remove-email/{id}', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'removeEmail'])->name('reports.company-attendance.remove-email');
+            Route::delete('company-attendance/{report_id}/clear-all-emails', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'clearAllEmails'])->name('reports.company-attendance.clear-all-emails');
             Route::post('company-attendance/{report_id}/add-email-in-bulk', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'addEmailInBulk'])->name('reports.company-attendance.add-email-in-bulk');
             Route::post('company-attendance/{report_id}/add-email', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'addEmail'])->name('reports.company-attendance.add-email');
             Route::get('company-attendance/{report_id}/toggle-select', [\App\Http\Controllers\Back\CompanyAttendanceReportController::class, 'toggleSelect'])->name('reports.company-attendance.toggle-select');

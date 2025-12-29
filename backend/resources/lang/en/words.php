@@ -724,6 +724,8 @@ return [
     'enter-emails-separated-by-commas' => 'Enter emails separated by commas',
     'default-cc-emails-help' => 'These emails will be automatically added to the CC field when creating a new resignation',
     'default-bcc-emails-help' => 'These emails will be automatically added to the BCC field when creating a new resignation',
+    'clear-all-emails' => 'Clear All Emails',
+    'are-you-sure-to-clear-all-emails' => 'Are you sure you want to clear all emails (TO, CC, and BCC)? This action cannot be undone.',
     'ownership-is-verified' => 'Ownership is verified',
     'not-owned' => 'Phone is not owned',
     'ownership-is-pending' => 'Ownership is pending',
