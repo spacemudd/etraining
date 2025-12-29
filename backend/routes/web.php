@@ -971,6 +971,11 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('company-invoices-summary', [\App\Http\Controllers\Back\ReportsController::class, 'formCompanyInvoicesSummaryReport'])->name('reports.company-invoices-summary.index');
             Route::get('company-invoices-summary/export', [\App\Http\Controllers\Back\ReportsController::class, 'exportCompanyInvoicesSummary'])->name('reports.company-invoices-summary.export');
 
+            // Companies paid invoices 2024 report routes
+            Route::get('companies-paid-invoices-2024/export', [\App\Http\Controllers\Back\ReportsController::class, 'exportCompaniesPaidInvoices2024'])->name('reports.companies-paid-invoices-2024.export');
+            Route::get('companies-paid-invoices-2024/job/{id}', [\App\Http\Controllers\Back\ReportsController::class, 'companiesPaidInvoices2024Job'])->name('reports.companies-paid-invoices-2024.job');
+            Route::get('companies-paid-invoices-2024/job/{id}/download', [\App\Http\Controllers\Back\ReportsController::class, 'companiesPaidInvoices2024JobDownload'])->name('reports.companies-paid-invoices-2024.job.download');
+
             // Certificates issued report routes
             Route::get('certificates-issued', [\App\Http\Controllers\Back\ReportsController::class, 'formCertificatesIssuedReport'])->name('reports.certificates-issued.index');
             Route::post('certificates-issued/export', [\App\Http\Controllers\Back\ReportsController::class, 'exportCertificatesIssued'])->name('reports.certificates-issued.export');

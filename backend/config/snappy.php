@@ -38,7 +38,9 @@ return [
     'pdf' => [
         'enabled' => true,
         //'binary'  => env('WKHTML_PDF_BINARY', base_path('vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64')),
-        'binary'  => env('WKHTML_PDF_BINARY', '/usr/local/bin/wkhtmltopdf2'),
+        'binary'  => env('WKHTML_PDF_BINARY', strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' 
+            ? base_path('vendor/wemersonjanuario/wkhtmltopdf-windows/bin/64bit/wkhtmltopdf.exe')
+            : '/usr/local/bin/wkhtmltopdf2'),
         'timeout' => false,
         'options' => [
             'enable-local-file-access' => true,
@@ -59,7 +61,9 @@ return [
 
     'image' => [
         'enabled' => true,
-        'binary'  => env('WKHTML_IMG_BINARY', '/usr/local/bin/wkhtmltoimage'),
+        'binary'  => env('WKHTML_IMG_BINARY', strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'
+            ? base_path('vendor/wemersonjanuario/wkhtmltopdf-windows/bin/64bit/wkhtmltoimage.exe')
+            : '/usr/local/bin/wkhtmltoimage'),
         'timeout' => false,
         'options' => [],
         'env'     => [],

@@ -16,6 +16,7 @@ class CompanyCertificatesExport implements FromCollection, WithHeadings, WithSty
 {
     protected $companyId;
     protected $maxCertificatesCount = 0;
+    protected $traineeStatuses = [];
 
     public function __construct($companyId)
     {
@@ -41,6 +42,12 @@ class CompanyCertificatesExport implements FromCollection, WithHeadings, WithSty
 
         // حساب الحد الأقصى لعدد الشهادات (يجب أن يكون محسوباً قبل headings و styles)
         $this->calculateMaxCertificatesCount($trainees);
+
+        // حفظ حالة كل متدرب (محذوف أو موقوف)
+        foreach ($trainees as $trainee) {
+            $isDeletedOrSuspended = !is_null($trainee->deleted_at) || !is_null($trainee->suspended_at);
+            $this->traineeStatuses[$trainee->identity_number] = $isDeletedOrSuspended;
+        }
 
         return $trainees->map(function ($trainee) {
             $certificates = [];
@@ -166,6 +173,17 @@ class CompanyCertificatesExport implements FromCollection, WithHeadings, WithSty
                     $this->calculateMaxCertificatesCount($trainees);
                 }
                 
+                // حفظ حالة المتدربات إذا لم تكن محفوظة بالفعل
+                if (empty($this->traineeStatuses)) {
+                    $trainees = Trainee::withTrashed()
+                        ->where('company_id', $this->companyId)
+                        ->get();
+                    foreach ($trainees as $trainee) {
+                        $isDeletedOrSuspended = !is_null($trainee->deleted_at) || !is_null($trainee->suspended_at);
+                        $this->traineeStatuses[$trainee->identity_number] = $isDeletedOrSuspended;
+                    }
+                }
+                
                 // Set RTL for Arabic
                 $sheet->setRightToLeft(true);
                 
@@ -184,6 +202,23 @@ class CompanyCertificatesExport implements FromCollection, WithHeadings, WithSty
                 $sheet->getStyle('A1:' . $lastColumn . $sheet->getHighestRow())
                     ->getAlignment()
                     ->setWrapText(true);
+                
+                // تطبيق تلوين خلفية أحمر فاتح على صفوف المتدربات المحذوفة أو الموقوفة
+                $highestRow = $sheet->getHighestRow();
+                for ($row = 2; $row <= $highestRow; $row++) {
+                    // قراءة identity_number من العمود A
+                    $identityNumber = $sheet->getCell('A' . $row)->getValue();
+                    
+                    // التحقق من وجود المتدرب في قائمة المحذوفين/الموقوفين
+                    if (isset($this->traineeStatuses[$identityNumber]) && $this->traineeStatuses[$identityNumber]) {
+                        // تطبيق تلوين خلفية أحمر فاتح على كامل الصف
+                        $sheet->getStyle('A' . $row . ':' . $lastColumn . $row)
+                            ->getFill()
+                            ->setFillType(Fill::FILL_SOLID)
+                            ->getStartColor()
+                            ->setRGB('FFE6E6'); // لون أحمر فاتح
+                    }
+                }
             },
         ];
     }

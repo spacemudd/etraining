@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Back;
 
+use App\Exports\CompaniesPaidInvoices2024Export;
 use App\Exports\CompanyInvoicesSummaryExport;
 use App\Exports\TraineeAttendanceExportByGroup;
 use App\Exports\TraineesWithoutInvoicesExport;
@@ -9,8 +10,10 @@ use App\Http\Controllers\Controller;
 use App\Jobs\BulkCourseAttendanceReportJob;
 use App\Jobs\ContractsReportJob;
 use App\Jobs\CourseAttendanceReportJob;
+use App\Jobs\ExportCompaniesPaidInvoices2024Job;
 use App\Jobs\GenerateAttendanceReportJob;
 use App\Jobs\GenerateCompanyCertificatesReportJob;
+use App\Models\Back\ExportTraineesToExcelJobTracker;
 use App\Models\AttendanceReportDueDates;
 use App\Models\Back\Audit;
 use App\Models\Back\Company;
@@ -451,6 +454,65 @@ class ReportsController extends Controller
         }
 
         return Storage::disk('public')->download($path);
+    }
+
+    public function exportCompaniesPaidInvoices2024()
+    {
+        $this->authorize('view-backoffice-reports');
+
+        $excelJob = new ExportTraineesToExcelJobTracker();
+        $excelJob->queued_at = now();
+        $excelJob->user_id = auth()->user()->id;
+        $excelJob->team_id = auth()->user()->current_team_id;
+        $excelJob->save();
+
+        Audit::create([
+            'event' => 'companiesPaidInvoices2024.export.excel',
+            'auditable_id' => auth()->user()->id,
+            'auditable_type' => User::class,
+            'new_values' => [],
+        ]);
+
+        dispatch(new ExportCompaniesPaidInvoices2024Job($excelJob));
+
+        return $excelJob;
+    }
+
+    /**
+     * Get the status of the export job
+     *
+     * @param $id
+     * @return mixed
+     */
+    public function companiesPaidInvoices2024Job($id)
+    {
+        return ExportTraineesToExcelJobTracker::findOrFail($id);
+    }
+
+    /**
+     * Download the exported Excel file
+     *
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function companiesPaidInvoices2024JobDownload($id)
+    {
+        $tracker = ExportTraineesToExcelJobTracker::findOrFail($id);
+        $file = $tracker->getFirstMedia('excel');
+        
+        if (!$file) {
+            abort(404, 'الملف غير موجود');
+        }
+
+        if ($file->disk === 's3') {
+            return redirect()->to(
+                $file->getTemporaryUrl(now()->addMinutes(5), '', [
+                    //'ResponseContentType' => 'application/octet-stream',
+                ])
+            );
+        } else {
+            return response()->download($file->getPath());
+        }
     }
 
 }

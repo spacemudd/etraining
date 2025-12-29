@@ -18,33 +18,34 @@
         
         body {
             font-family: 'Arial', 'Tahoma', sans-serif;
-            background: #0C2D66;
-            color: #FFFFFF;
-            line-height: 1.4;
+            background: #f5f5f5;
+            color: #2c3e50;
+            line-height: 1.5;
             padding: 20px;
         }
         
         .container {
-            background: #0C2D66;
-            border: 3px solid #E2C044;
-            border-radius: 12px;
-            padding: 25px;
+            background: #ffffff;
+            border: 4px solid #d4af37;
+            border-radius: 16px;
+            padding: 30px;
             margin: 0 auto;
             max-width: 1400px;
-            box-shadow: 0 8px 24px rgba(12, 45, 102, 0.5);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), inset 0 0 60px rgba(212, 175, 55, 0.02);
         }
         
         .header {
             text-align: center;
-            background: linear-gradient(135deg, #0C2D66 0%, #1a4a8a 100%);
-            color: #E2C044;
-            padding: 25px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            border: 3px solid #E2C044;
-            box-shadow: 0 4px 12px rgba(12, 45, 102, 0.4);
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f8f9fa 100%);
+            color: #2c3e50;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 3px solid #d4af37;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
             page-break-after: avoid;
             position: relative;
+            overflow: hidden;
         }
         
         .header::before {
@@ -53,33 +54,48 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #E2C044 0%, #f4d76e 50%, #E2C044 100%);
+            height: 5px;
+            background: linear-gradient(90deg, #d4af37 0%, #f4d76e 30%, #d4af37 70%, #f4d76e 100%);
+            box-shadow: 0 2px 8px rgba(212, 175, 55, 0.6);
+        }
+        
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.5) 50%, transparent 100%);
         }
         
         .header h1 {
-            font-size: 28px;
-            margin-bottom: 8px;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            color: #FFFFFF !important;
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            color: #2c3e50 !important;
+            letter-spacing: 1px;
         }
         
         .header p {
-            font-size: 16px;
-            color: #FFFFFF !important;
-            font-weight: 300;
+            font-size: 17px;
+            color: #d4af37 !important;
+            font-weight: 500;
+            text-shadow: none;
+            letter-spacing: 0.5px;
         }
         
         .company-info {
-            background: linear-gradient(135deg, #0C2D66 0%, #1a4a8a 100%);
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            border: 2px solid #E2C044;
-            box-shadow: 0 4px 8px rgba(226, 192, 68, 0.3);
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f8f9fa 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 3px solid #d4af37;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
             page-break-after: avoid;
             position: relative;
+            overflow: hidden;
         }
         
         .company-info::before {
@@ -88,42 +104,68 @@
             right: 0;
             top: 0;
             bottom: 0;
-            width: 5px;
-            background: linear-gradient(180deg, #E2C044 0%, #f4d76e 100%);
+            width: 6px;
+            background: linear-gradient(180deg, #d4af37 0%, #f4d76e 50%, #d4af37 100%);
+            box-shadow: -2px 0 8px rgba(212, 175, 55, 0.5);
+        }
+        
+        .company-info::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, transparent 0%, rgba(212, 175, 55, 0.3) 50%, transparent 100%);
         }
         
         .company-name {
-            font-size: 24px;
-            font-weight: bold;
-            color: #FFFFFF !important;
-            margin-bottom: 8px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            font-size: 26px;
+            font-weight: 700;
+            color: #2c3e50 !important;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            letter-spacing: 0.5px;
         }
         
         .company-subtitle {
-            color: #E2C044 !important;
-            font-size: 16px;
-            font-weight: 500;
+            color: #d4af37 !important;
+            font-size: 17px;
+            font-weight: 600;
+            text-shadow: none;
         }
         
         .report-details {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+            width: 100%;
             margin-bottom: 25px;
             page-break-after: avoid;
+            overflow: hidden;
+            display: block;
         }
         
         .detail-card {
-            background: linear-gradient(135deg, #0C2D66 0%, #1a4a8a 100%);
-            border: 2px solid #E2C044;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #ffffff 100%);
+            border: 3px solid #d4af37;
             padding: 18px;
-            border-radius: 8px;
+            border-radius: 12px;
             text-align: center;
-            box-shadow: 0 3px 8px rgba(226, 192, 68, 0.3);
-            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
             position: relative;
             overflow: hidden;
+            float: right;
+            width: 23%;
+            margin-left: 2.66%;
+            box-sizing: border-box;
+        }
+        
+        .detail-card:first-child {
+            margin-left: 0;
+        }
+        
+        .report-details::after {
+            content: "";
+            display: table;
+            clear: both;
         }
         
         .detail-card::before {
@@ -132,58 +174,73 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #E2C044 0%, #f4d76e 50%, #E2C044 100%);
+            height: 4px;
+            background: linear-gradient(90deg, #d4af37 0%, #f4d76e 40%, #d4af37 80%, #f4d76e 100%);
+            box-shadow: 0 2px 6px rgba(212, 175, 55, 0.5);
+        }
+        
+        .detail-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.3) 50%, transparent 100%);
         }
         
         .detail-label {
-            font-weight: bold;
-            color: #FFFFFF !important;
-            font-size: 12px;
-            margin-bottom: 8px;
+            font-weight: 600;
+            color: #6c757d !important;
+            font-size: 13px;
+            margin-bottom: 10px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
+            text-shadow: none;
         }
         
         .detail-value {
-            font-size: 20px;
-            font-weight: bold;
-            color: #E2C044 !important;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            font-size: 24px;
+            font-weight: 700;
+            color: #d4af37 !important;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         
         .attendance-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 25px;
-            border: 2px solid #E2C044;
-            border-radius: 8px;
+            margin-top: 30px;
+            border: 3px solid #d4af37;
+            border-radius: 12px;
             overflow: hidden;
             table-layout: fixed;
-            box-shadow: 0 4px 12px rgba(12, 45, 102, 0.2);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), inset 0 0 40px rgba(212, 175, 55, 0.05);
         }
         
         .attendance-table th {
-            background: linear-gradient(135deg, #0C2D66 0%, #1a4a8a 100%) !important;
-            color: #E2C044 !important;
-            padding: 14px 6px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f8f9fa 100%) !important;
+            color: #2c3e50 !important;
+            padding: 16px 6px;
             text-align: center;
-            font-weight: bold;
-            font-size: 11px;
-            border: 1px solid #E2C044;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            font-weight: 700;
+            font-size: 12px;
+            border: 2px solid #d4af37;
+            text-shadow: none;
             page-break-after: avoid;
+            letter-spacing: 0.5px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
         }
         
         .attendance-table td {
-            padding: 10px 4px;
+            padding: 12px 4px;
             text-align: center;
-            border: 1px solid #E2C044;
-            background: #1a4a8a;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            background: #ffffff;
             font-size: 10px;
             vertical-align: middle;
             page-break-inside: avoid;
-            color: #FFFFFF !important;
+            color: #2c3e50 !important;
+            transition: background 0.2s ease;
         }
         
         .attendance-table tr {
@@ -191,104 +248,164 @@
         }
         
         .attendance-table tr:nth-child(even) td {
-            background: #0C2D66;
+            background: #f8f9fa;
+        }
+        
+        .attendance-table tr:hover td {
+            background: rgba(212, 175, 55, 0.1) !important;
         }
         
         .employee-name {
-            font-weight: bold;
-            color: #FFFFFF !important;
+            font-weight: 600;
+            color: #2c3e50 !important;
             font-size: 12px;
-            margin-bottom: 3px;
-            line-height: 1.3;
+            margin-bottom: 4px;
+            line-height: 1.4;
+            text-shadow: none;
         }
         
         .employee-id {
-            color: #E2C044 !important;
+            color: #6c757d !important;
             font-size: 9px;
-            line-height: 1.2;
+            line-height: 1.3;
+            font-weight: 500;
+            text-shadow: none;
         }
         
         .attendance-mark {
             display: inline-block;
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
-            line-height: 20px;
-            font-weight: bold;
-            font-size: 10px;
+            line-height: 22px;
+            font-weight: 700;
+            font-size: 11px;
             text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            border: 1px solid rgba(12, 45, 102, 0.3);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(0, 0, 0, 0.2);
         }
         
         .present {
-            background: #E2C044 !important;
-            color: #0C2D66 !important;
-            font-weight: bold;
+            background: linear-gradient(135deg, #d4af37 0%, #f4d76e 100%) !important;
+            color: #0a1f3d !important;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
         }
         
         .absent {
-            background: #c0392b !important;
-            color: #ffffff !important;
+            background: #ffffff !important;
+            color: #dc3545 !important;
+            border: 2px solid #dc3545 !important;
+            font-weight: 700 !important;
+            text-shadow: none;
+        }
+        
+        .attendance-mark.absent {
+            background: #ffffff !important;
+            color: #dc3545 !important;
+            border: 2px solid #dc3545 !important;
+            font-weight: 700 !important;
+            text-shadow: none !important;
+        }
+        
+        span.attendance-mark.absent {
+            background: #ffffff !important;
+            color: #dc3545 !important;
+            border: 2px solid #dc3545 !important;
+            font-weight: 700 !important;
+            text-shadow: none !important;
         }
         
         .vacation {
-            background: #d68910 !important;
-            color: #ffffff !important;
+            background: #ffffff !important;
+            color: #dc3545 !important;
+            border: 2px solid #dc3545 !important;
+            font-weight: 700 !important;
+            text-shadow: none;
+        }
+        
+        .attendance-mark.vacation {
+            background: #ffffff !important;
+            color: #dc3545 !important;
+            border: 2px solid #dc3545 !important;
+            font-weight: 700 !important;
+            text-shadow: none !important;
+        }
+        
+        span.attendance-mark.vacation {
+            background: #ffffff !important;
+            color: #dc3545 !important;
+            border: 2px solid #dc3545 !important;
+            font-weight: 700 !important;
+            text-shadow: none !important;
         }
         
         .day-header {
-            background: linear-gradient(135deg, #0C2D66 0%, #1a4a8a 100%) !important;
-            color: #E2C044 !important;
-            border: 1px solid #E2C044 !important;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f8f9fa 100%) !important;
+            color: #2c3e50 !important;
+            border: 2px solid #d4af37 !important;
         }
         
         .vacation-day {
-            background: #8b6914 !important;
-            color: #E2C044 !important;
-            border: 1px solid #E2C044 !important;
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%) !important;
+            color: #856404 !important;
+            border: 2px solid #d4af37 !important;
         }
         
         .logo {
-            max-width: 90px;
+            max-width: 100px;
             height: auto;
-            border-radius: 6px;
-            border: 2px solid #E2C044;
-            box-shadow: 0 3px 6px rgba(12, 45, 102, 0.2);
+            border-radius: 8px;
+            border: 3px solid #d4af37;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4), 0 0 20px rgba(212, 175, 55, 0.3);
         }
         
         .footer {
-            margin-top: 25px;
+            margin-top: 30px;
             text-align: center;
-            padding: 18px;
-            background: linear-gradient(135deg, #0C2D66 0%, #1a4a8a 100%);
-            border-radius: 8px;
-            border-top: 3px solid #E2C044;
+            padding: 22px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f8f9fa 100%);
+            border-radius: 12px;
+            border-top: 4px solid #d4af37;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
             page-break-before: avoid;
+            position: relative;
+        }
+        
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #d4af37 0%, #f4d76e 50%, #d4af37 100%);
         }
         
         .footer p {
-            color: #FFFFFF !important;
-            font-size: 12px;
+            color: #6c757d !important;
+            font-size: 13px;
             margin: 0;
             font-weight: 500;
+            text-shadow: none;
+            letter-spacing: 0.3px;
         }
         
         /* تحسينات الطباعة والتقسيم */
         @media print {
             body {
-                background: #0C2D66;
+                background: #ffffff;
                 padding: 0;
                 margin: 0;
             }
             
             .container {
                 box-shadow: none;
-                border: 2px solid #E2C044;
+                border: 3px solid #d4af37;
                 margin: 0;
-                padding: 10px;
+                padding: 15px;
                 max-width: none;
-                background: #0C2D66 !important;
+                background: #ffffff !important;
             }
             
             .header {
@@ -331,28 +448,44 @@
             
             .attendance-table th {
                 page-break-after: avoid;
-                background: linear-gradient(135deg, #0C2D66 0%, #1a4a8a 100%) !important;
-                color: #E2C044 !important;
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f8f9fa 100%) !important;
+                color: #2c3e50 !important;
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
             }
             
             .attendance-table td {
                 page-break-inside: avoid;
-                background: #1a4a8a !important;
-                color: #FFFFFF !important;
+                background: #ffffff !important;
+                color: #2c3e50 !important;
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
             }
             
             .attendance-table tr:nth-child(even) td {
-                background: #0C2D66 !important;
-                color: #FFFFFF !important;
+                background: #f8f9fa !important;
+                color: #2c3e50 !important;
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
             }
             
             .present, .absent, .vacation {
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
+            .absent, .attendance-mark.absent, span.attendance-mark.absent {
+                background: #ffffff !important;
+                color: #dc3545 !important;
+                border: 2px solid #dc3545 !important;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
+            .vacation, .attendance-mark.vacation, span.attendance-mark.vacation {
+                background: #ffffff !important;
+                color: #dc3545 !important;
+                border: 2px solid #dc3545 !important;
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
             }
@@ -406,7 +539,7 @@
         <!-- Header -->
         <div class="header">
             <h1>تقرير الحضور والانصراف</h1>
-            <p>Attendance & Absence Report - Royal Design</p>
+            <p>Attendance & Absence Report</p>
         </div>
         
         <!-- Company Info -->
@@ -495,7 +628,7 @@
                                         @if ($record->start_date && $days[$i]['date_carbon']->isAfter($record->end_date))
                                             {{-- Weekend after resignation date - show empty --}}
                                         @else
-                                            <span class="attendance-mark vacation">X</span>
+                                            <span class="attendance-mark vacation" style="background: #ffffff !important; color: #dc3545 !important; border: 2px solid #dc3545 !important;">X</span>
                                         @endif
                                     @else
                                         @if ($record->start_date)
@@ -503,7 +636,7 @@
                                                 <span class="attendance-mark present">✓</span>
                                             @else
                                                 @if ($record->status === 'new_registration')
-                                                    <span class="attendance-mark absent">✗</span>
+                                                    <span class="attendance-mark absent" style="background: #ffffff !important; color: #dc3545 !important; border: 2px solid #dc3545 !important;">✗</span>
                                                 @endif
                                             @endif
                                         @else
@@ -548,7 +681,7 @@
                                         @if ($record->start_date && $days[$i]['date_carbon']->isAfter($record->end_date))
                                             {{-- Weekend after resignation date - show empty --}}
                                         @else
-                                            <span class="attendance-mark vacation">X</span>
+                                            <span class="attendance-mark vacation" style="background: #ffffff !important; color: #dc3545 !important; border: 2px solid #dc3545 !important;">X</span>
                                         @endif
                                     @else
                                         @if ($record->start_date)
@@ -556,7 +689,7 @@
                                                 <span class="attendance-mark present">✓</span>
                                             @else
                                                 @if ($record->status === 'new_registration')
-                                                    <span class="attendance-mark absent">✗</span>
+                                                    <span class="attendance-mark absent" style="background: #ffffff !important; color: #dc3545 !important; border: 2px solid #dc3545 !important;">✗</span>
                                                 @endif
                                             @endif
                                         @else
@@ -574,7 +707,6 @@
         
         <!-- Footer -->
         <div class="footer">
-            <p>تم إنشاؤه تلقائياً بواسطة نظام إدارة التدريب - التصميم الملكي</p>
         </div>
     </div>
 </body>
