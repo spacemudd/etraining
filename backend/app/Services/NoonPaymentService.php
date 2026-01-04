@@ -58,8 +58,18 @@ class NoonPaymentService
         $paymentInfo['order']['channel'] = config("noon_payment.channel");
         $paymentInfo['order']['category'] = config("noon_payment.order_category");
         
+        // #region agent log
+        file_put_contents('c:\\xampp\\htdocs\\new-project\\etraining\\backend\\.cursor\\debug.log', json_encode(['location'=>'NoonPaymentService.php:checkBnplOptions','message'=>'Before API call','data'=>['apiOperation'=>$paymentInfo['apiOperation'],'orderAmount'=>$paymentInfo['order']['amount'],'hasItems'=>isset($paymentInfo['order']['items']),'itemsCount'=>isset($paymentInfo['order']['items'])?count($paymentInfo['order']['items']):0,'hasCustomer'=>isset($paymentInfo['customer']),'hasBilling'=>isset($paymentInfo['billing']),'hasShipping'=>isset($paymentInfo['shipping']),'fullRequest'=>json_decode(json_encode($paymentInfo),true)],'timestamp'=>time()*1000,'sessionId'=>'debug-session','runId'=>'run2','hypothesisId'=>'H'])."\n", FILE_APPEND);
+        // #endregion
+        
         $apiUrl = config("noon_payment." . ($centerId == 5676 ? 'jasarah' : 'jisr') . ".payment_api") . "order";
-        return json_decode(CurlHelper::post($apiUrl, $paymentInfo, $this->getHeaders($centerId)));
+        $response = json_decode(CurlHelper::post($apiUrl, $paymentInfo, $this->getHeaders($centerId)));
+        
+        // #region agent log
+        file_put_contents('c:\\xampp\\htdocs\\new-project\\etraining\\backend\\.cursor\\debug.log', json_encode(['location'=>'NoonPaymentService.php:checkBnplOptions','message'=>'API response','data'=>['resultCode'=>$response->resultCode??'N/A','message'=>$response->message??'N/A'],'timestamp'=>time()*1000,'sessionId'=>'debug-session','runId'=>'run2','hypothesisId'=>'H'])."\n", FILE_APPEND);
+        // #endregion
+        
+        return $response;
     }
 
     /**

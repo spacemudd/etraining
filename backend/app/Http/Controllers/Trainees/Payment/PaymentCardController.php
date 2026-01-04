@@ -305,21 +305,67 @@ class PaymentCardController extends Controller
      */
     public function checkTabbyOptions(Request $request)
     {
+        // #region agent log
+        file_put_contents('c:\\xampp\\htdocs\\new-project\\etraining\\backend\\.cursor\\debug.log', json_encode(['location'=>'PaymentCardController.php:checkTabbyOptions','message'=>'Function entry','data'=>['requestParams'=>$request->all()],'timestamp'=>time()*1000,'sessionId'=>'debug-session','runId'=>'run1','hypothesisId'=>'G'])."\n", FILE_APPEND);
+        // #endregion
+        
         $request->validate([
             'invoice_id' => 'required|exists:invoices,id',
         ]);
         
         $invoice = Invoice::notPaid()->findOrFail($request->invoice_id);
         
+        // #region agent log
+        file_put_contents('c:\\xampp\\htdocs\\new-project\\etraining\\backend\\.cursor\\debug.log', json_encode(['location'=>'PaymentCardController.php:checkTabbyOptions','message'=>'Invoice found','data'=>['invoiceId'=>$invoice->id,'amount'=>$invoice->grand_total,'traineeId'=>$invoice->trainee_id],'timestamp'=>time()*1000,'sessionId'=>'debug-session','runId'=>'run1','hypothesisId'=>'G'])."\n", FILE_APPEND);
+        // #endregion
+        
+        Log::info('Tabby check options - Request received', [
+            'invoice_id' => $invoice->id,
+            'invoice_amount' => $invoice->grand_total,
+            'trainee_id' => $invoice->trainee_id,
+            'trainee_name' => $invoice->trainee->name ?? 'N/A',
+        ]);
+        
         try {
             $options = $this->paymentService->checkTabbyOptions($invoice);
+            
+            // #region agent log
+            $responseData = json_decode(json_encode($options), true);
+            file_put_contents('c:\\xampp\\htdocs\\new-project\\etraining\\backend\\.cursor\\debug.log', json_encode(['location'=>'PaymentCardController.php:checkTabbyOptions','message'=>'API response received','data'=>['resultCode'=>$options->resultCode??'N/A','hasResult'=>isset($options->result),'hasProducts'=>isset($options->result->products),'productsCount'=>isset($options->result->products)?count($options->result->products):0],'timestamp'=>time()*1000,'sessionId'=>'debug-session','runId'=>'run1','hypothesisId'=>'H'])."\n", FILE_APPEND);
+            // #endregion
+            
+            // Log the response structure
+            Log::info('Tabby check options - API Response', [
+                'invoice_id' => $invoice->id,
+                'resultCode' => $options->resultCode ?? 'N/A',
+                'message' => $options->message ?? 'N/A',
+                'has_result' => isset($options->result),
+                'has_products' => isset($options->result->products),
+                'products_count' => isset($options->result->products) ? count($options->result->products) : 0,
+                'full_response' => $responseData,
+            ]);
+            
+            // #region agent log
+            file_put_contents('c:\\xampp\\htdocs\\new-project\\etraining\\backend\\.cursor\\debug.log', json_encode(['location'=>'PaymentCardController.php:checkTabbyOptions','message'=>'Returning response','data'=>['resultCode'=>$options->resultCode??'N/A'],'timestamp'=>time()*1000,'sessionId'=>'debug-session','runId'=>'run1','hypothesisId'=>'H'])."\n", FILE_APPEND);
+            // #endregion
+            
             return response()->json($options);
         } catch (\Exception $e) {
-            Log::error('Tabby check options error: ' . $e->getMessage(), [
+            // #region agent log
+            file_put_contents('c:\\xampp\\htdocs\\new-project\\etraining\\backend\\.cursor\\debug.log', json_encode(['location'=>'PaymentCardController.php:checkTabbyOptions','message'=>'Exception caught','data'=>['errorMessage'=>$e->getMessage(),'exceptionClass'=>get_class($e)],'timestamp'=>time()*1000,'sessionId'=>'debug-session','runId'=>'run1','hypothesisId'=>'F'])."\n", FILE_APPEND);
+            // #endregion
+            
+            Log::error('Tabby check options error', [
                 'invoice_id' => $invoice->id,
-                'exception' => $e,
+                'error_message' => $e->getMessage(),
+                'error_trace' => $e->getTraceAsString(),
+                'exception_class' => get_class($e),
             ]);
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json([
+                'error' => $e->getMessage(),
+                'resultCode' => 500,
+                'message' => 'Failed to check Tabby options',
+            ], 500);
         }
     }
 
