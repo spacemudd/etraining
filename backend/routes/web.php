@@ -1092,6 +1092,14 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('payment/card/charge-payment', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'chargePayment'])
             ->name('payment.card.charge');
 
+        // Tabby payment routes
+        Route::get('payment/tabby/check-options', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'checkTabbyOptions'])
+            ->name('payment.tabby.check-options');
+        Route::post('payment/tabby/initiate', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'initiateTabbyPayment'])
+            ->name('payment.tabby.initiate');
+        Route::get('payment/tabby/charge-payment', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'chargeTabbyPayment'])
+            ->name('payment.tabby.charge-payment');
+
         // Resignation request routes
         Route::get('resignation-request', [\App\Http\Controllers\Trainees\ResignationRequestController::class, 'index'])->name('resignation-request.index');
         Route::post('resignation-request', [\App\Http\Controllers\Trainees\ResignationRequestController::class, 'store'])->name('resignation-request.store');

@@ -29,6 +29,7 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
 
     const PAYMENT_METHOD_BANK_RECEIPT = 0;
     const PAYMENT_METHOD_CREDIT_CARD = 1;
+    const PAYMENT_METHOD_TABBY = 2;
 
     public $incrementing = false;
 
@@ -259,6 +260,7 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
     {
         if ($this->payment_method ===  Invoice::PAYMENT_METHOD_CREDIT_CARD) return __('words.credit-card-method');
         if ($this->payment_method ===  Invoice::PAYMENT_METHOD_BANK_RECEIPT) return __('words.bank-transfer');
+        if ($this->payment_method ===  Invoice::PAYMENT_METHOD_TABBY) return __('words.tabby-method');
         return '';
     }
 
@@ -266,6 +268,7 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
     {
         if ($this->payment_method === Invoice::PAYMENT_METHOD_CREDIT_CARD && $this->paid_at) return true;
         if ($this->payment_method === Invoice::PAYMENT_METHOD_BANK_RECEIPT && $this->verified_by_id && $this->chased_by_id) return true;
+        if ($this->payment_method === Invoice::PAYMENT_METHOD_TABBY && $this->paid_at) return true;
 
         return false;
     }

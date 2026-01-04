@@ -106,13 +106,24 @@ class PaymentCardController extends Controller
                 $invoice->restore();
             }
 
+            // Determine payment method based on payment details
+            $paymentMethod = Invoice::PAYMENT_METHOD_CREDIT_CARD;
+            $paymentBrand = $order->result->paymentDetails->brand ?? null;
+            
+            if (isset($order->result->paymentDetails->mode) && 
+                (strtoupper($order->result->paymentDetails->mode) === 'TABBY' || 
+                 strtoupper($order->result->paymentDetails->mode) === 'BNPL')) {
+                $paymentMethod = Invoice::PAYMENT_METHOD_TABBY;
+                $paymentBrand = 'TABBY';
+            }
+
             $invoice->update([
-                'payment_method' => Invoice::PAYMENT_METHOD_CREDIT_CARD,
+                'payment_method' => $paymentMethod,
                 'payment_reference_id' => $order->result->order->id,
                 'paid_at' => now(),
                 'status' => Invoice::STATUS_PAID,
                 'payment_detail_method' => $order->result->paymentDetails->mode,
-                'payment_detail_brand' => $order->result->paymentDetails->brand,
+                'payment_detail_brand' => $paymentBrand,
             ]);
 
             AccountingLedgerBook::create([
@@ -284,5 +295,87 @@ class PaymentCardController extends Controller
             ->queue(new EditAmountMail($invoice));
 
         return $this->paymentService->createPaymentUrlForInvoice($invoice); // redirect is done by frontend js.
+    }
+
+    /**
+     * Check available Tabby options for an invoice
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function checkTabbyOptions(Request $request)
+    {
+        $request->validate([
+            'invoice_id' => 'required|exists:invoices,id',
+        ]);
+        
+        $invoice = Invoice::notPaid()->findOrFail($request->invoice_id);
+        
+        try {
+            $options = $this->paymentService->checkTabbyOptions($invoice);
+            return response()->json($options);
+        } catch (\Exception $e) {
+            Log::error('Tabby check options error: ' . $e->getMessage(), [
+                'invoice_id' => $invoice->id,
+                'exception' => $e,
+            ]);
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Initiate Tabby payment
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function initiateTabbyPayment(Request $request)
+    {
+        $request->validate([
+            'invoice_id' => 'required|exists:invoices,id',
+            'product_type' => 'required|string',
+            'product_id' => 'required|integer',
+        ]);
+        
+        $invoice = Invoice::notPaid()->findOrFail($request->invoice_id);
+        
+        try {
+            $url = $this->paymentService->createTabbyPaymentUrl(
+                $invoice,
+                $request->product_type,
+                $request->product_id
+            );
+            return redirect($url);
+        } catch (\Exception $e) {
+            Log::error('Tabby payment initiation error: ' . $e->getMessage(), [
+                'invoice_id' => $invoice->id,
+                'product_type' => $request->product_type,
+                'product_id' => $request->product_id,
+                'exception' => $e,
+            ]);
+            session()->put('failed_payment', true);
+            return redirect()->route('dashboard')->withErrors(['error' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Handle Tabby payment return
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function chargeTabbyPayment(Request $request)
+    {
+        sleep(2);
+        
+        $success = $this->paymentService->isOrderSuccessful($request->orderId, 5676);
+        
+        if ($success) {
+            session()->put('success_payment', true);
+        } else {
+            session()->put('failed_payment', true);
+        }
+        
+        return redirect()->route('dashboard');
     }
 }
