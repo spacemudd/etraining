@@ -16,5 +16,6 @@ class VerifyCsrfToken extends Middleware
         '/noon',
         '/api/trainees/uploadcv',
         '/login', //  For testing purposes.
+        '/cdn-cgi/*',
     ];
 }
