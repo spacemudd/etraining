@@ -190,6 +190,7 @@ class GenerateCompanyCertificatesReportJob implements ShouldQueue
                                     'phone' => $trainee->phone,
                                     'identity_number' => $trainee->identity_number,
                                     'trainee_name' => $trainee->name,
+                                    'english_name' => $trainee->english_name ?? '',
                                     'deleted_at' => $trainee->deleted_at,
                                     'last_login_at' => optional($trainee->user)->last_login_at,
                                 ];

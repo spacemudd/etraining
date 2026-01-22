@@ -45,6 +45,7 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
             ' الجوال',
             'رقم الهوية',
             'اسم المتدرب',
+            'الاسم بالانجليزية',
             'تاريخ الحذف',
             'تاريخ اخر دخول',
         ];
@@ -52,9 +53,9 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
 
     public function styles(Worksheet $sheet)
     {
-        $sheet->getStyle('A1:N1')->getFont()->setBold(true);
-        $sheet->getStyle('A1:N1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle('A1:N1')->getFill()
+        $sheet->getStyle('A1:O1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:O1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A1:O1')->getFill()
             ->setFillType('solid')
             ->getStartColor()->setARGB('FFFFE599');
 
@@ -88,16 +89,17 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
             $sheet->getCell("L$rowIndex")->setValue($trainee['phone']);
             $sheet->getCell("M$rowIndex")->setValue($trainee['identity_number']);
             $sheet->getCell("N$rowIndex")->setValue($trainee['trainee_name']);
+            $sheet->getCell("O$rowIndex")->setValue($trainee['english_name'] ?? '');
 
             if ($trainee['deleted_at']) {
-                $sheet->getCell("O$rowIndex")->setValue($trainee['deleted_at']);
+                $sheet->getCell("P$rowIndex")->setValue($trainee['deleted_at']);
             }
 
             if ($trainee['last_login_at']) {
-                $sheet->getCell("P$rowIndex")->setValue($trainee['last_login_at']);
+                $sheet->getCell("Q$rowIndex")->setValue($trainee['last_login_at']);
             }
 
-            $sheet->getStyle("A$rowIndex:N$rowIndex")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle("A$rowIndex:O$rowIndex")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
         }
     }
 }
