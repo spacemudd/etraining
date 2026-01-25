@@ -278,7 +278,11 @@ class TraineeLeavesController extends Controller
                 'mahmoud.h@hadaf-hq.com',
                 'halim@hadaf-hq.com',
                 'm.zinah@hadaf-hq.com',
-                'rahmah@hadaf-hq.com'
+                'rahmah@hadaf-hq.com',
+                'cfo@hadaf-hq.com',
+                'shahad.alshahri@hadaf-hq.com',
+                'mohammad.salah@hadaf-hq.com',
+                'abdulrahman@hadaf-hq.com'
             ];
 
             $responseData = [
