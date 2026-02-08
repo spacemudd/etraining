@@ -58,11 +58,28 @@ class TraineesController extends Controller
 
     public function index()
     {
+        // Check if the logged-in user is sara@hadaf-hq.com
+        $isSaraUser = auth()->user()->email === 'sara@hadaf-hq.com';
+        
+        if ($isSaraUser) {
+            // For sara@hadaf-hq.com, show only: name, identity_number, company name
+            // Order by newest first (latest)
+            return Inertia::render('Back/Trainees/Index', [
+                'trainees' => Trainee::with('company')
+                    ->select('id', 'name', 'identity_number', 'company_id', 'created_at')
+                    ->latest()
+                    ->paginate(20),
+                'isSaraView' => true,
+            ]);
+        }
+        
+        // For other users, show the normal view
         return Inertia::render('Back/Trainees/Index', [
             'trainees' => Trainee::with('company')
                 ->with('trainee_group')
                 ->latest()
                 ->paginate(20),
+            'isSaraView' => false,
         ]);
     }
 
