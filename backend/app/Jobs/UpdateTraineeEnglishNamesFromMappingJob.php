@@ -53,7 +53,8 @@ class UpdateTraineeEnglishNamesFromMappingJob implements ShouldQueue
                 continue;
             }
 
-            $affected = Trainee::where('identity_number', $identityNumber)
+            $affected = Trainee::withTrashed()
+                ->where('identity_number', $identityNumber)
                 ->update(['english_name' => $englishName]);
 
             if ($affected > 0) {
