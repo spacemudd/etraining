@@ -80,7 +80,7 @@ class TraineeGroup extends Model implements Auditable
                 case 'شعبة 5':
                 case 'شعبة 15':
                 case 'شعبة 13':
-            return 'من الأحد الى الأربعاء الساعة 12:00 مساءا الى 01:30 صباحا';
+            return 'من الأحد الى الأربعاء الساعة 12:00 ليلا الى 01:30 صباحا';
 
             case 'شعبة 2':
             case 'شعبة 3':
