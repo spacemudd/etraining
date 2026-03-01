@@ -52,7 +52,8 @@ class MaternityLeaveMail extends Mailable
             'leave_id' => $this->leave->id
         ]);
 
-        $subject = 'إشعار إجازة وضع - ' . $this->trainee->name;
+        $companyNameAr = optional($this->trainee->company)->name_ar ?? $this->trainee->name;
+        $subject = 'إشعار إجازة وضع - ' . $companyNameAr;
         
         \Log::info('Email Subject Prepared', [
             'subject' => $subject,
