@@ -57,7 +57,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
         $company_id = 'beff7800-b94b-4831-8044-8cdcb152087a';
 
-        $select_invoices_from = ['2025-01-01', '2025-01-31'];
+        $select_invoices_from = ['2026-01-01', '2026-01-31'];
 
         //foreach ($companies as $company_id) {
             $count = Company::with('invoices')
