@@ -409,7 +409,7 @@
 
           </div>
                <button
-              v-if="trainee.must_sign==true"
+              v-if="trainee.must_sign==true && $page.props.user && $page.props.user.email === 'ebrahim.hosny@hadaf-hq.com'"
               v-can="'block-trainee'"
               @click="confirmCancelContract"
               class="items-center rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right"
