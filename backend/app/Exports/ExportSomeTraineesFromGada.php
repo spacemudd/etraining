@@ -109,13 +109,8 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
                       ->orderBy('sent_at', 'desc');
                 }
             ])
-            ->get();
-
-        // ترتيب المتدربين حسب ترتيب الهويات في القائمة أعلاه
-        $identityOrder = array_flip($Ids);
-        $trainees = $trainees->sortBy(function ($trainee) use ($identityOrder) {
-            return $identityOrder[$trainee->identity_number] ?? PHP_INT_MAX;
-        })->values();
+            ->get()
+            ->keyBy('identity_number');
 
         // حساب الحد الأقصى لعدد الشهادات
         $this->maxCertificatesCount = 0;
@@ -124,41 +119,58 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
             $this->maxCertificatesCount = max($this->maxCertificatesCount, $count);
         }
 
-        return $trainees->map(function ($trainee) {
-            $certificates = [];
-            
-            // جمع الشهادات المخصصة
-            foreach ($trainee->custom_certificates as $cert) {
-                $certificates[] = $cert->title;
-            }
-            
-            // جمع شهادات UK
-            foreach ($trainee->uk_certificates as $cert) {
-                if ($cert->ukCertificate && $cert->ukCertificate->course) {
-                    $certificates[] = $cert->ukCertificate->course->name_ar ?? 'غير محدد';
-                }
-            }
-            
-            $certificatesCount = count($certificates);
-            
-            // إنشاء الصف
+        // بناء الصفوف بنفس ترتيب مصفوفة الهويات تماماً
+        $rows = collect();
+        foreach ($Ids as $identityNumber) {
+            $trainee = $trainees->get($identityNumber);
+            $rows->push($this->traineeToRow($trainee, $identityNumber));
+        }
+
+        return $rows;
+    }
+
+    /**
+     * تحويل متدرب (أو هوية فقط) إلى صف Excel.
+     */
+    private function traineeToRow(?Trainee $trainee, string $identityNumber): array
+    {
+        if ($trainee === null) {
             $row = [
-                'identity_number' => $trainee->identity_number,
-                'verification_status' => $this->translateZohoContractStatus($trainee->zoho_contract_status),
-                'verification_date' => $trainee->zoho_sign_date
-                    ? Carbon::parse($trainee->zoho_sign_date)->format('Y-m-d')
-                    : '',
-                'name' => $trainee->name,
-                'certificates_count' => $certificatesCount,
+                'identity_number' => $identityNumber,
+                'verification_status' => '',
+                'verification_date' => '',
+                'name' => '',
+                'certificates_count' => 0,
             ];
-            
-            // إضافة أسماء الشهادات كأعمدة
             for ($i = 0; $i < $this->maxCertificatesCount; $i++) {
-                $row['certificate_' . $i] = $certificates[$i] ?? '';
+                $row['certificate_' . $i] = '';
             }
-            
             return $row;
-        });
+        }
+
+        $certificates = [];
+        foreach ($trainee->custom_certificates as $cert) {
+            $certificates[] = $cert->title;
+        }
+        foreach ($trainee->uk_certificates as $cert) {
+            if ($cert->ukCertificate && $cert->ukCertificate->course) {
+                $certificates[] = $cert->ukCertificate->course->name_ar ?? 'غير محدد';
+            }
+        }
+
+        $row = [
+            'identity_number' => $trainee->identity_number,
+            'verification_status' => $this->translateZohoContractStatus($trainee->zoho_contract_status),
+            'verification_date' => $trainee->zoho_sign_date
+                ? Carbon::parse($trainee->zoho_sign_date)->format('Y-m-d')
+                : '',
+            'name' => $trainee->name,
+            'certificates_count' => count($certificates),
+        ];
+        for ($i = 0; $i < $this->maxCertificatesCount; $i++) {
+            $row['certificate_' . $i] = $certificates[$i] ?? '';
+        }
+        return $row;
     }
 
     protected function calculateMaxCertificatesCount()
