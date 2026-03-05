@@ -296,6 +296,10 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
             // إنشاء الصف
             $row = [
                 'identity_number' => $trainee->identity_number,
+                'verification_status' => $this->translateZohoContractStatus($trainee->zoho_contract_status),
+                'verification_date' => $trainee->zoho_sign_date
+                    ? Carbon::parse($trainee->zoho_sign_date)->format('Y-m-d')
+                    : '',
                 'name' => $trainee->name,
                 'certificates_count' => $certificatesCount,
             ];
@@ -393,6 +397,8 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
 
         $headings = [
             'الهوية',
+            'حالة التوثيق',
+            'تاريخ التوثيق',
             'الإسم',
             'عدد الشهادات المستلمة',
         ];
@@ -403,5 +409,20 @@ class ExportSomeTraineesFromGada implements FromCollection, WithHeadings
         }
         
         return $headings;
+    }
+
+    /**
+     * ترجمة حالة عقد زوهو إلى العربية.
+     */
+    private function translateZohoContractStatus(?string $status): string
+    {
+        return match ($status) {
+            'completed' => 'مكتمل',
+            'pending' => 'قيد الانتظار',
+            'sent' => 'تم الإرسال',
+            'viewed' => 'تمت المشاهدة',
+            'signed' => 'موقع',
+            default => $status !== null && $status !== '' ? $status : '—',
+        };
     }
 }
