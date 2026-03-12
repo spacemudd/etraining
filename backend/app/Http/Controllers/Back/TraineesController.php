@@ -295,7 +295,7 @@ class TraineesController extends Controller
                     $q->orderBy('number', 'desc');
                 }])
                 ->with(['custom_certificates' => function($q) {
-                    $q->orderBy('created_at', 'desc')->limit(2);
+                    $q->orderBy('created_at', 'desc')->limit(20);
                 }])
                 ->with(['uk_certificates' => function($q) {
                     $q->where('status', 'sent')
@@ -669,7 +669,11 @@ class TraineesController extends Controller
      */
     public function createCustomCertificate($trainee_id)
     {
-        $trainee = Trainee::withTrashed()->findOrFail($trainee_id);
+        $trainee = Trainee::withTrashed()
+            ->with(['custom_certificates' => function ($q) {
+                $q->orderBy('created_at', 'desc');
+            }])
+            ->findOrFail($trainee_id);
 
         return Inertia::render('Back/Trainees/Certificates/Create', [
             'trainee' => $trainee,
@@ -689,17 +693,124 @@ class TraineesController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'issued_at' => 'required|date',
+            'certificate_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
         ]);
 
         $trainee = Trainee::withTrashed()->findOrFail($trainee_id);
-        
-        TraineeCustomCertificate::create([
+
+        $certificate = TraineeCustomCertificate::create([
             'trainee_id' => $trainee->id,
             'title' => $request->title,
             'issued_at' => $request->issued_at,
         ]);
 
+        if ($request->hasFile('certificate_file')) {
+            $certificate->addMediaFromRequest('certificate_file')
+                ->toMediaCollection('certificate_file');
+        }
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'message' => 'تم إنشاء الشهادة بنجاح',
+                'redirect' => route('back.trainees.show', $trainee->id),
+            ]);
+        }
+
         return redirect()->route('back.trainees.show', $trainee->id);
+    }
+
+    /**
+     * Get signed or direct URL for custom certificate file.
+     */
+    public function getCustomCertificateFileUrl($trainee_id, $id)
+    {
+        try {
+            $certificate = TraineeCustomCertificate::where('trainee_id', $trainee_id)
+                ->where('id', $id)
+                ->firstOrFail();
+
+            $media = $certificate->getFirstMedia('certificate_file');
+
+            if (!$media) {
+                return response()->json(['error' => 'الملف غير موجود'], 404);
+            }
+
+            if ($media->disk === 's3') {
+                $signedUrl = $media->getTemporaryUrl(now()->addHour(), '', [
+                    'ResponseContentDisposition' => 'inline; filename="' . $media->name . '"',
+                ]);
+
+                return response()->json([
+                    'file_url' => $signedUrl,
+                    'file_name' => $media->name,
+                    'expires_at' => now()->addHour()->toISOString(),
+                ]);
+            }
+
+            // للتخزين المحلي: إرجاع رابط يمر عبر التطبيق لتفادي 404 مع /storage/
+            $streamUrl = route('back.trainees.custom-certificates.stream-file', [
+                'trainee_id' => $trainee_id,
+                'id' => $id,
+            ]);
+
+            return response()->json([
+                'file_url' => $streamUrl,
+                'file_name' => $media->name,
+                'expires_at' => null,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error getting custom certificate file URL', [
+                'trainee_id' => $trainee_id,
+                'certificate_id' => $id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json(['error' => 'حدث خطأ أثناء الحصول على رابط الملف'], 500);
+        }
+    }
+
+    /**
+     * Stream or redirect to custom certificate file (عرض الملف من خلال التطبيق).
+     */
+    public function streamCustomCertificateFile($trainee_id, $id)
+    {
+        try {
+            $certificate = TraineeCustomCertificate::where('trainee_id', $trainee_id)
+                ->where('id', $id)
+                ->firstOrFail();
+
+            $media = $certificate->getFirstMedia('certificate_file');
+
+            if (!$media) {
+                abort(404, 'الملف غير موجود');
+            }
+
+            if ($media->disk === 's3') {
+                $signedUrl = $media->getTemporaryUrl(now()->addHour(), '', [
+                    'ResponseContentDisposition' => 'inline; filename="' . $media->name . '"',
+                ]);
+
+                return redirect()->away($signedUrl);
+            }
+
+            $path = $media->getPath();
+            if (!is_file($path)) {
+                abort(404, 'الملف غير موجود');
+            }
+
+            return response()->file($path, [
+                'Content-Disposition' => 'inline; filename="' . $media->name . '"',
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            abort(404, 'الشهادة غير موجودة');
+        } catch (\Exception $e) {
+            \Log::error('Error streaming custom certificate file', [
+                'trainee_id' => $trainee_id,
+                'certificate_id' => $id,
+                'error' => $e->getMessage(),
+            ]);
+            abort(500, 'حدث خطأ أثناء عرض الملف');
+        }
     }
 
     /**
@@ -1132,7 +1243,7 @@ class TraineesController extends Controller
                 ->withCount('general_files')
                 ->with('invoices')
                 ->with(['custom_certificates' => function($q) {
-                    $q->orderBy('created_at', 'desc')->limit(2);
+                    $q->orderBy('created_at', 'desc')->limit(20);
                 }])
                 ->with(['uk_certificates' => function($q) {
                     $q->where('status', 'sent')

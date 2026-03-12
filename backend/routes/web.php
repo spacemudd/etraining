@@ -900,6 +900,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         // Custom certificates
         Route::get('trainees/{trainee_id}/custom-certificates/create', [\App\Http\Controllers\Back\TraineesController::class, 'createCustomCertificate'])->name('trainees.custom-certificates.create');
         Route::post('trainees/{trainee_id}/custom-certificates', [\App\Http\Controllers\Back\TraineesController::class, 'storeCustomCertificate'])->name('trainees.custom-certificates.store');
+        Route::get('trainees/{trainee_id}/custom-certificates/{id}/file-url', [\App\Http\Controllers\Back\TraineesController::class, 'getCustomCertificateFileUrl'])->name('trainees.custom-certificates.file-url');
+        Route::get('trainees/{trainee_id}/custom-certificates/{id}/file', [\App\Http\Controllers\Back\TraineesController::class, 'streamCustomCertificateFile'])->name('trainees.custom-certificates.stream-file');
         
         Route::get('trainees/{trainee_id}/block', [\App\Http\Controllers\Back\TraineesController::class, 'blockView'])->name('trainees.block');
         Route::post('trainees/{trainee_id}/block', [\App\Http\Controllers\Back\TraineesController::class, 'block'])->name('trainees.block.store');

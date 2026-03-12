@@ -4,10 +4,13 @@ namespace App\Models\Back;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class TraineeCustomCertificate extends Model
+class TraineeCustomCertificate extends Model implements HasMedia
 {
     use HasFactory;
+    use InteractsWithMedia;
 
     protected $fillable = [
         'trainee_id',
@@ -21,6 +24,8 @@ class TraineeCustomCertificate extends Model
 
     protected $appends = [
         'issued_at_formatted',
+        'has_certificate_file',
+        'certificate_file_name',
     ];
 
     /**
@@ -37,5 +42,17 @@ class TraineeCustomCertificate extends Model
     public function getIssuedAtFormattedAttribute()
     {
         return $this->issued_at ? $this->issued_at->format('Y/m/d') : $this->created_at->format('Y/m/d');
+    }
+
+    public function getHasCertificateFileAttribute(): bool
+    {
+        return $this->hasMedia('certificate_file');
+    }
+
+    public function getCertificateFileNameAttribute(): ?string
+    {
+        $media = $this->getFirstMedia('certificate_file');
+
+        return $media ? $media->name : null;
     }
 }

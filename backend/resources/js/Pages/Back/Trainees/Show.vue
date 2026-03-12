@@ -901,8 +901,20 @@
               >
                   <div v-if="trainee.custom_certificates && trainee.custom_certificates.length > 0" 
                        class="text-sm mt-2 p-1 px-2 bg-gray-200 rounded-lg">
-                      <div v-for="certificate in trainee.custom_certificates" :key="certificate.id" class="mt-1">
-                          {{ certificate.title }} - {{ certificate.issued_at_formatted }}
+                      <div v-for="certificate in trainee.custom_certificates" :key="certificate.id" class="mt-1 flex items-center justify-between gap-2">
+                          <span>{{ certificate.title }} - {{ certificate.issued_at_formatted }}</span>
+                          <a
+                              v-if="certificate.has_certificate_file"
+                              href="#"
+                              class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 ml-2 whitespace-nowrap"
+                              title="عرض ملف الشهادة"
+                              @click.stop.prevent="openCertificateFile(certificate)"
+                          >
+                              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                              </svg>
+                              <span>عرض الملف</span>
+                          </a>
                       </div>
                   </div>
                   
@@ -1864,6 +1876,24 @@ export default {
     // Navigate to certificate creation page
     navigateToCreateCertificate() {
       this.$inertia.visit(route('back.trainees.custom-certificates.create', this.trainee.id));
+    },
+    async openCertificateFile(certificate) {
+      if (!certificate.has_certificate_file) return;
+      try {
+        const url = route('back.trainees.custom-certificates.file-url', {
+          trainee_id: this.trainee.id,
+          id: certificate.id,
+        });
+        const response = await axios.get(url);
+        if (response.data && response.data.file_url) {
+          window.open(response.data.file_url, '_blank', 'noopener,noreferrer');
+        } else {
+          alert('لم يتم العثور على رابط الملف');
+        }
+      } catch (err) {
+        const msg = err.response?.data?.error || err.response?.data?.message || 'حدث خطأ أثناء فتح الملف';
+        alert(msg);
+      }
     },
 
   },
