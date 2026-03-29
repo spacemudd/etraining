@@ -117,11 +117,28 @@ public function sendEmbeddedContract(Request $request)
 {
     Log::info("start sending embedded document");
 
-    $recipientName = $request->recipient_name;
-    $recipientEmail = $request->recipient_email;
+    $trainee = Trainee::with('user')->where('user_id', $request->user_id)->first();
+    if (!$trainee) {
+        Log::warning('Trainee not found for embedded contract', ['user_id' => $request->user_id]);
 
-    //get trainee details
-    $trainee=Trainee::where('user_id',$request->user_id)->first();
+        return response()->json(['error' => 'Trainee not found'], 404);
+    }
+
+    $recipientName = trim((string) ($request->recipient_name ?? ''));
+    $recipientEmail = trim((string) ($request->recipient_email ?? ''));
+
+    if ($recipientEmail === '' || !filter_var($recipientEmail, FILTER_VALIDATE_EMAIL)) {
+        $recipientEmail = trim((string) optional($trainee->user)->email);
+    }
+
+    if ($recipientEmail === '' || !filter_var($recipientEmail, FILTER_VALIDATE_EMAIL)) {
+        Log::warning('Invalid recipient email for Zoho embedded contract', [
+            'user_id' => $request->user_id,
+        ]);
+
+        return response()->json(['error' => 'Invalid recipient email'], 422);
+    }
+
     $contractValue = $trainee->override_training_costs ?? 2300;
 
     $numbersInArabic = [
@@ -188,58 +205,62 @@ public function sendEmbeddedContract(Request $request)
         ])
         ->post("https://sign.zoho.sa/api/v1/templates/{$templateId}/createdocument", $payload);
 
-        $responseData = $response->json();
-        Log::info("Response from Zoho: " . json_encode($response->json()));
+    $responseData = $response->json() ?? [];
+    Log::info('Response from Zoho: '.json_encode($responseData));
 
-        Log::info($responseData['requests']['request_id']);
-        Log::info($responseData['requests']['actions'][0]['action_id']);
+    $zohoFailed = !$response->successful()
+        || (($responseData['status'] ?? '') === 'failure')
+        || empty(data_get($responseData, 'requests.request_id'));
 
-
-
-    if ($response->successful()) {
-        $responseData = $response->json();
-        // $trainee->update(['zoho_contract_id' => $responseData['requests']['request_id']]);
-
-        if (!empty($responseData['requests']) && isset($responseData['requests']['request_id'])) {
-
-            $requestId = $responseData['requests']['request_id'];
-
-            if (!empty($responseData['requests']['actions']) && isset($responseData['requests']['actions'][0]['action_id'])) {
-                $actionId = $responseData['requests']['actions'][0]['action_id'];
-
-                $embedTokenResponse = Http::withHeaders([
-                    "Authorization" => "Zoho-oauthtoken " . $accessToken,
-                ])->post("https://sign.zoho.sa/api/v1/requests/{$requestId}/actions/{$actionId}/embedtoken", [
-
-                    'host' => 'http://127.0.0.1:8000'
-                ]);
-
-                if ($embedTokenResponse->successful()) {
-                    $trainee->update(['zoho_contract_id' => $responseData['requests']['request_id']]);
-                    $signingUrl = $embedTokenResponse->json()['sign_url'];
-                    Log::info("Embed token successfully generated", ['response' => $response->json()]);
-                    return response()->json(['sign_url' => $signingUrl]);
-                } else {
-                    Log::error("error while getting embedded document URL", [
-                        'embedTokenResponse' => $embedTokenResponse->json(),
-                    ]);
-                    return response()->json(["error" => "error while getting embedded document URL"], 500);
-                }
-            } else {
-                Log::error("error while getting action id");
-                return response()->json(["error" => "error while getting action id"], 500);
-            }
-        } else {
-            Log::error("error while getting request id");
-            return response()->json(["error" => "error while getting request id"], 500);
-        }
-    } else {
-        Log::error("error while creating document", [
-            'response' => $response->json(),
+    if ($zohoFailed) {
+        Log::error('error while creating document', [
+            'response' => $responseData,
             'status' => $response->status(),
         ]);
-        return response()->json(["error" => "error while creating document"], 500);
+
+        $httpStatus = $response->status();
+        if ($httpStatus < 400 || $httpStatus >= 600) {
+            $httpStatus = 422;
+        }
+
+        return response()->json([
+            'error' => 'error while creating document',
+            'zoho_message' => $responseData['message'] ?? null,
+            'zoho_code' => $responseData['code'] ?? null,
+        ], $httpStatus);
     }
+
+    Log::info($responseData['requests']['request_id']);
+    $requestId = $responseData['requests']['request_id'];
+
+    if (empty($responseData['requests']['actions']) || !isset($responseData['requests']['actions'][0]['action_id'])) {
+        Log::error('error while getting action id', ['response' => $responseData]);
+
+        return response()->json(['error' => 'error while getting action id'], 500);
+    }
+
+    Log::info($responseData['requests']['actions'][0]['action_id']);
+    $actionId = $responseData['requests']['actions'][0]['action_id'];
+
+    $embedTokenResponse = Http::withHeaders([
+        'Authorization' => 'Zoho-oauthtoken '.$accessToken,
+    ])->post("https://sign.zoho.sa/api/v1/requests/{$requestId}/actions/{$actionId}/embedtoken", [
+        'host' => 'http://127.0.0.1:8000',
+    ]);
+
+    if ($embedTokenResponse->successful()) {
+        $trainee->update(['zoho_contract_id' => $responseData['requests']['request_id']]);
+        $signingUrl = $embedTokenResponse->json()['sign_url'];
+        Log::info('Embed token successfully generated', ['response' => $response->json()]);
+
+        return response()->json(['sign_url' => $signingUrl]);
+    }
+
+    Log::error('error while getting embedded document URL', [
+        'embedTokenResponse' => $embedTokenResponse->json(),
+    ]);
+
+    return response()->json(['error' => 'error while getting embedded document URL'], 500);
 }
 
 public function viewContract()
