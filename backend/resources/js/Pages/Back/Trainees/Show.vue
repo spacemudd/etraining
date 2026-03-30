@@ -1551,6 +1551,7 @@ export default {
         'ebrahim.hosny@hadaf-hq.com',
         'azzah.abdullah@hadaf-hq.com',
         'reem.center@hadaf-hq.com',
+        'riyadh.center@hadaf-hq.com',
       ];
       return !!email && allowed.includes(email);
     }
