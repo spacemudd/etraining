@@ -21,7 +21,7 @@ class NoonPaymentService
     {
         $paymentInfo['apiOperation'] = "INITIATE";
         $paymentInfo['order']['channel'] = config("noon_payment.channel");
-        $paymentInfo['order']['category'] = config("noon_payment.order_category");
+        $paymentInfo['order']['category'] = 'pay';
         $paymentInfo['configuration']['tokenizeCc'] = false;
         $paymentInfo['customer'] = array_merge(
             $paymentInfo['customer'] ?? [],
