@@ -51,20 +51,10 @@ class NoonService implements PaymentServiceInterface
                 // 'ipAddress' => request()->ip(),
             ],
             'billing' => [
-                'contact' => [
-                    'firstName' => Str::before($invoice->trainee->name, ' '),
-                    'lastName' => Str::afterLast($invoice->trainee->name, ' '),
-                    'phone' => $invoice->trainee->clean_phone,
-                    'email' => $invoice->trainee->email ?: 'no-reply@jasarah-ksa.com',
-                ],
+                'contact' => $this->buildTraineeContact($invoice),
             ],
             'shipping' => [
-                'contact' => [
-                    'firstName' => Str::before($invoice->trainee->name, ' '),
-                    'lastName' => Str::afterLast($invoice->trainee->name, ' '),
-                    'phone' => $invoice->trainee->clean_phone,
-                    'email' => $invoice->trainee->email ?: 'no-reply@jasarah-ksa.com',
-                ],
+                'contact' => $this->buildTraineeContact($invoice),
             ],
             'deviceFingerPrint' => [
                 'sessionId' => request()->fingerprint(),
@@ -83,6 +73,47 @@ class NoonService implements PaymentServiceInterface
         }
 
         throw new RuntimeException('Noon payment fatal error: '.$url->resultCode.' - '.$url->message);
+    }
+
+    private function buildTraineeContact(Invoice $invoice): array
+    {
+        $fullName = Str::replace('  ', ' ', trim((string) $invoice->trainee->name));
+        $firstName = Str::before($fullName, ' ');
+        $lastName = Str::afterLast($fullName, ' ');
+
+        if ($lastName === $fullName) {
+            $lastName = $firstName;
+        }
+
+        return [
+            'firstName' => $firstName ?: 'Trainee',
+            'lastName' => $lastName ?: 'Trainee',
+            'phone' => $this->normalizeSaudiPhone((string) $invoice->trainee->clean_phone),
+            'email' => $invoice->trainee->email ?: 'no-reply@jasarah-ksa.com',
+        ];
+    }
+
+    private function normalizeSaudiPhone(string $phone): string
+    {
+        $normalized = str_replace([' ', '-'], '', trim($phone));
+
+        if (str_starts_with($normalized, '+')) {
+            return $normalized;
+        }
+
+        if (str_starts_with($normalized, '00966')) {
+            return '+' . substr($normalized, 2);
+        }
+
+        if (str_starts_with($normalized, '966')) {
+            return '+' . $normalized;
+        }
+
+        if (str_starts_with($normalized, '05')) {
+            return '+966' . substr($normalized, 1);
+        }
+
+        return $normalized;
     }
 
     /**
