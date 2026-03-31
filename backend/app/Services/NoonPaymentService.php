@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use CodeBugLab\NoonPayment\Helper\CurlHelper;
-use App\Helpers\EnvHelper;
 
 class NoonPaymentService
 {
@@ -27,13 +26,16 @@ class NoonPaymentService
             $paymentInfo['customer'] ?? [],
             $this->getTabbyCustomerConfig()
         );
+        $billingContact = $paymentInfo['billing']['contact'] ?? [];
+        $shippingContact = $paymentInfo['shipping']['contact'] ?? $billingContact;
+
         $paymentInfo['billing'] = [
             'address' => $this->getTabbyBillingAddressConfig(),
-            'contact' => $paymentInfo['billing']['contact'] ?? [],
+            'contact' => $billingContact,
         ];
         $paymentInfo['shipping'] = [
             'address' => $this->getTabbyShippingAddressConfig(),
-            'contact' => $paymentInfo['shipping']['contact'] ?? [],
+            'contact' => $shippingContact,
         ];
 
         if ($centerId === 5676) {

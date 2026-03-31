@@ -44,7 +44,15 @@ class NoonService implements PaymentServiceInterface
                     'firstName' => Str::before($invoice->trainee->name, ' '),
                     'lastName' => Str::afterLast($invoice->trainee->name, ' '),
                     'phone' => $invoice->trainee->clean_phone,
-                    //'email' => $invoice->trainee->email,
+                    'email' => $invoice->trainee->email ?: 'no-reply@jasarah-ksa.com',
+                ],
+            ],
+            'shipping' => [
+                'contact' => [
+                    'firstName' => Str::before($invoice->trainee->name, ' '),
+                    'lastName' => Str::afterLast($invoice->trainee->name, ' '),
+                    'phone' => $invoice->trainee->clean_phone,
+                    'email' => $invoice->trainee->email ?: 'no-reply@jasarah-ksa.com',
                 ],
             ],
             'deviceFingerPrint' => [
