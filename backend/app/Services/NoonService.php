@@ -37,6 +37,17 @@ class NoonService implements PaymentServiceInterface
                 'currency' => 'SAR',
                 'name' => Str::replace('  ', ' ', trim($invoice->trainee->name)),
                 'description' => 'Training fees for period - '.$invoice->from_date.' - '.$invoice->to_date,
+                'items' => [
+                    [
+                        'name' => 'Training fees invoice #' . $invoice->id,
+                        'quantity' => 1,
+                        'unitPrice' => (float) $invoice->grand_total,
+                        'code' => 'default',
+                        'nvp' => [
+                            'productSku' => 'invoice-' . $invoice->id,
+                        ],
+                    ],
+                ],
                 // 'ipAddress' => request()->ip(),
             ],
             'billing' => [
@@ -59,7 +70,7 @@ class NoonService implements PaymentServiceInterface
                 'sessionId' => request()->fingerprint(),
             ],
             'configuration' => [
-                'locale' => 'ar',
+                'locale' => 'en',
                 'webhookUrl' => $webhookUrl,
                 'returnUrl' => 'https://app.jasarah-ksa.com/trainees/payment/card/charge-payment',
                 // 'generateShortLink' => true, // TODO: When sharing the invoice with SMS.
