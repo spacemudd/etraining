@@ -23,6 +23,7 @@ class NoonPaymentService
         $paymentInfo['order']['channel'] = config("noon_payment.channel");
         $paymentInfo['order']['category'] = 'pay';
         $paymentInfo['configuration']['tokenizeCc'] = false;
+        $paymentInfo['configuration']['paymentOption'] = $paymentInfo['configuration']['paymentOption'] ?? 'Tabby';
         $paymentInfo['customer'] = array_merge(
             $paymentInfo['customer'] ?? [],
             $this->getTabbyCustomerConfig()
