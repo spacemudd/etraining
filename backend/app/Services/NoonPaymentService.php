@@ -134,6 +134,9 @@ class NoonPaymentService
     {
         Log::info('Noon INITIATE payload summary', [
             'centerId' => $centerId,
+            'merchantBusinessId' => $centerId === 5676 ? config('noon_payment.jasarah.business_id') : config('noon_payment.jisr.business_id'),
+            'merchantAppName' => $centerId === 5676 ? config('noon_payment.jasarah.app_name') : config('noon_payment.jisr.app_name'),
+            'merchantMode' => $centerId === 5676 ? config('noon_payment.jasarah.mode') : config('noon_payment.jisr.mode'),
             'reference' => $paymentInfo['order']['reference'] ?? null,
             'amount' => $paymentInfo['order']['amount'] ?? null,
             'currency' => $paymentInfo['order']['currency'] ?? null,
@@ -159,6 +162,8 @@ class NoonPaymentService
             'centerId' => $centerId,
             'resultCode' => $response->resultCode ?? null,
             'message' => $response->message ?? null,
+            'requestReference' => $response->requestReference ?? null,
+            'responseBusinessId' => $response->result->business->id ?? null,
             'paymentMethods' => $paymentMethods,
         ]);
 
