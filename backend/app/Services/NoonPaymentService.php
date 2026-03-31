@@ -23,7 +23,6 @@ class NoonPaymentService
         $paymentInfo['order']['channel'] = config("noon_payment.channel");
         $paymentInfo['order']['category'] = 'pay';
         $paymentInfo['configuration']['tokenizeCc'] = false;
-        $paymentInfo['configuration']['paymentOption'] = $paymentInfo['configuration']['paymentOption'] ?? 'Tabby';
         $paymentInfo['customer'] = array_merge(
             $paymentInfo['customer'] ?? [],
             $this->getTabbyCustomerConfig()
@@ -42,11 +41,9 @@ class NoonPaymentService
 
         if ($centerId === 5676) {
             $paymentInfo['configuration']['returnUrl'] = (!empty($paymentInfo['configuration']['returnUrl'])) ? $paymentInfo['configuration']['returnUrl'] : config('noon_payment.jasarah.return_url');
-            $paymentInfo['configuration']['paymentAction'] = (!empty($paymentInfo['configuration']['paymentAction'])) ? $paymentInfo['configuration']['paymentAction'] : "SALE";
             return $this->postInitiate(config("noon_payment.jasarah.payment_api") . "order", $paymentInfo, $centerId);
         } else {
             $paymentInfo['configuration']['returnUrl'] = (! empty($paymentInfo['configuration']['returnUrl'])) ? $paymentInfo['configuration']['returnUrl'] : config('noon_payment.jisr.return_url');
-            $paymentInfo['configuration']['paymentAction'] = (! empty($paymentInfo['configuration']['paymentAction'])) ? $paymentInfo['configuration']['paymentAction'] : "SALE";
             return $this->postInitiate(config("noon_payment.jisr.payment_api") . "order", $paymentInfo, $centerId);
         }
     }

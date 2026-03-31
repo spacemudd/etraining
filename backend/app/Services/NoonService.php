@@ -33,7 +33,7 @@ class NoonService implements PaymentServiceInterface
             [
             'order' => [
                 'reference' => $invoice->id,
-                'amount' => $invoice->grand_total,
+                'amount' => (float) $invoice->grand_total,
                 'currency' => 'SAR',
                 'name' => Str::replace('  ', ' ', trim($invoice->trainee->name)),
                 'description' => 'Training fees for period - '.$invoice->from_date.' - '.$invoice->to_date,
