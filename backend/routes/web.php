@@ -1126,8 +1126,15 @@ Route::get('/attendance/export-by-group/{courseBatch}', [\App\Http\Controllers\A
 
 
  Route::get('export-some-trainees',function(){
-    return Excel::download(new \App\Exports\ExportSomeTraineesFromGada(),'trainees.xlsx');
+   return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\ExportSomeTraineesFromGada(),'trainees.xlsx');
 });
+
+Route::get('export-candidates', function () {
+    return \Maatwebsite\Excel\Facades\Excel::download(
+        new \App\Exports\ExportSomeTraineesFromGada(),
+        'candidates.xlsx'
+    );
+})->name('candidates.export.excel');
 
 Route::get('export-trainee-audits', function(\Illuminate\Http\Request $request) {
     $userId = $request->get('user_id', '53a66c49-f6b4-4dee-952f-71f4d096a9ba');
