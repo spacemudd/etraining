@@ -16,7 +16,7 @@ class ExportSomeTraineesFromGada implements FromQuery, WithHeadings, WithMapping
     {
         return Trainee::query()
             ->onlyTrashed()
-            ->where('deleted_remark', 'غير مسجل في شركة')
+            ->where('deleted_remark', 'غير مسجلة في الشركة')
             ->select(['name', 'identity_number', 'phone', 'deleted_remark', 'deleted_at'])
             ->orderBy('name');
     }
