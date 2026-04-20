@@ -19,6 +19,7 @@
                                 id="reason">
                             <option value="عدم سداد">عدم سداد</option>
                             <option value="استبعاد من الشركة">استبعاد من الشركة</option>
+                            <option value="مستبعدة - عدم صرف رواتب">مستبعدة - عدم صرف رواتب</option>
                             <option value="استقالة">استقالة</option>
                             <option value="انسحاب">انسحاب</option>
                             <option value="عمل مشاكل">عمل مشاكل</option>
