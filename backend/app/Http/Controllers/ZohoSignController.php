@@ -124,7 +124,8 @@ public function sendEmbeddedContract(Request $request)
         return response()->json(['error' => 'Trainee not found'], 404);
     }
 
-    $recipientName = trim((string) ($request->recipient_name ?? ''));
+    // Always use the latest trainee name from DB for Zoho contract fields.
+    $recipientName = trim((string) ($trainee->name ?? ''));
     $recipientEmail = trim((string) ($request->recipient_email ?? ''));
 
     if ($recipientEmail === '' || !filter_var($recipientEmail, FILTER_VALIDATE_EMAIL)) {
