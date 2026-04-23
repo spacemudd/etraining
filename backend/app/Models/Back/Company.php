@@ -62,6 +62,31 @@ class Company extends Model implements SearchableLabels, Auditable, HasMedia
         'resource_label',
         'resource_type',
         'created_at_timezone',
+        'is_special_company',
+    ];
+
+    private const SPECIAL_COMPANY_NAMES_AR = [
+        'شركة ماب للصناعة',
+        'شركة ماس الذهبية المحدودة شركة شخص واحد',
+        'شركة جي دي جونز ال ال سي',
+        'مصنع صلب الجزيرة للخرسانة مسبقة الصب',
+        'مطعم المقياس الحديث لتقديم الوجبات',
+        'شركة الفا المدن للمقاولات',
+        'شركة دي جي جونز وشركاه السعودية شركة شخص واحد',
+        'مؤسسة واحه الرياض الخضراء للتجارة',
+        'شركة الاخوه المتحده المحدودة(شركة شخص واحد)',
+        'شركة بدائل للجدران',
+        'شركة الرمز السعودي',
+        'شركة مصانع الايمان للتجارة والمقاولات المحدودة',
+        'مصنع شركة تقنية الابار السعودية',
+        'التفاصيل المعدنية',
+        'مصنع شركة بيسان السعودية لموانع التسرب',
+        'شركة بيت الامتياز للتشغيل والصيانة',
+        'شركة رست للمياه شركة مساهمة سعودية مقفلة',
+        'شركة الأبعاد الاربعة لتقديم المشروبات',
+        'شركة ابناء عبدالله حسين السبوعي للمقاولات مساهمة مقفلة',
+        'مصنع العاصمة لاسياج حديد التسليح',
+        'شركة داش لانظمة التحكم وفروعها',
     ];
 
     protected static function boot(): void
@@ -260,6 +285,32 @@ public function recruitmentCompany()
         if ($this->created_at) {
             return Timezone::convertToLocal($this->created_at, 'Y-m-d h:i A');
         }
+    }
+
+    public function getIsSpecialCompanyAttribute(): bool
+    {
+        $normalizedCurrent = $this->normalizeCompanyNameForMatching((string) $this->name_ar);
+
+        if ($normalizedCurrent === '') {
+            return false;
+        }
+
+        foreach (self::SPECIAL_COMPANY_NAMES_AR as $companyName) {
+            if ($normalizedCurrent === $this->normalizeCompanyNameForMatching($companyName)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function normalizeCompanyNameForMatching(string $name): string
+    {
+        $normalized = trim($name);
+        $normalized = str_replace(['(', ')', '（', '）'], '', $normalized);
+        $normalized = preg_replace('/\s+/u', ' ', $normalized) ?? $normalized;
+
+        return mb_strtolower($normalized);
     }
 
     public function company_mails()

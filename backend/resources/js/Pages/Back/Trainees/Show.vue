@@ -152,6 +152,24 @@
         </div>
 
         <div
+          class="col-span-6 items-center justify-end bg-amber-50 border border-amber-300 text-right flex gap-2 p-3 rounded-md"
+          v-if="!is_limited_view && trainee.company && trainee.company.is_special_company"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="w-5 h-5 text-amber-700"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M12 2.25a.75.75 0 01.673.418l2.8 5.676 6.264.91a.75.75 0 01.416 1.279l-4.532 4.418 1.07 6.238a.75.75 0 01-1.088.79L12 19.347l-5.603 2.946a.75.75 0 01-1.088-.79l1.07-6.238-4.532-4.418a.75.75 0 01.416-1.279l6.264-.91 2.8-5.676A.75.75 0 0112 2.25z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </div>
+
+        <div
           class="col-span-6 items-center justify-end bg-gray-50 text-right flex gap-6"
           v-if="in_block_list && !is_limited_view"
         >
