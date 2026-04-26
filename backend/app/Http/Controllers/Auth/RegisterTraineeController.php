@@ -31,7 +31,20 @@ class RegisterTraineeController extends Controller
             return redirect(route('dashboard'));
         }
 
-        return view('auth.register-trainees');
+        return view('auth.register-trainees', [
+            'registerAction' => route('register.trainees.store'),
+        ]);
+    }
+
+    public function showEngineers()
+    {
+        if (optional(optional(auth()->user())->trainee)->skip_uploading_id) {
+            return redirect(route('dashboard'));
+        }
+
+        return view('auth.register-trainees', [
+            'registerAction' => route('register.engineers.store'),
+        ]);
     }
 
     /**
@@ -43,13 +56,28 @@ class RegisterTraineeController extends Controller
      */
     public function store(Request $request)
     {
-        Log::info('RegisterTraineeController@store: Beginning trainee registration.');
+        return $this->completeTraineeRegistration($request, false);
+    }
+
+    public function storeEngineers(Request $request)
+    {
+        return $this->completeTraineeRegistration($request, true);
+    }
+
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    protected function completeTraineeRegistration(Request $request, bool $isEngineer)
+    {
+        $logContext = $isEngineer ? 'engineer' : 'trainee';
+        Log::info("RegisterTraineeController: Beginning {$logContext} registration.");
 
         User::withoutGlobalScope(TeamScope::class);
 
         // Clean and prepare data
         $data = $request->except('_token');
         $data['children_count'] = $data['children_count'] ? (int) $data['children_count'] : 0;
+        $data['is_engineer'] = $isEngineer;
 
         Validator::make($data, [
             'name' => ['required', 'string', 'max:255', 'unique:trainee_block_lists'],
@@ -72,7 +100,7 @@ class RegisterTraineeController extends Controller
 
         User::addGlobalScope(new TeamScope());
 
-        Log::info('RegisterTraineeController@store: Validation successful.');
+        Log::info("RegisterTraineeController: Validation successful ({$logContext}).");
 
         \DB::beginTransaction();
         try {
@@ -89,10 +117,11 @@ class RegisterTraineeController extends Controller
             ]);
             \DB::commit();
 
-            Log::info('RegisterTraineeController@store: Trainee registration successful.', [
+            Log::info("RegisterTraineeController: Registration successful ({$logContext}).", [
                 'trainee_id' => $trainee->id,
                 'user_id' => $user->id,
-                'email' => $user->email
+                'email' => $user->email,
+                'is_engineer' => $isEngineer,
             ]);
 
             // Redirect to login page with a success message

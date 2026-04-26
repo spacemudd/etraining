@@ -565,6 +565,9 @@ Route::get('/terms', [\App\Http\Controllers\TermsController::class, 'index'])->n
 Route::post('/register/trainees', [\App\Http\Controllers\Auth\RegisterTraineeController::class, 'store'])->name('register.trainees.store');
 Route::get('/register/trainees', [\App\Http\Controllers\Auth\RegisterTraineeController::class, 'show'])->name('register.trainees');
 
+Route::post('/register/engineers', [\App\Http\Controllers\Auth\RegisterTraineeController::class, 'storeEngineers'])->name('register.engineers.store');
+Route::get('/register/engineers', [\App\Http\Controllers\Auth\RegisterTraineeController::class, 'showEngineers'])->name('register.engineers');
+
 Route::post('/register/instructors', [\App\Http\Controllers\Auth\RegisterInstructorController::class, 'store'])->name('register.instructors.store');
 Route::get('/register/instructors', [\App\Http\Controllers\Auth\RegisterInstructorController::class, 'show'])->name('register.instructors');
 

@@ -153,6 +153,7 @@ return [
     'open-new-course-file-description' => 'هنا يمكن لك إنشاء برنامج تدريبي جديد ورفع كل المرفقات المطلوبة',
     'hi-there' => 'اهلاً بك',
     'im-a-trainee' => 'انا مٌتدرب',
+    'register-engineers' => 'تسجيل المهندسين',
     'im-an-instructor' => 'انا مٌدرب',
     'password-confirm' => 'تأكيد كلمة السر',
     'already-registered' => 'لديك حساب؟',

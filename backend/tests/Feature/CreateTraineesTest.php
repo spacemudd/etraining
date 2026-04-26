@@ -108,6 +108,49 @@ class CreateTraineesTest extends TestCase
             'city_id' => $trainee['city_id'],
             'marital_status_id' => $trainee['marital_status_id'],
             'children_count' => $trainee['children_count'],
+            'is_engineer' => false,
+        ]);
+    }
+
+    public function test_engineer_signup_page_is_available()
+    {
+        $this->get(route('register.engineers'))
+            ->assertSuccessful();
+    }
+
+    public function test_engineer_register_is_stored_as_trainee_with_is_engineer()
+    {
+        $admin = User::factory()->create();
+        $team = $admin->ownedTeams()->create([
+            'name' => 'eTraining Shafiq',
+            'personal_team' => false,
+        ]);
+        app()->make(RolesService::class)->seedRolesToTeam($team);
+
+        $trainee = [
+            'name' => 'Engineer User',
+            'english_name' => 'Engineer User',
+            'email' => 'engineer.signup@example.com',
+            'identity_number' => '3030303030',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'birthday' => '1992-06-15',
+            'phone' => '501111111',
+            'phone_additional' => '501111112',
+            'educational_level_id' => EducationalLevel::create(['order' => 1, 'name_en' => 'College_Eng'])->id,
+            'city_id' => City::create(['name' => 'Jeddah_Eng'])->id,
+            'marital_status_id' => MaritalStatus::create(['order' => 1, 'name_en' => 'Single_Eng'])->id,
+            'children_count' => 0,
+        ];
+
+        $response = $this->post(route('register.engineers.store'), $trainee);
+
+        $response->assertSessionHasNoErrors()
+            ->assertRedirect(route('login'));
+
+        $this->assertDatabaseHas('trainees', [
+            'email' => $trainee['email'],
+            'is_engineer' => true,
         ]);
     }
 

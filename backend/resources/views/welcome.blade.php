@@ -28,6 +28,15 @@
                 {{ __('words.to-register') }}
             </div>
 
+            {{-- Engineer registration --}}
+            <div>
+                <a href="{{ route('register.engineers') }}"
+                   class="flex bg-indigo-600 hover:bg-indigo-700 text-white py-5 px-10 rounded-lg text-2xl justify-center mb-4">
+                    <img src="{{ asset('/img/student.svg') }}" class="w-8 ml-5" style="filter:invert(1)">
+                    {{ __('words.register-engineers') }}
+                </a>
+            </div>
+
             {{-- Trainee login --}}
             <div>
                 <a href="{{ route('register.trainees') }}"

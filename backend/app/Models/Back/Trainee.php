@@ -72,6 +72,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'zoho_contract_status',
         'zoho_sign_date',
         'team_id',
+        'is_engineer',
 
     ];
 
@@ -84,6 +85,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'deleted_at' => 'datetime:Y-m-d',
         'ignore_attendance' => 'boolean',
         'dont_edit_notice' => 'boolean',
+        'is_engineer' => 'boolean',
     ];
 
     protected $appends = [

@@ -360,7 +360,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('register.trainees.store') }}">
+        <form method="POST" action="{{ $registerAction }}">
             @csrf
 
             <div><h1 class="text-2xl text-center my-5 font-bold">{{ __('words.welcome') }}!</h1></div>
