@@ -23,21 +23,21 @@ class NoonPaymentService
         $paymentInfo['order']['channel'] = config("noon_payment.channel");
         $paymentInfo['order']['category'] = 'pay';
         $paymentInfo['configuration']['tokenizeCc'] = false;
-        $paymentInfo['customer'] = array_merge(
-            $paymentInfo['customer'] ?? [],
-            $this->getTabbyCustomerConfig()
-        );
-        $billingContact = $paymentInfo['billing']['contact'] ?? [];
-        $shippingContact = $paymentInfo['shipping']['contact'] ?? $billingContact;
+        // $paymentInfo['customer'] = array_merge(
+        //     $paymentInfo['customer'] ?? [],
+        //     $this->getTabbyCustomerConfig()
+        // );
+        // $billingContact = $paymentInfo['billing']['contact'] ?? [];
+        // $shippingContact = $paymentInfo['shipping']['contact'] ?? $billingContact;
 
-        $paymentInfo['billing'] = [
-            'address' => $this->getTabbyBillingAddressConfig(),
-            'contact' => $billingContact,
-        ];
-        $paymentInfo['shipping'] = [
-            'address' => $this->getTabbyShippingAddressConfig(),
-            'contact' => $shippingContact,
-        ];
+        // $paymentInfo['billing'] = [
+        //     'address' => $this->getTabbyBillingAddressConfig(),
+        //     'contact' => $billingContact,
+        // ];
+        // $paymentInfo['shipping'] = [
+        //     'address' => $this->getTabbyShippingAddressConfig(),
+        //     'contact' => $shippingContact,
+        // ];
 
         if ($centerId === 5676) {
             $paymentInfo['configuration']['returnUrl'] = (!empty($paymentInfo['configuration']['returnUrl'])) ? $paymentInfo['configuration']['returnUrl'] : config('noon_payment.jasarah.return_url');
@@ -144,9 +144,9 @@ class NoonPaymentService
             'channel' => $paymentInfo['order']['channel'] ?? null,
             'hasItems' => !empty($paymentInfo['order']['items']),
             'locale' => $paymentInfo['configuration']['locale'] ?? null,
-            'hasCustomer' => !empty($paymentInfo['customer']),
-            'billingContactKeys' => array_keys($paymentInfo['billing']['contact'] ?? []),
-            'shippingContactKeys' => array_keys($paymentInfo['shipping']['contact'] ?? []),
+            // 'hasCustomer' => !empty($paymentInfo['customer']),
+            // 'billingContactKeys' => array_keys($paymentInfo['billing']['contact'] ?? []),
+            // 'shippingContactKeys' => array_keys($paymentInfo['shipping']['contact'] ?? []),
         ]);
 
         $response = json_decode(CurlHelper::post($url, $paymentInfo, $this->getHeaders($centerId)));

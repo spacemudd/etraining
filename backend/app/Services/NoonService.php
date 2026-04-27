@@ -48,7 +48,6 @@ class NoonService implements PaymentServiceInterface
                         ],
                     ],
                 ],
-                // 'ipAddress' => request()->ip(),
             ],
             'billing' => [
                 'contact' => $this->buildTraineeContact($invoice),
@@ -60,7 +59,7 @@ class NoonService implements PaymentServiceInterface
                 'sessionId' => request()->fingerprint(),
             ],
             'configuration' => [
-                'locale' => 'en',
+                'locale' => 'ar',
                 'webhookUrl' => $webhookUrl,
                 'returnUrl' => 'https://prod.jasarah-ksa.com/trainees/payment/card/charge-payment',
                 // 'generateShortLink' => true, // TODO: When sharing the invoice with SMS.
