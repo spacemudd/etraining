@@ -26,7 +26,7 @@ class NoonService implements PaymentServiceInterface
 
         $centerId = 5676; // As of 22-12-2024 - Change all payments to Jasarah.
 
-        $webhookUrl = ($centerId == 5676 ? 'https://app.jasarah-ksa.com/noon' : 'https://app.jisr-ksa.com/noon');
+        $webhookUrl = 'https://prod.jasarah-ksa.com/noon';
 
         $url = NoonPaymentService::getInstance()->initiate(
             $centerId,
@@ -62,7 +62,7 @@ class NoonService implements PaymentServiceInterface
             'configuration' => [
                 'locale' => 'en',
                 'webhookUrl' => $webhookUrl,
-                'returnUrl' => 'https://app.jasarah-ksa.com/trainees/payment/card/charge-payment',
+                'returnUrl' => 'https://prod.jasarah-ksa.com/trainees/payment/card/charge-payment',
                 // 'generateShortLink' => true, // TODO: When sharing the invoice with SMS.
             ]
         ]);
