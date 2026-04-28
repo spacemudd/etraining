@@ -43,8 +43,8 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
      */
     public function handle()
     {
-        $from_date = Carbon::parse('2026-02-01')->startOfDay();
-        $to_date = Carbon::parse('2026-02-27')->endOfDay();
+        $from_date = Carbon::parse('2026-04-01')->startOfDay();
+        $to_date = Carbon::parse('2026-04-29')->endOfDay();
         $this->createReportsBasedOnTraineedInvoiced($from_date, $to_date);
         return 1;
     }
