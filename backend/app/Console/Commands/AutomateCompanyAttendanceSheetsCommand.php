@@ -43,8 +43,8 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
      */
     public function handle()
     {
-        $from_date = Carbon::parse('2026-03-01')->startOfDay();
-        $to_date = Carbon::parse('2026-03-30')->endOfDay();
+        $from_date = Carbon::parse('2026-02-01')->startOfDay();
+        $to_date = Carbon::parse('2026-02-27')->endOfDay();
         $this->createReportsBasedOnTraineedInvoiced($from_date, $to_date);
         return 1;
     }
@@ -57,7 +57,7 @@ class AutomateCompanyAttendanceSheetsCommand extends Command
 
         $company_id = 'beff7800-b94b-4831-8044-8cdcb152087a';
 
-        $select_invoices_from = ['2026-02-01', '2026-02-28'];
+        $select_invoices_from = ['2026-03-01', '2026-03-31'];
 
         //foreach ($companies as $company_id) {
             $count = Company::with('invoices')
