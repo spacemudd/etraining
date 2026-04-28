@@ -26,34 +26,26 @@ class NoonService implements PaymentServiceInterface
 
         $centerId = 5676; // As of 22-12-2024 - Change all payments to Jasarah.
 
-        $webhookUrl = 'https://prod.jasarah-ksa.com/noon';
+        $webhookUrl = ($centerId == 5676 ? 'https://prod.jasarah-ksa.com/noon' : 'https://app.jisr-ksa.com/noon');
 
         $url = NoonPaymentService::getInstance()->initiate(
             $centerId,
             [
             'order' => [
                 'reference' => $invoice->id,
-                'amount' => (float) $invoice->grand_total,
+                'amount' => $invoice->grand_total,
                 'currency' => 'SAR',
                 'name' => Str::replace('  ', ' ', trim($invoice->trainee->name)),
                 'description' => 'Training fees for period - '.$invoice->from_date.' - '.$invoice->to_date,
-                'items' => [
-                    [
-                        'name' => 'Training fees invoice #' . $invoice->id,
-                        'quantity' => 1,
-                        'unitPrice' => (float) $invoice->grand_total,
-                        'code' => 'default',
-                        'nvp' => [
-                            'productSku' => 'invoice-' . $invoice->id,
-                        ],
-                    ],
-                ],
+                // 'ipAddress' => request()->ip(),
             ],
             'billing' => [
-                'contact' => $this->buildTraineeContact($invoice),
-            ],
-            'shipping' => [
-                'contact' => $this->buildTraineeContact($invoice),
+                'contact' => [
+                    'firstName' => Str::before($invoice->trainee->name, ' '),
+                    'lastName' => Str::afterLast($invoice->trainee->name, ' '),
+                    'phone' => $invoice->trainee->clean_phone,
+                    //'email' => $invoice->trainee->email,
+                ],
             ],
             'deviceFingerPrint' => [
                 'sessionId' => request()->fingerprint(),
@@ -72,47 +64,6 @@ class NoonService implements PaymentServiceInterface
         }
 
         throw new RuntimeException('Noon payment fatal error: '.$url->resultCode.' - '.$url->message);
-    }
-
-    private function buildTraineeContact(Invoice $invoice): array
-    {
-        $fullName = Str::replace('  ', ' ', trim((string) $invoice->trainee->name));
-        $firstName = Str::before($fullName, ' ');
-        $lastName = Str::afterLast($fullName, ' ');
-
-        if ($lastName === $fullName) {
-            $lastName = $firstName;
-        }
-
-        return [
-            'firstName' => $firstName ?: 'Trainee',
-            'lastName' => $lastName ?: 'Trainee',
-            'phone' => $this->normalizeSaudiPhone((string) $invoice->trainee->clean_phone),
-            'email' => $invoice->trainee->email ?: 'no-reply@jasarah-ksa.com',
-        ];
-    }
-
-    private function normalizeSaudiPhone(string $phone): string
-    {
-        $normalized = str_replace([' ', '-'], '', trim($phone));
-
-        if (str_starts_with($normalized, '+')) {
-            return $normalized;
-        }
-
-        if (str_starts_with($normalized, '00966')) {
-            return '+' . substr($normalized, 2);
-        }
-
-        if (str_starts_with($normalized, '966')) {
-            return '+' . $normalized;
-        }
-
-        if (str_starts_with($normalized, '05')) {
-            return '+966' . substr($normalized, 1);
-        }
-
-        return $normalized;
     }
 
     /**
