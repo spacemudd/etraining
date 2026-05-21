@@ -45,7 +45,7 @@
             <form id="otp-request-form" method="POST" action="{{ route('login.2fa-code') }}">
                 @csrf
                 <input type="hidden" name="email" id="otp-email" value="{{ old('email') }}">
-                <button type="submit" id="request-otp-btn" class="w-full px-4 py-2 bg-green-500 text-white rounded mt-2">طلب رمز OTP</button>
+                <button type="submit" id="request-otp-btn" class="w-full px-4 py-2 bg-green-500 text-white rounded mt-2">طلب رمز التحقق عبر البريد الإلكتروني</button>
             </form>
         </div>
 

@@ -13,7 +13,7 @@
         @endif
 
         <div class="mb-4 text-sm text-gray-600">
-            <p>تم ارسال التحقق</p>
+            <p>تم إرسال رمز التحقق إلى بريدك الإلكتروني ({{ $email }}).</p>
         </div>
 
         <form method="POST" action="{{ route('login.verify-code') }}" id="verifyCodeForm">
@@ -50,7 +50,7 @@
                 @csrf
                 <input type="hidden" name="email" value="{{ $email }}" />
                 <button type="submit" class="text-sm text-blue-600 hover:text-blue-800 underline">
-                    إعادة إرسال رمز التحقق
+                    إعادة إرسال رمز التحقق عبر البريد الإلكتروني
                 </button>
             </form>
         </div>

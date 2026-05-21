@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\SendWhatsAppVerification;
+use App\Jobs\SendEmailVerification;
 use App\Models\User;
 use App\Models\Verification;
 use Illuminate\Http\Request;
@@ -20,12 +20,12 @@ class VerificationsController extends Controller
         if (! $user) {
             return redirect()->back()->withErrors(['email' => 'البريد الإلكتروني غير صحيح أو غير مسجل.']);
         }
-        $this->sendWhatsAppCode($user);
+        $this->sendEmailCode($user);
 
         return redirect()->route('login.verify', ['email' => $request->email]);
     }
 
-    public function sendWhatsAppCode(User $user): Verification
+    public function sendEmailCode(User $user): Verification
     {
         Verification::where('user_id', $user->id)->delete();
 
@@ -34,7 +34,7 @@ class VerificationsController extends Controller
             'code' => rand(2000, 9999),
         ]);
 
-        SendWhatsAppVerification::dispatch($user->id, (string) $verify->code);
+        SendEmailVerification::dispatch($user->id, (string) $verify->code);
 
         return $verify;
     }
