@@ -869,7 +869,7 @@ return [
     'monthly_limit' => 'Monthly Limit',
     'cost_per_request' => 'Cost Per Request',
     'total_cost' => 'Total Cost',
-    'last_12_months_history' => 'Last 12 Months History',
+    'last_24_months_history' => 'Last 24 Months History',
     'uk-certificate' => 'UK Certificate',
     'download-certificate' => 'Download Certificate',
     'upload-method' => 'Upload Method',

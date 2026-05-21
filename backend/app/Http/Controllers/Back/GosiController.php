@@ -43,7 +43,7 @@ class GosiController extends Controller
     }
 
     /**
-     * Get 12-month GOSI request history
+     * Get 24-month GOSI request history
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -55,8 +55,8 @@ class GosiController extends Controller
         $currentDate = Carbon::now();
         $monthlyLimit = (int) (AppSetting::where('name', 'gosi_monthly_requests')->value('value') ?? 600);
 
-        // Get the last 12 months
-        for ($i = 11; $i >= 0; $i--) {
+        // Get the last 24 months
+        for ($i = 23; $i >= 0; $i--) {
             $date = $currentDate->copy()->subMonths($i);
             $monthKey = $date->format('Y-m');
             

@@ -867,7 +867,7 @@ return [
     'monthly_limit' => 'الحد الشهري',
     'cost_per_request' => 'التكلفة لكل طلب',
     'total_cost' => 'التكلفة الإجمالية',
-    'last_12_months_history' => 'تاريخ آخر 12 شهر',
+    'last_24_months_history' => 'تاريخ آخر 24 شهر',
     'uk-certificate' => 'شهادة بريطانية',
     'download-certificate' => 'تحميل الشهادة',
     'upload-method' => 'طريقة الرفع',

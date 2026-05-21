@@ -8,10 +8,10 @@
                 ]"
             ></breadcrumb-container>
 
-            <!-- 12-Month History Table -->
+            <!-- 24-Month History Table -->
             <div class="col-span-6 sm:col-span-6 my-4">
                 <div class="flex justify-between items-center mb-2">
-                    <h6 class="text-lg font-semibold">{{ $t('words.last_12_months_history') }}</h6>
+                    <h6 class="text-lg font-semibold">{{ $t('words.last_24_months_history') }}</h6>
                     <button 
                         @click="fetchMonthlyHistory" 
                         :disabled="loadingHistory"
