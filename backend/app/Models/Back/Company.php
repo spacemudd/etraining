@@ -89,6 +89,16 @@ class Company extends Model implements SearchableLabels, Auditable, HasMedia
         'شركة داش لانظمة التحكم وفروعها',
     ];
 
+    private const SPECIAL_COMPANY_IDS = [
+        '1407a7ea-819f-4820-809d-3a084f0aea8f',
+        '57139087-44fa-463c-8b04-57a93d1c5d29',
+        '36531629-313f-4470-8ea3-8ad0a864f5f9',
+        '9079899a-ab5a-4bc3-b513-9e3ff2ef2924',
+        '9da8b8f4-1fdd-44bf-8f4a-6cdd5b3e6b52',
+        'b6f6c14b-5ef4-4070-9319-72001b96870c',
+        'cc1fd9d9-e820-4db8-a5a5-cff76d3c1277',
+    ];
+
     protected static function boot(): void
     {
         parent::boot();
@@ -289,6 +299,10 @@ public function recruitmentCompany()
 
     public function getIsSpecialCompanyAttribute(): bool
     {
+        if (in_array($this->id, self::SPECIAL_COMPANY_IDS, true)) {
+            return true;
+        }
+
         $normalizedCurrent = $this->normalizeCompanyNameForMatching((string) $this->name_ar);
 
         if ($normalizedCurrent === '') {
