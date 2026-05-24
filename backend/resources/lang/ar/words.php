@@ -688,7 +688,7 @@ return [
     'upload' => 'رفع',
     'other-files' => 'ملفات اخرى',
     'page-refresh' => 'تحديث الصفحة',
-    'override-training-costs' => 'تثبيت رسوم التدريب على المتدربة',
+    'override-training-costs' => 'عرض وتعديل رسوم التدريب الثابتة في صفحة المتدربة',
     'fixed-training-costs' => 'رسوم تدريب ثابتة',
     'not-set' => 'غير مفعل',
     'here-you-can-override-training-cost-for-the-trainee' => 'هنا يمكنك تحديد رسوم التدريب او تجاهل رسوم التدريب للشركة',

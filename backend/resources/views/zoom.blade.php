@@ -7,7 +7,7 @@
     @auth
         <meta name="logrocket-id" content="{{ auth()->user()->logrocketId() }}">
         <meta name="logrocket-id-extra" content='{!! auth()->user()->logrocketIdExtra() !!}'>
-        <meta name="user-permissions" content='{!! json_encode(collect(optional(auth()->user()->roles()->first())->getAllPermissions())->pluck('name')->toArray()) !!}'>
+        <meta name="user-permissions" content='{!! json_encode(auth()->user()->getAllPermissions()->pluck('name')->values()->toArray()) !!}'>
     @endif
 
     <title>{{ config('app.name', 'Laravel') }}</title>

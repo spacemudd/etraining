@@ -677,7 +677,7 @@ return [
     'upload' => 'Upload',
     'other-files' => 'Other files',
     'page-refresh' => 'Page refresh',
-    'override-training-costs' => 'Override training costs',
+    'override-training-costs' => 'View and edit fixed training costs on trainee page',
     'fixed-training-costs' => 'Fixed training costs',
     'here-you-can-override-training-cost-for-the-trainee' => 'Here you can specify the training costs and alerts for the trainee',
     'ignore-attendance-warnings-and-emails' => 'Ingore attendance warnings and emaiks',

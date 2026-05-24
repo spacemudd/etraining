@@ -1740,6 +1740,8 @@ class TraineesController extends Controller
 
     public function indexFixedTrainingCosts()
     {
+        $this->authorize('override-training-costs');
+
         return Inertia::render('Back/Trainees/IndexFixedTrainingCosts', [
             'trainees' => Trainee::with('company')
                 ->with('trainee_group')
