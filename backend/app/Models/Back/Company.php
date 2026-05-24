@@ -299,6 +299,10 @@ public function recruitmentCompany()
 
     public function getIsSpecialCompanyAttribute(): bool
     {
+        if (! empty($this->recruitment_company_id)) {
+            return false;
+        }
+
         if (in_array($this->id, self::SPECIAL_COMPANY_IDS, true)) {
             return true;
         }
