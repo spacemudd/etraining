@@ -597,7 +597,7 @@ return [
     'certificate-title' => 'Certificate title',
     'issue-date' => 'Issue date',
     'no-certificates' => 'None',
-    'jasarah-certificates' => 'Jasarah Certificates',
+    'jasarah-certificates' => 'Attendance Certificates',
     'no-jasarah-certificates' => 'None',
     'download-excel-report-for-all-trainees-with-certificates' => 'Download Excel report for all trainees with certificates',
     'download-excel' => 'Download Excel',
