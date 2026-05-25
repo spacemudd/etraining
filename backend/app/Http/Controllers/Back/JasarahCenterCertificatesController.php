@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessJasarahCenterCertificateFinalizeJob;
+use App\Jobs\SendJasarahCenterCertificateJob;
 use App\Models\Back\Course;
 use App\Models\Back\JasarahCenterCertificate;
 use App\Models\Back\JasarahCenterCertificateRow;

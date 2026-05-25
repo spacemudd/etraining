@@ -609,6 +609,8 @@ return [
     'certificate-title' => 'عنوان الشهادة',
     'issue-date' => 'تاريخ الإصدار',
     'no-certificates' => 'لا يوجد',
+    'jasarah-certificates' => 'شهادات جسارة',
+    'no-jasarah-certificates' => 'لا يوجد',
     'download-excel-report-for-all-trainees-with-certificates' => 'تحميل تقرير Excel لجميع المتدربين الحاصلين على شهادات',
     'download-excel' => 'تحميل Excel',
     'about-this-report' => 'حول هذا التقرير',

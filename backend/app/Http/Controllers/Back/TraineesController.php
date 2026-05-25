@@ -17,6 +17,7 @@ use App\Models\Back\Instructor;
 use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
 use App\Models\Back\TraineeBlockList;
+use App\Models\Back\JasarahCenterCertificateRow;
 use App\Models\Back\TraineeCustomCertificate;
 use App\Models\Back\TraineeGroup;
 use App\Models\City;
@@ -241,6 +242,7 @@ class TraineesController extends Controller
                 'invoices' => [],
                 'custom_certificates' => [],
                 'uk_certificates' => [],
+                'jasarah_center_certificate_rows' => [],
                 'general_files_count' => 0,
                 'email' => null,
                 'english_name' => null,
@@ -302,6 +304,13 @@ class TraineesController extends Controller
                       ->with(['ukCertificate.course'])
                       ->orderBy('sent_at', 'desc')
                       ->limit(5);
+                }])
+                ->with(['jasarah_center_certificate_rows' => function ($q) {
+                    $q->where('status', JasarahCenterCertificateRow::STATUS_SENT)
+                      ->whereNotNull('pdf_path')
+                      ->with(['jasarahCenterCertificate.course:id,name_ar,name_en'])
+                      ->orderBy('sent_at', 'desc')
+                      ->limit(20);
                 }])
                 ->findOrFail($id),
             'trainee_groups' => TraineeGroup::get(),
@@ -1250,6 +1259,13 @@ class TraineesController extends Controller
                       ->with(['ukCertificate.course'])
                       ->orderBy('sent_at', 'desc')
                       ->limit(5);
+                }])
+                ->with(['jasarah_center_certificate_rows' => function ($q) {
+                    $q->where('status', JasarahCenterCertificateRow::STATUS_SENT)
+                      ->whereNotNull('pdf_path')
+                      ->with(['jasarahCenterCertificate.course:id,name_ar,name_en'])
+                      ->orderBy('sent_at', 'desc')
+                      ->limit(20);
                 }])
                 ->withTrashed()
                 ->findOrFail($id);
