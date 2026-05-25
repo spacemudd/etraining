@@ -6,6 +6,7 @@ namespace App\Jobs;
 
 use App\Mail\JasarahCenterCertificateMail;
 use App\Models\Back\JasarahCenterCertificateRow;
+use App\Services\JasarahCenterCertificateService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -29,7 +30,7 @@ class SendIndividualJasarahCenterCertificateJob implements ShouldQueue
         $this->rowId = $rowId;
     }
 
-    public function handle(): void
+    public function handle(JasarahCenterCertificateService $service): void
     {
         $row = JasarahCenterCertificateRow::with(['trainee', 'jasarahCenterCertificate.course'])->find($this->rowId);
 
@@ -44,16 +45,14 @@ class SendIndividualJasarahCenterCertificateJob implements ShouldQueue
                 throw new \Exception('PDF content is empty or could not be retrieved from S3');
             }
 
-            $courseName = $row->jasarahCenterCertificate->course->name_en
-                ?? $row->jasarahCenterCertificate->course->name_ar
-                ?? '';
+            $courseName = $row->jasarahCenterCertificate->displayCourseTitle();
 
             Mail::to($row->trainee->email)
                 ->bcc(['shafiqal-shaar@adv-line.com', 'mashael.a@hadaf-hq.com'])
                 ->send(new JasarahCenterCertificateMail(
                     $pdfContent,
                     basename($row->pdf_path),
-                    $row->trainee,
+                    $row->trainee_name_en,
                     $courseName,
                     $this->rowId
                 ));
@@ -63,6 +62,8 @@ class SendIndividualJasarahCenterCertificateJob implements ShouldQueue
                 'status' => JasarahCenterCertificateRow::STATUS_SENT,
                 'delivery_status' => JasarahCenterCertificateRow::DELIVERY_STATUS_PENDING,
             ]);
+
+            $service->syncTraineeEnglishNameFromCsvAfterSend($row);
 
             $row->jasarahCenterCertificate?->checkAndUpdateCompletionStatus();
         } catch (\Exception $e) {

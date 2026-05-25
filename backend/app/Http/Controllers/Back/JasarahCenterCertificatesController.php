@@ -21,7 +21,7 @@ class JasarahCenterCertificatesController extends Controller
     public function index()
     {
         $imports = JasarahCenterCertificate::with(['course:id,name_ar', 'course.instructor:id,name'])
-            ->select('id', 'course_id', 'status', 'total_rows', 'matched_count', 'unmatched_count', 'sent_count', 'failed_count', 'started_at', 'completed_at', 'created_at')
+            ->select('id', 'course_id', 'course_title', 'status', 'total_rows', 'matched_count', 'unmatched_count', 'sent_count', 'failed_count', 'started_at', 'completed_at', 'created_at')
             ->orderBy('created_at', 'desc')
             ->paginate(20);
 
@@ -47,13 +47,16 @@ class JasarahCenterCertificatesController extends Controller
         $request->validate([
             'csv' => 'required|file|mimes:csv,txt',
             'course_id' => 'required|exists:courses,id',
+            'course_title' => 'required|string|max:500',
         ]);
 
         $courseId = $request->input('course_id');
+        $courseTitle = trim($request->input('course_title'));
         $csvFile = $request->file('csv');
 
         $certificate = JasarahCenterCertificate::create([
             'course_id' => $courseId,
+            'course_title' => $courseTitle,
             'status' => JasarahCenterCertificate::STATUS_PROCESSING,
             'started_at' => now(),
         ]);
@@ -354,7 +357,7 @@ class JasarahCenterCertificatesController extends Controller
             'failed_count' => $certificate->failed_count ?? 0,
             'started_at' => $certificate->started_at,
             'completed_at' => $certificate->completed_at,
-            'course_name' => $certificate->course->name_ar ?? 'Unknown Course',
+            'course_name' => $certificate->displayCourseTitle() ?: 'Unknown Course',
             'matched' => $matched,
             'unmatched' => $unmatched,
             'failed' => $failed,

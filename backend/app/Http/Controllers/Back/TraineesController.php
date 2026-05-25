@@ -308,6 +308,7 @@ class TraineesController extends Controller
                 ->with(['jasarah_center_certificate_rows' => function ($q) {
                     $q->where('status', JasarahCenterCertificateRow::STATUS_SENT)
                       ->whereNotNull('pdf_path')
+                      ->with(['jasarahCenterCertificate:id,course_id,course_title'])
                       ->with(['jasarahCenterCertificate.course:id,name_ar,name_en'])
                       ->orderBy('sent_at', 'desc')
                       ->limit(20);
@@ -1263,6 +1264,7 @@ class TraineesController extends Controller
                 ->with(['jasarah_center_certificate_rows' => function ($q) {
                     $q->where('status', JasarahCenterCertificateRow::STATUS_SENT)
                       ->whereNotNull('pdf_path')
+                      ->with(['jasarahCenterCertificate:id,course_id,course_title'])
                       ->with(['jasarahCenterCertificate.course:id,name_ar,name_en'])
                       ->orderBy('sent_at', 'desc')
                       ->limit(20);

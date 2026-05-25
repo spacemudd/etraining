@@ -967,7 +967,7 @@
                    class="text-sm mt-2 p-1 px-2 bg-green-100 rounded-lg">
                   <div v-for="row in trainee.jasarah_center_certificate_rows" :key="row.id" class="mt-1 flex items-center justify-between">
                       <span>
-                          {{ row.jasarah_center_certificate?.course?.name_ar }}
+                          {{ row.jasarah_center_certificate?.course_title || row.jasarah_center_certificate?.course?.name_ar }}
                           - {{ row.sent_at ? new Date(row.sent_at).toLocaleDateString() : '' }}
                       </span>
                       <a

@@ -13,6 +13,7 @@ class JasarahCenterCertificate extends Model
 
     protected $fillable = [
         'course_id',
+        'course_title',
         'status',
         'total_rows',
         'matched_count',
@@ -40,6 +41,15 @@ class JasarahCenterCertificate extends Model
     public function course()
     {
         return $this->belongsTo(Course::class);
+    }
+
+    public function displayCourseTitle(): string
+    {
+        if (filled($this->course_title)) {
+            return $this->course_title;
+        }
+
+        return $this->course?->name_en ?? $this->course?->name_ar ?? '';
     }
 
     public function rows()

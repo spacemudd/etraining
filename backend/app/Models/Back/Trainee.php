@@ -564,6 +564,17 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         return round($this->invoices()->notPaid()->sum('grand_total'), 2);
     }
 
+    public function hasEnglishName(): bool
+    {
+        $name = trim((string) $this->english_name);
+
+        if ($name === '') {
+            return false;
+        }
+
+        return (bool) preg_match('/[a-zA-Z]/', $name);
+    }
+
     public function arabicE2w($str)
     {
         $arabic_eastern = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
