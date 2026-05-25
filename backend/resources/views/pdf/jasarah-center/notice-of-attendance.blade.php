@@ -111,7 +111,7 @@
             <p class="trainee-name">{{ $trainee_name }}</p>
             <p class="line">Had attended the program titled:</p>
             <p class="course-name">{{ $course_name }}</p>
-            <p class="line">And issued on {{ $date }} based on the trainee&rsquo;s request.</p>
+            <p class="line">Issued based on the trainee&rsquo;s request.</p>
 
             <p class="disclaimer">
                 This notice was granted based on attendance, and does not constitute<br>

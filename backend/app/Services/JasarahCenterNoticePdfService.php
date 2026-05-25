@@ -23,7 +23,6 @@ class JasarahCenterNoticePdfService
             ->loadView('pdf.jasarah-center.notice-of-attendance', [
                 'trainee_name' => $traineeNameEn,
                 'course_name' => $courseName,
-                'date' => now()->format('d/m/Y'),
             ])
             ->output();
     }
