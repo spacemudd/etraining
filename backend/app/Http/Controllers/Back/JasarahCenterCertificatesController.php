@@ -47,11 +47,21 @@ class JasarahCenterCertificatesController extends Controller
         $request->validate([
             'csv' => 'required|file|mimes:csv,txt',
             'course_id' => 'required|exists:courses,id',
-            'course_title' => 'required|string|max:500',
+            'course_title' => 'nullable|string|max:500',
         ]);
 
         $courseId = $request->input('course_id');
-        $courseTitle = trim($request->input('course_title'));
+        $course = Course::findOrFail($courseId);
+        $courseTitle = trim((string) $request->input('course_title', ''));
+
+        if ($courseTitle === '') {
+            $courseTitle = trim($course->name_en ?? $course->name_ar ?? '');
+        }
+
+        if ($courseTitle === '') {
+            return response()->json(['error' => 'Course title is required'], 422);
+        }
+
         $csvFile = $request->file('csv');
 
         $certificate = JasarahCenterCertificate::create([

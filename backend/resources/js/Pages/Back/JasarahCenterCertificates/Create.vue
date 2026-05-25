@@ -31,6 +31,7 @@
                     <input
                         v-model="courseTitle"
                         type="text"
+                        required
                         class="w-full form-input"
                         :placeholder="$t('words.jasarah-course-title-placeholder')"
                     />
@@ -172,7 +173,12 @@ export default {
                 this.$inertia.visit(route('back.jasarah-center-certificates.processing', response.data.import_id));
             } catch (err) {
                 this.isProcessing = false;
-                this.uploadError = err.response?.data?.error || this.$t('words.upload-failed');
+                const errors = err.response?.data?.errors;
+                if (errors?.course_title?.[0]) {
+                    this.uploadError = errors.course_title[0];
+                } else {
+                    this.uploadError = err.response?.data?.error || err.response?.data?.message || this.$t('words.upload-failed');
+                }
             }
         },
     },

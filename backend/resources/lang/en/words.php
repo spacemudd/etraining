@@ -668,7 +668,7 @@ return [
     'selected' => 'Selected',
     'remove' => 'Remove',
     'submit-and-send-certificates' => 'Submit & Send Certificates',
-    'please-select-course-and-file' => 'Please select a course and a ZIP file.',
+    'please-select-course-and-file' => 'Please select a course, enter the course title, and choose a CSV file.',
     'upload-failed' => 'Upload failed.',
     'submission-failed' => 'Submission failed.',
     'certificates-queued-for-sending' => 'Certificates queued for sending!',

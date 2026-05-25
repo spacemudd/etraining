@@ -679,7 +679,7 @@ return [
     'selected' => 'مختار',
     'remove' => 'إزالة',
     'submit-and-send-certificates' => 'إرسال الشهادات',
-    'please-select-course-and-file' => 'يرجى اختيار دورة وملف ZIP.',
+    'please-select-course-and-file' => 'يرجى اختيار الدورة وعنوان الدورة وملف CSV.',
     'upload-failed' => 'فشل الرفع.',
     'submission-failed' => 'فشل الإرسال.',
     'certificates-queued-for-sending' => 'تمت إضافة الشهادات إلى قائمة الإرسال!',
