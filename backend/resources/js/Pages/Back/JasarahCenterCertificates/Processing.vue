@@ -12,7 +12,7 @@
             <div class="flex justify-between items-start mb-8">
                 <div>
                     <h1 class="font-bold text-3xl">{{ $t('words.processing-jasarah-center-certificates') }}</h1>
-                    <p class="text-gray-600 mt-2">{{ $t('words.course') }}: {{ importData.course?.name_ar || 'Unknown Course' }}</p>
+                    <p class="text-gray-600 mt-2">{{ $t('words.course') }}: {{ displayCourseTitle }}</p>
                 </div>
                 <div class="flex flex-col items-end gap-3">
                     <div class="relative">
@@ -189,6 +189,12 @@ export default {
     props: { import: Object },
     computed: {
         importData() { return this.import },
+        displayCourseTitle() {
+            return this.status.course_name
+                || this.importData.course_title
+                || this.importData.course?.name_ar
+                || 'Unknown Course';
+        },
         canSubmit() {
             const hasUnmatched = this.status.unmatched && this.status.unmatched.length > 0
             const allMapped = !hasUnmatched || this.status.unmatched.every(t => t.selectedTrainee)

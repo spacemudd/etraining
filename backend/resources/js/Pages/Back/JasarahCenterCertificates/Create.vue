@@ -16,12 +16,28 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         {{ $t('words.course') }}
                     </label>
-                    <select v-model="selectedCourseId" class="w-full form-select">
+                    <select v-model="selectedCourseId" class="w-full form-select" @change="onCourseChange">
                         <option value="">{{ $t('words.select-course') }}</option>
                         <option v-for="course in courses.data" :key="course.id" :value="course.id">
                             {{ course.name_ar }} - {{ course.instructor ? course.instructor.name : 'No Instructor' }} ({{ new Date(course.created_at).toLocaleDateString() }})
                         </option>
                     </select>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        {{ $t('words.jasarah-course-title') }}
+                    </label>
+                    <input
+                        v-model="courseTitle"
+                        type="text"
+                        required
+                        class="w-full form-input"
+                        :placeholder="$t('words.jasarah-course-title-placeholder')"
+                    />
+                    <p class="text-sm text-gray-500 mt-1">
+                        {{ $t('words.jasarah-course-title-help') }}
+                    </p>
                 </div>
 
                 <div class="mb-6">
@@ -98,6 +114,7 @@ export default {
     data() {
         return {
             selectedCourseId: '',
+            courseTitle: '',
             csvFile: null,
             uploadError: '',
             isProcessing: false,
@@ -105,10 +122,19 @@ export default {
     },
     computed: {
         canProcess() {
-            return !!this.selectedCourseId && !!this.csvFile;
+            return !!this.selectedCourseId && !!this.courseTitle.trim() && !!this.csvFile;
         },
     },
     methods: {
+        onCourseChange() {
+            const course = this.courses.data.find((c) => c.id === this.selectedCourseId);
+            if (course) {
+                this.courseTitle = course.name_en || course.name_ar || '';
+            } else {
+                this.courseTitle = '';
+            }
+        },
+
         onCsvFileChange(event) {
             this.csvFile = event.target.files[0];
             this.uploadError = '';
@@ -126,7 +152,7 @@ export default {
         },
 
         async handleCsvUpload() {
-            if (!this.csvFile || !this.selectedCourseId) {
+            if (!this.csvFile || !this.selectedCourseId || !this.courseTitle.trim()) {
                 this.uploadError = this.$t('words.please-select-course-and-file');
                 return;
             }
@@ -137,6 +163,7 @@ export default {
             const formData = new FormData();
             formData.append('csv', this.csvFile);
             formData.append('course_id', this.selectedCourseId);
+            formData.append('course_title', this.courseTitle.trim());
 
             try {
                 const response = await axios.post('/back/jasarah-center-certificates/upload-csv', formData, {
@@ -146,7 +173,12 @@ export default {
                 this.$inertia.visit(route('back.jasarah-center-certificates.processing', response.data.import_id));
             } catch (err) {
                 this.isProcessing = false;
-                this.uploadError = err.response?.data?.error || this.$t('words.upload-failed');
+                const errors = err.response?.data?.errors;
+                if (errors?.course_title?.[0]) {
+                    this.uploadError = errors.course_title[0];
+                } else {
+                    this.uploadError = err.response?.data?.error || err.response?.data?.message || this.$t('words.upload-failed');
+                }
             }
         },
     },

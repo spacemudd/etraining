@@ -43,7 +43,7 @@ class ProcessJasarahCenterCertificateFinalizeJob implements ShouldQueue
 
         foreach ($rows as $row) {
             try {
-                $service->generateAndStorePdf($row, $certificate->course);
+                $service->generateAndStorePdf($row, $certificate);
             } catch (\Exception $e) {
                 Log::error('Failed to generate Jasarah Center certificate PDF', [
                     'row_id' => $row->id,

@@ -38,7 +38,7 @@
                         <tbody class="bg-white divide-y divide-gray-200">
                             <tr v-for="item in imports.data" :key="item.id" class="hover:bg-gray-50">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#{{ item.id }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.course?.name_ar || 'Unknown Course' }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.course_title || item.course?.name_ar || 'Unknown Course' }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.course?.instructor?.name || 'No Instructor' }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span :class="getStatusClass(item.status)" class="inline-flex px-2 py-1 text-xs font-semibold rounded-full">

@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Models\Back\Course;
 use PDF;
 
 class JasarahCenterNoticePdfService
 {
-    public static function generate(string $traineeNameEn, Course $course): string
+    public static function generate(string $traineeNameEn, string $courseName): string
     {
         return PDF::setOption('margin-top', 0)
             ->setOption('margin-bottom', 0)
@@ -23,8 +22,7 @@ class JasarahCenterNoticePdfService
             ->setOption('disable-smart-shrinking', true)
             ->loadView('pdf.jasarah-center.notice-of-attendance', [
                 'trainee_name' => $traineeNameEn,
-                'course_name' => $course->name_en ?? $course->name_ar,
-                'date' => now()->format('d/m/Y'),
+                'course_name' => $courseName,
             ])
             ->output();
     }
