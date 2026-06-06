@@ -15,6 +15,8 @@ use App\Models\Back\Company;
 use App\Models\Back\ExportTraineesToExcelJobTracker;
 use App\Models\Back\Instructor;
 use App\Models\Back\Invoice;
+use App\Models\Back\RecordedCourse;
+use App\Models\Back\RecordedCourseEnrollment;
 use App\Models\Back\Trainee;
 use App\Models\Back\TraineeBlockList;
 use App\Models\Back\JasarahCenterCertificateRow;
@@ -81,6 +83,61 @@ class TraineesController extends Controller
                 ->latest()
                 ->paginate(20),
             'isSaraView' => false,
+        ]);
+    }
+
+    /**
+     * List trainees who self-registered via the public engineer registration flow.
+     */
+    public function indexEngineers(Request $request)
+    {
+        $isSaraUser = auth()->user()->email === 'sara@hadaf-hq.com';
+
+        $filters = $request->only(['search', 'company_id', 'status']);
+
+        $baseQuery = Trainee::query()
+            ->with(['company', 'user'])
+            ->where('is_engineer', true)
+            ->when($filters['search'] ?? null, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'LIKE', '%'.$search.'%')
+                        ->orWhere('identity_number', 'LIKE', '%'.$search.'%')
+                        ->orWhere('email', 'LIKE', '%'.$search.'%')
+                        ->orWhere('phone', 'LIKE', '%'.$search.'%');
+                });
+            })
+            ->when($filters['company_id'] ?? null, function ($query, $companyId) {
+                if ($companyId === 'none') {
+                    $query->whereNull('company_id');
+                } else {
+                    $query->where('company_id', $companyId);
+                }
+            })
+            ->when(
+                isset($filters['status']) && $filters['status'] !== '' && $filters['status'] !== null,
+                fn ($query) => $query->where('status', (int) $filters['status'])
+            );
+
+        $traineesQuery = (clone $baseQuery)->latest();
+
+        if ($isSaraUser) {
+            $traineesQuery->select('id', 'name', 'identity_number', 'company_id', 'user_id', 'created_at');
+        } else {
+            $traineesQuery->with('trainee_group');
+        }
+
+        $selectedCompany = null;
+        if (! empty($filters['company_id']) && $filters['company_id'] !== 'none') {
+            $selectedCompany = Company::query()
+                ->select(['id', 'name_ar', 'name_en', 'code'])
+                ->find($filters['company_id']);
+        }
+
+        return Inertia::render('Back/Trainees/EngineersIndex', [
+            'trainees' => $traineesQuery->paginate(20)->withQueryString(),
+            'filters' => $filters,
+            'selectedCompany' => $selectedCompany,
+            'isSaraView' => $isSaraUser,
         ]);
     }
 
@@ -277,6 +334,7 @@ class TraineesController extends Controller
                 'marital_statuses' => collect([]),
                 'educational_levels' => collect([]),
                 'allowed_users_for_special_documents' => $allowedUsers,
+                'engineerRecordedCoursePanel' => null,
             ]);
         }
 
@@ -319,7 +377,55 @@ class TraineesController extends Controller
             'marital_statuses' => MaritalStatus::orderBy('order')->get(),
             'educational_levels' => EducationalLevel::orderBy('order')->get(),
             'allowed_users_for_special_documents' => $allowedUsers,
+            'engineerRecordedCoursePanel' => $this->engineerRecordedCoursePanelPayload(
+                Trainee::withTrashed()->findOrFail($id)
+            ),
         ]);
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function engineerRecordedCoursePanelPayload(Trainee $trainee): ?array
+    {
+        if (! $trainee->is_engineer || ! auth()->user()->can('manage-recorded-courses')) {
+            return null;
+        }
+
+        $recordedCourses = RecordedCourse::query()
+            ->orderBy('name_en')
+            ->get(['id', 'name_ar', 'name_en'])
+            ->map(static fn (RecordedCourse $c): array => [
+                'id' => $c->id,
+                'name_ar' => $c->name_ar,
+                'name_en' => $c->name_en,
+            ])
+            ->values()
+            ->all();
+
+        $enrollments = RecordedCourseEnrollment::query()
+            ->where('trainee_id', $trainee->id)
+            ->with('recordedCourse')
+            ->orderByDesc('enrolled_at')
+            ->get()
+            ->map(static function (RecordedCourseEnrollment $e): array {
+                $course = $e->recordedCourse;
+
+                return [
+                    'id' => $e->id,
+                    'recorded_course_id' => $e->recorded_course_id,
+                    'course_name_ar' => $course?->name_ar ?? '',
+                    'course_name_en' => $course?->name_en ?? '',
+                    'enrolled_at' => $e->enrolled_at?->toIso8601String(),
+                ];
+            })
+            ->values()
+            ->all();
+
+        return [
+            'recorded_courses' => $recordedCourses,
+            'enrollments' => $enrollments,
+        ];
     }
 
     /**

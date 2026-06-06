@@ -106,7 +106,7 @@
 
   <!-- Full view: Normal layout with sidebar -->
   <app-layout v-else>
-    <div class="container px-6 mx-auto grid pt-6">
+    <div class="container px-6 mx-auto pt-6">
       <breadcrumb-container
         :crumbs="[
           { title: 'dashboard', link: route('dashboard') },
@@ -115,12 +115,115 @@
           ]"
       ></breadcrumb-container>
 
+      <div
+        v-if="$page.props.flash && ($page.props.flash.success || $page.props.flash.warning)"
+        class="col-span-6 mb-4 space-y-2"
+      >
+        <div
+          v-if="$page.props.flash.success"
+          class="p-3 bg-green-100 text-green-800 rounded-md"
+        >
+          {{ $page.props.flash.success }}
+        </div>
+        <div
+          v-if="$page.props.flash.warning"
+          class="p-3 bg-yellow-100 text-yellow-800 rounded-md"
+        >
+          {{ $page.props.flash.warning }}
+        </div>
+      </div>
+
       <validation-errors
         :errors="validationErrors"
         v-if="validationErrors"
       ></validation-errors>
 
       <div class="grid grid-cols-6 gap-6">
+      <div
+        v-if="engineerRecordedCoursePanel"
+        class="col-span-6 mb-2 rounded-lg border-2 border-indigo-200 bg-indigo-50 p-6 shadow-sm"
+      >
+        <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
+          <div>
+            <h2 class="text-xl font-bold text-indigo-900">
+              {{ $t("words.trainee-engineer-recorded-courses-title") }}
+            </h2>
+            <p class="mt-2 text-sm text-indigo-900 text-opacity-90 max-w-3xl">
+              {{ $t("words.trainee-engineer-recorded-courses-body") }}
+            </p>
+          </div>
+        </div>
+
+        <div v-if="engineerRecordedCoursePanel.enrollments.length" class="mb-6">
+          <h3 class="text-sm font-semibold text-gray-800 mb-2">
+            {{ $t("words.trainee-engineer-current-recorded-enrollments") }}
+          </h3>
+          <ul class="space-y-2 text-sm">
+            <li
+              v-for="enr in engineerRecordedCoursePanel.enrollments"
+              :key="enr.id"
+              class="flex flex-wrap items-center gap-3 bg-white rounded-md px-3 py-2 border border-indigo-100"
+            >
+              <span class="font-medium text-gray-900">{{
+                enr.course_name_en || enr.course_name_ar
+              }}</span>
+              <span class="text-gray-500 text-xs">{{ enr.enrolled_at }}</span>
+              <inertia-link
+                class="text-indigo-600 hover:text-indigo-800 text-sm font-medium"
+                :href="
+                  route('back.settings.recorded-courses.show', enr.recorded_course_id)
+                "
+              >
+                {{ $t("words.trainee-engineer-open-course-settings") }}
+              </inertia-link>
+            </li>
+          </ul>
+        </div>
+
+        <form
+          v-if="engineerRecordedCoursePanel.recorded_courses.length"
+          class="flex flex-wrap items-end gap-4"
+          @submit.prevent="submitEngineerRecordedCourseEnrollment"
+        >
+          <div class="flex-1 min-w-[220px]">
+            <jet-label
+              for="engineer_recorded_course_id"
+              :value="$t('words.trainee-engineer-select-course')"
+            />
+            <select
+              id="engineer_recorded_course_id"
+              v-model="engineerRecordedCourseForm.recorded_course_id"
+              class="mt-1 block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
+            >
+              <option value="">{{ $t("words.trainee-engineer-select-course") }}</option>
+              <option
+                v-for="c in engineerRecordedCoursePanel.recorded_courses"
+                :key="c.id"
+                :value="c.id"
+              >
+                {{ c.name_en || c.name_ar }}
+              </option>
+            </select>
+            <jet-input-error
+              :message="engineerRecordedCourseForm.error('recorded_course_id')"
+              class="mt-2"
+            />
+          </div>
+          <jet-button
+            type="submit"
+            :class="{ 'opacity-25': engineerRecordedCourseForm.processing }"
+            :disabled="engineerRecordedCourseForm.processing"
+          >
+            {{ $t("words.trainee-engineer-enroll-to-course") }}
+          </jet-button>
+        </form>
+        <p
+          v-else
+          class="text-sm text-indigo-900 text-opacity-80"
+        >
+          {{ $t("words.nothing-is-here") }}
+        </p>
+      </div>
 
         <div
           class="col-span-6 items-center justify-end bg-gray-50 text-right flex gap-6"
@@ -182,7 +285,7 @@
                 stroke-width="1.5"
                 stroke="currentColor"
                 class="w-6 h-6"
-              >bg-red-600 p-2
+              >
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -249,7 +352,7 @@
             :href="
               route('back.trainees.private-notifications.create', trainee.id)
             "
-            class="items-center justify-start text-left float-left rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right"
+            class="items-center justify-start text-left rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right"
           >
             {{ $t("words.private-message") }}
           </inertia-link>
@@ -258,7 +361,7 @@
             v-if="trainee.user_id"
             v-can="'can-impersonate'"
             :href="route('impersonate', trainee.user_id)"
-            class="items-center justify-start text-left float-left rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right"
+            class="items-center justify-start text-left rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right"
           >
             {{ $t("words.login-as-user") }}
           </a>
@@ -268,7 +371,7 @@
               route('back.trainees.admin.attendance-sheet.pdf', trainee.id)
             "
             target="_blank"
-            class="items-center justify-start text-left float-left rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right"
+            class="items-center justify-start text-left rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right"
           >
             {{ $t("words.attendance-sheet") }}
           </a>
@@ -372,7 +475,7 @@
           <button
             v-can="'block-trainee'"
             @click="blockTrainee"
-            class="items-center justify-start text-left float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right"
+            class="items-center justify-start text-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right"
           >
             {{ $t("words.block-trainee") }}
           </button>
@@ -383,7 +486,7 @@
             :href="
               route('back.trainees.suspend.create', { trainee_id: trainee.id })
             "
-            class="items-center justify-start text-left float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right"
+            class="items-center justify-start text-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right"
           >
             {{ $t("words.suspend") }}
           </inertia-link>
@@ -395,7 +498,7 @@
                     :href="
                       route('contract-must-sign', { trainee_id: trainee.id })
                     "
-                    class="items-center justify-start text-left float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right"
+                    class="items-center justify-start text-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right"
                   >
                     {{ $t("words.send-contract") }}
                 </inertia-link>
@@ -985,12 +1088,11 @@
                   {{ $t('words.no-jasarah-certificates') }}
               </div>
           </div>
-      </div>
 
+      <div class="col-span-6">
       <jet-section-border></jet-section-border>
 
-      <div class="grid grid-cols-1 md:grid-cols-7 gap-6 my-2">
-        <div class="md:col-span-7 lg:col-span-1 sm:col-span-3" v-if="!is_limited_view">
+      <div class="mb-4" v-if="!is_limited_view">
           <div class="px-4 sm:px-0">
             <h3 class="text-lg font-medium text-gray-900">
               {{ $t("words.documents") }}
@@ -1023,7 +1125,8 @@
           </div>
         </div>
 
-        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div>
           <jet-label
             :value="$t('words.identity-card-photocopy')"
             class="mb-2"
@@ -1056,7 +1159,7 @@
           ></vue-dropzone>
         </div>
 
-        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3" v-if="!is_limited_view">
+        <div v-if="!is_limited_view">
           <jet-label
             :value="$t('words.qualification-photocopy')"
             class="mb-2"
@@ -1086,7 +1189,7 @@
           ></vue-dropzone>
         </div>
 
-        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3" v-if="!is_limited_view">
+        <div v-if="!is_limited_view">
           <jet-label :value="$t('words.bank-account-photocopy')" class="mb-2" />
 
           <div
@@ -1114,7 +1217,7 @@
           ></vue-dropzone>
         </div>
 
-        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3" v-if="!is_limited_view">
+        <div v-if="!is_limited_view">
           <jet-label :value="$t('words.national-address-copy')" class="mb-2" />
 
           <div
@@ -1142,7 +1245,7 @@
           ></vue-dropzone>
         </div>
 
-        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3" v-if="!is_limited_view">
+        <div v-if="!is_limited_view">
           <jet-label :value="$t('words.cv')" class="mb-2" />
 
           <div
@@ -1169,10 +1272,8 @@
             :options="dropzoneOptionsCv"
           ></vue-dropzone>
         </div>
-      </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-7 gap-6 my-2" v-if="canViewSpecialDocuments">
-        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
+        <div v-if="canViewSpecialDocuments">
           <jet-label :value="$t('words.gosi-certificate')" class="mb-2" />
 
           <div
@@ -1199,10 +1300,8 @@
             :options="dropzoneOptionsGosiCertificate"
           ></vue-dropzone>
         </div>
-      </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-7 gap-6 my-2" v-if="canViewSpecialDocuments">
-        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
+        <div v-if="canViewSpecialDocuments">
           <jet-label :value="$t('words.qiwa-contract')" class="mb-2" />
 
           <div
@@ -1230,11 +1329,13 @@
           ></vue-dropzone>
         </div>
       </div>
+      </div>
 
+      <div class="col-span-6">
       <jet-section-border></jet-section-border>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-2">
-        <div class="md:col-span-4 lg:col-span-1 sm:col-span-3">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 my-2">
+        <div>
           <div class="px-4 sm:px-0">
             <h3 class="text-lg font-medium text-gray-900">
               {{ $t("words.warnings-sheet") }}
@@ -1242,16 +1343,18 @@
           </div>
         </div>
 
-        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
+        <div>
           <attendance-sheet-management-for-trainee :trainee_id="trainee.id">
           </attendance-sheet-management-for-trainee>
         </div>
       </div>
+      </div>
 
+      <div class="col-span-6" v-if="canViewSpecialDocuments">
       <jet-section-border></jet-section-border>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-2" v-if="canViewSpecialDocuments">
-        <div class="md:col-span-4 lg:col-span-1 sm:col-span-3">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 my-2">
+        <div>
           <div class="px-4 sm:px-0">
             <h3 class="text-lg font-medium text-gray-900">
               طلبات الإجازة
@@ -1259,20 +1362,22 @@
           </div>
         </div>
 
-        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
+        <div>
           <trainee-leaves-management :trainee_id="trainee.id">
           </trainee-leaves-management>
         </div>
       </div>
-
-      <jet-section-border></jet-section-border>
+      </div>
 
       <div
         v-can="'issue-monthly-invoices'"
         v-if="!is_limited_view"
-        class="grid grid-cols-1 md:grid-cols-2 gap-6 my-2"
+        class="col-span-6"
       >
-        <div class="md:col-span-4 lg:col-span-1 sm:col-span-3">
+      <jet-section-border></jet-section-border>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 my-2">
+        <div>
           <div class="px-4 sm:px-0">
             <h3 class="text-lg font-medium text-gray-900">
               {{ $t("words.invoices") }}
@@ -1284,7 +1389,7 @@
           </div>
         </div>
 
-        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
+        <div>
           <div class="flex w-full justify-end gap-2">
             <inertia-link
               :href="route('back.trainees.invoices.create', trainee.id)"
@@ -1347,13 +1452,16 @@
           </table>
         </div>
       </div>
+      </div>
 
+      <div class="col-span-6" v-if="!is_limited_view">
       <jet-section-border></jet-section-border>
 
       <trainee-audit-container
-        v-if="!is_limited_view"
         :trainee_id="trainee.id"
       ></trainee-audit-container>
+      </div>
+      </div>
     </div>
   </app-layout>
 </template>
@@ -1397,6 +1505,7 @@ export default {
     "trainee_group_trainees",
     "companies",
     "is_limited_view",
+    "engineerRecordedCoursePanel",
   ],
   components: {
     GosiContainer,
@@ -1424,6 +1533,9 @@ export default {
   },
   data() {
     return {
+      engineerRecordedCourseForm: this.$inertia.form({
+        recorded_course_id: "",
+      }),
       isRefreshing: false,
       isProfileMenuOpen: false,
       new_trainee_group: {
@@ -1636,6 +1748,20 @@ export default {
     document.removeEventListener('click', this.handleClickOutside);
   },
   methods: {
+    submitEngineerRecordedCourseEnrollment() {
+      if (!this.engineerRecordedCourseForm.recorded_course_id) {
+        return;
+      }
+      this.engineerRecordedCourseForm.post(
+        this.route("back.trainees.recorded-course-enrollments.store", this.trainee.id),
+        {
+          preserveScroll: true,
+          onSuccess: () => {
+            this.engineerRecordedCourseForm.reset();
+          },
+        }
+      );
+    },
     toggleProfileMenu() {
       this.isProfileMenuOpen = !this.isProfileMenuOpen;
     },
