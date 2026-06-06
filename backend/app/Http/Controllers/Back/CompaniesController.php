@@ -44,6 +44,37 @@ class CompaniesController extends Controller
         ]);
     }
 
+    public function search(Request $request)
+    {
+        $this->authorize('view-companies');
+
+        $request->validate([
+            'search' => 'nullable|string|max:255',
+        ]);
+
+        $search = trim((string) $request->input('search', ''));
+
+        if (strlen($search) < 2) {
+            return response()->json([]);
+        }
+
+        $query = Company::query()
+            ->select(['id', 'name_ar', 'name_en', 'code'])
+            ->where(function ($q) use ($search) {
+                $q->where('name_ar', 'LIKE', '%'.$search.'%')
+                    ->orWhere('name_en', 'LIKE', '%'.$search.'%')
+                    ->orWhere('code', $search);
+            })
+            ->orderBy('name_ar')
+            ->limit(15);
+
+        if (auth()->user()->can('view-deleted-companies')) {
+            $query->withTrashed();
+        }
+
+        return response()->json($query->get());
+    }
+
     /**
      * Show the form for creating a new resource.
      *

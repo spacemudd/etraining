@@ -16,8 +16,8 @@ class RecordedCourseEnrollmentsController extends Controller
 {
     public function store(StoreRecordedCourseEnrollmentRequest $request, RecordedCourse $recordedCourse): RedirectResponse
     {
-        $traineeId = $request->validated('trainee_id');
-        $trainee = Trainee::query()->findOrFail($traineeId);
+        $validated = $request->validated();
+        $trainee = Trainee::query()->findOrFail($validated['trainee_id']);
 
         if ($trainee->team_id !== $recordedCourse->team_id) {
             throw ValidationException::withMessages([
@@ -32,7 +32,7 @@ class RecordedCourseEnrollmentsController extends Controller
 
         if ($existing !== null) {
             return redirect()
-                ->route('back.settings.recorded-courses.edit', $recordedCourse)
+                ->route('back.settings.recorded-courses.enrollments.index', $recordedCourse)
                 ->with('warning', __('words.recorded-course-enrollment-already-exists'));
         }
 
@@ -44,7 +44,7 @@ class RecordedCourseEnrollmentsController extends Controller
         ]);
 
         return redirect()
-            ->route('back.settings.recorded-courses.edit', $recordedCourse)
+            ->route('back.settings.recorded-courses.enrollments.index', $recordedCourse)
             ->with('success', __('words.recorded-course-enrollment-created'));
     }
 }

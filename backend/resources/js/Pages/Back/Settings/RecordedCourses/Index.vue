@@ -58,10 +58,10 @@
                 <inertia-link
                   class="btn-gray text-sm"
                   :href="
-                    route('back.settings.recorded-courses.edit', course.id)
+                    route('back.settings.recorded-courses.show', course.id)
                   "
                 >
-                  {{ $t("words.edit") }}
+                  {{ $t("words.recorded-course-manage") }}
                 </inertia-link>
                 <button
                   type="button"

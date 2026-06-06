@@ -89,28 +89,55 @@ class TraineesController extends Controller
     /**
      * List trainees who self-registered via the public engineer registration flow.
      */
-    public function indexEngineers()
+    public function indexEngineers(Request $request)
     {
         $isSaraUser = auth()->user()->email === 'sara@hadaf-hq.com';
 
-        $baseQuery = Trainee::with('company')->where('is_engineer', true);
+        $filters = $request->only(['search', 'company_id', 'status']);
+
+        $baseQuery = Trainee::query()
+            ->with(['company', 'user'])
+            ->where('is_engineer', true)
+            ->when($filters['search'] ?? null, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'LIKE', '%'.$search.'%')
+                        ->orWhere('identity_number', 'LIKE', '%'.$search.'%')
+                        ->orWhere('email', 'LIKE', '%'.$search.'%')
+                        ->orWhere('phone', 'LIKE', '%'.$search.'%');
+                });
+            })
+            ->when($filters['company_id'] ?? null, function ($query, $companyId) {
+                if ($companyId === 'none') {
+                    $query->whereNull('company_id');
+                } else {
+                    $query->where('company_id', $companyId);
+                }
+            })
+            ->when(
+                isset($filters['status']) && $filters['status'] !== '' && $filters['status'] !== null,
+                fn ($query) => $query->where('status', (int) $filters['status'])
+            );
+
+        $traineesQuery = (clone $baseQuery)->latest();
 
         if ($isSaraUser) {
-            return Inertia::render('Back/Trainees/EngineersIndex', [
-                'trainees' => (clone $baseQuery)
-                    ->select('id', 'name', 'identity_number', 'company_id', 'created_at')
-                    ->latest()
-                    ->paginate(20),
-                'isSaraView' => true,
-            ]);
+            $traineesQuery->select('id', 'name', 'identity_number', 'company_id', 'user_id', 'created_at');
+        } else {
+            $traineesQuery->with('trainee_group');
+        }
+
+        $selectedCompany = null;
+        if (! empty($filters['company_id']) && $filters['company_id'] !== 'none') {
+            $selectedCompany = Company::query()
+                ->select(['id', 'name_ar', 'name_en', 'code'])
+                ->find($filters['company_id']);
         }
 
         return Inertia::render('Back/Trainees/EngineersIndex', [
-            'trainees' => (clone $baseQuery)
-                ->with('trainee_group')
-                ->latest()
-                ->paginate(20),
-            'isSaraView' => false,
+            'trainees' => $traineesQuery->paginate(20)->withQueryString(),
+            'filters' => $filters,
+            'selectedCompany' => $selectedCompany,
+            'isSaraView' => $isSaraUser,
         ]);
     }
 

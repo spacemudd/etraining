@@ -54,7 +54,7 @@ class RecordedCoursesTest extends TestCase
             ]
         )->assertRedirect(
             route(
-                'back.settings.recorded-courses.edit',
+                'back.settings.recorded-courses.show',
                 RecordedCourse::query()->where('name_en', 'Recorded course')->firstOrFail()
             )
         );

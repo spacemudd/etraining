@@ -11,16 +11,15 @@
                 <h1 class="mb-8 font-bold text-3xl">{{ $t('words.courses') }}</h1>
                 <div class="mb-6 flex justify-between items-center">
 
-                    <!--<search-filter v-model="form.search" class="w-full max-w-md mr-4" @reset="reset">-->
-                    <!--    <label class="block text-gray-700">Trashed:</label>-->
-                    <!--    <select v-model="form.trashed" class="mt-1 w-full form-select">-->
-                    <!--        <option :value="null" />-->
-                    <!--        <option value="with">With Trashed</option>-->
-                    <!--        <option value="only">Only Trashed</option>-->
-                    <!--    </select>-->
-                    <!--</search-filter>-->
+                    <inertia-link
+                        v-can="'manage-recorded-courses'"
+                        class="btn-gray"
+                        :href="route('back.settings.recorded-courses.index')"
+                    >
+                        <span>{{ $t('words.manage-pre-recorded-courses') }}</span>
+                    </inertia-link>
 
-                    <inertia-link class="btn-gray" :href="route('back.courses.create')">
+                    <inertia-link class="btn-gray ml-2" :href="route('back.courses.create')">
                         <span>{{ $t('words.new') }}</span>
                     </inertia-link>
 

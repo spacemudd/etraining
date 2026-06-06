@@ -50,7 +50,7 @@ class RecordedCourseLearnerFlowTest extends TestCase
             ]
         )->assertRedirect(
             route(
-                'back.settings.recorded-courses.edit',
+                'back.settings.recorded-courses.show',
                 RecordedCourse::query()->where('name_en', 'Course')->firstOrFail()
             )
         );
@@ -62,29 +62,14 @@ class RecordedCourseLearnerFlowTest extends TestCase
         $f2 = UploadedFile::fake()->create('l2.mp4', 200, 'video/mp4');
 
         $this->actingAs($admin)->put(
-            route('back.settings.recorded-courses.update', $course->id),
-            [
-                'name_ar' => 'دورة',
-                'name_en' => 'Course',
-                'description' => 'D',
-                'unlock_delay_hours' => 1,
-                'allowed_weekdays' => [6],
-                'lessons' => [
-                    [
-                        'id' => $lessons[0]->id,
-                        'title_ar' => 'L1',
-                        'title_en' => 'L1',
-                        'video' => $f1,
-                    ],
-                    [
-                        'id' => $lessons[1]->id,
-                        'title_ar' => 'L2',
-                        'title_en' => 'L2',
-                        'video' => $f2,
-                    ],
-                ],
-            ]
-        )->assertRedirect(route('back.settings.recorded-courses.edit', $course));
+            route('back.settings.recorded-courses.lessons.video.update', [$course, $lessons[0]]),
+            ['video' => $f1]
+        )->assertRedirect(route('back.settings.recorded-courses.lessons.video.edit', [$course, $lessons[0]]));
+
+        $this->actingAs($admin)->put(
+            route('back.settings.recorded-courses.lessons.video.update', [$course, $lessons[1]]),
+            ['video' => $f2]
+        )->assertRedirect(route('back.settings.recorded-courses.lessons.video.edit', [$course, $lessons[1]]));
 
         $lessons = $course->fresh()->lessons()->orderBy('sort_order')->get();
 

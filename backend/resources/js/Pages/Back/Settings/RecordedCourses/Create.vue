@@ -20,6 +20,9 @@
             <span class="block mt-2 text-gray-600">{{
               $t("words.recorded-course-create-videos-on-edit")
             }}</span>
+            <span class="block mt-2 text-gray-600">{{
+              $t("words.recorded-course-created-start-setup")
+            }}</span>
           </template>
           <template #form>
             <div class="col-span-6 sm:col-span-4">

@@ -106,7 +106,7 @@
 
   <!-- Full view: Normal layout with sidebar -->
   <app-layout v-else>
-    <div class="container px-6 mx-auto grid pt-6">
+    <div class="container px-6 mx-auto pt-6">
       <breadcrumb-container
         :crumbs="[
           { title: 'dashboard', link: route('dashboard') },
@@ -138,9 +138,10 @@
         v-if="validationErrors"
       ></validation-errors>
 
+      <div class="grid grid-cols-6 gap-6">
       <div
         v-if="engineerRecordedCoursePanel"
-        class="col-span-6 mb-6 rounded-lg border-2 border-indigo-200 bg-indigo-50 p-6 shadow-sm"
+        class="col-span-6 mb-2 rounded-lg border-2 border-indigo-200 bg-indigo-50 p-6 shadow-sm"
       >
         <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
           <div>
@@ -170,7 +171,7 @@
               <inertia-link
                 class="text-indigo-600 hover:text-indigo-800 text-sm font-medium"
                 :href="
-                  route('back.settings.recorded-courses.edit', enr.recorded_course_id)
+                  route('back.settings.recorded-courses.show', enr.recorded_course_id)
                 "
               >
                 {{ $t("words.trainee-engineer-open-course-settings") }}
@@ -223,8 +224,6 @@
           {{ $t("words.nothing-is-here") }}
         </p>
       </div>
-
-      <div class="grid grid-cols-6 gap-6">
 
         <div
           class="col-span-6 items-center justify-end bg-gray-50 text-right flex gap-6"
@@ -286,7 +285,7 @@
                 stroke-width="1.5"
                 stroke="currentColor"
                 class="w-6 h-6"
-              >bg-red-600 p-2
+              >
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -353,7 +352,7 @@
             :href="
               route('back.trainees.private-notifications.create', trainee.id)
             "
-            class="items-center justify-start text-left float-left rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right"
+            class="items-center justify-start text-left rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right"
           >
             {{ $t("words.private-message") }}
           </inertia-link>
@@ -362,7 +361,7 @@
             v-if="trainee.user_id"
             v-can="'can-impersonate'"
             :href="route('impersonate', trainee.user_id)"
-            class="items-center justify-start text-left float-left rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right"
+            class="items-center justify-start text-left rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right"
           >
             {{ $t("words.login-as-user") }}
           </a>
@@ -372,7 +371,7 @@
               route('back.trainees.admin.attendance-sheet.pdf', trainee.id)
             "
             target="_blank"
-            class="items-center justify-start text-left float-left rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right"
+            class="items-center justify-start text-left rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right"
           >
             {{ $t("words.attendance-sheet") }}
           </a>
@@ -476,7 +475,7 @@
           <button
             v-can="'block-trainee'"
             @click="blockTrainee"
-            class="items-center justify-start text-left float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right"
+            class="items-center justify-start text-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right"
           >
             {{ $t("words.block-trainee") }}
           </button>
@@ -487,7 +486,7 @@
             :href="
               route('back.trainees.suspend.create', { trainee_id: trainee.id })
             "
-            class="items-center justify-start text-left float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right"
+            class="items-center justify-start text-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right"
           >
             {{ $t("words.suspend") }}
           </inertia-link>
@@ -499,7 +498,7 @@
                     :href="
                       route('contract-must-sign', { trainee_id: trainee.id })
                     "
-                    class="items-center justify-start text-left float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right"
+                    class="items-center justify-start text-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right"
                   >
                     {{ $t("words.send-contract") }}
                 </inertia-link>
@@ -1089,12 +1088,11 @@
                   {{ $t('words.no-jasarah-certificates') }}
               </div>
           </div>
-      </div>
 
+      <div class="col-span-6">
       <jet-section-border></jet-section-border>
 
-      <div class="grid grid-cols-1 md:grid-cols-7 gap-6 my-2">
-        <div class="md:col-span-7 lg:col-span-1 sm:col-span-3" v-if="!is_limited_view">
+      <div class="mb-4" v-if="!is_limited_view">
           <div class="px-4 sm:px-0">
             <h3 class="text-lg font-medium text-gray-900">
               {{ $t("words.documents") }}
@@ -1127,7 +1125,8 @@
           </div>
         </div>
 
-        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div>
           <jet-label
             :value="$t('words.identity-card-photocopy')"
             class="mb-2"
@@ -1160,7 +1159,7 @@
           ></vue-dropzone>
         </div>
 
-        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3" v-if="!is_limited_view">
+        <div v-if="!is_limited_view">
           <jet-label
             :value="$t('words.qualification-photocopy')"
             class="mb-2"
@@ -1190,7 +1189,7 @@
           ></vue-dropzone>
         </div>
 
-        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3" v-if="!is_limited_view">
+        <div v-if="!is_limited_view">
           <jet-label :value="$t('words.bank-account-photocopy')" class="mb-2" />
 
           <div
@@ -1218,7 +1217,7 @@
           ></vue-dropzone>
         </div>
 
-        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3" v-if="!is_limited_view">
+        <div v-if="!is_limited_view">
           <jet-label :value="$t('words.national-address-copy')" class="mb-2" />
 
           <div
@@ -1246,7 +1245,7 @@
           ></vue-dropzone>
         </div>
 
-        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3" v-if="!is_limited_view">
+        <div v-if="!is_limited_view">
           <jet-label :value="$t('words.cv')" class="mb-2" />
 
           <div
@@ -1273,10 +1272,8 @@
             :options="dropzoneOptionsCv"
           ></vue-dropzone>
         </div>
-      </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-7 gap-6 my-2" v-if="canViewSpecialDocuments">
-        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
+        <div v-if="canViewSpecialDocuments">
           <jet-label :value="$t('words.gosi-certificate')" class="mb-2" />
 
           <div
@@ -1303,10 +1300,8 @@
             :options="dropzoneOptionsGosiCertificate"
           ></vue-dropzone>
         </div>
-      </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-7 gap-6 my-2" v-if="canViewSpecialDocuments">
-        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
+        <div v-if="canViewSpecialDocuments">
           <jet-label :value="$t('words.qiwa-contract')" class="mb-2" />
 
           <div
@@ -1334,11 +1329,13 @@
           ></vue-dropzone>
         </div>
       </div>
+      </div>
 
+      <div class="col-span-6">
       <jet-section-border></jet-section-border>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-2">
-        <div class="md:col-span-4 lg:col-span-1 sm:col-span-3">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 my-2">
+        <div>
           <div class="px-4 sm:px-0">
             <h3 class="text-lg font-medium text-gray-900">
               {{ $t("words.warnings-sheet") }}
@@ -1346,16 +1343,18 @@
           </div>
         </div>
 
-        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
+        <div>
           <attendance-sheet-management-for-trainee :trainee_id="trainee.id">
           </attendance-sheet-management-for-trainee>
         </div>
       </div>
+      </div>
 
+      <div class="col-span-6" v-if="canViewSpecialDocuments">
       <jet-section-border></jet-section-border>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-2" v-if="canViewSpecialDocuments">
-        <div class="md:col-span-4 lg:col-span-1 sm:col-span-3">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 my-2">
+        <div>
           <div class="px-4 sm:px-0">
             <h3 class="text-lg font-medium text-gray-900">
               طلبات الإجازة
@@ -1363,20 +1362,22 @@
           </div>
         </div>
 
-        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
+        <div>
           <trainee-leaves-management :trainee_id="trainee.id">
           </trainee-leaves-management>
         </div>
       </div>
-
-      <jet-section-border></jet-section-border>
+      </div>
 
       <div
         v-can="'issue-monthly-invoices'"
         v-if="!is_limited_view"
-        class="grid grid-cols-1 md:grid-cols-2 gap-6 my-2"
+        class="col-span-6"
       >
-        <div class="md:col-span-4 lg:col-span-1 sm:col-span-3">
+      <jet-section-border></jet-section-border>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 my-2">
+        <div>
           <div class="px-4 sm:px-0">
             <h3 class="text-lg font-medium text-gray-900">
               {{ $t("words.invoices") }}
@@ -1388,7 +1389,7 @@
           </div>
         </div>
 
-        <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
+        <div>
           <div class="flex w-full justify-end gap-2">
             <inertia-link
               :href="route('back.trainees.invoices.create', trainee.id)"
@@ -1451,13 +1452,16 @@
           </table>
         </div>
       </div>
+      </div>
 
+      <div class="col-span-6" v-if="!is_limited_view">
       <jet-section-border></jet-section-border>
 
       <trainee-audit-container
-        v-if="!is_limited_view"
         :trainee_id="trainee.id"
       ></trainee-audit-container>
+      </div>
+      </div>
     </div>
   </app-layout>
 </template>

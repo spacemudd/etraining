@@ -684,10 +684,23 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('/settings/recorded-courses', [\App\Http\Controllers\Back\RecordedCoursesController::class, 'index'])->name('settings.recorded-courses.index');
         Route::get('/settings/recorded-courses/create', [\App\Http\Controllers\Back\RecordedCoursesController::class, 'create'])->name('settings.recorded-courses.create');
         Route::post('/settings/recorded-courses', [\App\Http\Controllers\Back\RecordedCoursesController::class, 'store'])->name('settings.recorded-courses.store');
+        Route::get('/settings/recorded-courses/{recorded_course}', [\App\Http\Controllers\Back\RecordedCoursesController::class, 'show'])->name('settings.recorded-courses.show');
         Route::get('/settings/recorded-courses/{recorded_course}/edit', [\App\Http\Controllers\Back\RecordedCoursesController::class, 'edit'])->name('settings.recorded-courses.edit');
         Route::put('/settings/recorded-courses/{recorded_course}', [\App\Http\Controllers\Back\RecordedCoursesController::class, 'update'])->name('settings.recorded-courses.update');
         Route::delete('/settings/recorded-courses/{recorded_course}', [\App\Http\Controllers\Back\RecordedCoursesController::class, 'destroy'])->name('settings.recorded-courses.destroy');
+        Route::get('/settings/recorded-courses/{recorded_course}/details', [\App\Http\Controllers\Back\RecordedCoursesController::class, 'editDetails'])->name('settings.recorded-courses.details.edit');
+        Route::put('/settings/recorded-courses/{recorded_course}/details', [\App\Http\Controllers\Back\RecordedCoursesController::class, 'updateDetails'])->name('settings.recorded-courses.details.update');
+        Route::get('/settings/recorded-courses/{recorded_course}/schedule', [\App\Http\Controllers\Back\RecordedCoursesController::class, 'editSchedule'])->name('settings.recorded-courses.schedule.edit');
+        Route::put('/settings/recorded-courses/{recorded_course}/schedule', [\App\Http\Controllers\Back\RecordedCoursesController::class, 'updateSchedule'])->name('settings.recorded-courses.schedule.update');
+        Route::get('/settings/recorded-courses/{recorded_course}/enrollments', [\App\Http\Controllers\Back\RecordedCoursesController::class, 'enrollments'])->name('settings.recorded-courses.enrollments.index');
         Route::post('/settings/recorded-courses/{recorded_course}/enrollments', [\App\Http\Controllers\Back\RecordedCourseEnrollmentsController::class, 'store'])->name('settings.recorded-courses.enrollments.store');
+        Route::get('/settings/recorded-courses/{recorded_course}/lessons', [\App\Http\Controllers\Back\RecordedCourseLessonsController::class, 'index'])->name('settings.recorded-courses.lessons.index');
+        Route::post('/settings/recorded-courses/{recorded_course}/lessons', [\App\Http\Controllers\Back\RecordedCourseLessonsController::class, 'store'])->name('settings.recorded-courses.lessons.store');
+        Route::put('/settings/recorded-courses/{recorded_course}/lessons/{lesson}', [\App\Http\Controllers\Back\RecordedCourseLessonsController::class, 'update'])->name('settings.recorded-courses.lessons.update');
+        Route::delete('/settings/recorded-courses/{recorded_course}/lessons/{lesson}', [\App\Http\Controllers\Back\RecordedCourseLessonsController::class, 'destroy'])->name('settings.recorded-courses.lessons.destroy');
+        Route::get('/settings/recorded-courses/{recorded_course}/lessons/{lesson}/video', [\App\Http\Controllers\Back\RecordedCourseLessonsController::class, 'editVideo'])->name('settings.recorded-courses.lessons.video.edit');
+        Route::put('/settings/recorded-courses/{recorded_course}/lessons/{lesson}/video', [\App\Http\Controllers\Back\RecordedCourseLessonsController::class, 'updateVideo'])->name('settings.recorded-courses.lessons.video.update');
+        Route::get('/settings/recorded-courses/{recorded_course}/lessons/{lesson}/stream', [\App\Http\Controllers\Back\RecordedCourseLessonsController::class, 'stream'])->name('settings.recorded-courses.lessons.stream');
 
         Route::post('/settings/recorded-courses/lesson-videos/chunk-uploads', [\App\Http\Controllers\Back\RecordedCourseLessonVideoChunkUploadController::class, 'start'])->name('settings.recorded-courses.lesson-videos.chunk-uploads.start');
         Route::post('/settings/recorded-courses/lesson-videos/chunk-uploads/{upload}', [\App\Http\Controllers\Back\RecordedCourseLessonVideoChunkUploadController::class, 'chunk'])->name('settings.recorded-courses.lesson-videos.chunk-uploads.chunk');
@@ -741,6 +754,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('companies/export', [\App\Http\Controllers\Back\CompaniesController::class, 'export'])->name('companies.export');
 
         Route::get('companies/exportArchived', [\App\Http\Controllers\Back\CompaniesController::class, 'exportArchived'])->name('companies.export-archived');
+
+        Route::get('companies/search', [\App\Http\Controllers\Back\CompaniesController::class, 'search'])->name('companies.search');
 
         Route::get('companies/{id}/ptcnet', [\App\Http\Controllers\Back\CompaniesController::class, 'markAsPtcNet']);
 

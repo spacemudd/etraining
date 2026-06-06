@@ -105,7 +105,7 @@ class RecordedCourseVideoChunkUploadTest extends TestCase
             ]
         )->assertRedirect(
             route(
-                'back.settings.recorded-courses.edit',
+                'back.settings.recorded-courses.show',
                 RecordedCourse::query()->where('name_en', 'Chunk course')->firstOrFail()
             )
         );
@@ -114,23 +114,11 @@ class RecordedCourseVideoChunkUploadTest extends TestCase
         $lesson = $course->lessons()->orderBy('sort_order')->firstOrFail();
 
         $this->actingAs($admin)->put(
-            route('back.settings.recorded-courses.update', $course->id),
+            route('back.settings.recorded-courses.lessons.video.update', [$course, $lesson]),
             [
-                'name_ar' => 'دورة',
-                'name_en' => 'Chunk course',
-                'description' => '',
-                'unlock_delay_hours' => 24,
-                'allowed_weekdays' => [0, 1, 2, 3, 4],
-                'lessons' => [
-                    [
-                        'id' => $lesson->id,
-                        'title_ar' => 'درس',
-                        'title_en' => 'Lesson',
-                        'upload_token' => $token,
-                    ],
-                ],
+                'upload_token' => $token,
             ]
-        )->assertRedirect(route('back.settings.recorded-courses.edit', $course));
+        )->assertRedirect(route('back.settings.recorded-courses.lessons.video.edit', [$course, $lesson]));
 
         $this->assertTrue(
             $lesson->fresh()->getFirstMedia(RecordedCourseLesson::VIDEO_COLLECTION) !== null

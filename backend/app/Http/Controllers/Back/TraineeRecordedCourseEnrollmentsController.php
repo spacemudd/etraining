@@ -20,7 +20,8 @@ class TraineeRecordedCourseEnrollmentsController extends Controller
     ): RedirectResponse {
         abort_unless($trainee->is_engineer, 403);
 
-        $courseId = (string) $request->validated('recorded_course_id');
+        $validated = $request->validated();
+        $courseId = (string) $validated['recorded_course_id'];
         /** @var RecordedCourse $course */
         $course = RecordedCourse::query()->whereKey($courseId)->firstOrFail();
 

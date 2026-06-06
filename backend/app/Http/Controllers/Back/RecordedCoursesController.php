@@ -6,6 +6,8 @@ namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Back\StoreRecordedCourseRequest;
+use App\Http\Requests\Back\UpdateRecordedCourseDetailsRequest;
+use App\Http\Requests\Back\UpdateRecordedCourseScheduleRequest;
 use App\Http\Requests\Back\UpdateRecordedCourseRequest;
 use App\Models\Back\RecordedCourse;
 use App\Models\Back\RecordedCourseLesson;
@@ -102,11 +104,76 @@ class RecordedCoursesController extends Controller
         });
 
         return redirect()
-            ->route('back.settings.recorded-courses.edit', $course)
-            ->with('success', __('words.recorded-course-created-add-videos'));
+            ->route('back.settings.recorded-courses.show', $course)
+            ->with('success', __('words.recorded-course-created-start-setup'));
     }
 
-    public function edit(RecordedCourse $recordedCourse): Response
+    public function show(RecordedCourse $recordedCourse): Response
+    {
+        abort_unless(auth()->user()->can('manage-recorded-courses'), 403);
+
+        $recordedCourse->load(['lessons', 'enrollments']);
+
+        return Inertia::render('Back/Settings/RecordedCourses/Show', [
+            'recordedCourse' => $this->coursePayload($recordedCourse),
+            'readiness' => $this->readiness($recordedCourse),
+            'lessons' => $recordedCourse->lessons->map(fn (RecordedCourseLesson $lesson) => $this->lessonSummary($recordedCourse, $lesson)),
+        ]);
+    }
+
+    public function edit(RecordedCourse $recordedCourse): RedirectResponse
+    {
+        abort_unless(auth()->user()->can('manage-recorded-courses'), 403);
+
+        return redirect()->route('back.settings.recorded-courses.show', $recordedCourse);
+    }
+
+    public function editDetails(RecordedCourse $recordedCourse): Response
+    {
+        abort_unless(auth()->user()->can('manage-recorded-courses'), 403);
+        $recordedCourse->load('lessons');
+
+        return Inertia::render('Back/Settings/RecordedCourses/Details', [
+            'recordedCourse' => $this->coursePayload($recordedCourse),
+            'readiness' => $this->readiness($recordedCourse),
+        ]);
+    }
+
+    public function updateDetails(UpdateRecordedCourseDetailsRequest $request, RecordedCourse $recordedCourse): RedirectResponse
+    {
+        $validated = $request->validated();
+        $recordedCourse->update($validated);
+
+        return redirect()
+            ->route('back.settings.recorded-courses.details.edit', $recordedCourse)
+            ->with('success', __('words.saved-successfully'));
+    }
+
+    public function editSchedule(RecordedCourse $recordedCourse): Response
+    {
+        abort_unless(auth()->user()->can('manage-recorded-courses'), 403);
+        $recordedCourse->load('lessons');
+
+        return Inertia::render('Back/Settings/RecordedCourses/Schedule', [
+            'recordedCourse' => $this->coursePayload($recordedCourse),
+            'readiness' => $this->readiness($recordedCourse),
+        ]);
+    }
+
+    public function updateSchedule(UpdateRecordedCourseScheduleRequest $request, RecordedCourse $recordedCourse): RedirectResponse
+    {
+        $validated = $request->validated();
+        $recordedCourse->update([
+            'unlock_delay_hours' => $validated['unlock_delay_hours'],
+            'allowed_weekdays' => self::allowedWeekdaysJson($validated['allowed_weekdays']),
+        ]);
+
+        return redirect()
+            ->route('back.settings.recorded-courses.schedule.edit', $recordedCourse)
+            ->with('success', __('words.saved-successfully'));
+    }
+
+    public function enrollments(RecordedCourse $recordedCourse): Response
     {
         abort_unless(auth()->user()->can('manage-recorded-courses'), 403);
 
@@ -141,28 +208,14 @@ class RecordedCoursesController extends Controller
             ];
         });
 
-        $lessons = $recordedCourse->lessons->map(function (RecordedCourseLesson $lesson) {
-            $media = $lesson->getFirstMedia(RecordedCourseLesson::VIDEO_COLLECTION);
-
-            return [
+        return Inertia::render('Back/Settings/RecordedCourses/Enrollments', [
+            'recordedCourse' => $this->courseSummary($recordedCourse),
+            'readiness' => $this->readiness($recordedCourse),
+            'lessons' => $lessonsOrdered->map(fn (RecordedCourseLesson $lesson) => [
                 'id' => $lesson->id,
                 'title_ar' => $lesson->title_ar,
                 'title_en' => $lesson->title_en ?? '',
-                'has_video' => $media !== null,
-                'video_file_name' => $media?->name,
-            ];
-        });
-
-        return Inertia::render('Back/Settings/RecordedCourses/Edit', [
-            'recordedCourse' => [
-                'id' => $recordedCourse->id,
-                'name_ar' => $recordedCourse->name_ar,
-                'name_en' => $recordedCourse->name_en,
-                'description' => $recordedCourse->description,
-                'unlock_delay_hours' => $recordedCourse->unlock_delay_hours,
-                'allowed_weekdays' => $recordedCourse->allowed_weekdays ?? [],
-            ],
-            'lessons' => $lessons,
+            ]),
             'enrollments' => $enrollments,
         ]);
     }
@@ -242,7 +295,7 @@ class RecordedCoursesController extends Controller
         });
 
         return redirect()
-            ->route('back.settings.recorded-courses.edit', $recordedCourse)
+            ->route('back.settings.recorded-courses.show', $recordedCourse)
             ->with('success', __('words.saved-successfully'));
     }
 
@@ -252,5 +305,66 @@ class RecordedCoursesController extends Controller
         $recordedCourse->delete();
 
         return redirect()->route('back.settings.recorded-courses.index');
+    }
+
+    private function courseSummary(RecordedCourse $course): array
+    {
+        return [
+            'id' => $course->id,
+            'name_ar' => $course->name_ar,
+            'name_en' => $course->name_en,
+        ];
+    }
+
+    private function coursePayload(RecordedCourse $course): array
+    {
+        return [
+            'id' => $course->id,
+            'name_ar' => $course->name_ar,
+            'name_en' => $course->name_en,
+            'description' => $course->description,
+            'unlock_delay_hours' => $course->unlock_delay_hours,
+            'allowed_weekdays' => $course->allowed_weekdays ?? [],
+        ];
+    }
+
+    private function lessonSummary(RecordedCourse $course, RecordedCourseLesson $lesson): array
+    {
+        $media = $lesson->getFirstMedia(RecordedCourseLesson::VIDEO_COLLECTION);
+
+        return [
+            'id' => $lesson->id,
+            'sort_order' => $lesson->sort_order,
+            'title_ar' => $lesson->title_ar,
+            'title_en' => $lesson->title_en ?? '',
+            'has_video' => $media !== null,
+            'video_file_name' => $media?->name,
+            'video_stream_url' => $media
+                ? route('back.settings.recorded-courses.lessons.stream', [$course, $lesson])
+                : null,
+        ];
+    }
+
+    private function readiness(RecordedCourse $course): array
+    {
+        $lessons = $course->lessons;
+        $withVideo = $lessons->filter(
+            fn (RecordedCourseLesson $lesson) => $lesson->getFirstMedia(RecordedCourseLesson::VIDEO_COLLECTION) !== null
+        )->count();
+
+        return [
+            'details_complete' => filled($course->name_ar) && filled($course->name_en),
+            'schedule_complete' => $course->unlock_delay_hours > 0 && count($course->allowed_weekdays) > 0,
+            'lessons_count' => $lessons->count(),
+            'lessons_with_video_count' => $withVideo,
+            'all_lessons_have_video' => $lessons->count() > 0 && $withVideo === $lessons->count(),
+            'ready_for_engineers' => filled($course->name_ar)
+                && filled($course->name_en)
+                && $course->unlock_delay_hours > 0
+                && count($course->allowed_weekdays) > 0
+                && $lessons->count() > 0
+                && $withVideo === $lessons->count(),
+            'enrollments_count' => $course->enrollments->count(),
+        ];
     }
 }
