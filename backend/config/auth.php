@@ -114,4 +114,18 @@ return [
 
     'password_timeout' => 10800,
 
+    /*
+    |--------------------------------------------------------------------------
+    | Password Login Emails (Hadaf HQ exceptions)
+    |--------------------------------------------------------------------------
+    |
+    | These @hadaf-hq.com accounts use password login instead of OTP.
+    |
+    */
+
+    'password_login_emails' => [
+        'hessao+1@hadaf-hq.com',
+        'amiah+zoom2@hadaf-hq.com',
+    ],
+
 ];

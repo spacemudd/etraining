@@ -60,6 +60,7 @@
 
         <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const passwordLoginEmails = @json(array_map('strtolower', config('auth.password_login_emails', [])));
             const emailField = document.getElementById('email');
             const passwordSection = document.getElementById('password-section');
             const loginOptions = document.getElementById('login-options');
@@ -74,15 +75,29 @@
             const otpRequestForm = document.getElementById('otp-request-form');
             const requestOtpBtn = document.getElementById('request-otp-btn');
 
+            function usesPasswordLogin(email) {
+                return passwordLoginEmails.includes(email.toLowerCase());
+            }
+
+            function showPasswordLogin() {
+                passwordSection.style.display = 'block';
+                rememberSection.style.display = 'block';
+                passwordLoginBtn.style.display = 'block';
+                loginOptions.style.display = 'none';
+                otpSection.style.display = 'none';
+            }
+
             function showOptions() {
                 const email = emailField.value.trim();
                 if (email !== '') {
-                    if (email.endsWith('@hadaf-hq.com')) {
+                    if (email.endsWith('@hadaf-hq.com') && !usesPasswordLogin(email)) {
                         otpSection.style.display = 'block';
                         loginOptions.style.display = 'none';
                         passwordSection.style.display = 'none';
                         rememberSection.style.display = 'none';
                         passwordLoginBtn.style.display = 'none';
+                    } else if (usesPasswordLogin(email)) {
+                        showPasswordLogin();
                     } else {
                         loginOptions.style.display = 'flex';
                         passwordSection.style.display = 'none';
@@ -121,12 +136,12 @@
                     e.preventDefault();
                     const email = this.value.trim();
                     if (email !== '') {
-                        if (email.endsWith('@hadaf-hq.com')) {
-                            // Submit OTP form for @hadaf-hq.com emails
+                        if (email.endsWith('@hadaf-hq.com') && !usesPasswordLogin(email)) {
                             otpEmail.value = email;
                             otpRequestForm.submit();
+                        } else if (usesPasswordLogin(email)) {
+                            document.getElementById('password').focus();
                         }
-                        // For other emails, don't auto-submit - let user choose password or magic link
                     }
                 }
             });
