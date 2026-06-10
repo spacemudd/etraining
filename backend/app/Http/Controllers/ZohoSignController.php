@@ -440,6 +440,11 @@ public function contractMustSign(Request $request){
    return redirect()->back()->with('success','contract sent succefully');
 }
 public function cancelContract(Request $request){
+    $allowedEmails = config('auth.cancel_contract_allowed_emails', []);
+    if (! in_array(auth()->user()?->email, $allowedEmails, true)) {
+        abort(403);
+    }
+
     $trainee=Trainee::find($request->trainee_id);
     $trainee->zoho_contract_id=null;
     $trainee->zoho_contract_status=null;

@@ -334,6 +334,7 @@ class TraineesController extends Controller
                 'marital_statuses' => collect([]),
                 'educational_levels' => collect([]),
                 'allowed_users_for_special_documents' => $allowedUsers,
+                'cancel_contract_allowed_emails' => config('auth.cancel_contract_allowed_emails', []),
                 'engineerRecordedCoursePanel' => null,
             ]);
         }
@@ -377,6 +378,7 @@ class TraineesController extends Controller
             'marital_statuses' => MaritalStatus::orderBy('order')->get(),
             'educational_levels' => EducationalLevel::orderBy('order')->get(),
             'allowed_users_for_special_documents' => $allowedUsers,
+            'cancel_contract_allowed_emails' => config('auth.cancel_contract_allowed_emails', []),
             'engineerRecordedCoursePanel' => $this->engineerRecordedCoursePanelPayload(
                 Trainee::withTrashed()->findOrFail($id)
             ),
