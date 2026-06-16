@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
+use App\Models\Back\Audit;
 use App\Models\Back\Trainee;
 use App\Models\Media;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Str;
@@ -196,8 +198,29 @@ class TraineesFilesController extends Controller
 
     public function destroy($trainee_id, $file)
     {
+        $trainee = Trainee::withTrashed()->findOrFail($trainee_id);
         $media = Media::findOrFail($file);
+
+        if ((string) $media->model_id !== (string) $trainee->id) {
+            abort(404);
+        }
+
+        $fileName = $media->file_name;
         $media->delete();
+
+        Audit::create([
+            'event' => 'trainee.file.deleted',
+            'user_type' => User::class,
+            'user_id' => auth()->id(),
+            'auditable_id' => $trainee->id,
+            'auditable_type' => Trainee::class,
+            'old_values' => array_filter([
+                'نوع الملف' => Trainee::mediaCollectionLabel($media->collection_name),
+                'اسم الملف' => $fileName,
+            ]),
+            'new_values' => [],
+        ]);
+
         return redirect()->route('back.trainees.files.index', $trainee_id);
     }
     

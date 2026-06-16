@@ -497,10 +497,7 @@ class TraineesController extends Controller
     public function deleteIdentity(Request $request, $trainee_id)
     {
         $trainee = Trainee::findOrFail($trainee_id);
-        $trainee->getMedia('identity')->each->forceDelete();
-
-        $trainee->status = Instructor::STATUS_PENDING_UPLOADING_FILES;
-        $trainee->save();
+        $trainee->deleteMediaCollectionWithAudit('identity', true);
 
         return response()->redirectToRoute('back.trainees.show', $trainee->id);
     }
@@ -546,10 +543,7 @@ class TraineesController extends Controller
     public function deleteQualification(Request $request, $trainee_id)
     {
         $trainee = Trainee::findOrFail($trainee_id);
-        $trainee->getMedia('qualification')->each->forceDelete();
-
-        $trainee->status = Instructor::STATUS_PENDING_UPLOADING_FILES;
-        $trainee->save();
+        $trainee->deleteMediaCollectionWithAudit('qualification', true);
 
         return response()->redirectToRoute('back.trainees.show', $trainee->id);
     }
@@ -654,10 +648,7 @@ class TraineesController extends Controller
     public function deleteBankAccount(Request $request, $trainee_id)
     {
         $trainee = Trainee::findOrFail($trainee_id);
-        $trainee->getMedia('bank-account')->each->forceDelete();
-
-        $trainee->status = Instructor::STATUS_PENDING_UPLOADING_FILES;
-        $trainee->save();
+        $trainee->deleteMediaCollectionWithAudit('bank-account', true);
 
         return response()->redirectToRoute('back.trainees.show', $trainee->id);
     }
@@ -672,10 +663,7 @@ class TraineesController extends Controller
     public function deleteNationalAddress(Request $request, $trainee_id)
     {
         $trainee = Trainee::findOrFail($trainee_id);
-        $trainee->getMedia('national-address')->each->forceDelete();
-
-        $trainee->status = Instructor::STATUS_PENDING_UPLOADING_FILES;
-        $trainee->save();
+        $trainee->deleteMediaCollectionWithAudit('national-address', true);
 
         return response()->redirectToRoute('back.trainees.show', $trainee->id);
     }
@@ -690,10 +678,7 @@ class TraineesController extends Controller
     public function deleteCv(Request $request, $trainee_id)
     {
         $trainee = Trainee::findOrFail($trainee_id);
-        $trainee->getMedia('cv')->each->forceDelete();
-
-        $trainee->status = Instructor::STATUS_PENDING_UPLOADING_FILES;
-        $trainee->save();
+        $trainee->deleteMediaCollectionWithAudit('cv', true);
 
         return response()->redirectToRoute('back.trainees.show', $trainee->id);
     }
@@ -711,21 +696,13 @@ class TraineesController extends Controller
 
         $trainee->refresh();
 
-        if ($trainee->non_registration_proof_copy_url) {
-            $trainee->status = Trainee::STATUS_PENDING_APPROVAL;
-            $trainee->save();
-        }
-
         return $uploaded_file;
     }
 
     public function deleteNonRegistrationProof(Request $request, $trainee_id)
     {
         $trainee = Trainee::findOrFail($trainee_id);
-        $trainee->getMedia('non-registration-proof')->each->forceDelete();
-
-        $trainee->status = Instructor::STATUS_PENDING_UPLOADING_FILES;
-        $trainee->save();
+        $trainee->deleteMediaCollectionWithAudit('non-registration-proof');
 
         return response()->redirectToRoute('back.trainees.show', $trainee->id);
     }
@@ -767,10 +744,7 @@ class TraineesController extends Controller
     public function deleteGosiCertificate(Request $request, $trainee_id)
     {
         $trainee = Trainee::findOrFail($trainee_id);
-        $trainee->getMedia('gosi-certificate')->each->forceDelete();
-
-        // For optional documents, we don't change the status when deleted
-        // The status will be managed by the approval process
+        $trainee->deleteMediaCollectionWithAudit('gosi-certificate');
 
         return response()->redirectToRoute('back.trainees.show', $trainee->id);
     }
@@ -812,10 +786,7 @@ class TraineesController extends Controller
     public function deleteQiwaContract(Request $request, $trainee_id)
     {
         $trainee = Trainee::findOrFail($trainee_id);
-        $trainee->getMedia('qiwa-contract')->each->forceDelete();
-
-        // For optional documents, we don't change the status when deleted
-        // The status will be managed by the approval process
+        $trainee->deleteMediaCollectionWithAudit('qiwa-contract');
 
         return response()->redirectToRoute('back.trainees.show', $trainee->id);
     }

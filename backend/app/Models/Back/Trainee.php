@@ -9,6 +9,7 @@ use App\Models\City;
 use App\Models\EducationalLevel;
 use App\Models\MaritalStatus;
 use App\Models\SearchableLabels;
+use App\Models\Back\Audit;
 use App\Models\Team;
 use App\Models\User;
 use App\Services\TraineeCompanyMovementService;
@@ -359,6 +360,54 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     public function general_files()
     {
         return $this->media()->where('collection_name', 'general_files');
+    }
+
+    public function deleteMediaCollectionWithAudit(string $collection, ?bool $setPendingUploadStatus = null): void
+    {
+        $media = $this->getMedia($collection);
+
+        if ($media->isEmpty()) {
+            return;
+        }
+
+        $fileNames = $media->pluck('file_name')->filter()->implode(', ');
+
+        $media->each->forceDelete();
+
+        Audit::create([
+            'event' => 'trainee.file.deleted',
+            'user_type' => User::class,
+            'user_id' => auth()->id(),
+            'auditable_id' => $this->id,
+            'auditable_type' => self::class,
+            'old_values' => array_filter([
+                'نوع الملف' => self::mediaCollectionLabel($collection),
+                'اسم الملف' => $fileNames ?: null,
+            ]),
+            'new_values' => [],
+        ]);
+
+        if ($setPendingUploadStatus === true) {
+            $this->status = self::STATUS_PENDING_UPLOADING_FILES;
+            $this->saveQuietly();
+        }
+    }
+
+    public static function mediaCollectionLabel(string $collection): string
+    {
+        $labels = [
+            'identity' => 'words.identity-card-photocopy',
+            'qualification' => 'words.qualification-photocopy',
+            'bank-account' => 'words.bank-account-photocopy',
+            'national-address' => 'words.national-address-copy',
+            'cv' => 'words.cv',
+            'non-registration-proof' => 'words.non-registration-proof',
+            'gosi-certificate' => 'words.gosi-certificate',
+            'qiwa-contract' => 'words.qiwa-contract',
+            'general_files' => 'words.files',
+        ];
+
+        return __($labels[$collection] ?? 'words.files');
     }
 
     public function attendances()

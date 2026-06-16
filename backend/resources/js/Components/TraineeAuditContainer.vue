@@ -94,8 +94,8 @@
                           :class="{
                               'bg-green-100 text-green-800': audit.event === 'created',
                               'bg-yellow-100 text-yellow-800': audit.event === 'updated',
-                              'bg-red-100 text-red-800': audit.event === 'deleted',
-                              'bg-gray-100 text-gray-800': !['created', 'updated', 'deleted'].includes(audit.event)
+                              'bg-red-100 text-red-800': audit.event === 'deleted' || audit.event === 'trainee.file.deleted',
+                              'bg-gray-100 text-gray-800': !['created', 'updated', 'deleted', 'trainee.file.deleted'].includes(audit.event)
                           }">
                         {{ audit.event }}
                     </span>
@@ -216,10 +216,16 @@ export default {
         }
     },
     mounted() {
-        let vm = this;
-        setTimeout(function() {
-            vm.getAuditRecords();
-        }, 200)
+        this.getAuditRecords();
+        this.inertiaSuccessHandler = () => {
+            this.getAuditRecords();
+        };
+        this.$inertia.on('success', this.inertiaSuccessHandler);
+    },
+    beforeDestroy() {
+        if (this.inertiaSuccessHandler) {
+            this.$inertia.off('success', this.inertiaSuccessHandler);
+        }
     },
     methods: {
         getAuditRecords() {
