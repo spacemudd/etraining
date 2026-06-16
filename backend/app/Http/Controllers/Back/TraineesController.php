@@ -43,6 +43,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Mail;
@@ -311,6 +312,7 @@ class TraineesController extends Controller
                 'bill_from_date' => null,
                 'linked_date' => null,
                 'trainee_message' => null,
+                'current_procedure_alert' => null,
                 'job_number' => null,
                 'dont_edit_notice' => false,
                 'phone_is_owned' => null,
@@ -322,6 +324,7 @@ class TraineesController extends Controller
                 'cv_url' => null,
                 'gosi_certificate_copy_url' => null,
                 'qiwa_contract_copy_url' => null,
+                'non_registration_proof_copy_url' => null,
             ];
 
             return Inertia::render('Back/Trainees/Show', [
@@ -379,6 +382,13 @@ class TraineesController extends Controller
             'educational_levels' => EducationalLevel::orderBy('order')->get(),
             'allowed_users_for_special_documents' => $allowedUsers,
             'cancel_contract_allowed_emails' => config('auth.cancel_contract_allowed_emails', []),
+            'current_procedure_alert_options' => collect(Trainee::currentProcedureAlertKeys())
+                ->map(fn (string $key) => [
+                    'value' => $key,
+                    'label' => __('words.current-procedure-alert-' . $key),
+                ])
+                ->values()
+                ->all(),
             'engineerRecordedCoursePanel' => $this->engineerRecordedCoursePanelPayload(
                 Trainee::withTrashed()->findOrFail($id)
             ),
@@ -681,6 +691,38 @@ class TraineesController extends Controller
     {
         $trainee = Trainee::findOrFail($trainee_id);
         $trainee->getMedia('cv')->each->forceDelete();
+
+        $trainee->status = Instructor::STATUS_PENDING_UPLOADING_FILES;
+        $trainee->save();
+
+        return response()->redirectToRoute('back.trainees.show', $trainee->id);
+    }
+
+    public function storeNonRegistrationProof(Request $request, $trainee_id)
+    {
+        $request->validate([
+            'non_registration_proof' => 'required_without:file',
+            'file' => 'required_without:non_registration_proof',
+        ]);
+
+        $trainee = Trainee::findOrFail($trainee_id);
+        $file = $request->file('non_registration_proof') ?: $request->file('file');
+        $uploaded_file = $trainee->uploadToFolder($file, 'non-registration-proof');
+
+        $trainee->refresh();
+
+        if ($trainee->non_registration_proof_copy_url) {
+            $trainee->status = Trainee::STATUS_PENDING_APPROVAL;
+            $trainee->save();
+        }
+
+        return $uploaded_file;
+    }
+
+    public function deleteNonRegistrationProof(Request $request, $trainee_id)
+    {
+        $trainee = Trainee::findOrFail($trainee_id);
+        $trainee->getMedia('non-registration-proof')->each->forceDelete();
 
         $trainee->status = Instructor::STATUS_PENDING_UPLOADING_FILES;
         $trainee->save();
@@ -1304,6 +1346,7 @@ class TraineesController extends Controller
             'trainee_group_name' => ['nullable', 'string', 'max:255', new TraineeGroupLimit],
             'trainee_message' => 'nullable|string|max:255',
             'job_number' => 'nullable|string|max:255',
+            'current_procedure_alert' => ['nullable', 'string', Rule::in(Trainee::currentProcedureAlertKeys())],
         ]);
 
         $request->validate([
@@ -1321,7 +1364,11 @@ class TraineesController extends Controller
         }
 
         DB::beginTransaction();
-        $trainee->update($request->except('_token'));
+        $updateData = $request->except('_token');
+        $updateData['current_procedure_alert'] = $request->filled('current_procedure_alert')
+            ? $request->input('current_procedure_alert')
+            : null;
+        $trainee->update($updateData);
         if ($user = $trainee->user) {
             $user->email = $trainee->refresh()->email;
             $user->save();
@@ -1980,6 +2027,7 @@ class TraineesController extends Controller
             ->merge($trainee->getMedia('bank-account'))
             ->merge($trainee->getMedia('national-address'))
             ->merge($trainee->getMedia('cv'))
+            ->merge($trainee->getMedia('non-registration-proof'))
             ->merge($trainee->getMedia('gosi-certificate'))
             ->merge($trainee->getMedia('qiwa-contract'))
             ->merge($trainee->getMedia('general_files'));
@@ -2013,6 +2061,24 @@ class TraineesController extends Controller
         }
         $trainee->save();
         return redirect()->back();
+    }
+
+    public function updateCurrentProcedureAlert(Request $request, string $trainee_id)
+    {
+        $validated = $request->validate([
+            'current_procedure_alert' => ['nullable', 'string', Rule::in(Trainee::currentProcedureAlertKeys())],
+        ]);
+
+        $trainee = Trainee::findOrFail($trainee_id);
+        $trainee->current_procedure_alert = $validated['current_procedure_alert'] ?? null;
+        $trainee->save();
+
+        return redirect()->back()->with(
+            'success',
+            $trainee->current_procedure_alert
+                ? __('words.current-procedure-alert-updated')
+                : __('words.current-procedure-alert-removed')
+        );
     }
 
     public function gosiLog()

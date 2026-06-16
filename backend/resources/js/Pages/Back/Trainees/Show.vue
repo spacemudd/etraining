@@ -968,6 +968,47 @@
           </p>
         </div>
 
+        <div
+          v-if="!is_limited_view"
+          class="col-span-6 sm:col-span-2 overflow-visible relative z-10"
+        >
+          <jet-label
+            for="current_procedure_alert"
+            :value="$t('words.current-procedure-alert')"
+          />
+          <select
+            v-if="editButton.editOption"
+            id="current_procedure_alert"
+            v-model="trainee.current_procedure_alert"
+            :class="editButton.selectInputClass"
+          >
+            <option value="">
+              {{ $t("words.current-procedure-alert-none") }}
+            </option>
+            <option
+              v-for="option in current_procedure_alert_options"
+              :key="option.value"
+              :value="option.value"
+            >
+              {{ option.label }}
+            </option>
+          </select>
+          <p v-else>
+            <span
+              v-if="trainee.current_procedure_alert"
+              class="text-sm inline-block mt-2 p-1 px-2 bg-green-200 rounded-lg font-semibold text-green-900"
+            >
+              {{ trainee.current_procedure_alert_label }}
+            </span>
+            <span
+              v-else
+              class="text-sm inline-block mt-2 p-1 px-2 bg-gray-200 rounded-lg"
+            >
+              {{ $t("words.current-procedure-alert-none") }}
+            </span>
+          </p>
+        </div>
+
         <div class="col-span-6 sm:col-span-1" v-can="'override-training-costs'">
           <jet-label for="name" :value="$t('words.fixed-training-costs')" />
           <inertia-link
@@ -1124,7 +1165,7 @@
           </div>
         </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
         <div>
           <jet-label
             :value="$t('words.identity-card-photocopy')"
@@ -1269,6 +1310,34 @@
             id="dropzoneCv"
             @vdropzone-sending="sendingCsrf"
             :options="dropzoneOptionsCv"
+          ></vue-dropzone>
+        </div>
+
+        <div v-if="!is_limited_view">
+          <jet-label :value="$t('words.non-registration-proof')" class="mb-2" />
+
+          <div
+            class="bg-white border-2 rounder-lg flex flex-col justify-center items-center min-container-upload"
+            v-if="trainee.non_registration_proof_copy_url"
+          >
+            <a
+              class="bg-gray-700 text-white font-semibold p-2 text-center w-1/2 rounded my-1"
+              target="_blank"
+              :href="trainee.non_registration_proof_copy_url"
+              >{{ $t("words.download") }}</a
+            >
+            <button
+              class="bg-red-500 text-white font-semibold p-2 text-center w-1/2 rounded my-1"
+              @click="deleteNonRegistrationProof"
+            >
+              {{ $t("words.delete") }}
+            </button>
+          </div>
+          <vue-dropzone
+            v-else
+            id="dropzoneNonRegistrationProof"
+            @vdropzone-sending="sendingCsrf"
+            :options="dropzoneOptionsNonRegistrationProof"
           ></vue-dropzone>
         </div>
 
@@ -1505,6 +1574,7 @@ export default {
     "companies",
     "is_limited_view",
     "engineerRecordedCoursePanel",
+    "current_procedure_alert_options",
   ],
   components: {
     GosiContainer,
@@ -1599,6 +1669,16 @@ export default {
       dropzoneOptionsCv: {
         destroyDropzone: false,
         url: route("back.trainees.attachments.cv", {
+          trainee_id: this.trainee.id,
+        }),
+        dictDefaultMessage:
+          `<ion-icon name='cloud-upload-outline' class='text-red-500' size='large'></ion-icon><br/> ${this.$t("words.upload-files-here")}`,
+        thumbnailWidth: 150,
+        maxFilesize: 20,
+      },
+      dropzoneOptionsNonRegistrationProof: {
+        destroyDropzone: false,
+        url: route("back.trainees.attachments.non-registration-proof", {
           trainee_id: this.trainee.id,
         }),
         dictDefaultMessage:
@@ -1703,7 +1783,7 @@ export default {
       const email = this.$page.props.user?.email;
       const allowed = this.$page.props.cancel_contract_allowed_emails || [];
       return !!email && allowed.includes(email);
-    }
+    },
   },
   mounted() {
     console.log('Component mounted');
@@ -1894,6 +1974,7 @@ export default {
           linked_date: this.trainee.linked_date_formatted,
           trainee_message: this.trainee.trainee_message,
           job_number: this.trainee.job_number,
+          current_procedure_alert: this.trainee.current_procedure_alert || null,
         };
 
         this.$wait.start("UPDATING_TRAINEE");
@@ -1984,6 +2065,15 @@ export default {
       if (confirm(this.$t("words.are-you-sure"))) {
         this.$inertia.delete(
           route("back.trainees.attachments.cv.destroy", {
+            trainee_id: this.trainee.id,
+          })
+        );
+      }
+    },
+    deleteNonRegistrationProof() {
+      if (confirm(this.$t("words.are-you-sure"))) {
+        this.$inertia.delete(
+          route("back.trainees.attachments.non-registration-proof.destroy", {
             trainee_id: this.trainee.id,
           })
         );

@@ -42,6 +42,12 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     const STATUS_PENDING_APPROVAL = 1;
     const STATUS_APPROVED = 2;
 
+    public const CURRENT_PROCEDURE_ALERT_FIELD_VISIT = 'field_visit';
+    public const CURRENT_PROCEDURE_ALERT_CONTRACT_UPDATE = 'contract_update';
+    public const CURRENT_PROCEDURE_ALERT_COLLECTION = 'collection_procedures';
+    public const CURRENT_PROCEDURE_ALERT_RESIGNATION = 'resignation_procedures';
+    public const CURRENT_PROCEDURE_ALERT_INCORRECT_CONTACT = 'incorrect_contact_info';
+
     public $incrementing = false;
 
     protected $keyType = 'string';
@@ -67,6 +73,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'bill_from_date',
         'linked_date',
         'trainee_message',
+        'current_procedure_alert',
         'job_number',
         'zoho_contract_id',
         'zoho_contract_status',
@@ -97,6 +104,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'cv_url',
         'gosi_certificate_copy_url',
         'qiwa_contract_copy_url',
+        'non_registration_proof_copy_url',
         'name_selectable',
         'show_url',
         'created_at_date',
@@ -116,6 +124,7 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'whatsapp_link',
         'clean_phone_additional',
         'phone_ownership_status',
+        'current_procedure_alert_label',
     ];
 
     protected static function boot(): void
@@ -382,6 +391,35 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         return $this->getCopyUrl('qualification');
     }
 
+    public static function currentProcedureAlertKeys(): array
+    {
+        return [
+            self::CURRENT_PROCEDURE_ALERT_FIELD_VISIT,
+            self::CURRENT_PROCEDURE_ALERT_CONTRACT_UPDATE,
+            self::CURRENT_PROCEDURE_ALERT_COLLECTION,
+            self::CURRENT_PROCEDURE_ALERT_RESIGNATION,
+            self::CURRENT_PROCEDURE_ALERT_INCORRECT_CONTACT,
+        ];
+    }
+
+    public static function currentProcedureAlertOptions(): array
+    {
+        return collect(self::currentProcedureAlertKeys())
+            ->mapWithKeys(fn (string $key) => [$key => __('words.current-procedure-alert-' . $key)])
+            ->all();
+    }
+
+    public function getCurrentProcedureAlertLabelAttribute(): ?string
+    {
+        if (! $this->current_procedure_alert) {
+            return null;
+        }
+
+        $key = 'words.current-procedure-alert-' . $this->current_procedure_alert;
+
+        return __($key) === $key ? null : __($key);
+    }
+
     public function getBankAccountCopyUrlAttribute()
     {
         return $this->getCopyUrl('bank-account');
@@ -405,6 +443,11 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     public function getQiwaContractCopyUrlAttribute()
     {
         return $this->getCopyUrl('qiwa-contract');
+    }
+
+    public function getNonRegistrationProofCopyUrlAttribute()
+    {
+        return $this->getCopyUrl('non-registration-proof');
     }
 
     public function getCopyUrl($collection_name)

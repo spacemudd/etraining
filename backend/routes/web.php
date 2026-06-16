@@ -831,6 +831,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('trainees/import', [\App\Http\Controllers\Back\TraineesImportController::class, 'store'])->name('trainees.import.store');
 
         Route::get('/trainees/{id}/gosi-deleted', [\App\Http\Controllers\Back\TraineesController::class, 'toggleGosiDeleted'])->name('trainees.toggle-gosi-deleted');
+        Route::put('/trainees/{id}/current-procedure-alert', [\App\Http\Controllers\Back\TraineesController::class, 'updateCurrentProcedureAlert'])->name('trainees.current-procedure-alert.update');
 
         Route::delete('/trainees/{id}/block-list', [\App\Http\Controllers\Back\TraineesController::class, 'deleteFromBlockList'])->name('trainees.delete-from-block-list');
         Route::get('/trainees/{id}/audit', [\App\Http\Controllers\Back\TraineesController::class, 'audit'])->name('trainees.audit');
@@ -940,6 +941,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::delete('trainees/{trainee_id}/attachments/national-address', [\App\Http\Controllers\Back\TraineesController::class, 'deleteNationalAddress'])->name('trainees.attachments.national-address.destroy');
         Route::post('trainees/{trainee_id}/attachments/cv', [\App\Http\Controllers\Back\TraineesController::class, 'storeCv'])->name('trainees.attachments.cv');
         Route::delete('trainees/{trainee_id}/attachments/cv', [\App\Http\Controllers\Back\TraineesController::class, 'deleteCv'])->name('trainees.attachments.cv.destroy');
+        Route::post('trainees/{trainee_id}/attachments/non-registration-proof', [\App\Http\Controllers\Back\TraineesController::class, 'storeNonRegistrationProof'])->name('trainees.attachments.non-registration-proof');
+        Route::delete('trainees/{trainee_id}/attachments/non-registration-proof', [\App\Http\Controllers\Back\TraineesController::class, 'deleteNonRegistrationProof'])->name('trainees.attachments.non-registration-proof.destroy');
         Route::post('trainees/{trainee_id}/attachments/gosi-certificate', [\App\Http\Controllers\Back\TraineesController::class, 'storeGosiCertificate'])->name('trainees.attachments.gosi-certificate');
         Route::delete('trainees/{trainee_id}/attachments/gosi-certificate', [\App\Http\Controllers\Back\TraineesController::class, 'deleteGosiCertificate'])->name('trainees.attachments.gosi-certificate.destroy');
         Route::post('trainees/{trainee_id}/attachments/qiwa-contract', [\App\Http\Controllers\Back\TraineesController::class, 'storeQiwaContract'])->name('trainees.attachments.qiwa-contract');
