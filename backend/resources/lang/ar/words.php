@@ -453,6 +453,7 @@ return [
     'present-but-late' => 'موجود (متأخر)',
     'view-backoffice-reports' => 'عرض التقارير',
     'course-attendances' => 'حضور الدورات',
+    'trainee-attendance' => 'حضور المتدربات',
     'date-from' => 'تاريخ من',
     'date-to' => 'تاريخ الى',
     'export' => 'إصدار',

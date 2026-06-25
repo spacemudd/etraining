@@ -452,6 +452,7 @@ return [
     'present-but-late' => 'Present (late)',
     'view-backoffice-reports' => 'View backoffice reports',
     'course-attendances' => 'Course attendances',
+    'trainee-attendance' => 'Trainee Attendance',
     'date-from' => 'Date from',
     'date-to' => 'Date to',
     'export' => 'Export',

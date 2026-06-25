@@ -1012,6 +1012,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::post('course-attendances/generate', [\App\Http\Controllers\Back\ReportsController::class, 'generateCourseAttendanceReport'])->name('reports.course-attendances.generate');
             Route::get('course-attendances', [\App\Http\Controllers\Back\ReportsController::class, 'formCourseAttendanceReport'])->name('reports.course-attendances.index');
 
+            Route::post('trainee-attendance/generate', [\App\Http\Controllers\Back\ReportsController::class, 'generateTraineeAttendanceReport'])->name('reports.trainee-attendance.generate');
+            Route::get('trainee-attendance', [\App\Http\Controllers\Back\ReportsController::class, 'formTraineeAttendanceReport'])->name('reports.trainee-attendance.index');
+
             Route::post('bulk-course-attendances/generate', [\App\Http\Controllers\Back\ReportsController::class, 'generateBulkCourseAttendanceReport'])->name('reports.bulk-course-attendances.generate');
             Route::get('bulk-course-attendances', [\App\Http\Controllers\Back\ReportsController::class, 'formBulkCourseAttendanceReport'])->name('reports.bulk-course-attendances.index');
 

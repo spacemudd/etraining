@@ -13,6 +13,7 @@ use App\Jobs\CourseAttendanceReportJob;
 use App\Jobs\ExportCompaniesPaidInvoices2024Job;
 use App\Jobs\GenerateAttendanceReportJob;
 use App\Jobs\GenerateCompanyCertificatesReportJob;
+use App\Jobs\TraineeAttendanceReportJob;
 use App\Models\Back\ExportTraineesToExcelJobTracker;
 use App\Models\AttendanceReportDueDates;
 use App\Models\Back\Audit;
@@ -24,6 +25,7 @@ use App\Models\User;
 use App\Reports\BulkCourseAttendanceReportFactory;
 use App\Reports\ContractsReportFactory;
 use App\Reports\CourseAttendanceReportFactory;
+use App\Reports\TraineeAttendanceReportFactory;
 use Carbon\Carbon;
 use Excel;
 use Illuminate\Http\Request;
@@ -52,6 +54,37 @@ class ReportsController extends Controller
             'companies' => Company::get(),
             'courses' => Course::with('instructor')->get(),
         ]);
+    }
+
+    public function formTraineeAttendanceReport()
+    {
+        $this->authorize('view-backoffice-reports');
+
+        return Inertia::render('Back/Reports/TraineeAttendance/Index');
+    }
+
+    public function generateTraineeAttendanceReport(Request $request)
+    {
+        $this->authorize('view-backoffice-reports');
+
+        $request->validate([
+            'date_from' => 'required|date',
+            'date_to' => 'required|date|after_or_equal:date_from',
+        ]);
+
+        $tracker = new JobTracker();
+        $tracker->user_id = auth()->user()->id;
+        $tracker->metadata = $request->only(['date_from', 'date_to']);
+        $tracker->reportable_id = null;
+        $tracker->reportable_type = TraineeAttendanceReportFactory::class;
+        $tracker->queued_at = now();
+        $tracker->save();
+
+        $tracker = $tracker->refresh();
+
+        TraineeAttendanceReportJob::dispatch($tracker);
+
+        return $tracker;
     }
     public function formCompanyCertificateseReport()
     {
