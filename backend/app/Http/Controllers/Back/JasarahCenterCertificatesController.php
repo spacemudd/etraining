@@ -11,6 +11,7 @@ use App\Models\Back\Course;
 use App\Models\Back\JasarahCenterCertificate;
 use App\Models\Back\JasarahCenterCertificateRow;
 use App\Models\Back\Trainee;
+use App\Services\JasarahCenterCertificateService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -145,7 +146,7 @@ class JasarahCenterCertificatesController extends Controller
                     'trainee_id' => $trainee->id,
                     'row_key' => $rowKey,
                     'identity_number' => $identityNumber,
-                    'trainee_name_en' => $traineeNameEn ?: ($trainee->name_en ?? $trainee->name),
+                    'trainee_name_en' => JasarahCenterCertificateService::resolveImportEnglishName($traineeNameEn, $trainee),
                     'status' => JasarahCenterCertificateRow::STATUS_PENDING,
                 ]);
 

@@ -46,13 +46,14 @@ class SendIndividualJasarahCenterCertificateJob implements ShouldQueue
             }
 
             $courseName = $row->jasarahCenterCertificate->displayCourseTitle();
+            $recipientName = $service->resolveEnglishNameForRow($row);
 
             Mail::to($row->trainee->email)
                 ->bcc(['shafiqal-shaar@adv-line.com', 'mashael.a@hadaf-hq.com'])
                 ->send(new JasarahCenterCertificateMail(
                     $pdfContent,
                     basename($row->pdf_path),
-                    $row->trainee_name_en,
+                    $recipientName,
                     $courseName,
                     $this->rowId
                 ));
