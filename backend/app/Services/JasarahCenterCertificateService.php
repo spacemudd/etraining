@@ -8,6 +8,7 @@ use App\Models\Back\JasarahCenterCertificate;
 use App\Models\Back\JasarahCenterCertificateRow;
 use App\Models\Back\Trainee;
 use App\Models\Back\TraineeCertificate;
+use App\Support\IdentityNumberNormalizer;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -72,7 +73,7 @@ class JasarahCenterCertificateService
                 continue;
             }
 
-            $identityNumber = isset($data[$idIndex]) ? $this->convertArabicNumeralsToEnglish(trim($data[$idIndex])) : '';
+            $identityNumber = isset($data[$idIndex]) ? IdentityNumberNormalizer::normalize(trim($data[$idIndex])) : '';
             $englishName = ($nameIndex !== null && isset($data[$nameIndex])) ? trim($data[$nameIndex]) : '';
 
             if ($identityNumber !== '' && is_numeric($identityNumber)) {
@@ -212,13 +213,5 @@ class JasarahCenterCertificateService
         }
 
         return null;
-    }
-
-    private function convertArabicNumeralsToEnglish(string $text): string
-    {
-        $arabicNumerals = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-        $englishNumerals = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-
-        return str_replace($arabicNumerals, $englishNumerals, $text);
     }
 }

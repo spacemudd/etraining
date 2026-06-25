@@ -12,6 +12,7 @@ use App\Models\Back\JasarahCenterCertificate;
 use App\Models\Back\JasarahCenterCertificateRow;
 use App\Models\Back\Trainee;
 use App\Services\JasarahCenterCertificateService;
+use App\Support\IdentityNumberNormalizer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -117,9 +118,9 @@ class JasarahCenterCertificatesController extends Controller
             $totalRows++;
             $rowKey = $identityNumber . '_' . $rowNumber;
 
-            $identityNumber = $this->convertArabicNumeralsToEnglish($identityNumber);
+            $identityNumber = IdentityNumberNormalizer::normalize($identityNumber);
 
-            if ($identityNumber === '' || !is_numeric($identityNumber)) {
+            if ($identityNumber === '' || !ctype_digit($identityNumber)) {
                 JasarahCenterCertificateRow::create([
                     'jasarah_center_certificate_id' => $certificate->id,
                     'row_key' => $rowKey,
@@ -133,12 +134,7 @@ class JasarahCenterCertificatesController extends Controller
                 continue;
             }
 
-            $trainee = Trainee::withTrashed()->where('identity_number', $identityNumber)->first();
-
-            if (!$trainee) {
-                $arabicIdentity = $this->englishToArabicNumerals($identityNumber);
-                $trainee = Trainee::withTrashed()->where('identity_number', $arabicIdentity)->first();
-            }
+            $trainee = IdentityNumberNormalizer::findTraineeByIdentity($identityNumber);
 
             if ($trainee) {
                 JasarahCenterCertificateRow::create([
@@ -470,21 +466,5 @@ class JasarahCenterCertificatesController extends Controller
         }
 
         return null;
-    }
-
-    private function convertArabicNumeralsToEnglish(string $text): string
-    {
-        $arabicNumerals = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-        $englishNumerals = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-
-        return str_replace($arabicNumerals, $englishNumerals, $text);
-    }
-
-    private function englishToArabicNumerals(string $input): string
-    {
-        $numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-        $arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-
-        return str_replace($numbers, $arabicNumbers, $input);
     }
 }

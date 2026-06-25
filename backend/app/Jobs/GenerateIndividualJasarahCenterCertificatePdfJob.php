@@ -33,7 +33,7 @@ class GenerateIndividualJasarahCenterCertificatePdfJob implements ShouldQueue
     {
         $row = JasarahCenterCertificateRow::with(['jasarahCenterCertificate.course'])->find($this->rowId);
 
-        if (!$row || !$row->trainee_id || $row->pdf_path || $row->status !== JasarahCenterCertificateRow::STATUS_PENDING) {
+        if (!$row || !$row->trainee_id || $row->status !== JasarahCenterCertificateRow::STATUS_PENDING || $row->pdf_path) {
             if ($row) {
                 $service->refreshPdfGenerationStatus($row->jasarah_center_certificate_id);
             }
