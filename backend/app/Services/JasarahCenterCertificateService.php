@@ -26,14 +26,19 @@ class JasarahCenterCertificateService
             'trainee_id' => $row->trainee_id,
         ]);
 
+        $row->loadMissing('trainee');
+        $traineeNameEn = $row->trainee
+            ? $row->trainee->resolveEnglishName($row->trainee_name_en)
+            : trim((string) $row->trainee_name_en);
+
         $pdfContent = JasarahCenterNoticePdfService::generate(
-            $row->trainee_name_en,
+            $traineeNameEn,
             $certificate->displayCourseTitle()
         );
         $s3Path = JasarahCenterNoticePdfService::s3Path(
             $row->jasarah_center_certificate_id,
             $row->identity_number,
-            $row->trainee_name_en
+            $traineeNameEn
         );
 
         Storage::disk('s3')->put($s3Path, $pdfContent);

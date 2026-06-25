@@ -672,6 +672,15 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         return (bool) preg_match('/[a-zA-Z]/', $name);
     }
 
+    public function resolveEnglishName(?string $fallback = null): string
+    {
+        if ($this->hasEnglishName()) {
+            return trim($this->english_name);
+        }
+
+        return trim((string) $fallback);
+    }
+
     public function arabicE2w($str)
     {
         $arabic_eastern = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
