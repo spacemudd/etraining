@@ -137,6 +137,10 @@ class JasarahCenterCertificatesController extends Controller
             $trainee = IdentityNumberNormalizer::findTraineeByIdentity($identityNumber);
 
             if ($trainee) {
+                $certificateService = app(JasarahCenterCertificateService::class);
+                $certificateService->syncTraineeEnglishNameFromCsv($trainee, $traineeNameEn);
+                $trainee->refresh();
+
                 JasarahCenterCertificateRow::create([
                     'jasarah_center_certificate_id' => $certificate->id,
                     'trainee_id' => $trainee->id,
@@ -209,13 +213,23 @@ class JasarahCenterCertificatesController extends Controller
             if ($row && !$row->trainee_id) {
                 $trainee = Trainee::withTrashed()->find($mapping['trainee_id']);
                 if ($trainee) {
+                    app(JasarahCenterCertificateService::class)->syncTraineeEnglishNameFromCsv(
+                        $trainee,
+                        (string) $row->trainee_name_en,
+                        (string) $row->id
+                    );
+                    $trainee->refresh();
+
                     $row->update([
                         'trainee_id' => $trainee->id,
-                        'identity_number' => $trainee->identity_number ?? $row->identity_number,
+                        'identity_number' => IdentityNumberNormalizer::normalize($trainee->identity_number ?? $row->identity_number),
+                        'trainee_name_en' => JasarahCenterCertificateService::resolveImportEnglishName((string) $row->trainee_name_en, $trainee),
                     ]);
                 }
             }
         }
+
+        app(JasarahCenterCertificateService::class)->syncMatchedRowsEnglishNamesFromCsv($certificate);
 
         $matchedCount = $certificate->rows()->whereNotNull('trainee_id')->count();
         $unmatchedCount = $certificate->rows()

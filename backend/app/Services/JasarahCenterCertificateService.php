@@ -170,15 +170,31 @@ class JasarahCenterCertificateService
         ]);
     }
 
+    public function syncTraineeEnglishNameFromCsv(Trainee $trainee, string $csvEnglishName, ?string $contextRowId = null): bool
+    {
+        $csvEnglishName = trim($csvEnglishName);
+
+        if ($csvEnglishName === '' || !self::containsLatinLetters($csvEnglishName)) {
+            return false;
+        }
+
+        if ($trainee->hasEnglishName()) {
+            return false;
+        }
+
+        $trainee->update(['english_name' => $csvEnglishName]);
+
+        Log::info('Updated trainee english_name from Jasarah Center certificate CSV', [
+            'trainee_id' => $trainee->id,
+            'jasarah_center_certificate_row_id' => $contextRowId,
+        ]);
+
+        return true;
+    }
+
     public function syncTraineeEnglishNameFromCsvAfterSend(JasarahCenterCertificateRow $row): void
     {
         if (!$row->trainee_id) {
-            return;
-        }
-
-        $csvEnglishName = trim((string) $row->trainee_name_en);
-
-        if ($csvEnglishName === '' || !self::containsLatinLetters($csvEnglishName)) {
             return;
         }
 
@@ -186,16 +202,30 @@ class JasarahCenterCertificateService
             ? $row->trainee
             : Trainee::withTrashed()->find($row->trainee_id);
 
-        if (!$trainee || $trainee->hasEnglishName()) {
+        if (!$trainee) {
             return;
         }
 
-        $trainee->update(['english_name' => $csvEnglishName]);
+        $this->syncTraineeEnglishNameFromCsv($trainee, (string) $row->trainee_name_en, (string) $row->id);
+    }
 
-        Log::info('Updated trainee english_name from Jasarah Center certificate CSV', [
-            'trainee_id' => $trainee->id,
-            'jasarah_center_certificate_row_id' => $row->id,
-        ]);
+    public function syncMatchedRowsEnglishNamesFromCsv(JasarahCenterCertificate $certificate): void
+    {
+        $csvNames = $this->parseCsvEnglishNames($certificate);
+
+        $certificate->rows()
+            ->whereNotNull('trainee_id')
+            ->with(['trainee' => fn ($query) => $query->withTrashed()])
+            ->chunkById(100, function ($rows) use ($csvNames) {
+                foreach ($rows as $row) {
+                    if (!$row->trainee) {
+                        continue;
+                    }
+
+                    $csvEnglishName = $csvNames[$row->identity_number] ?? (string) $row->trainee_name_en;
+                    $this->syncTraineeEnglishNameFromCsv($row->trainee, $csvEnglishName, (string) $row->id);
+                }
+            });
     }
 
     private static function containsLatinLetters(string $value): bool

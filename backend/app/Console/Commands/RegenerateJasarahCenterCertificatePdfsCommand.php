@@ -32,7 +32,13 @@ class RegenerateJasarahCenterCertificatePdfsCommand extends Command
 
         $rows = $certificate->rows()
             ->whereNotNull('trainee_id')
-            ->where('status', JasarahCenterCertificateRow::STATUS_PENDING)
+            ->where(function ($query) {
+                $query->where('status', JasarahCenterCertificateRow::STATUS_PENDING)
+                    ->orWhere(function ($failedQuery) {
+                        $failedQuery->where('status', JasarahCenterCertificateRow::STATUS_FAILED)
+                            ->where('error_message', 'like', '%No English name%');
+                    });
+            })
             ->with('trainee')
             ->get();
 
@@ -41,6 +47,12 @@ class RegenerateJasarahCenterCertificatePdfsCommand extends Command
 
         foreach ($rows as $row) {
             $csvEnglishName = $csvNames[$row->identity_number] ?? null;
+
+            if ($row->trainee) {
+                $service->syncTraineeEnglishNameFromCsv($row->trainee, (string) ($csvEnglishName ?? $row->trainee_name_en), (string) $row->id);
+                $row->trainee->refresh();
+            }
+
             $resolvedName = $service->resolveEnglishNameForRow($row, $csvEnglishName);
 
             if ($row->pdf_path) {
@@ -54,6 +66,7 @@ class RegenerateJasarahCenterCertificatePdfsCommand extends Command
                 'trainee_name_en' => $resolvedName,
                 'pdf_path' => null,
                 'error_message' => null,
+                'status' => JasarahCenterCertificateRow::STATUS_PENDING,
             ]);
 
             $updated++;
