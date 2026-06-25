@@ -59,6 +59,40 @@ class JasarahCenterCertificateService
         ]);
     }
 
+    public function refreshPdfGenerationStatus(int $certificateId): void
+    {
+        $certificate = JasarahCenterCertificate::find($certificateId);
+
+        if (!$certificate || $certificate->status !== JasarahCenterCertificate::STATUS_PROCESSING) {
+            return;
+        }
+
+        $stillGenerating = $certificate->rows()
+            ->whereNotNull('trainee_id')
+            ->where('status', JasarahCenterCertificateRow::STATUS_PENDING)
+            ->whereNull('pdf_path')
+            ->exists();
+
+        if ($stillGenerating) {
+            return;
+        }
+
+        $this->updateImportCounts($certificate);
+
+        $hasSendableRows = $certificate->rows()
+            ->whereNotNull('trainee_id')
+            ->whereNotNull('pdf_path')
+            ->where('status', JasarahCenterCertificateRow::STATUS_PENDING)
+            ->exists();
+
+        $certificate->update([
+            'status' => $hasSendableRows
+                ? JasarahCenterCertificate::STATUS_READY_TO_SEND
+                : JasarahCenterCertificate::STATUS_FAILED,
+            'completed_at' => now(),
+        ]);
+    }
+
     public function syncTraineeEnglishNameFromCsvAfterSend(JasarahCenterCertificateRow $row): void
     {
         if (!$row->trainee_id) {
