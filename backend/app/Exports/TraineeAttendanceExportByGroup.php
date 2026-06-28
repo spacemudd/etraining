@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStyles;
@@ -47,15 +48,15 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
             'اسم المتدرب',
             'الاسم بالانجليزية',
             'تاريخ الحذف',
-            'تاريخ اخر دخول',
+            'Last Sign In (Month/Year)',
         ];
     }
 
     public function styles(Worksheet $sheet)
     {
-        $sheet->getStyle('A1:O1')->getFont()->setBold(true);
-        $sheet->getStyle('A1:O1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle('A1:O1')->getFill()
+        $sheet->getStyle('A1:Q1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:Q1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A1:Q1')->getFill()
             ->setFillType('solid')
             ->getStartColor()->setARGB('FFFFE599');
 
@@ -96,10 +97,12 @@ class TraineeAttendanceExportByGroup implements FromCollection, WithHeadings, Wi
             }
 
             if ($trainee['last_login_at']) {
-                $sheet->getCell("Q$rowIndex")->setValue($trainee['last_login_at']);
+                $sheet->getCell("Q$rowIndex")->setValue(
+                    Carbon::parse($trainee['last_login_at'])->format('m/y')
+                );
             }
 
-            $sheet->getStyle("A$rowIndex:O$rowIndex")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle("A$rowIndex:Q$rowIndex")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
         }
     }
 }
