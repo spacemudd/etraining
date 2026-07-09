@@ -13,26 +13,19 @@ use RuntimeException;
 
 class TwilioWhatsAppService
 {
-    private Client $contentClient;
+    private const CONTENT_API = 'https://content.twilio.com/v1';
 
-    private Client $messagesClient;
+    private const MESSAGES_API = 'https://api.twilio.com/2010-04-01';
 
-    public function __construct(?Client $contentClient = null, ?Client $messagesClient = null)
+    private Client $client;
+
+    public function __construct(?Client $client = null)
     {
-        $auth = [
-            config('twilio.account_sid'),
-            config('twilio.auth_token'),
-        ];
-
-        $this->contentClient = $contentClient ?? new Client([
-            'base_uri' => 'https://content.twilio.com/v1/',
-            'auth' => $auth,
-            'http_errors' => false,
-        ]);
-
-        $this->messagesClient = $messagesClient ?? new Client([
-            'base_uri' => 'https://api.twilio.com/2010-04-01/',
-            'auth' => $auth,
+        $this->client = $client ?? new Client([
+            'auth' => [
+                config('twilio.account_sid'),
+                config('twilio.auth_token'),
+            ],
             'http_errors' => false,
         ]);
     }
@@ -53,7 +46,7 @@ class TwilioWhatsAppService
      */
     public function listTemplates(): array
     {
-        $response = $this->contentClient->get('Content', [
+        $response = $this->client->get(self::CONTENT_API . '/Content', [
             'query' => ['PageSize' => 100],
         ]);
 
@@ -90,7 +83,7 @@ class TwilioWhatsAppService
      */
     public function getTemplate(string $contentSid): array
     {
-        $response = $this->contentClient->get('Content/' . $contentSid);
+        $response = $this->client->get(self::CONTENT_API . '/Content/' . $contentSid);
 
         $payload = json_decode((string) $response->getBody(), true);
 
@@ -302,8 +295,8 @@ class TwilioWhatsAppService
         $messages = [];
 
         foreach (['To' => $address, 'From' => $address] as $field => $value) {
-            $response = $this->messagesClient->get(
-                'Accounts/' . config('twilio.account_sid') . '/Messages.json',
+            $response = $this->client->get(
+                self::MESSAGES_API . '/Accounts/' . config('twilio.account_sid') . '/Messages.json',
                 [
                     'query' => [
                         $field => $value,
@@ -424,8 +417,8 @@ class TwilioWhatsAppService
             $params['StatusCallback'] = $statusCallback;
         }
 
-        $response = $this->messagesClient->post(
-            'Accounts/' . config('twilio.account_sid') . '/Messages.json',
+        $response = $this->client->post(
+            self::MESSAGES_API . '/Accounts/' . config('twilio.account_sid') . '/Messages.json',
             ['form_params' => $params]
         );
 
@@ -448,7 +441,7 @@ class TwilioWhatsAppService
 
     private function getApprovalStatus(string $contentSid): string
     {
-        $response = $this->contentClient->get('Content/' . $contentSid . '/ApprovalRequests');
+        $response = $this->client->get(self::CONTENT_API . '/Content/' . $contentSid . '/ApprovalRequests');
 
         $payload = json_decode((string) $response->getBody(), true);
 

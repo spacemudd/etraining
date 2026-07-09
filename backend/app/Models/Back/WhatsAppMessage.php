@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace App\Models\Back;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Str;
 
 class WhatsAppMessage extends Model
 {
-    use HasUuids;
-
     public const DIRECTION_INBOUND = 'inbound';
 
     public const DIRECTION_OUTBOUND = 'outbound';
+
+    public $incrementing = false;
+
+    protected $keyType = 'string';
 
     protected $fillable = [
         'twilio_sid',
@@ -33,6 +35,15 @@ class WhatsAppMessage extends Model
         'sent_at' => 'datetime',
         'metadata' => 'array',
     ];
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->{$model->getKeyName()} = (string) Str::uuid();
+        });
+    }
 
     public function trainee(): BelongsTo
     {
