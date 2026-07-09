@@ -16,6 +16,8 @@ class WhatsAppMessage extends Model
 
     public $incrementing = false;
 
+    protected $table = 'whatsapp_messages';
+
     protected $keyType = 'string';
 
     protected $fillable = [
