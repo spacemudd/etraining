@@ -1021,6 +1021,7 @@ return [
     'whatsapp-templates' => 'القوالب',
     'select-template' => 'اختر قالب',
     'template-variables' => 'متغيرات القالب',
+    'template-variable' => 'المتغير',
     'send-whatsapp-template' => 'إرسال القالب',
     'whatsapp-sent-successfully' => 'تم إرسال الرسالة بنجاح',
     'whatsapp-send-failed' => 'فشل إرسال رسالة واتساب',

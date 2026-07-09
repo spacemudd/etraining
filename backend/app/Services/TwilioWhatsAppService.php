@@ -68,15 +68,7 @@ class TwilioWhatsAppService
         $templates = [];
 
         foreach ($payload['contents'] ?? [] as $content) {
-            $body = $this->extractTemplateBody($content['types'] ?? []);
-
-            $templates[] = [
-                'sid' => $content['sid'],
-                'friendly_name' => $content['friendly_name'] ?? '',
-                'language' => $content['language'] ?? '',
-                'body' => $body,
-                'variables' => $this->extractVariableKeys($body),
-            ];
+            $templates[] = $this->formatContentTemplate($content);
         }
 
         return $templates;
@@ -101,15 +93,34 @@ class TwilioWhatsAppService
             throw new RuntimeException('Failed to fetch WhatsApp template.');
         }
 
-        $body = $this->extractTemplateBody($payload['types'] ?? []);
+        return array_merge(
+            $this->formatContentTemplate($payload),
+            ['approval_status' => $this->getApprovalStatus($contentSid)]
+        );
+    }
+
+    /**
+     * @param  array<string, mixed>  $content
+     * @return array<string, mixed>
+     */
+    private function formatContentTemplate(array $content): array
+    {
+        $body = $this->extractTemplateBody($content['types'] ?? []);
+        $variables = $this->extractVariableKeys($body);
+        $variableSamples = $content['variables'] ?? [];
+
+        if ($variables === [] && is_array($variableSamples) && $variableSamples !== []) {
+            $variables = array_map('strval', array_keys($variableSamples));
+            sort($variables, SORT_NUMERIC);
+        }
 
         return [
-            'sid' => $payload['sid'],
-            'friendly_name' => $payload['friendly_name'] ?? '',
-            'language' => $payload['language'] ?? '',
+            'sid' => $content['sid'],
+            'friendly_name' => $content['friendly_name'] ?? '',
+            'language' => $content['language'] ?? '',
             'body' => $body,
-            'variables' => $this->extractVariableKeys($body),
-            'approval_status' => $this->getApprovalStatus($contentSid),
+            'variables' => array_values($variables),
+            'variable_samples' => $variableSamples,
         ];
     }
 
@@ -463,9 +474,13 @@ class TwilioWhatsAppService
      */
     private function extractTemplateBody(array $types): string
     {
-        foreach (['twilio/text', 'whatsapp/text', 'twilio/media', 'whatsapp/media'] as $type) {
-            if (! empty($types[$type]['body'])) {
-                return (string) $types[$type]['body'];
+        foreach ($types as $typeConfig) {
+            if (! is_array($typeConfig)) {
+                continue;
+            }
+
+            if (! empty($typeConfig['body'])) {
+                return (string) $typeConfig['body'];
             }
         }
 

@@ -165,11 +165,17 @@
                                                 v-for="variableKey in selectedTemplate.variables"
                                                 :key="variableKey"
                                             >
-                                                <label class="text-xs text-gray-500">{{ variableKey }}</label>
+                                                <label class="text-xs text-gray-500">
+                                                    {{ $t('words.template-variable') }} {{ variableKey }}
+                                                    <span v-if="variableSample(variableKey)" class="text-gray-400">
+                                                        ({{ variableSample(variableKey) }})
+                                                    </span>
+                                                </label>
                                                 <input
                                                     v-model="templateVariables[variableKey]"
                                                     type="text"
                                                     class="w-full form-input text-sm"
+                                                    :placeholder="variableSample(variableKey)"
                                                 />
                                             </div>
                                         </div>
@@ -363,7 +369,10 @@ export default {
                 const { data } = await axios.get(route('back.finance.whatsapp.templates.show', this.selectedTemplateSid));
                 this.selectedTemplate = data.template;
                 this.selectedTemplate.variables.forEach((key) => {
-                    this.$set(this.templateVariables, key, '');
+                    const defaultValue = this.selectedTrainee && key === '1'
+                        ? this.selectedTrainee.name
+                        : '';
+                    this.$set(this.templateVariables, key, defaultValue);
                 });
             } catch (error) {
                 this.errorMessage = this.$t('words.whatsapp-templates-load-failed');
@@ -449,6 +458,13 @@ export default {
         },
         isOutboundMessage(message) {
             return ['outbound-api', 'outbound-reply', 'outbound'].includes(message.direction);
+        },
+        variableSample(variableKey) {
+            if (!this.selectedTemplate || !this.selectedTemplate.variable_samples) {
+                return '';
+            }
+
+            return this.selectedTemplate.variable_samples[variableKey] || '';
         },
         async sendTemplate() {
             if (!this.selectedTrainee || !this.selectedTemplateSid) {

@@ -1022,6 +1022,7 @@ return [
     'whatsapp-templates' => 'Templates',
     'select-template' => 'Select template',
     'template-variables' => 'Template variables',
+    'template-variable' => 'Variable',
     'send-whatsapp-template' => 'Send template',
     'whatsapp-sent-successfully' => 'Message sent successfully',
     'whatsapp-send-failed' => 'Failed to send WhatsApp message',
