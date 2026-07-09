@@ -17,17 +17,21 @@ class TwilioWhatsAppService
 
     private const MESSAGES_API = 'https://api.twilio.com/2010-04-01';
 
-    private Client $client;
+    private ?Client $client = null;
 
-    public function __construct(?Client $client = null)
+    private function client(): Client
     {
-        $this->client = $client ?? new Client([
-            'auth' => [
-                config('twilio.account_sid'),
-                config('twilio.auth_token'),
-            ],
-            'http_errors' => false,
-        ]);
+        if ($this->client === null) {
+            $this->client = new Client([
+                'auth' => [
+                    config('twilio.account_sid'),
+                    config('twilio.auth_token'),
+                ],
+                'http_errors' => false,
+            ]);
+        }
+
+        return $this->client;
     }
 
     public function isConfigured(): bool
@@ -46,7 +50,7 @@ class TwilioWhatsAppService
      */
     public function listTemplates(): array
     {
-        $response = $this->client->get(self::CONTENT_API . '/Content', [
+        $response = $this->client()->get(self::CONTENT_API . '/Content', [
             'query' => ['PageSize' => 100],
         ]);
 
@@ -83,7 +87,7 @@ class TwilioWhatsAppService
      */
     public function getTemplate(string $contentSid): array
     {
-        $response = $this->client->get(self::CONTENT_API . '/Content/' . $contentSid);
+        $response = $this->client()->get(self::CONTENT_API . '/Content/' . $contentSid);
 
         $payload = json_decode((string) $response->getBody(), true);
 
@@ -295,7 +299,7 @@ class TwilioWhatsAppService
         $messages = [];
 
         foreach (['To' => $address, 'From' => $address] as $field => $value) {
-            $response = $this->client->get(
+            $response = $this->client()->get(
                 self::MESSAGES_API . '/Accounts/' . config('twilio.account_sid') . '/Messages.json',
                 [
                     'query' => [
@@ -417,7 +421,7 @@ class TwilioWhatsAppService
             $params['StatusCallback'] = $statusCallback;
         }
 
-        $response = $this->client->post(
+        $response = $this->client()->post(
             self::MESSAGES_API . '/Accounts/' . config('twilio.account_sid') . '/Messages.json',
             ['form_params' => $params]
         );
@@ -441,7 +445,7 @@ class TwilioWhatsAppService
 
     private function getApprovalStatus(string $contentSid): string
     {
-        $response = $this->client->get(self::CONTENT_API . '/Content/' . $contentSid . '/ApprovalRequests');
+        $response = $this->client()->get(self::CONTENT_API . '/Content/' . $contentSid . '/ApprovalRequests');
 
         $payload = json_decode((string) $response->getBody(), true);
 
