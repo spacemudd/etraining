@@ -1,12 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Jobs\SendEmailVerification;
 use App\Models\User;
 use App\Models\Verification;
+use App\Services\TwilioVerifyService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use RuntimeException;
 
 class VerificationsController extends Controller
 {
@@ -39,13 +43,28 @@ class VerificationsController extends Controller
         return $verify;
     }
 
-    public function sendSmsCode(User $user): Verification
+    public function sendSmsCode(User $user, TwilioVerifyService $twilioVerify): Verification
     {
         Verification::where('user_id', $user->id)->delete();
 
+        if ($twilioVerify->isConfigured()) {
+            $phone = $user->routeNotificationForMsegat();
+
+            if (! $phone) {
+                throw new RuntimeException('User phone number is missing or invalid.');
+            }
+
+            $twilioVerify->sendSmsCode($phone);
+
+            return Verification::create([
+                'user_id' => $user->id,
+                'code' => 'twilio',
+            ]);
+        }
+
         $verify = Verification::create([
             'user_id' => $user->id,
-            'code' => rand(2000, 9999),
+            'code' => (string) rand(2000, 9999),
         ]);
 
         $body = '{
@@ -59,17 +78,17 @@ class VerificationsController extends Controller
         $client = new \GuzzleHttp\Client([
             'headers' => [
                 'Content-Type' => 'application/json',
-            ]
+            ],
         ]);
 
-        $response = $client->post('https://www.msegat.com/gw/sendsms.php', [
+        $client->post('https://www.msegat.com/gw/sendsms.php', [
             'body' => $body,
         ]);
 
         return $verify;
     }
 
-    public function verifyCode(Request $request)
+    public function verifyCode(Request $request, TwilioVerifyService $twilioVerify)
     {
         $request->validate([
             'email' => 'required|email',
@@ -78,9 +97,20 @@ class VerificationsController extends Controller
 
         $email = $request->email;
         $user = User::where('email', $email)->firstOrFail();
-        $found = Verification::where('user_id', $user->id)->where('code', $request->code)->first();
+        $activeVerification = Verification::where('user_id', $user->id)->first();
+        $verified = false;
 
-        if ($found || $request->code==='2080') {
+        if ($activeVerification?->code === 'twilio' && $twilioVerify->isConfigured()) {
+            $phone = $user->routeNotificationForMsegat();
+            $verified = $phone && $twilioVerify->checkCode($phone, (string) $request->code);
+        } else {
+            $found = Verification::where('user_id', $user->id)
+                ->where('code', $request->code)
+                ->first();
+            $verified = (bool) $found || $request->code === '2080';
+        }
+
+        if ($verified) {
             auth()->login($user);
             return redirect()->route('dashboard');
         }

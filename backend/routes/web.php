@@ -217,6 +217,8 @@ Route::post('login/verify-code', [\App\Http\Controllers\VerificationsController:
 Route::get('/resignations/{id}', [CompanyResignationsController::class, 'confirmReceived'])->name('resignations.confirm-received');
 
 Route::post('webhooks/mail', [MailController::class, 'store'])->name('webhooks.mail');
+Route::post('webhooks/twilio/whatsapp/incoming', [\App\Http\Controllers\Webhooks\TwilioWhatsAppController::class, 'incoming'])->name('webhooks.twilio.whatsapp.incoming');
+Route::post('webhooks/twilio/whatsapp/status', [\App\Http\Controllers\Webhooks\TwilioWhatsAppController::class, 'status'])->name('webhooks.twilio.whatsapp.status');
 Route::post('noon', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'storeNoonReceipt'])->name('webhooks.noon');
 
 Route::get('version', function() {
@@ -798,6 +800,16 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('finance', [\App\Http\Controllers\Back\FinanceController::class, 'index'])->name('finance');
 
         Route::prefix('finance')->name('finance.')->group(function() {
+            Route::prefix('whatsapp')->name('whatsapp.')->group(function () {
+                Route::get('status', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'status'])->name('status');
+                Route::get('templates', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'templates'])->name('templates');
+                Route::get('templates/{contentSid}', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'showTemplate'])->name('templates.show');
+                Route::get('trainees', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'searchTrainees'])->name('trainees');
+                Route::get('messages', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'messages'])->name('messages');
+                Route::post('send-template', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'sendTemplate'])->name('send-template');
+                Route::post('send-message', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'sendMessage'])->name('send-message');
+            });
+
             Route::get('account-statements/excel', [\App\Http\Controllers\Back\AccountStatementsController::class, 'excel'])->name('account-statements.excel');
             Route::get('account-statements', [\App\Http\Controllers\Back\AccountStatementsController::class, 'index'])->name('account-statements');
             Route::resource('accounts', \App\Http\Controllers\Back\FinancialAccountsController::class);

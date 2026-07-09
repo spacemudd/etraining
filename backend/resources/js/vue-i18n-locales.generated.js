@@ -1013,7 +1013,20 @@ export default {
             "use-search-to-find-trainees": "استخدم البحث للعثور على المتدربين",
             "no-identity-file": "لا يوجد ملف هوية",
             "nature_of_work": "طبيعة العمل",
-            "region": "المنطقة"
+            "region": "المنطقة",
+            "whatsapp-chat": "محادثة واتساب",
+            "whatsapp-templates": "القوالب",
+            "select-template": "اختر قالب",
+            "template-variables": "متغيرات القالب",
+            "send-whatsapp-template": "إرسال القالب",
+            "whatsapp-sent-successfully": "تم إرسال الرسالة بنجاح",
+            "whatsapp-send-failed": "فشل إرسال رسالة واتساب",
+            "whatsapp-not-configured": "واتساب غير مهيأ. يرجى إعداد بيانات Twilio.",
+            "whatsapp-templates-load-failed": "فشل تحميل قوالب واتساب",
+            "whatsapp-freeform-hint": "الرسائل الحرة تعمل فقط خلال 24 ساعة من آخر رد من المتدربة.",
+            "whatsapp-live-updates": "التحديثات المباشرة مفعلة",
+            "attachment": "مرفق",
+            "no-results": "لا توجد نتائج"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -2183,7 +2196,20 @@ export default {
             "issued-company-invoices-summary": "Issued Company Invoices Summary",
             "trainee-information": "Trainee Information",
             "use-search-to-find-trainees": "Use search to find trainees",
-            "no-identity-file": "No identity file"
+            "no-identity-file": "No identity file",
+            "whatsapp-chat": "WhatsApp Chat",
+            "whatsapp-templates": "Templates",
+            "select-template": "Select template",
+            "template-variables": "Template variables",
+            "send-whatsapp-template": "Send template",
+            "whatsapp-sent-successfully": "Message sent successfully",
+            "whatsapp-send-failed": "Failed to send WhatsApp message",
+            "whatsapp-not-configured": "WhatsApp is not configured. Please set Twilio credentials.",
+            "whatsapp-templates-load-failed": "Failed to load WhatsApp templates",
+            "whatsapp-freeform-hint": "Free-form messages only work within 24 hours of the trainee's last reply.",
+            "whatsapp-live-updates": "Live updates enabled",
+            "attachment": "Attachment",
+            "no-results": "No results found"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",
