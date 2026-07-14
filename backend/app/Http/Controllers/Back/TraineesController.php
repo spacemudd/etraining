@@ -473,7 +473,7 @@ class TraineesController extends Controller
 
         $trainee = Trainee::findOrFail($trainee_id);
         $file = $request->file('identity_card_copy') ?: $request->file('file');
-        $uploaded_file = $trainee->uploadToFolder($file, 'identity');
+        $result = $trainee->uploadIdentityDocument($file);
 
         // Refresh the trainee model to get the updated URL after upload
         $trainee->refresh();
@@ -484,7 +484,28 @@ class TraineesController extends Controller
             $trainee->save();
         }
 
-        return $uploaded_file;
+        return response()->json([
+            'media' => $result['media'],
+            'detected_english_name' => $result['detected_english_name'],
+        ]);
+    }
+
+    /**
+     * Apply an English name detected from the identity document OCR (admin confirmed).
+     */
+    public function confirmDetectedEnglishName(Request $request, $trainee_id)
+    {
+        $request->validate([
+            'english_name' => 'required|string|max:255',
+        ]);
+
+        $trainee = Trainee::findOrFail($trainee_id);
+        $trainee->english_name = trim((string) $request->input('english_name'));
+        $trainee->save();
+
+        return response()->json([
+            'english_name' => $trainee->english_name,
+        ]);
     }
 
     /**

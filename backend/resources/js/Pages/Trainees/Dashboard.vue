@@ -54,6 +54,24 @@
             </div>
             </template>
 
+            <div class="container mx-auto grid p-6" v-if="showFeeWaiverBanner">
+                <div class="bg-green-100 rounded-lg p-10 border-green-500 border-2 relative">
+                    <button
+                        type="button"
+                        class="absolute top-3 left-3 text-green-800 hover:text-green-900 text-2xl leading-none font-bold px-2"
+                        aria-label="إغلاق"
+                        @click="dismissFeeWaiverBanner"
+                    >
+                        &times;
+                    </button>
+                    <div style="width: 100%;">
+                        <p class="text-gray-800 text-center font-bold" style="font-size: 22px; letter-spacing: 1px;">
+                            عزيزتي المتدربة تم اعفائكم من الرسوم لهذا الشهر وسيتم التواصل معكم لمزيد من التفاصيل خلال الغد
+                        </p>
+                    </div>
+                </div>
+            </div>
+
             <div class="container mx-auto grid" v-if="user.trainee.trainee_message">
                 <div class="bg-red-100 rounded-lg p-10 border-red-500 border-2">
                     <div style="width: 100%;">
@@ -345,7 +363,37 @@ export default {
             pdfUrl: null,
             contractStatus: null,
             errorMessage: null,
+            feeWaiverBannerDismissed: false,
+            feeWaiverIdentityNumbers: [
+                '1075309714',
+                '1082335512',
+                '1096797996',
+                '1086117254',
+                '1098178724',
+                '1098713256',
+                '1056514795',
+            ],
+            feeWaiverBannerStorageKey: 'fee_waiver_banner_dismissed_2026_07',
+            // Until 15 Jul 2026 12:00 GMT+3 (Asia/Riyadh)
+            feeWaiverBannerExpiresAt: '2026-07-15T12:00:00+03:00',
         }
+    },
+    computed: {
+        showFeeWaiverBanner() {
+            if (this.feeWaiverBannerDismissed) {
+                return false;
+            }
+
+            if (!this.user || !this.user.trainee) {
+                return false;
+            }
+
+            if (!this.feeWaiverIdentityNumbers.includes(String(this.user.trainee.identity_number))) {
+                return false;
+            }
+
+            return moment().isBefore(moment(this.feeWaiverBannerExpiresAt));
+        },
     },
     filters: {
         toDate(timestamp) {
@@ -359,12 +407,18 @@ export default {
         // Disable the pop up for the time being.
         // this.fetchContractStatus();
 
+        this.feeWaiverBannerDismissed = localStorage.getItem(this.feeWaiverBannerStorageKey) === '1';
+
         let vm = this;
         this.checkCoursesEnabledInterval = setInterval(function() {
             vm.updateCoursesEnabled();
         }, 2000)
     },
     methods: {
+        dismissFeeWaiverBanner() {
+            this.feeWaiverBannerDismissed = true;
+            localStorage.setItem(this.feeWaiverBannerStorageKey, '1');
+        },
         updateCoursesEnabled() {
             this.sessions.data.forEach((session, index) => {
 

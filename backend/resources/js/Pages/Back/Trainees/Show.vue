@@ -1195,9 +1195,18 @@
             v-if="!is_limited_view"
             id="dropzoneIdentity"
             @vdropzone-sending="sendingCsrf"
+            @vdropzone-success="onIdentityUploadSuccess"
             :options="dropzoneOptionsIdentity"
           ></vue-dropzone>
         </div>
+
+        <detected-english-name-popup
+          :show="showDetectedEnglishNamePopup"
+          :detected-name="detectedEnglishName"
+          :trainee-id="trainee.id"
+          @confirmed="onDetectedEnglishNameConfirmed"
+          @declined="onDetectedEnglishNameDeclined"
+        />
 
         <div v-if="!is_limited_view">
           <jet-label
@@ -1560,6 +1569,7 @@ import TraineeAuditContainer from "@/Components/TraineeAuditContainer";
 import { Inertia } from "@inertiajs/inertia";
 import ValidationErrors from "@/Components/ValidationErrors";
 import GosiContainer from "../../../Components/GosiContainer";
+import DetectedEnglishNamePopup from "@/Components/DetectedEnglishNamePopup";
 
 export default {
   props: [
@@ -1578,6 +1588,7 @@ export default {
   ],
   components: {
     GosiContainer,
+    DetectedEnglishNamePopup,
     ValidationErrors,
     TraineeAuditContainer,
     AppLayout,
@@ -1607,6 +1618,8 @@ export default {
       }),
       isRefreshing: false,
       isProfileMenuOpen: false,
+      showDetectedEnglishNamePopup: false,
+      detectedEnglishName: "",
       new_trainee_group: {
         name: "",
         id: "",
@@ -2023,6 +2036,38 @@ export default {
         "X-CSRF-TOKEN",
         window.token ? window.token.content : ""
       );
+    },
+
+    onIdentityUploadSuccess(file, response) {
+      let detectedName = null;
+
+      try {
+        const payload =
+          typeof response === "string" ? JSON.parse(response) : response;
+        detectedName = payload?.detected_english_name || null;
+      } catch (e) {
+        detectedName = null;
+      }
+
+      // Reload identity URL first, then ask about the OCR name so local popup state stays.
+      Inertia.reload({ only: ["trainee"] }).then(() => {
+        if (detectedName) {
+          this.detectedEnglishName = detectedName;
+          this.showDetectedEnglishNamePopup = true;
+        }
+      });
+    },
+
+    onDetectedEnglishNameConfirmed(englishName) {
+      this.showDetectedEnglishNamePopup = false;
+      this.detectedEnglishName = "";
+      this.trainee.english_name = englishName;
+      Inertia.reload({ only: ["trainee"] });
+    },
+
+    onDetectedEnglishNameDeclined() {
+      this.showDetectedEnglishNamePopup = false;
+      this.detectedEnglishName = "";
     },
 
     deleteIdentity() {

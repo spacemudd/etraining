@@ -1027,7 +1027,10 @@ export default {
             "whatsapp-freeform-hint": "الرسائل الحرة تعمل فقط خلال 24 ساعة من آخر رد من المتدربة.",
             "whatsapp-live-updates": "التحديثات المباشرة مفعلة",
             "attachment": "مرفق",
-            "no-results": "لا توجد نتائج"
+            "no-results": "لا توجد نتائج",
+            "detected-english-name-title": "تم اكتشاف الاسم الإنجليزي",
+            "detected-english-name-message": "تم اكتشاف الاسم الإنجليزي التالي:",
+            "detected-english-name-confirm": "هل ترغب في استخدام هذا الاسم؟"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -2211,7 +2214,10 @@ export default {
             "whatsapp-freeform-hint": "Free-form messages only work within 24 hours of the trainee's last reply.",
             "whatsapp-live-updates": "Live updates enabled",
             "attachment": "Attachment",
-            "no-results": "No results found"
+            "no-results": "No results found",
+            "detected-english-name-title": "English name detected",
+            "detected-english-name-message": "We detected this English name:",
+            "detected-english-name-confirm": "Would you like to use this name?"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

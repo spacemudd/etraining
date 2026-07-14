@@ -12,6 +12,7 @@ use App\Models\SearchableLabels;
 use App\Models\Back\Audit;
 use App\Models\Team;
 use App\Models\User;
+use App\Services\IdentityDocumentOcrService;
 use App\Services\TraineeCompanyMovementService;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,6 +20,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -382,6 +384,40 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
                 'team_id' => $this->team_id,
             ])
             ->toMediaCollection($folder);
+    }
+
+    /**
+     * Upload an identity document and optionally detect english_name via Google Cloud Vision OCR.
+     * Does not auto-save the detected name — caller should confirm with the user first.
+     *
+     * @param  UploadedFile  $file
+     * @return array{media: \Spatie\MediaLibrary\MediaCollections\Models\Media, detected_english_name: string|null}
+     * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist
+     * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig
+     */
+    public function uploadIdentityDocument(UploadedFile $file): array
+    {
+        $ocr = app(IdentityDocumentOcrService::class);
+        $detectedEnglishName = null;
+
+        // Read bytes before Spatie moves/consumes the temp upload.
+        if ($ocr->isEnabled()) {
+            $detectedEnglishName = $ocr->extractEnglishNameFromUpload($file);
+        }
+
+        $media = $this->uploadToFolder($file, 'identity');
+
+        if ($detectedEnglishName) {
+            Log::info('Detected english_name from identity OCR (awaiting confirmation)', [
+                'trainee_id' => $this->id,
+                'detected_english_name' => $detectedEnglishName,
+            ]);
+        }
+
+        return [
+            'media' => $media,
+            'detected_english_name' => $detectedEnglishName,
+        ];
     }
 
     public function attachments($folder)

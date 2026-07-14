@@ -1031,4 +1031,7 @@ return [
     'whatsapp-live-updates' => 'التحديثات المباشرة مفعلة',
     'attachment' => 'مرفق',
     'no-results' => 'لا توجد نتائج',
+    'detected-english-name-title' => 'تم اكتشاف الاسم الإنجليزي',
+    'detected-english-name-message' => 'تم اكتشاف الاسم الإنجليزي التالي:',
+    'detected-english-name-confirm' => 'هل ترغب في استخدام هذا الاسم؟',
 ];

@@ -316,9 +316,18 @@
                     <vue-dropzone v-else
                                   id="dropzoneIdentity"
                                   @vdropzone-sending="sendingCsrf"
+                                  @vdropzone-success="onIdentityUploadSuccess"
                                   :options="dropzoneOptionsIdentity"
                     ></vue-dropzone>
                 </div>
+
+                <detected-english-name-popup
+                    :show="showDetectedEnglishNamePopup"
+                    :detected-name="detectedEnglishName"
+                    :trainee-id="trainee.id"
+                    @confirmed="onDetectedEnglishNameConfirmed"
+                    @declined="onDetectedEnglishNameDeclined"
+                />
 
                 <div class="md:col-span-3 lg:col-span-1 sm:col-span-3">
                     <jet-label :value="$t('words.qualification-photocopy')" class="mb-2" />
@@ -431,6 +440,7 @@
     import TraineeAuditContainer from "@/Components/TraineeAuditContainer";
     import GosiContainer from "@/Components/GosiContainer";
     import ChangeTraineePassword from "@/Components/ChangeTraineePassword";
+    import DetectedEnglishNamePopup from "@/Components/DetectedEnglishNamePopup";
     import { Inertia } from '@inertiajs/inertia'
 
 
@@ -465,10 +475,13 @@
             TraineeAuditContainer,
             GosiContainer,
            ChangeTraineePassword,
+           DetectedEnglishNamePopup,
 
         },
         data() {
             return {
+                showDetectedEnglishNamePopup: false,
+                detectedEnglishName: '',
                 new_trainee_group: {
                     name: '',
                     id: '',
@@ -632,6 +645,33 @@
             },
             sendingCsrf(file, xhr, formData) {
                 xhr.setRequestHeader('X-CSRF-TOKEN', window.token ? window.token.content : '');
+            },
+            onIdentityUploadSuccess(file, response) {
+                let detectedName = null;
+
+                try {
+                    const payload = typeof response === 'string' ? JSON.parse(response) : response;
+                    detectedName = payload?.detected_english_name || null;
+                } catch (e) {
+                    detectedName = null;
+                }
+
+                Inertia.reload({ only: ['trainee'] }).then(() => {
+                    if (detectedName) {
+                        this.detectedEnglishName = detectedName;
+                        this.showDetectedEnglishNamePopup = true;
+                    }
+                });
+            },
+            onDetectedEnglishNameConfirmed(englishName) {
+                this.showDetectedEnglishNamePopup = false;
+                this.detectedEnglishName = '';
+                this.trainee.english_name = englishName;
+                Inertia.reload({ only: ['trainee'] });
+            },
+            onDetectedEnglishNameDeclined() {
+                this.showDetectedEnglishNamePopup = false;
+                this.detectedEnglishName = '';
             },
             deleteIdentity() {
                 if (confirm(this.$t('words.are-you-sure'))) {

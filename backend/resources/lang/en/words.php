@@ -1032,4 +1032,7 @@ return [
     'whatsapp-live-updates' => 'Live updates enabled',
     'attachment' => 'Attachment',
     'no-results' => 'No results found',
+    'detected-english-name-title' => 'English name detected',
+    'detected-english-name-message' => 'We detected this English name:',
+    'detected-english-name-confirm' => 'Would you like to use this name?',
 ];

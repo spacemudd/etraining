@@ -940,6 +940,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('trainees/{trainee_id}/create-user', [\App\Http\Controllers\Back\TraineesController::class, 'createUser'])->name('trainees.create-user');
         Route::post('trainees/assign-instructor', [\App\Http\Controllers\Back\TraineesController::class, 'assignInstructor'])->name('trainees.assign-instructor');
         Route::post('trainees/{trainee_id}/attachments/identity', [\App\Http\Controllers\Back\TraineesController::class, 'storeIdentity'])->name('trainees.attachments.identity');
+        Route::post('trainees/{trainee_id}/confirm-detected-english-name', [\App\Http\Controllers\Back\TraineesController::class, 'confirmDetectedEnglishName'])->name('trainees.confirm-detected-english-name');
         Route::delete('trainees/{trainee_id}/attachments/identity', [\App\Http\Controllers\Back\TraineesController::class, 'deleteIdentity'])->name('trainees.attachments.identity.destroy');
 
 
