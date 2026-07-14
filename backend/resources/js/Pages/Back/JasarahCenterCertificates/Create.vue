@@ -141,7 +141,7 @@ export default {
         },
 
         downloadSampleCsv() {
-            const csvContent = 'ID,Name (English)\n11101010,Afnan Mousa\n';
+            const csvContent = 'name,english_name\n11101010,Afnan Mousa\n';
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
 

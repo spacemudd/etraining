@@ -721,7 +721,7 @@ return [
     'jasarah-course-title-placeholder' => 'Enter the course title as it will appear in the PDF and email',
     'jasarah-course-title-help' => 'Pre-filled when you select a course; you can edit it. This title is used in the PDF and email.',
     'jasarah-center-certificates' => 'Jasarah Center Certificates',
-    'jasarah-center-certificates-help' => 'Upload a CSV file with columns: ID, Name (English). Each row will be matched to trainees by identity number.',
+    'jasarah-center-certificates-help' => 'Upload a CSV file with columns: name, english_name. Each row will be matched to trainees by identity number (name column).',
     'download-sample-csv' => 'Download sample CSV',
     'jasarah-center-certificate-imports' => 'Jasarah Center Certificate Imports',
     'no-jasarah-center-certificate-imports' => 'No data',

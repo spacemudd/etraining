@@ -732,7 +732,7 @@ return [
     'jasarah-course-title-placeholder' => 'أدخل عنوان الدورة كما سيظهر في PDF والبريد',
     'jasarah-course-title-help' => 'يُعبّأ تلقائياً عند اختيار الدورة ويمكنك تعديله. هذا العنوان يظهر في ملف PDF ورسالة البريد الإلكتروني.',
     'jasarah-center-certificates' => 'شهادات مركز جسارة',
-    'jasarah-center-certificates-help' => 'ارفع ملف CSV يحتوي على الأعمدة: ID، Name (English). سيتم مطابقة كل صف مع المتدربين برقم الهوية.',
+    'jasarah-center-certificates-help' => 'ارفع ملف CSV يحتوي على الأعمدة: name، english_name. سيتم مطابقة كل صف مع المتدربين برقم الهوية (عمود name).',
     'download-sample-csv' => 'تحميل نموذج CSV',
     'jasarah-center-certificate-imports' => 'اصدار شهادات حضور تحت اسم مركز جسارة',
     'no-jasarah-center-certificate-imports' => 'لا يوجد بيانات',

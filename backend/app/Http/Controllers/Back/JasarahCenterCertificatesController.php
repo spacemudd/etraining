@@ -95,13 +95,17 @@ class JasarahCenterCertificatesController extends Controller
         while (($data = fgetcsv($handle)) !== false) {
             if ($header === null) {
                 $header = array_map(fn ($col) => strtolower(trim($col)), $data);
-                $idIndex = $this->findColumnIndex($header, ['id', 'رقم الهوية']);
-                $nameIndex = $this->findColumnIndex($header, ['name (english)', 'name', 'name english']);
+                $idIndex = $this->findColumnIndex($header, ['id', 'رقم الهوية', 'name']);
+                $nameIndex = $this->findColumnIndex(
+                    $header,
+                    ['english_name', 'name'],
+                    $idIndex !== null ? [$idIndex] : []
+                );
 
                 if ($idIndex === null) {
                     fclose($handle);
 
-                    return response()->json(['error' => 'CSV must contain an ID column'], 400);
+                    return response()->json(['error' => 'CSV must contain a name (identity) column'], 400);
                 }
 
                 continue;
@@ -418,7 +422,7 @@ class JasarahCenterCertificatesController extends Controller
             $file = fopen('php://output', 'w');
             fputcsv($file, [
                 'Row Key',
-                'Name (English)',
+                'english_name',
                 'Identity Number',
                 'Trainee Email',
                 'Status',
@@ -470,12 +474,17 @@ class JasarahCenterCertificatesController extends Controller
         }
     }
 
-    private function findColumnIndex(array $header, array $candidates): ?int
+    /**
+     * @param  array<int, string>  $header
+     * @param  array<int, string>  $candidates
+     * @param  array<int, int>  $excludeIndexes
+     */
+    private function findColumnIndex(array $header, array $candidates, array $excludeIndexes = []): ?int
     {
         foreach ($candidates as $candidate) {
             $index = array_search(strtolower($candidate), $header, true);
-            if ($index !== false) {
-                return $index;
+            if ($index !== false && !in_array((int) $index, $excludeIndexes, true)) {
+                return (int) $index;
             }
         }
 
