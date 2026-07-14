@@ -1326,7 +1326,7 @@ class TraineesController extends Controller
             'phone' => ['required', 'string', 'max:255', 'unique:instructors'],
         ]);
 
-        $trainee = Trainee::findOrFail($trainee_id);
+        $trainee = Trainee::withTrashed()->findOrFail($trainee_id);
 
         if ($trainee->user) {
             $request->validate([
@@ -1336,9 +1336,13 @@ class TraineesController extends Controller
 
         DB::beginTransaction();
         $updateData = $request->except('_token');
-        $updateData['current_procedure_alert'] = $request->filled('current_procedure_alert')
-            ? $request->input('current_procedure_alert')
-            : null;
+        if ($request->has('current_procedure_alert')) {
+            $updateData['current_procedure_alert'] = $request->filled('current_procedure_alert')
+                ? $request->input('current_procedure_alert')
+                : null;
+        } else {
+            unset($updateData['current_procedure_alert']);
+        }
         $trainee->update($updateData);
         if ($user = $trainee->user) {
             $user->email = $trainee->refresh()->email;
@@ -1360,6 +1364,10 @@ class TraineesController extends Controller
             return response()->json([
                 'success' => true,
             ]);
+        }
+
+        if ($trainee->trashed()) {
+            return redirect()->route('back.trainees.show.blocked', $trainee_id);
         }
 
         return redirect()->route('back.trainees.show', $trainee_id);

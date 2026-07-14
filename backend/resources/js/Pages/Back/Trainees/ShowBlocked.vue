@@ -19,6 +19,33 @@
                         {{ $t('words.attendance-sheet') }}
                     </a>
 
+                    <button
+                        v-if="!editButton.editOption"
+                        @click="editTrainee"
+                        class="items-center justify-end rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-right"
+                    >
+                        {{ editButton.text }}
+                    </button>
+                    <button
+                        v-else
+                        @click="editTrainee"
+                        :disabled="$wait.is('UPDATING_TRAINEE')"
+                        :class="{
+                            'bg-green-200 cursor-wait': $wait.is('UPDATING_TRAINEE'),
+                        }"
+                        class="items-center justify-end rounded-md px-4 py-2 bg-green-300 hover:bg-green-400 text-right"
+                    >
+                        {{ editButton.text }}
+                    </button>
+
+                    <button
+                        v-if="editButton.editOption"
+                        @click="cancelEdit"
+                        class="items-center justify-end rounded-md px-4 py-2 bg-red-300 hover:bg-red-400 text-right"
+                    >
+                        {{ cancelButton.text }}
+                    </button>
+
                     <button @click="unblock" class="items-center justify-end rounded-md px-4 py-2 bg-red-600 hover:bg-red-600 text-right text-white">
                         {{ $t('words.unblock') }}
                     </button>
@@ -26,6 +53,12 @@
 
 
                 </div>
+
+                <validation-errors
+                    class="col-span-6"
+                    :errors="validationErrors"
+                    v-if="validationErrors"
+                />
 
                 <div class="col-span-6 items-center justify-end bg-gray-50 text-right flex gap-6" v-can="'view-gosi'">
                     <gosi-container :nin-or-iqama="trainee.identity_number"></gosi-container>
@@ -398,6 +431,7 @@
     import TraineeAuditContainer from "@/Components/TraineeAuditContainer";
     import GosiContainer from "@/Components/GosiContainer";
     import ChangeTraineePassword from "@/Components/ChangeTraineePassword";
+    import { Inertia } from '@inertiajs/inertia'
 
 
     export default {
@@ -439,6 +473,7 @@
                     name: '',
                     id: '',
                 },
+                validationErrors: null,
                 cancelButton: {
                     text: this.$t('words.cancel'),
                 },
@@ -535,6 +570,65 @@
                 }).catch(error => {
                     throw error;
                 })
+            },
+            cancelEdit() {
+                this.editButton.editOption = false;
+                this.editButton.inputClass = "mt-1 block w-full bg-gray-200";
+                this.editButton.selectInputClass =
+                    "mt-1 block w-full border border-gray-200 bg-gray-200 py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none";
+                this.editButton.text = this.$t('words.edit');
+                this.validationErrors = null;
+                window.location.reload();
+            },
+            editTrainee() {
+                if (!this.editButton.editOption) {
+                    this.editButton.editOption = true;
+                    this.editButton.inputClass = "mt-1 block w-full bg-white";
+                    this.editButton.selectInputClass =
+                        "mt-1 block w-full border border-gray-200 bg-white py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none";
+                    this.editButton.text = this.$t('words.save');
+                    return;
+                }
+
+                let newForm = {
+                    trainee_group_name: this.trainee.trainee_group
+                        ? this.trainee.trainee_group.name
+                        : "",
+                    company_id: this.trainee.company_id,
+                    name: this.trainee.name,
+                    english_name: this.trainee.english_name,
+                    email: this.trainee.email,
+                    identity_number: this.trainee.identity_number,
+                    birthday: this.trainee.birthday,
+                    phone: this.trainee.phone,
+                    phone_additional: this.trainee.phone_additional,
+                    national_address: this.trainee.national_address,
+                    educational_level_id: this.trainee.educational_level_id,
+                    city_id: this.trainee.city_id,
+                    marital_status_id: this.trainee.marital_status_id,
+                    children_count: this.trainee.children_count,
+                };
+
+                this.$wait.start("UPDATING_TRAINEE");
+                this.validationErrors = null;
+                axios
+                    .put(route("back.trainees.update", this.trainee.id), newForm)
+                    .then(() => {
+                        Inertia.reload().then(() => {
+                            this.editButton.editOption = false;
+                            this.editButton.inputClass = "mt-1 block w-full bg-gray-200";
+                            this.editButton.selectInputClass =
+                                "mt-1 block w-full border border-gray-200 bg-gray-200 py-2.5 px-4 pr-8 rounded leading-tight focus:outline-none";
+                            this.editButton.text = this.$t("words.edit");
+                            this.$wait.end("UPDATING_TRAINEE");
+                        });
+                    })
+                    .catch((error) => {
+                        this.$wait.end("UPDATING_TRAINEE");
+                        if (error.response && error.response.status == 422) {
+                            this.validationErrors = error.response.data.errors;
+                        }
+                    });
             },
             sendingCsrf(file, xhr, formData) {
                 xhr.setRequestHeader('X-CSRF-TOKEN', window.token ? window.token.content : '');
