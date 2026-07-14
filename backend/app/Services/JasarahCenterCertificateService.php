@@ -18,7 +18,11 @@ class JasarahCenterCertificateService
     {
         $csvName = trim($csvName);
 
-        if ($csvName !== '' && self::containsLatinLetters($csvName)) {
+        if (
+            $csvName !== ''
+            && self::containsLatinLetters($csvName)
+            && !Trainee::isPlaceholderEnglishName($csvName)
+        ) {
             return $csvName;
         }
 
@@ -26,7 +30,7 @@ class JasarahCenterCertificateService
             return trim($trainee->english_name);
         }
 
-        return $csvName;
+        return Trainee::isPlaceholderEnglishName($csvName) ? '' : $csvName;
     }
 
     public function resolveEnglishNameForRow(JasarahCenterCertificateRow $row, ?string $csvEnglishName = null): string
@@ -103,7 +107,11 @@ class JasarahCenterCertificateService
 
         $traineeNameEn = $this->resolveEnglishNameForRow($row);
 
-        if ($traineeNameEn === '' || !self::containsLatinLetters($traineeNameEn)) {
+        if (
+            $traineeNameEn === ''
+            || !self::containsLatinLetters($traineeNameEn)
+            || Trainee::isPlaceholderEnglishName($traineeNameEn)
+        ) {
             throw new \RuntimeException('No English name available for trainee');
         }
 
@@ -178,7 +186,11 @@ class JasarahCenterCertificateService
     {
         $csvEnglishName = trim($csvEnglishName);
 
-        if ($csvEnglishName === '' || !self::containsLatinLetters($csvEnglishName)) {
+        if (
+            $csvEnglishName === ''
+            || !self::containsLatinLetters($csvEnglishName)
+            || Trainee::isPlaceholderEnglishName($csvEnglishName)
+        ) {
             return false;
         }
 

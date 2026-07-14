@@ -697,11 +697,16 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     {
         $name = trim((string) $this->english_name);
 
-        if ($name === '') {
+        if ($name === '' || self::isPlaceholderEnglishName($name)) {
             return false;
         }
 
         return (bool) preg_match('/[a-zA-Z]/', $name);
+    }
+
+    public static function isPlaceholderEnglishName(string $name): bool
+    {
+        return strcasecmp(trim($name), 'Not Available') === 0;
     }
 
     public function resolveEnglishName(?string $fallback = null): string
