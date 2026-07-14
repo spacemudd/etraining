@@ -128,6 +128,11 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         'current_procedure_alert_label',
     ];
 
+    /**
+     * When true, the next audit record is attributed to System (null user).
+     */
+    public bool $auditAsSystem = false;
+
     protected static function boot(): void
     {
         parent::boot();
@@ -217,6 +222,33 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
     public function preferredLocale()
     {
         return optional($this->user)->locale;
+    }
+
+    /**
+     * Attribute automated / system-driven changes to System in audits.
+     */
+    public function transformAudit(array $data): array
+    {
+        if ($this->auditAsSystem) {
+            $data['user_id'] = null;
+            $data['user_type'] = null;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Persist the model and record the audit as System (null user).
+     */
+    public function saveAsSystem(array $options = []): bool
+    {
+        $this->auditAsSystem = true;
+
+        try {
+            return $this->save($options);
+        } finally {
+            $this->auditAsSystem = false;
+        }
     }
 
     public function company()

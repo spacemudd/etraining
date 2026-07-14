@@ -346,7 +346,7 @@ public function checkContractStatus()
 
     if ($trainee->zoho_contract_status !== $status) {
         $trainee->zoho_contract_status = $status;
-        $trainee->save();
+        $trainee->saveAsSystem();
         Log::info("Updated contract status for user {$user->id} to: {$status}");
     }
 
@@ -355,7 +355,7 @@ public function checkContractStatus()
             $trainee->zoho_sign_date=$signDate;
             Mail::to($trainee->email)->send(new ContractSigned($trainee));
             $trainee->contract_signed_notification_sent = true;
-            $trainee->save();
+            $trainee->saveAsSystem();
             Log::info("Contract signed notification sent to: {$trainee->email}");
         } catch (\Exception $e) {
             Log::error("Failed to send contract signed email to {$trainee->email}: " . $e->getMessage());
@@ -409,7 +409,7 @@ public function adminCheckContractStatusForTrainee(Trainee $trainee)
 
     if ($trainee->zoho_contract_status !== $status) {
         $trainee->zoho_contract_status = $status;
-        $trainee->save();
+        $trainee->saveAsSystem();
         Log::info("Updated contract status for user {$trainee->id} to: {$status}");
     }
 
@@ -418,7 +418,7 @@ public function adminCheckContractStatusForTrainee(Trainee $trainee)
             $trainee->zoho_sign_date = $signDate;
             Mail::to($trainee->email)->send(new ContractSigned($trainee));
             $trainee->contract_signed_notification_sent = true;
-            $trainee->save();
+            $trainee->saveAsSystem();
             Log::info("Contract signed notification sent to: {$trainee->email}");
         } catch (\Exception $e) {
             Log::error("Failed to send contract signed email to {$trainee->email}: " . $e->getMessage());
