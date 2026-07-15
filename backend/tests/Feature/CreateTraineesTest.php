@@ -72,7 +72,9 @@ class CreateTraineesTest extends TestCase
 
         $trainee = [
             'name' => 'Shafiq al-Shaar',
-            'english_name' => 'Shafiq al-Shaar',
+            'english_first_name' => 'Shafiq',
+            'english_second_name' => 'al',
+            'english_last_name' => 'Shaar',
             'email' => 'shafiqalshaar@gmail.com',
             'identity_number' => '2020202010',
             'password' => 'password',
@@ -99,7 +101,7 @@ class CreateTraineesTest extends TestCase
         $this->assertDatabaseHas('trainees', [
             'email' => $trainee['email'],
             'name' => $trainee['name'],
-            'english_name' => $trainee['english_name'],
+            'english_name' => 'Shafiq al Shaar',
             'identity_number' => $trainee['identity_number'],
             'phone' => $trainee['phone'],
             'phone_additional' => $trainee['phone_additional'],
@@ -129,7 +131,9 @@ class CreateTraineesTest extends TestCase
 
         $trainee = [
             'name' => 'Engineer User',
-            'english_name' => 'Engineer User',
+            'english_first_name' => 'Engineer',
+            'english_second_name' => 'Middle',
+            'english_last_name' => 'User',
             'email' => 'engineer.signup@example.com',
             'identity_number' => '3030303030',
             'password' => 'password',

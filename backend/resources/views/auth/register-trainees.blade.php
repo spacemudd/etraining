@@ -374,13 +374,23 @@
             <hr class="border-1 mb-5">
 
             <div>
-                <x-jet-label value="{{ __('words.full-name') }}" />
+                <x-jet-label value="{{ __('words.full-name-ar') }}" />
                 <x-jet-input class="block mt-1 w-full h-12 px-4 py-3" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
             </div>
 
             <div class="mt-4">
-                <x-jet-label value="{{ __('words.name_en') }}" />
-                <x-jet-input class="block mt-1 w-full h-12 px-4 py-3" type="text" name="english_name" :value="old('english_name')" required autocomplete="name" />
+                <x-jet-label value="{{ __('words.english-first-name') }}" />
+                <x-jet-input class="block mt-1 w-full h-12 px-4 py-3" type="text" name="english_first_name" :value="old('english_first_name')" required autocomplete="given-name" />
+            </div>
+
+            <div class="mt-4">
+                <x-jet-label value="{{ __('words.english-second-name') }}" />
+                <x-jet-input class="block mt-1 w-full h-12 px-4 py-3" type="text" name="english_second_name" :value="old('english_second_name')" required autocomplete="additional-name" />
+            </div>
+
+            <div class="mt-4">
+                <x-jet-label value="{{ __('words.english-last-name') }}" />
+                <x-jet-input class="block mt-1 w-full h-12 px-4 py-3" type="text" name="english_last_name" :value="old('english_last_name')" required autocomplete="family-name" />
             </div>
 
             <div class="mt-4">

@@ -81,7 +81,9 @@ class RegisterTraineeController extends Controller
 
         Validator::make($data, [
             'name' => ['required', 'string', 'max:255', 'unique:trainee_block_lists'],
-            'english_name' => ['required', 'string', 'max:255'],
+            'english_first_name' => ['required', 'string', 'max:100'],
+            'english_second_name' => ['required', 'string', 'max:100'],
+            'english_last_name' => ['required', 'string', 'max:100'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users', 'unique:instructors', 'unique:trainees', 'unique:trainee_block_lists'],
             'password' => $this->passwordRules(),
             'identity_number' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9\s\-_\.]+$/', 'unique:trainees', 'unique:instructors', 'unique:trainee_block_lists'],
@@ -97,6 +99,13 @@ class RegisterTraineeController extends Controller
             'phone.regex' => 'رقم الجوال يجب أن يكون 9 أرقام فقط',
             'phone_additional.regex' => 'رقم الجوال الإضافي يجب أن يكون 9 أرقام فقط',
         ])->validate();
+
+        $data['english_name'] = trim(implode(' ', [
+            $data['english_first_name'],
+            $data['english_second_name'],
+            $data['english_last_name'],
+        ]));
+        unset($data['english_first_name'], $data['english_second_name'], $data['english_last_name']);
 
         User::addGlobalScope(new TeamScope());
 
