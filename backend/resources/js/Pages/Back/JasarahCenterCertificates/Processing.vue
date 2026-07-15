@@ -168,7 +168,12 @@
             </div>
 
             <div v-if="status.status === 'sent' || status.status === 'failed'" class="bg-white rounded shadow p-6">
-                <a v-if="status.status === 'sent'" :href="route('back.jasarah-center-certificates.delivery-report', importData.id)" class="btn-gray bg-green-500 hover:bg-green-600 text-white mr-4">{{ $t('words.delivery-report') }}</a>
+                <a
+                    :href="route('back.jasarah-center-certificates.delivery-report', importData.id)"
+                    class="btn-gray bg-green-500 hover:bg-green-600 text-white mr-4"
+                >
+                    {{ $t('words.delivery-report') }}
+                </a>
                 <button @click="goBack" class="btn-gray bg-gray-500 hover:bg-gray-600">{{ $t('words.back-to-imports') }}</button>
             </div>
         </div>

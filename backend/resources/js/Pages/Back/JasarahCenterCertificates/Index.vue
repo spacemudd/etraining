@@ -59,7 +59,7 @@
                                             {{ $t('words.view') }}
                                         </inertia-link>
                                         <a
-                                            v-if="item.status === 'sent' || item.status === 'completed'"
+                                            v-if="item.status === 'sent' || item.status === 'completed' || item.status === 'failed'"
                                             :href="route('back.jasarah-center-certificates.delivery-report', item.id)"
                                             class="inline-flex items-center px-3 py-1.5 text-xs font-semibold rounded-md border border-green-300 bg-green-50 text-green-700 hover:bg-green-100 whitespace-nowrap mb-1"
                                         >
