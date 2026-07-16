@@ -1,6 +1,6 @@
 <template>
     <app-layout>
-        <div class="container px-6 mx-auto grid pt-6">
+        <div class="container px-6 mx-auto grid pt-6 min-w-0 max-w-full">
             <breadcrumb-container
                 :crumbs="[
                     {title: 'dashboard', link: route('dashboard')},
@@ -8,17 +8,15 @@
                     {title: 'invoices', link: route('back.finance.invoices.short')},
                 ]"
             ></breadcrumb-container>
-            <div class="flex flex-col md:flex-row md:space-x-5 place-content-center">
-                <div class="place-items-start ml-20" style="margin-left: 100px">
-                    <inertia-link class="font-bold text-center mx-3 mt-5 inline-flex items-center px-4 py-2 bg-green-400 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none focus:border-green-400 focus:shadow-outline-green transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
-                                  :href="route('back.finance.invoices.short')">
-                        {{ $t('words.simple-table') }}
-                    </inertia-link>
-                    <inertia-link class="font-bold text-center mx-3 mt-5 inline-flex items-center px-4 py-2 bg-gray-300 hover:bg-red-700 active:bg-red-900 border border-transparent rounded-md font-semibold text-xs text-black uppercase ltr:tracking-widest focus:outline-none focus:border-gray-300 focus:shadow-outline-gray transition ease-in-out duration-150 disabled:cursor-not-allowed mx-"
-                                  :href="route('back.finance.invoices.index')">
-                        {{ $t('words.complete-table') }}
-                    </inertia-link>
-                </div>
+            <div class="flex flex-wrap gap-3 mt-4">
+                <inertia-link class="font-bold inline-flex items-center px-4 py-2 bg-green-400 hover:bg-green-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase ltr:tracking-widest focus:outline-none transition ease-in-out duration-150"
+                              :href="route('back.finance.invoices.short')">
+                    {{ $t('words.simple-table') }}
+                </inertia-link>
+                <inertia-link class="font-bold inline-flex items-center px-4 py-2 bg-gray-300 hover:bg-gray-400 border border-transparent rounded-md font-semibold text-xs text-black uppercase ltr:tracking-widest focus:outline-none transition ease-in-out duration-150"
+                              :href="route('back.finance.invoices.index')">
+                    {{ $t('words.complete-table') }}
+                </inertia-link>
             </div>
             <div class="flex" v-if="canSelectAll">
                 <button class="btn btn-gray mt-5 disabled:bg-gray-100 disabled:cursor-not-allowed" :disabled="$wait.is('APPROVING_INVOICES')" @click="approveInvoices">({{ selected_invoices.length }}) {{ $t('words.financial-department-approval') }}</button>
@@ -29,9 +27,9 @@
             </div>
 
 
-            <div class="">
+            <div class="min-w-0 max-w-full">
                 <Table
-                    class="mt-5 w-full whitespace-no-wrap"
+                    class="mt-5 w-full invoices-table"
                     :filters="queryBuilderProps.filters"
                     :search="queryBuilderProps.search"
                     :columns="queryBuilderProps.columns"
@@ -39,12 +37,12 @@
                     :meta="invoices"
                 >
                     <template #head>
-                        <tr :style="{background: ['#f7f7f7'], position: ['sticky'], top: [0]}">
-                            <th :style="{background: ['#f7f7f7'], position: ['sticky'], right: [0]}">{{ $t('words.account-name') }}</th>
-                            <th :style="{background: ['#f7f7f7'], position: ['sticky'], right: ['90px']}" @click.prevent="sortBy('number')">{{ $t('words.invoice') }}</th>
+                        <tr class="invoices-table-head">
+                            <th class="sticky-col sticky-col-first">{{ $t('words.account-name') }}</th>
+                            <th class="sticky-col sticky-col-second" @click.prevent="sortBy('number')">{{ $t('words.invoice') }}</th>
                             <th @click.prevent="sortBy('from_date')">{{ $t('words.date-period') }}</th>
                             <th>{{ $t('words.paid-at') }}</th>
-                            <th>{{ $t('words.company') }}</th>
+                            <th class="company-col">{{ $t('words.company') }}</th>
                             <th @click.prevent="sortBy('status')">{{ $t('words.status') }}</th>
                             <th>{{ $t('words.payment-method') }}</th>
                             <th>{{ $t('words.collected') }}</th>
@@ -57,12 +55,12 @@
                     <!--                    class="sticky top-0 bg-white"-->
                     <template #body>
                         <tr v-for="invoice in invoices.data" :key="invoice.id">
-                            <td :style="{background: ['#f7f7f7'], position: ['sticky'], right: [0], top: ['35px']}">
-                                <inertia-link :href="route('back.trainees.show', invoice.trainee_id)">
+                            <td class="sticky-col sticky-col-first">
+                                <inertia-link class="cell-truncate" :title="invoice.trainee.name" :href="route('back.trainees.show', invoice.trainee_id)">
                                     {{ invoice.trainee.name }}
                                 </inertia-link>
                             </td>
-                            <td :style="{background: ['#f7f7f7'], position: ['sticky'], right: ['90px'], top: ['35px']}">
+                            <td class="sticky-col sticky-col-second">
                                 <input type="checkbox"
                                        v-if="canSelectAll"
                                        :checked="selected_invoices.includes(invoice.id)"
@@ -86,8 +84,8 @@
                                     --
                                 </inertia-link>
                             </td>
-                            <td class="rtl:text-right text-black">
-                                <inertia-link :href="route('back.companies.show', invoice.company_id)">
+                            <td class="company-col rtl:text-right text-black">
+                                <inertia-link class="cell-truncate block" :title="invoice.company.name_ar" :href="route('back.companies.show', invoice.company_id)">
                                     {{ invoice.company.name_ar }}
                                 </inertia-link>
                             </td>
@@ -290,6 +288,66 @@
         </div>
     </app-layout>
 </template>
+
+<style scoped>
+.invoices-table >>> table {
+    table-layout: auto;
+}
+
+.invoices-table >>> th,
+.invoices-table >>> td {
+    white-space: nowrap;
+}
+
+.invoices-table >>> .company-col {
+    max-width: 14rem;
+    white-space: normal;
+}
+
+.invoices-table >>> .cell-truncate {
+    display: block;
+    max-width: 14rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.invoices-table >>> .sticky-col {
+    position: sticky;
+    z-index: 1;
+    background-color: #f7f7f7;
+}
+
+.invoices-table >>> .sticky-col-first {
+    right: 0;
+    min-width: 8rem;
+    max-width: 10rem;
+}
+
+.invoices-table >>> .sticky-col-second {
+    right: 10rem;
+    min-width: 9rem;
+}
+
+.invoices-table >>> .invoices-table-head th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: #f7f7f7;
+}
+
+.invoices-table >>> .invoices-table-head .sticky-col-first {
+    z-index: 3;
+}
+
+.invoices-table >>> .invoices-table-head .sticky-col-second {
+    z-index: 3;
+}
+
+.invoices-table >>> tr:hover .sticky-col {
+    background-color: #f9fafb;
+}
+</style>
 
 <script>
 

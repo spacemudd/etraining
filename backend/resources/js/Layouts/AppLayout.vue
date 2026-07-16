@@ -63,7 +63,7 @@
                 <sidebar-container/>
             </div>
         </aside>
-        <div class="flex flex-col flex-1 w-full mb-10">
+        <div class="flex flex-col flex-1 w-full min-w-0 mb-10">
             <header class="z-10 py-4 bg-white shadow-md dark:bg-gray-800">
                 <div
                     class="container flex items-center justify-between h-full px-6 mx-auto text-red-600 dark:text-red-300"
@@ -168,7 +168,7 @@
                 </div>
             </header>
 
-            <main class="h-full overflow-y-auto">
+            <main class="h-full overflow-y-auto min-w-0">
                 <slot></slot>
             </main>
         </div>
