@@ -674,24 +674,24 @@
           </inertia-link>
         </div>
 
-        <div>
+        <div class="overflow-x-auto">
           <table
-            class="w-full whitespace-no-wrap bg-white rounded-lg my-5 p-5 shadow text-sm"
+            class="w-full table-fixed bg-white rounded-lg my-5 p-5 shadow text-sm"
           >
             <tr class="text-left font-bold">
-              <th class="p-4">{{ $t("words.created-by") }}</th>
+              <th class="p-4 w-40">{{ $t("words.created-by") }}</th>
               <th class="p-4">{{ $t("words.emails") }}</th>
-              <th class="p-4">{{ $t("words.trainees") }}</th>
-              <th class="p-4">{{ $t("words.status") }}</th>
-              <th class="p-4">{{ $t("words.actions") }}</th>
+              <th class="p-4 w-24">{{ $t("words.trainees") }}</th>
+              <th class="p-4 w-28">{{ $t("words.status") }}</th>
+              <th class="p-4 w-48">{{ $t("words.actions") }}</th>
             </tr>
             <tr
               v-for="resignation in company.resignations"
               :key="resignation.id"
               class="hover:bg-gray-100 focus-within:bg-gray-100"
             >
-              <td class="border-t">
-                <div class="px-4 py-2 focus:text-indigo-500">
+              <td class="border-t align-top">
+                <div class="px-4 py-2 focus:text-indigo-500 break-words">
                   {{ resignation.number }}<br />
                   {{ resignation.created_by.email }}
                   <br />
@@ -700,23 +700,55 @@
                   </p>
                 </div>
               </td>
-              <td class="border-t">
-                <div class="px-4 py-2 focus:text-indigo-500">
-                  {{ resignation.emails_to }}
-                  <template v-if="resignation.emails_cc"
-                    ><br />{{ resignation.emails_cc }}</template
-                  >
-                  <template v-if="resignation.emails_bcc"
-                    ><br />{{ resignation.emails_bcc }}</template
-                  >
+              <td class="border-t align-top">
+                <div class="px-4 py-2 space-y-2 text-xs leading-5">
+                  <div v-if="splitResignationEmails(resignation.emails_to).length">
+                    <p class="font-semibold text-gray-600 mb-0.5">
+                      {{ $t("words.to") }}
+                    </p>
+                    <p
+                      v-for="(email, index) in splitResignationEmails(resignation.emails_to)"
+                      :key="'to-' + resignation.id + '-' + index"
+                      dir="ltr"
+                      class="text-left break-all text-gray-800"
+                    >
+                      {{ email }}
+                    </p>
+                  </div>
+                  <div v-if="splitResignationEmails(resignation.emails_cc).length">
+                    <p class="font-semibold text-gray-600 mb-0.5">
+                      {{ $t("words.cc") }}
+                    </p>
+                    <p
+                      v-for="(email, index) in splitResignationEmails(resignation.emails_cc)"
+                      :key="'cc-' + resignation.id + '-' + index"
+                      dir="ltr"
+                      class="text-left break-all text-gray-800"
+                    >
+                      {{ email }}
+                    </p>
+                  </div>
+                  <div v-if="splitResignationEmails(resignation.emails_bcc).length">
+                    <p class="font-semibold text-gray-600 mb-0.5">
+                      {{ $t("words.bcc") }}
+                    </p>
+                    <p
+                      v-for="(email, index) in splitResignationEmails(resignation.emails_bcc)"
+                      :key="'bcc-' + resignation.id + '-' + index"
+                      dir="ltr"
+                      class="text-left break-all text-gray-800"
+                    >
+                      {{ email }}
+                    </p>
+                  </div>
                 </div>
               </td>
-              <td class="border-t w-px">
+              <td class="border-t w-px align-top">
                 <div class="px-4 py-2 flex items-center focus:text-indigo-500">
                   {{ resignation.trainees_count }}
                 </div>
               </td>
-              <td class="border-t w-px">
+              <td class="border-t w-px align-top">
                 <div class="px-4 py-2 flex items-center focus:text-indigo-500">
                   <template v-if="resignation.sent_at">
                     <br />
@@ -730,9 +762,9 @@
                 </div>
               </td>
 
-              <td class="border-t w-px">
+              <td class="border-t w-px align-top">
                 <div
-                  class="px-4 py-2 flex items-center focus:text-indigo-500 gap-2"
+                  class="px-4 py-2 flex flex-wrap items-center focus:text-indigo-500 gap-2"
                 >
                   <button
                     class="bg-red-500 text-white px-2 py-1 rounded disabled:bg-yellow-100"
@@ -945,6 +977,15 @@ export default {
     },
   },
   methods: {
+    splitResignationEmails(value) {
+      if (!value) {
+        return [];
+      }
+      return String(value)
+        .split(/[,;]+/)
+        .map((email) => email.trim())
+        .filter(Boolean);
+    },
     getSelected() {
       axios({
         url: "/back/companies",
