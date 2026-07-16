@@ -14,16 +14,16 @@ class DefaultResignationEmailsSeeder extends Seeder
      */
     public function run()
     {
-        // Default CC emails for resignations
+        // Defaults that used to live in CC are BCC (they were always sent as BCC historically).
+        // Keep CC empty so new resignations only put intentional visible CCs there.
         AppSetting::updateOrCreate(
             ['name' => 'resignation_default_cc_emails'],
-            ['value' => 'ceo@hadaf-hq.com, afnan@hadaf-hq.com, sara@hadaf-hq.com, mashael.a@hadaf-hq.com, mahmoud.h@hadaf-hq.com, halim@hadaf-hq.com, m.zinah@hadaf-hq.com, rahmah@hadaf-hq.com']
+            ['value' => '']
         );
 
-        // Default BCC emails for resignations
         AppSetting::updateOrCreate(
             ['name' => 'resignation_default_bcc_emails'],
-            ['value' => 'trainee.affairs@hadaf-hq.com, cfo@hadaf-hq.com']
+            ['value' => 'trainee.affairs@hadaf-hq.com, cfo@hadaf-hq.com, mahmood.hasan@hadaf-hq.com, ceo@hadaf-hq.com, sara@hadaf-hq.com, mashael.a@hadaf-hq.com, afnan@hadaf-hq.com, mahmoud.h@hadaf-hq.com, mohammad.salah@hadaf-hq.com, mahmoud.azmy@hadaf-hq.com, abdulrahman@hadaf-hq.com']
         );
     }
 } 

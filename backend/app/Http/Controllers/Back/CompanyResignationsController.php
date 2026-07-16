@@ -190,23 +190,28 @@ class CompanyResignationsController extends Controller
         $mailInstance = null;
         
         if (!empty($toEmails)) {
-            $mailInstance = Mail::to($toEmails);
+            $mailInstance = Mail::to(array_values($toEmails));
         } else if (!empty($ccEmails)) {
             // إذا لم تكن هناك TO emails، استخدم أول CC كـ TO
-            $mailInstance = Mail::to($ccEmails[0]);
+            $ccEmails = array_values($ccEmails);
+            $mailInstance = Mail::to([$ccEmails[0]]);
             array_shift($ccEmails);
         } else if (!empty($bccEmails)) {
             // إذا لم تكن هناك TO أو CC emails، استخدم أول BCC كـ TO
-            $mailInstance = Mail::to($bccEmails[0]);
+            $bccEmails = array_values($bccEmails);
+            $mailInstance = Mail::to([$bccEmails[0]]);
             array_shift($bccEmails);
         }
-        
-        // تحويل جميع CC emails إلى BCC (مخفية تلقائياً)
-        $allBccEmails = array_merge($ccEmails, $bccEmails);
 
-        // إضافة جميع الايميلات كـ BCC مخفية
-        if (!empty($allBccEmails)) {
-            $mailInstance->bcc($allBccEmails);
+        $ccEmails = array_values($ccEmails);
+        $bccEmails = array_values($bccEmails);
+
+        if (!empty($ccEmails)) {
+            $mailInstance->cc($ccEmails);
+        }
+
+        if (!empty($bccEmails)) {
+            $mailInstance->bcc($bccEmails);
         }
 
         // تسجيل تفاصيل الإرسال
@@ -215,8 +220,7 @@ class CompanyResignationsController extends Controller
             'to_count' => count($toEmails),
             'cc_count' => count($ccEmails),
             'bcc_count' => count($bccEmails),
-            'total_hidden_emails' => count($allBccEmails),
-            'note' => 'CC emails are automatically converted to BCC (hidden)'
+            'note' => 'CC and BCC are sent as separate recipient types',
         ]);
 
         $mailInstance->send(new ResignationsMail($resignation));
