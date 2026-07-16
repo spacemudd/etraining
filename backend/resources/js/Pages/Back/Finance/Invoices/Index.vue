@@ -38,51 +38,54 @@
                 >
                     <template #head>
                         <tr class="invoices-table-head">
-                            <th class="sticky-col sticky-col-first">{{ $t('words.account-name') }}</th>
-                            <th class="sticky-col sticky-col-second" @click.prevent="sortBy('number')">{{ $t('words.invoice') }}</th>
+                            <th class="sticky-col sticky-col-first">
+                                {{ $t('words.account-name') }}
+                                <span class="text-gray-400 font-normal">/</span>
+                                {{ $t('words.invoice') }}
+                            </th>
                             <th @click.prevent="sortBy('from_date')">{{ $t('words.date-period') }}</th>
-                            <th>{{ $t('words.paid-at') }}</th>
                             <th class="company-col">{{ $t('words.company') }}</th>
-                            <th @click.prevent="sortBy('status')">{{ $t('words.status') }}</th>
-                            <th>{{ $t('words.payment-method') }}</th>
+                            <th @click.prevent="sortBy('status')">
+                                {{ $t('words.status') }}
+                                <span class="text-gray-400 font-normal">/</span>
+                                {{ $t('words.payment-method') }}
+                            </th>
                             <th>{{ $t('words.amount') }}</th>
-                            <th>{{ $t('words.submitted-receipt') }}</th>
-                            <th>{{ $t('words.bank-name') }}</th>
                             <th>{{ $t('words.collected') }}</th>
                             <th>{{ $t('words.confirmed') }}</th>
                             <th @click.prevent="sortBy('created_at')">{{ $t('words.date') }}</th>
                             <th>{{ $t('words.actions') }}</th>
                         </tr>
                     </template>
-                    <!--                    :style="{position: ['sticky'], right: [0], background: ['#efefef'], border: []}"-->
-                    <!--                    class="sticky top-0 bg-white"-->
                     <template #body>
                         <tr v-for="invoice in invoices.data" :key="invoice.id">
                             <td class="sticky-col sticky-col-first">
-                                <inertia-link class="hover:text-blue-600 cell-truncate" :title="invoice.trainee ? invoice.trainee.name : '-'" :href="invoice.trainee.show_url">{{ invoice.trainee ? invoice.trainee.name : '-' }}</inertia-link>
-                            </td>
-                            <td class="sticky-col sticky-col-second">
-                                <input type="checkbox"
-                                       v-if="canSelectAll"
-                                       :checked="selected_invoices.includes(invoice.id)"
-                                       @click="toggleSelectedInvoice(invoice)">
-                                <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
-                                    {{ invoice.number_formatted }}
-                                </inertia-link>
+                                <div class="flex items-start gap-2">
+                                    <input type="checkbox"
+                                           v-if="canSelectAll"
+                                           class="mt-1"
+                                           :checked="selected_invoices.includes(invoice.id)"
+                                           @click="toggleSelectedInvoice(invoice)">
+                                    <div class="min-w-0">
+                                        <inertia-link
+                                            class="hover:text-blue-600 cell-truncate block font-medium"
+                                            :title="invoice.trainee ? invoice.trainee.name : '-'"
+                                            :href="invoice.trainee && invoice.trainee.show_url ? invoice.trainee.show_url : (invoice.trainee_id ? route('back.trainees.show', invoice.trainee_id) : '#')"
+                                        >
+                                            {{ invoice.trainee ? invoice.trainee.name : '-' }}
+                                        </inertia-link>
+                                        <inertia-link
+                                            class="hover:text-blue-600 text-sm text-gray-600 block mt-0.5"
+                                            :href="route('back.finance.invoices.show', invoice.id)"
+                                        >
+                                            {{ invoice.number_formatted }}
+                                        </inertia-link>
+                                    </div>
+                                </div>
                             </td>
                             <td class="rtl:text-right text-black">
                                 <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
                                     {{  invoice.from_date | formatDate  }}
-                                </inertia-link>
-                            </td>
-                            <td class="rtl:text-right text-black" v-if="invoice.paid_at">
-                                <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
-                                    {{ invoice.paid_at | formatDateTime }}
-                                </inertia-link>
-                            </td>
-                            <td class="rtl:text-right text-black" v-if="!invoice.paid_at">
-                                <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
-                                    --
                                 </inertia-link>
                             </td>
                             <td class="company-col rtl:text-right text-black">
@@ -91,7 +94,7 @@
                                 </inertia-link>
                             </td>
                             <td class="rtl:text-right text-black">
-                                <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
+                                <inertia-link :href="route('back.finance.invoices.show', invoice.id)" class="block">
                                     <div v-if="invoice.status < 0">
                                         <span class="text-white bg-purple-500 rounded-lg px-3 py-1 font-bold border-solid border-2 border-purple-600">
                                             {{ invoice.status_formatted }}
@@ -122,41 +125,31 @@
                                             {{ invoice.status_formatted }}
                                         </span>
                                     </div>
-                                </inertia-link>
-                            </td>
-                            <td class="rtl:text-right text-black">
-                                <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
-                                    <span v-if="invoice.payment_method === 1"
-                                          class="img {display:block} inline-block inline-flex">
-                                    {{ invoice.payment_method_formatted }}
-                                        <svg v-if="invoice.payment_method === 1" width="60" height="26">
-                                            <image xlink:href="https://www.svgrepo.com/show/210224/credit-card.svg" src="https://www.svgrepo.com/show/210224/credit-card.svg" width="60" height="26"/>
-                                        </svg>
-                                    </span>
-                                    <span v-else>
+
+                                    <div v-if="invoice.paid_at" class="mt-2">
+                                        <span class="inline-flex items-center gap-1 font-medium">
+                                            <template v-if="invoice.payment_method === 1">
+                                                {{ invoice.payment_method_formatted }}
+                                                <svg width="28" height="18" class="inline-block" aria-hidden="true">
+                                                    <image xlink:href="https://www.svgrepo.com/show/210224/credit-card.svg" src="https://www.svgrepo.com/show/210224/credit-card.svg" width="28" height="18"/>
+                                                </svg>
+                                            </template>
+                                            <template v-else>
+                                                {{ invoice.payment_method_formatted || '—' }}
+                                            </template>
+                                        </span>
+                                        <div class="text-xs text-gray-600 mt-0.5">
+                                            {{ invoice.paid_at | formatDateTime }}
+                                        </div>
+                                    </div>
+                                    <div v-else-if="invoice.payment_method_formatted" class="mt-2 text-sm text-gray-600">
                                         {{ invoice.payment_method_formatted }}
-                                    </span>
+                                    </div>
                                 </inertia-link>
                             </td>
                             <td class="rtl:text-right text-black">
                                 <inertia-link :href="route('back.finance.invoices.show', invoice.id)">
                                     {{ invoice.grand_total }}
-                                </inertia-link>
-                            </td>
-                            <td class="rtl:text-right text-black">
-                                <inertia-link v-if="invoice.trainee_bank_payment_receipt"
-                                              :href="route('back.finance.invoices.show', invoice.id)">
-                                    {{ invoice.trainee_bank_payment_receipt.sender_name }}
-                                    <br/>
-                                    {{ invoice.trainee_bank_payment_receipt.created_at }}
-                                </inertia-link>
-                            </td>
-                            <td class="rtl:text-right text-black">
-                                <inertia-link v-if="invoice.trainee_bank_payment_receipt"
-                                              :href="route('back.finance.invoices.show', invoice.id)">
-                                    {{ $t('words.from') }} {{ invoice.trainee_bank_payment_receipt.bank_from }}
-                                    <br/>
-                                    {{ $t('words.to') }} {{ invoice.trainee_bank_payment_receipt.bank_to }}
                                 </inertia-link>
                             </td>
                             <td class="rtl:text-right text-black">
@@ -347,13 +340,9 @@
 
 .invoices-table >>> .sticky-col-first {
     right: 0;
-    min-width: 8rem;
-    max-width: 10rem;
-}
-
-.invoices-table >>> .sticky-col-second {
-    right: 10rem;
-    min-width: 9rem;
+    min-width: 11rem;
+    max-width: 14rem;
+    white-space: normal;
 }
 
 .invoices-table >>> .invoices-table-head th {
@@ -364,10 +353,6 @@
 }
 
 .invoices-table >>> .invoices-table-head .sticky-col-first {
-    z-index: 3;
-}
-
-.invoices-table >>> .invoices-table-head .sticky-col-second {
     z-index: 3;
 }
 
