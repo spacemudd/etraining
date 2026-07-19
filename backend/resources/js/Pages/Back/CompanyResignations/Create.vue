@@ -280,9 +280,11 @@ export default {
         if (this.company.id) {
             this.form.company_id = this.company.id;
 
-            // TO: Use from last resignation if exists, otherwise leave empty
-            if (this.company.resignations.length) {
+            // TO: Prefer last resignation recipients, otherwise use the company email
+            if (this.company.resignations.length && this.company.resignations[0].emails_to) {
                 this.form.emails_to = this.normalizeEmailString(this.company.resignations[0].emails_to);
+            } else if (this.company.email) {
+                this.form.emails_to = this.normalizeEmailString(this.company.email);
             }
 
             // CC and BCC: Always use default emails from settings (not from last resignation)
