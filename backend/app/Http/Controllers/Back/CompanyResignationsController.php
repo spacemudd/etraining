@@ -57,9 +57,9 @@ class CompanyResignationsController extends Controller
             'resignation_date' => Carbon::parse($request->resignation_date),
             'company_id' => $request->company_id,
             'reason' => $request->reason,
-            'emails_to' => $request->emails_to,
-            'emails_cc' => $request->emails_cc ?? [],
-            'emails_bcc' => $request->emails_bcc ?? [],
+            'emails_to' => $this->normalizeEmailList($request->emails_to),
+            'emails_cc' => $this->normalizeEmailList($request->emails_cc),
+            'emails_bcc' => $this->normalizeEmailList($request->emails_bcc),
         ]);
 
 
@@ -244,5 +244,27 @@ class CompanyResignationsController extends Controller
             'received_at' => now(),
         ]);
         return 'شكرًا لتأكيد الاستلام'.' - '.now()->setTimezone('Asia/Riyadh');
+    }
+
+    /**
+     * Normalize email input into a comma-separated string for storage.
+     */
+    private function normalizeEmailList($emails): ?string
+    {
+        if (is_array($emails)) {
+            $list = $emails;
+        } elseif (is_string($emails) && $emails !== '') {
+            $list = preg_split('/[,;\n]+/', $emails) ?: [];
+        } else {
+            return null;
+        }
+
+        $normalized = array_values(array_unique(array_filter(array_map(function ($email) {
+            $email = strtolower(trim((string) $email));
+
+            return filter_var($email, FILTER_VALIDATE_EMAIL) ? $email : null;
+        }, $list))));
+
+        return empty($normalized) ? null : implode(', ', $normalized);
     }
 }

@@ -77,21 +77,20 @@
                                         </div>
                                     </div>
 
-                                    <div class="mt-2">
-                                        <div class="col-span-4 sm:col-span-4">
-                                            <p>
-                                                <ion-icon name="add-circle-outline" class="mt-2 mx-1 w-4 h-4 fill-red-400"></ion-icon>
-                                                <b>{{ $t('words.to') }}:</b> <jet-input type="text" class="mt-1 block w-full" v-model="form.emails_to" required/>
-                                            </p>
-                                            <p>
-                                                <ion-icon name="add-circle-outline" class="mt-2 mx-1 w-4 h-4 fill-red-400"></ion-icon>
-                                                <b>{{ $t('words.cc') }}:</b> <jet-input type="text" class="mt-1 block w-full" v-model="form.emails_cc" />
-                                            </p>
-                                            <p>
-                                                <ion-icon name="add-circle-outline" class="mt-2 mx-1 w-4 h-4 fill-red-400"></ion-icon>
-                                                <b>{{ $t('words.bcc') }}:</b> <jet-input type="text" class="mt-1 block w-full" v-model="form.emails_bcc" />
-                                            </p>
-                                        </div>
+                                    <div class="mt-4 space-y-4">
+                                        <email-list-input
+                                            v-model="form.emails_to"
+                                            :label="$t('words.to')"
+                                            required
+                                        />
+                                        <email-list-input
+                                            v-model="form.emails_cc"
+                                            :label="$t('words.cc')"
+                                        />
+                                        <email-list-input
+                                            v-model="form.emails_bcc"
+                                            :label="$t('words.bcc')"
+                                        />
                                     </div>
 
                                     <div class="mt-5">
@@ -239,6 +238,7 @@ import VueDropzone from 'vue2-dropzone'
 import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 import _ from "lodash";
 import { Skeleton } from 'vue-loading-skeleton';
+import EmailListInput from '@/Components/EmailListInput';
 
 export default {
     props: ['sessions', 'company', 'default_cc_emails', 'default_bcc_emails'],
@@ -257,6 +257,7 @@ export default {
         JetTextarea,
         VueDropzone,
         Skeleton,
+        EmailListInput,
     },
     data() {
         return {
@@ -266,9 +267,9 @@ export default {
                 date: new Date().toISOString().substring(0, 10),
                 resignation_date: new Date().toISOString().substring(0, 10),
                 reason: '',
-                emails_to: [],
-                emails_cc: [],
-                emails_bcc: [],
+                emails_to: '',
+                emails_cc: '',
+                emails_bcc: '',
             }),
             searchString: '',
             searchResults: [],
@@ -278,18 +279,33 @@ export default {
     mounted() {
         if (this.company.id) {
             this.form.company_id = this.company.id;
-            
+
             // TO: Use from last resignation if exists, otherwise leave empty
             if (this.company.resignations.length) {
-                this.form.emails_to = this.company.resignations[0].emails_to;
+                this.form.emails_to = this.normalizeEmailString(this.company.resignations[0].emails_to);
             }
-            
+
             // CC and BCC: Always use default emails from settings (not from last resignation)
-            this.form.emails_cc = this.default_cc_emails || '';
-            this.form.emails_bcc = this.default_bcc_emails || '';
+            this.form.emails_cc = this.normalizeEmailString(this.default_cc_emails);
+            this.form.emails_bcc = this.normalizeEmailString(this.default_bcc_emails);
         }
     },
     methods: {
+        normalizeEmailString(value) {
+            if (Array.isArray(value)) {
+                return value.map((email) => String(email || '').trim()).filter(Boolean).join(', ');
+            }
+
+            if (!value) {
+                return '';
+            }
+
+            return String(value)
+                .split(/[,;\n]+/)
+                .map((email) => email.trim())
+                .filter(Boolean)
+                .join(', ');
+        },
         triggerSearching() {
             if (this.searchString) {
                 this.searchBoxVisible = true;
@@ -337,6 +353,15 @@ export default {
                 alert(this.$t('words.please-select'));
                 return;
             }
+
+            if (!this.normalizeEmailString(this.form.emails_to)) {
+                alert(this.$t('words.please-add-at-least-one-to-email'));
+                return;
+            }
+
+            this.form.emails_to = this.normalizeEmailString(this.form.emails_to);
+            this.form.emails_cc = this.normalizeEmailString(this.form.emails_cc);
+            this.form.emails_bcc = this.normalizeEmailString(this.form.emails_bcc);
 
             if(confirm(this.$t('words.are-you-sure'))) {
                 this.form.post(route('back.resignations.store', {company_id: this.company.id}), {
