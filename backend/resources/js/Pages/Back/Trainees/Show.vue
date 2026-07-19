@@ -111,7 +111,12 @@
         :crumbs="[
           { title: 'dashboard', link: route('dashboard') },
           { title: 'trainees', link: route('back.trainees.index') },
-          { title_raw: trainee.name },
+          {
+            title_raw: trainee.name,
+            badge: trainee.current_procedure_alert
+              ? trainee.current_procedure_alert_label
+              : null,
+          },
           ]"
       ></breadcrumb-container>
 
@@ -996,7 +1001,7 @@
           <p v-else>
             <span
               v-if="trainee.current_procedure_alert"
-              class="text-sm inline-block mt-2 p-1 px-2 bg-green-200 rounded-lg font-semibold text-green-900"
+              class="text-sm inline-block mt-2 p-1 px-2 bg-amber-500 rounded-lg font-semibold text-white"
             >
               {{ trainee.current_procedure_alert_label }}
             </span>
