@@ -30,7 +30,7 @@
                     </a>
                     <span
                         v-if="crumb.badge"
-                        class="text-sm font-bold inline-flex items-center px-3 py-1 rounded-lg bg-amber-500 text-white shadow-sm"
+                        class="text-sm font-bold inline-flex items-center px-3 py-1 rounded-lg bg-orange-500 text-white shadow-sm"
                     >
                         {{ crumb.badge }}
                     </span>
