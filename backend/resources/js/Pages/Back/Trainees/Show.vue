@@ -111,9 +111,33 @@
         :crumbs="[
           { title: 'dashboard', link: route('dashboard') },
           { title: 'trainees', link: route('back.trainees.index') },
-          { title_raw: trainee.name },
+          {
+            title_raw: trainee.name,
+            badge: currentProcedureAlertLabel,
+          },
           ]"
       ></breadcrumb-container>
+
+      <div
+        v-if="currentProcedureAlertLabel"
+        class="mb-4 flex items-center gap-2 p-3 rounded-md bg-orange-100 border border-orange-400 text-orange-900"
+      >
+        <svg
+          class="w-5 h-5 text-orange-600 flex-shrink-0"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        <div>
+          <span class="font-bold">{{ $t("words.current-procedure-alert") }}:</span>
+          <span class="font-semibold mr-2">{{ currentProcedureAlertLabel }}</span>
+        </div>
+      </div>
 
       <div
         v-if="$page.props.flash && ($page.props.flash.success || $page.props.flash.warning)"
@@ -995,14 +1019,14 @@
           </select>
           <p v-else>
             <span
-              v-if="trainee.current_procedure_alert"
-              class="text-sm inline-block mt-2 p-1 px-2 bg-green-200 rounded-lg font-semibold text-green-900"
+              v-if="currentProcedureAlertLabel"
+              class="text-sm inline-block mt-2 p-1 px-2 bg-orange-500 rounded-lg font-semibold text-white"
             >
-              {{ trainee.current_procedure_alert_label }}
+              {{ currentProcedureAlertLabel }}
             </span>
             <span
               v-else
-              class="text-sm inline-block mt-2 p-1 px-2 bg-gray-200 rounded-lg"
+              class="text-sm inline-block mt-2 p-1 px-2 bg-gray-200 rounded-lg text-gray-800"
             >
               {{ $t("words.current-procedure-alert-none") }}
             </span>
@@ -1723,6 +1747,22 @@ export default {
     };
   },
   computed: {
+    currentProcedureAlertLabel() {
+      if (!this.trainee || !this.trainee.current_procedure_alert) {
+        return null;
+      }
+
+      if (this.trainee.current_procedure_alert_label) {
+        return this.trainee.current_procedure_alert_label;
+      }
+
+      const options = this.current_procedure_alert_options || [];
+      const match = options.find(
+        (option) => option.value === this.trainee.current_procedure_alert
+      );
+
+      return match ? match.label : this.trainee.current_procedure_alert;
+    },
     canViewSpecialDocuments() {
       // Check if current user email is in the allowed users list
       const currentUserEmail = this.$page.props.user?.email;
