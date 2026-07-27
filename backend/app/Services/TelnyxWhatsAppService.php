@@ -279,12 +279,6 @@ class TelnyxWhatsAppService
         $to = $this->normalizePhoneDigits($phone);
         $from = $this->normalizePhoneDigits(config('telnyx.whatsapp_from'));
 
-        Log::debug('Sending WhatsApp message via Telnyx', [
-            'from' => $from,
-            'to' => $to,
-            'template_id' => $whatsappMessage['template']['template_id'] ?? 'N/A',
-            'type' => $whatsappMessage['type'] ?? 'N/A',
-        ]);
 
         $params = [
             'from' => $from,
@@ -334,24 +328,43 @@ class TelnyxWhatsAppService
         $payload = json_decode((string) $response->getBody(), true) ?? [];
 
         if ($response->getStatusCode() >= 400) {
-            Log::error('Telnyx WhatsApp API request failed', [
+            $context = [
                 'method' => $method,
                 'uri' => $uri,
                 'status' => $response->getStatusCode(),
                 'response' => $payload,
-            ]);
+            ];
+
+            $fromNumber = $options['json']['from'] ?? null;
+            $toNumber = $options['json']['to'] ?? null;
+
+            if ($fromNumber) {
+                $context['from_number'] = $fromNumber;
+            }
+            if ($toNumber) {
+                $context['to_number'] = $toNumber;
+            }
+
+            Log::error('Telnyx WhatsApp API request failed', $context);
 
             $errorDetails = $payload['errors'][0]['detail']
                 ?? $payload['errors'][0]['title']
                 ?? json_encode($payload['errors'] ?? $payload); // Fallback to full errors or payload
 
-            throw new RuntimeException(
-                sprintf(
-                    "Telnyx API request failed with status %d: %s",
-                    $response->getStatusCode(),
-                    (string) $errorDetails
-                )
+            $message = sprintf(
+                "Telnyx API request failed with status %d: %s",
+                $response->getStatusCode(),
+                (string) $errorDetails
             );
+
+            if ($fromNumber) {
+                $message .= " (From: {$fromNumber})";
+            }
+            if ($toNumber) {
+                $message .= " (To: {$toNumber})";
+            }
+
+            throw new RuntimeException($message);
         }
 
         return is_array($payload) ? $payload : [];
