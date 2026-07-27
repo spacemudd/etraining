@@ -143,7 +143,7 @@
                                     v-else
                                     class="max-w-[80%] md:max-w-[70%] rounded-2xl px-4 py-3 text-sm shadow-sm"
                                     :class="isOutboundMessage(message)
-                                        ? 'bg-[#dcf8c6] text-gray-900 rounded-tr-sm border border-[#c5e6af]'
+                                        ? 'bg-[#e7fce3] text-gray-900 rounded-tr-sm border border-[#c5e6af]'
                                         : 'bg-white text-gray-900 rounded-tl-sm border border-gray-200'"
                                 >
                                     <p class="whitespace-pre-wrap break-words leading-relaxed" dir="auto">{{ message.body }}</p>
@@ -169,7 +169,7 @@
                                         </span>
                                         <span class="flex items-center gap-1" dir="ltr">
                                             <span>{{ formatMessageTime(message.date_sent) }}</span>
-                                            <span v-if="message.status" class="capitalize">· {{ message.status }}</span>
+                                            <span v-if="message.status" class="capitalize">· {{ translateStatus(message.status) }}</span>
                                         </span>
                                     </div>
                                 </div>
@@ -259,12 +259,12 @@
                             </div>
 
                             <!-- Freeform Message or Internal Note Composer -->
-                            <div v-else>
+                            <div v-else class="border-2 rounded-xl p-3 bg-white" :class="isNoteMode ? 'border-yellow-400 bg-yellow-50/30' : 'border-gray-200'">
                                 <div class="relative">
                                     <textarea
                                         v-model="messageBody"
                                         rows="3"
-                                        class="w-full text-sm rounded-lg transition-all p-3"
+                                        class="w-full text-sm rounded-lg transition-all p-3 border"
                                         :class="isNoteMode ? 'bg-yellow-100 border-yellow-300 focus:border-yellow-500 focus:ring-yellow-200 text-yellow-950 placeholder-yellow-800/60' : 'border-gray-300 focus:border-green-500 focus:ring-green-200'"
                                         :placeholder="isNoteMode ? $t('words.internal-note-hint') : $t('words.message') + '...'"
                                     ></textarea>
@@ -640,10 +640,14 @@ export default {
             if (!dateString) return '';
             return new Date(dateString).toLocaleString();
         },
-        formatTimeShort(dateString) {
-            if (!dateString) return '';
-            const date = new Date(dateString);
-            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        translateStatus(status) {
+            if (!status) return '';
+            const key = status.toLowerCase().trim();
+            if (key === 'delivered') return this.$t('words.delivered');
+            if (key === 'queued') return this.$t('words.queued');
+            if (key === 'received') return this.$t('words.received');
+            if (key === 'sent') return this.$t('words.sent');
+            return status;
         },
     },
 };
