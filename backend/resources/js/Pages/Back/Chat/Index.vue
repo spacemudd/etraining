@@ -107,7 +107,7 @@
                         </div>
 
                         <!-- Messages Container -->
-                        <div ref="messagesContainer" class="flex-1 overflow-y-auto p-6 space-y-4 bg-[#efeae2] min-h-[200px]">
+                        <div ref="messagesContainer" class="flex-1 overflow-y-auto max-h-[calc(100vh-380px)] p-6 space-y-4 bg-[#efeae2]">
                             <div v-if="loadingMessages" class="text-center text-sm text-gray-500 py-4">
                                 {{ $t('words.loading') }}...
                             </div>
