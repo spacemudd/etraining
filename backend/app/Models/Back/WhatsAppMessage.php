@@ -23,8 +23,10 @@ class WhatsAppMessage extends Model
     protected $fillable = [
         'twilio_sid',
         'trainee_id',
+        'user_id',
         'phone',
         'direction',
+        'is_note',
         'body',
         'status',
         'from_address',
@@ -36,6 +38,7 @@ class WhatsAppMessage extends Model
     protected $casts = [
         'sent_at' => 'datetime',
         'metadata' => 'array',
+        'is_note' => 'boolean',
     ];
 
     protected static function boot(): void
@@ -43,12 +46,19 @@ class WhatsAppMessage extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->{$model->getKeyName()} = (string) Str::uuid();
+            if (empty($model->{$model->getKeyName()})) {
+                $model->{$model->getKeyName()} = (string) Str::uuid();
+            }
         });
     }
 
     public function trainee(): BelongsTo
     {
         return $this->belongsTo(Trainee::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\User::class);
     }
 }

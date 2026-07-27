@@ -796,6 +796,18 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('company-contracts/attach-instructor', [\App\Http\Controllers\Back\CompaniesContractsController::class, 'attachInstructor'])->name('company-contracts.attach-instructor');
         Route::post('company-contracts/detach-instructor', [\App\Http\Controllers\Back\CompaniesContractsController::class, 'detachInstructor'])->name('company-contracts.detach-instructor');
 
+        Route::get('chat', [\App\Http\Controllers\Back\ChatController::class, 'index'])->name('chat.index');
+        Route::prefix('chat')->name('chat.')->group(function () {
+            Route::get('conversations', [\App\Http\Controllers\Back\ChatController::class, 'conversations'])->name('conversations');
+            Route::get('messages', [\App\Http\Controllers\Back\ChatController::class, 'messages'])->name('messages');
+            Route::get('trainees', [\App\Http\Controllers\Back\ChatController::class, 'searchTrainees'])->name('trainees');
+            Route::get('templates', [\App\Http\Controllers\Back\ChatController::class, 'templates'])->name('templates');
+            Route::get('templates/{contentSid}', [\App\Http\Controllers\Back\ChatController::class, 'showTemplate'])->name('templates.show');
+            Route::post('send-message', [\App\Http\Controllers\Back\ChatController::class, 'sendMessage'])->name('send-message');
+            Route::post('send-template', [\App\Http\Controllers\Back\ChatController::class, 'sendTemplate'])->name('send-template');
+            Route::post('send-note', [\App\Http\Controllers\Back\ChatController::class, 'sendNote'])->name('send-note');
+        });
+
         Route::get('trainee-groups', [\App\Http\Controllers\Back\TraineesController::class, 'withGroups'])->name('trainee-groups.index');
 
         Route::get('finance', [\App\Http\Controllers\Back\FinanceController::class, 'index'])->name('finance');

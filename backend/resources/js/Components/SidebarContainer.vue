@@ -98,6 +98,15 @@
             </template>
         </sidebar-link>
 
+        <sidebar-link :link-value="route('back.chat.index')" :active="$page.currentRouteName == 'back.chat.index'">
+            <template #icon>
+                <ion-icon name="chatbubbles-outline" class="w-5 h-5"></ion-icon>
+            </template>
+            <template #title>
+                <span class="ltr:ml-4 rtl:mr-4 hover:text-red-600 hover:font-bold">{{ $t('words.chat') }}</span>
+            </template>
+        </sidebar-link>
+
         <sidebar-link :link-value="route('back.settings')">
             <template #icon>
                 <ion-icon name="settings-outline" class="w-5 h-5"></ion-icon>
