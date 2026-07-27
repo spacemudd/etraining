@@ -93,17 +93,23 @@ class ChatController extends Controller
 
         $messages = WhatsAppMessage::query()
             ->where('phone', $phone)
-            ->with('user:id,name')
+            ->with(['user:id,name', 'media'])
             ->orderBy('sent_at')
             ->orderBy('created_at')
             ->get()
             ->map(function (WhatsAppMessage $msg) {
                 $formatted = $this->whatsAppService->formatStoredMessage($msg);
+                $formatted['id'] = $msg->id;
                 $formatted['is_note'] = (bool) $msg->is_note;
                 $formatted['author'] = $msg->user ? [
                     'id' => $msg->user->id,
                     'name' => $msg->user->name,
                 ] : null;
+                $formatted['saved_media'] = $msg->getMedia('whatsapp_media')->map(fn ($m) => [
+                    'id' => $m->id,
+                    'url' => $m->getUrl(),
+                    'name' => $m->file_name,
+                ]);
                 return $formatted;
             });
 
@@ -285,6 +291,33 @@ class ChatController extends Controller
                 ],
             ],
         ]);
+    }
+
+    public function saveToS3(Request $request, string $id): JsonResponse
+    {
+        $message = WhatsAppMessage::query()->findOrFail($id);
+
+        $request->validate([
+            'media_url' => 'required|url',
+        ]);
+
+        $mediaUrl = $request->input('media_url');
+
+        try {
+            $media = $message->addMediaFromUrl($mediaUrl)
+                ->toMediaCollection('whatsapp_media', 's3');
+
+            return response()->json([
+                'success' => true,
+                'message' => __('words.saved-to-s3'),
+                'media_id' => $media->id,
+                'url' => $media->getUrl(),
+            ]);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'message' => 'Failed to save media to S3: ' . $exception->getMessage(),
+            ], 422);
+        }
     }
 
     public function templates(): JsonResponse

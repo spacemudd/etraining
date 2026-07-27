@@ -39,37 +39,58 @@
                         />
                     </div>
 
-                    <div class="overflow-y-auto flex-1 divide-y divide-gray-100">
-                        <div v-if="loadingConversations" class="p-4 text-center text-sm text-gray-500">
-                            {{ $t('words.loading') }}...
+                    <div class="overflow-y-auto flex-1 divide-y divide-gray-100 flex flex-col justify-between">
+                        <div>
+                            <div v-if="loadingConversations" class="p-4 text-center text-sm text-gray-500">
+                                {{ $t('words.loading') }}...
+                            </div>
+                            <div v-else-if="filteredConversations.length === 0" class="p-6 text-center text-sm text-gray-500">
+                                {{ $t('words.no-results') }}
+                            </div>
+                            <div
+                                v-for="conv in paginatedConversations"
+                                :key="conv.phone"
+                                @click="selectConversation(conv)"
+                                class="p-4 cursor-pointer hover:bg-green-50 transition-colors flex flex-col gap-1"
+                                :class="{ 'bg-green-100 border-l-4 border-green-600': selectedConversation && selectedConversation.phone === conv.phone }"
+                            >
+                                <div class="flex items-center justify-between">
+                                    <span class="font-semibold text-sm text-gray-900 truncate">
+                                        {{ conv.trainee ? conv.trainee.name : conv.phone }}
+                                    </span>
+                                    <span class="text-[11px] text-gray-400" dir="ltr">
+                                        {{ formatTimeShort(conv.last_message.sent_at) }}
+                                    </span>
+                                </div>
+                                <div v-if="conv.trainee && conv.trainee.company_name" class="text-xs text-gray-600 font-medium">
+                                    {{ conv.trainee.company_name }}
+                                </div>
+                                <div class="flex items-center justify-between text-xs text-gray-500">
+                                    <span class="truncate max-w-[200px]">
+                                        <span v-if="conv.last_message.is_note" class="text-yellow-700 font-medium">[{{ $t('words.internal-note') }}]: </span>
+                                        {{ conv.last_message.body }}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                        <div v-else-if="filteredConversations.length === 0" class="p-6 text-center text-sm text-gray-500">
-                            {{ $t('words.no-results') }}
-                        </div>
-                        <div
-                            v-for="conv in filteredConversations"
-                            :key="conv.phone"
-                            @click="selectConversation(conv)"
-                            class="p-4 cursor-pointer hover:bg-green-50 transition-colors flex flex-col gap-1"
-                            :class="{ 'bg-green-100 border-l-4 border-green-600': selectedConversation && selectedConversation.phone === conv.phone }"
-                        >
-                            <div class="flex items-center justify-between">
-                                <span class="font-semibold text-sm text-gray-900 truncate">
-                                    {{ conv.trainee ? conv.trainee.name : conv.phone }}
-                                </span>
-                                <span class="text-[11px] text-gray-400" dir="ltr">
-                                    {{ formatTimeShort(conv.last_message.sent_at) }}
-                                </span>
-                            </div>
-                            <div v-if="conv.trainee && conv.trainee.company_name" class="text-xs text-gray-600 font-medium">
-                                {{ conv.trainee.company_name }}
-                            </div>
-                            <div class="flex items-center justify-between text-xs text-gray-500">
-                                <span class="truncate max-w-[200px]">
-                                    <span v-if="conv.last_message.is_note" class="text-yellow-700 font-medium">[{{ $t('words.internal-note') }}]: </span>
-                                    {{ conv.last_message.body }}
-                                </span>
-                            </div>
+
+                        <!-- Pagination Controls -->
+                        <div v-if="totalPages > 1" class="p-3 border-t bg-white flex items-center justify-between text-xs text-gray-600">
+                            <button
+                                @click="conversationPage--"
+                                :disabled="conversationPage === 1"
+                                class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded disabled:opacity-40"
+                            >
+                                {{ $t('words.previous') || 'Previous' }}
+                            </button>
+                            <span>{{ conversationPage }} / {{ totalPages }}</span>
+                            <button
+                                @click="conversationPage++"
+                                :disabled="conversationPage >= totalPages"
+                                class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded disabled:opacity-40"
+                            >
+                                {{ $t('words.next') || 'Next' }}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -154,24 +175,52 @@
                                 <div
                                     v-else
                                     class="max-w-[80%] md:max-w-[70%] rounded-2xl px-4 py-3 text-sm shadow-sm"
-                                    :class="isOutboundMessage(message)
-                                        ? 'bg-green-100 text-gray-900 rounded-tr-sm border border-green-300'
-                                        : 'bg-white text-gray-900 rounded-tl-sm border border-gray-200'"
+                                    :class="message.status === 'delivery_failed' || message.status === 'failed'
+                                        ? 'bg-red-100 text-red-950 rounded-tr-sm border border-red-300'
+                                        : (isOutboundMessage(message)
+                                            ? 'bg-green-100 text-gray-900 rounded-tr-sm border border-green-300'
+                                            : 'bg-white text-gray-900 rounded-tl-sm border border-gray-200')"
                                 >
                                     <p class="whitespace-pre-wrap break-words leading-relaxed" dir="auto">{{ message.body }}</p>
                                     
-                                    <!-- Media Attachments -->
-                                    <div v-if="message.metadata && message.metadata.media && message.metadata.media.length" class="mt-2 space-y-1">
-                                        <a
-                                            v-for="(media, mediaIndex) in message.metadata.media"
-                                            :key="mediaIndex"
-                                            :href="media.url"
-                                            target="_blank"
-                                            class="block text-xs underline text-blue-600"
-                                        >
-                                            {{ media.content_type || $t('words.attachment') }}
-                                        </a>
-                                    </div>
+                                     <!-- Media Attachments -->
+                                     <div v-if="message.metadata && message.metadata.media && message.metadata.media.length" class="mt-2 space-y-2">
+                                         <div
+                                             v-for="(media, mediaIndex) in message.metadata.media"
+                                             :key="mediaIndex"
+                                             class="flex flex-col gap-1 p-2 bg-black/5 rounded-lg border border-black/10"
+                                         >
+                                             <a
+                                                 :href="media.url"
+                                                 target="_blank"
+                                                 class="text-xs underline font-medium text-blue-600 flex items-center gap-1"
+                                             >
+                                                 <ion-icon name="document-attach-outline" class="w-4 h-4"></ion-icon>
+                                                 {{ media.content_type || $t('words.attachment') }}
+                                             </a>
+                                             <button
+                                                 v-if="message.id"
+                                                 @click="saveMediaToS3(message.id, media.url)"
+                                                 class="self-start mt-1 text-[11px] bg-white border border-gray-300 hover:bg-gray-100 px-2 py-1 rounded font-semibold text-gray-700 shadow-sm transition"
+                                             >
+                                                 {{ $t('words.save-to-s3') }}
+                                             </button>
+                                         </div>
+                                     </div>
+
+                                     <!-- Saved to S3 Media List -->
+                                     <div v-if="message.saved_media && message.saved_media.length" class="mt-2 space-y-1">
+                                         <div class="text-[11px] font-bold text-green-700">✓ S3 Cloud Storage:</div>
+                                         <a
+                                             v-for="s3Media in message.saved_media"
+                                             :key="s3Media.id"
+                                             :href="s3Media.url"
+                                             target="_blank"
+                                             class="block text-xs underline text-green-800 font-medium"
+                                         >
+                                             {{ s3Media.name }}
+                                         </a>
+                                     </div>
 
                                     <!-- Author & Timestamp footer -->
                                     <div class="text-[11px] mt-1.5 flex items-center justify-between gap-3 text-gray-500 pt-1 border-t border-gray-200/40">
@@ -287,7 +336,7 @@
                                         <ion-icon name="information-circle-outline" class="w-4 h-4"></ion-icon>
                                         {{ $t('words.internal-note-hint') }}
                                     </p>
-                                    <p v-else class="text-xs text-gray-400">Press send to deliver message via WhatsApp.</p>
+                                     <p v-else class="text-xs text-gray-400">{{ $t('words.press-send-whatsapp-hint') }}</p>
 
                                     <button
                                         @click="sendMessageOrNote"
@@ -437,6 +486,8 @@ export default {
             newChatTemplateVariables: {},
             sendingNewChat: false,
             newChatError: '',
+            conversationPage: 1,
+            conversationsPerPage: 10,
             pollInterval: null,
         };
     },
@@ -452,6 +503,13 @@ export default {
                 const idNum = conv.trainee?.identity_number?.toLowerCase() || '';
                 return name.includes(q) || phone.includes(q) || idNum.includes(q);
             });
+        },
+        paginatedConversations() {
+            const start = (this.conversationPage - 1) * this.conversationsPerPage;
+            return this.filteredConversations.slice(start, start + this.conversationsPerPage);
+        },
+        totalPages() {
+            return Math.ceil(this.filteredConversations.length / this.conversationsPerPage) || 1;
         },
         previewTemplateBody() {
             if (!this.selectedTemplate) {
@@ -657,12 +715,7 @@ export default {
             }
         },
         startPolling() {
-            this.pollInterval = setInterval(() => {
-                this.loadConversations();
-                if (this.selectedConversation) {
-                    this.loadMessagesSilently();
-                }
-            }, 4000);
+            // Polling disabled in favor of WebSockets/Soketi broadcast
         },
         stopPolling() {
             if (this.pollInterval) {

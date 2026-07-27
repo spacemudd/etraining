@@ -806,6 +806,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::post('send-message', [\App\Http\Controllers\Back\ChatController::class, 'sendMessage'])->name('send-message');
             Route::post('send-template', [\App\Http\Controllers\Back\ChatController::class, 'sendTemplate'])->name('send-template');
             Route::post('send-note', [\App\Http\Controllers\Back\ChatController::class, 'sendNote'])->name('send-note');
+            Route::post('messages/{id}/save-to-s3', [\App\Http\Controllers\Back\ChatController::class, 'saveToS3'])->name('messages.save-to-s3');
         });
 
         Route::get('trainee-groups', [\App\Http\Controllers\Back\TraineesController::class, 'withGroups'])->name('trainee-groups.index');

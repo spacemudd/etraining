@@ -6,10 +6,13 @@ namespace App\Models\Back;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Str;
 
-class WhatsAppMessage extends Model
+class WhatsAppMessage extends Model implements HasMedia
 {
+    use InteractsWithMedia;
     public const DIRECTION_INBOUND = 'inbound';
 
     public const DIRECTION_OUTBOUND = 'outbound';
