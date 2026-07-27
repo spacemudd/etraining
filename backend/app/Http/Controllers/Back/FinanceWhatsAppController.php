@@ -6,14 +6,14 @@ namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
 use App\Models\Back\Trainee;
-use App\Services\TwilioWhatsAppService;
+use App\Services\TelnyxWhatsAppService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use RuntimeException;
 
 class FinanceWhatsAppController extends Controller
 {
-    public function __construct(private readonly TwilioWhatsAppService $whatsAppService)
+    public function __construct(private readonly TelnyxWhatsAppService $whatsAppService)
     {
     }
 

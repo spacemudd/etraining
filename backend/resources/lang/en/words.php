@@ -1042,7 +1042,7 @@ return [
     'send-whatsapp-template' => 'Send template',
     'whatsapp-sent-successfully' => 'Message sent successfully',
     'whatsapp-send-failed' => 'Failed to send WhatsApp message',
-    'whatsapp-not-configured' => 'WhatsApp is not configured. Please set Twilio credentials.',
+    'whatsapp-not-configured' => 'WhatsApp is not configured. Please set Telnyx credentials.',
     'whatsapp-templates-load-failed' => 'Failed to load WhatsApp templates',
     'whatsapp-freeform-hint' => 'Free-form messages only work within 24 hours of the trainee\'s last reply.',
     'whatsapp-live-updates' => 'Live updates enabled',

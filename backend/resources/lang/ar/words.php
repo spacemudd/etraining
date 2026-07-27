@@ -1041,7 +1041,7 @@ return [
     'send-whatsapp-template' => 'إرسال القالب',
     'whatsapp-sent-successfully' => 'تم إرسال الرسالة بنجاح',
     'whatsapp-send-failed' => 'فشل إرسال رسالة واتساب',
-    'whatsapp-not-configured' => 'واتساب غير مهيأ. يرجى إعداد بيانات Twilio.',
+    'whatsapp-not-configured' => 'واتساب غير مهيأ. يرجى إعداد بيانات Telnyx.',
     'whatsapp-templates-load-failed' => 'فشل تحميل قوالب واتساب',
     'whatsapp-freeform-hint' => 'الرسائل الحرة تعمل فقط خلال 24 ساعة من آخر رد من المتدربة.',
     'whatsapp-live-updates' => 'التحديثات المباشرة مفعلة',

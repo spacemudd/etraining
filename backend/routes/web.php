@@ -219,6 +219,7 @@ Route::get('/resignations/{id}', [CompanyResignationsController::class, 'confirm
 Route::post('webhooks/mail', [MailController::class, 'store'])->name('webhooks.mail');
 Route::post('webhooks/twilio/whatsapp/incoming', [\App\Http\Controllers\Webhooks\TwilioWhatsAppController::class, 'incoming'])->name('webhooks.twilio.whatsapp.incoming');
 Route::post('webhooks/twilio/whatsapp/status', [\App\Http\Controllers\Webhooks\TwilioWhatsAppController::class, 'status'])->name('webhooks.twilio.whatsapp.status');
+Route::post('webhooks/telnyx/whatsapp', [\App\Http\Controllers\Webhooks\TelnyxWhatsAppController::class, 'handle'])->name('webhooks.telnyx.whatsapp');
 Route::post('noon', [\App\Http\Controllers\Trainees\Payment\PaymentCardController::class, 'storeNoonReceipt'])->name('webhooks.noon');
 
 Route::get('version', function() {
