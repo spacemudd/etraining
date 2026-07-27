@@ -75,32 +75,24 @@ class TelnyxWhatsAppController extends Controller
             return;
         }
 
-        $media = [];
+        [$media, $body] = $this->extractMediaAndBody($payload);
 
-        foreach ($payload['media'] ?? [] as $item) {
-            if (! is_array($item)) {
-                continue;
-            }
-
-            $media[] = [
-                'url' => $item['url'] ?? null,
-                'content_type' => $item['content_type'] ?? null,
-            ];
-        }
+        $metadata = $media !== [] ? ['media' => $media] : null;
 
         $this->whatsAppService->storeInboundMessage([
             'external_id' => $messageId,
             'from' => $from,
             'to' => $this->extractPhone($payload['to'][0] ?? $payload['to'] ?? null),
-            'body' => (string) ($payload['text'] ?? $payload['body'] ?? ''),
+            'body' => $body,
             'status' => 'received',
             'sent_at' => $payload['received_at'] ?? now(),
-            'metadata' => $media !== [] ? ['media' => $media] : null,
+            'metadata' => $metadata,
         ]);
 
         Log::info('Telnyx WhatsApp inbound message stored', [
             'message_id' => $messageId,
             'from' => $from,
+            'body' => $body,
         ]);
     }
 
@@ -124,20 +116,13 @@ class TelnyxWhatsAppController extends Controller
             return;
         }
 
-        $body = (string) data_get($msg, 'text.body', $msg['body'] ?? '');
+        [$media, $body] = $this->extractMediaAndBody($msg);
+        if ($body === '' && isset($fullPayload['text'])) {
+            $body = (string) $fullPayload['text'];
+        }
+
         $timestamp = $msg['timestamp'] ?? null;
         $sentAt = $timestamp ? \Carbon\Carbon::createFromTimestamp((int) $timestamp) : now();
-
-        $media = [];
-        foreach ($msg['media'] ?? [] as $item) {
-            if (! is_array($item)) {
-                continue;
-            }
-            $media[] = [
-                'url' => $item['url'] ?? null,
-                'content_type' => $item['content_type'] ?? null,
-            ];
-        }
 
         $metadata = $media !== [] ? ['media' => $media] : null;
         if (isset($fullPayload['contacts'])) {
@@ -159,6 +144,51 @@ class TelnyxWhatsAppController extends Controller
             'from' => $from,
             'body' => $body,
         ]);
+    }
+
+    /**
+     * @return array{0: array<int, array<string, mixed>>, 1: string}
+     */
+    private function extractMediaAndBody(array $source): array
+    {
+        $media = [];
+        $body = (string) (
+            $source['text']
+            ?? $source['body']
+            ?? data_get($source, 'text.body')
+            ?? data_get($source, 'image.caption')
+            ?? data_get($source, 'document.caption')
+            ?? data_get($source, 'video.caption')
+            ?? data_get($source, 'caption')
+            ?? ''
+        );
+
+        foreach ($source['media'] ?? [] as $item) {
+            if (is_array($item) && isset($item['url'])) {
+                $media[] = [
+                    'url' => $item['url'],
+                    'content_type' => $item['content_type'] ?? $item['mime_type'] ?? null,
+                ];
+            }
+        }
+
+        foreach (['image', 'document', 'audio', 'video'] as $mediaType) {
+            if (isset($source[$mediaType]) && is_array($source[$mediaType])) {
+                $m = $source[$mediaType];
+                if (isset($m['url'])) {
+                    $media[] = [
+                        'url' => $m['url'],
+                        'content_type' => $m['content_type'] ?? $m['mime_type'] ?? null,
+                    ];
+                }
+            }
+        }
+
+        if ($body === '' && count($media) > 0) {
+            $body = '[Media Attachment]';
+        }
+
+        return [$media, $body];
     }
 
     /**

@@ -29,19 +29,18 @@ class ChatController extends Controller
 
     public function conversations(): JsonResponse
     {
-        // Group messages by phone to get distinct conversation threads
+        // Get unique phones
         $phones = WhatsAppMessage::query()
-            ->select('phone', 'trainee_id')
+            ->select('phone')
             ->distinct()
-            ->get();
+            ->pluck('phone');
 
         $conversations = [];
 
-        foreach ($phones as $item) {
-            $phone = $item->phone;
-            $traineeId = $item->trainee_id;
-
-            $trainee = $traineeId ? Trainee::with('company:id,name_ar')->find($traineeId) : $this->whatsAppService->findTraineeByPhone($phone);
+        foreach ($phones as $phone) {
+            if (! $phone) {
+                continue;
+            }
 
             $lastMessage = WhatsAppMessage::query()
                 ->where('phone', $phone)
@@ -54,7 +53,11 @@ class ChatController extends Controller
                 continue;
             }
 
-            $conversations[] = [
+            $trainee = $lastMessage->trainee_id
+                ? Trainee::with('company:id,name_ar')->find($lastMessage->trainee_id)
+                : $this->whatsAppService->findTraineeByPhone($phone);
+
+            $conversations[$phone] = [
                 'phone' => $phone,
                 'trainee' => $trainee ? [
                     'id' => $trainee->id,
@@ -75,11 +78,13 @@ class ChatController extends Controller
             ];
         }
 
+        $conversations = array_values($conversations);
+
         // Sort by most recent activity
         usort($conversations, fn ($a, $b) => $b['updated_at'] <=> $a['updated_at']);
 
         return response()->json([
-            'conversations' => array_values($conversations),
+            'conversations' => $conversations,
         ]);
     }
 
