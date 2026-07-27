@@ -279,6 +279,13 @@ class TelnyxWhatsAppService
         $to = $this->normalizePhoneDigits($phone);
         $from = $this->normalizePhoneDigits(config('telnyx.whatsapp_from'));
 
+        Log::debug('Sending WhatsApp message via Telnyx', [
+            'from' => $from,
+            'to' => $to,
+            'template_id' => $whatsappMessage['template']['template_id'] ?? 'N/A',
+            'type' => $whatsappMessage['type'] ?? 'N/A',
+        ]);
+
         $params = [
             'from' => $from,
             'to' => $to,
