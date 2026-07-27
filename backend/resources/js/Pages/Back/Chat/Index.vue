@@ -5,13 +5,23 @@
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                     {{ $t('words.chat') }}
                 </h2>
-                <button
-                    @click="openNewChatModal"
-                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 shadow transition-colors"
-                >
-                    <ion-icon name="add-outline" class="w-5 h-5"></ion-icon>
-                    {{ $t('words.new-chat') }}
-                </button>
+                <div class="flex items-center gap-3">
+                    <button
+                        @click="openNewChatModal"
+                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 shadow transition-colors"
+                    >
+                        <ion-icon name="add-outline" class="w-5 h-5"></ion-icon>
+                        {{ $t('words.new-chat') }}
+                    </button>
+                    <a
+                        href="/back/finance/whatsapp/status"
+                        target="_blank"
+                        class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 border border-gray-300 shadow-sm transition"
+                    >
+                        <ion-icon name="settings-outline" class="w-5 h-5"></ion-icon>
+                        {{ $t('words.account') }}
+                    </a>
+                </div>
             </div>
         </template>
 
@@ -312,39 +322,75 @@
                         </button>
                     </div>
 
-                    <div class="mb-4">
-                        <input
-                            v-model="modalSearchQuery"
-                            @input="searchTraineesModal"
-                            type="text"
-                            class="w-full form-input text-sm rounded-lg border-gray-300"
-                            :placeholder="$t('words.select-or-search-trainee')"
-                            ref="modalSearchInput"
-                        />
+                    <p class="text-xs text-gray-500 mb-4">{{ $t('words.start-new-chat-hint') }}</p>
+
+                    <div class="space-y-4 mb-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">{{ $t('words.phone-number') }}</label>
+                            <input
+                                v-model="newChatPhone"
+                                type="text"
+                                class="w-full form-input text-sm rounded-lg border-gray-300"
+                                placeholder="+9665xxxxxxxx"
+                                dir="ltr"
+                            />
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">{{ $t('words.whatsapp-templates') }}</label>
+                            <select
+                                v-model="newChatTemplateSid"
+                                @change="onNewChatTemplateChange"
+                                class="w-full form-select text-sm rounded-lg border-gray-300"
+                            >
+                                <option value="">{{ $t('words.select-template') }}</option>
+                                <option
+                                    v-for="template in templates"
+                                    :key="template.sid"
+                                    :value="template.sid"
+                                >
+                                    {{ template.friendly_name }} ({{ template.language }})
+                                </option>
+                            </select>
+                        </div>
+
+                        <div v-if="newChatTemplate" class="p-3 bg-gray-50 rounded-lg text-sm whitespace-pre-wrap border text-gray-800">
+                            {{ previewNewChatTemplateBody }}
+                        </div>
+
+                        <div v-if="newChatTemplate && newChatTemplate.variables.length" class="space-y-2">
+                            <div class="text-xs font-medium text-gray-700">{{ $t('words.template-variables') }}</div>
+                            <div
+                                v-for="variableKey in newChatTemplate.variables"
+                                :key="variableKey"
+                            >
+                                <input
+                                    v-model="newChatTemplateVariables[variableKey]"
+                                    type="text"
+                                    class="w-full form-input text-xs rounded-lg"
+                                    :placeholder="$t('words.template-variable') + ' ' + variableKey"
+                                />
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="overflow-y-auto max-h-[350px] divide-y divide-gray-100">
-                        <div v-if="searchingTrainees" class="p-4 text-center text-sm text-gray-500">
-                            {{ $t('words.loading') }}...
-                        </div>
-                        <div v-else-if="modalSearchResults.length === 0 && modalSearchQuery" class="p-4 text-center text-sm text-gray-500">
-                            {{ $t('words.no-results') }}
-                        </div>
-                        <div
-                            v-for="trainee in modalSearchResults"
-                            :key="trainee.id"
-                            @click="startChatWithTrainee(trainee)"
-                            class="p-3 hover:bg-green-50 rounded-lg cursor-pointer transition flex items-center justify-between"
+                    <div class="flex justify-end gap-2 pt-3 border-t">
+                        <button
+                            @click="$modal.hide('newChatModal')"
+                            class="px-4 py-2 rounded-lg text-sm font-semibold bg-gray-100 hover:bg-gray-200 text-gray-700 transition"
                         >
-                            <div>
-                                <div class="font-semibold text-sm text-gray-900">{{ trainee.name }}</div>
-                                <div class="text-xs text-gray-500">{{ trainee.phone }} <span v-if="trainee.identity_number">· ID: {{ trainee.identity_number }}</span></div>
-                            </div>
-                            <span v-if="trainee.company_name" class="text-xs text-gray-600 bg-gray-100 px-2 py-0.5 rounded">
-                                {{ trainee.company_name }}
-                            </span>
-                        </div>
+                            {{ $t('words.cancel') }}
+                        </button>
+                        <button
+                            @click="sendNewChatTemplate"
+                            :disabled="sendingNewChat || !newChatPhone.trim() || !newChatTemplateSid"
+                            class="px-4 py-2 rounded-lg text-sm font-semibold bg-green-600 hover:bg-green-700 text-white shadow disabled:opacity-50 transition"
+                        >
+                            {{ $t('words.send') }}
+                        </button>
                     </div>
+
+                    <p v-if="newChatError" class="mt-2 text-xs text-red-600 font-medium">{{ newChatError }}</p>
                 </div>
             </modal>
         </portal>
@@ -366,7 +412,7 @@ export default {
             default: false,
         },
     },
-    data() {
+        data() {
         return {
             conversations: [],
             conversationSearch: '',
@@ -385,9 +431,12 @@ export default {
             sending: false,
             errorMessage: '',
             successMessage: '',
-            modalSearchQuery: '',
-            modalSearchResults: [],
-            searchingTrainees: false,
+            newChatPhone: '',
+            newChatTemplateSid: '',
+            newChatTemplate: null,
+            newChatTemplateVariables: {},
+            sendingNewChat: false,
+            newChatError: '',
             pollInterval: null,
         };
     },
@@ -411,6 +460,17 @@ export default {
             let body = this.selectedTemplate.body;
             Object.keys(this.templateVariables).forEach((key) => {
                 const val = this.templateVariables[key] || `{{${key}}}`;
+                body = body.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), val);
+            });
+            return body;
+        },
+        previewNewChatTemplateBody() {
+            if (!this.newChatTemplate) {
+                return '';
+            }
+            let body = this.newChatTemplate.body;
+            Object.keys(this.newChatTemplateVariables).forEach((key) => {
+                const val = this.newChatTemplateVariables[key] || `{{${key}}}`;
                 body = body.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), val);
             });
             return body;
@@ -485,50 +545,58 @@ export default {
             }
         },
         openNewChatModal() {
-            this.modalSearchQuery = '';
-            this.modalSearchResults = [];
+            this.newChatPhone = '';
+            this.newChatTemplateSid = '';
+            this.newChatTemplate = null;
+            this.newChatTemplateVariables = {};
+            this.newChatError = '';
             this.$modal.show('newChatModal');
-            this.$nextTick(() => {
-                if (this.$refs.modalSearchInput) {
-                    this.$refs.modalSearchInput.focus();
-                }
-            });
         },
-        searchTraineesModal: throttle(async function () {
-            if (!this.modalSearchQuery || this.modalSearchQuery.length < 2) {
-                this.modalSearchResults = [];
-                return;
-            }
-            this.searchingTrainees = true;
+        async onNewChatTemplateChange() {
+            this.newChatTemplateVariables = {};
+            this.newChatTemplate = null;
+            if (!this.newChatTemplateSid) return;
             try {
-                const { data } = await axios.get(route('back.chat.trainees'), {
-                    params: { search: this.modalSearchQuery },
+                const { data } = await axios.get(route('back.chat.templates.show', this.newChatTemplateSid));
+                this.newChatTemplate = data.template;
+                this.newChatTemplate.variables.forEach((key) => {
+                    this.$set(this.newChatTemplateVariables, key, '');
                 });
-                this.modalSearchResults = data.trainees;
             } catch (e) {
-                this.modalSearchResults = [];
+                this.newChatError = 'Failed to load template details.';
+            }
+        },
+        async sendNewChatTemplate() {
+            if (!this.newChatPhone.trim() || !this.newChatTemplateSid) return;
+            this.sendingNewChat = true;
+            this.newChatError = '';
+
+            try {
+                const { data } = await axios.post(route('back.chat.send-template'), {
+                    phone: this.newChatPhone.trim(),
+                    content_sid: this.newChatTemplateSid,
+                    content_variables: this.newChatTemplateVariables,
+                });
+
+                this.$modal.hide('newChatModal');
+                await this.loadConversations();
+
+                let conv = this.conversations.find((c) => c.phone === data.message.to || c.phone === this.newChatPhone.trim());
+                if (!conv) {
+                    conv = {
+                        phone: this.newChatPhone.trim(),
+                        trainee: null,
+                        last_message: data.message,
+                        updated_at: Date.now() / 1000,
+                    };
+                    this.conversations.unshift(conv);
+                }
+                this.selectConversation(conv);
+            } catch (error) {
+                this.newChatError = error.response?.data?.message || 'Failed to send template.';
             } finally {
-                this.searchingTrainees = false;
+                this.sendingNewChat = false;
             }
-        }, 300),
-        startChatWithTrainee(trainee) {
-            this.$modal.hide('newChatModal');
-            let existing = this.conversations.find((c) => c.phone === trainee.phone);
-            if (!existing) {
-                existing = {
-                    phone: trainee.phone,
-                    trainee: trainee,
-                    last_message: {
-                        body: 'New conversation started',
-                        direction: 'outbound',
-                        is_note: false,
-                        sent_at: new Date().toISOString(),
-                    },
-                    updated_at: Date.now() / 1000,
-                };
-                this.conversations.unshift(existing);
-            }
-            this.selectConversation(existing);
         },
         toggleNoteMode() {
             this.isNoteMode = !this.isNoteMode;

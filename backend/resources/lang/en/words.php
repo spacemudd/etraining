@@ -517,6 +517,8 @@ return [
     'sent' => 'Sent',
     'internal-note' => 'Internal Note',
     'new-chat' => 'New Chat',
+    'phone-number' => 'Phone Number',
+    'start-new-chat-hint' => 'Enter phone number and select a WhatsApp template to start a new chat.',
     'select-or-search-trainee' => 'Search & select trainee...',
     'internal-note-hint' => 'This note is internal only and will not be sent to the trainee via WhatsApp.',
     'instructor-start-time' => 'Instructor start time',
