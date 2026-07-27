@@ -285,7 +285,6 @@ class TelnyxWhatsAppService
             'normalized_from_number' => $from,
             'to_number' => $to,
             'api_key_prefix' => substr(config('telnyx.api_key'), 0, 5) . '...', // Mask API key
-            'waba_id' => config('telnyx.waba_id'),
             'message_type' => $whatsappMessage['type'] ?? 'unknown',
             'template_id' => $whatsappMessage['template']['template_id'] ?? 'N/A',
         ]);
@@ -295,10 +294,6 @@ class TelnyxWhatsAppService
             'to' => $to,
             'whatsapp_message' => $whatsappMessage,
         ];
-
-        if (filled(config('telnyx.waba_id'))) {
-            $params['messaging_profile_id'] = config('telnyx.waba_id');
-        }
 
         $webhookUrl = config('telnyx.status_callback_url');
 
@@ -367,7 +362,6 @@ class TelnyxWhatsAppService
 
             $configuredFrom = config('telnyx.whatsapp_from');
             $apiKeyPrefix = substr(config('telnyx.api_key'), 0, 5) . '...';
-            $wabaId = config('telnyx.waba_id');
 
             $message = sprintf(
                 "Telnyx API request failed with status %d: %s",
@@ -379,7 +373,6 @@ class TelnyxWhatsAppService
             $message .= " (Normalized From: {$fromNumber})";
             $message .= " (To: {$toNumber})";
             $message .= " (API Key: {$apiKeyPrefix})";
-            $message .= " (WABA ID: {$wabaId})";
 
             throw new RuntimeException($message);
         }
