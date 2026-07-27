@@ -40,8 +40,8 @@
                             v-for="conv in filteredConversations"
                             :key="conv.phone"
                             @click="selectConversation(conv)"
-                            class="p-4 cursor-pointer hover:bg-green-50/60 transition-colors flex flex-col gap-1"
-                            :class="{ 'bg-green-100/70 border-l-4 border-green-600': selectedConversation && selectedConversation.phone === conv.phone }"
+                            class="p-4 cursor-pointer hover:bg-green-50 transition-colors flex flex-col gap-1"
+                            :class="{ 'bg-green-100 border-l-4 border-green-600': selectedConversation && selectedConversation.phone === conv.phone }"
                         >
                             <div class="flex items-center justify-between">
                                 <span class="font-semibold text-sm text-gray-900 truncate">
@@ -51,13 +51,13 @@
                                     {{ formatTimeShort(conv.last_message.sent_at) }}
                                 </span>
                             </div>
+                            <div v-if="conv.trainee && conv.trainee.company_name" class="text-xs text-gray-600 font-medium">
+                                {{ conv.trainee.company_name }}
+                            </div>
                             <div class="flex items-center justify-between text-xs text-gray-500">
                                 <span class="truncate max-w-[200px]">
                                     <span v-if="conv.last_message.is_note" class="text-yellow-700 font-medium">[{{ $t('words.internal-note') }}]: </span>
                                     {{ conv.last_message.body }}
-                                </span>
-                                <span v-if="conv.trainee && conv.trainee.company_name" class="bg-gray-200 text-gray-700 px-1.5 py-0.5 rounded text-[10px] truncate max-w-[100px]">
-                                    {{ conv.trainee.company_name }}
                                 </span>
                             </div>
                         </div>
@@ -88,9 +88,11 @@
                                     <div class="font-bold text-gray-800 text-sm">
                                         {{ selectedConversation.trainee ? selectedConversation.trainee.name : selectedConversation.phone }}
                                     </div>
-                                    <div class="text-xs text-gray-500 flex items-center gap-2">
-                                        <span>{{ selectedConversation.phone }}</span>
-                                        <span v-if="selectedConversation.trainee && selectedConversation.trainee.company_name">· {{ selectedConversation.trainee.company_name }}</span>
+                                    <div v-if="selectedConversation.trainee && selectedConversation.trainee.company_name" class="text-xs text-gray-600 font-medium">
+                                        {{ selectedConversation.trainee.company_name }}
+                                    </div>
+                                    <div class="text-xs text-gray-500 flex items-center gap-2 mt-0.5">
+                                        <span dir="ltr">{{ selectedConversation.phone }}</span>
                                     </div>
                                 </div>
                             </div>
