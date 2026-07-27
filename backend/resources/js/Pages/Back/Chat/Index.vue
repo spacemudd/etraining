@@ -121,19 +121,19 @@
                                 <!-- Internal Note Sticky Box -->
                                 <div
                                     v-if="message.is_note"
-                                    class="max-w-[85%] w-full bg-[#fef3c7] border-2 border-amber-300 rounded-xl p-4 text-sm shadow-md text-amber-950"
+                                    class="max-w-[85%] w-full bg-yellow-100 border-2 border-yellow-300 rounded-xl p-4 text-sm shadow-md text-yellow-950"
                                 >
-                                    <div class="flex items-center justify-between font-bold text-xs text-amber-900 mb-1.5">
+                                    <div class="flex items-center justify-between font-bold text-xs text-yellow-900 mb-1.5">
                                         <span class="flex items-center gap-1.5">
-                                            <ion-icon name="document-text-outline" class="w-4 h-4 text-amber-700"></ion-icon>
+                                            <ion-icon name="document-text-outline" class="w-4 h-4 text-yellow-700"></ion-icon>
                                             {{ $t('words.internal-note') }}
                                         </span>
-                                        <span v-if="message.author" class="bg-amber-200 text-amber-950 px-2 py-0.5 rounded text-[11px] font-semibold">
+                                        <span v-if="message.author" class="bg-yellow-200 text-yellow-950 px-2 py-0.5 rounded text-[11px] font-semibold">
                                             👤 {{ message.author.name }}
                                         </span>
                                     </div>
-                                    <p class="whitespace-pre-wrap break-words text-amber-950 text-sm leading-relaxed" dir="auto">{{ message.body }}</p>
-                                    <div class="text-[11px] text-amber-800/80 mt-2 text-right font-medium" dir="ltr">
+                                    <p class="whitespace-pre-wrap break-words text-yellow-950 text-sm leading-relaxed" dir="auto">{{ message.body }}</p>
+                                    <div class="text-[11px] text-yellow-800/80 mt-2 text-right font-medium" dir="ltr">
                                         {{ formatMessageTime(message.date_sent) }}
                                     </div>
                                 </div>
@@ -200,8 +200,9 @@
                                 <!-- Internal Note Toggle Button -->
                                 <button
                                     @click="toggleNoteMode"
+                                    type="button"
                                     class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition shadow-sm"
-                                    :class="isNoteMode ? 'bg-amber-500 text-white ring-2 ring-amber-300' : 'bg-amber-100 text-amber-800 hover:bg-amber-200'"
+                                    :class="isNoteMode ? 'bg-yellow-400 text-black border border-yellow-500' : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200 border border-yellow-200'"
                                 >
                                     <ion-icon name="create-outline" class="w-4 h-4"></ion-icon>
                                     {{ $t('words.internal-note') }}
@@ -249,6 +250,7 @@
 
                                 <button
                                     @click="sendTemplate"
+                                    type="button"
                                     :disabled="sending || !selectedTemplateSid"
                                     class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow disabled:opacity-50"
                                 >
@@ -263,13 +265,13 @@
                                         v-model="messageBody"
                                         rows="3"
                                         class="w-full text-sm rounded-lg transition-all p-3"
-                                        :class="isNoteMode ? 'bg-[#fef3c7] border-amber-300 focus:border-amber-500 focus:ring-amber-200 text-amber-950 placeholder-amber-700/70' : 'border-gray-300 focus:border-green-500 focus:ring-green-200'"
+                                        :class="isNoteMode ? 'bg-yellow-100 border-yellow-300 focus:border-yellow-500 focus:ring-yellow-200 text-yellow-950 placeholder-yellow-800/60' : 'border-gray-300 focus:border-green-500 focus:ring-green-200'"
                                         :placeholder="isNoteMode ? $t('words.internal-note-hint') : $t('words.message') + '...'"
                                     ></textarea>
                                 </div>
 
                                 <div class="flex items-center justify-between mt-2">
-                                    <p v-if="isNoteMode" class="text-xs text-amber-800 font-medium flex items-center gap-1">
+                                    <p v-if="isNoteMode" class="text-xs text-yellow-800 font-medium flex items-center gap-1">
                                         <ion-icon name="information-circle-outline" class="w-4 h-4"></ion-icon>
                                         {{ $t('words.internal-note-hint') }}
                                     </p>
@@ -277,9 +279,10 @@
 
                                     <button
                                         @click="sendMessageOrNote"
+                                        type="button"
                                         :disabled="sending || !messageBody.trim()"
                                         class="px-4 py-2 rounded-lg text-sm font-semibold text-white shadow disabled:opacity-50 transition"
-                                        :class="isNoteMode ? 'bg-amber-600 hover:bg-amber-700' : 'bg-green-600 hover:bg-green-700'"
+                                        :class="isNoteMode ? 'bg-yellow-500 hover:bg-yellow-600 text-black font-bold' : 'bg-green-600 hover:bg-green-700'"
                                     >
                                         {{ isNoteMode ? $t('words.internal-note') : $t('words.send') }}
                                     </button>
