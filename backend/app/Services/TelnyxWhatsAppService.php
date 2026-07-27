@@ -245,6 +245,11 @@ class TelnyxWhatsAppService
             $digits = '+' . $digits;
         }
 
+        // Ensure the number starts with a plus sign and the country code
+        if (!str_starts_with($digits, '+')) {
+            $digits = '+' . $digits;
+        }
+
         return $digits;
     }
 
