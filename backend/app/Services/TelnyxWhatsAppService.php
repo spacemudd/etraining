@@ -334,11 +334,17 @@ class TelnyxWhatsAppService
                 'response' => $payload,
             ]);
 
-            $detail = $payload['errors'][0]['detail']
+            $errorDetails = $payload['errors'][0]['detail']
                 ?? $payload['errors'][0]['title']
-                ?? $errorMessage;
+                ?? json_encode($payload['errors'] ?? $payload); // Fallback to full errors or payload
 
-            throw new RuntimeException((string) $detail);
+            throw new RuntimeException(
+                sprintf(
+                    "Telnyx API request failed with status %d: %s",
+                    $response->getStatusCode(),
+                    (string) $errorDetails
+                )
+            );
         }
 
         return is_array($payload) ? $payload : [];
