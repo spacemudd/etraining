@@ -143,8 +143,8 @@
                                     v-else
                                     class="max-w-[80%] md:max-w-[70%] rounded-2xl px-4 py-3 text-sm shadow-sm"
                                     :class="isOutboundMessage(message)
-                                        ? 'bg-[#dcf8c6] text-gray-900 rounded-tr-sm border border-[#c5e6af]'
-                                        : 'bg-white text-gray-900 rounded-tl-sm border border-gray-200'"
+                                        ? 'bg-[#dcf8c6] text-gray-900 ltr:rounded-tr-sm rtl:rounded-tl-sm border border-[#c5e6af]'
+                                        : 'bg-white text-gray-900 ltr:rounded-tl-sm rtl:rounded-tr-sm border border-gray-200'"
                                 >
                                     <p class="whitespace-pre-wrap break-words leading-relaxed" dir="auto">{{ message.body }}</p>
                                     
