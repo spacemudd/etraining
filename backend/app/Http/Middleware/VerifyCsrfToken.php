@@ -13,6 +13,7 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         '/webhooks/*',
+        '/webhooks/telnyx/whatsapp',
         '/noon',
         '/api/trainees/uploadcv',
         '/login', //  For testing purposes.

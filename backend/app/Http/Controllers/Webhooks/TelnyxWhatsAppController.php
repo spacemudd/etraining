@@ -30,11 +30,15 @@ class TelnyxWhatsAppController extends Controller
             return response('Forbidden', 403);
         }
 
-        $eventType = (string) data_get($request->all(), 'data.event_type', '');
-        $payload = data_get($request->all(), 'data.payload', []);
+        Log::info('Telnyx WhatsApp webhook received', [
+            'request' => $request->all(),
+        ]);
+
+        $eventType = (string) data_get($request->all(), 'data.event_type', data_get($request->all(), 'event_type', ''));
+        $payload = data_get($request->all(), 'data.payload', data_get($request->all(), 'data', []));
 
         if (! is_array($payload)) {
-            return response('', 204);
+            $payload = [];
         }
 
         if ($eventType === 'message.received') {
