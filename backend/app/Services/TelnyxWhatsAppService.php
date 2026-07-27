@@ -90,14 +90,14 @@ class TelnyxWhatsAppService
 
         $templatePayload = ['components' => $components];
 
-        if ($templateId !== '') {
-            $templatePayload['template_id'] = $templateId;
-        } elseif (! empty($template['friendly_name']) && ! empty($template['language'])) {
+        if (! empty($template['friendly_name']) && ! empty($template['language'])) {
             $templatePayload['name'] = $template['friendly_name'];
             $templatePayload['language'] = [
                 'policy' => 'deterministic',
                 'code' => $template['language'],
             ];
+        } elseif ($templateId !== '') {
+            $templatePayload['template_id'] = $templateId;
         }
 
         $message = $this->sendWhatsAppMessage($phone, [
@@ -285,6 +285,11 @@ class TelnyxWhatsAppService
             'to' => $to,
             'whatsapp_message' => $whatsappMessage,
         ];
+
+        $messagingProfileId = config('telnyx.messaging_profile_id');
+        if (filled($messagingProfileId)) {
+            $params['messaging_profile_id'] = $messagingProfileId;
+        }
 
         $webhookUrl = config('telnyx.status_callback_url');
 
