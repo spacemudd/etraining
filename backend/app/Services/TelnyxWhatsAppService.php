@@ -361,18 +361,21 @@ class TelnyxWhatsAppService
                 ?? $payload['errors'][0]['title']
                 ?? json_encode($payload['errors'] ?? $payload); // Fallback to full errors or payload
 
+            $configuredFrom = config('telnyx.whatsapp_from');
+            $apiKeyPrefix = substr(config('telnyx.api_key'), 0, 5) . '...';
+            $wabaId = config('telnyx.waba_id');
+
             $message = sprintf(
                 "Telnyx API request failed with status %d: %s",
                 $response->getStatusCode(),
                 (string) $errorDetails
             );
 
-            if ($fromNumber) {
-                $message .= " (From: {$fromNumber})";
-            }
-            if ($toNumber) {
-                $message .= " (To: {$toNumber})";
-            }
+            $message .= " (Configured From: {$configuredFrom})";
+            $message .= " (Normalized From: {$fromNumber})";
+            $message .= " (To: {$toNumber})";
+            $message .= " (API Key: {$apiKeyPrefix})";
+            $message .= " (WABA ID: {$wabaId})";
 
             throw new RuntimeException($message);
         }
