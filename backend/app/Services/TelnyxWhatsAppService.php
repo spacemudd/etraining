@@ -240,6 +240,11 @@ class TelnyxWhatsAppService
             $digits = '966' . $digits;
         }
 
+        // Ensure the number starts with a plus sign and the country code
+        if (!str_starts_with($digits, '+')) {
+            $digits = '+' . $digits;
+        }
+
         return $digits;
     }
 
@@ -261,10 +266,8 @@ class TelnyxWhatsAppService
             ->first();
     }
 
-    public function toE164(string $phone): string
-    {
-        return app(TwilioVerifyService::class)->toE164($phone);
-    }
+    // Removed toE164 as Telnyx seems to handle it internally if the number is properly formatted.
+    // If issues persist, consider re-introducing or using a dedicated E.164 formatting library.
 
     /**
      * @param  array<string, mixed>  $whatsappMessage
@@ -272,9 +275,13 @@ class TelnyxWhatsAppService
      */
     private function sendWhatsAppMessage(string $phone, array $whatsappMessage, string $bodyForStorage = ''): array
     {
+        // Ensure the phone number is normalized before sending
+        $to = $this->normalizePhoneDigits($phone);
+        $from = $this->normalizePhoneDigits(config('telnyx.whatsapp_from'));
+
         $params = [
-            'from' => $this->toE164(config('telnyx.whatsapp_from')),
-            'to' => $this->toE164($phone),
+            'from' => $from,
+            'to' => $to,
             'whatsapp_message' => $whatsappMessage,
         ];
 
