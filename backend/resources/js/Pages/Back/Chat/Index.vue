@@ -118,22 +118,22 @@
                                 class="flex"
                                 :class="isOutboundMessage(message) && !message.is_note ? 'justify-end' : (message.is_note ? 'justify-center' : 'justify-start')"
                             >
-                                <!-- Internal Note Box -->
+                                <!-- Internal Note Sticky Box -->
                                 <div
                                     v-if="message.is_note"
-                                    class="max-w-[85%] w-full bg-yellow-55béco bg-amber-50 border border-amber-200 rounded-xl p-3 text-sm shadow-sm text-amber-900"
+                                    class="max-w-[85%] w-full bg-[#fef3c7] border-2 border-amber-300 rounded-xl p-4 text-sm shadow-md text-amber-950"
                                 >
-                                    <div class="flex items-center justify-between font-semibold text-xs text-amber-800 mb-1">
-                                        <span class="flex items-center gap-1">
-                                            <ion-icon name="lock-closed-outline" class="w-3.5 h-3.5"></ion-icon>
+                                    <div class="flex items-center justify-between font-bold text-xs text-amber-900 mb-1.5">
+                                        <span class="flex items-center gap-1.5">
+                                            <ion-icon name="document-text-outline" class="w-4 h-4 text-amber-700"></ion-icon>
                                             {{ $t('words.internal-note') }}
                                         </span>
-                                        <span v-if="message.author" class="bg-amber-200 text-amber-900 px-1.5 py-0.5 rounded text-[10px]">
-                                            {{ message.author.name }}
+                                        <span v-if="message.author" class="bg-amber-200 text-amber-950 px-2 py-0.5 rounded text-[11px] font-semibold">
+                                            👤 {{ message.author.name }}
                                         </span>
                                     </div>
-                                    <p class="whitespace-pre-wrap break-words text-amber-950" dir="auto">{{ message.body }}</p>
-                                    <div class="text-[10px] text-amber-700/80 mt-1.5 text-right" dir="ltr">
+                                    <p class="whitespace-pre-wrap break-words text-amber-950 text-sm leading-relaxed" dir="auto">{{ message.body }}</p>
+                                    <div class="text-[11px] text-amber-800/80 mt-2 text-right font-medium" dir="ltr">
                                         {{ formatMessageTime(message.date_sent) }}
                                     </div>
                                 </div>
@@ -141,12 +141,12 @@
                                 <!-- Standard WhatsApp Message Bubble -->
                                 <div
                                     v-else
-                                    class="max-w-[80%] md:max-w-[70%] rounded-2xl px-4 py-2.5 text-sm shadow-sm"
+                                    class="max-w-[80%] md:max-w-[70%] rounded-2xl px-4 py-3 text-sm shadow-sm"
                                     :class="isOutboundMessage(message)
                                         ? 'bg-[#dcf8c6] text-gray-900 rounded-tr-sm border border-[#c5e6af]'
                                         : 'bg-white text-gray-900 rounded-tl-sm border border-gray-200'"
                                 >
-                                    <p class="whitespace-pre-wrap break-words" dir="auto">{{ message.body }}</p>
+                                    <p class="whitespace-pre-wrap break-words leading-relaxed" dir="auto">{{ message.body }}</p>
                                     
                                     <!-- Media Attachments -->
                                     <div v-if="message.metadata && message.metadata.media && message.metadata.media.length" class="mt-2 space-y-1">
@@ -182,14 +182,14 @@
                             <div class="flex items-center justify-between mb-3">
                                 <div class="flex gap-2">
                                     <button
-                                        @click="sendMode = 'freeform'"
+                                        @click="sendMode = 'freeform'; isNoteMode = false;"
                                         class="px-3 py-1.5 rounded-lg text-xs font-semibold transition"
                                         :class="sendMode === 'freeform' && !isNoteMode ? 'bg-green-600 text-white shadow' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
                                     >
                                         {{ $t('words.message') }}
                                     </button>
                                     <button
-                                        @click="sendMode = 'template'"
+                                        @click="sendMode = 'template'; isNoteMode = false;"
                                         class="px-3 py-1.5 rounded-lg text-xs font-semibold transition"
                                         :class="sendMode === 'template' && !isNoteMode ? 'bg-green-600 text-white shadow' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
                                     >
@@ -262,8 +262,8 @@
                                     <textarea
                                         v-model="messageBody"
                                         rows="3"
-                                        class="w-full text-sm rounded-lg transition-all"
-                                        :class="isNoteMode ? 'bg-amber-50 border-amber-300 focus:border-amber-500 focus:ring-amber-200 text-amber-950 placeholder-amber-700/60' : 'border-gray-300 focus:border-green-500 focus:ring-green-200'"
+                                        class="w-full text-sm rounded-lg transition-all p-3"
+                                        :class="isNoteMode ? 'bg-[#fef3c7] border-amber-300 focus:border-amber-500 focus:ring-amber-200 text-amber-950 placeholder-amber-700/70' : 'border-gray-300 focus:border-green-500 focus:ring-green-200'"
                                         :placeholder="isNoteMode ? $t('words.internal-note-hint') : $t('words.message') + '...'"
                                     ></textarea>
                                 </div>
