@@ -296,6 +296,10 @@ class TelnyxWhatsAppService
             'whatsapp_message' => $whatsappMessage,
         ];
 
+        if (filled(config('telnyx.waba_id'))) {
+            $params['messaging_profile_id'] = config('telnyx.waba_id');
+        }
+
         $webhookUrl = config('telnyx.status_callback_url');
 
         if (! filled($webhookUrl)) {
