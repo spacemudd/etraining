@@ -279,15 +279,6 @@ class TelnyxWhatsAppService
         $to = $this->normalizePhoneDigits($phone);
         $from = $this->normalizePhoneDigits(config('telnyx.whatsapp_from'));
 
-        // Temporary debug log to inspect runtime configuration
-        Log::debug('Telnyx WhatsApp send attempt details', [
-            'configured_from_number' => config('telnyx.whatsapp_from'),
-            'normalized_from_number' => $from,
-            'to_number' => $to,
-            'api_key_prefix' => substr(config('telnyx.api_key'), 0, 5) . '...', // Mask API key
-            'message_type' => $whatsappMessage['type'] ?? 'unknown',
-            'template_id' => $whatsappMessage['template']['template_id'] ?? 'N/A',
-        ]);
 
         $params = [
             'from' => $from,
