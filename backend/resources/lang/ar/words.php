@@ -519,7 +519,7 @@ return [
     'please-use-the-excel-template-below' => 'الرجاء استخدام صيغة ملف الإكسل ادناه',
     'download-excel-file' => 'تحميل صيغة الإكسل',
     'suspend' => 'حظر',
-    'whatsapp' => 'إسألني',
+    'whatsapp' => 'تواصل',
     'instructor-start-time' => 'وقت دخول المدربة',
     'system-requirements' => 'متطلبات التقنية للمنصة',
     'edit-survey-links' => 'تعديل روابط الإستبيان',

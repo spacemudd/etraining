@@ -36,8 +36,8 @@
                         {{ $t('words.whatsapp-not-configured') }}
                     </div>
 
-                    <div v-else class="flex flex-col md:flex-row min-h-[500px] max-h-[75vh]">
-                        <div class="md:w-1/3 border-b md:border-b-0 md:border-r flex flex-col">
+                    <div v-else class="flex flex-col md:flex-row h-[600px] max-h-[75vh]">
+                        <div class="md:w-1/3 border-b md:border-b-0 md:border-r flex flex-col overflow-y-auto">
                             <div class="p-4 border-b">
                                 <input
                                     v-model="searchQuery"
@@ -67,7 +67,7 @@
                             </div>
                         </div>
 
-                        <div class="md:w-2/3 flex flex-col">
+                        <div class="md:w-2/3 flex flex-col h-full overflow-hidden">
                             <div v-if="!selectedTrainee" class="flex-1 flex items-center justify-center text-gray-400 p-8 text-center">
                                 {{ $t('words.select-trainee') }}
                             </div>
@@ -80,7 +80,7 @@
                                 </div>
 
                                 <div ref="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-100 min-h-[200px]">
-                                    <div v-if="loadingMessages" class="text-center text-sm text-gray-500">
+                                    <div v-if="loadingMessages" class="text-center text-sm text-gray-500 py-4">
                                         {{ $t('words.loading') }}...
                                     </div>
 
@@ -91,12 +91,12 @@
                                         :class="isOutboundMessage(message) ? 'justify-end' : 'justify-start'"
                                     >
                                         <div
-                                            class="max-w-[80%] rounded-lg px-3 py-2 text-sm shadow"
+                                            class="max-w-[80%] md:max-w-[70%] rounded-2xl px-4 py-2.5 text-sm shadow-sm"
                                             :class="isOutboundMessage(message)
-                                                ? 'bg-green-500 text-white'
-                                                : 'bg-white text-gray-800'"
+                                                ? 'bg-green-600 text-white rounded-tr-sm'
+                                                : 'bg-white text-gray-800 border border-gray-200 rounded-tl-sm'"
                                         >
-                                            <p class="whitespace-pre-wrap">{{ message.body }}</p>
+                                            <p class="whitespace-pre-wrap break-words" dir="auto">{{ message.body }}</p>
                                             <div v-if="message.metadata && message.metadata.media && message.metadata.media.length" class="mt-2 space-y-1">
                                                 <a
                                                     v-for="(media, mediaIndex) in message.metadata.media"
@@ -109,9 +109,9 @@
                                                     {{ media.content_type || $t('words.attachment') }}
                                                 </a>
                                             </div>
-                                            <div class="text-xs mt-1 opacity-75">
-                                                {{ formatMessageTime(message.date_sent) }}
-                                                <span v-if="message.status"> · {{ message.status }}</span>
+                                            <div class="text-[11px] mt-1.5 flex items-center gap-1.5 opacity-75" :class="isOutboundMessage(message) ? 'justify-end text-green-100' : 'justify-start text-gray-500'" dir="ltr">
+                                                <span>{{ formatMessageTime(message.date_sent) }}</span>
+                                                <span v-if="message.status" class="capitalize">· {{ message.status }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -535,3 +535,20 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.overflow-y-auto::-webkit-scrollbar {
+    width: 6px;
+}
+.overflow-y-auto::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+.overflow-y-auto::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+</style>
