@@ -43,6 +43,15 @@ class TelnyxWhatsAppController extends Controller
 
         if ($eventType === 'message.received') {
             $this->handleInbound($payload);
+        } elseif ($eventType === 'whatsapp.messages' || isset($payload['messages'])) {
+            $messages = $payload['messages'] ?? [];
+            if (is_array($messages)) {
+                foreach ($messages as $msg) {
+                    if (is_array($msg)) {
+                        $this->handleWhatsappMessagePayload($msg, $payload);
+                    }
+                }
+            }
         } elseif (in_array($eventType, ['message.sent', 'message.finalized', 'message.delivered', 'message.read', 'message.failed'], true)) {
             $this->handleStatus($payload, $eventType);
         }
@@ -92,6 +101,63 @@ class TelnyxWhatsAppController extends Controller
         Log::info('Telnyx WhatsApp inbound message stored', [
             'message_id' => $messageId,
             'from' => $from,
+        ]);
+    }
+
+    /**
+     * @param  array<string, mixed>  $msg
+     * @param  array<string, mixed>  $fullPayload
+     */
+    private function handleWhatsappMessagePayload(array $msg, array $fullPayload): void
+    {
+        $messageId = (string) ($msg['id'] ?? '');
+        $from = (string) ($msg['from'] ?? '');
+        if ($from === '' && isset($fullPayload['contacts'][0]['wa_id'])) {
+            $from = '+' . ltrim((string) $fullPayload['contacts'][0]['wa_id'], '+');
+        }
+
+        if ($messageId === '' || $from === '') {
+            return;
+        }
+
+        if (WhatsAppMessage::query()->where('twilio_sid', $messageId)->exists()) {
+            return;
+        }
+
+        $body = (string) data_get($msg, 'text.body', $msg['body'] ?? '');
+        $timestamp = $msg['timestamp'] ?? null;
+        $sentAt = $timestamp ? \Carbon\Carbon::createFromTimestamp((int) $timestamp) : now();
+
+        $media = [];
+        foreach ($msg['media'] ?? [] as $item) {
+            if (! is_array($item)) {
+                continue;
+            }
+            $media[] = [
+                'url' => $item['url'] ?? null,
+                'content_type' => $item['content_type'] ?? null,
+            ];
+        }
+
+        $metadata = $media !== [] ? ['media' => $media] : null;
+        if (isset($fullPayload['contacts'])) {
+            $metadata['contacts'] = $fullPayload['contacts'];
+        }
+
+        $this->whatsAppService->storeInboundMessage([
+            'external_id' => $messageId,
+            'from' => $from,
+            'to' => data_get($fullPayload, 'metadata.display_phone_number'),
+            'body' => $body,
+            'status' => 'received',
+            'sent_at' => $sentAt,
+            'metadata' => $metadata,
+        ]);
+
+        Log::info('Telnyx WhatsApp incoming message (whatsapp.messages) stored', [
+            'message_id' => $messageId,
+            'from' => $from,
+            'body' => $body,
         ]);
     }
 
