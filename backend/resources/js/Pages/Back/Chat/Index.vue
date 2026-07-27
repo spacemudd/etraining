@@ -116,7 +116,7 @@
                                 v-for="message in messages"
                                 :key="message.sid || message.date_sent + message.body"
                                 class="flex"
-                                :class="isOutboundMessage(message) && !message.is_note ? 'justify-end' : (message.is_note ? 'justify-center' : 'justify-start')"
+                                :class="messageAlignmentClass(message)"
                             >
                                 <!-- Internal Note Sticky Box -->
                                 <div
@@ -143,8 +143,8 @@
                                     v-else
                                     class="max-w-[80%] md:max-w-[70%] rounded-2xl px-4 py-3 text-sm shadow-sm"
                                     :class="isOutboundMessage(message)
-                                        ? 'bg-[#dcf8c6] text-gray-900 ltr:rounded-tr-sm rtl:rounded-tl-sm border border-[#c5e6af]'
-                                        : 'bg-white text-gray-900 ltr:rounded-tl-sm rtl:rounded-tr-sm border border-gray-200'"
+                                        ? 'bg-[#dcf8c6] text-gray-900 rounded-tr-sm border border-[#c5e6af]'
+                                        : 'bg-white text-gray-900 rounded-tl-sm border border-gray-200'"
                                 >
                                     <p class="whitespace-pre-wrap break-words leading-relaxed" dir="auto">{{ message.body }}</p>
                                     
@@ -162,12 +162,12 @@
                                     </div>
 
                                     <!-- Author & Timestamp footer -->
-                                    <div class="text-[11px] mt-1.5 flex items-center justify-between gap-3 text-gray-500 pt-1 border-t border-gray-200/40" dir="ltr">
+                                    <div class="text-[11px] mt-1.5 flex items-center justify-between gap-3 text-gray-500 pt-1 border-t border-gray-200/40">
                                         <span class="font-medium text-[10px] text-gray-600 truncate max-w-[120px]">
                                             <span v-if="isOutboundMessage(message) && message.author">👤 {{ message.author.name }}</span>
                                             <span v-else-if="!isOutboundMessage(message)">📲 Trainee</span>
                                         </span>
-                                        <span class="flex items-center gap-1">
+                                        <span class="flex items-center gap-1" dir="ltr">
                                             <span>{{ formatMessageTime(message.date_sent) }}</span>
                                             <span v-if="message.status" class="capitalize">· {{ message.status }}</span>
                                         </span>
@@ -614,6 +614,21 @@ export default {
         },
         isOutboundMessage(message) {
             return ['outbound-api', 'outbound-reply', 'outbound'].includes(message.direction);
+        },
+        isRtl() {
+            return document.documentElement.dir === 'rtl' || (this.$page && this.$page.props && this.$page.props.locale === 'ar');
+        },
+        messageAlignmentClass(message) {
+            if (message.is_note) {
+                return 'justify-center';
+            }
+            const isOutbound = this.isOutboundMessage(message);
+            const isRTL = this.isRtl();
+            if (isOutbound) {
+                return isRTL ? 'justify-start' : 'justify-end';
+            } else {
+                return isRTL ? 'justify-end' : 'justify-start';
+            }
         },
         scrollToBottom() {
             const container = this.$refs.messagesContainer;

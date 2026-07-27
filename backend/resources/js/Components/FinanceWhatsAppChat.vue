@@ -88,7 +88,7 @@
                                         v-for="message in messages"
                                         :key="message.sid || message.date_sent + message.body"
                                         class="flex"
-                                        :class="isOutboundMessage(message) ? 'justify-end' : 'justify-start'"
+                                        :class="messageAlignmentClass(message)"
                                     >
                                         <div
                                             class="max-w-[80%] md:max-w-[70%] rounded-2xl px-4 py-2.5 text-sm shadow-sm"
@@ -458,6 +458,21 @@ export default {
         },
         isOutboundMessage(message) {
             return ['outbound-api', 'outbound-reply', 'outbound'].includes(message.direction);
+        },
+        isRtl() {
+            return document.documentElement.dir === 'rtl' || (this.$page && this.$page.props && this.$page.props.locale === 'ar');
+        },
+        messageAlignmentClass(message) {
+            if (message.is_note) {
+                return 'justify-center';
+            }
+            const isOutbound = this.isOutboundMessage(message);
+            const isRTL = this.isRtl();
+            if (isOutbound) {
+                return isRTL ? 'justify-start' : 'justify-end';
+            } else {
+                return isRTL ? 'justify-end' : 'justify-start';
+            }
         },
         variableSample(variableKey) {
             if (!this.selectedTemplate || !this.selectedTemplate.variable_samples) {
