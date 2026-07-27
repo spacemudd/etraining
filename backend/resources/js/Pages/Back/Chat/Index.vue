@@ -640,6 +640,11 @@ export default {
             if (!dateString) return '';
             return new Date(dateString).toLocaleString();
         },
+        formatTimeShort(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        },
         translateStatus(status) {
             if (!status) return '';
             const key = status.toLowerCase().trim();
