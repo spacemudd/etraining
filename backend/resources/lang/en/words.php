@@ -515,7 +515,7 @@ return [
     'queued' => 'Queued',
     'received' => 'Received',
     'sent' => 'Sent',
-    'internal_note' => 'Internal Note',
+    'internal-note' => 'Internal Note',
     'new-chat' => 'New Chat',
     'select-or-search-trainee' => 'Search & select trainee...',
     'internal-note-hint' => 'This note is internal only and will not be sent to the trainee via WhatsApp.',
