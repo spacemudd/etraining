@@ -508,7 +508,7 @@ class TelnyxWhatsAppService
     /**
      * @return array<string, mixed>
      */
-    private function formatStoredMessage(WhatsAppMessage $message): array
+    public function formatStoredMessage(WhatsAppMessage $message): array
     {
         return [
             'sid' => $message->twilio_sid,
