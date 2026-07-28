@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Back;
 
 use App\Exports\CompaniesPaidInvoices2024Export;
 use App\Exports\CompanyInvoicesSummaryExport;
+use App\Exports\RecentUnlinkedTraineesExport;
 use App\Exports\TraineeAttendanceExportByGroup;
 use App\Exports\TraineesWithoutInvoicesExport;
 use App\Http\Controllers\Controller;
@@ -20,6 +21,7 @@ use App\Models\Back\Audit;
 use App\Models\Back\Company;
 use App\Models\Back\Course;
 use App\Models\Back\Invoice;
+use App\Models\Back\Trainee;
 use App\Models\JobTracker;
 use App\Models\User;
 use App\Reports\BulkCourseAttendanceReportFactory;
@@ -250,6 +252,27 @@ class ReportsController extends Controller
         $fileName = now()->format('Y-m-d') . '-certificates-issued-' . $company->name_ar . '.xlsx';
 
         return Excel::download(new \App\Exports\CompanyCertificatesExport($request->company_id), $fileName);
+    }
+
+    public function exportRecentUnlinkedTrainees()
+    {
+        $this->authorize('view-backoffice-reports');
+
+        Audit::create([
+            'event' => 'recentUnlinkedTrainees.export.excel',
+            'auditable_id' => auth()->user()->id,
+            'auditable_type' => User::class,
+            'new_values' => [
+                'period' => 'last_3_months',
+                'company_id' => null,
+                'type' => Trainee::class,
+            ],
+        ]);
+
+        return Excel::download(
+            new RecentUnlinkedTraineesExport(),
+            now()->format('Y-m-d') . '-recent-unlinked-trainees.xlsx'
+        );
     }
 
 

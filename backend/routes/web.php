@@ -753,6 +753,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::resource('companies/{company_id}/resignations', CompanyResignationsController::class);
         Route::get('companies/deleted', [\App\Http\Controllers\Back\CompaniesController::class, 'deleted'])->name('companies.deleted');
         Route::get('companies/{id}/restore', [\App\Http\Controllers\Back\CompaniesController::class, 'restore'])->name('companies.restore');
+        Route::get('reports/recent-unlinked-trainees/excel', [\App\Http\Controllers\Back\ReportsController::class, 'exportRecentUnlinkedTrainees'])->name('reports.recent-unlinked-trainees.excel');
 
         Route::get('companies/export', [\App\Http\Controllers\Back\CompaniesController::class, 'export'])->name('companies.export');
 
