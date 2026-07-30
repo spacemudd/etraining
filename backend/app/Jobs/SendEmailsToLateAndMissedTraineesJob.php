@@ -80,6 +80,11 @@ class SendEmailsToLateAndMissedTraineesJob implements ShouldQueue
         foreach ($usersWhoDidntAttended as $punchIn) {
             Log::debug('Sending warning to user: '.$punchIn->email);
 
+            if ($punchIn->ignore_attendance) {
+                Log::debug('Skipping warning - trainee has ignore_attendance enabled: '.$punchIn->email);
+                continue;
+            }
+
             // Skip warning if trainee was created less than or equal to 2 days before the session
             $sessionDate = $this->courseBatchSession->starts_at;
             $traineeCreatedDate = $punchIn->created_at;
@@ -136,6 +141,11 @@ class SendEmailsToLateAndMissedTraineesJob implements ShouldQueue
         foreach ($usersWhoWhereLate as $punchInAttendance) {
             $punchIn = $punchInAttendance->trainee;
             Log::debug('Sending warning to user: '.$punchIn->email);
+
+            if ($punchIn->ignore_attendance) {
+                Log::debug('Skipping late warning - trainee has ignore_attendance enabled: '.$punchIn->email);
+                continue;
+            }
 
             // Skip warning if trainee was created less than or equal to 2 days before the session
             $sessionDate = $this->courseBatchSession->starts_at;

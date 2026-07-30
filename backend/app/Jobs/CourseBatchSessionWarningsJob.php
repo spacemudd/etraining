@@ -68,6 +68,11 @@ class CourseBatchSessionWarningsJob implements ShouldQueue
                     continue;
                 }
 
+                if ($attendance->trainee->ignore_attendance) {
+                    Log::debug('[CourseBatchSessionWarningsJob] Skipping warning - trainee has ignore_attendance enabled: '.$attendance->trainee->email);
+                    continue;
+                }
+
                 // Skip warning if trainee was created less than or equal to 2 days before the session
                 $sessionDate = $this->courseBatchSession->starts_at;
                 $traineeCreatedDate = $attendance->trainee->created_at;
@@ -141,6 +146,11 @@ class CourseBatchSessionWarningsJob implements ShouldQueue
                     ->exists();
 
                 if ($alreadySent) {
+                    continue;
+                }
+
+                if ($attendance->trainee->ignore_attendance) {
+                    Log::debug('[CourseBatchSessionWarningsJob] Skipping late warning - trainee has ignore_attendance enabled: '.$attendance->trainee->email);
                     continue;
                 }
 
