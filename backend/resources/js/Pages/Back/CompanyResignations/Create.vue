@@ -47,11 +47,13 @@
 
                                     <div class="mt-2">
                                         <div class="col-span-4 sm:col-span-4">
-                                            <jet-label for="notes" :value="$t('words.reason')" />
+                                            <jet-label for="reason" :value="$t('words.reason')" />
                                             <div class="relative mt-2">
                                                 <select class="mt-1 block w-full bg-gray-100 appearance-none border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:border-gray-500"
                                                         v-model="form.reason"
-                                                        id="reason">
+                                                        id="reason"
+                                                        required>
+                                                    <option disabled value="">{{ $t('words.please-select') }}</option>
                                                     <option value="عدم سداد">عدم سداد</option>
                                                     <option value="استبعاد من الشركة">استبعاد من الشركة</option>
                                                     <option value="استقالة">استقالة</option>
@@ -353,6 +355,11 @@ export default {
         submitForm() {
             if (this.form.trainees.length === 0) {
                 alert(this.$t('words.please-select'));
+                return;
+            }
+
+            if (!this.form.reason) {
+                alert(this.$t('words.resignation-reason-required'));
                 return;
             }
 

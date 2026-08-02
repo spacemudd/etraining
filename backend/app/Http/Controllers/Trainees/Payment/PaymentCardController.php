@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Trainees\Payment;
 
+use App\Exceptions\NoonUnmatchedPaymentException;
 use App\Http\Controllers\Controller;
 use App\Mail\EditAmountMail;
+use App\Mail\NoonUnmatchedPaymentMail;
 use App\Mail\RejectNewEmailMail;
 use App\Models\Back\AccountingLedgerBook;
 use App\Models\Back\Audit;
@@ -16,8 +18,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
-use Mail;
+use Throwable;
 
 class PaymentCardController extends Controller
 {
@@ -101,6 +104,20 @@ class PaymentCardController extends Controller
                     $q->withTrashed();
                 }])->find($invoice_id);
 
+            if (!$invoice) {
+                DB::rollBack();
+                $this->alertUnmatchedNoonPayment($request, $order, 'invoice_not_found', $invoice_id);
+
+                return 1;
+            }
+
+            if (!$invoice->trainee) {
+                DB::rollBack();
+                $this->alertUnmatchedNoonPayment($request, $order, 'trainee_missing', $invoice->id);
+
+                return 1;
+            }
+
             // TODO: If the invoice is deleted, notify the admins via email.
             if ($invoice->deleted_at) {
                 $invoice->restore();
@@ -138,12 +155,24 @@ class PaymentCardController extends Controller
     public function recordFailure(Request $request, $order)
     {
         DB::beginTransaction();
+        $invoiceReference = $order->result->order->reference ?? null;
         $invoice = Invoice::withTrashed()
             ->with([
                 'trainee' => function ($q) {
                     $q->withTrashed();
                 }
-            ])->find($order->result->order->reference);
+            ])->find($invoiceReference);
+
+        if (!$invoice || !$invoice->trainee) {
+            Log::warning('Noon payment failure webhook could not resolve invoice/trainee', [
+                'order_id' => $request->orderId,
+                'invoice_reference' => $invoiceReference,
+                'has_invoice' => (bool) $invoice,
+            ]);
+            DB::rollBack();
+
+            return;
+        }
 
         Audit::create([
             'team_id' => $invoice->trainee->team_id,
@@ -153,6 +182,81 @@ class PaymentCardController extends Controller
             'new_values' => $request->toArray(),
         ]);
         DB::commit();
+    }
+
+    /**
+     * Escalate a successful Noon payment that cannot be matched to an invoice/trainee.
+     *
+     * @param object $order
+     */
+    private function alertUnmatchedNoonPayment(Request $request, $order, string $reason, ?string $invoiceReference): void
+    {
+        $context = [
+            'reason' => $reason,
+            'order_id' => $request->orderId,
+            'invoice_reference' => $invoiceReference,
+            'noon_order_id' => $order->result->order->id ?? null,
+            'amount' => $order->result->order->amount ?? null,
+            'currency' => $order->result->order->currency ?? null,
+            'payment_status' => $order->result->order->status ?? null,
+            'received_at' => now()->toDateTimeString(),
+            'webhook_payload' => $request->toArray(),
+        ];
+
+        Log::error('Noon successful payment could not be matched to invoice/trainee', $context);
+
+        try {
+            Audit::create([
+                'event' => 'noon_unmatched_payment',
+                'auditable_id' => $invoiceReference,
+                'auditable_type' => Invoice::class,
+                'new_values' => $context,
+            ]);
+        } catch (Throwable $e) {
+            Log::error('Failed to store noon_unmatched_payment audit', [
+                'error' => $e->getMessage(),
+                'context' => $context,
+            ]);
+        }
+
+        $exception = new NoonUnmatchedPaymentException(
+            sprintf(
+                'Noon payment succeeded but could not be matched (%s). orderId=%s reference=%s noonOrderId=%s amount=%s',
+                $reason,
+                $context['order_id'] ?? 'n/a',
+                $context['invoice_reference'] ?? 'n/a',
+                $context['noon_order_id'] ?? 'n/a',
+                $context['amount'] ?? 'n/a'
+            )
+        );
+
+        if (app()->bound('sentry')) {
+            try {
+                app('sentry')->withScope(function (\Sentry\State\Scope $scope) use ($exception, $context): void {
+                    $scope->setLevel(\Sentry\Severity::error());
+                    $scope->setTag('payment_provider', 'noon');
+                    $scope->setTag('payment_issue', 'unmatched_success');
+                    $scope->setContext('noon_unmatched_payment', $context);
+                    app('sentry')->captureException($exception);
+                });
+            } catch (Throwable $e) {
+                Log::error('Failed to report unmatched Noon payment to Sentry', [
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
+        try {
+            Mail::to([
+                'sara@hadaf-hq.com',
+                'shafiqalshaar@adv-line.com',
+            ])->send(new NoonUnmatchedPaymentMail($context));
+        } catch (Throwable $e) {
+            Log::error('Failed to email finance about unmatched Noon payment', [
+                'error' => $e->getMessage(),
+                'context' => $context,
+            ]);
+        }
     }
 
     public function showOptions()

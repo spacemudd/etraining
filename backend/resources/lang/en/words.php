@@ -866,6 +866,7 @@ return [
     'create-new-resignation-form' => 'Create new resignations form',
     'create-new-resignation-form-help' => 'Here you can select the company you want to send resignation files to.',
     'manage-resignations' => 'Manage resignations',
+    'resignation-reason-required' => 'Resignation reason is required. Please select one.',
     'trainee-must-be-in-the-same-company' => 'Trainee must be in the same company',
     'cc' => 'Cc',
     'bcc' => 'Bcc',

@@ -864,6 +864,7 @@ return [
     'create-new-resignation-form' => 'نموذج انشاء استقالة جديدة',
     'create-new-resignation-form-help' => 'هنا يمكنك اختيار الشركة المراد ارسال لها الاستقالات.',
     'manage-resignations' => 'أدارة الاستقالات',
+    'resignation-reason-required' => 'سبب الاستقالة مطلوب. الرجاء الاختيار.',
     'trainee-must-be-in-the-same-company' => 'المتدربة ليست في نفس الشركة',
     'cc' => 'نسخة (Cc)',
     'bcc' => 'نسخة خفية (Bcc)',

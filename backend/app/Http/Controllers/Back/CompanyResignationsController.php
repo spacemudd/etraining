@@ -43,10 +43,12 @@ class CompanyResignationsController extends Controller
             //'trainees.*.id' => 'required|exists:trainees,id',
             'date' => 'required|date',
             'resignation_date' => 'nullable|date',
-            //'reason' => 'required|string',
+            'reason' => 'required|string|max:255',
             //'emails_to' => 'required|string',
             //'emails_cc' => 'nullable|string',
             //'emails_bcc' => 'nullable|string',
+        ], [
+            'reason.required' => 'سبب الاستقالة مطلوب.',
         ]);
 
         DB::beginTransaction();
