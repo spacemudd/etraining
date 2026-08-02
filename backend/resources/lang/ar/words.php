@@ -814,7 +814,6 @@ return [
     'page-refresh' => 'تحديث الصفحة',
     'override-training-costs' => 'عرض وتعديل رسوم التدريب الثابتة في صفحة المتدربة',
     'apply-invoice-value-over-fixed-costs' => 'اعتماد قيمة الفاتورة المدخلة بدل الرسوم المثبتة',
-    'apply-invoice-value-over-fixed-costs-hint' => 'لديك صلاحية اعتماد القيمة المدخلة على الفواتير حتى للمتدربات اللاتي لديهن رسوم تدريب مثبتة.',
     'fixed-training-costs' => 'رسوم تدريب ثابتة',
     'not-set' => 'غير مفعل',
     'here-you-can-override-training-cost-for-the-trainee' => 'هنا يمكنك تحديد رسوم التدريب او تجاهل رسوم التدريب للشركة',

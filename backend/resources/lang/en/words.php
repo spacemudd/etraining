@@ -801,7 +801,6 @@ return [
     'page-refresh' => 'Page refresh',
     'override-training-costs' => 'View and edit fixed training costs on trainee page',
     'apply-invoice-value-over-fixed-costs' => 'Apply entered invoice value over fixed training costs',
-    'apply-invoice-value-over-fixed-costs-hint' => 'You can apply the entered invoice value even for trainees with fixed training costs.',
     'fixed-training-costs' => 'Fixed training costs',
     'here-you-can-override-training-cost-for-the-trainee' => 'Here you can specify the training costs and alerts for the trainee',
     'ignore-attendance-warnings-and-emails' => 'Ingore attendance warnings and emaiks',
