@@ -304,6 +304,17 @@ public function checkContractStatus()
     Log::info('Checking contract status...');
 
     $user = Auth::user();
+
+    if (!$user) {
+        Log::info('Unauthenticated contract status check; prompting login.');
+
+        return response()->json([
+            'status' => 'unauthenticated',
+            'error' => 'Unauthenticated',
+            'login_url' => route('login'),
+        ], 401);
+    }
+
     $trainee = Trainee::where('user_id', $user->id)->first();
 
     if (!$trainee || !$trainee->zoho_contract_id) {

@@ -491,8 +491,6 @@ export default {
             try {
                 const response = await axios.get(route('zoho.check-contract-status'));
                 this.contractStatus = response.data.status;
-                console.log(this.contractStatus);
-
                 this.errorMessage = null;
 
                 // Shafiq: Disable the pop up for the time being.
@@ -500,6 +498,10 @@ export default {
                 //     this.showContractPopup();
                 // }
             } catch (error) {
+                if (error.response?.status === 401) {
+                    window.location.href = error.response?.data?.login_url || route('login');
+                    return;
+                }
                 this.errorMessage = error.response?.data?.error || "حدث خطأ أثناء جلب حالة العقد.";
             }
         }
