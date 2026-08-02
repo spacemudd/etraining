@@ -1,0 +1,20 @@
+---
+description: Sentry org/project defaults for this workspace
+alwaysApply: true
+---
+
+# Sentry
+
+This repo maps to the **Clarastars** Sentry account / **e-training** project.
+
+When using Sentry MCP tools, always use:
+
+| Setting | Value |
+|---|---|
+| Organization slug | `clarastars` |
+| Project slug | `e-training` |
+| Project ID | `5602270` |
+| Region URL | `https://us.sentry.io` |
+| Web URL | https://clarastars.sentry.io/projects/e-training/?project=5602270 |
+
+Do not query other Sentry organizations (including HADAF) from this workspace unless the user explicitly asks.

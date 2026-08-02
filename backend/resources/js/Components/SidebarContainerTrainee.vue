@@ -224,17 +224,18 @@ export default {
 
      async fetchContractStatus() {
     try {
-        console.log("heeeereeeeeee");
         const response = await axios.get(route('zoho.check-contract-status'));
         this.contractStatus = response.data.status;
-        console.log(this.contractStatus);
-
         this.errorMessage = null;
 
         if (this.contractStatus !== 'completed') {
             // this.showContractPopup();
         }
     } catch (error) {
+        if (error.response?.status === 401) {
+            window.location.href = error.response?.data?.login_url || route('login');
+            return;
+        }
         this.errorMessage = error.response?.data?.error || "حدث خطأ أثناء جلب حالة العقد.";
     }
 }
