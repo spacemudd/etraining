@@ -68,10 +68,12 @@ class CompanyInvoicesController extends Controller
         $validatedData = $this->validateStoreRequest($request, $company->id);
 
         DB::transaction(function () use ($request, $company, $validatedData) {
+            $applyCustomValueOverFixedCosts = $request->user()->can('apply-invoice-value-over-fixed-costs');
+
             foreach ($request->input('trainees') as $trainee_id) {
-                // Should we override?
+                // Use fixed training costs unless the user is allowed to apply the entered invoice value.
                 $cost = Trainee::findOrFail($trainee_id)->override_training_costs;
-                if ($cost !== null) {
+                if ($cost !== null && ! $applyCustomValueOverFixedCosts) {
                     $grand_total = Money::of($cost, 'SAR', new CustomContext(2), RoundingMode::HALF_UP);
                     $sub_total = $grand_total->multipliedBy(1 / (1 + InvoiceItem::DEFAULT_TAX), RoundingMode::HALF_UP);
                     $tax = $grand_total->minus($sub_total);

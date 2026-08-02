@@ -51,6 +51,7 @@ class RolesService
         'receive-notification-on-trainee-delete',
         'manage-missed-course-notices',
         'override-training-costs',
+        'apply-invoice-value-over-fixed-costs',
         'companies-report',
         'manage-trainee-groups',
         'block-trainee',

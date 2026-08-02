@@ -81,6 +81,13 @@
                                 :message="form.error('invoice_value')"
                                 class="mt-2"
                             />
+
+                            <p
+                                v-can="'apply-invoice-value-over-fixed-costs'"
+                                class="mt-2 text-sm text-green-700 bg-green-50 border border-green-200 rounded px-3 py-2"
+                            >
+                                {{ $t('words.apply-invoice-value-over-fixed-costs-hint') }}
+                            </p>
                         </div>
 
                         <div class="col-span-4" v-if="expectedToPay">
