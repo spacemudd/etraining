@@ -48,6 +48,7 @@
                          <option value="رجيع بسبب رفض توقيع المباشرة في مقر الشركة">رجيع بسبب رفض توقيع المباشرة في مقر الشركة</option>
                         <option value="قابلة للتسجيل">قابلة للتسجيل</option>
                         <option value="بعد الإجراء القانوني">بعد الإجراء القانوني</option>
+                        <option value="عقد معلق بمنصة العمل عن بعد">عقد معلق بمنصة العمل عن بعد</option>
                     </select>
                     <button @click="suspendTrainee" class="mt-5 items-center justify-start float-left rounded-md px-4 py-2 bg-red-300 hover:bg-red-400">
                         {{ $t('words.suspend') }}
