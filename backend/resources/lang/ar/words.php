@@ -1058,6 +1058,8 @@ return [
     'whatsapp-templates-load-failed' => 'فشل تحميل قوالب واتساب',
     'whatsapp-freeform-hint' => 'الرسائل الحرة تعمل فقط خلال 24 ساعة من آخر رد من المتدربة.',
     'whatsapp-live-updates' => 'التحديثات المباشرة مفعلة',
+    'pending-invoices' => 'فواتير معلّقة',
+    'no-pending-invoices' => 'لا توجد فواتير بانتظار الدفع',
     'attachment' => 'مرفق',
     'no-results' => 'لا توجد نتائج',
     'detected-english-name-title' => 'تم اكتشاف الاسم الإنجليزي',

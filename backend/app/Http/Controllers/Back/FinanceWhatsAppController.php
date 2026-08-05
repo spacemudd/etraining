@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
+use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
 use App\Services\TelnyxWhatsAppService;
 use Illuminate\Http\JsonResponse;
@@ -70,6 +71,37 @@ class FinanceWhatsAppController extends Controller
                 'company_name' => $trainee->company?->name_ar,
                 'show_url' => route('back.trainees.show', $trainee->id),
             ]),
+        ]);
+    }
+
+    public function pendingInvoices(Trainee $trainee): JsonResponse
+    {
+        $invoices = $trainee->invoices()
+            ->notPaid()
+            ->where('status', '!=', Invoice::STATUS_ARCHIVED)
+            ->orderByDesc('from_date')
+            ->get([
+                'id',
+                'number',
+                'grand_total',
+                'status',
+                'from_date',
+                'to_date',
+                'created_at',
+            ]);
+
+        return response()->json([
+            'invoices' => $invoices->map(static fn (Invoice $invoice) => [
+                'id' => $invoice->id,
+                'number_formatted' => $invoice->number_formatted,
+                'grand_total' => round((float) $invoice->grand_total, 2),
+                'status' => $invoice->status,
+                'status_formatted' => $invoice->status_formatted,
+                'month_of' => $invoice->month_of,
+                'show_url' => route('back.finance.invoices.show', $invoice->id),
+            ])->values(),
+            'total_owed' => round((float) $invoices->sum('grand_total'), 2),
+            'count' => $invoices->count(),
         ]);
     }
 

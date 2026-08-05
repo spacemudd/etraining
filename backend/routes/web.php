@@ -820,6 +820,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
                 Route::get('templates', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'templates'])->name('templates');
                 Route::get('templates/{contentSid}', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'showTemplate'])->name('templates.show');
                 Route::get('trainees', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'searchTrainees'])->name('trainees');
+                Route::get('trainees/{trainee}/pending-invoices', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'pendingInvoices'])->name('trainees.pending-invoices');
                 Route::get('messages', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'messages'])->name('messages');
                 Route::post('send-template', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'sendTemplate'])->name('send-template');
                 Route::post('send-message', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'sendMessage'])->name('send-message');

@@ -11,10 +11,18 @@ BROADCAST_DRIVER=pusher
 PUSHER_APP_ID=your-app-id
 PUSHER_APP_KEY=your-app-key
 PUSHER_APP_SECRET=your-app-secret
-PUSHER_HOST=your-soketi-server-ip-or-domain
-PUSHER_PORT=6001
-PUSHER_SCHEME=http
 PUSHER_APP_CLUSTER=mt1
+
+# Public Soketi endpoint (no shared Docker network — use Coolify HTTPS proxy)
+PUSHER_HOST=ws.example.com
+PUSHER_PORT=443
+PUSHER_SCHEME=https
+
+MIX_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
+MIX_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
+MIX_PUSHER_HOST="${PUSHER_HOST}"
+MIX_PUSHER_PORT="${PUSHER_PORT}"
+MIX_PUSHER_SCHEME="${PUSHER_SCHEME}"
 ```
 
 ## 2. Frontend Configuration (`resources/js/bootstrap.js`)
@@ -25,12 +33,18 @@ import Echo from 'laravel-echo';
 
 window.Pusher = require('pusher-js');
 
+const pusherPort = Number(process.env.MIX_PUSHER_PORT || 443);
+const forceTLS = (process.env.MIX_PUSHER_SCHEME || 'https') === 'https';
+
 window.Echo = new Echo({
     broadcaster: 'pusher',
     key: process.env.MIX_PUSHER_APP_KEY,
+    cluster: process.env.MIX_PUSHER_APP_CLUSTER || 'mt1',
     wsHost: process.env.MIX_PUSHER_HOST || window.location.hostname,
-    wsPort: process.env.MIX_PUSHER_PORT || 6001,
-    forceTLS: false,
+    wsPort: pusherPort,
+    wssPort: pusherPort,
+    forceTLS: forceTLS,
+    encrypted: forceTLS,
     disableStats: true,
     enabledTransports: ['ws', 'wss'],
 });

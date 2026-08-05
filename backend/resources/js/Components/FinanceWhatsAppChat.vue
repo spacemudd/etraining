@@ -56,9 +56,11 @@
                                     class="p-3 border-b cursor-pointer hover:bg-green-50 transition-colors"
                                     :class="{ 'bg-green-100': selectedTrainee && selectedTrainee.id === trainee.id }"
                                 >
-                                    <div class="font-medium text-sm">{{ trainee.name }}</div>
+                                    <div class="font-medium text-sm truncate">
+                                        {{ trainee.name }}
+                                        <span v-if="trainee.company_name" class="font-normal text-gray-500"> · {{ trainee.company_name }}</span>
+                                    </div>
                                     <div class="text-xs text-gray-500">{{ trainee.phone }}</div>
-                                    <div v-if="trainee.company_name" class="text-xs text-gray-400">{{ trainee.company_name }}</div>
                                 </div>
 
                                 <div v-if="searchQuery && !searching && searchResults.length === 0" class="p-4 text-sm text-gray-500 text-center">
@@ -73,10 +75,75 @@
                             </div>
 
                             <template v-else>
-                                <div class="p-4 border-b bg-gray-50">
-                                    <div class="font-semibold">{{ selectedTrainee.name }}</div>
-                                    <div class="text-sm text-gray-600">{{ $t('words.phone') }}: {{ selectedTrainee.phone }}</div>
-                                    <div class="text-xs text-green-600 mt-1">{{ $t('words.whatsapp-live-updates') }}</div>
+                                <div class="p-4 border-b bg-gray-50 space-y-3">
+                                    <div class="flex items-start justify-between gap-3">
+                                        <div class="min-w-0">
+                                            <div class="font-semibold truncate">
+                                                {{ selectedTrainee.name }}
+                                                <span v-if="selectedTrainee.company_name" class="font-normal text-gray-500"> · {{ selectedTrainee.company_name }}</span>
+                                            </div>
+                                            <div class="text-sm text-gray-600">{{ $t('words.phone') }}: {{ selectedTrainee.phone }}</div>
+                                            <div class="text-xs text-green-600 mt-1">{{ $t('words.whatsapp-live-updates') }}</div>
+                                        </div>
+                                        <div class="flex items-center gap-2 flex-shrink-0">
+                                            <a
+                                                v-if="selectedTrainee.show_url"
+                                                :href="selectedTrainee.show_url"
+                                                target="_blank"
+                                                class="text-xs bg-white border border-gray-300 hover:bg-gray-100 px-3 py-1.5 rounded-lg font-medium text-gray-700 transition"
+                                            >
+                                                {{ $t('words.profile') }}
+                                            </a>
+                                            <span
+                                                v-if="!loadingPendingInvoices && pendingInvoices.length"
+                                                class="text-xs bg-amber-100 border border-amber-200 text-amber-900 px-2.5 py-1.5 rounded-lg font-semibold whitespace-nowrap"
+                                            >
+                                                {{ pendingInvoices.length }} · {{ formatAmount(pendingTotalOwed) }}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div v-if="loadingPendingInvoices" class="text-xs text-gray-500">
+                                        {{ $t('words.loading') }}...
+                                    </div>
+
+                                    <div
+                                        v-else-if="pendingInvoices.length"
+                                        class="rounded-lg border border-amber-200 bg-amber-50/80 overflow-hidden"
+                                    >
+                                        <div class="px-3 py-2 border-b border-amber-200 flex items-center justify-between gap-2">
+                                            <span class="text-xs font-semibold text-amber-950">{{ $t('words.pending-invoices') }}</span>
+                                            <span class="text-xs text-amber-800">
+                                                {{ $t('words.outstanding-amount') }}: {{ formatAmount(pendingTotalOwed) }}
+                                            </span>
+                                        </div>
+                                        <ul class="divide-y divide-amber-100 max-h-36 overflow-y-auto">
+                                            <li
+                                                v-for="invoice in pendingInvoices"
+                                                :key="invoice.id"
+                                                class="px-3 py-2 flex items-center justify-between gap-3 text-xs"
+                                            >
+                                                <div class="min-w-0 flex items-center gap-2">
+                                                    <a
+                                                        :href="invoice.show_url"
+                                                        target="_blank"
+                                                        class="font-medium text-blue-600 hover:text-blue-700 hover:underline truncate"
+                                                    >
+                                                        {{ invoice.number_formatted }}
+                                                    </a>
+                                                    <span v-if="invoice.month_of" class="text-gray-500 flex-shrink-0">{{ invoice.month_of }}</span>
+                                                </div>
+                                                <div class="flex items-center gap-2 flex-shrink-0">
+                                                    <span class="font-semibold text-gray-800 tabular-nums">{{ formatAmount(invoice.grand_total) }}</span>
+                                                    <span class="text-amber-800 bg-amber-100 px-1.5 py-0.5 rounded">{{ invoice.status_formatted }}</span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div v-else class="text-xs text-gray-500">
+                                        {{ $t('words.no-pending-invoices') }}
+                                    </div>
                                 </div>
 
                                 <div ref="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-100 min-h-[200px]">
@@ -238,6 +305,9 @@ export default {
             searchResults: [],
             searching: false,
             selectedTrainee: null,
+            pendingInvoices: [],
+            pendingTotalOwed: 0,
+            loadingPendingInvoices: false,
             templates: [],
             selectedTemplateSid: '',
             selectedTemplate: null,
@@ -299,6 +369,9 @@ export default {
             this.searchQuery = '';
             this.searchResults = [];
             this.selectedTrainee = null;
+            this.pendingInvoices = [];
+            this.pendingTotalOwed = 0;
+            this.loadingPendingInvoices = false;
             this.messages = [];
             this.selectedTemplateSid = '';
             this.selectedTemplate = null;
@@ -341,8 +414,35 @@ export default {
             this.errorMessage = '';
             this.successMessage = '';
             this.messages = [];
-            await this.loadMessages(false);
+            this.pendingInvoices = [];
+            this.pendingTotalOwed = 0;
+            await Promise.all([
+                this.loadMessages(false),
+                this.loadPendingInvoices(),
+            ]);
             this.startPolling();
+        },
+        async loadPendingInvoices() {
+            if (!this.selectedTrainee || !this.selectedTrainee.id) {
+                this.pendingInvoices = [];
+                this.pendingTotalOwed = 0;
+                return;
+            }
+
+            this.loadingPendingInvoices = true;
+
+            try {
+                const { data } = await axios.get(
+                    route('back.finance.whatsapp.trainees.pending-invoices', this.selectedTrainee.id)
+                );
+                this.pendingInvoices = data.invoices || [];
+                this.pendingTotalOwed = data.total_owed || 0;
+            } catch (error) {
+                this.pendingInvoices = [];
+                this.pendingTotalOwed = 0;
+            } finally {
+                this.loadingPendingInvoices = false;
+            }
         },
         async loadTemplates() {
             this.loadingTemplates = true;
@@ -546,6 +646,13 @@ export default {
 
             const date = new Date(dateString);
             return date.toLocaleString();
+        },
+        formatAmount(amount) {
+            const value = Number(amount) || 0;
+            return value.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+            });
         },
     },
 };
