@@ -4,6 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    @if (config('broadcasting.default') === 'pusher' && filled(config('broadcasting.connections.pusher.key')))
+        <meta name="pusher-key" content="{{ config('broadcasting.connections.pusher.key') }}">
+        <meta name="pusher-cluster" content="{{ config('broadcasting.connections.pusher.options.cluster', 'mt1') }}">
+        <meta name="pusher-host" content="{{ config('broadcasting.connections.pusher.options.host') }}">
+        <meta name="pusher-port" content="{{ config('broadcasting.connections.pusher.options.port', 443) }}">
+        <meta name="pusher-scheme" content="{{ config('broadcasting.connections.pusher.options.scheme', 'https') }}">
+    @endif
     @auth
         <meta name="logrocket-id" content="{{ auth()->user()->logrocketId() }}">
         <meta name="logrocket-id-extra" content='{!! auth()->user()->logrocketIdExtra() !!}'>

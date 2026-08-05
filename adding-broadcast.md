@@ -18,6 +18,8 @@ PUSHER_HOST=ws.example.com
 PUSHER_PORT=443
 PUSHER_SCHEME=https
 
+# Prefer runtime meta tags (app.blade.php) fed from Laravel `PUSHER_*` env —
+# Echo reads those first so Coolify host/key changes do not require a Mix rebuild.
 MIX_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
 MIX_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
 MIX_PUSHER_HOST="${PUSHER_HOST}"
@@ -26,28 +28,40 @@ MIX_PUSHER_SCHEME="${PUSHER_SCHEME}"
 ```
 
 ## 2. Frontend Configuration (`resources/js/bootstrap.js`)
-Ensure Laravel Echo is properly configured with Pusher to connect to your Soketi server:
+Echo prefers meta tags from Blade (`pusher-host`, etc.), then falls back to Mix env:
 
 ```javascript
 import Echo from 'laravel-echo';
 
 window.Pusher = require('pusher-js');
 
-const pusherPort = Number(process.env.MIX_PUSHER_PORT || 443);
-const forceTLS = (process.env.MIX_PUSHER_SCHEME || 'https') === 'https';
+const pusherKey = document.querySelector('meta[name="pusher-key"]')?.content
+    || process.env.MIX_PUSHER_APP_KEY;
+const pusherHost = document.querySelector('meta[name="pusher-host"]')?.content
+    || process.env.MIX_PUSHER_HOST;
+const pusherPort = Number(
+    document.querySelector('meta[name="pusher-port"]')?.content
+    || process.env.MIX_PUSHER_PORT
+    || 443
+);
+const forceTLS = (document.querySelector('meta[name="pusher-scheme"]')?.content
+    || process.env.MIX_PUSHER_SCHEME
+    || 'https') === 'https';
 
-window.Echo = new Echo({
-    broadcaster: 'pusher',
-    key: process.env.MIX_PUSHER_APP_KEY,
-    cluster: process.env.MIX_PUSHER_APP_CLUSTER || 'mt1',
-    wsHost: process.env.MIX_PUSHER_HOST || window.location.hostname,
-    wsPort: pusherPort,
-    wssPort: pusherPort,
-    forceTLS: forceTLS,
-    encrypted: forceTLS,
-    disableStats: true,
-    enabledTransports: ['ws', 'wss'],
-});
+if (pusherKey && pusherHost) {
+    window.Echo = new Echo({
+        broadcaster: 'pusher',
+        key: pusherKey,
+        cluster: process.env.MIX_PUSHER_APP_CLUSTER || 'mt1',
+        wsHost: pusherHost,
+        wsPort: pusherPort,
+        wssPort: pusherPort,
+        forceTLS: forceTLS,
+        encrypted: forceTLS,
+        disableStats: true,
+        enabledTransports: ['ws', 'wss'],
+    });
+}
 ```
 
 ## 3. Creating the Event (`WhatsAppMessageReceived`)

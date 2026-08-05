@@ -31,21 +31,34 @@ try {
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
  * allows your team to easily build robust real-time web applications.
+ *
+ * Prefer runtime meta tags from Laravel (.env) over MIX_* bake-in values,
+ * so Coolify/Soketi host changes do not require a frontend rebuild.
  */
 
 import Echo from 'laravel-echo';
 
 window.Pusher = require('pusher-js');
 
-if (process.env.MIX_PUSHER_APP_KEY) {
-    const pusherPort = Number(process.env.MIX_PUSHER_PORT || 443);
-    const forceTLS = (process.env.MIX_PUSHER_SCHEME || 'https') === 'https';
+function metaContent(name) {
+    const el = document.head.querySelector(`meta[name="${name}"]`);
+    return el && el.content ? el.content : null;
+}
+
+const pusherKey = metaContent('pusher-key') || process.env.MIX_PUSHER_APP_KEY;
+const pusherHost = metaContent('pusher-host') || process.env.MIX_PUSHER_HOST;
+const pusherPort = Number(metaContent('pusher-port') || process.env.MIX_PUSHER_PORT || 443);
+const pusherScheme = metaContent('pusher-scheme') || process.env.MIX_PUSHER_SCHEME || 'https';
+const pusherCluster = metaContent('pusher-cluster') || process.env.MIX_PUSHER_APP_CLUSTER || 'mt1';
+
+if (pusherKey && pusherHost) {
+    const forceTLS = pusherScheme === 'https';
 
     window.Echo = new Echo({
         broadcaster: 'pusher',
-        key: process.env.MIX_PUSHER_APP_KEY,
-        cluster: process.env.MIX_PUSHER_APP_CLUSTER || 'mt1',
-        wsHost: process.env.MIX_PUSHER_HOST || window.location.hostname,
+        key: pusherKey,
+        cluster: pusherCluster,
+        wsHost: pusherHost,
         wsPort: pusherPort,
         wssPort: pusherPort,
         forceTLS: forceTLS,
