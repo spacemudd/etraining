@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Back;
 
+use App\Events\WhatsAppMessageReceived;
 use App\Http\Controllers\Controller;
 use App\Models\Back\Trainee;
 use App\Models\Back\WhatsAppMessage;
@@ -281,6 +282,8 @@ class ChatController extends Controller
         ]);
 
         $note->load('user:id,name');
+
+        broadcast(new WhatsAppMessageReceived($note));
 
         return response()->json([
             'message' => [

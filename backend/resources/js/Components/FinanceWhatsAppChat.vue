@@ -321,6 +321,7 @@ export default {
             errorMessage: '',
             successMessage: '',
             pollInterval: null,
+            echoChannel: null,
         };
     },
     computed: {
@@ -349,6 +350,7 @@ export default {
         },
     },
     beforeDestroy() {
+        this.unsubscribeEcho();
         this.stopPolling();
     },
     methods: {
@@ -358,12 +360,45 @@ export default {
 
             if (this.configured) {
                 await this.loadTemplates();
+                this.subscribeEcho();
             }
         },
         close() {
+            this.unsubscribeEcho();
             this.stopPolling();
             this.$modal.hide('financeWhatsAppChatModal');
             this.resetState();
+        },
+        normalizePhone(phone) {
+            return String(phone || '').replace(/\D+/g, '');
+        },
+        subscribeEcho() {
+            this.unsubscribeEcho();
+
+            if (!window.Echo) {
+                return;
+            }
+
+            this.echoChannel = window.Echo.channel('whatsapp-chat')
+                .listen('.WhatsAppMessageReceived', (event) => {
+                    const message = event.message;
+                    if (!message || !this.selectedTrainee) {
+                        return;
+                    }
+
+                    const selectedPhone = this.normalizePhone(this.selectedTrainee.phone);
+                    const messagePhone = this.normalizePhone(message.phone);
+
+                    if (selectedPhone && messagePhone && selectedPhone === messagePhone) {
+                        this.mergeMessages([message]);
+                    }
+                });
+        },
+        unsubscribeEcho() {
+            if (window.Echo && this.echoChannel) {
+                window.Echo.leave('whatsapp-chat');
+            }
+            this.echoChannel = null;
         },
         resetState() {
             this.searchQuery = '';
@@ -420,7 +455,11 @@ export default {
                 this.loadMessages(false),
                 this.loadPendingInvoices(),
             ]);
-            this.startPolling();
+
+            // Fallback polling only when Echo/Soketi is unavailable
+            if (!window.Echo) {
+                this.startPolling();
+            }
         },
         async loadPendingInvoices() {
             if (!this.selectedTrainee || !this.selectedTrainee.id) {

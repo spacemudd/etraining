@@ -537,14 +537,42 @@ export default {
     mounted() {
         this.loadConversations();
         this.startPolling();
+        this.subscribeEcho();
         if (this.configured) {
             this.loadTemplates();
         }
     },
     beforeDestroy() {
+        this.unsubscribeEcho();
         this.stopPolling();
     },
     methods: {
+        subscribeEcho() {
+            if (!window.Echo) {
+                return;
+            }
+
+            window.Echo.channel('whatsapp-chat')
+                .listen('.WhatsAppMessageReceived', (event) => {
+                    this.loadConversations();
+                    const message = event.message;
+                    if (
+                        this.selectedConversation
+                        && message
+                        && this.normalizePhone(message.phone) === this.normalizePhone(this.selectedConversation.phone)
+                    ) {
+                        this.loadMessagesSilently();
+                    }
+                });
+        },
+        unsubscribeEcho() {
+            if (window.Echo) {
+                window.Echo.leave('whatsapp-chat');
+            }
+        },
+        normalizePhone(phone) {
+            return String(phone || '').replace(/\D+/g, '');
+        },
         async loadConversations() {
             this.loadingConversations = true;
             try {

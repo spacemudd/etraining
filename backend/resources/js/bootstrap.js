@@ -33,13 +33,24 @@ try {
  * allows your team to easily build robust real-time web applications.
  */
 
-// import Echo from 'laravel-echo';
+import Echo from 'laravel-echo';
 
-// window.Pusher = require('pusher-js');
+window.Pusher = require('pusher-js');
 
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: process.env.MIX_PUSHER_APP_KEY,
-//     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-//     forceTLS: true
-// });
+if (process.env.MIX_PUSHER_APP_KEY) {
+    const pusherPort = Number(process.env.MIX_PUSHER_PORT || 443);
+    const forceTLS = (process.env.MIX_PUSHER_SCHEME || 'https') === 'https';
+
+    window.Echo = new Echo({
+        broadcaster: 'pusher',
+        key: process.env.MIX_PUSHER_APP_KEY,
+        cluster: process.env.MIX_PUSHER_APP_CLUSTER || 'mt1',
+        wsHost: process.env.MIX_PUSHER_HOST || window.location.hostname,
+        wsPort: pusherPort,
+        wssPort: pusherPort,
+        forceTLS: forceTLS,
+        encrypted: forceTLS,
+        disableStats: true,
+        enabledTransports: ['ws', 'wss'],
+    });
+}

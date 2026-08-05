@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Events\WhatsAppMessageReceived;
 use App\Models\Back\Trainee;
 use App\Models\Back\WhatsAppMessage;
 use Carbon\Carbon;
@@ -157,7 +158,7 @@ class TelnyxWhatsAppService
         $from = (string) ($payload['from'] ?? '');
         $phone = $this->normalizePhoneDigits($from);
 
-        return WhatsAppMessage::query()->create([
+        $message = WhatsAppMessage::query()->create([
             'twilio_sid' => $payload['external_id'] ?? null,
             'trainee_id' => $this->findTraineeByPhone($phone)?->id,
             'phone' => $phone,
@@ -169,6 +170,10 @@ class TelnyxWhatsAppService
             'sent_at' => $payload['sent_at'] ?? now(),
             'metadata' => $payload['metadata'] ?? null,
         ]);
+
+        broadcast(new WhatsAppMessageReceived($message));
+
+        return $message;
     }
 
     /**
@@ -193,15 +198,19 @@ class TelnyxWhatsAppService
         ];
 
         if (! empty($message['sid'])) {
-            return WhatsAppMessage::query()->updateOrCreate(
+            $stored = WhatsAppMessage::query()->updateOrCreate(
                 ['twilio_sid' => $message['sid']],
                 $attributes
             );
+        } else {
+            $stored = WhatsAppMessage::query()->create(array_merge($attributes, [
+                'twilio_sid' => null,
+            ]));
         }
 
-        return WhatsAppMessage::query()->create(array_merge($attributes, [
-            'twilio_sid' => null,
-        ]));
+        broadcast(new WhatsAppMessageReceived($stored));
+
+        return $stored;
     }
 
     public function updateMessageStatus(string $externalId, string $status, ?string $errorMessage = null): void
