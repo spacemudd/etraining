@@ -118,16 +118,20 @@ class TelnyxWhatsAppController extends Controller
 
         [$media, $body] = $this->extractMediaAndBody($msg);
         if ($body === '' && isset($fullPayload['text'])) {
-            $body = (string) $fullPayload['text'];
+            $body = $this->stringifyWebhookText($fullPayload['text']);
         }
 
         $timestamp = $msg['timestamp'] ?? null;
         $sentAt = $timestamp ? \Carbon\Carbon::createFromTimestamp((int) $timestamp) : now();
 
-        $metadata = $media !== [] ? ['media' => $media] : null;
+        $metadata = [];
+        if ($media !== []) {
+            $metadata['media'] = $media;
+        }
         if (isset($fullPayload['contacts'])) {
             $metadata['contacts'] = $fullPayload['contacts'];
         }
+        $metadata = $metadata !== [] ? $metadata : null;
 
         $this->whatsAppService->storeInboundMessage([
             'external_id' => $messageId,
@@ -152,16 +156,7 @@ class TelnyxWhatsAppController extends Controller
     private function extractMediaAndBody(array $source): array
     {
         $media = [];
-        $body = (string) (
-            $source['text']
-            ?? $source['body']
-            ?? data_get($source, 'text.body')
-            ?? data_get($source, 'image.caption')
-            ?? data_get($source, 'document.caption')
-            ?? data_get($source, 'video.caption')
-            ?? data_get($source, 'caption')
-            ?? ''
-        );
+        $body = $this->extractMessageBody($source);
 
         foreach ($source['media'] ?? [] as $item) {
             if (is_array($item) && isset($item['url'])) {
@@ -189,6 +184,60 @@ class TelnyxWhatsAppController extends Controller
         }
 
         return [$media, $body];
+    }
+
+    /**
+     * WhatsApp / Telnyx payloads may send text as a string or as { body: "..." }.
+     * Casting an array with (string) raises "Array to string conversion" (E-TRAINING-20H).
+     *
+     * @param  array<string, mixed>  $source
+     */
+    private function extractMessageBody(array $source): string
+    {
+        $candidates = [
+            data_get($source, 'text.body'),
+            $source['text'] ?? null,
+            $source['body'] ?? null,
+            data_get($source, 'image.caption'),
+            data_get($source, 'document.caption'),
+            data_get($source, 'video.caption'),
+            data_get($source, 'caption'),
+        ];
+
+        foreach ($candidates as $candidate) {
+            $text = $this->stringifyWebhookText($candidate);
+            if ($text !== '') {
+                return $text;
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * @param  mixed  $value
+     */
+    private function stringifyWebhookText($value): string
+    {
+        if (is_string($value)) {
+            return $value;
+        }
+
+        if (is_numeric($value)) {
+            return (string) $value;
+        }
+
+        if (! is_array($value)) {
+            return '';
+        }
+
+        foreach (['body', 'text', 'caption'] as $key) {
+            if (isset($value[$key]) && is_scalar($value[$key])) {
+                return (string) $value[$key];
+            }
+        }
+
+        return '';
     }
 
     /**

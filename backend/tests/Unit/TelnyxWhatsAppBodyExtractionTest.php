@@ -1,0 +1,82 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests\Unit;
+
+use App\Http\Controllers\Webhooks\TelnyxWhatsAppController;
+use App\Services\TelnyxWebhookValidator;
+use App\Services\TelnyxWhatsAppService;
+use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
+
+/**
+ * Regression for E-TRAINING-20H: Array to string conversion when webhook
+ * text/caption fields arrive as arrays instead of strings.
+ */
+class TelnyxWhatsAppBodyExtractionTest extends TestCase
+{
+    public function test_nested_text_body_array_is_stringified(): void
+    {
+        [$media, $body] = $this->extractMediaAndBody([
+            'text' => ['body' => 'Hello from nested text'],
+        ]);
+
+        $this->assertSame([], $media);
+        $this->assertSame('Hello from nested text', $body);
+    }
+
+    public function test_plain_string_text_is_preserved(): void
+    {
+        [$media, $body] = $this->extractMediaAndBody([
+            'text' => 'Plain string body',
+        ]);
+
+        $this->assertSame([], $media);
+        $this->assertSame('Plain string body', $body);
+    }
+
+    public function test_image_caption_array_is_stringified_without_error(): void
+    {
+        [$media, $body] = $this->extractMediaAndBody([
+            'image' => [
+                'url' => 'https://example.com/image.jpg',
+                'mime_type' => 'image/jpeg',
+                'caption' => ['body' => 'Photo caption'],
+            ],
+        ]);
+
+        $this->assertCount(1, $media);
+        $this->assertSame('https://example.com/image.jpg', $media[0]['url']);
+        $this->assertSame('Photo caption', $body);
+    }
+
+    public function test_media_without_caption_falls_back_to_placeholder(): void
+    {
+        [$media, $body] = $this->extractMediaAndBody([
+            'image' => [
+                'url' => 'https://example.com/image.jpg',
+            ],
+        ]);
+
+        $this->assertCount(1, $media);
+        $this->assertSame('[Media Attachment]', $body);
+    }
+
+    /**
+     * @param  array<string, mixed>  $source
+     * @return array{0: array<int, array<string, mixed>>, 1: string}
+     */
+    private function extractMediaAndBody(array $source): array
+    {
+        $controller = new TelnyxWhatsAppController(
+            $this->createMock(TelnyxWhatsAppService::class),
+            $this->createMock(TelnyxWebhookValidator::class),
+        );
+
+        $method = new ReflectionMethod(TelnyxWhatsAppController::class, 'extractMediaAndBody');
+        $method->setAccessible(true);
+
+        return $method->invoke($controller, $source);
+    }
+}
