@@ -536,7 +536,6 @@ export default {
     },
     mounted() {
         this.loadConversations();
-        this.startPolling();
         this.subscribeEcho();
         if (this.configured) {
             this.loadTemplates();
@@ -549,6 +548,7 @@ export default {
     methods: {
         subscribeEcho() {
             if (!window.Echo) {
+                this.startPolling();
                 return;
             }
 
@@ -743,7 +743,13 @@ export default {
             }
         },
         startPolling() {
-            // Polling disabled in favor of WebSockets/Soketi broadcast
+            this.stopPolling();
+            this.pollInterval = setInterval(() => {
+                this.loadConversations();
+                if (this.selectedConversation) {
+                    this.loadMessagesSilently();
+                }
+            }, 5000);
         },
         stopPolling() {
             if (this.pollInterval) {

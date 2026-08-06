@@ -66,4 +66,9 @@ if (pusherKey && pusherHost) {
         disableStats: true,
         enabledTransports: ['ws', 'wss'],
     });
+} else if (typeof console !== 'undefined' && console.warn) {
+    console.warn('[Echo] Skipped init — missing pusher-key or pusher-host meta (check PUSHER_APP_KEY / PUSHER_HOST in .env, then php artisan config:clear).', {
+        hasKey: !!pusherKey,
+        hasHost: !!pusherHost,
+    });
 }
