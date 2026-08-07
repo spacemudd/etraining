@@ -6,6 +6,15 @@
                     {{ $t('words.chat') }}
                 </h2>
                 <div class="flex items-center gap-3">
+                    <whats-app-templates-manager
+                        v-if="configured"
+                        :can-manage="canManageTemplates"
+                        :list-route="route('back.chat.templates')"
+                        :store-route="route('back.chat.templates.store')"
+                        :update-route-template="route('back.chat.templates.update', { contentSid: '__SID__' })"
+                        :destroy-route-template="route('back.chat.templates.destroy', { contentSid: '__SID__' })"
+                        @templates-updated="onTemplatesManaged"
+                    />
                     <button
                         @click="openNewChatModal"
                         class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 shadow transition-colors"
@@ -39,6 +48,7 @@
                                 :class="statusTab === 'open' ? 'bg-white text-green-700 shadow' : 'text-gray-600 hover:text-gray-800'"
                             >
                                 {{ $t('words.chat-status-open') }}
+                                <span class="opacity-70" dir="ltr">({{ conversationCounts.open }})</span>
                             </button>
                             <button
                                 type="button"
@@ -47,6 +57,7 @@
                                 :class="statusTab === 'pending' ? 'bg-white text-amber-700 shadow' : 'text-gray-600 hover:text-gray-800'"
                             >
                                 {{ $t('words.chat-status-pending') }}
+                                <span class="opacity-70" dir="ltr">({{ conversationCounts.pending }})</span>
                             </button>
                             <button
                                 type="button"
@@ -55,6 +66,7 @@
                                 :class="statusTab === 'closed' ? 'bg-white text-gray-800 shadow' : 'text-gray-600 hover:text-gray-800'"
                             >
                                 {{ $t('words.chat-status-closed') }}
+                                <span class="opacity-70" dir="ltr">({{ conversationCounts.closed }})</span>
                             </button>
                         </div>
                         <input
@@ -88,6 +100,7 @@
                                 :class="listFilter === 'unassigned' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
                             >
                                 {{ $t('words.chat-filter-unassigned') }}
+                                <span dir="ltr">({{ conversationCounts.unassigned }})</span>
                             </button>
                         </div>
                         <select
@@ -624,15 +637,21 @@
 
 <script>
 import AppLayout from '@/Layouts/AppLayout';
+import WhatsAppTemplatesManager from '@/Components/WhatsAppTemplatesManager';
 import axios from 'axios';
 import throttle from 'lodash/throttle';
 
 export default {
     components: {
         AppLayout,
+        WhatsAppTemplatesManager,
     },
     props: {
         configured: {
+            type: Boolean,
+            default: false,
+        },
+        canManageTemplates: {
             type: Boolean,
             default: false,
         },
@@ -669,6 +688,12 @@ export default {
             conversationPage: 1,
             totalPages: 1,
             totalConversations: 0,
+            conversationCounts: {
+                open: 0,
+                pending: 0,
+                closed: 0,
+                unassigned: 0,
+            },
             listFilter: 'all',
             statusTab: 'open',
             selectedTagFilter: '',
@@ -837,6 +862,8 @@ export default {
                     this.selectedConversation = null;
                     this.messages = [];
                     await this.loadConversations();
+                } else {
+                    await this.refreshConversationCounts();
                 }
             } catch (error) {
                 this.errorMessage = error.response?.data?.message || this.$t('words.chat-status-failed');
@@ -872,6 +899,7 @@ export default {
                     console.log('[Chat] WhatsAppConversationUpdated', event && event.conversation);
                     if (event && event.conversation) {
                         this.patchConversation(event.conversation);
+                        this.refreshConversationCounts();
                     } else {
                         this.loadConversations();
                     }
@@ -928,12 +956,37 @@ export default {
                 this.conversationPage = data.current_page || 1;
                 this.totalPages = data.last_page || 1;
                 this.totalConversations = data.total || 0;
+                this.applyConversationCounts(data.counts);
             } catch (e) {
                 this.conversations = [];
                 this.totalPages = 1;
                 this.totalConversations = 0;
             } finally {
                 this.loadingConversations = false;
+            }
+        },
+        applyConversationCounts(counts) {
+            if (!counts || typeof counts !== 'object') {
+                return;
+            }
+            this.conversationCounts = {
+                open: Number(counts.open) || 0,
+                pending: Number(counts.pending) || 0,
+                closed: Number(counts.closed) || 0,
+                unassigned: Number(counts.unassigned) || 0,
+            };
+        },
+        async refreshConversationCounts() {
+            try {
+                const { data } = await axios.get(route('back.chat.conversations'), {
+                    params: {
+                        ...this.conversationParams(),
+                        page: 1,
+                    },
+                });
+                this.applyConversationCounts(data.counts);
+            } catch (e) {
+                // keep current counts
             }
         },
         async selectConversation(conv) {
@@ -1020,6 +1073,7 @@ export default {
                 const method = this.selectedConversation.is_assigned_to_me ? 'delete' : 'post';
                 const { data } = await axios[method](route(routeName, this.selectedConversation.id));
                 this.patchConversation(data.conversation);
+                await this.refreshConversationCounts();
             } catch (error) {
                 this.errorMessage = error.response?.data?.message || this.$t('words.chat-assign-failed');
             } finally {
@@ -1097,6 +1151,19 @@ export default {
                 this.templates = [];
             } finally {
                 this.loadingTemplates = false;
+            }
+        },
+        onTemplatesManaged(templates) {
+            this.templates = templates || [];
+            if (this.selectedTemplateSid && !this.templates.some((t) => t.sid === this.selectedTemplateSid)) {
+                this.selectedTemplateSid = '';
+                this.selectedTemplate = null;
+                this.templateVariables = {};
+            }
+            if (this.newChatTemplateSid && !this.templates.some((t) => t.sid === this.newChatTemplateSid)) {
+                this.newChatTemplateSid = '';
+                this.newChatTemplate = null;
+                this.newChatTemplateVariables = {};
             }
         },
         async onTemplateChange() {

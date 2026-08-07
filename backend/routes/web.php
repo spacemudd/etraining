@@ -810,7 +810,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('messages', [\App\Http\Controllers\Back\ChatController::class, 'messages'])->name('messages');
             Route::get('trainees', [\App\Http\Controllers\Back\ChatController::class, 'searchTrainees'])->name('trainees');
             Route::get('templates', [\App\Http\Controllers\Back\ChatController::class, 'templates'])->name('templates');
+            Route::post('templates', [\App\Http\Controllers\Back\ChatController::class, 'storeTemplate'])->name('templates.store');
             Route::get('templates/{contentSid}', [\App\Http\Controllers\Back\ChatController::class, 'showTemplate'])->name('templates.show');
+            Route::patch('templates/{contentSid}', [\App\Http\Controllers\Back\ChatController::class, 'updateTemplate'])->name('templates.update');
+            Route::delete('templates/{contentSid}', [\App\Http\Controllers\Back\ChatController::class, 'destroyTemplate'])->name('templates.destroy');
             Route::post('send-message', [\App\Http\Controllers\Back\ChatController::class, 'sendMessage'])->name('send-message');
             Route::post('send-template', [\App\Http\Controllers\Back\ChatController::class, 'sendTemplate'])->name('send-template');
             Route::post('send-note', [\App\Http\Controllers\Back\ChatController::class, 'sendNote'])->name('send-note');
@@ -825,7 +828,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::prefix('whatsapp')->name('whatsapp.')->group(function () {
                 Route::get('status', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'status'])->name('status');
                 Route::get('templates', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'templates'])->name('templates');
+                Route::post('templates', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'storeTemplate'])->name('templates.store');
                 Route::get('templates/{contentSid}', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'showTemplate'])->name('templates.show');
+                Route::patch('templates/{contentSid}', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'updateTemplate'])->name('templates.update');
+                Route::delete('templates/{contentSid}', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'destroyTemplate'])->name('templates.destroy');
                 Route::get('trainees', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'searchTrainees'])->name('trainees');
                 Route::get('trainees/{trainee}/pending-invoices', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'pendingInvoices'])->name('trainees.pending-invoices');
                 Route::get('messages', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'messages'])->name('messages');

@@ -31,6 +31,7 @@ class FinanceWhatsAppController extends Controller
 
         return response()->json([
             'templates' => $this->whatsAppService->listTemplates(),
+            'can_manage' => $this->whatsAppService->canManageTemplates(),
         ]);
     }
 
@@ -40,6 +41,78 @@ class FinanceWhatsAppController extends Controller
 
         return response()->json([
             'template' => $this->whatsAppService->getTemplate($contentSid),
+        ]);
+    }
+
+    public function storeTemplate(Request $request): JsonResponse
+    {
+        $this->ensureCanManageTemplates();
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:512', 'regex:/^[a-z0-9_]+$/'],
+            'category' => 'required|string|in:UTILITY,MARKETING,AUTHENTICATION',
+            'language' => 'required|string|max:20',
+            'body' => 'required|string|max:1024',
+            'header' => 'nullable|string|max:60',
+            'footer' => 'nullable|string|max:60',
+            'variable_samples' => 'nullable|array',
+            'variable_samples.*' => 'nullable|string|max:200',
+        ]);
+
+        try {
+            $template = $this->whatsAppService->createTemplate($validated);
+        } catch (RuntimeException $exception) {
+            return response()->json([
+                'message' => $exception->getMessage(),
+            ], 422);
+        }
+
+        return response()->json([
+            'template' => $template,
+            'message' => __('words.whatsapp-template-created'),
+        ], 201);
+    }
+
+    public function updateTemplate(Request $request, string $contentSid): JsonResponse
+    {
+        $this->ensureCanManageTemplates();
+
+        $validated = $request->validate([
+            'body' => 'required|string|max:1024',
+            'header' => 'nullable|string|max:60',
+            'footer' => 'nullable|string|max:60',
+            'variable_samples' => 'nullable|array',
+            'variable_samples.*' => 'nullable|string|max:200',
+        ]);
+
+        try {
+            $template = $this->whatsAppService->updateTemplate($contentSid, $validated);
+        } catch (RuntimeException $exception) {
+            return response()->json([
+                'message' => $exception->getMessage(),
+            ], 422);
+        }
+
+        return response()->json([
+            'template' => $template,
+            'message' => __('words.whatsapp-template-updated'),
+        ]);
+    }
+
+    public function destroyTemplate(string $contentSid): JsonResponse
+    {
+        $this->ensureCanManageTemplates();
+
+        try {
+            $this->whatsAppService->deleteTemplate($contentSid);
+        } catch (RuntimeException $exception) {
+            return response()->json([
+                'message' => $exception->getMessage(),
+            ], 422);
+        }
+
+        return response()->json([
+            'message' => __('words.whatsapp-template-deleted'),
         ]);
     }
 
@@ -185,6 +258,15 @@ class FinanceWhatsAppController extends Controller
     {
         if (! $this->whatsAppService->isConfigured()) {
             abort(503, __('words.whatsapp-not-configured'));
+        }
+    }
+
+    private function ensureCanManageTemplates(): void
+    {
+        $this->ensureConfigured();
+
+        if (! $this->whatsAppService->canManageTemplates()) {
+            abort(503, __('words.whatsapp-templates-manage-not-configured'));
         }
     }
 }

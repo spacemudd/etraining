@@ -41,6 +41,11 @@ class TelnyxWhatsAppService
             && filled(config('telnyx.whatsapp_from'));
     }
 
+    public function canManageTemplates(): bool
+    {
+        return $this->isConfigured() && filled(config('telnyx.waba_id'));
+    }
+
     /**
      * @return array<int, array<string, mixed>>
      */
@@ -78,6 +83,155 @@ class TelnyxWhatsAppService
         );
 
         return $this->formatTemplate($payload['data'] ?? $payload);
+    }
+
+    /**
+     * Submit a new WhatsApp message template for Meta review.
+     *
+     * @param  array{
+     *     name: string,
+     *     category: string,
+     *     language: string,
+     *     body: string,
+     *     header?: string|null,
+     *     footer?: string|null,
+     *     variable_samples?: array<string, string>
+     * }  $input
+     * @return array<string, mixed>
+     */
+    public function createTemplate(array $input): array
+    {
+        $this->assertCanManageTemplates();
+
+        $payload = $this->request('POST', 'whatsapp/message_templates', [
+            'json' => [
+                'waba_id' => config('telnyx.waba_id'),
+                'name' => $input['name'],
+                'category' => strtoupper($input['category']),
+                'language' => $input['language'],
+                'components' => $this->buildManageComponents($input),
+            ],
+        ], 'Failed to create WhatsApp template.');
+
+        return $this->formatTemplate($payload['data'] ?? $payload);
+    }
+
+    /**
+     * Update an existing template (APPROVED or REJECTED only). Re-submits for Meta review.
+     *
+     * @param  array{
+     *     body: string,
+     *     header?: string|null,
+     *     footer?: string|null,
+     *     variable_samples?: array<string, string>
+     * }  $input
+     * @return array<string, mixed>
+     */
+    public function updateTemplate(string $templateId, array $input): array
+    {
+        $this->assertCanManageTemplates();
+
+        $payload = $this->request('PATCH', 'whatsapp/message_templates/' . $templateId, [
+            'json' => [
+                'components' => $this->buildManageComponents($input),
+            ],
+        ], 'Failed to update WhatsApp template.');
+
+        return $this->formatTemplate($payload['data'] ?? $payload);
+    }
+
+    /**
+     * Permanently delete a WhatsApp message template.
+     */
+    public function deleteTemplate(string $templateId): void
+    {
+        $this->assertCanManageTemplates();
+
+        $this->request(
+            'DELETE',
+            'whatsapp/message_templates/' . $templateId,
+            [],
+            'Failed to delete WhatsApp template.'
+        );
+    }
+
+    private function assertCanManageTemplates(): void
+    {
+        if (! $this->canManageTemplates()) {
+            throw new RuntimeException(
+                'WhatsApp template management requires TELNYX_API_KEY, TELNYX_WHATSAPP_FROM, and TELNYX_WABA_ID.'
+            );
+        }
+    }
+
+    /**
+     * @param  array{
+     *     body: string,
+     *     header?: string|null,
+     *     footer?: string|null,
+     *     variable_samples?: array<string, string>
+     * }  $input
+     * @return array<int, array<string, mixed>>
+     */
+    private function buildManageComponents(array $input): array
+    {
+        $components = [];
+
+        $header = trim((string) ($input['header'] ?? ''));
+        if ($header !== '') {
+            $components[] = [
+                'type' => 'HEADER',
+                'format' => 'TEXT',
+                'text' => $header,
+            ];
+        }
+
+        $body = (string) $input['body'];
+        $bodyComponent = [
+            'type' => 'BODY',
+            'text' => $body,
+        ];
+
+        $samples = $this->resolveBodyExamples($body, $input['variable_samples'] ?? []);
+        if ($samples !== []) {
+            $bodyComponent['example'] = [
+                'body_text' => [$samples],
+            ];
+        }
+
+        $components[] = $bodyComponent;
+
+        $footer = trim((string) ($input['footer'] ?? ''));
+        if ($footer !== '') {
+            $components[] = [
+                'type' => 'FOOTER',
+                'text' => $footer,
+            ];
+        }
+
+        return $components;
+    }
+
+    /**
+     * @param  array<string, string>  $variableSamples
+     * @return array<int, string>
+     */
+    private function resolveBodyExamples(string $body, array $variableSamples): array
+    {
+        $keys = $this->extractVariableKeys($body);
+
+        if ($keys === []) {
+            return [];
+        }
+
+        $examples = [];
+
+        foreach ($keys as $key) {
+            $sample = trim((string) ($variableSamples[$key] ?? $variableSamples[(int) $key] ?? ''));
+            $examples[] = $sample !== '' ? $sample : 'example' . $key;
+        }
+
+        return $examples;
     }
 
     /**
@@ -365,19 +519,20 @@ class TelnyxWhatsAppService
                 ?? $payload['errors'][0]['title']
                 ?? json_encode($payload['errors'] ?? $payload); // Fallback to full errors or payload
 
-            $configuredFrom = config('telnyx.whatsapp_from');
-            $apiKeyPrefix = substr(config('telnyx.api_key'), 0, 5) . '...';
-
             $message = sprintf(
                 "Telnyx API request failed with status %d: %s",
                 $response->getStatusCode(),
                 (string) $errorDetails
             );
 
-            $message .= " (Configured From: {$configuredFrom})";
-            $message .= " (Normalized From: {$fromNumber})";
-            $message .= " (To: {$toNumber})";
-            $message .= " (API Key: {$apiKeyPrefix})";
+            if ($fromNumber || $toNumber) {
+                $configuredFrom = config('telnyx.whatsapp_from');
+                $apiKeyPrefix = substr((string) config('telnyx.api_key'), 0, 5) . '...';
+                $message .= " (Configured From: {$configuredFrom})";
+                $message .= " (Normalized From: {$fromNumber})";
+                $message .= " (To: {$toNumber})";
+                $message .= " (API Key: {$apiKeyPrefix})";
+            }
 
             throw new RuntimeException($message);
         }
@@ -391,9 +546,10 @@ class TelnyxWhatsAppService
      */
     private function formatTemplate(array $template): array
     {
-        $body = $this->extractTemplateBody($template['components'] ?? []);
+        $components = is_array($template['components'] ?? null) ? $template['components'] : [];
+        $body = $this->extractTemplateBody($components);
         $variables = $this->extractVariableKeys($body);
-        $variableSamples = $this->extractVariableSamples($template['components'] ?? []);
+        $variableSamples = $this->extractVariableSamples($components);
 
         if ($variables === [] && $variableSamples !== []) {
             $variables = array_map('strval', array_keys($variableSamples));
@@ -405,11 +561,55 @@ class TelnyxWhatsAppService
             'friendly_name' => $template['name'] ?? '',
             'language' => $template['language'] ?? '',
             'body' => $body,
+            'header' => $this->extractTemplateHeader($components),
+            'footer' => $this->extractTemplateFooter($components),
+            'components' => $components,
             'variables' => array_values($variables),
             'variable_samples' => $variableSamples,
             'approval_status' => strtolower((string) ($template['status'] ?? 'unknown')),
             'category' => $template['category'] ?? null,
+            'quality_rating' => $template['quality_rating'] ?? null,
+            'can_edit' => in_array(strtoupper((string) ($template['status'] ?? '')), ['APPROVED', 'REJECTED'], true),
         ];
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $components
+     */
+    private function extractTemplateHeader(array $components): string
+    {
+        foreach ($components as $component) {
+            if (! is_array($component)) {
+                continue;
+            }
+
+            if (strtoupper((string) ($component['type'] ?? '')) === 'HEADER'
+                && strtoupper((string) ($component['format'] ?? 'TEXT')) === 'TEXT'
+                && ! empty($component['text'])
+            ) {
+                return (string) $component['text'];
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $components
+     */
+    private function extractTemplateFooter(array $components): string
+    {
+        foreach ($components as $component) {
+            if (! is_array($component)) {
+                continue;
+            }
+
+            if (strtoupper((string) ($component['type'] ?? '')) === 'FOOTER' && ! empty($component['text'])) {
+                return (string) $component['text'];
+            }
+        }
+
+        return '';
     }
 
     /**

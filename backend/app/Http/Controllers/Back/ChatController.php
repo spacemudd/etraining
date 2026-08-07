@@ -32,6 +32,7 @@ class ChatController extends Controller
     {
         return Inertia::render('Back/Chat/Index', [
             'configured' => $this->whatsAppService->isConfigured(),
+            'canManageTemplates' => $this->whatsAppService->canManageTemplates(),
         ]);
     }
 
@@ -101,7 +102,10 @@ class ChatController extends Controller
             return $this->formatConversation($conversation, $authId);
         });
 
-        return response()->json($paginator);
+        $payload = $paginator->toArray();
+        $payload['counts'] = $this->conversationCounts();
+
+        return response()->json($payload);
     }
 
     public function assignAgent(WhatsAppConversation $conversation): JsonResponse
@@ -516,6 +520,7 @@ class ChatController extends Controller
 
         return response()->json([
             'templates' => $this->whatsAppService->listTemplates(),
+            'can_manage' => $this->whatsAppService->canManageTemplates(),
         ]);
     }
 
@@ -526,6 +531,98 @@ class ChatController extends Controller
         return response()->json([
             'template' => $this->whatsAppService->getTemplate($contentSid),
         ]);
+    }
+
+    public function storeTemplate(Request $request): JsonResponse
+    {
+        $this->ensureCanManageTemplates();
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:512', 'regex:/^[a-z0-9_]+$/'],
+            'category' => 'required|string|in:UTILITY,MARKETING,AUTHENTICATION',
+            'language' => 'required|string|max:20',
+            'body' => 'required|string|max:1024',
+            'header' => 'nullable|string|max:60',
+            'footer' => 'nullable|string|max:60',
+            'variable_samples' => 'nullable|array',
+            'variable_samples.*' => 'nullable|string|max:200',
+        ]);
+
+        try {
+            $template = $this->whatsAppService->createTemplate($validated);
+        } catch (RuntimeException $exception) {
+            return response()->json([
+                'message' => $exception->getMessage(),
+            ], 422);
+        }
+
+        return response()->json([
+            'template' => $template,
+            'message' => __('words.whatsapp-template-created'),
+        ], 201);
+    }
+
+    public function updateTemplate(Request $request, string $contentSid): JsonResponse
+    {
+        $this->ensureCanManageTemplates();
+
+        $validated = $request->validate([
+            'body' => 'required|string|max:1024',
+            'header' => 'nullable|string|max:60',
+            'footer' => 'nullable|string|max:60',
+            'variable_samples' => 'nullable|array',
+            'variable_samples.*' => 'nullable|string|max:200',
+        ]);
+
+        try {
+            $template = $this->whatsAppService->updateTemplate($contentSid, $validated);
+        } catch (RuntimeException $exception) {
+            return response()->json([
+                'message' => $exception->getMessage(),
+            ], 422);
+        }
+
+        return response()->json([
+            'template' => $template,
+            'message' => __('words.whatsapp-template-updated'),
+        ]);
+    }
+
+    public function destroyTemplate(string $contentSid): JsonResponse
+    {
+        $this->ensureCanManageTemplates();
+
+        try {
+            $this->whatsAppService->deleteTemplate($contentSid);
+        } catch (RuntimeException $exception) {
+            return response()->json([
+                'message' => $exception->getMessage(),
+            ], 422);
+        }
+
+        return response()->json([
+            'message' => __('words.whatsapp-template-deleted'),
+        ]);
+    }
+
+    /**
+     * @return array{open: int, pending: int, closed: int, unassigned: int}
+     */
+    private function conversationCounts(): array
+    {
+        $byStatus = WhatsAppConversation::query()
+            ->selectRaw('status, COUNT(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        return [
+            'open' => (int) ($byStatus[WhatsAppConversation::STATUS_OPEN] ?? 0),
+            'pending' => (int) ($byStatus[WhatsAppConversation::STATUS_PENDING] ?? 0),
+            'closed' => (int) ($byStatus[WhatsAppConversation::STATUS_CLOSED] ?? 0),
+            'unassigned' => (int) WhatsAppConversation::query()
+                ->whereDoesntHave('agents')
+                ->count(),
+        ];
     }
 
     /**
@@ -596,6 +693,15 @@ class ChatController extends Controller
     {
         if (! $this->whatsAppService->isConfigured()) {
             abort(503, __('words.whatsapp-not-configured'));
+        }
+    }
+
+    private function ensureCanManageTemplates(): void
+    {
+        $this->ensureConfigured();
+
+        if (! $this->whatsAppService->canManageTemplates()) {
+            abort(503, __('words.whatsapp-templates-manage-not-configured'));
         }
     }
 }
