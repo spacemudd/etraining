@@ -473,20 +473,26 @@
                                     {{ previewTemplateBody }}
                                 </div>
 
-                                <div v-if="selectedTemplate && selectedTemplate.variables.length" class="space-y-2 mb-3">
+                                <div v-if="selectedTemplate && manualTemplateVariables.length" class="space-y-2 mb-3">
                                     <div class="text-xs font-medium text-gray-700">{{ $t('words.template-variables') }}</div>
                                     <div
-                                        v-for="variableKey in selectedTemplate.variables"
+                                        v-for="variableKey in manualTemplateVariables"
                                         :key="variableKey"
                                     >
                                         <input
                                             v-model="templateVariables[variableKey]"
                                             type="text"
                                             class="w-full form-input text-xs rounded-lg"
-                                            :placeholder="$t('words.template-variable') + ' ' + variableKey"
+                                            :placeholder="templateVariableLabel(variableKey)"
                                         />
                                     </div>
                                 </div>
+                                <p
+                                    v-else-if="selectedTemplate && selectedTemplate.variables && selectedTemplate.variables.length"
+                                    class="text-xs text-green-700 mb-3"
+                                >
+                                    {{ $t('words.whatsapp-auto-filled-variables') }}
+                                </p>
 
                                 <button
                                     @click="sendTemplate"
@@ -586,20 +592,26 @@
                             {{ previewNewChatTemplateBody }}
                         </div>
 
-                        <div v-if="newChatTemplate && newChatTemplate.variables.length" class="space-y-2">
+                        <div v-if="newChatTemplate && newChatManualVariables.length" class="space-y-2">
                             <div class="text-xs font-medium text-gray-700">{{ $t('words.template-variables') }}</div>
                             <div
-                                v-for="variableKey in newChatTemplate.variables"
+                                v-for="variableKey in newChatManualVariables"
                                 :key="variableKey"
                             >
                                 <input
                                     v-model="newChatTemplateVariables[variableKey]"
                                     type="text"
                                     class="w-full form-input text-xs rounded-lg"
-                                    :placeholder="$t('words.template-variable') + ' ' + variableKey"
+                                    :placeholder="templateVariableLabel(variableKey, newChatTemplate)"
                                 />
                             </div>
                         </div>
+                        <p
+                            v-else-if="newChatTemplate && newChatTemplate.variables && newChatTemplate.variables.length"
+                            class="text-xs text-green-700"
+                        >
+                            {{ $t('words.whatsapp-auto-filled-variables') }}
+                        </p>
                     </div>
 
                     <div class="flex justify-end gap-2 pt-3 border-t">
@@ -697,14 +709,27 @@ export default {
         };
     },
     computed: {
+        manualTemplateVariables() {
+            if (!this.selectedTemplate) {
+                return [];
+            }
+            return this.selectedTemplate.manual_variables || this.selectedTemplate.variables || [];
+        },
+        newChatManualVariables() {
+            if (!this.newChatTemplate) {
+                return [];
+            }
+            return this.newChatTemplate.manual_variables || this.newChatTemplate.variables || [];
+        },
         previewTemplateBody() {
             if (!this.selectedTemplate) {
                 return '';
             }
-            let body = this.selectedTemplate.body;
-            Object.keys(this.templateVariables).forEach((key) => {
-                const val = this.templateVariables[key] || `{{${key}}}`;
-                body = body.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), val);
+            let body = this.selectedTemplate.body_display || this.selectedTemplate.body;
+            const values = this.previewVariableValues(this.selectedTemplate, this.templateVariables);
+            Object.keys(values).forEach((key) => {
+                const val = values[key] || `{{${key}}}`;
+                body = body.replace(new RegExp(`\\{\\{\\s*${key}\\s*\\}\\}`, 'g'), val);
             });
             return body;
         },
@@ -712,10 +737,11 @@ export default {
             if (!this.newChatTemplate) {
                 return '';
             }
-            let body = this.newChatTemplate.body;
-            Object.keys(this.newChatTemplateVariables).forEach((key) => {
-                const val = this.newChatTemplateVariables[key] || `{{${key}}}`;
-                body = body.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), val);
+            let body = this.newChatTemplate.body_display || this.newChatTemplate.body;
+            const values = this.previewVariableValues(this.newChatTemplate, this.newChatTemplateVariables);
+            Object.keys(values).forEach((key) => {
+                const val = values[key] || `{{${key}}}`;
+                body = body.replace(new RegExp(`\\{\\{\\s*${key}\\s*\\}\\}`, 'g'), val);
             });
             return body;
         },
@@ -1163,9 +1189,7 @@ export default {
             try {
                 const { data } = await axios.get(route('back.chat.templates.show', this.selectedTemplateSid));
                 this.selectedTemplate = data.template;
-                this.selectedTemplate.variables.forEach((key) => {
-                    this.$set(this.templateVariables, key, '');
-                });
+                this.applyTemplateVariableDefaults(this.selectedTemplate, this.templateVariables);
             } catch (e) {
                 this.errorMessage = 'Failed to load template details.';
             }
@@ -1185,12 +1209,71 @@ export default {
             try {
                 const { data } = await axios.get(route('back.chat.templates.show', this.newChatTemplateSid));
                 this.newChatTemplate = data.template;
-                this.newChatTemplate.variables.forEach((key) => {
-                    this.$set(this.newChatTemplateVariables, key, '');
-                });
+                this.applyTemplateVariableDefaults(this.newChatTemplate, this.newChatTemplateVariables);
             } catch (e) {
                 this.newChatError = 'Failed to load template details.';
             }
+        },
+        templateVariableLabel(variableKey, template = null) {
+            const current = template || this.selectedTemplate;
+            const bindings = (current && current.variable_bindings) || {};
+            const tag = bindings[variableKey];
+            if (tag) {
+                return tag;
+            }
+            return this.$t('words.template-variable') + ' ' + variableKey;
+        },
+        currentTraineeContext() {
+            return (this.selectedConversation && this.selectedConversation.trainee) || null;
+        },
+        autoValueForTag(tag, trainee = null) {
+            const person = trainee || this.currentTraineeContext();
+            if (!person) {
+                return '';
+            }
+            switch (tag) {
+                case 'trainee_name':
+                    return person.name || '';
+                case 'trainee_english_name':
+                    return person.english_name || '';
+                case 'trainee_phone':
+                    return person.phone || '';
+                case 'trainee_identity':
+                    return person.identity_number || '';
+                case 'company_name':
+                    return person.company_name || '';
+                default:
+                    return '';
+            }
+        },
+        applyTemplateVariableDefaults(template, targetObject) {
+            const bindings = template.variable_bindings || {};
+            const autoVariables = template.auto_variables || {};
+            (template.variables || []).forEach((key) => {
+                const tag = autoVariables[key] || bindings[key] || '';
+                const autoValue = tag ? this.autoValueForTag(tag) : '';
+                this.$set(targetObject, key, autoValue);
+            });
+        },
+        previewVariableValues(template, manualValues) {
+            const values = { ...(manualValues || {}) };
+            const bindings = template.variable_bindings || {};
+            const autoVariables = template.auto_variables || {};
+            Object.keys(autoVariables).forEach((key) => {
+                const tag = autoVariables[key];
+                const autoValue = this.autoValueForTag(tag);
+                if (autoValue) {
+                    values[key] = autoValue;
+                    values[tag] = autoValue;
+                }
+            });
+            Object.keys(bindings).forEach((key) => {
+                const tag = bindings[key];
+                if (values[key]) {
+                    values[tag] = values[key];
+                }
+            });
+            return values;
         },
         async sendNewChatTemplate() {
             if (!this.newChatPhone.trim() || !this.newChatTemplateSid) return;

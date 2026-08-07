@@ -45,6 +45,39 @@ class TelnyxWhatsAppTemplateComponentsTest extends TestCase
         $this->assertSame([['example1']], $components[0]['example']['body_text']);
     }
 
+    public function test_build_manage_components_includes_url_button(): void
+    {
+        $components = $this->buildManageComponents([
+            'body' => 'Track your order.',
+            'buttons' => [
+                [
+                    'type' => 'URL',
+                    'text' => 'Track',
+                    'url' => 'https://example.com/track/{{1}}',
+                    'example' => 'ORD-1',
+                ],
+            ],
+        ]);
+
+        $this->assertCount(2, $components);
+        $this->assertSame('BUTTONS', $components[1]['type']);
+        $this->assertSame('URL', $components[1]['buttons'][0]['type']);
+        $this->assertSame(['ORD-1'], $components[1]['buttons'][0]['example']);
+    }
+
+    public function test_mixed_button_types_are_rejected(): void
+    {
+        $this->expectException(\RuntimeException::class);
+
+        $this->buildManageComponents([
+            'body' => 'Hello',
+            'buttons' => [
+                ['type' => 'QUICK_REPLY', 'text' => 'Yes'],
+                ['type' => 'URL', 'text' => 'Open', 'url' => 'https://example.com'],
+            ],
+        ]);
+    }
+
     /**
      * @param  array<string, mixed>  $input
      * @return array<int, array<string, mixed>>

@@ -521,6 +521,7 @@ class ChatController extends Controller
         return response()->json([
             'templates' => $this->whatsAppService->listTemplates(),
             'can_manage' => $this->whatsAppService->canManageTemplates(),
+            'available_auto_tags' => $this->whatsAppService->availableAutoTags(),
         ]);
     }
 
@@ -530,6 +531,7 @@ class ChatController extends Controller
 
         return response()->json([
             'template' => $this->whatsAppService->getTemplate($contentSid),
+            'available_auto_tags' => $this->whatsAppService->availableAutoTags(),
         ]);
     }
 
@@ -546,6 +548,12 @@ class ChatController extends Controller
             'footer' => 'nullable|string|max:60',
             'variable_samples' => 'nullable|array',
             'variable_samples.*' => 'nullable|string|max:200',
+            'buttons' => 'nullable|array|max:3',
+            'buttons.*.type' => 'required_with:buttons|string|in:QUICK_REPLY,URL,PHONE_NUMBER',
+            'buttons.*.text' => 'required_with:buttons|string|max:25',
+            'buttons.*.url' => 'nullable|string|max:2000',
+            'buttons.*.phone_number' => 'nullable|string|max:30',
+            'buttons.*.example' => 'nullable|string|max:200',
         ]);
 
         try {
@@ -572,6 +580,12 @@ class ChatController extends Controller
             'footer' => 'nullable|string|max:60',
             'variable_samples' => 'nullable|array',
             'variable_samples.*' => 'nullable|string|max:200',
+            'buttons' => 'nullable|array|max:3',
+            'buttons.*.type' => 'required_with:buttons|string|in:QUICK_REPLY,URL,PHONE_NUMBER',
+            'buttons.*.text' => 'required_with:buttons|string|max:25',
+            'buttons.*.url' => 'nullable|string|max:2000',
+            'buttons.*.phone_number' => 'nullable|string|max:30',
+            'buttons.*.example' => 'nullable|string|max:200',
         ]);
 
         try {

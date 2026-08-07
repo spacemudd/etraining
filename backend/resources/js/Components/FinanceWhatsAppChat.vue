@@ -226,14 +226,14 @@
                                             {{ previewTemplateBody }}
                                         </div>
 
-                                        <div v-if="selectedTemplate && selectedTemplate.variables.length" class="space-y-2 mb-3">
+                                        <div v-if="selectedTemplate && manualTemplateVariables.length" class="space-y-2 mb-3">
                                             <div class="text-sm font-medium text-gray-700">{{ $t('words.template-variables') }}</div>
                                             <div
-                                                v-for="variableKey in selectedTemplate.variables"
+                                                v-for="variableKey in manualTemplateVariables"
                                                 :key="variableKey"
                                             >
                                                 <label class="text-xs text-gray-500">
-                                                    {{ $t('words.template-variable') }} {{ variableKey }}
+                                                    {{ templateVariableLabel(variableKey) }}
                                                     <span v-if="variableSample(variableKey)" class="text-gray-400">
                                                         ({{ variableSample(variableKey) }})
                                                     </span>
@@ -246,6 +246,12 @@
                                                 />
                                             </div>
                                         </div>
+                                        <p
+                                            v-else-if="selectedTemplate && selectedTemplate.variables && selectedTemplate.variables.length"
+                                            class="text-xs text-green-700 mb-3"
+                                        >
+                                            {{ $t('words.whatsapp-auto-filled-variables') }}
+                                        </p>
 
                                         <jet-button
                                             @click.native="sendTemplate"
@@ -334,16 +340,39 @@ export default {
 
             return lastMessage.date_sent || null;
         },
+        manualTemplateVariables() {
+            if (!this.selectedTemplate) {
+                return [];
+            }
+            return this.selectedTemplate.manual_variables || this.selectedTemplate.variables || [];
+        },
         previewTemplateBody() {
             if (!this.selectedTemplate) {
                 return '';
             }
 
-            let body = this.selectedTemplate.body;
+            let body = this.selectedTemplate.body_display || this.selectedTemplate.body;
+            const values = { ...(this.templateVariables || {}) };
+            const autoVariables = this.selectedTemplate.auto_variables || {};
+            const bindings = this.selectedTemplate.variable_bindings || {};
 
-            Object.keys(this.templateVariables).forEach((key) => {
-                const value = this.templateVariables[key] || `{{${key}}}`;
-                body = body.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value);
+            Object.keys(autoVariables).forEach((key) => {
+                const autoValue = this.autoValueForTag(autoVariables[key]);
+                if (autoValue) {
+                    values[key] = autoValue;
+                    values[autoVariables[key]] = autoValue;
+                }
+            });
+
+            Object.keys(bindings).forEach((key) => {
+                if (values[key]) {
+                    values[bindings[key]] = values[key];
+                }
+            });
+
+            Object.keys(values).forEach((key) => {
+                const value = values[key] || `{{${key}}}`;
+                body = body.replace(new RegExp(`\\{\\{\\s*${key}\\s*\\}\\}`, 'g'), value);
             });
 
             return body;
@@ -520,14 +549,38 @@ export default {
             try {
                 const { data } = await axios.get(route('back.finance.whatsapp.templates.show', this.selectedTemplateSid));
                 this.selectedTemplate = data.template;
-                this.selectedTemplate.variables.forEach((key) => {
-                    const defaultValue = this.selectedTrainee && key === '1'
-                        ? this.selectedTrainee.name
-                        : '';
+                const bindings = this.selectedTemplate.variable_bindings || {};
+                const autoVariables = this.selectedTemplate.auto_variables || {};
+                (this.selectedTemplate.variables || []).forEach((key) => {
+                    const tag = autoVariables[key] || bindings[key] || '';
+                    const defaultValue = tag ? this.autoValueForTag(tag) : '';
                     this.$set(this.templateVariables, key, defaultValue);
                 });
             } catch (error) {
                 this.errorMessage = this.$t('words.whatsapp-templates-load-failed');
+            }
+        },
+        templateVariableLabel(variableKey) {
+            const bindings = (this.selectedTemplate && this.selectedTemplate.variable_bindings) || {};
+            return bindings[variableKey] || (this.$t('words.template-variable') + ' ' + variableKey);
+        },
+        autoValueForTag(tag) {
+            if (!this.selectedTrainee) {
+                return '';
+            }
+            switch (tag) {
+                case 'trainee_name':
+                    return this.selectedTrainee.name || '';
+                case 'trainee_english_name':
+                    return this.selectedTrainee.english_name || '';
+                case 'trainee_phone':
+                    return this.selectedTrainee.phone || '';
+                case 'trainee_identity':
+                    return this.selectedTrainee.identity_number || '';
+                case 'company_name':
+                    return this.selectedTrainee.company_name || '';
+                default:
+                    return '';
             }
         },
         async loadMessages(poll = false) {

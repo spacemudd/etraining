@@ -6,7 +6,9 @@ namespace App\Services;
 
 use App\Models\Back\Trainee;
 use App\Models\Back\WhatsAppMessage;
+use App\Models\Back\WhatsAppTemplateBinding;
 use App\Support\WhatsAppBroadcast;
+use App\Support\WhatsAppTemplateTags;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
@@ -103,6 +105,15 @@ class TelnyxWhatsAppService
     {
         $this->assertCanManageTemplates();
 
+        $normalized = WhatsAppTemplateTags::normalizeBody(
+            (string) $input['body'],
+            $input['variable_samples'] ?? [],
+            (string) ($input['language'] ?? 'ar')
+        );
+
+        $input['body'] = $normalized['body'];
+        $input['variable_samples'] = $normalized['samples'];
+
         $payload = $this->request('POST', 'whatsapp/message_templates', [
             'json' => [
                 'waba_id' => config('telnyx.waba_id'),
@@ -112,6 +123,14 @@ class TelnyxWhatsAppService
                 'components' => $this->buildManageComponents($input),
             ],
         ], 'Failed to create WhatsApp template.');
+
+        $template = $this->formatTemplate($payload['data'] ?? $payload);
+        $this->saveTemplateBindings(
+            (string) ($template['sid'] ?? ''),
+            $normalized['bindings'],
+            (string) ($input['name'] ?? ''),
+            (string) ($input['language'] ?? '')
+        );
 
         return $this->formatTemplate($payload['data'] ?? $payload);
     }
@@ -123,7 +142,9 @@ class TelnyxWhatsAppService
      *     body: string,
      *     header?: string|null,
      *     footer?: string|null,
-     *     variable_samples?: array<string, string>
+     *     variable_samples?: array<string, string>,
+     *     buttons?: array<int, array<string, mixed>>,
+     *     language?: string
      * }  $input
      * @return array<string, mixed>
      */
@@ -131,11 +152,30 @@ class TelnyxWhatsAppService
     {
         $this->assertCanManageTemplates();
 
+        $existing = $this->getTemplate($templateId);
+        $language = (string) ($input['language'] ?? $existing['language'] ?? 'ar');
+
+        $normalized = WhatsAppTemplateTags::normalizeBody(
+            (string) $input['body'],
+            $input['variable_samples'] ?? [],
+            $language
+        );
+
+        $input['body'] = $normalized['body'];
+        $input['variable_samples'] = $normalized['samples'];
+
         $payload = $this->request('PATCH', 'whatsapp/message_templates/' . $templateId, [
             'json' => [
                 'components' => $this->buildManageComponents($input),
             ],
         ], 'Failed to update WhatsApp template.');
+
+        $this->saveTemplateBindings(
+            $templateId,
+            $normalized['bindings'],
+            (string) ($existing['friendly_name'] ?? ''),
+            $language
+        );
 
         return $this->formatTemplate($payload['data'] ?? $payload);
     }
@@ -153,6 +193,60 @@ class TelnyxWhatsAppService
             [],
             'Failed to delete WhatsApp template.'
         );
+
+        WhatsAppTemplateBinding::query()->where('template_sid', $templateId)->delete();
+    }
+
+    /**
+     * @return array<int, array{tag: string, label: string, example: string, placeholder: string}>
+     */
+    public function availableAutoTags(string $language = 'ar'): array
+    {
+        return WhatsAppTemplateTags::availableForUi($language);
+    }
+
+    /**
+     * @param  array<string, string>  $bindings
+     */
+    private function saveTemplateBindings(string $templateSid, array $bindings, string $name = '', string $language = ''): void
+    {
+        if ($templateSid === '') {
+            return;
+        }
+
+        WhatsAppTemplateBinding::query()->updateOrCreate(
+            ['template_sid' => $templateSid],
+            [
+                'template_name' => $name !== '' ? $name : null,
+                'language' => $language !== '' ? $language : null,
+                'bindings' => $bindings,
+            ]
+        );
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function bindingsForTemplate(string $templateSid): array
+    {
+        if ($templateSid === '') {
+            return [];
+        }
+
+        $record = WhatsAppTemplateBinding::query()->where('template_sid', $templateSid)->first();
+
+        if (! $record || ! is_array($record->bindings)) {
+            return [];
+        }
+
+        $bindings = [];
+        foreach ($record->bindings as $key => $tag) {
+            if (is_string($tag) && $tag !== '') {
+                $bindings[(string) $key] = $tag;
+            }
+        }
+
+        return $bindings;
     }
 
     private function assertCanManageTemplates(): void
@@ -169,7 +263,8 @@ class TelnyxWhatsAppService
      *     body: string,
      *     header?: string|null,
      *     footer?: string|null,
-     *     variable_samples?: array<string, string>
+     *     variable_samples?: array<string, string>,
+     *     buttons?: array<int, array<string, mixed>>
      * }  $input
      * @return array<int, array<string, mixed>>
      */
@@ -209,7 +304,104 @@ class TelnyxWhatsAppService
             ];
         }
 
+        $buttons = $this->normalizeButtons($input['buttons'] ?? []);
+        if ($buttons !== []) {
+            $components[] = [
+                'type' => 'BUTTONS',
+                'buttons' => $buttons,
+            ];
+        }
+
         return $components;
+    }
+
+    /**
+     * @param  array<int, mixed>  $buttons
+     * @return array<int, array<string, mixed>>
+     */
+    private function normalizeButtons(array $buttons): array
+    {
+        $normalized = [];
+
+        foreach (array_slice(array_values($buttons), 0, 3) as $button) {
+            if (! is_array($button)) {
+                continue;
+            }
+
+            $type = strtoupper(trim((string) ($button['type'] ?? '')));
+            $text = trim((string) ($button['text'] ?? ''));
+
+            if ($text === '' || ! in_array($type, ['QUICK_REPLY', 'URL', 'PHONE_NUMBER'], true)) {
+                continue;
+            }
+
+            if ($type === 'QUICK_REPLY') {
+                $normalized[] = [
+                    'type' => 'QUICK_REPLY',
+                    'text' => $text,
+                ];
+                continue;
+            }
+
+            if ($type === 'URL') {
+                $url = trim((string) ($button['url'] ?? ''));
+                if ($url === '') {
+                    continue;
+                }
+
+                $item = [
+                    'type' => 'URL',
+                    'text' => $text,
+                    'url' => $url,
+                ];
+
+                if (str_contains($url, '{{')) {
+                    $example = trim((string) ($button['example'] ?? 'example'));
+                    $item['example'] = [$example !== '' ? $example : 'example'];
+                }
+
+                $normalized[] = $item;
+                continue;
+            }
+
+            $phone = trim((string) ($button['phone_number'] ?? ''));
+            if ($phone === '') {
+                continue;
+            }
+
+            $normalized[] = [
+                'type' => 'PHONE_NUMBER',
+                'text' => $text,
+                'phone_number' => $phone,
+            ];
+        }
+
+        if ($normalized === []) {
+            return [];
+        }
+
+        $types = array_unique(array_map(
+            static fn (array $button): string => (string) $button['type'],
+            $normalized
+        ));
+        $hasQuickReply = in_array('QUICK_REPLY', $types, true);
+        $hasCallToAction = in_array('URL', $types, true) || in_array('PHONE_NUMBER', $types, true);
+
+        if ($hasQuickReply && $hasCallToAction) {
+            throw new RuntimeException(
+                'WhatsApp templates cannot mix QUICK_REPLY buttons with URL or PHONE_NUMBER buttons.'
+            );
+        }
+
+        if ($hasQuickReply && count($normalized) > 3) {
+            throw new RuntimeException('A template can have at most 3 QUICK_REPLY buttons.');
+        }
+
+        if ($hasCallToAction && count($normalized) > 2) {
+            throw new RuntimeException('A template can have at most 2 call-to-action buttons (URL / phone).');
+        }
+
+        return $normalized;
     }
 
     /**
@@ -241,6 +433,15 @@ class TelnyxWhatsAppService
     public function sendTemplate(string $phone, string $templateId, array $contentVariables = [], ?string $traineeId = null): array
     {
         $template = $this->getTemplate($templateId);
+        $trainee = $traineeId
+            ? Trainee::query()->with('company:id,name_ar')->find($traineeId)
+            : $this->findTraineeByPhone($this->normalizePhoneDigits($phone));
+
+        if ($trainee && ! $trainee->relationLoaded('company')) {
+            $trainee->load('company:id,name_ar');
+        }
+
+        $contentVariables = $this->resolveTemplateVariables($template, $contentVariables, $trainee);
         $components = $this->buildTemplateComponents($contentVariables);
 
         $templatePayload = ['components' => $components];
@@ -259,9 +460,50 @@ class TelnyxWhatsAppService
             'type' => 'template',
             'template' => $templatePayload,
         ], $this->previewTemplateBody($template, $contentVariables));
-        $this->storeOutboundMessage($message, $phone, $traineeId);
+        $this->storeOutboundMessage($message, $phone, $trainee?->id ?? $traineeId);
 
         return $message;
+    }
+
+    /**
+     * @param  array<string, mixed>  $template
+     * @param  array<string, string>  $contentVariables
+     * @return array<string, string>
+     */
+    private function resolveTemplateVariables(array $template, array $contentVariables, ?Trainee $trainee): array
+    {
+        $resolved = [];
+        foreach ($contentVariables as $key => $value) {
+            $resolved[(string) $key] = (string) $value;
+        }
+
+        $bindings = is_array($template['variable_bindings'] ?? null) ? $template['variable_bindings'] : [];
+
+        foreach ($template['variables'] ?? [] as $key) {
+            $key = (string) $key;
+            $tag = (string) ($bindings[$key] ?? '');
+
+            if ($tag === '' || ! WhatsAppTemplateTags::isAutoTag($tag)) {
+                continue;
+            }
+
+            $autoValue = WhatsAppTemplateTags::resolve($tag, $trainee);
+            if ($autoValue !== null && $autoValue !== '') {
+                $resolved[$key] = $autoValue;
+            }
+        }
+
+        foreach ($template['variables'] ?? [] as $key) {
+            $key = (string) $key;
+            if (! array_key_exists($key, $resolved) || trim((string) $resolved[$key]) === '') {
+                $tag = (string) ($bindings[$key] ?? $key);
+                throw new RuntimeException(
+                    'Missing value for template variable ' . $tag . '.'
+                );
+            }
+        }
+
+        return $resolved;
     }
 
     /**
@@ -550,10 +792,30 @@ class TelnyxWhatsAppService
         $body = $this->extractTemplateBody($components);
         $variables = $this->extractVariableKeys($body);
         $variableSamples = $this->extractVariableSamples($components);
+        $bindings = $this->bindingsForTemplate((string) ($template['id'] ?? ''));
+
+        // Legacy fallback: single {{1}} with no bindings was used as trainee name in Finance chat.
+        if ($bindings === [] && $variables === ['1']) {
+            $bindings = ['1' => 'trainee_name'];
+        }
 
         if ($variables === [] && $variableSamples !== []) {
             $variables = array_map('strval', array_keys($variableSamples));
             sort($variables, SORT_NUMERIC);
+        }
+
+        $autoVariables = [];
+        $manualVariables = [];
+
+        foreach ($variables as $key) {
+            $key = (string) $key;
+            $tag = (string) ($bindings[$key] ?? '');
+
+            if ($tag !== '' && WhatsAppTemplateTags::isAutoTag($tag)) {
+                $autoVariables[$key] = $tag;
+            } else {
+                $manualVariables[] = $key;
+            }
         }
 
         return [
@@ -561,10 +823,15 @@ class TelnyxWhatsAppService
             'friendly_name' => $template['name'] ?? '',
             'language' => $template['language'] ?? '',
             'body' => $body,
+            'body_display' => WhatsAppTemplateTags::applyBindingsToBody($body, $bindings),
             'header' => $this->extractTemplateHeader($components),
             'footer' => $this->extractTemplateFooter($components),
+            'buttons' => $this->extractTemplateButtons($components),
             'components' => $components,
             'variables' => array_values($variables),
+            'manual_variables' => array_values($manualVariables),
+            'auto_variables' => $autoVariables,
+            'variable_bindings' => $bindings,
             'variable_samples' => $variableSamples,
             'approval_status' => strtolower((string) ($template['status'] ?? 'unknown')),
             'category' => $template['category'] ?? null,
@@ -610,6 +877,58 @@ class TelnyxWhatsAppService
         }
 
         return '';
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $components
+     * @return array<int, array<string, mixed>>
+     */
+    private function extractTemplateButtons(array $components): array
+    {
+        foreach ($components as $component) {
+            if (! is_array($component)) {
+                continue;
+            }
+
+            if (strtoupper((string) ($component['type'] ?? '')) !== 'BUTTONS') {
+                continue;
+            }
+
+            $buttons = [];
+            foreach ($component['buttons'] ?? [] as $button) {
+                if (! is_array($button)) {
+                    continue;
+                }
+
+                $type = strtoupper((string) ($button['type'] ?? ''));
+                $text = (string) ($button['text'] ?? '');
+
+                if ($text === '' || $type === '') {
+                    continue;
+                }
+
+                $item = [
+                    'type' => $type,
+                    'text' => $text,
+                ];
+
+                if ($type === 'URL') {
+                    $item['url'] = (string) ($button['url'] ?? '');
+                    $example = $button['example'][0] ?? $button['example'] ?? null;
+                    $item['example'] = is_string($example) ? $example : '';
+                }
+
+                if ($type === 'PHONE_NUMBER') {
+                    $item['phone_number'] = (string) ($button['phone_number'] ?? '');
+                }
+
+                $buttons[] = $item;
+            }
+
+            return $buttons;
+        }
+
+        return [];
     }
 
     /**

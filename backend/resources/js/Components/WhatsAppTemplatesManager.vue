@@ -72,6 +72,16 @@
                                         </span>
                                     </div>
                                     <p class="mt-2 text-xs text-gray-700 whitespace-pre-wrap">{{ template.body }}</p>
+                                    <div v-if="template.buttons && template.buttons.length" class="mt-2 flex flex-wrap gap-1">
+                                        <span
+                                            v-for="(button, btnIndex) in template.buttons"
+                                            :key="template.sid + '-btn-' + btnIndex"
+                                            class="px-2 py-0.5 rounded bg-white border text-[11px] text-gray-700"
+                                            dir="ltr"
+                                        >
+                                            {{ button.type }}: {{ button.text }}
+                                        </span>
+                                    </div>
                                 </div>
                                 <div class="flex flex-col gap-1 shrink-0">
                                     <button
@@ -161,6 +171,21 @@
                                     :placeholder="$t('words.whatsapp-template-body-hint')"
                                     required
                                 ></textarea>
+                                <div v-if="availableAutoTags.length" class="mt-2">
+                                    <p class="text-[11px] text-gray-500 mb-1">{{ $t('words.whatsapp-auto-tags-hint') }}</p>
+                                    <div class="flex flex-wrap gap-1">
+                                        <button
+                                            v-for="tag in availableAutoTags"
+                                            :key="tag.tag"
+                                            type="button"
+                                            @click="insertAutoTag(tag.placeholder)"
+                                            class="px-2 py-0.5 text-[11px] rounded border bg-white hover:bg-green-50 text-gray-700 border-gray-300"
+                                            dir="ltr"
+                                        >
+                                            {{ tag.placeholder }}
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
 
                             <div>
@@ -175,12 +200,100 @@
                                 />
                             </div>
 
-                            <div v-if="detectedVariables.length" class="space-y-2">
+                            <div class="space-y-2 border rounded-lg p-3 bg-gray-50">
+                                <div class="flex items-center justify-between gap-2">
+                                    <div>
+                                        <div class="text-xs font-semibold text-gray-700">
+                                            {{ $t('words.whatsapp-template-buttons') }} ({{ $t('words.optional') }})
+                                        </div>
+                                        <p class="text-[11px] text-gray-500 mt-0.5">{{ $t('words.whatsapp-template-buttons-hint') }}</p>
+                                    </div>
+                                    <button
+                                        v-if="form.buttons.length < maxButtons"
+                                        type="button"
+                                        @click="addButton"
+                                        class="px-2 py-1 text-xs rounded border bg-white hover:bg-gray-100 text-gray-700 shrink-0"
+                                    >
+                                        {{ $t('words.add-button') }}
+                                    </button>
+                                </div>
+
+                                <div
+                                    v-for="(button, index) in form.buttons"
+                                    :key="'btn-' + index"
+                                    class="border rounded-lg p-3 bg-white space-y-2"
+                                >
+                                    <div class="flex items-center justify-between gap-2">
+                                        <select
+                                            v-model="button.type"
+                                            class="form-select text-xs rounded-lg border-gray-300"
+                                        >
+                                            <option value="QUICK_REPLY">QUICK_REPLY</option>
+                                            <option value="URL">URL</option>
+                                            <option value="PHONE_NUMBER">PHONE_NUMBER</option>
+                                        </select>
+                                        <button
+                                            type="button"
+                                            @click="removeButton(index)"
+                                            class="px-2 py-1 text-xs rounded border bg-white hover:bg-red-50 text-red-600 border-red-200"
+                                        >
+                                            {{ $t('words.delete') }}
+                                        </button>
+                                    </div>
+
+                                    <div>
+                                        <label class="text-[11px] text-gray-500">{{ $t('words.button-text') }}</label>
+                                        <input
+                                            v-model="button.text"
+                                            type="text"
+                                            class="w-full form-input text-sm rounded-lg border-gray-300"
+                                            maxlength="25"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div v-if="button.type === 'URL'">
+                                        <label class="text-[11px] text-gray-500">{{ $t('words.button-url') }}</label>
+                                        <input
+                                            v-model="button.url"
+                                            type="url"
+                                            dir="ltr"
+                                            class="w-full form-input text-sm rounded-lg border-gray-300"
+                                            placeholder="https://example.com/order"
+                                            required
+                                        />
+                                        <div v-if="button.url && button.url.indexOf('{{') !== -1" class="mt-2">
+                                            <label class="text-[11px] text-gray-500">{{ $t('words.button-url-example') }}</label>
+                                            <input
+                                                v-model="button.example"
+                                                type="text"
+                                                dir="ltr"
+                                                class="w-full form-input text-sm rounded-lg border-gray-300"
+                                                placeholder="promo123"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div v-if="button.type === 'PHONE_NUMBER'">
+                                        <label class="text-[11px] text-gray-500">{{ $t('words.button-phone') }}</label>
+                                        <input
+                                            v-model="button.phone_number"
+                                            type="text"
+                                            dir="ltr"
+                                            class="w-full form-input text-sm rounded-lg border-gray-300"
+                                            placeholder="+9665xxxxxxxx"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div v-if="manualDetectedVariables.length" class="space-y-2">
                                 <div class="text-xs font-semibold text-gray-700">
                                     {{ $t('words.template-variables') }} — {{ $t('words.examples') }}
                                 </div>
                                 <div
-                                    v-for="variableKey in detectedVariables"
+                                    v-for="variableKey in manualDetectedVariables"
                                     :key="variableKey"
                                 >
                                     <label class="text-[11px] text-gray-500">
@@ -194,6 +307,9 @@
                                     />
                                 </div>
                             </div>
+                            <p v-else-if="detectedVariables.length" class="text-[11px] text-green-700">
+                                {{ $t('words.whatsapp-auto-tags-only-hint') }}
+                            </p>
 
                             <div class="flex items-center justify-end gap-2 pt-2 border-t">
                                 <button
@@ -222,6 +338,14 @@
 <script>
 import axios from 'axios';
 
+const emptyButton = () => ({
+    type: 'QUICK_REPLY',
+    text: '',
+    url: '',
+    phone_number: '',
+    example: '',
+});
+
 const emptyForm = () => ({
     name: '',
     category: 'UTILITY',
@@ -230,6 +354,7 @@ const emptyForm = () => ({
     body: '',
     footer: '',
     variable_samples: {},
+    buttons: [],
 });
 
 export default {
@@ -262,6 +387,7 @@ export default {
             saving: false,
             deletingSid: null,
             templates: [],
+            availableAutoTags: [],
             view: 'list',
             editingSid: null,
             form: emptyForm(),
@@ -270,11 +396,29 @@ export default {
         };
     },
     computed: {
+        autoTagNames() {
+            return this.availableAutoTags.map((tag) => tag.tag);
+        },
         detectedVariables() {
-            const matches = this.form.body.match(/\{\{(\d+)\}\}/g) || [];
-            const keys = [...new Set(matches.map((m) => m.replace(/[{}]/g, '')))];
-            keys.sort((a, b) => Number(a) - Number(b));
+            const matches = this.form.body.match(/\{\{\s*([a-zA-Z0-9_]+)\s*\}\}/g) || [];
+            const keys = [...new Set(matches.map((m) => m.replace(/[{}\s]/g, '')))];
+            keys.sort((a, b) => {
+                const aNum = /^\d+$/.test(a);
+                const bNum = /^\d+$/.test(b);
+                if (aNum && bNum) return Number(a) - Number(b);
+                if (aNum) return -1;
+                if (bNum) return 1;
+                return a.localeCompare(b);
+            });
             return keys;
+        },
+        manualDetectedVariables() {
+            return this.detectedVariables.filter((key) => !this.autoTagNames.includes(key));
+        },
+        maxButtons() {
+            const types = this.form.buttons.map((b) => b.type);
+            const hasCta = types.includes('URL') || types.includes('PHONE_NUMBER');
+            return hasCta ? 2 : 3;
         },
     },
     methods: {
@@ -294,12 +438,45 @@ export default {
             this.form = emptyForm();
             this.errorMessage = '';
         },
+        insertAutoTag(placeholder) {
+            this.form.body = `${this.form.body || ''}${placeholder}`;
+        },
+        addButton() {
+            if (this.form.buttons.length >= this.maxButtons) {
+                return;
+            }
+            this.form.buttons.push(emptyButton());
+        },
+        removeButton(index) {
+            this.form.buttons.splice(index, 1);
+        },
+        sanitizedButtons() {
+            return this.form.buttons
+                .filter((button) => button.text && button.text.trim())
+                .map((button) => {
+                    const item = {
+                        type: button.type,
+                        text: button.text.trim(),
+                    };
+                    if (button.type === 'URL') {
+                        item.url = (button.url || '').trim();
+                        if (item.url.indexOf('{{') !== -1) {
+                            item.example = (button.example || '').trim() || 'example';
+                        }
+                    }
+                    if (button.type === 'PHONE_NUMBER') {
+                        item.phone_number = (button.phone_number || '').trim();
+                    }
+                    return item;
+                });
+        },
         async loadTemplates() {
             this.loading = true;
             this.errorMessage = '';
             try {
                 const { data } = await axios.get(this.listRoute);
                 this.templates = data.templates || [];
+                this.availableAutoTags = data.available_auto_tags || [];
                 this.$emit('templates-updated', this.templates);
             } catch (e) {
                 this.errorMessage = (e.response && e.response.data && e.response.data.message)
@@ -323,9 +500,16 @@ export default {
                 category: template.category || 'UTILITY',
                 language: template.language || 'ar',
                 header: template.header || '',
-                body: template.body || '',
+                body: template.body_display || template.body || '',
                 footer: template.footer || '',
                 variable_samples: { ...(template.variable_samples || {}) },
+                buttons: (template.buttons || []).map((button) => ({
+                    type: button.type || 'QUICK_REPLY',
+                    text: button.text || '',
+                    url: button.url || '',
+                    phone_number: button.phone_number || '',
+                    example: button.example || '',
+                })),
             };
             this.errorMessage = '';
             this.successMessage = '';
@@ -343,6 +527,7 @@ export default {
                 header: this.form.header || null,
                 footer: this.form.footer || null,
                 variable_samples: this.form.variable_samples,
+                buttons: this.sanitizedButtons(),
             };
 
             try {
