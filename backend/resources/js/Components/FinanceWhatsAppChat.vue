@@ -376,13 +376,19 @@ export default {
             this.unsubscribeEcho();
 
             if (!window.Echo) {
+                console.warn('[FinanceWhatsAppChat] Echo unavailable — live updates will use polling fallback when a trainee is selected');
                 return;
             }
 
+            console.log('[FinanceWhatsAppChat] Subscribing to channel whatsapp-chat');
+
             this.echoChannel = window.Echo.channel('whatsapp-chat')
                 .listen('.WhatsAppMessageReceived', (event) => {
+                    console.log('[FinanceWhatsAppChat] WhatsAppMessageReceived', event && event.message);
+
                     const message = event.message;
                     if (!message || !this.selectedTrainee) {
+                        console.log('[FinanceWhatsAppChat] Ignoring event (no message or no selected trainee)');
                         return;
                     }
 
@@ -390,12 +396,19 @@ export default {
                     const messagePhone = this.normalizePhone(message.phone);
 
                     if (selectedPhone && messagePhone && selectedPhone === messagePhone) {
+                        console.log('[FinanceWhatsAppChat] Merging message for selected trainee');
                         this.mergeMessages([message]);
+                    } else {
+                        console.log('[FinanceWhatsAppChat] Ignoring message for other phone', {
+                            selectedPhone,
+                            messagePhone,
+                        });
                     }
                 });
         },
         unsubscribeEcho() {
             if (window.Echo && this.echoChannel) {
+                console.log('[FinanceWhatsAppChat] Leaving channel whatsapp-chat');
                 window.Echo.leave('whatsapp-chat');
             }
             this.echoChannel = null;

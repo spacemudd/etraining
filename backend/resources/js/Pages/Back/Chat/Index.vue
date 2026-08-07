@@ -548,12 +548,16 @@ export default {
     methods: {
         subscribeEcho() {
             if (!window.Echo) {
+                console.warn('[Chat] Echo unavailable — falling back to polling');
                 this.startPolling();
                 return;
             }
 
+            console.log('[Chat] Subscribing to channel whatsapp-chat');
+
             window.Echo.channel('whatsapp-chat')
                 .listen('.WhatsAppMessageReceived', (event) => {
+                    console.log('[Chat] WhatsAppMessageReceived', event && event.message);
                     this.loadConversations();
                     const message = event.message;
                     if (
@@ -561,12 +565,14 @@ export default {
                         && message
                         && this.normalizePhone(message.phone) === this.normalizePhone(this.selectedConversation.phone)
                     ) {
+                        console.log('[Chat] Refreshing open conversation messages');
                         this.loadMessagesSilently();
                     }
                 });
         },
         unsubscribeEcho() {
             if (window.Echo) {
+                console.log('[Chat] Leaving channel whatsapp-chat');
                 window.Echo.leave('whatsapp-chat');
             }
         },

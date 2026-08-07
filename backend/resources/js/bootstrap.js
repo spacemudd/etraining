@@ -45,30 +45,92 @@ function metaContent(name) {
     return el && el.content ? el.content : null;
 }
 
-const pusherKey = metaContent('pusher-key') || process.env.MIX_PUSHER_APP_KEY;
-const pusherHost = metaContent('pusher-host') || process.env.MIX_PUSHER_HOST;
-const pusherPort = Number(metaContent('pusher-port') || process.env.MIX_PUSHER_PORT || 443);
-const pusherScheme = metaContent('pusher-scheme') || process.env.MIX_PUSHER_SCHEME || 'https';
-const pusherCluster = metaContent('pusher-cluster') || process.env.MIX_PUSHER_APP_CLUSTER || 'mt1';
+const echoDebug = typeof console !== 'undefined' ? console : { log() {}, warn() {}, error() {}, info() {}, group() {}, groupEnd() {} };
+
+const metaKey = metaContent('pusher-key');
+const metaHost = metaContent('pusher-host');
+const metaPort = metaContent('pusher-port');
+const metaScheme = metaContent('pusher-scheme');
+const metaCluster = metaContent('pusher-cluster');
+
+const pusherKey = metaKey || process.env.MIX_PUSHER_APP_KEY;
+const pusherHost = metaHost || process.env.MIX_PUSHER_HOST;
+const pusherPort = Number(metaPort || process.env.MIX_PUSHER_PORT || 443);
+const pusherScheme = metaScheme || process.env.MIX_PUSHER_SCHEME || 'https';
+const pusherCluster = metaCluster || process.env.MIX_PUSHER_APP_CLUSTER || 'mt1';
+
+echoDebug.group('[Echo] Init');
+echoDebug.log('meta tags', {
+    key: metaKey ? `${String(metaKey).slice(0, 8)}…` : null,
+    host: metaHost,
+    port: metaPort,
+    scheme: metaScheme,
+    cluster: metaCluster,
+});
+echoDebug.log('resolved config', {
+    key: pusherKey ? `${String(pusherKey).slice(0, 8)}…` : null,
+    host: pusherHost,
+    port: pusherPort,
+    scheme: pusherScheme,
+    cluster: pusherCluster,
+    keySource: metaKey ? 'meta' : (process.env.MIX_PUSHER_APP_KEY ? 'mix' : 'missing'),
+    hostSource: metaHost ? 'meta' : (process.env.MIX_PUSHER_HOST ? 'mix' : 'missing'),
+});
 
 if (pusherKey && pusherHost) {
     const forceTLS = pusherScheme === 'https';
+    const wsUrl = `${forceTLS ? 'wss' : 'ws'}://${pusherHost}:${pusherPort}/app/${pusherKey}`;
 
-    window.Echo = new Echo({
-        broadcaster: 'pusher',
-        key: pusherKey,
-        cluster: pusherCluster,
-        wsHost: pusherHost,
-        wsPort: pusherPort,
-        wssPort: pusherPort,
-        forceTLS: forceTLS,
-        encrypted: forceTLS,
-        disableStats: true,
-        enabledTransports: ['ws', 'wss'],
-    });
-} else if (typeof console !== 'undefined' && console.warn) {
-    console.warn('[Echo] Skipped init — missing pusher-key or pusher-host meta (check PUSHER_APP_KEY / PUSHER_HOST in .env, then php artisan config:clear).', {
+    echoDebug.log('creating Echo →', wsUrl);
+
+    try {
+        window.Echo = new Echo({
+            broadcaster: 'pusher',
+            key: pusherKey,
+            cluster: pusherCluster,
+            wsHost: pusherHost,
+            wsPort: pusherPort,
+            wssPort: pusherPort,
+            forceTLS: forceTLS,
+            encrypted: forceTLS,
+            disableStats: true,
+            enabledTransports: ['ws', 'wss'],
+        });
+
+        const pusher = window.Echo.connector && window.Echo.connector.pusher;
+        if (pusher && pusher.connection) {
+            pusher.connection.bind('state_change', (states) => {
+                echoDebug.log('[Echo] connection state:', states.previous, '→', states.current);
+            });
+            pusher.connection.bind('connected', () => {
+                echoDebug.info('[Echo] connected', {
+                    socketId: pusher.connection.socket_id,
+                    host: pusherHost,
+                });
+            });
+            pusher.connection.bind('unavailable', () => {
+                echoDebug.warn('[Echo] connection unavailable');
+            });
+            pusher.connection.bind('failed', () => {
+                echoDebug.error('[Echo] connection failed');
+            });
+            pusher.connection.bind('error', (err) => {
+                echoDebug.error('[Echo] connection error', err);
+            });
+            pusher.connection.bind('disconnected', () => {
+                echoDebug.warn('[Echo] disconnected');
+            });
+        } else {
+            echoDebug.warn('[Echo] Echo created but pusher connector missing');
+        }
+    } catch (error) {
+        echoDebug.error('[Echo] failed to create Echo instance', error);
+    }
+} else {
+    echoDebug.warn('[Echo] Skipped init — missing pusher-key or pusher-host (check PUSHER_APP_KEY / PUSHER_HOST in .env, then php artisan config:clear).', {
         hasKey: !!pusherKey,
         hasHost: !!pusherHost,
     });
 }
+
+echoDebug.groupEnd();
