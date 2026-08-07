@@ -572,24 +572,22 @@ export default {
                 return;
             }
 
-            const existingSids = new Set(this.messages.map((message) => message.sid).filter(Boolean));
             let added = false;
 
             newMessages.forEach((message) => {
-                if (message.sid && existingSids.has(message.sid)) {
-                    const index = this.messages.findIndex((item) => item.sid === message.sid);
-                    if (index !== -1) {
-                        this.$set(this.messages, index, message);
-                    }
+                const messageKeys = [message.sid, message.id].filter(Boolean).map(String);
+                const existingIndex = this.messages.findIndex((item) => {
+                    const itemKeys = [item.sid, item.id].filter(Boolean).map(String);
+                    return messageKeys.some((key) => itemKeys.includes(key));
+                });
+
+                if (existingIndex !== -1) {
+                    this.$set(this.messages, existingIndex, { ...this.messages[existingIndex], ...message });
                     return;
                 }
 
                 this.messages.push(message);
                 added = true;
-
-                if (message.sid) {
-                    existingSids.add(message.sid);
-                }
             });
 
             if (added) {

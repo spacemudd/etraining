@@ -25,7 +25,7 @@ final class WhatsAppBroadcast
         }
 
         try {
-            broadcast(new WhatsAppMessageReceived($message));
+            broadcast(new WhatsAppMessageReceived($message))->toOthers();
 
             Log::info('WhatsApp message broadcasted', [
                 'driver' => $driver,

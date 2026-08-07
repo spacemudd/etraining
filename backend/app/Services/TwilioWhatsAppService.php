@@ -387,10 +387,13 @@ class TwilioWhatsAppService
     private function formatStoredMessage(WhatsAppMessage $message): array
     {
         return [
-            'sid' => $message->twilio_sid,
+            'id' => $message->id,
+            'sid' => $message->twilio_sid ?: $message->id,
+            'phone' => $message->phone,
             'body' => $message->body ?? '',
             'status' => $message->status,
             'direction' => $message->direction === WhatsAppMessage::DIRECTION_OUTBOUND ? 'outbound-api' : 'inbound',
+            'is_note' => (bool) $message->is_note,
             'from' => $message->from_address,
             'to' => $message->to_address,
             'date_sent' => optional($message->sent_at)->toIso8601String(),

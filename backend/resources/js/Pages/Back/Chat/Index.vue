@@ -584,17 +584,24 @@ export default {
                 return;
             }
 
-            const sid = message.sid || message.id;
-            if (sid) {
-                const existingIndex = this.messages.findIndex((item) => (item.sid || item.id) === sid);
-                if (existingIndex !== -1) {
-                    this.$set(this.messages, existingIndex, { ...this.messages[existingIndex], ...message });
-                    return;
-                }
+            const messageKeys = this.messageIdentityKeys(message);
+            const existingIndex = this.messages.findIndex((item) => {
+                const itemKeys = this.messageIdentityKeys(item);
+                return messageKeys.some((key) => itemKeys.includes(key));
+            });
+
+            if (existingIndex !== -1) {
+                this.$set(this.messages, existingIndex, { ...this.messages[existingIndex], ...message });
+                return;
             }
 
             this.messages.push(message);
             this.$nextTick(() => this.scrollToBottom());
+        },
+        messageIdentityKeys(message) {
+            return [message.sid, message.id]
+                .filter(Boolean)
+                .map((value) => String(value));
         },
         async loadConversations() {
             this.loadingConversations = true;
@@ -731,7 +738,7 @@ export default {
                 }
 
                 const { data } = await axios.post(endpoint, payload);
-                this.messages.push(data.message);
+                this.mergeIncomingMessage(data.message);
                 this.messageBody = '';
                 this.successMessage = this.isNoteMode ? 'Internal note added.' : 'Message sent successfully.';
                 this.$nextTick(() => this.scrollToBottom());
@@ -755,7 +762,7 @@ export default {
                     content_variables: this.templateVariables,
                     trainee_id: this.selectedConversation.trainee?.id || null,
                 });
-                this.messages.push(data.message);
+                this.mergeIncomingMessage(data.message);
                 this.successMessage = 'WhatsApp template sent successfully.';
                 this.$nextTick(() => this.scrollToBottom());
                 this.loadConversations();

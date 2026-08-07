@@ -123,6 +123,18 @@ if (pusherKey && pusherHost) {
         } else {
             echoDebug.warn('[Echo] Echo created but pusher connector missing');
         }
+
+        window.axios.interceptors.request.use((config) => {
+            try {
+                const socketId = window.Echo && typeof window.Echo.socketId === 'function'
+                    ? window.Echo.socketId()
+                    : null;
+                if (socketId) {
+                    config.headers['X-Socket-ID'] = socketId;
+                }
+            } catch (e) {}
+            return config;
+        });
     } catch (error) {
         echoDebug.error('[Echo] failed to create Echo instance', error);
     }
