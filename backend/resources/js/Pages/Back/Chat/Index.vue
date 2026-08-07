@@ -1,11 +1,11 @@
 <template>
     <app-layout>
-        <template #header>
-            <div class="flex items-center justify-between">
+        <div class="py-6 max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between mb-4 gap-3 flex-wrap">
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                     {{ $t('words.chat') }}
                 </h2>
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-3 flex-wrap">
                     <whats-app-templates-manager
                         v-if="configured"
                         :can-manage="canManageTemplates"
@@ -22,20 +22,10 @@
                         <ion-icon name="add-outline" class="w-5 h-5"></ion-icon>
                         {{ $t('words.new-chat') }}
                     </button>
-                    <a
-                        href="/back/finance/whatsapp/status"
-                        target="_blank"
-                        class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 border border-gray-300 shadow-sm transition"
-                    >
-                        <ion-icon name="settings-outline" class="w-5 h-5"></ion-icon>
-                        {{ $t('words.account') }}
-                    </a>
                 </div>
             </div>
-        </template>
 
-        <div class="py-6 max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg flex h-[calc(100vh-210px)] min-h-[600px] border border-gray-200">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg flex h-[calc(100vh-250px)] min-h-[600px] border border-gray-200">
                 
                 <!-- Left Sidebar: Conversations List -->
                 <div class="w-full md:w-80 lg:w-96 border-r flex flex-col bg-gray-50">
