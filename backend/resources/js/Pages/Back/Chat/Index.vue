@@ -119,7 +119,8 @@
                             >
                                 <div class="flex items-center justify-between gap-2">
                                     <span class="font-semibold text-sm text-gray-900 truncate">
-                                        {{ conv.trainee ? conv.trainee.name : conv.phone }}
+                                        <template v-if="conv.trainee">{{ conv.trainee.name }}</template>
+                                        <span v-else dir="ltr">{{ conv.phone }}</span>
                                     </span>
                                     <span class="text-[11px] text-gray-400 flex-shrink-0" dir="ltr">
                                         {{ formatTimeShort(conv.last_message && conv.last_message.sent_at) }}
@@ -127,6 +128,9 @@
                                 </div>
                                 <div v-if="conv.trainee && conv.trainee.company_name" class="text-xs text-gray-600 font-medium">
                                     {{ conv.trainee.company_name }}
+                                </div>
+                                <div v-if="conv.trainee" class="text-xs text-gray-500" dir="ltr">
+                                    {{ conv.phone }}
                                 </div>
                                 <div class="flex items-center justify-between text-xs text-gray-500 gap-2">
                                     <span class="truncate max-w-[180px]">
@@ -162,15 +166,15 @@
                                 :disabled="conversationPage === 1 || loadingConversations"
                                 class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded disabled:opacity-40"
                             >
-                                {{ $t('words.previous') || 'Previous' }}
+                                {{ $t('words.previous') }}
                             </button>
-                            <span>{{ conversationPage }} / {{ totalPages }}</span>
+                            <span dir="ltr">{{ conversationPage }} / {{ totalPages }}</span>
                             <button
                                 @click="goToPage(conversationPage + 1)"
                                 :disabled="conversationPage >= totalPages || loadingConversations"
                                 class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded disabled:opacity-40"
                             >
-                                {{ $t('words.next') || 'Next' }}
+                                {{ $t('words.next') }}
                             </button>
                         </div>
                     </div>
@@ -345,46 +349,54 @@
                                             ? 'bg-green-100 text-gray-900 rounded-tr-sm border border-green-300'
                                             : 'bg-white text-gray-900 rounded-tl-sm border border-gray-200')"
                                 >
-                                    <p class="whitespace-pre-wrap break-words leading-relaxed" dir="auto">{{ message.body }}</p>
-                                    
-                                     <!-- Media Attachments -->
-                                     <div v-if="message.metadata && message.metadata.media && message.metadata.media.length" class="mt-2 space-y-2">
-                                         <div
-                                             v-for="(media, mediaIndex) in message.metadata.media"
-                                             :key="mediaIndex"
-                                             class="flex flex-col gap-1 p-2 bg-black/5 rounded-lg border border-black/10"
-                                         >
-                                             <a
-                                                 :href="media.url"
-                                                 target="_blank"
-                                                 class="text-xs underline font-medium text-blue-600 flex items-center gap-1"
-                                             >
-                                                 <ion-icon name="document-attach-outline" class="w-4 h-4"></ion-icon>
-                                                 {{ media.content_type || $t('words.attachment') }}
-                                             </a>
-                                             <button
-                                                 v-if="message.id"
-                                                 @click="saveMediaToS3(message.id, media.url)"
-                                                 class="self-start mt-1 text-[11px] bg-white border border-gray-300 hover:bg-gray-100 px-2 py-1 rounded font-semibold text-gray-700 shadow-sm transition"
-                                             >
-                                                 {{ $t('words.save-to-s3') }}
-                                             </button>
-                                         </div>
-                                     </div>
+                                    <p
+                                        v-if="message.body && message.body !== '[Media Attachment]'"
+                                        class="whitespace-pre-wrap break-words leading-relaxed"
+                                        dir="auto"
+                                    >{{ message.body }}</p>
 
-                                     <!-- Saved to S3 Media List -->
-                                     <div v-if="message.saved_media && message.saved_media.length" class="mt-2 space-y-1">
-                                         <div class="text-[11px] font-bold text-green-700">✓ S3 Cloud Storage:</div>
-                                         <a
-                                             v-for="s3Media in message.saved_media"
-                                             :key="s3Media.id"
-                                             :href="s3Media.url"
-                                             target="_blank"
-                                             class="block text-xs underline text-green-800 font-medium"
-                                         >
-                                             {{ s3Media.name }}
-                                         </a>
-                                     </div>
+                                    <!-- Media Attachments (inline when possible) -->
+                                    <div v-if="messageAttachments(message).length" class="mt-2 space-y-2">
+                                        <div
+                                            v-for="(media, mediaIndex) in messageAttachments(message)"
+                                            :key="media.id || media.url || mediaIndex"
+                                        >
+                                            <a
+                                                v-if="isImageAttachment(media)"
+                                                :href="media.url"
+                                                target="_blank"
+                                                class="block"
+                                            >
+                                                <img
+                                                    :src="media.url"
+                                                    :alt="media.name || $t('words.attachment')"
+                                                    class="max-w-full max-h-64 rounded-lg object-contain bg-black/5"
+                                                    loading="lazy"
+                                                />
+                                            </a>
+                                            <video
+                                                v-else-if="isVideoAttachment(media)"
+                                                :src="media.url"
+                                                controls
+                                                class="max-w-full max-h-64 rounded-lg bg-black"
+                                            ></video>
+                                            <audio
+                                                v-else-if="isAudioAttachment(media)"
+                                                :src="media.url"
+                                                controls
+                                                class="w-full"
+                                            ></audio>
+                                            <a
+                                                v-else
+                                                :href="media.url"
+                                                target="_blank"
+                                                class="inline-flex items-center gap-1.5 text-sm font-medium text-blue-700 underline"
+                                            >
+                                                <ion-icon name="document-attach-outline" class="w-4 h-4"></ion-icon>
+                                                {{ media.name || $t('words.attachment') }}
+                                            </a>
+                                        </div>
+                                    </div>
 
                                     <!-- Author & Timestamp footer -->
                                     <div class="text-[11px] mt-1.5 flex items-center justify-between gap-3 text-gray-500 pt-1 border-t border-gray-200/40">
@@ -1240,19 +1252,57 @@ export default {
                 }
             } catch (e) {}
         },
-        async saveMediaToS3(messageId, mediaUrl) {
-            try {
-                const { data } = await axios.post(route('back.chat.messages.save-to-s3', messageId), {
-                    media_url: mediaUrl,
-                });
-                this.successMessage = data.message || this.$t('words.saved-to-s3');
-                await this.loadMessages();
-            } catch (error) {
-                this.errorMessage = error.response?.data?.message || 'Failed to save media.';
-            }
-        },
         isOutboundMessage(message) {
             return ['outbound-api', 'outbound-reply', 'outbound'].includes(message.direction);
+        },
+        messageAttachments(message) {
+            if (!message) {
+                return [];
+            }
+
+            if (message.saved_media && message.saved_media.length) {
+                return message.saved_media.map((media) => ({
+                    id: media.id,
+                    url: media.url,
+                    name: media.name,
+                    content_type: this.guessMediaType(media.name || media.url),
+                }));
+            }
+
+            const raw = (message.metadata && message.metadata.media) || [];
+            return raw
+                .filter((media) => media && media.url)
+                .map((media, index) => ({
+                    id: media.id || `meta-${index}`,
+                    url: media.url,
+                    name: media.name || null,
+                    content_type: media.content_type || media.mime_type || this.guessMediaType(media.url),
+                }));
+        },
+        guessMediaType(value) {
+            const source = String(value || '').toLowerCase();
+            if (/\.(jpe?g|png|gif|webp|bmp|svg)(\?|$)/.test(source)) {
+                return 'image/*';
+            }
+            if (/\.(mp4|webm|mov|m4v)(\?|$)/.test(source)) {
+                return 'video/*';
+            }
+            if (/\.(mp3|ogg|wav|m4a|aac)(\?|$)/.test(source)) {
+                return 'audio/*';
+            }
+            return '';
+        },
+        isImageAttachment(media) {
+            const type = String((media && media.content_type) || '').toLowerCase();
+            return type.startsWith('image/') || this.guessMediaType(media && (media.url || media.name)).startsWith('image/');
+        },
+        isVideoAttachment(media) {
+            const type = String((media && media.content_type) || '').toLowerCase();
+            return type.startsWith('video/') || this.guessMediaType(media && (media.url || media.name)).startsWith('video/');
+        },
+        isAudioAttachment(media) {
+            const type = String((media && media.content_type) || '').toLowerCase();
+            return type.startsWith('audio/') || this.guessMediaType(media && (media.url || media.name)).startsWith('audio/');
         },
         isRtl() {
             return document.documentElement.dir === 'rtl' || (this.$page && this.$page.props && this.$page.props.locale === 'ar');

@@ -49,6 +49,7 @@ return [
     'name' => 'Name',
     'Next' => 'Next',
     'Previous' => 'Previous',
+    'previous' => 'Previous',
     'contracts' => 'Contracts',
     'contracts-help' => 'Here contracts are created and paired with instructorss',
     'view-all' => 'View all',
