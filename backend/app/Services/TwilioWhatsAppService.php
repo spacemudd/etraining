@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Events\WhatsAppMessageReceived;
 use App\Models\Back\Trainee;
 use App\Models\Back\WhatsAppMessage;
+use App\Support\WhatsAppBroadcast;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
@@ -211,7 +211,7 @@ class TwilioWhatsAppService
             'metadata' => $payload['metadata'] ?? null,
         ]);
 
-        broadcast(new WhatsAppMessageReceived($message));
+        WhatsAppBroadcast::messageStored($message);
 
         return $message;
     }
@@ -248,7 +248,7 @@ class TwilioWhatsAppService
             ]));
         }
 
-        broadcast(new WhatsAppMessageReceived($stored));
+        WhatsAppBroadcast::messageStored($stored);
 
         return $stored;
     }

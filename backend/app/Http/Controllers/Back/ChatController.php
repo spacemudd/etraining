@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Back;
 
-use App\Events\WhatsAppMessageReceived;
 use App\Http\Controllers\Controller;
 use App\Models\Back\Trainee;
 use App\Models\Back\WhatsAppMessage;
 use App\Services\TelnyxWhatsAppService;
+use App\Support\WhatsAppBroadcast;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -283,7 +283,7 @@ class ChatController extends Controller
 
         $note->load('user:id,name');
 
-        broadcast(new WhatsAppMessageReceived($note));
+        WhatsAppBroadcast::messageStored($note);
 
         return response()->json([
             'message' => [

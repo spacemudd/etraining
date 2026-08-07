@@ -565,8 +565,8 @@ export default {
                         && message
                         && this.normalizePhone(message.phone) === this.normalizePhone(this.selectedConversation.phone)
                     ) {
-                        console.log('[Chat] Refreshing open conversation messages');
-                        this.loadMessagesSilently();
+                        console.log('[Chat] Appending message to open conversation');
+                        this.mergeIncomingMessage(message);
                     }
                 });
         },
@@ -578,6 +578,23 @@ export default {
         },
         normalizePhone(phone) {
             return String(phone || '').replace(/\D+/g, '');
+        },
+        mergeIncomingMessage(message) {
+            if (!message) {
+                return;
+            }
+
+            const sid = message.sid || message.id;
+            if (sid) {
+                const existingIndex = this.messages.findIndex((item) => (item.sid || item.id) === sid);
+                if (existingIndex !== -1) {
+                    this.$set(this.messages, existingIndex, { ...this.messages[existingIndex], ...message });
+                    return;
+                }
+            }
+
+            this.messages.push(message);
+            this.$nextTick(() => this.scrollToBottom());
         },
         async loadConversations() {
             this.loadingConversations = true;
