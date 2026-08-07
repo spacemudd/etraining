@@ -6,9 +6,12 @@ namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
 use App\Models\Back\Trainee;
+use App\Models\Back\WhatsAppConversation;
 use App\Models\Back\WhatsAppMessage;
+use App\Models\Back\WhatsAppTag;
 use App\Services\TelnyxWhatsAppService;
 use App\Support\WhatsAppBroadcast;
+use App\Support\WhatsAppConversationSync;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -17,6 +20,10 @@ use RuntimeException;
 
 class ChatController extends Controller
 {
+    private const CONVERSATIONS_PER_PAGE = 7;
+
+    private const MESSAGES_PER_PAGE = 50;
+
     public function __construct(private readonly TelnyxWhatsAppService $whatsAppService)
     {
     }
@@ -28,99 +35,288 @@ class ChatController extends Controller
         ]);
     }
 
-    public function conversations(): JsonResponse
+    public function conversations(Request $request): JsonResponse
     {
-        // Get unique phones
-        $phones = WhatsAppMessage::query()
-            ->select('phone')
-            ->distinct()
-            ->pluck('phone');
+        $validated = $request->validate([
+            'page' => 'nullable|integer|min:1',
+            'q' => 'nullable|string|max:200',
+            'mine' => 'nullable|boolean',
+            'unassigned' => 'nullable|boolean',
+            'tag_id' => 'nullable|uuid|exists:whatsapp_tags,id',
+            'agent_id' => 'nullable|uuid|exists:users,id',
+            'status' => 'nullable|string|in:open,pending,closed',
+        ]);
 
-        $conversations = [];
+        $status = $validated['status'] ?? WhatsAppConversation::STATUS_OPEN;
 
-        foreach ($phones as $phone) {
-            if (! $phone) {
-                continue;
-            }
+        $query = WhatsAppConversation::query()
+            ->with([
+                'agents:id,name',
+                'tags:id,name,color',
+                'trainee:id,name,phone,identity_number,company_id',
+                'trainee.company:id,name_ar',
+            ])
+            ->where('status', $status)
+            ->orderByDesc('last_message_at')
+            ->orderByDesc('updated_at');
 
-            $lastMessage = WhatsAppMessage::query()
-                ->where('phone', $phone)
-                ->orderByDesc('sent_at')
-                ->orderByDesc('created_at')
-                ->with('user:id,name')
-                ->first();
-
-            if (! $lastMessage) {
-                continue;
-            }
-
-            $trainee = $lastMessage->trainee_id
-                ? Trainee::with('company:id,name_ar')->find($lastMessage->trainee_id)
-                : $this->whatsAppService->findTraineeByPhone($phone);
-
-            $conversations[$phone] = [
-                'phone' => $phone,
-                'trainee' => $trainee ? [
-                    'id' => $trainee->id,
-                    'name' => $trainee->name,
-                    'phone' => $trainee->phone,
-                    'identity_number' => $trainee->identity_number,
-                    'company_name' => $trainee->company?->name_ar,
-                    'show_url' => route('back.trainees.show', $trainee->id),
-                ] : null,
-                'last_message' => [
-                    'body' => $lastMessage->body,
-                    'direction' => $lastMessage->direction,
-                    'is_note' => $lastMessage->is_note,
-                    'sent_at' => $lastMessage->sent_at?->toIso8601String() ?? $lastMessage->created_at?->toIso8601String(),
-                    'author_name' => $lastMessage->user?->name,
-                ],
-                'updated_at' => $lastMessage->sent_at?->timestamp ?? $lastMessage->created_at?->timestamp ?? 0,
-            ];
+        if (! empty($validated['q'])) {
+            $search = $validated['q'];
+            $query->where(function ($builder) use ($search) {
+                $builder->where('phone', 'LIKE', '%' . $search . '%')
+                    ->orWhereHas('trainee', function ($traineeQuery) use ($search) {
+                        $traineeQuery->where('name', 'LIKE', '%' . $search . '%')
+                            ->orWhere('phone', 'LIKE', '%' . $search . '%')
+                            ->orWhere('identity_number', 'LIKE', '%' . $search . '%');
+                    });
+            });
         }
 
-        $conversations = array_values($conversations);
+        if (! empty($validated['mine'])) {
+            $query->whereHas('agents', function ($agentsQuery) {
+                $agentsQuery->where('users.id', auth()->id());
+            });
+        }
 
-        // Sort by most recent activity
-        usort($conversations, fn ($a, $b) => $b['updated_at'] <=> $a['updated_at']);
+        if (! empty($validated['unassigned'])) {
+            $query->whereDoesntHave('agents');
+        }
+
+        if (! empty($validated['tag_id'])) {
+            $query->whereHas('tags', function ($tagsQuery) use ($validated) {
+                $tagsQuery->where('whatsapp_tags.id', $validated['tag_id']);
+            });
+        }
+
+        if (! empty($validated['agent_id'])) {
+            $query->whereHas('agents', function ($agentsQuery) use ($validated) {
+                $agentsQuery->where('users.id', $validated['agent_id']);
+            });
+        }
+
+        $paginator = $query->paginate(self::CONVERSATIONS_PER_PAGE);
+        $authId = auth()->id();
+
+        $paginator->getCollection()->transform(function (WhatsAppConversation $conversation) use ($authId) {
+            return $this->formatConversation($conversation, $authId);
+        });
+
+        return response()->json($paginator);
+    }
+
+    public function assignAgent(WhatsAppConversation $conversation): JsonResponse
+    {
+        $userId = auth()->id();
+
+        if (! $conversation->agents()->where('users.id', $userId)->exists()) {
+            $conversation->agents()->attach($userId, [
+                'assigned_at' => now(),
+            ]);
+        }
+
+        $conversation->load([
+            'agents:id,name',
+            'tags:id,name,color',
+            'trainee.company:id,name_ar',
+        ]);
+
+        WhatsAppConversationSync::broadcast($conversation);
 
         return response()->json([
-            'conversations' => $conversations,
+            'conversation' => $this->formatConversation($conversation, $userId),
+        ]);
+    }
+
+    public function unassignAgent(WhatsAppConversation $conversation): JsonResponse
+    {
+        $userId = auth()->id();
+        $conversation->agents()->detach($userId);
+
+        $conversation->load([
+            'agents:id,name',
+            'tags:id,name,color',
+            'trainee.company:id,name_ar',
+        ]);
+
+        WhatsAppConversationSync::broadcast($conversation);
+
+        return response()->json([
+            'conversation' => $this->formatConversation($conversation, $userId),
+        ]);
+    }
+
+    public function updateStatus(Request $request, WhatsAppConversation $conversation): JsonResponse
+    {
+        $validated = $request->validate([
+            'status' => 'required|string|in:open,pending,closed',
+        ]);
+
+        $conversation->update([
+            'status' => $validated['status'],
+        ]);
+
+        $conversation->load([
+            'agents:id,name',
+            'tags:id,name,color',
+            'trainee.company:id,name_ar',
+        ]);
+
+        WhatsAppConversationSync::broadcast($conversation);
+
+        return response()->json([
+            'conversation' => $this->formatConversation($conversation, auth()->id()),
+        ]);
+    }
+
+    public function tags(): JsonResponse
+    {
+        $tags = WhatsAppTag::query()
+            ->orderBy('name')
+            ->get(['id', 'name', 'color']);
+
+        return response()->json([
+            'tags' => $tags,
+        ]);
+    }
+
+    public function storeTag(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:60',
+            'color' => 'nullable|string|max:32',
+        ]);
+
+        $name = trim($validated['name']);
+
+        $tag = WhatsAppTag::query()->firstOrCreate(
+            ['name' => $name],
+            ['color' => $validated['color'] ?? null]
+        );
+
+        return response()->json([
+            'tag' => [
+                'id' => $tag->id,
+                'name' => $tag->name,
+                'color' => $tag->color,
+            ],
+        ]);
+    }
+
+    public function attachTag(Request $request, WhatsAppConversation $conversation): JsonResponse
+    {
+        $validated = $request->validate([
+            'tag_id' => 'nullable|uuid|exists:whatsapp_tags,id',
+            'name' => 'nullable|string|max:60',
+            'color' => 'nullable|string|max:32',
+        ]);
+
+        if (empty($validated['tag_id']) && empty($validated['name'])) {
+            return response()->json([
+                'message' => 'A tag id or name is required.',
+            ], 422);
+        }
+
+        if (! empty($validated['tag_id'])) {
+            $tag = WhatsAppTag::query()->findOrFail($validated['tag_id']);
+        } else {
+            $tag = WhatsAppTag::query()->firstOrCreate(
+                ['name' => trim($validated['name'])],
+                ['color' => $validated['color'] ?? null]
+            );
+        }
+
+        $conversation->tags()->syncWithoutDetaching([$tag->id]);
+
+        $conversation->load([
+            'agents:id,name',
+            'tags:id,name,color',
+            'trainee.company:id,name_ar',
+        ]);
+
+        WhatsAppConversationSync::broadcast($conversation);
+
+        return response()->json([
+            'conversation' => $this->formatConversation($conversation, auth()->id()),
+            'tag' => [
+                'id' => $tag->id,
+                'name' => $tag->name,
+                'color' => $tag->color,
+            ],
+        ]);
+    }
+
+    public function detachTag(WhatsAppConversation $conversation, WhatsAppTag $tag): JsonResponse
+    {
+        $conversation->tags()->detach($tag->id);
+
+        $conversation->load([
+            'agents:id,name',
+            'tags:id,name,color',
+            'trainee.company:id,name_ar',
+        ]);
+
+        WhatsAppConversationSync::broadcast($conversation);
+
+        return response()->json([
+            'conversation' => $this->formatConversation($conversation, auth()->id()),
         ]);
     }
 
     public function messages(Request $request): JsonResponse
     {
-        $request->validate([
+        $validated = $request->validate([
             'phone' => 'required|string|max:30',
+            'limit' => 'nullable|integer|min:1|max:100',
+            'before' => 'nullable|date',
+            'before_id' => 'nullable|uuid',
         ]);
 
-        $phone = $this->whatsAppService->normalizePhoneDigits($request->phone);
+        $phone = $this->whatsAppService->normalizePhoneDigits($validated['phone']);
+        $limit = (int) ($validated['limit'] ?? self::MESSAGES_PER_PAGE);
 
-        $messages = WhatsAppMessage::query()
+        $query = WhatsAppMessage::query()
             ->where('phone', $phone)
-            ->with(['user:id,name', 'media'])
-            ->orderBy('sent_at')
-            ->orderBy('created_at')
-            ->get()
-            ->map(function (WhatsAppMessage $msg) {
-                $formatted = $this->whatsAppService->formatStoredMessage($msg);
-                $formatted['id'] = $msg->id;
-                $formatted['is_note'] = (bool) $msg->is_note;
-                $formatted['author'] = $msg->user ? [
-                    'id' => $msg->user->id,
-                    'name' => $msg->user->name,
-                ] : null;
-                $formatted['saved_media'] = $msg->getMedia('whatsapp_media')->map(fn ($m) => [
-                    'id' => $m->id,
-                    'url' => $m->getUrl(),
-                    'name' => $m->file_name,
-                ]);
-                return $formatted;
+            ->with(['user:id,name', 'media']);
+
+        if (! empty($validated['before'])) {
+            $before = $validated['before'];
+            $beforeId = $validated['before_id'] ?? null;
+
+            $query->where(function ($builder) use ($before, $beforeId) {
+                $builder->where('sent_at', '<', $before);
+                if ($beforeId) {
+                    $builder->orWhere(function ($sameSecond) use ($before, $beforeId) {
+                        $sameSecond->where('sent_at', '=', $before)
+                            ->where('id', '<', $beforeId);
+                    });
+                }
             });
+        }
+
+        $messages = $query
+            ->orderByDesc('sent_at')
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->limit($limit + 1)
+            ->get();
+
+        $hasMore = $messages->count() > $limit;
+        if ($hasMore) {
+            $messages = $messages->take($limit);
+        }
+
+        $formatted = $messages
+            ->reverse()
+            ->values()
+            ->map(fn (WhatsAppMessage $msg) => $this->formatMessage($msg));
+
+        $oldest = $formatted->first();
 
         return response()->json([
-            'messages' => $messages,
+            'messages' => $formatted,
+            'has_more' => $hasMore,
+            'next_before' => $oldest['date_sent'] ?? null,
+            'next_before_id' => $oldest['id'] ?? null,
         ]);
     }
 
@@ -173,7 +369,6 @@ class ChatController extends Controller
                 $validated['trainee_id'] ?? null
             );
 
-            // Update the stored message with the current authenticated user id
             $stored = WhatsAppMessage::query()
                 ->where('phone', $this->whatsAppService->normalizePhoneDigits($validated['phone']))
                 ->where('direction', WhatsAppMessage::DIRECTION_OUTBOUND)
@@ -188,13 +383,12 @@ class ChatController extends Controller
             }
 
             $stored?->load('user:id,name');
-            $formatted = $stored ? $this->whatsAppService->formatStoredMessage($stored) : $response;
+            $formatted = $stored ? $this->formatMessage($stored) : $response;
             $formatted['is_note'] = false;
             $formatted['author'] = [
                 'id' => auth()->id(),
                 'name' => auth()->user()->name,
             ];
-
         } catch (RuntimeException $exception) {
             return response()->json([
                 'message' => $exception->getMessage(),
@@ -239,13 +433,12 @@ class ChatController extends Controller
             }
 
             $stored?->load('user:id,name');
-            $formatted = $stored ? $this->whatsAppService->formatStoredMessage($stored) : $response;
+            $formatted = $stored ? $this->formatMessage($stored) : $response;
             $formatted['is_note'] = false;
             $formatted['author'] = [
                 'id' => auth()->id(),
                 'name' => auth()->user()->name,
             ];
-
         } catch (RuntimeException $exception) {
             return response()->json([
                 'message' => $exception->getMessage(),
@@ -286,18 +479,7 @@ class ChatController extends Controller
         WhatsAppBroadcast::messageStored($note);
 
         return response()->json([
-            'message' => [
-                'sid' => $note->id,
-                'direction' => WhatsAppMessage::DIRECTION_OUTBOUND,
-                'is_note' => true,
-                'body' => $note->body,
-                'status' => 'internal_note',
-                'date_sent' => $note->sent_at?->toIso8601String(),
-                'author' => [
-                    'id' => auth()->id(),
-                    'name' => auth()->user()->name,
-                ],
-            ],
+            'message' => $this->formatMessage($note),
         ]);
     }
 
@@ -344,6 +526,70 @@ class ChatController extends Controller
         return response()->json([
             'template' => $this->whatsAppService->getTemplate($contentSid),
         ]);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function formatConversation(WhatsAppConversation $conversation, $authId = null): array
+    {
+        return [
+            'id' => $conversation->id,
+            'phone' => $conversation->phone,
+            'status' => $conversation->status ?: WhatsAppConversation::STATUS_OPEN,
+            'trainee' => $conversation->trainee ? [
+                'id' => $conversation->trainee->id,
+                'name' => $conversation->trainee->name,
+                'phone' => $conversation->trainee->phone,
+                'identity_number' => $conversation->trainee->identity_number,
+                'company_name' => $conversation->trainee->company?->name_ar,
+                'show_url' => route('back.trainees.show', $conversation->trainee->id),
+            ] : null,
+            'last_message' => [
+                'body' => $conversation->last_message_body,
+                'direction' => $conversation->last_message_direction,
+                'is_note' => (bool) $conversation->last_message_is_note,
+                'sent_at' => optional($conversation->last_message_at)->toIso8601String(),
+            ],
+            'updated_at' => optional($conversation->last_message_at)->timestamp
+                ?? optional($conversation->updated_at)->timestamp
+                ?? 0,
+            'agents' => $conversation->agents->map(fn ($user) => [
+                'id' => $user->id,
+                'name' => $user->name,
+            ])->values()->all(),
+            'tags' => $conversation->tags->map(fn ($tag) => [
+                'id' => $tag->id,
+                'name' => $tag->name,
+                'color' => $tag->color,
+            ])->values()->all(),
+            'is_assigned_to_me' => $authId
+                ? $conversation->agents->contains('id', $authId)
+                : false,
+            'is_unassigned' => $conversation->agents->isEmpty(),
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function formatMessage(WhatsAppMessage $msg): array
+    {
+        $formatted = $this->whatsAppService->formatStoredMessage($msg);
+        $formatted['id'] = $msg->id;
+        $formatted['phone'] = $msg->phone;
+        $formatted['is_note'] = (bool) $msg->is_note;
+        $formatted['author'] = $msg->user ? [
+            'id' => $msg->user->id,
+            'name' => $msg->user->name,
+        ] : null;
+        $formatted['saved_media'] = $msg->getMedia('whatsapp_media')->map(fn ($m) => [
+            'id' => $m->id,
+            'url' => $m->getUrl(),
+            'name' => $m->file_name,
+        ]);
+
+        return $formatted;
     }
 
     private function ensureConfigured(): void

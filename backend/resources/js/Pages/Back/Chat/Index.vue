@@ -30,13 +30,76 @@
                 
                 <!-- Left Sidebar: Conversations List -->
                 <div class="w-full md:w-80 lg:w-96 border-r flex flex-col bg-gray-50">
-                    <div class="p-3 border-b bg-white">
+                    <div class="p-3 border-b bg-white space-y-2">
+                        <div class="flex gap-1 p-0.5 bg-gray-100 rounded-lg">
+                            <button
+                                type="button"
+                                @click="setStatusTab('open')"
+                                class="flex-1 px-2 py-1.5 rounded-md text-[11px] font-semibold transition"
+                                :class="statusTab === 'open' ? 'bg-white text-green-700 shadow' : 'text-gray-600 hover:text-gray-800'"
+                            >
+                                {{ $t('words.chat-status-open') }}
+                            </button>
+                            <button
+                                type="button"
+                                @click="setStatusTab('pending')"
+                                class="flex-1 px-2 py-1.5 rounded-md text-[11px] font-semibold transition"
+                                :class="statusTab === 'pending' ? 'bg-white text-amber-700 shadow' : 'text-gray-600 hover:text-gray-800'"
+                            >
+                                {{ $t('words.chat-status-pending') }}
+                            </button>
+                            <button
+                                type="button"
+                                @click="setStatusTab('closed')"
+                                class="flex-1 px-2 py-1.5 rounded-md text-[11px] font-semibold transition"
+                                :class="statusTab === 'closed' ? 'bg-white text-gray-800 shadow' : 'text-gray-600 hover:text-gray-800'"
+                            >
+                                {{ $t('words.chat-status-closed') }}
+                            </button>
+                        </div>
                         <input
                             v-model="conversationSearch"
+                            @input="onSearchInput"
                             type="text"
                             class="w-full form-input text-sm rounded-lg border-gray-300"
                             :placeholder="$t('words.search') + '...'"
                         />
+                        <div class="flex flex-wrap gap-1">
+                            <button
+                                type="button"
+                                @click="setFilter('all')"
+                                class="px-2 py-1 rounded text-[11px] font-semibold"
+                                :class="listFilter === 'all' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                            >
+                                {{ $t('words.all') }}
+                            </button>
+                            <button
+                                type="button"
+                                @click="setFilter('mine')"
+                                class="px-2 py-1 rounded text-[11px] font-semibold"
+                                :class="listFilter === 'mine' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                            >
+                                {{ $t('words.chat-filter-mine') }}
+                            </button>
+                            <button
+                                type="button"
+                                @click="setFilter('unassigned')"
+                                class="px-2 py-1 rounded text-[11px] font-semibold"
+                                :class="listFilter === 'unassigned' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                            >
+                                {{ $t('words.chat-filter-unassigned') }}
+                            </button>
+                        </div>
+                        <select
+                            v-model="selectedTagFilter"
+                            @change="reloadConversationsFromStart"
+                            class="w-full form-select text-xs rounded-lg border-gray-300"
+                        >
+                            <option value="">{{ $t('words.chat-filter-all-tags') }}</option>
+                            <option v-for="tag in availableTags" :key="tag.id" :value="tag.id">
+                                {{ tag.name }}
+                            </option>
+                        </select>
                     </div>
 
                     <div class="overflow-y-auto flex-1 divide-y divide-gray-100 flex flex-col justify-between">
@@ -44,31 +107,49 @@
                             <div v-if="loadingConversations" class="p-4 text-center text-sm text-gray-500">
                                 {{ $t('words.loading') }}...
                             </div>
-                            <div v-else-if="filteredConversations.length === 0" class="p-6 text-center text-sm text-gray-500">
+                            <div v-else-if="conversations.length === 0" class="p-6 text-center text-sm text-gray-500">
                                 {{ $t('words.no-results') }}
                             </div>
                             <div
-                                v-for="conv in paginatedConversations"
-                                :key="conv.phone"
+                                v-for="conv in conversations"
+                                :key="conv.id || conv.phone"
                                 @click="selectConversation(conv)"
                                 class="p-4 cursor-pointer hover:bg-green-50 transition-colors flex flex-col gap-1"
                                 :class="{ 'bg-green-100 border-l-4 border-green-600': selectedConversation && selectedConversation.phone === conv.phone }"
                             >
-                                <div class="flex items-center justify-between">
+                                <div class="flex items-center justify-between gap-2">
                                     <span class="font-semibold text-sm text-gray-900 truncate">
                                         {{ conv.trainee ? conv.trainee.name : conv.phone }}
                                     </span>
-                                    <span class="text-[11px] text-gray-400" dir="ltr">
-                                        {{ formatTimeShort(conv.last_message.sent_at) }}
+                                    <span class="text-[11px] text-gray-400 flex-shrink-0" dir="ltr">
+                                        {{ formatTimeShort(conv.last_message && conv.last_message.sent_at) }}
                                     </span>
                                 </div>
                                 <div v-if="conv.trainee && conv.trainee.company_name" class="text-xs text-gray-600 font-medium">
                                     {{ conv.trainee.company_name }}
                                 </div>
-                                <div class="flex items-center justify-between text-xs text-gray-500">
-                                    <span class="truncate max-w-[200px]">
-                                        <span v-if="conv.last_message.is_note" class="text-yellow-700 font-medium">[{{ $t('words.internal-note') }}]: </span>
-                                        {{ conv.last_message.body }}
+                                <div class="flex items-center justify-between text-xs text-gray-500 gap-2">
+                                    <span class="truncate max-w-[180px]">
+                                        <span v-if="conv.last_message && conv.last_message.is_note" class="text-yellow-700 font-medium">[{{ $t('words.internal-note') }}]: </span>
+                                        {{ conv.last_message && conv.last_message.body }}
+                                    </span>
+                                </div>
+                                <div v-if="(conv.agents && conv.agents.length) || (conv.tags && conv.tags.length)" class="flex flex-wrap items-center gap-1 mt-1">
+                                    <span
+                                        v-for="agent in (conv.agents || [])"
+                                        :key="'a-' + agent.id"
+                                        class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-indigo-100 text-indigo-800 text-[10px] font-bold border border-indigo-200"
+                                        :title="agent.name"
+                                    >
+                                        {{ agentInitials(agent.name) }}
+                                    </span>
+                                    <span
+                                        v-for="tag in (conv.tags || [])"
+                                        :key="'t-' + tag.id"
+                                        class="inline-flex px-1.5 py-0.5 rounded text-[10px] font-semibold bg-gray-200 text-gray-700"
+                                        :style="tag.color ? { backgroundColor: tag.color, color: '#fff' } : null"
+                                    >
+                                        {{ tag.name }}
                                     </span>
                                 </div>
                             </div>
@@ -77,16 +158,16 @@
                         <!-- Pagination Controls -->
                         <div v-if="totalPages > 1" class="p-3 border-t bg-white flex items-center justify-between text-xs text-gray-600">
                             <button
-                                @click="conversationPage--"
-                                :disabled="conversationPage === 1"
+                                @click="goToPage(conversationPage - 1)"
+                                :disabled="conversationPage === 1 || loadingConversations"
                                 class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded disabled:opacity-40"
                             >
                                 {{ $t('words.previous') || 'Previous' }}
                             </button>
                             <span>{{ conversationPage }} / {{ totalPages }}</span>
                             <button
-                                @click="conversationPage++"
-                                :disabled="conversationPage >= totalPages"
+                                @click="goToPage(conversationPage + 1)"
+                                :disabled="conversationPage >= totalPages || loadingConversations"
                                 class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded disabled:opacity-40"
                             >
                                 {{ $t('words.next') || 'Next' }}
@@ -110,37 +191,120 @@
 
                     <template v-else>
                         <!-- Chat Header -->
-                        <div class="px-6 py-3.5 border-b bg-gray-50 flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-bold text-base shadow-sm">
-                                    {{ selectedConversation.trainee ? selectedConversation.trainee.name.charAt(0) : 'W' }}
+                        <div class="px-6 py-3.5 border-b bg-gray-50 space-y-2">
+                            <div class="flex items-center justify-between gap-3">
+                                <div class="flex items-center gap-3 min-w-0">
+                                    <div class="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-bold text-base shadow-sm flex-shrink-0">
+                                        {{ selectedConversation.trainee ? selectedConversation.trainee.name.charAt(0) : 'W' }}
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="font-bold text-gray-800 text-sm truncate">
+                                            {{ selectedConversation.trainee ? selectedConversation.trainee.name : selectedConversation.phone }}
+                                        </div>
+                                        <div v-if="selectedConversation.trainee && selectedConversation.trainee.company_name" class="text-xs text-gray-600 font-medium truncate">
+                                            {{ selectedConversation.trainee.company_name }}
+                                        </div>
+                                        <div class="text-xs text-gray-500 flex items-center gap-2 mt-0.5">
+                                            <span dir="ltr">{{ selectedConversation.phone }}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <div class="font-bold text-gray-800 text-sm">
-                                        {{ selectedConversation.trainee ? selectedConversation.trainee.name : selectedConversation.phone }}
-                                    </div>
-                                    <div v-if="selectedConversation.trainee && selectedConversation.trainee.company_name" class="text-xs text-gray-600 font-medium">
-                                        {{ selectedConversation.trainee.company_name }}
-                                    </div>
-                                    <div class="text-xs text-gray-500 flex items-center gap-2 mt-0.5">
-                                        <span dir="ltr">{{ selectedConversation.phone }}</span>
-                                    </div>
+                                <div class="flex items-center gap-2 flex-shrink-0">
+                                    <select
+                                        :value="selectedConversation.status || 'open'"
+                                        @change="onStatusChange($event)"
+                                        :disabled="updatingStatus"
+                                        class="form-select text-xs rounded-lg border-gray-300 py-1.5"
+                                    >
+                                        <option value="open">{{ $t('words.chat-status-open') }}</option>
+                                        <option value="pending">{{ $t('words.chat-status-pending') }}</option>
+                                        <option value="closed">{{ $t('words.chat-status-closed') }}</option>
+                                    </select>
+                                    <button
+                                        type="button"
+                                        @click="toggleAssignMe"
+                                        :disabled="assigningAgent"
+                                        class="text-xs px-3 py-1.5 rounded-lg font-medium border transition disabled:opacity-50"
+                                        :class="selectedConversation.is_assigned_to_me
+                                            ? 'bg-indigo-600 text-white border-indigo-600 hover:bg-indigo-700'
+                                            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'"
+                                    >
+                                        {{ selectedConversation.is_assigned_to_me ? $t('words.chat-unassign-me') : $t('words.chat-assign-me') }}
+                                    </button>
+                                    <a
+                                        v-if="selectedConversation.trainee"
+                                        :href="selectedConversation.trainee.show_url"
+                                        target="_blank"
+                                        class="text-xs bg-white border border-gray-300 hover:bg-gray-100 px-3 py-1.5 rounded-lg font-medium text-gray-700 transition"
+                                    >
+                                        {{ $t('words.profile') }}
+                                    </a>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-2">
-                                <a
-                                    v-if="selectedConversation.trainee"
-                                    :href="selectedConversation.trainee.show_url"
-                                    target="_blank"
-                                    class="text-xs bg-white border border-gray-300 hover:bg-gray-100 px-3 py-1.5 rounded-lg font-medium text-gray-700 transition"
+
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span
+                                    v-for="agent in (selectedConversation.agents || [])"
+                                    :key="'ha-' + agent.id"
+                                    class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-800 text-[11px] font-semibold border border-indigo-100"
+                                    :title="agent.name"
                                 >
-                                    {{ $t('words.profile') }}
-                                </a>
+                                    <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-indigo-100 text-[10px] font-bold">
+                                        {{ agentInitials(agent.name) }}
+                                    </span>
+                                    {{ agent.name }}
+                                </span>
+                                <span
+                                    v-for="tag in (selectedConversation.tags || [])"
+                                    :key="'ht-' + tag.id"
+                                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-gray-200 text-gray-700"
+                                    :style="tag.color ? { backgroundColor: tag.color, color: '#fff' } : null"
+                                >
+                                    {{ tag.name }}
+                                    <button type="button" class="opacity-80 hover:opacity-100" @click="detachTag(tag)">×</button>
+                                </span>
+                                <div class="inline-flex items-center gap-1">
+                                    <select
+                                        v-model="tagToAttach"
+                                        class="form-select text-xs rounded-lg border-gray-300 py-1"
+                                    >
+                                        <option value="">{{ $t('words.chat-add-tag') }}</option>
+                                        <option v-for="tag in availableTags" :key="'pick-' + tag.id" :value="tag.id">
+                                            {{ tag.name }}
+                                        </option>
+                                    </select>
+                                    <button
+                                        type="button"
+                                        @click="attachSelectedTag"
+                                        :disabled="!tagToAttach || attachingTag"
+                                        class="text-xs bg-white border border-gray-300 px-2 py-1 rounded-lg font-medium disabled:opacity-40"
+                                    >
+                                        {{ $t('words.add') }}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="createAndAttachTag"
+                                        :disabled="attachingTag"
+                                        class="text-xs bg-white border border-gray-300 px-2 py-1 rounded-lg font-medium disabled:opacity-40"
+                                    >
+                                        {{ $t('words.chat-new-tag') }}
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Messages Container -->
-                        <div ref="messagesContainer" class="flex-1 overflow-y-auto p-6 space-y-4 bg-[#efeae2]" style="max-height: 400px;">
+                        <div ref="messagesContainer" @scroll="onMessagesScroll" class="flex-1 overflow-y-auto p-6 space-y-4 bg-[#efeae2]" style="max-height: 400px;">
+                            <div v-if="hasMoreMessages" class="text-center mb-2">
+                                <button
+                                    type="button"
+                                    @click="loadOlderMessages"
+                                    :disabled="loadingOlderMessages"
+                                    class="text-xs bg-white border border-gray-300 px-3 py-1.5 rounded-lg font-medium text-gray-700 disabled:opacity-50"
+                                >
+                                    {{ loadingOlderMessages ? ($t('words.loading') + '...') : $t('words.chat-load-older') }}
+                                </button>
+                            </div>
                             <div v-if="loadingMessages" class="text-center text-sm text-gray-500 py-4">
                                 {{ $t('words.loading') }}...
                             </div>
@@ -469,6 +633,10 @@ export default {
             selectedConversation: null,
             messages: [],
             loadingMessages: false,
+            loadingOlderMessages: false,
+            hasMoreMessages: false,
+            nextBefore: null,
+            nextBeforeId: null,
             sendMode: 'freeform',
             isNoteMode: false,
             messageBody: '',
@@ -487,30 +655,21 @@ export default {
             sendingNewChat: false,
             newChatError: '',
             conversationPage: 1,
-            conversationsPerPage: 10,
+            totalPages: 1,
+            totalConversations: 0,
+            listFilter: 'all',
+            statusTab: 'open',
+            selectedTagFilter: '',
+            availableTags: [],
+            tagToAttach: '',
+            assigningAgent: false,
+            attachingTag: false,
+            updatingStatus: false,
             pollInterval: null,
+            searchDebounce: null,
         };
     },
     computed: {
-        filteredConversations() {
-            if (!this.conversationSearch) {
-                return this.conversations;
-            }
-            const q = this.conversationSearch.toLowerCase();
-            return this.conversations.filter((conv) => {
-                const name = conv.trainee?.name?.toLowerCase() || '';
-                const phone = conv.phone?.toLowerCase() || '';
-                const idNum = conv.trainee?.identity_number?.toLowerCase() || '';
-                return name.includes(q) || phone.includes(q) || idNum.includes(q);
-            });
-        },
-        paginatedConversations() {
-            const start = (this.conversationPage - 1) * this.conversationsPerPage;
-            return this.filteredConversations.slice(start, start + this.conversationsPerPage);
-        },
-        totalPages() {
-            return Math.ceil(this.filteredConversations.length / this.conversationsPerPage) || 1;
-        },
         previewTemplateBody() {
             if (!this.selectedTemplate) {
                 return '';
@@ -535,6 +694,7 @@ export default {
         },
     },
     mounted() {
+        this.loadTags();
         this.loadConversations();
         this.subscribeEcho();
         if (this.configured) {
@@ -544,8 +704,135 @@ export default {
     beforeDestroy() {
         this.unsubscribeEcho();
         this.stopPolling();
+        if (this.searchDebounce) {
+            clearTimeout(this.searchDebounce);
+        }
     },
     methods: {
+        conversationParams() {
+            const params = {
+                page: this.conversationPage,
+                status: this.statusTab || 'open',
+            };
+            if (this.conversationSearch.trim()) {
+                params.q = this.conversationSearch.trim();
+            }
+            if (this.listFilter === 'mine') {
+                params.mine = 1;
+            }
+            if (this.listFilter === 'unassigned') {
+                params.unassigned = 1;
+            }
+            if (this.selectedTagFilter) {
+                params.tag_id = this.selectedTagFilter;
+            }
+            return params;
+        },
+        setStatusTab(status) {
+            this.statusTab = status;
+            this.selectedConversation = null;
+            this.messages = [];
+            this.reloadConversationsFromStart();
+        },
+        setFilter(filter) {
+            this.listFilter = filter;
+            this.reloadConversationsFromStart();
+        },
+        onSearchInput() {
+            if (this.searchDebounce) {
+                clearTimeout(this.searchDebounce);
+            }
+            this.searchDebounce = setTimeout(() => {
+                this.reloadConversationsFromStart();
+            }, 300);
+        },
+        reloadConversationsFromStart() {
+            this.conversationPage = 1;
+            this.loadConversations();
+        },
+        goToPage(page) {
+            if (page < 1 || page > this.totalPages) {
+                return;
+            }
+            this.conversationPage = page;
+            this.loadConversations();
+        },
+        agentInitials(name) {
+            const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+            if (!parts.length) {
+                return '?';
+            }
+            if (parts.length === 1) {
+                return parts[0].slice(0, 2).toUpperCase();
+            }
+            return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+        },
+        patchConversation(updated) {
+            if (!updated || !updated.id) {
+                return;
+            }
+            const currentUserId = this.$page && this.$page.props && this.$page.props.user
+                ? this.$page.props.user.id
+                : null;
+            const merged = {
+                ...updated,
+                status: updated.status || 'open',
+                is_assigned_to_me: currentUserId
+                    ? (updated.agents || []).some((agent) => agent.id === currentUserId)
+                    : false,
+                is_unassigned: !(updated.agents && updated.agents.length),
+            };
+
+            const matchesTab = (merged.status || 'open') === this.statusTab;
+            const index = this.conversations.findIndex((c) => c.id === merged.id || c.phone === merged.phone);
+
+            if (!matchesTab) {
+                if (index !== -1) {
+                    this.conversations.splice(index, 1);
+                }
+                if (this.selectedConversation && (this.selectedConversation.id === merged.id || this.selectedConversation.phone === merged.phone)) {
+                    this.selectedConversation = { ...this.selectedConversation, ...merged };
+                }
+                return;
+            }
+
+            if (index !== -1) {
+                this.$set(this.conversations, index, { ...this.conversations[index], ...merged });
+            } else {
+                this.conversations.unshift(merged);
+            }
+
+            if (this.selectedConversation && (this.selectedConversation.id === merged.id || this.selectedConversation.phone === merged.phone)) {
+                this.selectedConversation = { ...this.selectedConversation, ...merged };
+            }
+        },
+        async onStatusChange(event) {
+            if (!this.selectedConversation || !this.selectedConversation.id) {
+                return;
+            }
+            const status = event.target.value;
+            if (!status || status === this.selectedConversation.status) {
+                return;
+            }
+            this.updatingStatus = true;
+            try {
+                const { data } = await axios.patch(
+                    route('back.chat.conversations.status', this.selectedConversation.id),
+                    { status }
+                );
+                this.patchConversation(data.conversation);
+                if ((data.conversation.status || 'open') !== this.statusTab) {
+                    this.selectedConversation = null;
+                    this.messages = [];
+                    await this.loadConversations();
+                }
+            } catch (error) {
+                this.errorMessage = error.response?.data?.message || this.$t('words.chat-status-failed');
+                event.target.value = this.selectedConversation.status || 'open';
+            } finally {
+                this.updatingStatus = false;
+            }
+        },
         subscribeEcho() {
             if (!window.Echo) {
                 console.warn('[Chat] Echo unavailable — falling back to polling');
@@ -567,6 +854,14 @@ export default {
                     ) {
                         console.log('[Chat] Appending message to open conversation');
                         this.mergeIncomingMessage(message);
+                    }
+                })
+                .listen('.WhatsAppConversationUpdated', (event) => {
+                    console.log('[Chat] WhatsAppConversationUpdated', event && event.conversation);
+                    if (event && event.conversation) {
+                        this.patchConversation(event.conversation);
+                    } else {
+                        this.loadConversations();
                     }
                 });
         },
@@ -603,13 +898,28 @@ export default {
                 .filter(Boolean)
                 .map((value) => String(value));
         },
+        async loadTags() {
+            try {
+                const { data } = await axios.get(route('back.chat.tags'));
+                this.availableTags = data.tags || [];
+            } catch (e) {
+                this.availableTags = [];
+            }
+        },
         async loadConversations() {
             this.loadingConversations = true;
             try {
-                const { data } = await axios.get(route('back.chat.conversations'));
-                this.conversations = data.conversations;
+                const { data } = await axios.get(route('back.chat.conversations'), {
+                    params: this.conversationParams(),
+                });
+                this.conversations = data.data || [];
+                this.conversationPage = data.current_page || 1;
+                this.totalPages = data.last_page || 1;
+                this.totalConversations = data.total || 0;
             } catch (e) {
                 this.conversations = [];
+                this.totalPages = 1;
+                this.totalConversations = 0;
             } finally {
                 this.loadingConversations = false;
             }
@@ -618,21 +928,152 @@ export default {
             this.selectedConversation = conv;
             this.errorMessage = '';
             this.successMessage = '';
+            this.tagToAttach = '';
             await this.loadMessages();
         },
         async loadMessages() {
             if (!this.selectedConversation) return;
             this.loadingMessages = true;
+            this.hasMoreMessages = false;
+            this.nextBefore = null;
+            this.nextBeforeId = null;
             try {
                 const { data } = await axios.get(route('back.chat.messages'), {
-                    params: { phone: this.selectedConversation.phone },
+                    params: {
+                        phone: this.selectedConversation.phone,
+                        limit: 50,
+                    },
                 });
-                this.messages = data.messages;
+                this.messages = data.messages || [];
+                this.hasMoreMessages = !!data.has_more;
+                this.nextBefore = data.next_before || null;
+                this.nextBeforeId = data.next_before_id || null;
                 this.$nextTick(() => this.scrollToBottom());
             } catch (e) {
                 this.messages = [];
             } finally {
                 this.loadingMessages = false;
+            }
+        },
+        async loadOlderMessages() {
+            if (!this.selectedConversation || !this.hasMoreMessages || this.loadingOlderMessages) {
+                return;
+            }
+            this.loadingOlderMessages = true;
+            const container = this.$refs.messagesContainer;
+            const previousHeight = container ? container.scrollHeight : 0;
+            try {
+                const { data } = await axios.get(route('back.chat.messages'), {
+                    params: {
+                        phone: this.selectedConversation.phone,
+                        limit: 50,
+                        before: this.nextBefore,
+                        before_id: this.nextBeforeId,
+                    },
+                });
+                const older = data.messages || [];
+                this.messages = [...older, ...this.messages];
+                this.hasMoreMessages = !!data.has_more;
+                this.nextBefore = data.next_before || null;
+                this.nextBeforeId = data.next_before_id || null;
+                this.$nextTick(() => {
+                    if (container) {
+                        container.scrollTop = container.scrollHeight - previousHeight;
+                    }
+                });
+            } catch (e) {
+                // keep current messages
+            } finally {
+                this.loadingOlderMessages = false;
+            }
+        },
+        onMessagesScroll() {
+            const container = this.$refs.messagesContainer;
+            if (!container || !this.hasMoreMessages || this.loadingOlderMessages) {
+                return;
+            }
+            if (container.scrollTop <= 40) {
+                this.loadOlderMessages();
+            }
+        },
+        async toggleAssignMe() {
+            if (!this.selectedConversation || !this.selectedConversation.id) {
+                return;
+            }
+            this.assigningAgent = true;
+            try {
+                const routeName = this.selectedConversation.is_assigned_to_me
+                    ? 'back.chat.conversations.agents.unassign'
+                    : 'back.chat.conversations.agents.assign';
+                const method = this.selectedConversation.is_assigned_to_me ? 'delete' : 'post';
+                const { data } = await axios[method](route(routeName, this.selectedConversation.id));
+                this.patchConversation(data.conversation);
+            } catch (error) {
+                this.errorMessage = error.response?.data?.message || this.$t('words.chat-assign-failed');
+            } finally {
+                this.assigningAgent = false;
+            }
+        },
+        async attachSelectedTag() {
+            if (!this.selectedConversation || !this.selectedConversation.id || !this.tagToAttach) {
+                return;
+            }
+            this.attachingTag = true;
+            try {
+                const { data } = await axios.post(
+                    route('back.chat.conversations.tags.attach', this.selectedConversation.id),
+                    { tag_id: this.tagToAttach }
+                );
+                this.patchConversation(data.conversation);
+                this.tagToAttach = '';
+                if (data.tag && !this.availableTags.find((t) => t.id === data.tag.id)) {
+                    this.availableTags.push(data.tag);
+                }
+            } catch (error) {
+                this.errorMessage = error.response?.data?.message || this.$t('words.chat-tag-failed');
+            } finally {
+                this.attachingTag = false;
+            }
+        },
+        async createAndAttachTag() {
+            if (!this.selectedConversation || !this.selectedConversation.id) {
+                return;
+            }
+            const name = window.prompt(this.$t('words.chat-new-tag-prompt'));
+            if (!name || !name.trim()) {
+                return;
+            }
+            this.attachingTag = true;
+            try {
+                const { data } = await axios.post(
+                    route('back.chat.conversations.tags.attach', this.selectedConversation.id),
+                    { name: name.trim() }
+                );
+                this.patchConversation(data.conversation);
+                if (data.tag && !this.availableTags.find((t) => t.id === data.tag.id)) {
+                    this.availableTags.push(data.tag);
+                    this.availableTags.sort((a, b) => a.name.localeCompare(b.name));
+                }
+            } catch (error) {
+                this.errorMessage = error.response?.data?.message || this.$t('words.chat-tag-failed');
+            } finally {
+                this.attachingTag = false;
+            }
+        },
+        async detachTag(tag) {
+            if (!this.selectedConversation || !this.selectedConversation.id || !tag) {
+                return;
+            }
+            try {
+    const { data } = await axios.delete(
+                    route('back.chat.conversations.tags.detach', {
+                        conversation: this.selectedConversation.id,
+                        tag: tag.id,
+                    })
+                );
+                this.patchConversation(data.conversation);
+            } catch (error) {
+                this.errorMessage = error.response?.data?.message || this.$t('words.chat-tag-failed');
             }
         },
         async loadTemplates() {
@@ -688,26 +1129,20 @@ export default {
             this.newChatError = '';
 
             try {
-                const { data } = await axios.post(route('back.chat.send-template'), {
+                await axios.post(route('back.chat.send-template'), {
                     phone: this.newChatPhone.trim(),
                     content_sid: this.newChatTemplateSid,
                     content_variables: this.newChatTemplateVariables,
                 });
 
                 this.$modal.hide('newChatModal');
-                await this.loadConversations();
+                await this.reloadConversationsFromStart();
 
-                let conv = this.conversations.find((c) => c.phone === data.message.to || c.phone === this.newChatPhone.trim());
-                if (!conv) {
-                    conv = {
-                        phone: this.newChatPhone.trim(),
-                        trainee: null,
-                        last_message: data.message,
-                        updated_at: Date.now() / 1000,
-                    };
-                    this.conversations.unshift(conv);
+                const normalized = this.normalizePhone(this.newChatPhone.trim());
+                let conv = this.conversations.find((c) => this.normalizePhone(c.phone) === normalized);
+                if (conv) {
+                    this.selectConversation(conv);
                 }
-                this.selectConversation(conv);
             } catch (error) {
                 this.newChatError = error.response?.data?.message || 'Failed to send template.';
             } finally {
@@ -791,13 +1226,30 @@ export default {
             if (!this.selectedConversation) return;
             try {
                 const { data } = await axios.get(route('back.chat.messages'), {
-                    params: { phone: this.selectedConversation.phone },
+                    params: {
+                        phone: this.selectedConversation.phone,
+                        limit: 50,
+                    },
                 });
-                if (data.messages.length !== this.messages.length) {
-                    this.messages = data.messages;
+                if ((data.messages || []).length !== this.messages.length) {
+                    this.messages = data.messages || [];
+                    this.hasMoreMessages = !!data.has_more;
+                    this.nextBefore = data.next_before || null;
+                    this.nextBeforeId = data.next_before_id || null;
                     this.$nextTick(() => this.scrollToBottom());
                 }
             } catch (e) {}
+        },
+        async saveMediaToS3(messageId, mediaUrl) {
+            try {
+                const { data } = await axios.post(route('back.chat.messages.save-to-s3', messageId), {
+                    media_url: mediaUrl,
+                });
+                this.successMessage = data.message || this.$t('words.saved-to-s3');
+                await this.loadMessages();
+            } catch (error) {
+                this.errorMessage = error.response?.data?.message || 'Failed to save media.';
+            }
         },
         isOutboundMessage(message) {
             return ['outbound-api', 'outbound-reply', 'outbound'].includes(message.direction);

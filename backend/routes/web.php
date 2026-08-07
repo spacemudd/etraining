@@ -800,6 +800,13 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('chat', [\App\Http\Controllers\Back\ChatController::class, 'index'])->name('chat.index');
         Route::prefix('chat')->name('chat.')->group(function () {
             Route::get('conversations', [\App\Http\Controllers\Back\ChatController::class, 'conversations'])->name('conversations');
+            Route::post('conversations/{conversation}/agents', [\App\Http\Controllers\Back\ChatController::class, 'assignAgent'])->name('conversations.agents.assign');
+            Route::delete('conversations/{conversation}/agents', [\App\Http\Controllers\Back\ChatController::class, 'unassignAgent'])->name('conversations.agents.unassign');
+            Route::patch('conversations/{conversation}/status', [\App\Http\Controllers\Back\ChatController::class, 'updateStatus'])->name('conversations.status');
+            Route::get('tags', [\App\Http\Controllers\Back\ChatController::class, 'tags'])->name('tags');
+            Route::post('tags', [\App\Http\Controllers\Back\ChatController::class, 'storeTag'])->name('tags.store');
+            Route::post('conversations/{conversation}/tags', [\App\Http\Controllers\Back\ChatController::class, 'attachTag'])->name('conversations.tags.attach');
+            Route::delete('conversations/{conversation}/tags/{tag}', [\App\Http\Controllers\Back\ChatController::class, 'detachTag'])->name('conversations.tags.detach');
             Route::get('messages', [\App\Http\Controllers\Back\ChatController::class, 'messages'])->name('messages');
             Route::get('trainees', [\App\Http\Controllers\Back\ChatController::class, 'searchTrainees'])->name('trainees');
             Route::get('templates', [\App\Http\Controllers\Back\ChatController::class, 'templates'])->name('templates');

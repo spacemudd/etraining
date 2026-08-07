@@ -1,0 +1,90 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Events;
+
+use App\Models\Back\WhatsAppConversation;
+use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
+
+class WhatsAppConversationUpdated implements ShouldBroadcastNow
+{
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
+
+    /**
+     * @var array<string, mixed>
+     */
+    public array $conversation;
+
+    /**
+     * @param  array<string, mixed>  $conversation
+     */
+    public function __construct(array $conversation)
+    {
+        $this->conversation = $conversation;
+    }
+
+    public static function fromModel(WhatsAppConversation $conversation): self
+    {
+        $conversation->loadMissing([
+            'agents:id,name',
+            'tags:id,name,color',
+            'trainee:id,name,phone,identity_number,company_id',
+            'trainee.company:id,name_ar',
+        ]);
+
+        $authId = auth()->id();
+
+        return new self([
+            'id' => $conversation->id,
+            'phone' => $conversation->phone,
+            'status' => $conversation->status ?: WhatsAppConversation::STATUS_OPEN,
+            'trainee' => $conversation->trainee ? [
+                'id' => $conversation->trainee->id,
+                'name' => $conversation->trainee->name,
+                'phone' => $conversation->trainee->phone,
+                'identity_number' => $conversation->trainee->identity_number,
+                'company_name' => $conversation->trainee->company?->name_ar,
+                'show_url' => route('back.trainees.show', $conversation->trainee->id),
+            ] : null,
+            'last_message' => [
+                'body' => $conversation->last_message_body,
+                'direction' => $conversation->last_message_direction,
+                'is_note' => (bool) $conversation->last_message_is_note,
+                'sent_at' => optional($conversation->last_message_at)->toIso8601String(),
+            ],
+            'updated_at' => optional($conversation->last_message_at)->timestamp
+                ?? optional($conversation->updated_at)->timestamp
+                ?? 0,
+            'agents' => $conversation->agents->map(fn ($user) => [
+                'id' => $user->id,
+                'name' => $user->name,
+            ])->values()->all(),
+            'tags' => $conversation->tags->map(fn ($tag) => [
+                'id' => $tag->id,
+                'name' => $tag->name,
+                'color' => $tag->color,
+            ])->values()->all(),
+            'is_assigned_to_me' => $authId
+                ? $conversation->agents->contains('id', $authId)
+                : false,
+            'is_unassigned' => $conversation->agents->isEmpty(),
+        ]);
+    }
+
+    public function broadcastOn(): Channel
+    {
+        return new Channel('whatsapp-chat');
+    }
+
+    public function broadcastAs(): string
+    {
+        return 'WhatsAppConversationUpdated';
+    }
+}

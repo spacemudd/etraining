@@ -13,6 +13,8 @@ final class WhatsAppBroadcast
 {
     public static function messageStored(WhatsAppMessage $message): void
     {
+        WhatsAppConversationSync::syncFromMessage($message, true);
+
         $driver = (string) config('broadcasting.default');
 
         if (! in_array($driver, ['pusher', 'redis', 'log'], true)) {
