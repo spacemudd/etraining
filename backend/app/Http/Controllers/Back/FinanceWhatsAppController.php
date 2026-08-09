@@ -16,6 +16,7 @@ class FinanceWhatsAppController extends Controller
 {
     public function __construct(private readonly TelnyxWhatsAppService $whatsAppService)
     {
+        $this->middleware('can:access-whatsapp-chats');
     }
 
     public function status(): JsonResponse

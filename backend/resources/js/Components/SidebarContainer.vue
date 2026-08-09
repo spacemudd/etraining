@@ -98,7 +98,11 @@
             </template>
         </sidebar-link>
 
-        <sidebar-link :link-value="route('back.chat.index')" :active="$page.currentRouteName == 'back.chat.index'">
+        <sidebar-link
+            v-can="'access-whatsapp-chats'"
+            :link-value="route('back.chat.index')"
+            :active="$page.currentRouteName == 'back.chat.index'"
+        >
             <template #icon>
                 <ion-icon name="chatbubbles-outline" class="w-5 h-5"></ion-icon>
             </template>

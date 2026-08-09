@@ -22,10 +22,9 @@ class RolesPermissionsController extends Controller
 {
     public function index($role_id)
     {
-        return Inertia::render('Back/Roles/Permissions/Index', [
-            'role' => Role::with('permissions')->findOrFail($role_id),
-            'permissions' => Permission::get(),
-        ]);
+        Role::query()->findOrFail($role_id);
+
+        return redirect()->route('back.settings.roles.index', ['role' => $role_id]);
     }
 
     public function attachPermission(Request $request)
@@ -37,7 +36,7 @@ class RolesPermissionsController extends Controller
             'permission_name' => 'required|exists:permissions,name',
         ]);
 
-        $role = DB::transaction(function() use ($request) {
+        $role = DB::transaction(function () use ($request) {
             $role = Role::where('id', $request->get('role_id'))->lockForUpdate()->firstOrFail();
             $permission = Permission::where('name', $request->get('permission_name'))->lockForUpdate()->firstOrFail();
 
@@ -56,7 +55,7 @@ class RolesPermissionsController extends Controller
             'permission_name' => 'required|exists:permissions,name',
         ]);
 
-        $role = DB::transaction(function() use ($request) {
+        $role = DB::transaction(function () use ($request) {
             $role = Role::where('id', $request->get('role_id'))->lockForUpdate()->firstOrFail();
             $permission = Permission::where('name', $request->get('permission_name'))->lockForUpdate()->firstOrFail();
 
@@ -64,5 +63,34 @@ class RolesPermissionsController extends Controller
         }, 5);
 
         return $role;
+    }
+
+    public function syncPermissions(Request $request)
+    {
+        $this->authorize('edit-permissions');
+
+        $validated = $request->validate([
+            'role_id' => 'required|exists:roles,id',
+            'permissions' => 'present|array',
+            'permissions.*' => 'string|exists:permissions,name',
+        ]);
+
+        $role = DB::transaction(function () use ($validated) {
+            $role = Role::query()->where('id', $validated['role_id'])->lockForUpdate()->firstOrFail();
+            $role->syncPermissions($validated['permissions']);
+
+            return $role->load('permissions:id,name');
+        }, 5);
+
+        return response()->json([
+            'role' => [
+                'id' => $role->id,
+                'permissions' => $role->permissions->map(fn (Permission $permission) => [
+                    'id' => $permission->id,
+                    'name' => $permission->name,
+                ])->values(),
+            ],
+            'message' => __('words.permissions-saved'),
+        ]);
     }
 }

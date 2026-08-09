@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Back;
 use App\Actions\Jetstream\AddTeamMember;
 use App\Http\Controllers\Controller;
 use App\Models\Back\Invite;
+use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
 use App\Notifications\InvitationToSystemNotification;
@@ -15,10 +16,30 @@ use Inertia\Inertia;
 
 class RolesController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $this->authorize('view-permissions');
+
         return Inertia::render('Back/Roles/Index', [
-            'roles' => Role::withCount('users')->with('permissions')->get()->toArray(),
+            'roles' => Role::query()
+                ->withCount('users')
+                ->with([
+                    'permissions:id,name',
+                    'users:id,name,email',
+                ])
+                ->get()
+                ->toArray(),
+            'permissions' => Permission::query()
+                ->orderBy('name')
+                ->get(['id', 'name'])
+                ->map(fn (Permission $permission) => [
+                    'id' => $permission->id,
+                    'name' => $permission->name,
+                    'display_name' => $permission->display_name,
+                ])
+                ->values(),
+            'selectedRoleId' => $request->query('role'),
+            'canEditPermissions' => auth()->user()->can('edit-permissions'),
         ]);
     }
 
@@ -26,13 +47,13 @@ class RolesController extends Controller
      * Show role.
      *
      * @param $id
-     * @return \Inertia\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function show($id)
     {
-        return Inertia::render('Back/Roles/Show', [
-            'role' => Role::with('users')->findOrFail($id),
-        ]);
+        Role::query()->findOrFail($id);
+
+        return redirect()->route('back.settings.roles.index', ['role' => $id]);
     }
 
     /**
@@ -68,7 +89,7 @@ class RolesController extends Controller
 
         Notification::send($invite, new InvitationToSystemNotification());
 
-        return redirect()->route('back.settings.roles.show', $id);
+        return redirect()->route('back.settings.roles.index', ['role' => $id]);
     }
 
     /**
@@ -80,6 +101,7 @@ class RolesController extends Controller
     public function deleteUser($role_id, $user_id)
     {
         User::findOrFail($user_id)->delete();
-        return redirect()->route('back.settings.roles.show', $role_id);
+
+        return redirect()->route('back.settings.roles.index', ['role' => $role_id]);
     }
 }

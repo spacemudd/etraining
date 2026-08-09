@@ -735,6 +735,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('/settings/roles', [\App\Http\Controllers\Back\RolesController::class, 'index'])->name('settings.roles.index');
         Route::post('/settings/roles/attach-permission', [\App\Http\Controllers\Back\RolesPermissionsController::class, 'attachPermission'])->name('settings.roles.attach-permission');
         Route::post('/settings/roles/detach-permission', [\App\Http\Controllers\Back\RolesPermissionsController::class, 'detachPermission'])->name('settings.roles.detach-permission');
+        Route::post('/settings/roles/sync-permissions', [\App\Http\Controllers\Back\RolesPermissionsController::class, 'syncPermissions'])->name('settings.roles.sync-permissions');
         Route::get('/settings/roles/{id}/permissions', [\App\Http\Controllers\Back\RolesPermissionsController::class, 'index'])->name('settings.roles.permissions.index');
 
 

@@ -26,6 +26,7 @@ class ChatController extends Controller
 
     public function __construct(private readonly TelnyxWhatsAppService $whatsAppService)
     {
+        $this->middleware('can:access-whatsapp-chats');
     }
 
     public function index(): Response

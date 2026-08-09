@@ -34,7 +34,7 @@
                     {{ $t('words.account-statements') }}
                 </inertia-link>
 
-                <finance-whats-app-chat />
+                <finance-whats-app-chat v-can="'access-whatsapp-chats'" />
             </div>
         </div>
     </app-layout>
