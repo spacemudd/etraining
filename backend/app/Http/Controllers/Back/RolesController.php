@@ -20,26 +20,78 @@ class RolesController extends Controller
     {
         $this->authorize('view-permissions');
 
+        $roles = Role::query()
+            ->withCount('users')
+            ->with('permissions:id,name')
+            ->get()
+            ->map(static function (Role $role) {
+                return [
+                    'id' => $role->id,
+                    'name' => $role->name,
+                    'display_name' => $role->display_name,
+                    'role_description' => $role->role_description,
+                    'order' => $role->order,
+                    'can_manage_users' => (bool) $role->can_manage_users,
+                    'users_count' => (int) $role->users_count,
+                    'permissions' => $role->permissions
+                        ->map(static fn (Permission $permission) => [
+                            'id' => $permission->id,
+                            'name' => $permission->name,
+                        ])
+                        ->values()
+                        ->all(),
+                ];
+            })
+            ->values();
+
+        $permissions = Permission::query()
+            ->orderBy('name')
+            ->get(['id', 'name'])
+            ->map(static fn (Permission $permission) => [
+                'id' => $permission->id,
+                'name' => $permission->name,
+                'display_name' => $permission->display_name,
+            ])
+            ->values();
+
         return Inertia::render('Back/Roles/Index', [
-            'roles' => Role::query()
-                ->withCount('users')
-                ->with([
-                    'permissions:id,name',
-                    'users:id,name,email',
-                ])
-                ->get()
-                ->toArray(),
-            'permissions' => Permission::query()
-                ->orderBy('name')
-                ->get(['id', 'name'])
-                ->map(fn (Permission $permission) => [
-                    'id' => $permission->id,
-                    'name' => $permission->name,
-                    'display_name' => $permission->display_name,
-                ])
-                ->values(),
+            'roles' => $roles,
+            'permissions' => $permissions,
             'selectedRoleId' => $request->query('role'),
             'canEditPermissions' => auth()->user()->can('edit-permissions'),
+        ]);
+    }
+
+    /**
+     * Lightweight users list for a role (loaded on demand).
+     */
+    public function users(Request $request, string $id)
+    {
+        $this->authorize('view-permissions');
+
+        $role = Role::query()->findOrFail($id);
+        $perPage = min(max((int) $request->query('per_page', 100), 1), 200);
+
+        $paginator = $role->users()
+            ->select(['users.id', 'users.name', 'users.email'])
+            ->orderBy('users.name')
+            ->paginate($perPage);
+
+        $users = collect($paginator->items())->map(static function (User $user) {
+            $user->setAppends([]);
+
+            return [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+            ];
+        })->values();
+
+        return response()->json([
+            'users' => $users,
+            'users_count' => $paginator->total(),
+            'current_page' => $paginator->currentPage(),
+            'last_page' => $paginator->lastPage(),
         ]);
     }
 

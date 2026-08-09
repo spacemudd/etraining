@@ -77,12 +77,12 @@
                                 </button>
                                 <button
                                     type="button"
-                                    @click="activeTab = 'users'"
+                                    @click="openUsersTab"
                                     class="px-3 py-1.5 rounded text-xs font-semibold"
                                     :class="activeTab === 'users' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
                                 >
                                     {{ $t('words.users') }}
-                                    ({{ (selectedRole.users || []).length }})
+                                    ({{ selectedRole.users_count || 0 }})
                                 </button>
                             </div>
                         </div>
@@ -178,7 +178,8 @@
                         <div v-else class="flex-1 flex flex-col min-h-0">
                             <div class="px-5 py-3 border-b bg-gray-50 flex items-center justify-between gap-3">
                                 <p class="text-sm text-gray-600">
-                                    {{ (selectedRole.users || []).length }} {{ $t('words.users') }}
+                                    <span v-if="loadingUsers">{{ $t('words.loading') }}...</span>
+                                    <span v-else>{{ selectedRole.users_count || 0 }} {{ $t('words.users') }}</span>
                                 </p>
                                 <inertia-link
                                     v-if="selectedRole.can_manage_users"
@@ -190,7 +191,13 @@
                             </div>
 
                             <div class="overflow-y-auto flex-1">
-                                <table class="w-full text-sm">
+                                <div v-if="loadingUsers" class="px-5 py-10 text-center text-gray-400 text-sm">
+                                    {{ $t('words.loading') }}...
+                                </div>
+                                <div v-else-if="usersError" class="px-5 py-10 text-center text-red-600 text-sm">
+                                    {{ usersError }}
+                                </div>
+                                <table v-else class="w-full text-sm">
                                     <thead class="bg-white sticky top-0">
                                         <tr class="text-left font-semibold text-gray-600 border-b">
                                             <th class="px-5 py-3">{{ $t('words.name') }}</th>
@@ -200,7 +207,7 @@
                                     </thead>
                                     <tbody>
                                         <tr
-                                            v-for="user in selectedRole.users || []"
+                                            v-for="user in selectedRoleUsers"
                                             :key="user.id"
                                             class="border-b hover:bg-gray-50"
                                         >
@@ -217,13 +224,35 @@
                                                 </button>
                                             </td>
                                         </tr>
-                                        <tr v-if="!(selectedRole.users || []).length">
+                                        <tr v-if="!selectedRoleUsers.length">
                                             <td colspan="3" class="px-5 py-10 text-center text-gray-400">
                                                 {{ $t('words.no-results') }}
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
+                                <div
+                                    v-if="!loadingUsers && usersLastPage > 1"
+                                    class="px-5 py-3 border-t flex items-center justify-between gap-3 text-sm"
+                                >
+                                    <button
+                                        type="button"
+                                        class="px-3 py-1.5 rounded border bg-white hover:bg-gray-50 disabled:opacity-40"
+                                        :disabled="usersPage <= 1 || loadingUsers"
+                                        @click="loadRoleUsers(selectedRole.id, usersPage - 1)"
+                                    >
+                                        {{ $t('words.previous') }}
+                                    </button>
+                                    <span class="text-gray-500">{{ usersPage }} / {{ usersLastPage }}</span>
+                                    <button
+                                        type="button"
+                                        class="px-3 py-1.5 rounded border bg-white hover:bg-gray-50 disabled:opacity-40"
+                                        :disabled="usersPage >= usersLastPage || loadingUsers"
+                                        @click="loadRoleUsers(selectedRole.id, usersPage + 1)"
+                                    >
+                                        {{ $t('words.next') }}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </template>
@@ -277,6 +306,11 @@ export default {
             saveMessage: '',
             saveError: false,
             localRoles: this.roles || [],
+            roleUsersCache: {},
+            loadingUsers: false,
+            usersError: '',
+            usersPage: 1,
+            usersLastPage: 1,
         };
     },
     computed: {
@@ -288,6 +322,13 @@ export default {
                 return null;
             }
             return this.rolesOrdered.find((role) => role.id === this.localSelectedRoleId) || null;
+        },
+        selectedRoleUsers() {
+            if (!this.selectedRole) {
+                return [];
+            }
+            const cached = this.roleUsersCache[this.selectedRole.id];
+            return (cached && cached.users) || [];
         },
         enabledCount() {
             return Object.keys(this.draftPermissions).filter((name) => this.draftPermissions[name]).length;
@@ -346,9 +387,59 @@ export default {
             this.permissionSearch = '';
             this.saveMessage = '';
             this.saveError = false;
+            this.usersError = '';
             if (window.history && window.history.replaceState) {
                 const url = route('back.settings.roles.index', { role: roleId });
                 window.history.replaceState({}, '', url);
+            }
+        },
+        openUsersTab() {
+            this.activeTab = 'users';
+            if (this.selectedRole) {
+                this.loadRoleUsers(this.selectedRole.id, 1);
+            }
+        },
+        async loadRoleUsers(roleId, page = 1) {
+            if (!roleId) {
+                return;
+            }
+
+            const cached = this.roleUsersCache[roleId];
+            if (cached && cached.page === page) {
+                this.usersPage = cached.page;
+                this.usersLastPage = cached.lastPage;
+                return;
+            }
+
+            this.loadingUsers = true;
+            this.usersError = '';
+
+            try {
+                const { data } = await axios.get(route('back.settings.roles.users', { id: roleId }), {
+                    params: { page, per_page: 100 },
+                });
+
+                this.$set(this.roleUsersCache, roleId, {
+                    users: data.users || [],
+                    page: data.current_page || page,
+                    lastPage: data.last_page || 1,
+                });
+
+                const roleIndex = this.localRoles.findIndex((role) => role.id === roleId);
+                if (roleIndex !== -1 && typeof data.users_count === 'number') {
+                    this.$set(this.localRoles, roleIndex, {
+                        ...this.localRoles[roleIndex],
+                        users_count: data.users_count,
+                    });
+                }
+
+                this.usersPage = data.current_page || page;
+                this.usersLastPage = data.last_page || 1;
+            } catch (error) {
+                this.usersError = (error.response && error.response.data && error.response.data.message)
+                    || this.$t('words.permissions-save-failed');
+            } finally {
+                this.loadingUsers = false;
             }
         },
         hydrateDraftFromRole(role) {
