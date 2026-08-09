@@ -63,6 +63,53 @@ class TelnyxWhatsAppBodyExtractionTest extends TestCase
         $this->assertSame('[Media Attachment]', $body);
     }
 
+    public function test_template_button_reply_uses_button_text(): void
+    {
+        [$media, $body] = $this->extractMediaAndBody([
+            'type' => 'button',
+            'button' => [
+                'payload' => 'talk_to_support',
+                'text' => 'التحدث مع خدمة العملاء',
+            ],
+        ]);
+
+        $this->assertSame([], $media);
+        $this->assertSame('التحدث مع خدمة العملاء', $body);
+    }
+
+    public function test_interactive_button_reply_uses_title(): void
+    {
+        [$media, $body] = $this->extractMediaAndBody([
+            'type' => 'interactive',
+            'interactive' => [
+                'type' => 'button_reply',
+                'button_reply' => [
+                    'id' => 'talk_to_support',
+                    'title' => 'التحدث مع خدمة العملاء',
+                ],
+            ],
+        ]);
+
+        $this->assertSame([], $media);
+        $this->assertSame('التحدث مع خدمة العملاء', $body);
+    }
+
+    public function test_interactive_list_reply_uses_title(): void
+    {
+        [$media, $body] = $this->extractMediaAndBody([
+            'type' => 'interactive',
+            'interactive' => [
+                'type' => 'list_reply',
+                'list_reply' => [
+                    'id' => 'option_1',
+                    'title' => 'Option one',
+                ],
+            ],
+        ]);
+
+        $this->assertSame('Option one', $body);
+    }
+
     /**
      * @param  array<string, mixed>  $source
      * @return array{0: array<int, array<string, mixed>>, 1: string}

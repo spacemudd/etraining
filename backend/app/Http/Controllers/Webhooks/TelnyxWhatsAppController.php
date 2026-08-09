@@ -77,7 +77,15 @@ class TelnyxWhatsAppController extends Controller
 
         [$media, $body] = $this->extractMediaAndBody($payload);
 
-        $metadata = $media !== [] ? ['media' => $media] : null;
+        $metadata = [];
+        if ($media !== []) {
+            $metadata['media'] = $media;
+        }
+        $buttonMeta = $this->extractButtonMetadata($payload);
+        if ($buttonMeta !== []) {
+            $metadata['button'] = $buttonMeta;
+        }
+        $metadata = $metadata !== [] ? $metadata : null;
 
         $this->whatsAppService->storeInboundMessage([
             'external_id' => $messageId,
@@ -130,6 +138,13 @@ class TelnyxWhatsAppController extends Controller
         }
         if (isset($fullPayload['contacts'])) {
             $metadata['contacts'] = $fullPayload['contacts'];
+        }
+        $buttonMeta = $this->extractButtonMetadata($msg);
+        if ($buttonMeta === []) {
+            $buttonMeta = $this->extractButtonMetadata($fullPayload);
+        }
+        if ($buttonMeta !== []) {
+            $metadata['button'] = $buttonMeta;
         }
         $metadata = $metadata !== [] ? $metadata : null;
 
@@ -188,6 +203,7 @@ class TelnyxWhatsAppController extends Controller
 
     /**
      * WhatsApp / Telnyx payloads may send text as a string or as { body: "..." }.
+     * Button / interactive replies arrive without a text body — use the button title.
      * Casting an array with (string) raises "Array to string conversion" (E-TRAINING-20H).
      *
      * @param  array<string, mixed>  $source
@@ -202,6 +218,22 @@ class TelnyxWhatsAppController extends Controller
             data_get($source, 'document.caption'),
             data_get($source, 'video.caption'),
             data_get($source, 'caption'),
+            // Quick-reply / template button taps
+            data_get($source, 'button.text'),
+            data_get($source, 'button.payload'),
+            data_get($source, 'button_reply.title'),
+            data_get($source, 'button_reply.id'),
+            data_get($source, 'interactive.button_reply.title'),
+            data_get($source, 'interactive.button_reply.id'),
+            data_get($source, 'interactive.list_reply.title'),
+            data_get($source, 'interactive.list_reply.id'),
+            data_get($source, 'interactive.list_reply.description'),
+            // Nested whatsapp_message shapes from some Telnyx events
+            data_get($source, 'whatsapp_message.button.text'),
+            data_get($source, 'whatsapp_message.button.payload'),
+            data_get($source, 'whatsapp_message.interactive.button_reply.title'),
+            data_get($source, 'whatsapp_message.interactive.list_reply.title'),
+            data_get($source, 'whatsapp_message.text.body'),
         ];
 
         foreach ($candidates as $candidate) {
@@ -209,6 +241,11 @@ class TelnyxWhatsAppController extends Controller
             if ($text !== '') {
                 return $text;
             }
+        }
+
+        $type = strtolower((string) ($source['type'] ?? data_get($source, 'whatsapp_message.type', '')));
+        if (in_array($type, ['button', 'interactive'], true)) {
+            return '[Button reply]';
         }
 
         return '';
@@ -271,6 +308,32 @@ class TelnyxWhatsAppController extends Controller
             $status,
             $errorMessage !== '' ? $errorMessage : null
         );
+    }
+
+    /**
+     * @param  array<string, mixed>  $source
+     * @return array<string, mixed>
+     */
+    private function extractButtonMetadata(array $source): array
+    {
+        $paths = [
+            'button',
+            'button_reply',
+            'interactive.button_reply',
+            'interactive.list_reply',
+            'whatsapp_message.button',
+            'whatsapp_message.interactive.button_reply',
+            'whatsapp_message.interactive.list_reply',
+        ];
+
+        foreach ($paths as $path) {
+            $value = data_get($source, $path);
+            if (is_array($value) && $value !== []) {
+                return $value;
+            }
+        }
+
+        return [];
     }
 
     /**
