@@ -93,16 +93,32 @@
                                 <span dir="ltr">({{ conversationCounts.unassigned }})</span>
                             </button>
                         </div>
-                        <select
-                            v-model="selectedTagFilter"
-                            @change="reloadConversationsFromStart"
-                            class="w-full form-select text-xs rounded-lg border-gray-300"
-                        >
-                            <option value="">{{ $t('words.chat-filter-all-tags') }}</option>
-                            <option v-for="tag in availableTags" :key="tag.id" :value="tag.id">
-                                {{ tag.name }}
-                            </option>
-                        </select>
+                        <div v-if="availableTags.length" class="flex flex-wrap gap-1.5 pt-1">
+                            <button
+                                type="button"
+                                @click="setTagFilter('')"
+                                class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-[11px] font-semibold border transition"
+                                :class="!selectedTagFilter ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'"
+                            >
+                                {{ $t('words.chat-filter-all-tags') }}
+                            </button>
+                            <button
+                                v-for="tag in availableTags"
+                                :key="'filter-tag-' + tag.id"
+                                type="button"
+                                @click="setTagFilter(tag.id)"
+                                class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-[11px] font-semibold border transition"
+                                :class="selectedTagFilter === tag.id ? 'ring-2 ring-offset-1 ring-gray-800 text-white' : 'bg-white text-gray-800 border-gray-200 hover:border-gray-400'"
+                                :style="tagBoxStyle(tag, selectedTagFilter === tag.id)"
+                            >
+                                <span>{{ tag.name }}</span>
+                                <span
+                                    class="inline-flex min-w-[1.25rem] justify-center px-1 rounded text-[10px] font-bold"
+                                    :class="selectedTagFilter === tag.id ? 'bg-white/25' : 'bg-black/10'"
+                                    dir="ltr"
+                                >{{ tag.conversation_count || 0 }}</span>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="overflow-y-auto flex-1 divide-y divide-gray-100 flex flex-col justify-between">
@@ -742,7 +758,7 @@ export default {
             if (!this.botStatus) {
                 return this.$t('words.loading') + '...';
             }
-            if (!this.botStatus.workflow_assigned) {
+            if (!this.botStatus.workflow_assigned && !this.botStatus.ai_enabled) {
                 return this.$t('words.bot-not-assigned');
             }
             if (this.botStatus.is_paused) {
@@ -770,7 +786,7 @@ export default {
             if (!this.botStatus) {
                 return 'bg-gray-100 border-gray-200 text-gray-500';
             }
-            if (!this.botStatus.workflow_assigned) {
+            if (!this.botStatus.workflow_assigned && !this.botStatus.ai_enabled) {
                 return 'bg-gray-100 border-gray-200 text-gray-600';
             }
             if (this.botStatus.is_paused) {
@@ -785,7 +801,7 @@ export default {
             if (typeof this.botStatus.can_pause === 'boolean') {
                 return this.botStatus.can_pause;
             }
-            return !!(this.botStatus.workflow_assigned && !this.botStatus.is_paused);
+            return !!((this.botStatus.workflow_assigned || this.botStatus.ai_enabled) && !this.botStatus.is_paused);
         },
         manualTemplateVariables() {
             if (!this.selectedTemplate) {
@@ -872,6 +888,27 @@ export default {
         setFilter(filter) {
             this.listFilter = filter;
             this.reloadConversationsFromStart();
+        },
+        setTagFilter(tagId) {
+            this.selectedTagFilter = tagId || '';
+            this.reloadConversationsFromStart();
+        },
+        tagBoxStyle(tag, selected) {
+            if (!tag || !tag.color) {
+                return selected ? { backgroundColor: '#1f2937', borderColor: '#1f2937', color: '#fff' } : null;
+            }
+            if (selected) {
+                return {
+                    backgroundColor: tag.color,
+                    borderColor: tag.color,
+                    color: '#fff',
+                };
+            }
+            return {
+                backgroundColor: tag.color + '22',
+                borderColor: tag.color,
+                color: '#111827',
+            };
         },
         onSearchInput() {
             if (this.searchDebounce) {
@@ -1060,6 +1097,7 @@ export default {
                 this.totalPages = data.last_page || 1;
                 this.totalConversations = data.total || 0;
                 this.applyConversationCounts(data.counts);
+                this.applyTagCounts(data.tag_counts);
             } catch (e) {
                 this.conversations = [];
                 this.totalPages = 1;
@@ -1079,6 +1117,15 @@ export default {
                 unassigned: Number(counts.unassigned) || 0,
             };
         },
+        applyTagCounts(tagCounts) {
+            if (!tagCounts || typeof tagCounts !== 'object') {
+                return;
+            }
+            this.availableTags = (this.availableTags || []).map((tag) => ({
+                ...tag,
+                conversation_count: Number(tagCounts[tag.id]) || 0,
+            }));
+        },
         async refreshConversationCounts() {
             try {
                 const { data } = await axios.get(route('back.chat.conversations'), {
@@ -1088,6 +1135,7 @@ export default {
                     },
                 });
                 this.applyConversationCounts(data.counts);
+                this.applyTagCounts(data.tag_counts);
             } catch (e) {
                 // keep current counts
             }
@@ -1262,8 +1310,12 @@ export default {
                 this.patchConversation(data.conversation);
                 this.tagToAttach = '';
                 if (data.tag && !this.availableTags.find((t) => t.id === data.tag.id)) {
-                    this.availableTags.push(data.tag);
+                    this.availableTags.push({
+                        ...data.tag,
+                        conversation_count: data.tag.conversation_count || 0,
+                    });
                 }
+                this.refreshConversationCounts();
             } catch (error) {
                 this.errorMessage = error.response?.data?.message || this.$t('words.chat-tag-failed');
             } finally {
@@ -1286,9 +1338,13 @@ export default {
                 );
                 this.patchConversation(data.conversation);
                 if (data.tag && !this.availableTags.find((t) => t.id === data.tag.id)) {
-                    this.availableTags.push(data.tag);
+                    this.availableTags.push({
+                        ...data.tag,
+                        conversation_count: data.tag.conversation_count || 0,
+                    });
                     this.availableTags.sort((a, b) => a.name.localeCompare(b.name));
                 }
+                this.refreshConversationCounts();
             } catch (error) {
                 this.errorMessage = error.response?.data?.message || this.$t('words.chat-tag-failed');
             } finally {
@@ -1300,13 +1356,14 @@ export default {
                 return;
             }
             try {
-    const { data } = await axios.delete(
+                const { data } = await axios.delete(
                     route('back.chat.conversations.tags.detach', {
                         conversation: this.selectedConversation.id,
                         tag: tag.id,
                     })
                 );
                 this.patchConversation(data.conversation);
+                this.refreshConversationCounts();
             } catch (error) {
                 this.errorMessage = error.response?.data?.message || this.$t('words.chat-tag-failed');
             }

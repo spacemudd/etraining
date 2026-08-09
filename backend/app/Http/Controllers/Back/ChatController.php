@@ -13,6 +13,7 @@ use App\Services\TelnyxWhatsAppService;
 use App\Support\WhatsAppBroadcast;
 use App\Support\WhatsAppBotPause;
 use App\Support\WhatsAppBotStatus;
+use App\Support\WhatsAppConversationHandoff;
 use App\Support\WhatsAppConversationSync;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -107,6 +108,7 @@ class ChatController extends Controller
 
         $payload = $paginator->toArray();
         $payload['counts'] = $this->conversationCounts();
+        $payload['tag_counts'] = $this->tagConversationCounts();
 
         return response()->json($payload);
     }
@@ -177,12 +179,23 @@ class ChatController extends Controller
 
     public function tags(): JsonResponse
     {
+        WhatsAppConversationHandoff::ensureNeedHumanAgentTag();
+
         $tags = WhatsAppTag::query()
             ->orderBy('name')
             ->get(['id', 'name', 'color']);
 
+        $counts = $this->tagConversationCounts($tags->pluck('id')->all());
+
         return response()->json([
-            'tags' => $tags,
+            'tags' => $tags->map(static function (WhatsAppTag $tag) use ($counts) {
+                return [
+                    'id' => $tag->id,
+                    'name' => $tag->name,
+                    'color' => $tag->color,
+                    'conversation_count' => (int) ($counts[$tag->id] ?? 0),
+                ];
+            })->values(),
         ]);
     }
 
@@ -205,6 +218,7 @@ class ChatController extends Controller
                 'id' => $tag->id,
                 'name' => $tag->name,
                 'color' => $tag->color,
+                'conversation_count' => 0,
             ],
         ]);
     }
@@ -248,6 +262,7 @@ class ChatController extends Controller
                 'id' => $tag->id,
                 'name' => $tag->name,
                 'color' => $tag->color,
+                'conversation_count' => 0,
             ],
         ]);
     }
@@ -677,6 +692,36 @@ class ChatController extends Controller
                 ->whereDoesntHave('agents')
                 ->count(),
         ];
+    }
+
+    /**
+     * Count open conversations plus conversations that have assigned agents, per tag.
+     *
+     * @param  array<int, string>|null  $tagIds
+     * @return array<string, int>
+     */
+    private function tagConversationCounts(?array $tagIds = null): array
+    {
+        $query = WhatsAppConversation::query()
+            ->join('whatsapp_conversation_tag as wct', 'wct.conversation_id', '=', 'whatsapp_conversations.id')
+            ->where(function ($builder) {
+                $builder->where('whatsapp_conversations.status', WhatsAppConversation::STATUS_OPEN)
+                    ->orWhereExists(function ($agents) {
+                        $agents->selectRaw('1')
+                            ->from('whatsapp_conversation_agents')
+                            ->whereColumn('whatsapp_conversation_agents.conversation_id', 'whatsapp_conversations.id');
+                    });
+            })
+            ->groupBy('wct.tag_id')
+            ->selectRaw('wct.tag_id, COUNT(DISTINCT whatsapp_conversations.id) as total');
+
+        if ($tagIds !== null && $tagIds !== []) {
+            $query->whereIn('wct.tag_id', $tagIds);
+        }
+
+        return $query->pluck('total', 'tag_id')
+            ->map(static fn ($total) => (int) $total)
+            ->all();
     }
 
     /**

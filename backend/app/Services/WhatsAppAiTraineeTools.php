@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
+use App\Support\WhatsAppConversationHandoff;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -84,6 +85,22 @@ final class WhatsAppAiTraineeTools
                     ],
                 ],
             ],
+            [
+                'type' => 'function',
+                'function' => [
+                    'name' => 'request_human_agent',
+                    'description' => 'Call this when the trainee needs a human agent (out of scope, unclear, escalation, or handoff rules apply). Tags the chat need_human_agent and pauses the bot.',
+                    'parameters' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'reason' => [
+                                'type' => 'string',
+                                'description' => 'Short reason for the handoff',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -101,6 +118,10 @@ final class WhatsAppAiTraineeTools
             'create_payment_link' => $this->createPaymentLink(
                 $normalizedPhone,
                 (string) ($arguments['invoice_id'] ?? '')
+            ),
+            'request_human_agent' => $this->requestHumanAgent(
+                $normalizedPhone,
+                isset($arguments['reason']) ? (string) $arguments['reason'] : null
             ),
             default => ['ok' => false, 'error' => 'unknown_tool'],
         };
@@ -255,6 +276,14 @@ final class WhatsAppAiTraineeTools
 
             return ['ok' => false, 'error' => 'payment_link_failed'];
         }
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function requestHumanAgent(string $normalizedPhone, ?string $reason = null): array
+    {
+        return WhatsAppConversationHandoff::requestHumanAgent($normalizedPhone, $reason);
     }
 
     private function findTrainee(string $normalizedPhone): ?Trainee

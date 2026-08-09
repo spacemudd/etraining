@@ -11,6 +11,7 @@ use App\Models\Back\WhatsAppBotWorkflow;
 use App\Models\Back\WhatsAppConversation;
 use App\Models\Back\WhatsAppMessage;
 use App\Support\WhatsAppBotPause;
+use App\Support\WhatsAppConversationHandoff;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -262,7 +263,7 @@ class WhatsAppBotEngine
                 if ($notice !== '') {
                     $this->sendBotText($inbound->phone, $notice, $inbound->trainee_id);
                 }
-                WhatsAppBotPause::pauseIndefinitely($inbound->phone);
+                WhatsAppConversationHandoff::requestHumanAgent((string) $inbound->phone, 'workflow_assign_agent');
                 $session->refresh();
                 break;
             }

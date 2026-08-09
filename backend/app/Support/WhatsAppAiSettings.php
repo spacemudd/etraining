@@ -183,7 +183,7 @@ final class WhatsAppAiSettings
             '- Never expose or discuss another trainee\'s data.',
             '- Never ask for card numbers or payment credentials; only share payment links from tools.',
             '- The caller phone is already known; do not ask the model to supply a different identity phone.',
-            '- If out of scope or data is missing, follow handoff rules.',
+            '- When handoff rules apply or you cannot help, you MUST call the request_human_agent tool, then briefly tell the trainee a human agent will follow up.',
         ];
 
         return implode("\n\n", array_filter($parts));
