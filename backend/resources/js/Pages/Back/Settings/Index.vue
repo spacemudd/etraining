@@ -68,6 +68,11 @@
                     {{ $t('words.system') }}
                 </inertia-link>
 
+                <inertia-link v-can="'access-whatsapp-chats'" :href="route('back.settings.whatsapp-bots.index')"
+                              class="col-span-1 bg-white shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-gray-200 text-center">
+                    {{ $t('words.whatsapp-bots') }}
+                </inertia-link>
+
             </div>
         </div>
     </app-layout>

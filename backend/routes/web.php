@@ -728,6 +728,14 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
         Route::get('/settings/disable-website', [\App\Http\Controllers\Back\DisableWebsiteController::class, 'index'])->name('settings.disable-website.index');
         Route::put('/settings/disable-website', [\App\Http\Controllers\Back\DisableWebsiteController::class, 'update'])->name('settings.disable-website.update');
+
+        Route::get('/settings/whatsapp-bots', [\App\Http\Controllers\Back\WhatsAppBotWorkflowController::class, 'index'])->name('settings.whatsapp-bots.index');
+        Route::post('/settings/whatsapp-bots', [\App\Http\Controllers\Back\WhatsAppBotWorkflowController::class, 'store'])->name('settings.whatsapp-bots.store');
+        Route::get('/settings/whatsapp-bots/{id}/edit', [\App\Http\Controllers\Back\WhatsAppBotWorkflowController::class, 'edit'])->name('settings.whatsapp-bots.edit');
+        Route::put('/settings/whatsapp-bots/{id}', [\App\Http\Controllers\Back\WhatsAppBotWorkflowController::class, 'update'])->name('settings.whatsapp-bots.update');
+        Route::put('/settings/whatsapp-bots/{id}/graph', [\App\Http\Controllers\Back\WhatsAppBotWorkflowController::class, 'updateGraph'])->name('settings.whatsapp-bots.graph');
+        Route::delete('/settings/whatsapp-bots/{id}', [\App\Http\Controllers\Back\WhatsAppBotWorkflowController::class, 'destroy'])->name('settings.whatsapp-bots.destroy');
+        Route::put('/settings/whatsapp-bots/senders/{senderId}', [\App\Http\Controllers\Back\WhatsAppBotWorkflowController::class, 'assignSender'])->name('settings.whatsapp-bots.senders.assign');
         Route::get('/settings/roles/{id}/users', [\App\Http\Controllers\Back\RolesController::class, 'users'])->name('settings.roles.users');
         Route::delete('/settings/roles/{role_id}/users/{user_id}', [\App\Http\Controllers\Back\RolesController::class, 'deleteUser'])->name('settings.roles.users.delete');
         Route::post('/settings/roles/{id}/users/invite', [\App\Http\Controllers\Back\RolesController::class, 'sendInvite'])->name('settings.roles.users.invite.send');

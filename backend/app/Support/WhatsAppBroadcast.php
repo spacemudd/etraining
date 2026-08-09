@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Support;
 
 use App\Events\WhatsAppMessageReceived;
+use App\Jobs\ProcessWhatsAppBotReply;
 use App\Models\Back\WhatsAppMessage;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -15,8 +16,17 @@ final class WhatsAppBroadcast
     {
         WhatsAppConversationSync::syncFromMessage($message, true);
 
-        $driver = (string) config('broadcasting.default');
+        if (
+            $message->direction === WhatsAppMessage::DIRECTION_INBOUND
+            && ! $message->is_note
+        ) {
+            $metadata = is_array($message->metadata) ? $message->metadata : [];
+            if (empty($metadata['is_bot'])) {
+                ProcessWhatsAppBotReply::dispatch($message->id);
+            }
+        }
 
+        $driver = (string) config('broadcasting.default');
         if (! in_array($driver, ['pusher', 'redis', 'log'], true)) {
             Log::warning('WhatsApp broadcast skipped: BROADCAST_DRIVER is not configured for realtime', [
                 'driver' => $driver,

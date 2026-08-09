@@ -7,11 +7,12 @@ namespace App\Http\Controllers\Back;
 use App\Http\Controllers\Controller;
 use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
+use App\Models\Back\WhatsAppMessage;
 use App\Services\TelnyxWhatsAppService;
+use App\Support\WhatsAppBotPause;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use RuntimeException;
-
 class FinanceWhatsAppController extends Controller
 {
     public function __construct(private readonly TelnyxWhatsAppService $whatsAppService)
@@ -231,6 +232,8 @@ class FinanceWhatsAppController extends Controller
                 $validated['content_variables'] ?? [],
                 $validated['trainee_id'] ?? null
             );
+
+            $this->attachAgentAndPauseBot($validated['phone']);
         } catch (RuntimeException $exception) {
             return response()->json([
                 'message' => $exception->getMessage(),
@@ -258,6 +261,8 @@ class FinanceWhatsAppController extends Controller
                 $validated['body'],
                 $validated['trainee_id'] ?? null
             );
+
+            $this->attachAgentAndPauseBot($validated['phone']);
         } catch (RuntimeException $exception) {
             return response()->json([
                 'message' => $exception->getMessage(),
@@ -267,6 +272,26 @@ class FinanceWhatsAppController extends Controller
         return response()->json([
             'message' => $message,
         ]);
+    }
+
+    private function attachAgentAndPauseBot(string $phone): void
+    {
+        $normalized = $this->whatsAppService->normalizePhoneDigits($phone);
+
+        $stored = WhatsAppMessage::query()
+            ->where('phone', $normalized)
+            ->where('direction', WhatsAppMessage::DIRECTION_OUTBOUND)
+            ->orderByDesc('created_at')
+            ->first();
+
+        if ($stored && auth()->id()) {
+            $metadata = is_array($stored->metadata) ? $stored->metadata : [];
+            if (empty($metadata['is_bot'])) {
+                $stored->update(['user_id' => auth()->id()]);
+            }
+        }
+
+        WhatsAppBotPause::pauseForAgent($normalized);
     }
 
     private function ensureConfigured(): void

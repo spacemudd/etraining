@@ -29,6 +29,7 @@ class WhatsAppConversation extends Model
         'phone',
         'trainee_id',
         'status',
+        'bot_paused_until',
         'last_message_body',
         'last_message_direction',
         'last_message_is_note',
@@ -37,6 +38,7 @@ class WhatsAppConversation extends Model
 
     protected $casts = [
         'last_message_at' => 'datetime',
+        'bot_paused_until' => 'datetime',
         'last_message_is_note' => 'boolean',
     ];
 

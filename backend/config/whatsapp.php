@@ -7,6 +7,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Bot pause window (UChat-style)
+    |--------------------------------------------------------------------------
+    |
+    | After a human agent sends a WhatsApp message, the bot is paused for
+    | this many minutes. When the pause expires, the next inbound message
+    | restarts the workflow from the start node.
+    |
+    */
+    'bot_pause_minutes' => (int) env('WHATSAPP_BOT_PAUSE_MINUTES', 30),
+
+    /*
+    |--------------------------------------------------------------------------
     | Auto-injectable WhatsApp template tags
     |--------------------------------------------------------------------------
     |

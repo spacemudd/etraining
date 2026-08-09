@@ -49,11 +49,7 @@ final class WhatsAppConversationSync
         $conversation->save();
 
         if ($broadcast) {
-            self::broadcast($conversation->fresh([
-                'agents:id,name',
-                'tags:id,name,color',
-                'trainee.company:id,name_ar',
-            ]));
+            self::broadcast($conversation);
         }
 
         return $conversation;
@@ -68,7 +64,13 @@ final class WhatsAppConversationSync
         }
 
         try {
-            broadcast(WhatsAppConversationUpdated::fromModel($conversation))->toOthers();
+            $payload = $conversation->fresh([
+                'agents:id,name',
+                'tags:id,name,color',
+                'trainee.company:id,name_ar',
+            ]) ?? $conversation;
+
+            broadcast(WhatsAppConversationUpdated::fromModel($payload))->toOthers();
         } catch (Throwable $exception) {
             Log::error('WhatsApp conversation broadcast failed', [
                 'conversation_id' => $conversation->id,

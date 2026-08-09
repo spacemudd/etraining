@@ -11,6 +11,7 @@ use App\Models\Back\WhatsAppMessage;
 use App\Models\Back\WhatsAppTag;
 use App\Services\TelnyxWhatsAppService;
 use App\Support\WhatsAppBroadcast;
+use App\Support\WhatsAppBotPause;
 use App\Support\WhatsAppConversationSync;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -387,6 +388,8 @@ class ChatController extends Controller
                 ]);
             }
 
+            WhatsAppBotPause::pauseForAgent($validated['phone']);
+
             $stored?->load('user:id,name');
             $formatted = $stored ? $this->formatMessage($stored) : $response;
             $formatted['is_note'] = false;
@@ -436,6 +439,8 @@ class ChatController extends Controller
                     'user_id' => auth()->id(),
                 ]);
             }
+
+            WhatsAppBotPause::pauseForAgent($validated['phone']);
 
             $stored?->load('user:id,name');
             $formatted = $stored ? $this->formatMessage($stored) : $response;

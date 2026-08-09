@@ -38,6 +38,7 @@
         "@zoomus/websdk": "^2.5.0",
         "chart.js": "^3.9.1",
         "cldr-data": "^36.0.0",
+        "drawflow": "^0.0.60",
         "font-awesome": "^4.7.0",
         "intl-tel-input": "^17.0.12",
         "jquery": "^3.5.1",
