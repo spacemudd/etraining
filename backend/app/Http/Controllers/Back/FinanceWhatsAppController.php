@@ -246,6 +246,22 @@ class FinanceWhatsAppController extends Controller
         ]);
     }
 
+    public function resumeBot(Request $request): JsonResponse
+    {
+        $this->ensureConfigured();
+
+        $validated = $request->validate([
+            'phone' => 'required|string|max:30',
+        ]);
+
+        WhatsAppBotPause::resume($validated['phone']);
+
+        return response()->json([
+            'message' => __('words.whatsapp-bot-resumed'),
+            'bot' => WhatsAppBotStatus::forPhone($validated['phone']),
+        ]);
+    }
+
     public function sendTemplate(Request $request): JsonResponse
     {
         $this->ensureConfigured();

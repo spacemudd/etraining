@@ -112,6 +112,15 @@
                                                 >
                                                     {{ pausingBot ? $t('words.saving') : $t('words.pause-bot-30m') }}
                                                 </button>
+                                                <button
+                                                    v-if="canResumeBot"
+                                                    type="button"
+                                                    class="text-xs bg-white border border-green-300 hover:bg-green-50 text-green-800 px-3 py-1.5 rounded-lg font-medium transition disabled:opacity-50"
+                                                    :disabled="pausingBot"
+                                                    @click="resumeBot"
+                                                >
+                                                    {{ pausingBot ? $t('words.saving') : $t('words.resume-bot') }}
+                                                </button>
                                             </div>
                                             <a
                                                 v-if="selectedTrainee.show_url"
@@ -441,7 +450,16 @@ export default {
             if (typeof this.botStatus.can_pause === 'boolean') {
                 return this.botStatus.can_pause;
             }
-            return !!(this.botStatus.workflow_assigned && !this.botStatus.is_paused);
+            return !!((this.botStatus.workflow_assigned || this.botStatus.ai_enabled) && !this.botStatus.is_paused);
+        },
+        canResumeBot() {
+            if (!this.botStatus) {
+                return false;
+            }
+            if (typeof this.botStatus.can_resume === 'boolean') {
+                return this.botStatus.can_resume;
+            }
+            return !!((this.botStatus.workflow_assigned || this.botStatus.ai_enabled) && this.botStatus.is_paused);
         },
         lastMessageAt() {
             if (!this.messages.length) {
@@ -658,6 +676,28 @@ export default {
             } catch (error) {
                 this.errorMessage = (error.response && error.response.data && error.response.data.message)
                     || this.$t('words.whatsapp-bot-pause-failed');
+            } finally {
+                this.pausingBot = false;
+            }
+        },
+        async resumeBot() {
+            if (!this.selectedTrainee || !this.selectedTrainee.phone || this.pausingBot) {
+                return;
+            }
+
+            this.pausingBot = true;
+            this.errorMessage = '';
+            this.successMessage = '';
+
+            try {
+                const { data } = await axios.post(route('back.finance.whatsapp.bot-resume'), {
+                    phone: this.selectedTrainee.phone,
+                });
+                this.botStatus = data.bot || null;
+                this.successMessage = data.message || this.$t('words.whatsapp-bot-resumed');
+            } catch (error) {
+                this.errorMessage = (error.response && error.response.data && error.response.data.message)
+                    || this.$t('words.whatsapp-bot-resume-failed');
             } finally {
                 this.pausingBot = false;
             }

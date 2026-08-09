@@ -821,6 +821,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('messages', [\App\Http\Controllers\Back\ChatController::class, 'messages'])->name('messages');
             Route::get('bot-status', [\App\Http\Controllers\Back\ChatController::class, 'botStatus'])->name('bot-status');
             Route::post('bot-pause', [\App\Http\Controllers\Back\ChatController::class, 'pauseBot'])->name('bot-pause');
+            Route::post('bot-resume', [\App\Http\Controllers\Back\ChatController::class, 'resumeBot'])->name('bot-resume');
             Route::get('trainees', [\App\Http\Controllers\Back\ChatController::class, 'searchTrainees'])->name('trainees');
             Route::get('templates', [\App\Http\Controllers\Back\ChatController::class, 'templates'])->name('templates');
             Route::post('templates', [\App\Http\Controllers\Back\ChatController::class, 'storeTemplate'])->name('templates.store');
@@ -850,6 +851,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
                 Route::get('messages', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'messages'])->name('messages');
                 Route::get('bot-status', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'botStatus'])->name('bot-status');
                 Route::post('bot-pause', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'pauseBot'])->name('bot-pause');
+                Route::post('bot-resume', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'resumeBot'])->name('bot-resume');
                 Route::post('send-template', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'sendTemplate'])->name('send-template');
                 Route::post('send-message', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'sendMessage'])->name('send-message');
             });

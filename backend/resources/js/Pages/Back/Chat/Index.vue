@@ -250,6 +250,15 @@
                                         >
                                             {{ pausingBot ? $t('words.saving') : $t('words.pause-bot-30m') }}
                                         </button>
+                                        <button
+                                            v-if="canResumeBot"
+                                            type="button"
+                                            class="text-xs bg-white border border-green-300 hover:bg-green-50 text-green-800 px-3 py-1.5 rounded-lg font-medium transition disabled:opacity-50"
+                                            :disabled="pausingBot"
+                                            @click="resumeBot"
+                                        >
+                                            {{ pausingBot ? $t('words.saving') : $t('words.resume-bot') }}
+                                        </button>
                                     </div>
                                     <select
                                         :value="selectedConversation.status || 'open'"
@@ -803,6 +812,15 @@ export default {
             }
             return !!((this.botStatus.workflow_assigned || this.botStatus.ai_enabled) && !this.botStatus.is_paused);
         },
+        canResumeBot() {
+            if (!this.botStatus) {
+                return false;
+            }
+            if (typeof this.botStatus.can_resume === 'boolean') {
+                return this.botStatus.can_resume;
+            }
+            return !!((this.botStatus.workflow_assigned || this.botStatus.ai_enabled) && this.botStatus.is_paused);
+        },
         manualTemplateVariables() {
             if (!this.selectedTemplate) {
                 return [];
@@ -1183,11 +1201,13 @@ export default {
                 this.botStatus = {
                     workflow_assigned: false,
                     workflow_name: null,
+                    ai_enabled: false,
                     is_paused: false,
                     is_active: false,
                     paused_until: null,
                     pause_minutes: 30,
                     can_pause: false,
+                    can_resume: false,
                 };
             }
         },
@@ -1209,6 +1229,28 @@ export default {
             } catch (error) {
                 this.errorMessage = (error.response && error.response.data && error.response.data.message)
                     || this.$t('words.whatsapp-bot-pause-failed');
+            } finally {
+                this.pausingBot = false;
+            }
+        },
+        async resumeBot() {
+            if (!this.selectedConversation || !this.selectedConversation.phone || this.pausingBot) {
+                return;
+            }
+
+            this.pausingBot = true;
+            this.errorMessage = '';
+            this.successMessage = '';
+
+            try {
+                const { data } = await axios.post(route('back.chat.bot-resume'), {
+                    phone: this.selectedConversation.phone,
+                });
+                this.botStatus = data.bot || null;
+                this.successMessage = data.message || this.$t('words.whatsapp-bot-resumed');
+            } catch (error) {
+                this.errorMessage = (error.response && error.response.data && error.response.data.message)
+                    || this.$t('words.whatsapp-bot-resume-failed');
             } finally {
                 this.pausingBot = false;
             }
@@ -1506,7 +1548,7 @@ export default {
                     this.selectConversation(conv);
                 }
             } catch (error) {
-                this.newChatError = error.response?.data?.message || 'Failed to send template.';
+                this.newChatError = error.response?.data?.message || this.$t('words.whatsapp-template-send-failed');
             } finally {
                 this.sendingNewChat = false;
             }
@@ -1537,14 +1579,16 @@ export default {
                 const { data } = await axios.post(endpoint, payload);
                 this.mergeIncomingMessage(data.message);
                 this.messageBody = '';
-                this.successMessage = this.isNoteMode ? 'Internal note added.' : 'Message sent successfully.';
+                this.successMessage = this.isNoteMode
+                    ? this.$t('words.whatsapp-note-added')
+                    : this.$t('words.whatsapp-sent-successfully');
                 this.$nextTick(() => this.scrollToBottom());
                 this.loadConversations();
                 if (!this.isNoteMode) {
                     await this.loadBotStatus();
                 }
             } catch (error) {
-                this.errorMessage = error.response?.data?.message || 'Failed to send message.';
+                this.errorMessage = error.response?.data?.message || this.$t('words.whatsapp-send-failed');
             } finally {
                 this.sending = false;
             }
@@ -1563,12 +1607,12 @@ export default {
                     trainee_id: this.selectedConversation.trainee?.id || null,
                 });
                 this.mergeIncomingMessage(data.message);
-                this.successMessage = 'WhatsApp template sent successfully.';
+                this.successMessage = this.$t('words.whatsapp-sent-successfully');
                 this.$nextTick(() => this.scrollToBottom());
                 this.loadConversations();
                 await this.loadBotStatus();
             } catch (error) {
-                this.errorMessage = error.response?.data?.message || 'Failed to send template.';
+                this.errorMessage = error.response?.data?.message || this.$t('words.whatsapp-template-send-failed');
             } finally {
                 this.sending = false;
             }

@@ -96,4 +96,47 @@ final class WhatsAppBotPause
 
         return $conversation->bot_paused_until->isPast();
     }
+
+    public static function resume(string $phone): void
+    {
+        $service = app(TelnyxWhatsAppService::class);
+        $normalizedPhone = $service->normalizePhoneDigits($phone);
+
+        if ($normalizedPhone === '') {
+            return;
+        }
+
+        $conversation = WhatsAppConversation::query()->where('phone', $normalizedPhone)->first();
+        if (! $conversation) {
+            $digitsOnly = preg_replace('/\D+/', '', $normalizedPhone) ?? '';
+            $conversation = WhatsAppConversation::query()
+                ->where(function ($query) use ($normalizedPhone, $digitsOnly) {
+                    $query->where('phone', $normalizedPhone);
+                    if ($digitsOnly !== '' && $digitsOnly !== $normalizedPhone) {
+                        $query->orWhere('phone', $digitsOnly)
+                            ->orWhere('phone', '+' . $digitsOnly);
+                    }
+                })
+                ->first();
+        }
+
+        if (! $conversation) {
+            return;
+        }
+
+        $conversation->bot_paused_until = null;
+        $conversation->save();
+
+        WhatsAppBotSession::query()
+            ->where('phone', $normalizedPhone)
+            ->update([
+                'restart_pending' => true,
+                'current_node_id' => null,
+                'context' => null,
+            ]);
+
+        Log::info('WhatsApp bot resumed by agent', [
+            'phone' => $normalizedPhone,
+        ]);
+    }
 }

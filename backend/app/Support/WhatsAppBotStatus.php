@@ -19,7 +19,8 @@ final class WhatsAppBotStatus
      *     is_active: bool,
      *     paused_until: string|null,
      *     pause_minutes: int,
-     *     can_pause: bool
+     *     can_pause: bool,
+     *     can_resume: bool
      * }
      */
     public static function forPhone(string $phone): array
@@ -61,6 +62,7 @@ final class WhatsAppBotStatus
                 : null,
             'pause_minutes' => (int) config('whatsapp.bot_pause_minutes', 30),
             'can_pause' => $botConfigured && ! $isPaused,
+            'can_resume' => $botConfigured && $isPaused,
         ];
     }
 

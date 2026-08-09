@@ -375,6 +375,20 @@ class ChatController extends Controller
         ]);
     }
 
+    public function resumeBot(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'phone' => 'required|string|max:30',
+        ]);
+
+        WhatsAppBotPause::resume($validated['phone']);
+
+        return response()->json([
+            'message' => __('words.whatsapp-bot-resumed'),
+            'bot' => WhatsAppBotStatus::forPhone($validated['phone']),
+        ]);
+    }
+
     public function searchTrainees(Request $request): JsonResponse
     {
         $request->validate([
