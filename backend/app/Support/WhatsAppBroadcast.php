@@ -22,7 +22,9 @@ final class WhatsAppBroadcast
         ) {
             $metadata = is_array($message->metadata) ? $message->metadata : [];
             if (empty($metadata['is_bot'])) {
-                ProcessWhatsAppBotReply::dispatch($message->id);
+                // Run after the HTTP response so inbound Echo events flush first,
+                // then the bot reply is stored/broadcast as a separate event.
+                ProcessWhatsAppBotReply::dispatch($message->id)->afterResponse();
             }
         }
 
@@ -37,12 +39,16 @@ final class WhatsAppBroadcast
         }
 
         try {
-            // Bot replies are sent from queue workers / webhooks with no socket —
-            // broadcast to everyone so open agent chats receive them.
-            $broadcast = broadcast(new WhatsAppMessageReceived($message));
+            // Webhooks/queue workers have no Echo socket; always notify all subscribers.
+            // Agent-authored sends still use toOthers so the sender (who already merged
+            // the axios response) does not get a duplicate event.
+            $pending = broadcast(new WhatsAppMessageReceived($message));
             $metadata = is_array($message->metadata) ? $message->metadata : [];
-            if (empty($metadata['is_bot'])) {
-                $broadcast->toOthers();
+            $isBot = ! empty($metadata['is_bot']);
+            $isOutbound = $message->direction === WhatsAppMessage::DIRECTION_OUTBOUND;
+
+            if ($isOutbound && ! $isBot && ! $message->is_note) {
+                $pending->toOthers();
             }
 
             Log::info('WhatsApp message broadcasted', [
@@ -50,7 +56,7 @@ final class WhatsAppBroadcast
                 'message_id' => $message->id,
                 'phone' => $message->phone,
                 'direction' => $message->direction,
-                'is_bot' => ! empty($metadata['is_bot']),
+                'is_bot' => $isBot,
                 'host' => config('broadcasting.connections.pusher.options.host'),
             ]);
         } catch (Throwable $exception) {

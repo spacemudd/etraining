@@ -174,7 +174,7 @@
 
                                     <div
                                         v-for="message in messages"
-                                        :key="message.sid || message.date_sent + message.body"
+                                        :key="message.id || message.sid || (message.date_sent + '-' + message.body)"
                                         class="flex"
                                         :class="messageAlignmentClass(message)"
                                     >
@@ -359,6 +359,7 @@ export default {
             echoChannel: null,
             botStatus: null,
             pausingBot: false,
+            messagesRefreshTimer: null,
         };
     },
     computed: {
@@ -452,6 +453,10 @@ export default {
     beforeDestroy() {
         this.unsubscribeEcho();
         this.stopPolling();
+        if (this.messagesRefreshTimer) {
+            clearTimeout(this.messagesRefreshTimer);
+            this.messagesRefreshTimer = null;
+        }
     },
     methods: {
         async open() {
@@ -498,6 +503,9 @@ export default {
                     if (selectedPhone && messagePhone && selectedPhone === messagePhone) {
                         console.log('[FinanceWhatsAppChat] Merging message for selected trainee');
                         this.mergeMessages([message]);
+                        if (!this.isOutboundMessage(message) || this.isBotMessage(message)) {
+                            this.scheduleMessagesRefresh();
+                        }
                     } else {
                         console.log('[FinanceWhatsAppChat] Ignoring message for other phone', {
                             selectedPhone,
@@ -623,10 +631,20 @@ export default {
                 this.loadBotStatus(),
             ]);
 
-            // Fallback polling only when Echo/Soketi is unavailable
-            if (!window.Echo) {
-                this.startPolling();
+            // Soft-poll while a chat is open so bot replies from the queue appear live.
+            this.startPolling();
+        },
+        scheduleMessagesRefresh() {
+            if (this.messagesRefreshTimer) {
+                clearTimeout(this.messagesRefreshTimer);
             }
+            this.messagesRefreshTimer = setTimeout(() => {
+                this.messagesRefreshTimer = null;
+                if (this.selectedTrainee) {
+                    this.loadMessages(true);
+                    this.loadBotStatus();
+                }
+            }, 1200);
         },
         async loadPendingInvoices() {
             if (!this.selectedTrainee || !this.selectedTrainee.id) {
@@ -776,7 +794,7 @@ export default {
             this.stopPolling();
             this.pollInterval = setInterval(() => {
                 this.loadMessages(true);
-            }, 4000);
+            }, 3000);
         },
         stopPolling() {
             if (this.pollInterval) {

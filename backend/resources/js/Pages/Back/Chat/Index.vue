@@ -318,7 +318,7 @@
 
                             <div
                                 v-for="message in messages"
-                                :key="message.sid || message.date_sent + message.body"
+                                :key="message.id || message.sid || (message.date_sent + '-' + message.body)"
                                 class="flex"
                                 :class="messageAlignmentClass(message)"
                             >
@@ -713,6 +713,7 @@ export default {
             attachingTag: false,
             updatingStatus: false,
             pollInterval: null,
+            messagesRefreshTimer: null,
             searchDebounce: null,
         };
     },
@@ -765,6 +766,10 @@ export default {
     beforeDestroy() {
         this.unsubscribeEcho();
         this.stopPolling();
+        if (this.messagesRefreshTimer) {
+            clearTimeout(this.messagesRefreshTimer);
+            this.messagesRefreshTimer = null;
+        }
         if (this.searchDebounce) {
             clearTimeout(this.searchDebounce);
         }
@@ -917,6 +922,11 @@ export default {
                     ) {
                         console.log('[Chat] Appending message to open conversation');
                         this.mergeIncomingMessage(message);
+                        // Bot auto-replies usually follow inbound by ~1s; refresh catches
+                        // any reply that arrived without a usable Echo payload.
+                        if (!this.isOutboundMessage(message) || this.isBotMessage(message)) {
+                            this.scheduleOpenConversationRefresh();
+                        }
                     }
                 })
                 .listen('.WhatsAppConversationUpdated', (event) => {
@@ -1019,6 +1029,9 @@ export default {
             this.successMessage = '';
             this.tagToAttach = '';
             await this.loadMessages();
+            // Soft-poll even when Echo is connected — bot replies from the queue
+            // worker can otherwise miss the open thread until a hard refresh.
+            this.startPolling();
         },
         async loadMessages() {
             if (!this.selectedConversation) return;
@@ -1374,7 +1387,7 @@ export default {
                 if (this.selectedConversation) {
                     this.loadMessagesSilently();
                 }
-            }, 5000);
+            }, 3000);
         },
         stopPolling() {
             if (this.pollInterval) {
@@ -1382,7 +1395,18 @@ export default {
                 this.pollInterval = null;
             }
         },
-        async loadMessagesSilently() {
+        scheduleOpenConversationRefresh() {
+            if (this.messagesRefreshTimer) {
+                clearTimeout(this.messagesRefreshTimer);
+            }
+            this.messagesRefreshTimer = setTimeout(() => {
+                this.messagesRefreshTimer = null;
+                if (this.selectedConversation) {
+                    this.loadMessagesSilently(true);
+                }
+            }, 1200);
+        },
+        async loadMessagesSilently(force = false) {
             if (!this.selectedConversation) return;
             try {
                 const { data } = await axios.get(route('back.chat.messages'), {
@@ -1391,22 +1415,26 @@ export default {
                         limit: 50,
                     },
                 });
-                if ((data.messages || []).length !== this.messages.length) {
-                    this.messages = data.messages || [];
+                const incoming = data.messages || [];
+                if (force || incoming.length !== this.messages.length) {
+                    this.messages = incoming;
                     this.hasMoreMessages = !!data.has_more;
                     this.nextBefore = data.next_before || null;
                     this.nextBeforeId = data.next_before_id || null;
                     this.$nextTick(() => this.scrollToBottom());
-                } else {
-                    const incoming = data.messages || [];
-                    const lastIncoming = incoming.length ? incoming[incoming.length - 1] : null;
-                    const lastCurrent = this.messages.length ? this.messages[this.messages.length - 1] : null;
-                    const incomingKey = lastIncoming ? String(lastIncoming.id || lastIncoming.sid || '') : '';
-                    const currentKey = lastCurrent ? String(lastCurrent.id || lastCurrent.sid || '') : '';
-                    if (incomingKey && incomingKey !== currentKey) {
-                        this.messages = incoming;
-                        this.$nextTick(() => this.scrollToBottom());
-                    }
+                    return;
+                }
+
+                const lastIncoming = incoming.length ? incoming[incoming.length - 1] : null;
+                const lastCurrent = this.messages.length ? this.messages[this.messages.length - 1] : null;
+                const incomingKey = lastIncoming ? String(lastIncoming.id || lastIncoming.sid || '') : '';
+                const currentKey = lastCurrent ? String(lastCurrent.id || lastCurrent.sid || '') : '';
+                if (incomingKey && incomingKey !== currentKey) {
+                    this.messages = incoming;
+                    this.hasMoreMessages = !!data.has_more;
+                    this.nextBefore = data.next_before || null;
+                    this.nextBeforeId = data.next_before_id || null;
+                    this.$nextTick(() => this.scrollToBottom());
                 }
             } catch (e) {}
         },
