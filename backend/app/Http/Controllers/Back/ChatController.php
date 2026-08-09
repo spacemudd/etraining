@@ -12,6 +12,7 @@ use App\Models\Back\WhatsAppTag;
 use App\Services\TelnyxWhatsAppService;
 use App\Support\WhatsAppBroadcast;
 use App\Support\WhatsAppBotPause;
+use App\Support\WhatsAppBotStatus;
 use App\Support\WhatsAppConversationSync;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -329,6 +330,33 @@ class ChatController extends Controller
             'has_more' => $hasMore,
             'next_before' => $oldest['date_sent'] ?? null,
             'next_before_id' => $oldest['id'] ?? null,
+        ]);
+    }
+
+    public function botStatus(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'phone' => 'required|string|max:30',
+        ]);
+
+        return response()->json(
+            WhatsAppBotStatus::forPhone($validated['phone'])
+        );
+    }
+
+    public function pauseBot(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'phone' => 'required|string|max:30',
+            'minutes' => 'nullable|integer|min:1|max:1440',
+        ]);
+
+        $minutes = (int) ($validated['minutes'] ?? config('whatsapp.bot_pause_minutes', 30));
+        WhatsAppBotPause::pauseForAgent($validated['phone'], $minutes);
+
+        return response()->json([
+            'message' => __('words.whatsapp-bot-paused'),
+            'bot' => WhatsAppBotStatus::forPhone($validated['phone']),
         ]);
     }
 

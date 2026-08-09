@@ -7,11 +7,10 @@ namespace App\Http\Controllers\Back;
 use App\Http\Controllers\Controller;
 use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
-use App\Models\Back\WhatsAppBotSender;
-use App\Models\Back\WhatsAppConversation;
 use App\Models\Back\WhatsAppMessage;
 use App\Services\TelnyxWhatsAppService;
 use App\Support\WhatsAppBotPause;
+use App\Support\WhatsAppBotStatus;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use RuntimeException;
@@ -225,7 +224,7 @@ class FinanceWhatsAppController extends Controller
         ]);
 
         return response()->json(
-            $this->resolveBotStatus($validated['phone'])
+            WhatsAppBotStatus::forPhone($validated['phone'])
         );
     }
 
@@ -243,71 +242,9 @@ class FinanceWhatsAppController extends Controller
 
         return response()->json([
             'message' => __('words.whatsapp-bot-paused'),
-            'bot' => $this->resolveBotStatus($validated['phone']),
+            'bot' => WhatsAppBotStatus::forPhone($validated['phone']),
         ]);
     }
-
-    /**
-     * @return array{
-     *     workflow_assigned: bool,
-     *     workflow_name: string|null,
-     *     is_paused: bool,
-     *     is_active: bool,
-     *     paused_until: string|null,
-     *     pause_minutes: int
-     * }
-     */
-    private function resolveBotStatus(string $phone): array
-    {
-        $normalizedPhone = $this->whatsAppService->normalizePhoneDigits($phone);
-        $senderPhone = $this->whatsAppService->normalizePhoneDigits(
-            (string) (config('telnyx.whatsapp_from') ?: '')
-        );
-
-        $sender = null;
-        if ($senderPhone !== '') {
-            $digitsOnly = preg_replace('/\D+/', '', $senderPhone) ?? '';
-            $sender = WhatsAppBotSender::query()
-                ->with('workflow:id,name,is_active')
-                ->where(function ($query) use ($senderPhone, $digitsOnly) {
-                    $query->where('phone', $senderPhone);
-                    if ($digitsOnly !== '' && $digitsOnly !== $senderPhone) {
-                        $query->orWhere('phone', $digitsOnly);
-                    }
-                })
-                ->first();
-        }
-
-        $workflow = $sender?->workflow;
-        $workflowAssigned = $workflow !== null && $workflow->is_active;
-
-        $conversation = null;
-        if ($normalizedPhone !== '') {
-            $customerDigits = preg_replace('/\D+/', '', $normalizedPhone) ?? '';
-            $conversation = WhatsAppConversation::query()
-                ->where(function ($query) use ($normalizedPhone, $customerDigits) {
-                    $query->where('phone', $normalizedPhone);
-                    if ($customerDigits !== '' && $customerDigits !== $normalizedPhone) {
-                        $query->orWhere('phone', $customerDigits);
-                    }
-                })
-                ->first();
-        }
-
-        $isPaused = $conversation ? WhatsAppBotPause::isPaused($conversation) : false;
-
-        return [
-            'workflow_assigned' => $workflowAssigned,
-            'workflow_name' => $workflowAssigned ? $workflow->name : null,
-            'is_paused' => $isPaused,
-            'is_active' => $workflowAssigned && ! $isPaused,
-            'paused_until' => $isPaused
-                ? optional($conversation?->bot_paused_until)->toIso8601String()
-                : null,
-            'pause_minutes' => (int) config('whatsapp.bot_pause_minutes', 30),
-        ];
-    }
-
 
     public function sendTemplate(Request $request): JsonResponse
     {

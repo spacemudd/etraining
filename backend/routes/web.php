@@ -731,6 +731,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
         Route::get('/settings/whatsapp-bots', [\App\Http\Controllers\Back\WhatsAppBotWorkflowController::class, 'index'])->name('settings.whatsapp-bots.index');
         Route::post('/settings/whatsapp-bots', [\App\Http\Controllers\Back\WhatsAppBotWorkflowController::class, 'store'])->name('settings.whatsapp-bots.store');
+        Route::put('/settings/whatsapp-bots/ai', [\App\Http\Controllers\Back\WhatsAppBotWorkflowController::class, 'updateAiSettings'])->name('settings.whatsapp-bots.ai.update');
         Route::get('/settings/whatsapp-bots/{id}/edit', [\App\Http\Controllers\Back\WhatsAppBotWorkflowController::class, 'edit'])->name('settings.whatsapp-bots.edit');
         Route::put('/settings/whatsapp-bots/{id}', [\App\Http\Controllers\Back\WhatsAppBotWorkflowController::class, 'update'])->name('settings.whatsapp-bots.update');
         Route::put('/settings/whatsapp-bots/{id}/graph', [\App\Http\Controllers\Back\WhatsAppBotWorkflowController::class, 'updateGraph'])->name('settings.whatsapp-bots.graph');
@@ -818,6 +819,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::post('conversations/{conversation}/tags', [\App\Http\Controllers\Back\ChatController::class, 'attachTag'])->name('conversations.tags.attach');
             Route::delete('conversations/{conversation}/tags/{tag}', [\App\Http\Controllers\Back\ChatController::class, 'detachTag'])->name('conversations.tags.detach');
             Route::get('messages', [\App\Http\Controllers\Back\ChatController::class, 'messages'])->name('messages');
+            Route::get('bot-status', [\App\Http\Controllers\Back\ChatController::class, 'botStatus'])->name('bot-status');
+            Route::post('bot-pause', [\App\Http\Controllers\Back\ChatController::class, 'pauseBot'])->name('bot-pause');
             Route::get('trainees', [\App\Http\Controllers\Back\ChatController::class, 'searchTrainees'])->name('trainees');
             Route::get('templates', [\App\Http\Controllers\Back\ChatController::class, 'templates'])->name('templates');
             Route::post('templates', [\App\Http\Controllers\Back\ChatController::class, 'storeTemplate'])->name('templates.store');

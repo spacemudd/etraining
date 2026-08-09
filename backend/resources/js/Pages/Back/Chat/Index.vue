@@ -216,7 +216,25 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="flex items-center gap-2 flex-shrink-0">
+                                <div class="flex items-center gap-2 flex-shrink-0 flex-wrap justify-end">
+                                    <div class="flex items-center gap-2">
+                                        <span
+                                            class="text-xs px-2.5 py-1.5 rounded-lg font-semibold whitespace-nowrap border"
+                                            :class="botStatusBadgeClass"
+                                            :title="botStatusTitle"
+                                        >
+                                            {{ botStatusLabel }}
+                                        </span>
+                                        <button
+                                            v-if="canPauseBot"
+                                            type="button"
+                                            class="text-xs bg-white border border-orange-300 hover:bg-orange-50 text-orange-800 px-3 py-1.5 rounded-lg font-medium transition disabled:opacity-50"
+                                            :disabled="pausingBot"
+                                            @click="pauseBot"
+                                        >
+                                            {{ pausingBot ? $t('words.saving') : $t('words.pause-bot-30m') }}
+                                        </button>
+                                    </div>
                                     <select
                                         :value="selectedConversation.status || 'open'"
                                         @change="onStatusChange($event)"
@@ -715,9 +733,60 @@ export default {
             pollInterval: null,
             messagesRefreshTimer: null,
             searchDebounce: null,
+            botStatus: null,
+            pausingBot: false,
         };
     },
     computed: {
+        botStatusLabel() {
+            if (!this.botStatus) {
+                return this.$t('words.loading') + '...';
+            }
+            if (!this.botStatus.workflow_assigned) {
+                return this.$t('words.bot-not-assigned');
+            }
+            if (this.botStatus.is_paused) {
+                return this.$t('words.bot-paused');
+            }
+            return this.$t('words.bot-active');
+        },
+        botStatusTitle() {
+            if (!this.botStatus) {
+                return '';
+            }
+            if (this.botStatus.workflow_name) {
+                const name = this.botStatus.workflow_name;
+                if (this.botStatus.is_paused && this.botStatus.paused_until) {
+                    return name + ' · ' + this.formatPausedUntil(this.botStatus.paused_until);
+                }
+                return name;
+            }
+            if (this.botStatus.is_paused && this.botStatus.paused_until) {
+                return this.formatPausedUntil(this.botStatus.paused_until);
+            }
+            return '';
+        },
+        botStatusBadgeClass() {
+            if (!this.botStatus) {
+                return 'bg-gray-100 border-gray-200 text-gray-500';
+            }
+            if (!this.botStatus.workflow_assigned) {
+                return 'bg-gray-100 border-gray-200 text-gray-600';
+            }
+            if (this.botStatus.is_paused) {
+                return 'bg-orange-100 border-orange-200 text-orange-900';
+            }
+            return 'bg-green-100 border-green-200 text-green-800';
+        },
+        canPauseBot() {
+            if (!this.botStatus) {
+                return false;
+            }
+            if (typeof this.botStatus.can_pause === 'boolean') {
+                return this.botStatus.can_pause;
+            }
+            return !!(this.botStatus.workflow_assigned && !this.botStatus.is_paused);
+        },
         manualTemplateVariables() {
             if (!this.selectedTemplate) {
                 return [];
@@ -1028,10 +1097,73 @@ export default {
             this.errorMessage = '';
             this.successMessage = '';
             this.tagToAttach = '';
-            await this.loadMessages();
+            this.botStatus = null;
+            await Promise.all([
+                this.loadMessages(),
+                this.loadBotStatus(),
+            ]);
             // Soft-poll even when Echo is connected — bot replies from the queue
             // worker can otherwise miss the open thread until a hard refresh.
             this.startPolling();
+        },
+        formatPausedUntil(iso) {
+            if (!iso) {
+                return '';
+            }
+            try {
+                const date = new Date(iso);
+                if (Number.isNaN(date.getTime())) {
+                    return iso;
+                }
+                return this.$t('words.bot-paused-until') + ' ' + date.toLocaleString();
+            } catch (e) {
+                return iso;
+            }
+        },
+        async loadBotStatus() {
+            if (!this.selectedConversation || !this.selectedConversation.phone) {
+                this.botStatus = null;
+                return;
+            }
+
+            try {
+                const { data } = await axios.get(route('back.chat.bot-status'), {
+                    params: { phone: this.selectedConversation.phone },
+                });
+                this.botStatus = data;
+            } catch (error) {
+                this.botStatus = {
+                    workflow_assigned: false,
+                    workflow_name: null,
+                    is_paused: false,
+                    is_active: false,
+                    paused_until: null,
+                    pause_minutes: 30,
+                    can_pause: false,
+                };
+            }
+        },
+        async pauseBot() {
+            if (!this.selectedConversation || !this.selectedConversation.phone || this.pausingBot) {
+                return;
+            }
+
+            this.pausingBot = true;
+            this.errorMessage = '';
+            this.successMessage = '';
+
+            try {
+                const { data } = await axios.post(route('back.chat.bot-pause'), {
+                    phone: this.selectedConversation.phone,
+                });
+                this.botStatus = data.bot || null;
+                this.successMessage = data.message || this.$t('words.whatsapp-bot-paused');
+            } catch (error) {
+                this.errorMessage = (error.response && error.response.data && error.response.data.message)
+                    || this.$t('words.whatsapp-bot-pause-failed');
+            } finally {
+                this.pausingBot = false;
+            }
         },
         async loadMessages() {
             if (!this.selectedConversation) return;
@@ -1351,6 +1483,9 @@ export default {
                 this.successMessage = this.isNoteMode ? 'Internal note added.' : 'Message sent successfully.';
                 this.$nextTick(() => this.scrollToBottom());
                 this.loadConversations();
+                if (!this.isNoteMode) {
+                    await this.loadBotStatus();
+                }
             } catch (error) {
                 this.errorMessage = error.response?.data?.message || 'Failed to send message.';
             } finally {
@@ -1374,6 +1509,7 @@ export default {
                 this.successMessage = 'WhatsApp template sent successfully.';
                 this.$nextTick(() => this.scrollToBottom());
                 this.loadConversations();
+                await this.loadBotStatus();
             } catch (error) {
                 this.errorMessage = error.response?.data?.message || 'Failed to send template.';
             } finally {
@@ -1403,6 +1539,7 @@ export default {
                 this.messagesRefreshTimer = null;
                 if (this.selectedConversation) {
                     this.loadMessagesSilently(true);
+                    this.loadBotStatus();
                 }
             }, 1200);
         },

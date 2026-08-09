@@ -11,16 +11,17 @@
 <template>
     <div>
         <button
+            v-if="!hideTrigger"
             @click="open"
-            class="col-span-1 bg-green-500 shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-green-600 text-center text-white font-semibold flex items-center justify-center gap-2"
+            :class="triggerClass || 'col-span-1 bg-green-500 shadow-lg rounded-lg p-5 transition-all duration-500 ease-in-out hover:bg-green-600 text-center text-white font-semibold flex items-center justify-center gap-2'"
         >
             <ion-icon name="logo-whatsapp" class="w-6 h-6"></ion-icon>
-            {{ $t('words.whatsapp') }}
+            {{ triggerLabel || $t('words.whatsapp') }}
         </button>
 
-        <portal-target name="finance-whatsapp-chat-modal"></portal-target>
-        <portal to="finance-whatsapp-chat-modal">
-            <modal name="financeWhatsAppChatModal" :width="960" :height="'auto'" :scrollable="true">
+        <portal-target :name="portalName"></portal-target>
+        <portal :to="portalName">
+            <modal :name="modalName" :width="960" :height="'auto'" :scrollable="true">
                 <div class="bg-white rounded-lg max-h-[90vh] flex flex-col">
                     <div class="px-5 py-4 border-b flex items-center justify-between bg-green-600 text-white rounded-t-lg">
                         <div class="flex items-center gap-2">
@@ -37,7 +38,10 @@
                     </div>
 
                     <div v-else class="flex flex-col md:flex-row h-[600px] max-h-[75vh]">
-                        <div class="md:w-1/3 border-b md:border-b-0 md:border-r flex flex-col overflow-y-auto">
+                        <div
+                            v-if="!lockTrainee"
+                            class="md:w-1/3 border-b md:border-b-0 md:border-r flex flex-col overflow-y-auto"
+                        >
                             <div class="p-4 border-b">
                                 <input
                                     v-model="searchQuery"
@@ -69,7 +73,10 @@
                             </div>
                         </div>
 
-                        <div class="md:w-2/3 flex flex-col h-full overflow-hidden">
+                        <div
+                            class="flex flex-col h-full overflow-hidden"
+                            :class="lockTrainee ? 'w-full' : 'md:w-2/3'"
+                        >
                             <div v-if="!selectedTrainee" class="flex-1 flex items-center justify-center text-gray-400 p-8 text-center">
                                 {{ $t('words.select-trainee') }}
                             </div>
@@ -87,7 +94,6 @@
                                         </div>
                                         <div class="flex items-center gap-2 flex-shrink-0 flex-wrap justify-end">
                                             <div
-                                                v-if="botStatus"
                                                 class="flex items-center gap-2"
                                             >
                                                 <span
@@ -98,7 +104,7 @@
                                                     {{ botStatusLabel }}
                                                 </span>
                                                 <button
-                                                    v-if="botStatus.workflow_assigned && !botStatus.is_paused"
+                                                    v-if="canPauseBot"
                                                     type="button"
                                                     class="text-xs bg-white border border-orange-300 hover:bg-orange-50 text-orange-800 px-3 py-1.5 rounded-lg font-medium transition disabled:opacity-50"
                                                     :disabled="pausingBot"
@@ -333,6 +339,24 @@ export default {
         JetButton,
         JetTextarea,
     },
+    props: {
+        hideTrigger: {
+            type: Boolean,
+            default: false,
+        },
+        triggerLabel: {
+            type: String,
+            default: null,
+        },
+        triggerClass: {
+            type: String,
+            default: null,
+        },
+        instanceId: {
+            type: String,
+            default: 'finance',
+        },
+    },
     data() {
         return {
             configured: false,
@@ -340,6 +364,7 @@ export default {
             searchResults: [],
             searching: false,
             selectedTrainee: null,
+            lockTrainee: false,
             pendingInvoices: [],
             pendingTotalOwed: 0,
             loadingPendingInvoices: false,
@@ -363,9 +388,15 @@ export default {
         };
     },
     computed: {
+        modalName() {
+            return 'financeWhatsAppChatModal-' + this.instanceId;
+        },
+        portalName() {
+            return 'finance-whatsapp-chat-modal-' + this.instanceId;
+        },
         botStatusLabel() {
             if (!this.botStatus) {
-                return '';
+                return this.$t('words.loading') + '...';
             }
             if (!this.botStatus.workflow_assigned) {
                 return this.$t('words.bot-not-assigned');
@@ -402,6 +433,15 @@ export default {
                 return 'bg-orange-100 border-orange-200 text-orange-900';
             }
             return 'bg-green-100 border-green-200 text-green-800';
+        },
+        canPauseBot() {
+            if (!this.botStatus) {
+                return false;
+            }
+            if (typeof this.botStatus.can_pause === 'boolean') {
+                return this.botStatus.can_pause;
+            }
+            return !!(this.botStatus.workflow_assigned && !this.botStatus.is_paused);
         },
         lastMessageAt() {
             if (!this.messages.length) {
@@ -460,7 +500,8 @@ export default {
     },
     methods: {
         async open() {
-            this.$modal.show('financeWhatsAppChatModal');
+            this.lockTrainee = false;
+            this.$modal.show(this.modalName);
             await this.checkStatus();
 
             if (this.configured) {
@@ -468,10 +509,41 @@ export default {
                 this.subscribeEcho();
             }
         },
+        async openForTrainee(trainee) {
+            if (!trainee || !trainee.phone) {
+                this.errorMessage = this.$t('words.whatsapp-trainee-phone-missing');
+                return;
+            }
+
+            this.lockTrainee = true;
+            this.$modal.show(this.modalName);
+            await this.checkStatus();
+
+            if (!this.configured) {
+                return;
+            }
+
+            await this.loadTemplates();
+            this.subscribeEcho();
+            await this.selectTrainee(this.normalizeTraineePayload(trainee));
+        },
+        normalizeTraineePayload(trainee) {
+            const company = trainee.company || {};
+            return {
+                id: trainee.id,
+                name: trainee.name,
+                phone: trainee.phone,
+                identity_number: trainee.identity_number,
+                english_name: trainee.english_name || trainee.name_english || null,
+                company_name: trainee.company_name || company.name_ar || company.name || null,
+                show_url: trainee.show_url || route('back.trainees.show', trainee.id),
+            };
+        },
         close() {
             this.unsubscribeEcho();
             this.stopPolling();
-            this.$modal.hide('financeWhatsAppChatModal');
+            this.$modal.hide(this.modalName);
+            this.lockTrainee = false;
             this.resetState();
         },
         normalizePhone(phone) {

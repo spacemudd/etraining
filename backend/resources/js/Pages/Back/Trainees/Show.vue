@@ -381,6 +381,17 @@
             {{ $t("words.private-message") }}
           </inertia-link>
 
+          <button
+            v-can="'access-whatsapp-chats'"
+            v-if="trainee.phone"
+            type="button"
+            @click="openJasarahWhatsApp"
+            class="items-center justify-start text-left rounded-md px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-right inline-flex gap-2"
+          >
+            <ion-icon name="logo-whatsapp" class="w-4 h-4"></ion-icon>
+            {{ $t("words.open-jasarah-whatsapp") }}
+          </button>
+
           <a
             v-if="trainee.user_id"
             v-can="'can-impersonate'"
@@ -1564,6 +1575,13 @@
       </div>
       </div>
     </div>
+
+    <finance-whats-app-chat
+      v-can="'access-whatsapp-chats'"
+      ref="jasarahWhatsAppChat"
+      :hide-trigger="true"
+      instance-id="trainee-show"
+    />
   </app-layout>
 </template>
 
@@ -1594,6 +1612,7 @@ import { Inertia } from "@inertiajs/inertia";
 import ValidationErrors from "@/Components/ValidationErrors";
 import GosiContainer from "../../../Components/GosiContainer";
 import DetectedEnglishNamePopup from "@/Components/DetectedEnglishNamePopup";
+import FinanceWhatsAppChat from "@/Components/FinanceWhatsAppChat";
 
 export default {
   props: [
@@ -1613,6 +1632,7 @@ export default {
   components: {
     GosiContainer,
     DetectedEnglishNamePopup,
+    FinanceWhatsAppChat,
     ValidationErrors,
     TraineeAuditContainer,
     AppLayout,
@@ -2233,6 +2253,12 @@ export default {
         const msg = err.response?.data?.error || err.response?.data?.message || 'حدث خطأ أثناء فتح الملف';
         alert(msg);
       }
+    },
+    openJasarahWhatsApp() {
+      if (!this.$refs.jasarahWhatsAppChat) {
+        return;
+      }
+      this.$refs.jasarahWhatsAppChat.openForTrainee(this.trainee);
     },
 
   },

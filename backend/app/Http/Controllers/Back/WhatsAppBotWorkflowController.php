@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Back\WhatsAppBotSender;
 use App\Models\Back\WhatsAppBotWorkflow;
 use App\Services\TelnyxWhatsAppService;
+use App\Support\WhatsAppAiSettings;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -50,7 +51,35 @@ class WhatsAppBotWorkflowController extends Controller
                     'label' => $sender->label,
                     'workflow_id' => $sender->workflow_id,
                 ]),
+            'ai_settings' => WhatsAppAiSettings::forAdmin(),
         ]);
+    }
+
+    public function updateAiSettings(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'enabled' => 'required|boolean',
+            'openai_key' => 'nullable|string|max:500',
+            'model' => 'required|string|max:120',
+            'system_prompt' => 'required|string|max:10000',
+            'purpose' => 'required|string|max:5000',
+            'tone' => 'required|string|max:1000',
+            'handoff_rules' => 'required|string|max:5000',
+            'max_reply_chars' => 'required|integer|min:100|max:4000',
+        ]);
+
+        WhatsAppAiSettings::save([
+            'enabled' => (bool) $validated['enabled'],
+            'openai_key' => $validated['openai_key'] ?? null,
+            'model' => $validated['model'],
+            'system_prompt' => $validated['system_prompt'],
+            'purpose' => $validated['purpose'],
+            'tone' => $validated['tone'],
+            'handoff_rules' => $validated['handoff_rules'],
+            'max_reply_chars' => (int) $validated['max_reply_chars'],
+        ]);
+
+        return redirect()->back();
     }
 
     public function store(Request $request): RedirectResponse
