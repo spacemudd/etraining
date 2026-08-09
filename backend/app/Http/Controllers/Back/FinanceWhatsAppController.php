@@ -7,10 +7,12 @@ namespace App\Http\Controllers\Back;
 use App\Http\Controllers\Controller;
 use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
+use App\Models\Back\WhatsAppConversation;
 use App\Models\Back\WhatsAppMessage;
 use App\Services\TelnyxWhatsAppService;
 use App\Support\WhatsAppBotPause;
 use App\Support\WhatsAppBotStatus;
+use App\Support\WhatsAppMessagingWindow;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use RuntimeException;
@@ -206,12 +208,25 @@ class FinanceWhatsAppController extends Controller
             'limit' => 'nullable|integer|min:1|max:100',
         ]);
 
+        $normalizedPhone = $this->whatsAppService->normalizePhoneDigits($request->phone);
+        $conversation = WhatsAppConversation::query()
+            ->where('phone', $normalizedPhone)
+            ->first();
+
         return response()->json([
             'messages' => $this->whatsAppService->listMessages(
                 $request->phone,
                 (int) ($request->limit ?? 50),
                 $request->since
             ),
+            'messaging_window' => $conversation
+                ? WhatsAppMessagingWindow::forConversation($conversation)
+                : [
+                    'last_inbound_at' => null,
+                    'expires_at' => null,
+                    'remaining_seconds' => 0,
+                    'is_open' => false,
+                ],
         ]);
     }
 

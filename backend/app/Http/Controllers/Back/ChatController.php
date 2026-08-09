@@ -15,6 +15,7 @@ use App\Support\WhatsAppBotPause;
 use App\Support\WhatsAppBotStatus;
 use App\Support\WhatsAppConversationHandoff;
 use App\Support\WhatsAppConversationSync;
+use App\Support\WhatsAppMessagingWindow;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -761,6 +762,7 @@ class ChatController extends Controller
                 'is_note' => (bool) $conversation->last_message_is_note,
                 'sent_at' => optional($conversation->last_message_at)->toIso8601String(),
             ],
+            'messaging_window' => WhatsAppMessagingWindow::forConversation($conversation),
             'updated_at' => optional($conversation->last_message_at)->timestamp
                 ?? optional($conversation->updated_at)->timestamp
                 ?? 0,

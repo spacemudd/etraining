@@ -89,7 +89,22 @@
                                                 {{ selectedTrainee.name }}
                                                 <span v-if="selectedTrainee.company_name" class="font-normal text-gray-500"> · {{ selectedTrainee.company_name }}</span>
                                             </div>
-                                            <div class="text-sm text-gray-600">{{ $t('words.phone') }}: {{ selectedTrainee.phone }}</div>
+                                            <div class="text-sm text-gray-600 flex items-center gap-2 flex-wrap">
+                                                <span>{{ $t('words.phone') }}: <span dir="ltr">{{ selectedTrainee.phone }}</span></span>
+                                                <span
+                                                    v-if="messagingWindowLabel"
+                                                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md font-semibold border text-xs"
+                                                    :class="messagingWindowBadgeClass"
+                                                    :title="$t('words.whatsapp-freeform-hint')"
+                                                    dir="ltr"
+                                                >
+                                                    <ion-icon
+                                                        :name="messagingWindowIsOpen ? 'timer-outline' : 'lock-closed-outline'"
+                                                        class="w-3.5 h-3.5"
+                                                    ></ion-icon>
+                                                    {{ messagingWindowLabel }}
+                                                </span>
+                                            </div>
                                             <div class="text-xs text-green-600 mt-1">{{ $t('words.whatsapp-live-updates') }}</div>
                                         </div>
                                         <div class="flex items-center gap-2 flex-shrink-0 flex-wrap justify-end">
@@ -308,17 +323,25 @@
                                     </div>
 
                                     <div v-else>
+                                        <div
+                                            v-if="messagingWindowIsOpen === false"
+                                            class="mb-2 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900"
+                                        >
+                                            <ion-icon name="lock-closed-outline" class="w-4 h-4 mt-0.5 flex-shrink-0"></ion-icon>
+                                            <span>{{ $t('words.whatsapp-window-locked-hint') }}</span>
+                                        </div>
                                         <jet-textarea
                                             v-model="freeformMessage"
                                             class="w-full text-sm mb-3"
                                             rows="3"
                                             :placeholder="$t('words.message')"
+                                            :disabled="messagingWindowIsOpen === false"
                                         />
                                         <p class="text-xs text-gray-500 mb-3">{{ $t('words.whatsapp-freeform-hint') }}</p>
                                         <jet-button
                                             @click.native="sendFreeform"
                                             :class="{ 'opacity-25': sending }"
-                                            :disabled="sending || !freeformMessage.trim()"
+                                            :disabled="sending || !freeformMessage.trim() || messagingWindowIsOpen === false"
                                             class="bg-green-600 hover:bg-green-700"
                                         >
                                             {{ $t('words.send') }}
@@ -394,6 +417,9 @@ export default {
             botStatus: null,
             pausingBot: false,
             messagesRefreshTimer: null,
+            messagingWindow: null,
+            windowNowMs: Date.now(),
+            messagingWindowTimer: null,
         };
     },
     computed: {
@@ -402,6 +428,54 @@ export default {
         },
         portalName() {
             return 'finance-whatsapp-chat-modal-' + this.instanceId;
+        },
+        messagingWindowRemainingSeconds() {
+            const now = this.windowNowMs;
+            const window = this.messagingWindow;
+            if (!window) {
+                return 0;
+            }
+            let expiresMs = null;
+            if (window.expires_at) {
+                const parsed = Date.parse(window.expires_at);
+                if (!Number.isNaN(parsed)) {
+                    expiresMs = parsed;
+                }
+            }
+            if (expiresMs === null && window.last_inbound_at) {
+                const lastMs = Date.parse(window.last_inbound_at);
+                if (!Number.isNaN(lastMs)) {
+                    expiresMs = lastMs + (24 * 60 * 60 * 1000);
+                }
+            }
+            if (expiresMs === null) {
+                return 0;
+            }
+            return Math.max(0, Math.floor((expiresMs - now) / 1000));
+        },
+        messagingWindowIsOpen() {
+            if (!this.selectedTrainee) {
+                return null;
+            }
+            return this.messagingWindowRemainingSeconds > 0;
+        },
+        messagingWindowLabel() {
+            if (!this.selectedTrainee) {
+                return '';
+            }
+            if (this.messagingWindowRemainingSeconds <= 0) {
+                return this.$t('words.whatsapp-window-locked');
+            }
+            return this.$t('words.whatsapp-window-open') + ' · ' + this.formatCountdown(this.messagingWindowRemainingSeconds);
+        },
+        messagingWindowBadgeClass() {
+            if (this.messagingWindowIsOpen === false) {
+                return 'bg-red-50 border-red-200 text-red-800';
+            }
+            if (this.messagingWindowRemainingSeconds <= 3600) {
+                return 'bg-amber-50 border-amber-200 text-amber-900';
+            }
+            return 'bg-emerald-50 border-emerald-200 text-emerald-800';
         },
         botStatusLabel() {
             if (!this.botStatus) {
@@ -511,12 +585,67 @@ export default {
     beforeDestroy() {
         this.unsubscribeEcho();
         this.stopPolling();
+        this.stopMessagingWindowTicker();
         if (this.messagesRefreshTimer) {
             clearTimeout(this.messagesRefreshTimer);
             this.messagesRefreshTimer = null;
         }
     },
     methods: {
+        formatCountdown(totalSeconds) {
+            const seconds = Math.max(0, Math.floor(Number(totalSeconds) || 0));
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            const pad = (value) => String(value).padStart(2, '0');
+            return `${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
+        },
+        startMessagingWindowTicker() {
+            this.stopMessagingWindowTicker();
+            this.windowNowMs = Date.now();
+            this.messagingWindowTimer = setInterval(() => {
+                this.windowNowMs = Date.now();
+            }, 1000);
+        },
+        stopMessagingWindowTicker() {
+            if (this.messagingWindowTimer) {
+                clearInterval(this.messagingWindowTimer);
+                this.messagingWindowTimer = null;
+            }
+        },
+        applyMessagingWindow(window) {
+            if (!window || typeof window !== 'object') {
+                this.messagingWindow = {
+                    last_inbound_at: null,
+                    expires_at: null,
+                    remaining_seconds: 0,
+                    is_open: false,
+                };
+                return;
+            }
+            this.messagingWindow = window;
+        },
+        refreshMessagingWindowFromInbound(message) {
+            if (!message || this.isOutboundMessage(message) || message.is_note) {
+                return;
+            }
+            const sentAt = message.sent_at || message.created_at;
+            if (!sentAt) {
+                return;
+            }
+            const lastMs = Date.parse(sentAt);
+            if (Number.isNaN(lastMs)) {
+                return;
+            }
+            const expiresMs = lastMs + (24 * 60 * 60 * 1000);
+            const remaining = Math.max(0, Math.floor((expiresMs - Date.now()) / 1000));
+            this.messagingWindow = {
+                last_inbound_at: new Date(lastMs).toISOString(),
+                expires_at: new Date(expiresMs).toISOString(),
+                remaining_seconds: remaining,
+                is_open: remaining > 0,
+            };
+        },
         async open() {
             this.lockTrainee = false;
             this.$modal.show(this.modalName);
@@ -525,6 +654,7 @@ export default {
             if (this.configured) {
                 await this.loadTemplates();
                 this.subscribeEcho();
+                this.startMessagingWindowTicker();
             }
         },
         async openForTrainee(trainee) {
@@ -543,6 +673,7 @@ export default {
 
             await this.loadTemplates();
             this.subscribeEcho();
+            this.startMessagingWindowTicker();
             await this.selectTrainee(this.normalizeTraineePayload(trainee));
         },
         normalizeTraineePayload(trainee) {
@@ -560,6 +691,7 @@ export default {
         close() {
             this.unsubscribeEcho();
             this.stopPolling();
+            this.stopMessagingWindowTicker();
             this.$modal.hide(this.modalName);
             this.lockTrainee = false;
             this.resetState();
@@ -569,9 +701,10 @@ export default {
         },
         subscribeEcho() {
             this.unsubscribeEcho();
+            this.stopPolling();
 
             if (!window.Echo) {
-                console.warn('[FinanceWhatsAppChat] Echo unavailable — live updates will use polling fallback when a trainee is selected');
+                console.warn('[FinanceWhatsAppChat] Echo unavailable — slow polling fallback when a trainee is selected');
                 return;
             }
 
@@ -611,6 +744,18 @@ export default {
             }
             this.echoChannel = null;
         },
+        startPollingFallback() {
+            this.stopPolling();
+            this.pollInterval = setInterval(() => {
+                this.loadMessages(true);
+            }, 20000);
+        },
+        stopPolling() {
+            if (this.pollInterval) {
+                clearInterval(this.pollInterval);
+                this.pollInterval = null;
+            }
+        },
         resetState() {
             this.searchQuery = '';
             this.searchResults = [];
@@ -628,6 +773,7 @@ export default {
             this.sendMode = 'template';
             this.botStatus = null;
             this.pausingBot = false;
+            this.messagingWindow = null;
         },
         formatPausedUntil(iso) {
             if (!iso) {
@@ -743,8 +889,12 @@ export default {
                 this.loadBotStatus(),
             ]);
 
-            // Soft-poll while a chat is open so bot replies from the queue appear live.
-            this.startPolling();
+            // Live updates come from Echo. Poll only if realtime is unavailable.
+            if (!window.Echo) {
+                this.startPollingFallback();
+            } else {
+                this.stopPolling();
+            }
         },
         scheduleMessagesRefresh() {
             if (this.messagesRefreshTimer) {
@@ -859,6 +1009,10 @@ export default {
 
                 const { data } = await axios.get(route('back.finance.whatsapp.messages'), { params });
 
+                if (Object.prototype.hasOwnProperty.call(data, 'messaging_window')) {
+                    this.applyMessagingWindow(data.messaging_window);
+                }
+
                 if (poll) {
                     this.mergeMessages(data.messages);
                 } else {
@@ -891,27 +1045,17 @@ export default {
 
                 if (existingIndex !== -1) {
                     this.$set(this.messages, existingIndex, { ...this.messages[existingIndex], ...message });
+                    this.refreshMessagingWindowFromInbound(message);
                     return;
                 }
 
                 this.messages.push(message);
+                this.refreshMessagingWindowFromInbound(message);
                 added = true;
             });
 
             if (added) {
                 this.$nextTick(() => this.scrollToBottom());
-            }
-        },
-        startPolling() {
-            this.stopPolling();
-            this.pollInterval = setInterval(() => {
-                this.loadMessages(true);
-            }, 3000);
-        },
-        stopPolling() {
-            if (this.pollInterval) {
-                clearInterval(this.pollInterval);
-                this.pollInterval = null;
             }
         },
         isOutboundMessage(message) {

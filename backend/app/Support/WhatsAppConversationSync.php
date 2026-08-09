@@ -44,6 +44,12 @@ final class WhatsAppConversationSync
             && ! $message->is_note
         ) {
             $conversation->status = WhatsAppConversation::STATUS_OPEN;
+            if (
+                $conversation->last_inbound_at === null
+                || $sentAt->greaterThan($conversation->last_inbound_at)
+            ) {
+                $conversation->last_inbound_at = $sentAt;
+            }
         }
 
         $conversation->save();

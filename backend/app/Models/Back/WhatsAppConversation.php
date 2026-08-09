@@ -34,10 +34,12 @@ class WhatsAppConversation extends Model
         'last_message_direction',
         'last_message_is_note',
         'last_message_at',
+        'last_inbound_at',
     ];
 
     protected $casts = [
         'last_message_at' => 'datetime',
+        'last_inbound_at' => 'datetime',
         'bot_paused_until' => 'datetime',
         'last_message_is_note' => 'boolean',
     ];

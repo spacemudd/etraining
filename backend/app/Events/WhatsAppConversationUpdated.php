@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Events;
 
 use App\Models\Back\WhatsAppConversation;
+use App\Support\WhatsAppMessagingWindow;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
@@ -59,6 +60,7 @@ class WhatsAppConversationUpdated implements ShouldBroadcastNow
                 'is_note' => (bool) $conversation->last_message_is_note,
                 'sent_at' => optional($conversation->last_message_at)->toIso8601String(),
             ],
+            'messaging_window' => WhatsAppMessagingWindow::forConversation($conversation),
             'updated_at' => optional($conversation->last_message_at)->timestamp
                 ?? optional($conversation->updated_at)->timestamp
                 ?? 0,

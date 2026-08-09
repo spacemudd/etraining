@@ -227,8 +227,21 @@
                                         <div v-if="selectedConversation.trainee && selectedConversation.trainee.company_name" class="text-xs text-gray-600 font-medium truncate">
                                             {{ selectedConversation.trainee.company_name }}
                                         </div>
-                                        <div class="text-xs text-gray-500 flex items-center gap-2 mt-0.5">
+                                        <div class="text-xs text-gray-500 flex items-center gap-2 mt-0.5 flex-wrap">
                                             <span dir="ltr">{{ selectedConversation.phone }}</span>
+                                            <span
+                                                v-if="messagingWindowLabel"
+                                                class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md font-semibold border"
+                                                :class="messagingWindowBadgeClass"
+                                                :title="$t('words.whatsapp-freeform-hint')"
+                                                dir="ltr"
+                                            >
+                                                <ion-icon
+                                                    :name="messagingWindowIsOpen ? 'timer-outline' : 'lock-closed-outline'"
+                                                    class="w-3.5 h-3.5"
+                                                ></ion-icon>
+                                                {{ messagingWindowLabel }}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -557,6 +570,13 @@
 
                             <!-- Freeform Message or Internal Note Composer -->
                             <div v-else class="border-2 rounded-xl p-3 bg-white" :class="isNoteMode ? 'border-yellow-400 bg-yellow-50/30' : 'border-gray-200'">
+                                <div
+                                    v-if="!isNoteMode && messagingWindowIsOpen === false"
+                                    class="mb-2 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900"
+                                >
+                                    <ion-icon name="lock-closed-outline" class="w-4 h-4 mt-0.5 flex-shrink-0"></ion-icon>
+                                    <span>{{ $t('words.whatsapp-window-locked-hint') }}</span>
+                                </div>
                                 <div class="relative">
                                     <textarea
                                         v-model="messageBody"
@@ -564,6 +584,7 @@
                                         class="w-full text-sm rounded-lg transition-all p-3 border"
                                         :class="isNoteMode ? 'bg-yellow-100 border-yellow-300 focus:border-yellow-500 focus:ring-yellow-200 text-yellow-950 placeholder-yellow-800/60' : 'border-gray-300 focus:border-green-500 focus:ring-green-200'"
                                         :placeholder="isNoteMode ? $t('words.internal-note-hint') : $t('words.message') + '...'"
+                                        :disabled="!isNoteMode && messagingWindowIsOpen === false"
                                     ></textarea>
                                 </div>
 
@@ -577,7 +598,7 @@
                                     <button
                                         @click="sendMessageOrNote"
                                         type="button"
-                                        :disabled="sending || !messageBody.trim()"
+                                        :disabled="sending || !messageBody.trim() || (!isNoteMode && messagingWindowIsOpen === false)"
                                         class="px-4 py-2 rounded-lg text-sm font-semibold text-white shadow disabled:opacity-50 transition"
                                         :class="isNoteMode ? 'bg-yellow-500 hover:bg-yellow-600 text-black font-bold' : 'bg-green-600 hover:bg-green-700'"
                                     >
@@ -756,13 +777,67 @@ export default {
             attachingTag: false,
             updatingStatus: false,
             pollInterval: null,
+            conversationsReloadTimer: null,
             messagesRefreshTimer: null,
             searchDebounce: null,
             botStatus: null,
             pausingBot: false,
+            windowNowMs: Date.now(),
+            messagingWindowTimer: null,
         };
     },
     computed: {
+        messagingWindow() {
+            return (this.selectedConversation && this.selectedConversation.messaging_window) || null;
+        },
+        messagingWindowRemainingSeconds() {
+            const now = this.windowNowMs;
+            const window = this.messagingWindow;
+            if (!window) {
+                return 0;
+            }
+            let expiresMs = null;
+            if (window.expires_at) {
+                const parsed = Date.parse(window.expires_at);
+                if (!Number.isNaN(parsed)) {
+                    expiresMs = parsed;
+                }
+            }
+            if (expiresMs === null && window.last_inbound_at) {
+                const lastMs = Date.parse(window.last_inbound_at);
+                if (!Number.isNaN(lastMs)) {
+                    expiresMs = lastMs + (24 * 60 * 60 * 1000);
+                }
+            }
+            if (expiresMs === null) {
+                return 0;
+            }
+            return Math.max(0, Math.floor((expiresMs - now) / 1000));
+        },
+        messagingWindowIsOpen() {
+            if (!this.selectedConversation) {
+                return null;
+            }
+            return this.messagingWindowRemainingSeconds > 0;
+        },
+        messagingWindowLabel() {
+            if (!this.selectedConversation) {
+                return '';
+            }
+            if (this.messagingWindowRemainingSeconds <= 0) {
+                return this.$t('words.whatsapp-window-locked');
+            }
+            return this.$t('words.whatsapp-window-open') + ' · ' + this.formatCountdown(this.messagingWindowRemainingSeconds);
+        },
+        messagingWindowBadgeClass() {
+            if (this.messagingWindowIsOpen === false) {
+                return 'bg-red-50 border-red-200 text-red-800';
+            }
+            if (this.messagingWindowRemainingSeconds <= 3600) {
+                return 'bg-amber-50 border-amber-200 text-amber-900';
+            }
+            return 'bg-emerald-50 border-emerald-200 text-emerald-800';
+        },
         botStatusLabel() {
             if (!this.botStatus) {
                 return this.$t('words.loading') + '...';
@@ -862,6 +937,7 @@ export default {
         this.loadTags();
         this.loadConversations();
         this.subscribeEcho();
+        this.startMessagingWindowTicker();
         if (this.configured) {
             this.loadTemplates();
         }
@@ -869,15 +945,65 @@ export default {
     beforeDestroy() {
         this.unsubscribeEcho();
         this.stopPolling();
+        this.stopMessagingWindowTicker();
         if (this.messagesRefreshTimer) {
             clearTimeout(this.messagesRefreshTimer);
             this.messagesRefreshTimer = null;
+        }
+        if (this.conversationsReloadTimer) {
+            clearTimeout(this.conversationsReloadTimer);
+            this.conversationsReloadTimer = null;
         }
         if (this.searchDebounce) {
             clearTimeout(this.searchDebounce);
         }
     },
     methods: {
+        formatCountdown(totalSeconds) {
+            const seconds = Math.max(0, Math.floor(Number(totalSeconds) || 0));
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            const pad = (value) => String(value).padStart(2, '0');
+            return `${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
+        },
+        startMessagingWindowTicker() {
+            this.stopMessagingWindowTicker();
+            this.windowNowMs = Date.now();
+            this.messagingWindowTimer = setInterval(() => {
+                this.windowNowMs = Date.now();
+            }, 1000);
+        },
+        stopMessagingWindowTicker() {
+            if (this.messagingWindowTimer) {
+                clearInterval(this.messagingWindowTimer);
+                this.messagingWindowTimer = null;
+            }
+        },
+        refreshMessagingWindowFromInbound(message) {
+            if (!this.selectedConversation || !message || this.isOutboundMessage(message) || message.is_note) {
+                return;
+            }
+            const sentAt = message.sent_at || message.created_at;
+            if (!sentAt) {
+                return;
+            }
+            const lastMs = Date.parse(sentAt);
+            if (Number.isNaN(lastMs)) {
+                return;
+            }
+            const expiresMs = lastMs + (24 * 60 * 60 * 1000);
+            const remaining = Math.max(0, Math.floor((expiresMs - Date.now()) / 1000));
+            this.selectedConversation = {
+                ...this.selectedConversation,
+                messaging_window: {
+                    last_inbound_at: new Date(lastMs).toISOString(),
+                    expires_at: new Date(expiresMs).toISOString(),
+                    remaining_seconds: remaining,
+                    is_open: remaining > 0,
+                },
+            };
+        },
         conversationParams() {
             const params = {
                 page: this.conversationPage,
@@ -1026,9 +1152,11 @@ export default {
             }
         },
         subscribeEcho() {
+            this.stopPolling();
+
             if (!window.Echo) {
-                console.warn('[Chat] Echo unavailable — falling back to polling');
-                this.startPolling();
+                console.warn('[Chat] Echo unavailable — using slow polling fallback');
+                this.startPollingFallback();
                 return;
             }
 
@@ -1037,7 +1165,7 @@ export default {
             window.Echo.channel('whatsapp-chat')
                 .listen('.WhatsAppMessageReceived', (event) => {
                     console.log('[Chat] WhatsAppMessageReceived', event && event.message);
-                    this.loadConversations();
+                    this.scheduleConversationsReload();
                     const message = event.message;
                     if (
                         this.selectedConversation
@@ -1046,8 +1174,7 @@ export default {
                     ) {
                         console.log('[Chat] Appending message to open conversation');
                         this.mergeIncomingMessage(message);
-                        // Bot auto-replies usually follow inbound by ~1s; refresh catches
-                        // any reply that arrived without a usable Echo payload.
+                        // One delayed catch-up for bot replies that race the first event.
                         if (!this.isOutboundMessage(message) || this.isBotMessage(message)) {
                             this.scheduleOpenConversationRefresh();
                         }
@@ -1059,7 +1186,7 @@ export default {
                         this.patchConversation(event.conversation);
                         this.refreshConversationCounts();
                     } else {
-                        this.loadConversations();
+                        this.scheduleConversationsReload();
                     }
                 });
         },
@@ -1068,6 +1195,15 @@ export default {
                 console.log('[Chat] Leaving channel whatsapp-chat');
                 window.Echo.leave('whatsapp-chat');
             }
+        },
+        scheduleConversationsReload() {
+            if (this.conversationsReloadTimer) {
+                clearTimeout(this.conversationsReloadTimer);
+            }
+            this.conversationsReloadTimer = setTimeout(() => {
+                this.conversationsReloadTimer = null;
+                this.loadConversations();
+            }, 400);
         },
         normalizePhone(phone) {
             return String(phone || '').replace(/\D+/g, '');
@@ -1085,10 +1221,12 @@ export default {
 
             if (existingIndex !== -1) {
                 this.$set(this.messages, existingIndex, { ...this.messages[existingIndex], ...message });
+                this.refreshMessagingWindowFromInbound(message);
                 return;
             }
 
             this.messages.push(message);
+            this.refreshMessagingWindowFromInbound(message);
             this.$nextTick(() => this.scrollToBottom());
         },
         messageIdentityKeys(message) {
@@ -1168,9 +1306,12 @@ export default {
                 this.loadMessages(),
                 this.loadBotStatus(),
             ]);
-            // Soft-poll even when Echo is connected — bot replies from the queue
-            // worker can otherwise miss the open thread until a hard refresh.
-            this.startPolling();
+            // Live updates come from Echo. Poll only if realtime is unavailable.
+            if (!window.Echo) {
+                this.startPollingFallback();
+            } else {
+                this.stopPolling();
+            }
         },
         formatPausedUntil(iso) {
             if (!iso) {
@@ -1617,14 +1758,15 @@ export default {
                 this.sending = false;
             }
         },
-        startPolling() {
+        startPollingFallback() {
             this.stopPolling();
+            // Slow fallback only when Echo/Pusher is down — avoid lock storms with many agents.
             this.pollInterval = setInterval(() => {
                 this.loadConversations();
                 if (this.selectedConversation) {
                     this.loadMessagesSilently();
                 }
-            }, 3000);
+            }, 20000);
         },
         stopPolling() {
             if (this.pollInterval) {
