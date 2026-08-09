@@ -39,6 +39,8 @@ final class WhatsAppBroadcast
         }
 
         try {
+            PusherSocketId::normalizeRequest();
+
             // Webhooks/queue workers have no Echo socket; always notify all subscribers.
             // Agent-authored sends still use toOthers so the sender (who already merged
             // the axios response) does not get a duplicate event.
@@ -50,6 +52,9 @@ final class WhatsAppBroadcast
             if ($isOutbound && ! $isBot && ! $message->is_note) {
                 $pending->toOthers();
             }
+
+            // PendingBroadcast dispatches in __destruct — force it inside try/catch.
+            unset($pending);
 
             Log::info('WhatsApp message broadcasted', [
                 'driver' => $driver,

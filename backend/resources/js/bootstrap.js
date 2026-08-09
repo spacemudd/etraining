@@ -129,8 +129,13 @@ if (pusherKey && pusherHost) {
                 const socketId = window.Echo && typeof window.Echo.socketId === 'function'
                     ? window.Echo.socketId()
                     : null;
-                if (socketId) {
-                    config.headers['X-Socket-ID'] = socketId;
+                // Pusher requires exactly one "\d+.\d+" socket id. Avoid duplicate
+                // X-Socket-ID headers (which PHP joins as "id, id" and Pusher rejects).
+                if (socketId && /^\d+\.\d+$/.test(String(socketId))) {
+                    config.headers['X-Socket-ID'] = String(socketId);
+                } else if (config.headers) {
+                    delete config.headers['X-Socket-ID'];
+                    delete config.headers['X-Socket-Id'];
                 }
             } catch (e) {}
             return config;

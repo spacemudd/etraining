@@ -64,13 +64,16 @@ final class WhatsAppConversationSync
         }
 
         try {
+            PusherSocketId::normalizeRequest();
+
             $payload = $conversation->fresh([
                 'agents:id,name',
                 'tags:id,name,color',
                 'trainee.company:id,name_ar',
             ]) ?? $conversation;
 
-            broadcast(WhatsAppConversationUpdated::fromModel($payload))->toOthers();
+            $pending = broadcast(WhatsAppConversationUpdated::fromModel($payload))->toOthers();
+            unset($pending);
         } catch (Throwable $exception) {
             Log::error('WhatsApp conversation broadcast failed', [
                 'conversation_id' => $conversation->id,
