@@ -85,7 +85,28 @@
                                             <div class="text-sm text-gray-600">{{ $t('words.phone') }}: {{ selectedTrainee.phone }}</div>
                                             <div class="text-xs text-green-600 mt-1">{{ $t('words.whatsapp-live-updates') }}</div>
                                         </div>
-                                        <div class="flex items-center gap-2 flex-shrink-0">
+                                        <div class="flex items-center gap-2 flex-shrink-0 flex-wrap justify-end">
+                                            <div
+                                                v-if="botStatus"
+                                                class="flex items-center gap-2"
+                                            >
+                                                <span
+                                                    class="text-xs px-2.5 py-1.5 rounded-lg font-semibold whitespace-nowrap border"
+                                                    :class="botStatusBadgeClass"
+                                                    :title="botStatusTitle"
+                                                >
+                                                    {{ botStatusLabel }}
+                                                </span>
+                                                <button
+                                                    v-if="botStatus.workflow_assigned && !botStatus.is_paused"
+                                                    type="button"
+                                                    class="text-xs bg-white border border-orange-300 hover:bg-orange-50 text-orange-800 px-3 py-1.5 rounded-lg font-medium transition disabled:opacity-50"
+                                                    :disabled="pausingBot"
+                                                    @click="pauseBot"
+                                                >
+                                                    {{ pausingBot ? $t('words.saving') : $t('words.pause-bot-30m') }}
+                                                </button>
+                                            </div>
                                             <a
                                                 v-if="selectedTrainee.show_url"
                                                 :href="selectedTrainee.show_url"
@@ -328,9 +349,51 @@ export default {
             successMessage: '',
             pollInterval: null,
             echoChannel: null,
+            botStatus: null,
+            pausingBot: false,
         };
     },
     computed: {
+        botStatusLabel() {
+            if (!this.botStatus) {
+                return '';
+            }
+            if (!this.botStatus.workflow_assigned) {
+                return this.$t('words.bot-not-assigned');
+            }
+            if (this.botStatus.is_paused) {
+                return this.$t('words.bot-paused');
+            }
+            return this.$t('words.bot-active');
+        },
+        botStatusTitle() {
+            if (!this.botStatus) {
+                return '';
+            }
+            if (this.botStatus.workflow_name) {
+                const name = this.botStatus.workflow_name;
+                if (this.botStatus.is_paused && this.botStatus.paused_until) {
+                    return name + ' · ' + this.formatPausedUntil(this.botStatus.paused_until);
+                }
+                return name;
+            }
+            if (this.botStatus.is_paused && this.botStatus.paused_until) {
+                return this.formatPausedUntil(this.botStatus.paused_until);
+            }
+            return '';
+        },
+        botStatusBadgeClass() {
+            if (!this.botStatus) {
+                return 'bg-gray-100 border-gray-200 text-gray-600';
+            }
+            if (!this.botStatus.workflow_assigned) {
+                return 'bg-gray-100 border-gray-200 text-gray-600';
+            }
+            if (this.botStatus.is_paused) {
+                return 'bg-orange-100 border-orange-200 text-orange-900';
+            }
+            return 'bg-green-100 border-green-200 text-green-800';
+        },
         lastMessageAt() {
             if (!this.messages.length) {
                 return null;
@@ -457,6 +520,59 @@ export default {
             this.errorMessage = '';
             this.successMessage = '';
             this.sendMode = 'template';
+            this.botStatus = null;
+            this.pausingBot = false;
+        },
+        formatPausedUntil(iso) {
+            if (!iso) {
+                return '';
+            }
+            try {
+                const date = new Date(iso);
+                if (Number.isNaN(date.getTime())) {
+                    return iso;
+                }
+                return this.$t('words.bot-paused-until') + ' ' + date.toLocaleString();
+            } catch (e) {
+                return iso;
+            }
+        },
+        async loadBotStatus() {
+            if (!this.selectedTrainee || !this.selectedTrainee.phone) {
+                this.botStatus = null;
+                return;
+            }
+
+            try {
+                const { data } = await axios.get(route('back.finance.whatsapp.bot-status'), {
+                    params: { phone: this.selectedTrainee.phone },
+                });
+                this.botStatus = data;
+            } catch (error) {
+                this.botStatus = null;
+            }
+        },
+        async pauseBot() {
+            if (!this.selectedTrainee || !this.selectedTrainee.phone || this.pausingBot) {
+                return;
+            }
+
+            this.pausingBot = true;
+            this.errorMessage = '';
+            this.successMessage = '';
+
+            try {
+                const { data } = await axios.post(route('back.finance.whatsapp.bot-pause'), {
+                    phone: this.selectedTrainee.phone,
+                });
+                this.botStatus = data.bot || null;
+                this.successMessage = data.message || this.$t('words.whatsapp-bot-paused');
+            } catch (error) {
+                this.errorMessage = (error.response && error.response.data && error.response.data.message)
+                    || this.$t('words.whatsapp-bot-pause-failed');
+            } finally {
+                this.pausingBot = false;
+            }
         },
         async checkStatus() {
             try {
@@ -496,6 +612,7 @@ export default {
             await Promise.all([
                 this.loadMessages(false),
                 this.loadPendingInvoices(),
+                this.loadBotStatus(),
             ]);
 
             // Fallback polling only when Echo/Soketi is unavailable
@@ -704,6 +821,7 @@ export default {
                 this.mergeMessages([data.message]);
                 this.successMessage = this.$t('words.whatsapp-sent-successfully');
                 this.$nextTick(() => this.scrollToBottom());
+                await this.loadBotStatus();
             } catch (error) {
                 this.errorMessage = error.response?.data?.message || this.$t('words.whatsapp-send-failed');
             } finally {
@@ -730,6 +848,7 @@ export default {
                 this.freeformMessage = '';
                 this.successMessage = this.$t('words.whatsapp-sent-successfully');
                 this.$nextTick(() => this.scrollToBottom());
+                await this.loadBotStatus();
             } catch (error) {
                 this.errorMessage = error.response?.data?.message || this.$t('words.whatsapp-send-failed');
             } finally {
