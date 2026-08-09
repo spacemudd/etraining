@@ -37,13 +37,20 @@ final class WhatsAppBroadcast
         }
 
         try {
-            broadcast(new WhatsAppMessageReceived($message))->toOthers();
+            // Bot replies are sent from queue workers / webhooks with no socket —
+            // broadcast to everyone so open agent chats receive them.
+            $broadcast = broadcast(new WhatsAppMessageReceived($message));
+            $metadata = is_array($message->metadata) ? $message->metadata : [];
+            if (empty($metadata['is_bot'])) {
+                $broadcast->toOthers();
+            }
 
             Log::info('WhatsApp message broadcasted', [
                 'driver' => $driver,
                 'message_id' => $message->id,
                 'phone' => $message->phone,
                 'direction' => $message->direction,
+                'is_bot' => ! empty($metadata['is_bot']),
                 'host' => config('broadcasting.connections.pusher.options.host'),
             ]);
         } catch (Throwable $exception) {

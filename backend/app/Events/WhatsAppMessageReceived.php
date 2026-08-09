@@ -24,6 +24,9 @@ class WhatsAppMessageReceived implements ShouldBroadcastNow
 
     public function __construct(WhatsAppMessage $message)
     {
+        $metadata = is_array($message->metadata) ? $message->metadata : [];
+        $isBot = ! empty($metadata['is_bot']);
+
         $this->message = [
             'id' => $message->id,
             'sid' => $message->twilio_sid ?: $message->id,
@@ -34,12 +37,20 @@ class WhatsAppMessageReceived implements ShouldBroadcastNow
                 ? 'outbound-api'
                 : 'inbound',
             'is_note' => (bool) $message->is_note,
+            'is_bot' => $isBot,
             'from' => $message->from_address,
             'to' => $message->to_address,
             'date_sent' => optional($message->sent_at)->toIso8601String(),
-            'error_message' => $message->metadata['error_message'] ?? null,
-            'metadata' => $message->metadata,
+            'error_message' => $metadata['error_message'] ?? null,
+            'metadata' => $metadata,
             'trainee_id' => $message->trainee_id,
+            'author' => $isBot
+                ? [
+                    'id' => null,
+                    'name' => 'Bot',
+                    'is_bot' => true,
+                ]
+                : null,
         ];
     }
 

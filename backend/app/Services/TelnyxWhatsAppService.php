@@ -525,13 +525,65 @@ class TelnyxWhatsAppService
     }
 
     /**
+     * Send a bot auto-reply and store it with metadata.is_bot so agent UIs show it as a bot message.
+     *
+     * @return array<string, mixed>
+     */
+    public function sendBotFreeformMessage(string $phone, string $body, ?string $traineeId = null): array
+    {
+        $message = $this->sendWhatsAppMessage($phone, [
+            'type' => 'text',
+            'text' => [
+                'body' => $body,
+                'preview_url' => false,
+            ],
+        ], $body);
+
+        $this->storeOutboundMessage($message, $phone, $traineeId, [
+            'is_bot' => true,
+        ]);
+
+        return $message;
+    }
+
+    /**
+     * Persist an outbound bot message without calling the Telnyx API (dev / fallback).
+     */
+    public function storeLocalBotMessage(string $phone, string $body, ?string $traineeId = null): WhatsAppMessage
+    {
+        $normalized = $this->normalizePhoneDigits($phone);
+
+        $message = WhatsAppMessage::query()->create([
+            'trainee_id' => $traineeId,
+            'phone' => $normalized,
+            'direction' => WhatsAppMessage::DIRECTION_OUTBOUND,
+            'body' => $body,
+            'status' => 'sent',
+            'from_address' => $this->normalizePhoneDigits((string) config('telnyx.whatsapp_from')),
+            'to_address' => $normalized,
+            'sent_at' => now(),
+            'metadata' => ['is_bot' => true],
+        ]);
+
+        WhatsAppBroadcast::messageStored($message);
+
+        return $message;
+    }
+
+    /**
      * @return array<int, array<string, mixed>>
      */
     public function listMessages(string $phone, int $limit = 30, ?string $since = null): array
     {
         $normalizedPhone = $this->normalizePhoneDigits($phone);
+        $phoneDigits = preg_replace('/\D+/', '', $normalizedPhone) ?? '';
         $query = WhatsAppMessage::query()
-            ->where('phone', $normalizedPhone)
+            ->where(function ($builder) use ($normalizedPhone, $phoneDigits) {
+                $builder->where('phone', $normalizedPhone);
+                if ($phoneDigits !== '' && $phoneDigits !== $normalizedPhone) {
+                    $builder->orWhere('phone', $phoneDigits);
+                }
+            })
             ->orderBy('sent_at')
             ->orderBy('created_at');
 
@@ -574,9 +626,14 @@ class TelnyxWhatsAppService
 
     /**
      * @param  array<string, mixed>  $message
+     * @param  array<string, mixed>  $metadata
      */
-    public function storeOutboundMessage(array $message, string $phone, ?string $traineeId = null): WhatsAppMessage
-    {
+    public function storeOutboundMessage(
+        array $message,
+        string $phone,
+        ?string $traineeId = null,
+        array $metadata = []
+    ): WhatsAppMessage {
         $normalizedPhone = $this->normalizePhoneDigits($phone);
         $trainee = $traineeId
             ? Trainee::query()->find($traineeId)
@@ -591,6 +648,7 @@ class TelnyxWhatsAppService
             'from_address' => $message['from'] ?? null,
             'to_address' => $message['to'] ?? null,
             'sent_at' => isset($message['date_sent']) ? Carbon::parse($message['date_sent']) : now(),
+            'metadata' => $metadata !== [] ? $metadata : null,
         ];
 
         if (! empty($message['sid'])) {
@@ -1038,6 +1096,9 @@ class TelnyxWhatsAppService
      */
     public function formatStoredMessage(WhatsAppMessage $message): array
     {
+        $metadata = is_array($message->metadata) ? $message->metadata : [];
+        $isBot = ! empty($metadata['is_bot']);
+
         return [
             'id' => $message->id,
             'sid' => $message->twilio_sid ?: $message->id,
@@ -1046,11 +1107,12 @@ class TelnyxWhatsAppService
             'status' => $message->status,
             'direction' => $message->direction === WhatsAppMessage::DIRECTION_OUTBOUND ? 'outbound-api' : 'inbound',
             'is_note' => (bool) $message->is_note,
+            'is_bot' => $isBot,
             'from' => $message->from_address,
             'to' => $message->to_address,
             'date_sent' => optional($message->sent_at)->toIso8601String(),
-            'error_message' => $message->metadata['error_message'] ?? null,
-            'metadata' => $message->metadata,
+            'error_message' => $metadata['error_message'] ?? null,
+            'metadata' => $metadata,
         ];
     }
 }

@@ -348,9 +348,11 @@
                                     class="max-w-[80%] md:max-w-[70%] rounded-2xl px-4 py-3 text-sm shadow-sm"
                                     :class="message.status === 'delivery_failed' || message.status === 'failed'
                                         ? 'bg-red-100 text-red-950 rounded-tr-sm border border-red-300'
+                                        : (isBotMessage(message)
+                                        ? 'bg-indigo-100 text-gray-900 rounded-tr-sm border border-indigo-300'
                                         : (isOutboundMessage(message)
                                             ? 'bg-green-100 text-gray-900 rounded-tr-sm border border-green-300'
-                                            : 'bg-white text-gray-900 rounded-tl-sm border border-gray-200')"
+                                            : 'bg-white text-gray-900 rounded-tl-sm border border-gray-200'))"
                                 >
                                     <p
                                         v-if="message.body && message.body !== '[Media Attachment]'"
@@ -403,9 +405,15 @@
 
                                     <!-- Author & Timestamp footer -->
                                     <div class="text-[11px] mt-1.5 flex items-center justify-between gap-3 text-gray-500 pt-1 border-t border-gray-200/40">
-                                        <span class="font-medium text-[10px] text-gray-600 truncate max-w-[120px]">
-                                            <span v-if="isOutboundMessage(message) && message.author">👤 {{ message.author.name }}</span>
-                                            <span v-else-if="!isOutboundMessage(message)">📲 Trainee</span>
+                                        <span class="font-medium text-[10px] text-gray-600 truncate max-w-[140px]">
+                                            <span
+                                                v-if="isBotMessage(message)"
+                                                class="inline-flex items-center gap-1 bg-indigo-100 text-indigo-800 px-1.5 py-0.5 rounded"
+                                            >
+                                                🤖 {{ $t('words.whatsapp-bot-label') }}
+                                            </span>
+                                            <span v-else-if="isOutboundMessage(message) && message.author">👤 {{ message.author.name }}</span>
+                                            <span v-else-if="!isOutboundMessage(message)">📲 {{ $t('words.trainee') }}</span>
                                         </span>
                                         <span class="flex items-center gap-1" dir="ltr">
                                             <span>{{ formatMessageTime(message.date_sent) }}</span>
@@ -1389,11 +1397,33 @@ export default {
                     this.nextBefore = data.next_before || null;
                     this.nextBeforeId = data.next_before_id || null;
                     this.$nextTick(() => this.scrollToBottom());
+                } else {
+                    const incoming = data.messages || [];
+                    const lastIncoming = incoming.length ? incoming[incoming.length - 1] : null;
+                    const lastCurrent = this.messages.length ? this.messages[this.messages.length - 1] : null;
+                    const incomingKey = lastIncoming ? String(lastIncoming.id || lastIncoming.sid || '') : '';
+                    const currentKey = lastCurrent ? String(lastCurrent.id || lastCurrent.sid || '') : '';
+                    if (incomingKey && incomingKey !== currentKey) {
+                        this.messages = incoming;
+                        this.$nextTick(() => this.scrollToBottom());
+                    }
                 }
             } catch (e) {}
         },
         isOutboundMessage(message) {
             return ['outbound-api', 'outbound-reply', 'outbound'].includes(message.direction);
+        },
+        isBotMessage(message) {
+            if (!message) {
+                return false;
+            }
+            if (message.is_bot) {
+                return true;
+            }
+            if (message.author && message.author.is_bot) {
+                return true;
+            }
+            return !!(message.metadata && message.metadata.is_bot);
         },
         messageAttachments(message) {
             if (!message) {

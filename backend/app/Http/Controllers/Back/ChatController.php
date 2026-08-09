@@ -278,10 +278,16 @@ class ChatController extends Controller
         ]);
 
         $phone = $this->whatsAppService->normalizePhoneDigits($validated['phone']);
+        $phoneDigits = preg_replace('/\D+/', '', $phone) ?? '';
         $limit = (int) ($validated['limit'] ?? self::MESSAGES_PER_PAGE);
 
         $query = WhatsAppMessage::query()
-            ->where('phone', $phone)
+            ->where(function ($builder) use ($phone, $phoneDigits) {
+                $builder->where('phone', $phone);
+                if ($phoneDigits !== '' && $phoneDigits !== $phone) {
+                    $builder->orWhere('phone', $phoneDigits);
+                }
+            })
             ->with(['user:id,name', 'media']);
 
         if (! empty($validated['before'])) {
@@ -696,10 +702,21 @@ class ChatController extends Controller
         $formatted['id'] = $msg->id;
         $formatted['phone'] = $msg->phone;
         $formatted['is_note'] = (bool) $msg->is_note;
-        $formatted['author'] = $msg->user ? [
-            'id' => $msg->user->id,
-            'name' => $msg->user->name,
-        ] : null;
+        $formatted['is_bot'] = ! empty($formatted['is_bot']);
+
+        if ($formatted['is_bot']) {
+            $formatted['author'] = [
+                'id' => null,
+                'name' => 'Bot',
+                'is_bot' => true,
+            ];
+        } else {
+            $formatted['author'] = $msg->user ? [
+                'id' => $msg->user->id,
+                'name' => $msg->user->name,
+            ] : null;
+        }
+
         $formatted['saved_media'] = $msg->getMedia('whatsapp_media')->map(fn ($m) => [
             'id' => $m->id,
             'url' => $m->getUrl(),

@@ -1146,6 +1146,7 @@ return [
     'pause-bot-30m' => 'Pause bot 30m',
     'whatsapp-bot-paused' => 'Bot paused for 30 minutes',
     'whatsapp-bot-pause-failed' => 'Failed to pause the bot',
+    'whatsapp-bot-label' => 'Bot',
     'new-workflow' => 'New workflow',
     'workflow-name' => 'Workflow name',
     'no-workflows-yet' => 'No workflows yet',

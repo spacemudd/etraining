@@ -181,9 +181,17 @@
                                         <div
                                             class="max-w-[80%] md:max-w-[70%] rounded-2xl px-4 py-2.5 text-sm shadow-sm"
                                             :class="isOutboundMessage(message)
-                                                ? 'bg-green-600 text-white rounded-tr-sm'
+                                                ? (isBotMessage(message)
+                                                    ? 'bg-indigo-600 text-white rounded-tr-sm'
+                                                    : 'bg-green-600 text-white rounded-tr-sm')
                                                 : 'bg-white text-gray-800 border border-gray-200 rounded-tl-sm'"
                                         >
+                                            <div
+                                                v-if="isBotMessage(message)"
+                                                class="text-[10px] font-semibold uppercase tracking-wide mb-1 opacity-90"
+                                            >
+                                                🤖 {{ $t('words.whatsapp-bot-label') }}
+                                            </div>
                                             <p class="whitespace-pre-wrap break-words" dir="auto">{{ message.body }}</p>
                                             <div v-if="message.metadata && message.metadata.media && message.metadata.media.length" class="mt-2 space-y-1">
                                                 <a
@@ -778,6 +786,18 @@ export default {
         },
         isOutboundMessage(message) {
             return ['outbound-api', 'outbound-reply', 'outbound'].includes(message.direction);
+        },
+        isBotMessage(message) {
+            if (!message) {
+                return false;
+            }
+            if (message.is_bot) {
+                return true;
+            }
+            if (message.author && message.author.is_bot) {
+                return true;
+            }
+            return !!(message.metadata && message.metadata.is_bot);
         },
         isRtl() {
             return document.documentElement.dir === 'rtl' || (this.$page && this.$page.props && this.$page.props.locale === 'ar');

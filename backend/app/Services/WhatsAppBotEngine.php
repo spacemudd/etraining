@@ -43,9 +43,15 @@ class WhatsAppBotEngine
             return;
         }
 
+        $senderDigits = preg_replace('/\D+/', '', $senderPhone) ?? '';
         $sender = WhatsAppBotSender::query()
-            ->where('phone', $senderPhone)
             ->with('workflow')
+            ->where(function ($query) use ($senderPhone, $senderDigits) {
+                $query->where('phone', $senderPhone);
+                if ($senderDigits !== '' && $senderDigits !== $senderPhone) {
+                    $query->orWhere('phone', $senderDigits);
+                }
+            })
             ->first();
 
         if (! $sender || ! $sender->workflow_id) {
@@ -473,55 +479,19 @@ class WhatsAppBotEngine
     {
         if (! $this->whatsAppService->isConfigured()) {
             Log::warning('WhatsApp bot: Telnyx not configured, storing outbound locally only');
-            $this->storeLocalBotMessage($phone, $body, $traineeId);
+            $this->whatsAppService->storeLocalBotMessage($phone, $body, $traineeId);
 
             return;
         }
 
         try {
-            $this->whatsAppService->sendFreeformMessage($phone, $body, $traineeId);
+            $this->whatsAppService->sendBotFreeformMessage($phone, $body, $traineeId);
         } catch (Throwable $exception) {
-            // Fall back to local store so flows remain testable without Telnyx.
             Log::warning('WhatsApp bot send failed, storing locally', [
                 'error' => $exception->getMessage(),
             ]);
-            $this->storeLocalBotMessage($phone, $body, $traineeId);
-
-            return;
+            $this->whatsAppService->storeLocalBotMessage($phone, $body, $traineeId);
         }
-
-        $normalized = $this->whatsAppService->normalizePhoneDigits($phone);
-        $stored = WhatsAppMessage::query()
-            ->where('phone', $normalized)
-            ->where('direction', WhatsAppMessage::DIRECTION_OUTBOUND)
-            ->where('body', $body)
-            ->orderByDesc('created_at')
-            ->first();
-
-        if ($stored) {
-            $metadata = is_array($stored->metadata) ? $stored->metadata : [];
-            $metadata['is_bot'] = true;
-            $stored->metadata = $metadata;
-            $stored->user_id = null;
-            $stored->save();
-        }
-    }
-    private function storeLocalBotMessage(string $phone, string $body, ?string $traineeId): void
-    {
-        $normalized = $this->whatsAppService->normalizePhoneDigits($phone);
-        $message = WhatsAppMessage::query()->create([
-            'trainee_id' => $traineeId,
-            'phone' => $normalized,
-            'direction' => WhatsAppMessage::DIRECTION_OUTBOUND,
-            'body' => $body,
-            'status' => 'sent',
-            'from_address' => config('telnyx.whatsapp_from'),
-            'to_address' => $normalized,
-            'sent_at' => now(),
-            'metadata' => ['is_bot' => true],
-        ]);
-
-        \App\Support\WhatsAppBroadcast::messageStored($message);
     }
 
     private function interpolate(string $body, WhatsAppMessage $inbound, WhatsAppBotSession $session): string
