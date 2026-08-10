@@ -8,6 +8,7 @@ use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use JamesMills\LaravelTimezone\Facades\Timezone;
 use Lab404\Impersonate\Models\Impersonate;
@@ -75,7 +76,6 @@ class User extends Authenticatable implements Auditable
      */
     protected $appends = [
         'profile_photo_url',
-        'inbox_messages_count',
         'last_login_at_timezone',
     ];
 
@@ -126,7 +126,17 @@ class User extends Authenticatable implements Auditable
 
     public function getInboxMessagesCountAttribute()
     {
-        return $this->inbox_messages_for_me()->unread()->count();
+        if (! $this->id) {
+            return 0;
+        }
+
+        return Cache::remember(
+            'user:'.$this->id.':inbox_unread_count',
+            now()->addSeconds(60),
+            function () {
+                return $this->inbox_messages_for_me()->unread()->count();
+            }
+        );
     }
 
     public function inbox_messages_for_me()

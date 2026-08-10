@@ -25,17 +25,10 @@
                     </p>
                 </div>
 
-                <!-- Countdown Timer -->
                 <div class="mb-6">
                     <div class="bg-blue-50 rounded-lg p-4">
-                        <p class="text-sm text-gray-700 mb-2">
-                            {{ $t('words.page-will-refresh-in') }}
-                        </p>
-                        <div class="text-2xl font-bold text-blue-600">
-                            {{ countdown }}
-                        </div>
-                        <p class="text-xs text-gray-500 mt-1">
-                            {{ $t('words.seconds') }}
+                        <p class="text-sm text-gray-700">
+                            {{ $t('words.waiting-click-refresh-when-ready') }}
                         </p>
                     </div>
                 </div>
@@ -76,52 +69,27 @@ export default {
     
     data() {
         return {
-            countdown: 300,
-            countdownInterval: null,
             isRefreshing: false,
         }
     },
     
-    mounted() {
-        this.startCountdown();
-    },
-    
-    beforeDestroy() {
-        if (this.countdownInterval) {
-            clearInterval(this.countdownInterval);
-        }
-    },
-    
     methods: {
-        startCountdown() {
-            this.countdown = 300;
-            this.countdownInterval = setInterval(() => {
-                this.countdown--;
-                
-                if (this.countdown <= 0) {
-                    this.refreshPage();
-                }
-            }, 1000);
-        },
-        
         refreshPage() {
-            this.isRefreshing = true;
-            
-            if (this.countdownInterval) {
-                clearInterval(this.countdownInterval);
+            if (this.isRefreshing) {
+                return;
             }
-            
-            // Soft reload via Inertia when possible (avoids full browser reload storm)
+
+            this.isRefreshing = true;
+
+            // Manual check only — no auto reload (avoids request storms before class start)
             if (this.$inertia && this.$inertia.reload) {
                 this.$inertia.reload({
                     preserveScroll: true,
                     onFinish: () => {
                         this.isRefreshing = false;
-                        this.startCountdown();
                     },
                     onError: () => {
                         this.isRefreshing = false;
-                        this.startCountdown();
                     },
                 });
                 return;

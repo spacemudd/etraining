@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
+use App\Models\Back\Company;
 use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
 use App\Models\Back\TraineeBlockList;
@@ -396,22 +397,36 @@ class ChatController extends Controller
 
     public function searchTrainees(Request $request): JsonResponse
     {
-        $request->validate([
+        $validated = $request->validate([
             'search' => 'required|string|max:200',
+            'page' => 'nullable|integer|min:1',
+            'limit' => 'nullable|integer|min:1|max:50',
+            'company_id' => 'nullable|uuid|exists:companies,id',
         ]);
 
-        $search = $request->search;
+        $search = $validated['search'];
+        $page = (int) ($validated['page'] ?? 1);
+        $limit = (int) ($validated['limit'] ?? 10);
 
-        $trainees = Trainee::query()
-            ->where(function ($query) use ($search) {
-                $query->where('name', 'LIKE', '%' . $search . '%')
+        $query = Trainee::query()
+            ->where(function ($builder) use ($search) {
+                $builder->where('name', 'LIKE', '%' . $search . '%')
                     ->orWhere('phone', 'LIKE', '%' . $search . '%')
                     ->orWhere('identity_number', 'LIKE', '%' . $search . '%');
             })
             ->whereNotNull('phone')
             ->where('phone', '!=', '')
-            ->with('company:id,name_ar')
-            ->take(30)
+            ->with('company:id,name_ar');
+
+        if (! empty($validated['company_id'])) {
+            $query->where('company_id', $validated['company_id']);
+        }
+
+        $total = (clone $query)->count();
+        $trainees = $query
+            ->orderBy('name')
+            ->skip(($page - 1) * $limit)
+            ->take($limit)
             ->get(['id', 'name', 'phone', 'identity_number', 'company_id']);
 
         return response()->json([
@@ -422,7 +437,115 @@ class ChatController extends Controller
                 'identity_number' => $trainee->identity_number,
                 'company_name' => $trainee->company?->name_ar,
                 'show_url' => route('back.trainees.show', $trainee->id),
-            ]),
+            ])->values(),
+            'page' => $page,
+            'limit' => $limit,
+            'total' => $total,
+            'has_more' => ($page * $limit) < $total,
+        ]);
+    }
+
+    public function searchCompanies(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'search' => 'required|string|max:200',
+            'page' => 'nullable|integer|min:1',
+            'limit' => 'nullable|integer|min:1|max:50',
+        ]);
+
+        $search = $validated['search'];
+        $page = (int) ($validated['page'] ?? 1);
+        $limit = (int) ($validated['limit'] ?? 10);
+
+        $query = Company::query()
+            ->where(function ($builder) use ($search) {
+                $builder->where('name_ar', 'LIKE', '%' . $search . '%')
+                    ->orWhere('name_en', 'LIKE', '%' . $search . '%');
+            });
+
+        $total = (clone $query)->count();
+        $companies = $query
+            ->orderBy('name_ar')
+            ->skip(($page - 1) * $limit)
+            ->take($limit)
+            ->get(['id', 'name_ar', 'name_en']);
+
+        $companyIds = $companies->pluck('id');
+        $traineeCounts = Trainee::query()
+            ->whereIn('company_id', $companyIds)
+            ->whereNotNull('phone')
+            ->where('phone', '!=', '')
+            ->selectRaw('company_id, COUNT(*) as aggregate')
+            ->groupBy('company_id')
+            ->pluck('aggregate', 'company_id');
+
+        return response()->json([
+            'companies' => $companies->map(static fn (Company $company) => [
+                'id' => $company->id,
+                'name' => $company->name_ar ?: $company->name_en,
+                'name_ar' => $company->name_ar,
+                'name_en' => $company->name_en,
+                'trainees_with_phone_count' => (int) ($traineeCounts[$company->id] ?? 0),
+            ])->values(),
+            'page' => $page,
+            'limit' => $limit,
+            'total' => $total,
+            'has_more' => ($page * $limit) < $total,
+        ]);
+    }
+
+    public function companyTrainees(Request $request, string $company): JsonResponse
+    {
+        $companyModel = Company::query()->findOrFail($company);
+
+        $validated = $request->validate([
+            'page' => 'nullable|integer|min:1',
+            'limit' => 'nullable|integer|min:1|max:50',
+            'search' => 'nullable|string|max:200',
+        ]);
+
+        $page = (int) ($validated['page'] ?? 1);
+        $limit = (int) ($validated['limit'] ?? 10);
+
+        $query = Trainee::query()
+            ->where('company_id', $companyModel->id)
+            ->whereNotNull('phone')
+            ->where('phone', '!=', '')
+            ->with('company:id,name_ar');
+
+        if (! empty($validated['search'])) {
+            $search = $validated['search'];
+            $query->where(function ($builder) use ($search) {
+                $builder->where('name', 'LIKE', '%' . $search . '%')
+                    ->orWhere('phone', 'LIKE', '%' . $search . '%')
+                    ->orWhere('identity_number', 'LIKE', '%' . $search . '%');
+            });
+        }
+
+        $total = (clone $query)->count();
+        $trainees = $query
+            ->orderBy('name')
+            ->skip(($page - 1) * $limit)
+            ->take($limit)
+            ->get(['id', 'name', 'phone', 'identity_number', 'company_id']);
+
+        return response()->json([
+            'company' => [
+                'id' => $companyModel->id,
+                'name' => $companyModel->name_ar ?: $companyModel->name_en,
+            ],
+            'trainees' => $trainees->map(fn (Trainee $trainee) => [
+                'id' => $trainee->id,
+                'name' => $trainee->name,
+                'phone' => $trainee->phone,
+                'identity_number' => $trainee->identity_number,
+                'company_name' => $trainee->company?->name_ar,
+                'show_url' => route('back.trainees.show', $trainee->id),
+            ])->values(),
+            'page' => $page,
+            'limit' => $limit,
+            'total' => $total,
+            'has_more' => ($page * $limit) < $total,
         ]);
     }
 

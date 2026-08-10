@@ -21,24 +21,23 @@ class AppServiceProvider extends ServiceProvider
             'user' => function () {
                 $user = optional(auth())->user();
                 if ($user) {
-                    $user->load('roles');
+                    $user->loadMissing('roles');
                     // Ensure roles are serialized with id
                     if ($user->relationLoaded('roles')) {
                         $user->roles->each(function ($role) {
                             $role->makeVisible(['id']);
                         });
                     }
+                    // Opt-in only for shared auth user (not every User serialization / N+1)
+                    $user->append('inbox_messages_count');
                 }
                 return $user;
             },
             'locale' => function () {
                 return app()->getLocale();
             },
-            'language' => function () {
-                return translations(
-                    resource_path('lang/'. app()->getLocale() .'.json')
-                );
-            },
+            // vue-i18n already loads words from vue-i18n-locales.generated.js —
+            // do not re-read lang/*.json on every Inertia request.
             'flash' => function () {
                 return [
                     'success' => session('success'),
