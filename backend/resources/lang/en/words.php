@@ -475,6 +475,7 @@ return [
     'absent-with-excuse' => 'Absent with excuse',
     'send-message' => 'Send message',
     'private-message' => 'Private message',
+    'private-message-will-show-on-trainee-dashboard' => 'This message will appear clearly on the trainee\'s home page.',
     'confirm' => 'Confirm',
     'confirm-attendance-sheet' => 'Confirm attendance sheet',
     'sending-absent-warnings-to-users' => 'ًAbsent warnings',

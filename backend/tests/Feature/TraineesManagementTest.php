@@ -560,6 +560,11 @@ class TraineesManagementTest extends TestCase
             ->assertRedirect(route('back.trainees.show', $mike->id))
             ->assertSessionDoesntHaveErrors();
 
+        $this->assertSame(
+            "Hello1\n\nHello2",
+            $mike->fresh()->trainee_message
+        );
+
         Notification::assertSentTo($mike, function(TraineePrivateMessage $notification) use ($message) {
             return $notification->email_body === $message['email_body'];
         });

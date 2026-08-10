@@ -1,6 +1,13 @@
 {
+<<<<<<< Updated upstream
     "/js/app.js": "/js/app.js?id=d8be599eb7bf1b0930f9",
     "/css/app.css": "/css/app.css?id=0d080bc155bd44c2bf66",
     "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
     "/js/vendor.js": "/js/vendor.js?id=ad142aef01cd53bbe821"
+=======
+    "/js/app.js": "/js/app.js?id=4368c898d809c1ed1bf1",
+    "/css/app.css": "/css/app.css?id=4c6c292324fe16e9442c",
+    "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
+    "/js/vendor.js": "/js/vendor.js?id=65a0c38329f68c6f64cc"
+>>>>>>> Stashed changes
 }

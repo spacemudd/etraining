@@ -189,7 +189,7 @@ class TraineesController extends Controller
             'children_count' => 'nullable|integer|max:20',
             'bill_from_date' => ['nullable', 'date'],
             'linked_date' => ['nullable', 'date'],
-            'trainee_message' => 'nullable|string|max:255',
+            'trainee_message' => 'nullable|string|max:2000',
             'job_number' => 'nullable|string|max:255',
         ]);
 
@@ -1336,7 +1336,7 @@ class TraineesController extends Controller
             'bill_from_date' => ['nullable', 'date'],
             'linked_date' => ['nullable', 'date'],
             'trainee_group_name' => ['nullable', 'string', 'max:255', new TraineeGroupLimit],
-            'trainee_message' => 'nullable|string|max:255',
+            'trainee_message' => 'nullable|string|max:2000',
             'job_number' => 'nullable|string|max:255',
             'current_procedure_alert' => ['nullable', 'string', Rule::in(Trainee::currentProcedureAlertKeys())],
         ]);
@@ -1777,11 +1777,30 @@ class TraineesController extends Controller
     {
         $request->validate([
             'email_title' => 'required|string|max:500',
-            'email_body' => 'required|string|max:500',
+            'email_body' => 'required|string|max:2000',
             'sms_body' => 'nullable|string|max:500',
         ]);
-        $trainee = Trainee::findOrFail($id);
-        $trainee->notify(new TraineePrivateMessage($request->email_title, $request->email_body, $request->sms_body));
+        $trainee = Trainee::withTrashed()->findOrFail($id);
+
+        $dashboardMessage = trim($request->email_title."\n\n".$request->email_body);
+        $trainee->trainee_message = $dashboardMessage;
+        $trainee->save();
+
+        $trainee->notify(new TraineePrivateMessage(
+            $request->email_title,
+            $request->email_body,
+            (string) ($request->sms_body ?? '')
+        ));
+
+        if ($trainee->user_id) {
+            $inbox = new InboxMessage();
+            $inbox->from_id = auth()->id();
+            $inbox->to_id = $trainee->user_id;
+            $inbox->body = Str::limit($dashboardMessage, 250);
+            $inbox->is_system_message = true;
+            $inbox->save();
+        }
+
         Log::info([
             'Sending message to: ' . $trainee->email,
             'Body: ' . $request->email_body,

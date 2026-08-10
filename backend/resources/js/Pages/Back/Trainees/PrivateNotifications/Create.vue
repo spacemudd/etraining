@@ -16,7 +16,7 @@
                     </template>
 
                     <template #description>
-
+                        {{ $t('words.private-message-will-show-on-trainee-dashboard') }}
                     </template>
 
                     <template #form>

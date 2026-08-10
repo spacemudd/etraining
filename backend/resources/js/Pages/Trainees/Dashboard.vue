@@ -2,6 +2,20 @@
     <app-layout>
         <div class="container px-6 mx-auto grid">
 
+            <div class="container mx-auto grid p-6" v-if="privateDashboardMessage">
+                <div class="bg-red-100 rounded-lg p-8 md:p-10 border-red-500 border-4 shadow-lg">
+                    <div class="inline-flex items-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-red-600 w-7 h-7">
+                            <path fill-rule="evenodd" d="M11.484 2.17a.75.75 0 011.032 0 11.209 11.209 0 007.877 3.08.75.75 0 01.722.515 12.74 12.74 0 01.635 3.985c0 5.942-4.064 10.933-9.563 12.348a.749.749 0 01-.374 0C6.314 20.683 2.25 15.692 2.25 9.75c0-1.39.223-2.73.635-3.985a.75.75 0 01.722-.516l.143.001c2.996 0 5.718-1.17 7.734-3.08zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zM12 15a.75.75 0 00-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 00.75-.75v-.008a.75.75 0 00-.75-.75H12z" clip-rule="evenodd" />
+                        </svg>
+                        <h1 class="text-2xl text-red-600 font-bold mx-3">{{ $t('words.private-message') }}</h1>
+                    </div>
+                    <p class="text-gray-900 text-center font-bold whitespace-pre-wrap" style="font-size: 22px; letter-spacing: 1px; line-height: 1.8;">
+                        {{ privateDashboardMessage }}
+                    </p>
+                </div>
+            </div>
+
             <div class="grid grid-cols-3 gap-4 place-items-center h-26"  v-if="!user.trainee.deleted_at">
                 <div></div>
                 <div>
@@ -72,17 +86,6 @@
                 </div>
             </div>
 
-            <div class="container mx-auto grid" v-if="user.trainee.trainee_message">
-                <div class="bg-red-100 rounded-lg p-10 border-red-500 border-2">
-                    <div style="width: 100%;">
-                        <p class="text-gray-500" style="text-align: center;
-                                font-size: 20px;
-                                color: #323232;
-                                letter-spacing: 1px;
-                            }">{{ user.trainee.trainee_message }}</p>
-                    </div>
-                </div>
-            </div>
             <div class="container mx-auto grid p-6" v-if="global_messages.length">
                 <div class="bg-red-100 rounded-lg p-10 border-red-500 border-2">
                     <div class="inline-flex items-center">
@@ -369,6 +372,17 @@ export default {
         }
     },
     computed: {
+        privateDashboardMessage() {
+            if (this.trainee && this.trainee.trainee_message) {
+                return this.trainee.trainee_message;
+            }
+
+            if (this.user && this.user.trainee && this.user.trainee.trainee_message) {
+                return this.user.trainee.trainee_message;
+            }
+
+            return null;
+        },
         showFeeWaiverBanner() {
             if (this.feeWaiverBannerDismissed) {
                 return false;

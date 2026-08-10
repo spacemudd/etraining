@@ -476,6 +476,7 @@ return [
     'absent-with-excuse' => 'غياب بعذر',
     'send-message' => 'ارسال رسالة',
     'private-message' => 'رسالة خاصة',
+    'private-message-will-show-on-trainee-dashboard' => 'ستظهر هذه الرسالة بشكل واضح في الصفحة الأولى لحساب المتدربة.',
     'confirm' => 'اعتماد',
     'confirm-attendance-sheet' => 'إعتمد الحضور',
     'sending-absent-warnings-to-users' => 'إنذارات عدم الحضور',
