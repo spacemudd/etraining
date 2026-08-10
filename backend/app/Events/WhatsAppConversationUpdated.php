@@ -6,6 +6,7 @@ namespace App\Events;
 
 use App\Models\Back\WhatsAppConversation;
 use App\Support\WhatsAppMessagingWindow;
+use App\Support\WhatsAppTraineeLinker;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
@@ -33,6 +34,8 @@ class WhatsAppConversationUpdated implements ShouldBroadcastNow
 
     public static function fromModel(WhatsAppConversation $conversation): self
     {
+        WhatsAppTraineeLinker::attachTraineeIfMissing($conversation);
+
         $conversation->loadMissing([
             'agents:id,name',
             'tags:id,name,color',

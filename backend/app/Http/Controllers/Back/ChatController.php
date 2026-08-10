@@ -16,6 +16,7 @@ use App\Support\WhatsAppBotStatus;
 use App\Support\WhatsAppConversationHandoff;
 use App\Support\WhatsAppConversationSync;
 use App\Support\WhatsAppMessagingWindow;
+use App\Support\WhatsAppTraineeLinker;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -744,6 +745,12 @@ class ChatController extends Controller
      */
     private function formatConversation(WhatsAppConversation $conversation, $authId = null): array
     {
+        WhatsAppTraineeLinker::attachTraineeIfMissing($conversation);
+        $conversation->loadMissing([
+            'trainee:id,name,phone,identity_number,company_id',
+            'trainee.company:id,name_ar',
+        ]);
+
         return [
             'id' => $conversation->id,
             'phone' => $conversation->phone,

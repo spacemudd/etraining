@@ -14,6 +14,7 @@ use App\Models\Team;
 use App\Models\User;
 use App\Services\IdentityDocumentOcrService;
 use App\Services\TraineeCompanyMovementService;
+use App\Support\WhatsAppTraineeLinker;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -151,6 +152,8 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
             if (app()->isProduction() && config('yakeen.enabled', false)) {
                 VerifyPhoneOwnershipJob::dispatchSync($model->id);
             }
+
+            WhatsAppTraineeLinker::linkOrphanRecordsForTrainee($model);
         });
 
         static::updating(function ($model) {
@@ -168,12 +171,16 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
         });
 
         static::updated(function ($model) {
-            if ($model->isDirty('phone') && config('yakeen.enabled', false)) {
-                VerifyPhoneOwnershipJob::dispatch($model->id);
+            if ($model->wasChanged('phone')) {
+                WhatsAppTraineeLinker::linkOrphanRecordsForTrainee($model);
+
+                if (config('yakeen.enabled', false)) {
+                    VerifyPhoneOwnershipJob::dispatch($model->id);
+                }
             }
             
             // Log any change to instructor_id (catches changes from foreign key constraints, direct updates, etc.)
-            if ($model->isDirty('instructor_id')) {
+            if ($model->wasChanged('instructor_id')) {
                 $oldInstructorId = $model->getOriginal('instructor_id');
                 $newInstructorId = $model->instructor_id;
                 

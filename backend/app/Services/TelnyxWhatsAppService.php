@@ -577,11 +577,19 @@ class TelnyxWhatsAppService
     {
         $normalizedPhone = $this->normalizePhoneDigits($phone);
         $phoneDigits = preg_replace('/\D+/', '', $normalizedPhone) ?? '';
+        $suffix = substr($phoneDigits, -9);
+
         $query = WhatsAppMessage::query()
-            ->where(function ($builder) use ($normalizedPhone, $phoneDigits) {
+            ->where(function ($builder) use ($normalizedPhone, $phoneDigits, $suffix) {
                 $builder->where('phone', $normalizedPhone);
-                if ($phoneDigits !== '' && $phoneDigits !== $normalizedPhone) {
-                    $builder->orWhere('phone', $phoneDigits);
+
+                if ($phoneDigits !== '' && ('+' . $phoneDigits) !== $normalizedPhone) {
+                    $builder->orWhere('phone', $phoneDigits)
+                        ->orWhere('phone', '+' . $phoneDigits);
+                }
+
+                if (strlen($suffix) === 9) {
+                    $builder->orWhere('phone', 'LIKE', '%' . $suffix);
                 }
             })
             ->orderBy('sent_at')

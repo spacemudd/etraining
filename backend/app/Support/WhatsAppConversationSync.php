@@ -37,6 +37,8 @@ final class WhatsAppConversationSync
 
         if ($message->trainee_id) {
             $conversation->trainee_id = $message->trainee_id;
+        } elseif (! $conversation->trainee_id) {
+            WhatsAppTraineeLinker::attachTraineeIfMissing($conversation);
         }
 
         if (
