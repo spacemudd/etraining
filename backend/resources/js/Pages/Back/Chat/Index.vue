@@ -624,6 +624,7 @@
                                     ></textarea>
                                     <div class="absolute top-2 right-2 z-50" v-if="composerMode === 'freeform' || composerMode === 'note'">
                                         <button
+                                            ref="emojiButton"
                                             type="button"
                                             class="text-gray-400 hover:text-gray-700 p-1"
                                             :disabled="composerMode === 'freeform' && messagingWindowIsOpen === false"
@@ -631,22 +632,6 @@
                                         >
                                             <ion-icon name="happy-outline" class="w-5 h-5"></ion-icon>
                                         </button>
-                                        <div
-                                            v-if="showEmojiPicker"
-                                            class="absolute top-full mt-1 right-0 z-50 w-56 max-h-40 overflow-y-auto bg-white border border-gray-200 rounded-md shadow-lg p-2 grid grid-cols-8 gap-1"
-                                            style="z-index: 100;"
-                                            @click.stop
-                                        >
-                                            <button
-                                                v-for="emoji in emojiList"
-                                                :key="emoji"
-                                                type="button"
-                                                class="text-base hover:bg-gray-100 rounded p-0.5"
-                                                @click="insertEmoji(emoji)"
-                                            >
-                                                {{ emoji }}
-                                            </button>
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="flex items-center justify-end mt-2">
@@ -790,6 +775,25 @@
 
         <!-- New Chat Search Modal -->
         <portal-target name="new-chat-modal"></portal-target>
+        <portal to="emoji-picker-portal">
+            <div
+                v-if="showEmojiPicker"
+                class="fixed w-56 max-h-40 overflow-y-auto bg-white border border-gray-200 rounded-md shadow-xl p-2 grid grid-cols-8 gap-1"
+                :style="emojiPickerStyle"
+                @click.stop
+            >
+                <button
+                    v-for="emoji in emojiList"
+                    :key="emoji"
+                    type="button"
+                    class="text-base hover:bg-gray-100 rounded p-0.5"
+                    @click="insertEmoji(emoji)"
+                >
+                    {{ emoji }}
+                </button>
+            </div>
+        </portal>
+        <portal-target name="emoji-picker-portal"></portal-target>
         <portal to="new-chat-modal">
             <modal name="newChatModal" :width="540" :height="'auto'" :scrollable="true">
                 <div class="bg-white rounded-xl shadow-2xl p-6 flex flex-col max-h-[85vh]">
@@ -923,6 +927,11 @@ export default {
             threadResizeStartY: 0,
             threadResizeStartHeight: 0,
             showEmojiPicker: false,
+            emojiPickerStyle: {
+                top: '0px',
+                left: '0px',
+                zIndex: 9999,
+            },
             quickReplies: [],
             loadingQuickReplies: false,
             quickReplySearch: '',
@@ -2054,8 +2063,42 @@ export default {
                 this.showEmojiPicker = false;
             }
         },
+        positionEmojiPicker() {
+            const button = this.$refs.emojiButton;
+            if (!button || !button.getBoundingClientRect) {
+                return;
+            }
+            const rect = button.getBoundingClientRect();
+            const panelWidth = 224;
+            const panelHeight = 160;
+            const gap = 6;
+            let left = rect.left;
+            let top = rect.bottom + gap;
+
+            if (left + panelWidth > window.innerWidth - 8) {
+                left = Math.max(8, rect.right - panelWidth);
+            }
+            if (left < 8) {
+                left = 8;
+            }
+            if (top + panelHeight > window.innerHeight - 8) {
+                top = Math.max(8, rect.top - panelHeight - gap);
+            }
+
+            this.emojiPickerStyle = {
+                top: `${Math.round(top)}px`,
+                left: `${Math.round(left)}px`,
+                zIndex: 9999,
+            };
+        },
         toggleEmojiPicker() {
-            this.showEmojiPicker = !this.showEmojiPicker;
+            if (this.showEmojiPicker) {
+                this.showEmojiPicker = false;
+                return;
+            }
+            this.positionEmojiPicker();
+            this.showEmojiPicker = true;
+            this.$nextTick(() => this.positionEmojiPicker());
         },
         insertEmoji(emoji) {
             const textarea = this.$refs.messageTextarea;
