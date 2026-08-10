@@ -215,97 +215,100 @@
                     <template v-else>
                         <div class="flex-1 flex flex-col overflow-hidden min-w-0">
                         <!-- Chat Header -->
-                        <div class="px-6 py-3.5 border-b bg-gray-50 space-y-2">
-                            <div class="flex items-center justify-between gap-3">
-                                <div class="flex items-center gap-3 min-w-0">
-                                    <div class="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-bold text-base shadow-sm flex-shrink-0">
-                                        {{ selectedConversation.trainee ? selectedConversation.trainee.name.charAt(0) : 'W' }}
-                                    </div>
-                                    <div class="min-w-0">
-                                        <div class="font-bold text-gray-800 text-sm truncate">
-                                            {{ selectedConversation.trainee ? selectedConversation.trainee.name : selectedConversation.phone }}
-                                        </div>
-                                        <div v-if="selectedConversation.trainee && selectedConversation.trainee.company_name" class="text-xs text-gray-600 font-medium truncate">
-                                            {{ selectedConversation.trainee.company_name }}
-                                        </div>
-                                        <div class="text-xs text-gray-500 flex items-center gap-2 mt-0.5 flex-wrap">
-                                            <span dir="ltr">{{ selectedConversation.phone }}</span>
-                                            <span
-                                                v-if="messagingWindowLabel"
-                                                class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md font-semibold border"
-                                                :class="messagingWindowBadgeClass"
-                                                :title="$t('words.whatsapp-freeform-hint')"
-                                                dir="ltr"
-                                            >
-                                                <ion-icon
-                                                    :name="messagingWindowIsOpen ? 'timer-outline' : 'lock-closed-outline'"
-                                                    class="w-3.5 h-3.5"
-                                                ></ion-icon>
-                                                {{ messagingWindowLabel }}
-                                            </span>
-                                        </div>
-                                    </div>
+                        <div class="px-4 py-3 border-b bg-gray-50 space-y-2">
+                            <!-- Identity -->
+                            <div class="flex items-start gap-3 min-w-0">
+                                <div class="w-9 h-9 rounded-full bg-green-600 text-white flex items-center justify-center font-bold text-sm shadow-sm flex-shrink-0">
+                                    {{ selectedConversation.trainee ? selectedConversation.trainee.name.charAt(0) : 'W' }}
                                 </div>
-                                <div class="flex items-center gap-2 flex-shrink-0 flex-wrap justify-end">
-                                    <div class="flex items-center gap-2">
-                                        <span
-                                            class="text-xs px-2.5 py-1.5 rounded-lg font-semibold whitespace-nowrap border"
-                                            :class="botStatusBadgeClass"
-                                            :title="botStatusTitle"
-                                        >
-                                            {{ botStatusLabel }}
-                                        </span>
-                                        <button
-                                            v-if="canPauseBot"
-                                            type="button"
-                                            class="text-xs bg-white border border-orange-300 hover:bg-orange-50 text-orange-800 px-3 py-1.5 rounded-lg font-medium transition disabled:opacity-50"
-                                            :disabled="pausingBot"
-                                            @click="pauseBot"
-                                        >
-                                            {{ pausingBot ? $t('words.saving') : $t('words.pause-bot-30m') }}
-                                        </button>
-                                        <button
-                                            v-if="canResumeBot"
-                                            type="button"
-                                            class="text-xs bg-white border border-green-300 hover:bg-green-50 text-green-800 px-3 py-1.5 rounded-lg font-medium transition disabled:opacity-50"
-                                            :disabled="pausingBot"
-                                            @click="resumeBot"
-                                        >
-                                            {{ pausingBot ? $t('words.saving') : $t('words.resume-bot') }}
-                                        </button>
+                                <div class="min-w-0 flex-1">
+                                    <div class="font-bold text-gray-800 text-sm truncate">
+                                        {{ selectedConversation.trainee ? selectedConversation.trainee.name : selectedConversation.phone }}
                                     </div>
-                                    <select
-                                        :value="selectedConversation.status || 'open'"
-                                        @change="onStatusChange($event)"
-                                        :disabled="updatingStatus"
-                                        class="form-select text-xs rounded-lg border-gray-300 py-1.5"
-                                    >
-                                        <option value="open">{{ $t('words.chat-status-open') }}</option>
-                                        <option value="pending">{{ $t('words.chat-status-pending') }}</option>
-                                        <option value="closed">{{ $t('words.chat-status-closed') }}</option>
-                                    </select>
-                                    <button
-                                        type="button"
-                                        @click="toggleAssignMe"
-                                        :disabled="assigningAgent"
-                                        class="text-xs px-3 py-1.5 rounded-lg font-medium border transition disabled:opacity-50"
-                                        :class="selectedConversation.is_assigned_to_me
-                                            ? 'bg-indigo-600 text-white border-indigo-600 hover:bg-indigo-700'
-                                            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'"
-                                    >
-                                        {{ selectedConversation.is_assigned_to_me ? $t('words.chat-unassign-me') : $t('words.chat-assign-me') }}
-                                    </button>
-                                    <a
-                                        v-if="selectedConversation.trainee"
-                                        :href="selectedConversation.trainee.show_url"
-                                        target="_blank"
-                                        class="text-xs bg-white border border-gray-300 hover:bg-gray-100 px-3 py-1.5 rounded-lg font-medium text-gray-700 transition"
-                                    >
-                                        {{ $t('words.profile') }}
-                                    </a>
+                                    <div v-if="selectedConversation.trainee && selectedConversation.trainee.company_name" class="text-xs text-gray-600 font-medium truncate">
+                                        {{ selectedConversation.trainee.company_name }}
+                                    </div>
+                                    <div class="text-xs text-gray-500 flex items-center gap-2 mt-0.5 flex-wrap">
+                                        <span
+                                            v-if="selectedConversation.trainee"
+                                            dir="ltr"
+                                        >{{ selectedConversation.phone }}</span>
+                                        <span
+                                            v-if="messagingWindowLabel"
+                                            class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md font-semibold border"
+                                            :class="messagingWindowBadgeClass"
+                                            :title="$t('words.whatsapp-freeform-hint')"
+                                            dir="ltr"
+                                        >
+                                            <ion-icon
+                                                :name="messagingWindowIsOpen ? 'timer-outline' : 'lock-closed-outline'"
+                                                class="w-3.5 h-3.5"
+                                            ></ion-icon>
+                                            {{ messagingWindowLabel }}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
 
+                            <!-- Status / bot / assignment actions -->
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span
+                                    class="text-xs px-2.5 py-1.5 rounded-lg font-semibold whitespace-nowrap border"
+                                    :class="botStatusBadgeClass"
+                                    :title="botStatusTitle"
+                                >
+                                    {{ botStatusLabel }}
+                                </span>
+                                <button
+                                    v-if="canPauseBot"
+                                    type="button"
+                                    class="text-xs bg-white border border-orange-300 hover:bg-orange-50 text-orange-800 px-2.5 py-1.5 rounded-lg font-medium transition disabled:opacity-50"
+                                    :disabled="pausingBot"
+                                    @click="pauseBot"
+                                >
+                                    {{ pausingBot ? $t('words.saving') : $t('words.pause-bot-30m') }}
+                                </button>
+                                <button
+                                    v-if="canResumeBot"
+                                    type="button"
+                                    class="text-xs bg-white border border-green-300 hover:bg-green-50 text-green-800 px-2.5 py-1.5 rounded-lg font-medium transition disabled:opacity-50"
+                                    :disabled="pausingBot"
+                                    @click="resumeBot"
+                                >
+                                    {{ pausingBot ? $t('words.saving') : $t('words.resume-bot') }}
+                                </button>
+                                <select
+                                    :value="selectedConversation.status || 'open'"
+                                    @change="onStatusChange($event)"
+                                    :disabled="updatingStatus"
+                                    class="form-select text-xs rounded-lg border-gray-300 py-1.5"
+                                >
+                                    <option value="open">{{ $t('words.chat-status-open') }}</option>
+                                    <option value="pending">{{ $t('words.chat-status-pending') }}</option>
+                                    <option value="closed">{{ $t('words.chat-status-closed') }}</option>
+                                </select>
+                                <button
+                                    type="button"
+                                    @click="toggleAssignMe"
+                                    :disabled="assigningAgent"
+                                    class="text-xs px-2.5 py-1.5 rounded-lg font-medium border transition disabled:opacity-50"
+                                    :class="selectedConversation.is_assigned_to_me
+                                        ? 'bg-indigo-600 text-white border-indigo-600 hover:bg-indigo-700'
+                                        : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'"
+                                >
+                                    {{ selectedConversation.is_assigned_to_me ? $t('words.chat-unassign-me') : $t('words.chat-assign-me') }}
+                                </button>
+                                <a
+                                    v-if="selectedConversation.trainee"
+                                    :href="selectedConversation.trainee.show_url"
+                                    target="_blank"
+                                    class="text-xs bg-white border border-gray-300 hover:bg-gray-100 px-2.5 py-1.5 rounded-lg font-medium text-gray-700 transition"
+                                >
+                                    {{ $t('words.profile') }}
+                                </a>
+                            </div>
+
+                            <!-- Agents / tags -->
                             <div class="flex flex-wrap items-center gap-2 border-t border-gray-200 pt-2">
                                 <span
                                     v-for="agent in (selectedConversation.agents || [])"
@@ -614,7 +617,7 @@
                         </div>
 
                         <!-- Trainee Details Sidebar -->
-                        <aside class="hidden md:flex w-72 lg:w-80 border-l border-gray-200 bg-gray-50 flex-col overflow-hidden flex-shrink-0">
+                        <aside class="hidden md:flex w-64 lg:w-72 border-l border-gray-200 bg-gray-50 flex-col overflow-hidden flex-shrink-0">
                             <div class="px-4 py-3 border-b bg-white">
                                 <h3 class="text-sm font-semibold text-gray-800">{{ $t('words.trainee-details') }}</h3>
                             </div>
