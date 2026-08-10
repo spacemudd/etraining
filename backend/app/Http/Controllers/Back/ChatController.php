@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
+use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
+use App\Models\Back\TraineeBlockList;
 use App\Models\Back\WhatsAppConversation;
 use App\Models\Back\WhatsAppMessage;
 use App\Models\Back\WhatsAppTag;
@@ -420,6 +422,89 @@ class ChatController extends Controller
                 'company_name' => $trainee->company?->name_ar,
                 'show_url' => route('back.trainees.show', $trainee->id),
             ]),
+        ]);
+    }
+
+    public function traineeContext(string $trainee): JsonResponse
+    {
+        $model = Trainee::withTrashed()
+            ->with(['company:id,name_ar'])
+            ->findOrFail($trainee);
+
+        $attributes = array_filter([
+            'phone' => $model->phone,
+            'identity_number' => $model->identity_number,
+            'email' => $model->email,
+            'name' => $model->name,
+        ], static fn ($value) => filled($value));
+
+        $blockList = empty($attributes)
+            ? null
+            : TraineeBlockList::query()
+                ->where(function ($query) use ($attributes) {
+                    foreach ($attributes as $column => $value) {
+                        $query->orWhere($column, $value);
+                    }
+                })
+                ->first();
+
+        $isSuspended = ! is_null($model->suspended_at) || $model->trashed();
+        $isBlocked = $blockList !== null;
+        $reason = $isSuspended
+            ? (string) ($model->deleted_remark ?? '')
+            : ($isBlocked ? (string) ($blockList->reason ?? '') : null);
+
+        $invoices = $model->invoices()
+            ->with('company:id,name_ar')
+            ->notPaid()
+            ->where('status', '!=', Invoice::STATUS_ARCHIVED)
+            ->orderByDesc('from_date')
+            ->get([
+                'id',
+                'company_id',
+                'number',
+                'grand_total',
+                'status',
+                'from_date',
+                'to_date',
+                'created_at',
+            ]);
+
+        return response()->json([
+            'trainee' => [
+                'id' => $model->id,
+                'name' => $model->name,
+                'company_name' => $model->company?->name_ar,
+                'company_show_url' => $model->company_id
+                    ? route('back.companies.show', $model->company_id)
+                    : null,
+                'show_url' => $model->show_url,
+                'registration_date' => $model->created_at
+                    ? $model->created_at->toDateString()
+                    : null,
+            ],
+            'account_status' => [
+                'is_active' => ! $isSuspended && ! $isBlocked,
+                'is_suspended' => $isSuspended,
+                'is_blocked' => $isBlocked,
+                'suspended_at' => optional($model->suspended_at)->toIso8601String(),
+                'reason' => $reason !== '' ? $reason : null,
+                'in_block_list' => $blockList ? [
+                    'reason' => $blockList->reason,
+                ] : null,
+            ],
+            'invoices' => $invoices->map(static fn (Invoice $invoice) => [
+                'id' => $invoice->id,
+                'number_formatted' => $invoice->number_formatted,
+                'company_name' => $invoice->company?->name_ar,
+                'grand_total' => round((float) $invoice->grand_total, 2),
+                'status' => $invoice->status,
+                'status_formatted' => $invoice->status_formatted,
+                'month_of' => $invoice->month_of,
+                'show_url' => route('back.finance.invoices.show', $invoice->id),
+            ])->values(),
+            'total_owed' => round((float) $invoices->sum('grand_total'), 2),
+            'count' => $invoices->count(),
         ]);
     }
 

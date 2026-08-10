@@ -88,7 +88,7 @@ return [
     */
 
     'limiters' => [
-        'login' => null,
+        'login' => 'login',
     ],
 
     /*

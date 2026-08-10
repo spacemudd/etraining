@@ -199,8 +199,8 @@
                     </div>
                 </div>
 
-                <!-- Right Panel: Active Chat View -->
-                <div class="flex-1 flex flex-col bg-white overflow-hidden">
+                <!-- Right Panel: Active Chat View + Trainee Details -->
+                <div class="flex-1 flex overflow-hidden bg-white">
                     <div v-if="!selectedConversation" class="flex-1 flex flex-col items-center justify-center text-gray-400 p-8 text-center space-y-3">
                         <ion-icon name="logo-whatsapp" class="w-16 h-16 text-gray-300"></ion-icon>
                         <p class="text-base font-medium">{{ $t('words.select-trainee') }}</p>
@@ -213,6 +213,7 @@
                     </div>
 
                     <template v-else>
+                        <div class="flex-1 flex flex-col overflow-hidden min-w-0">
                         <!-- Chat Header -->
                         <div class="px-6 py-3.5 border-b bg-gray-50 space-y-2">
                             <div class="flex items-center justify-between gap-3">
@@ -305,7 +306,7 @@
                                 </div>
                             </div>
 
-                            <div class="flex flex-wrap items-center gap-2">
+                            <div class="flex flex-wrap items-center gap-2 border-t border-gray-200 pt-2">
                                 <span
                                     v-for="agent in (selectedConversation.agents || [])"
                                     :key="'ha-' + agent.id"
@@ -610,6 +611,129 @@
                             <p v-if="errorMessage" class="mt-2 text-xs text-red-600 font-medium">{{ errorMessage }}</p>
                             <p v-if="successMessage" class="mt-2 text-xs text-green-600 font-medium">{{ successMessage }}</p>
                         </div>
+                        </div>
+
+                        <!-- Trainee Details Sidebar -->
+                        <aside class="hidden md:flex w-72 lg:w-80 border-l border-gray-200 bg-gray-50 flex-col overflow-hidden flex-shrink-0">
+                            <div class="px-4 py-3 border-b bg-white">
+                                <h3 class="text-sm font-semibold text-gray-800">{{ $t('words.trainee-details') }}</h3>
+                            </div>
+                            <div class="flex-1 overflow-y-auto p-4 space-y-4">
+                                <div v-if="!selectedConversation.trainee" class="text-xs text-gray-500">
+                                    {{ $t('words.no-trainee-linked') }}
+                                </div>
+                                <div v-else-if="loadingTraineeContext" class="text-xs text-gray-500">
+                                    {{ $t('words.loading') }}...
+                                </div>
+                                <template v-else-if="traineeContext">
+                                    <div class="space-y-2">
+                                        <div class="text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+                                            {{ $t('words.company') }}
+                                        </div>
+                                        <a
+                                            v-if="traineeContext.trainee.company_show_url && traineeContext.trainee.company_name"
+                                            :href="traineeContext.trainee.company_show_url"
+                                            target="_blank"
+                                            class="text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline break-words"
+                                        >
+                                            {{ traineeContext.trainee.company_name }}
+                                        </a>
+                                        <div v-else class="text-sm text-gray-800">
+                                            {{ traineeContext.trainee.company_name || '—' }}
+                                        </div>
+                                        <div class="pt-1">
+                                            <div class="text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+                                                {{ $t('words.registration-date') }}
+                                            </div>
+                                            <div class="text-sm text-gray-800 mt-0.5" dir="ltr">
+                                                {{ traineeContext.trainee.registration_date || '—' }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-2 border-t border-gray-200 pt-3">
+                                        <div class="text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+                                            {{ $t('words.account-status') }}
+                                        </div>
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold border"
+                                            :class="accountStatusBadgeClass"
+                                        >
+                                            {{ accountStatusLabel }}
+                                        </span>
+                                        <p
+                                            v-if="traineeContext.account_status && traineeContext.account_status.reason"
+                                            class="text-xs text-gray-600 break-words"
+                                        >
+                                            {{ traineeContext.account_status.reason }}
+                                        </p>
+                                    </div>
+
+                                    <div class="space-y-2 border-t border-gray-200 pt-3">
+                                        <div class="flex items-center justify-between gap-2">
+                                            <div class="text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+                                                {{ $t('words.pending-invoices') }}
+                                            </div>
+                                            <span
+                                                v-if="traineeContext.count"
+                                                class="text-[11px] text-amber-800 bg-amber-100 border border-amber-200 px-1.5 py-0.5 rounded font-semibold"
+                                            >
+                                                {{ traineeContext.count }} · {{ formatAmount(traineeContext.total_owed) }}
+                                            </span>
+                                        </div>
+
+                                        <div
+                                            v-if="traineeContext.invoices && traineeContext.invoices.length"
+                                            class="rounded-lg border border-amber-200 bg-amber-50/80 overflow-hidden"
+                                        >
+                                            <ul class="divide-y divide-amber-100 max-h-72 overflow-y-auto">
+                                                <li
+                                                    v-for="invoice in traineeContext.invoices"
+                                                    :key="invoice.id"
+                                                    class="px-3 py-2.5 space-y-1.5 text-xs"
+                                                >
+                                                    <div class="flex items-start justify-between gap-2">
+                                                        <div class="min-w-0">
+                                                            <a
+                                                                :href="invoice.show_url"
+                                                                target="_blank"
+                                                                class="font-medium text-blue-600 hover:text-blue-700 hover:underline truncate block"
+                                                            >
+                                                                {{ invoice.number_formatted }}
+                                                            </a>
+                                                            <div class="text-gray-600 mt-0.5 truncate">
+                                                                {{ invoice.company_name || traineeContext.trainee.company_name || '—' }}
+                                                            </div>
+                                                        </div>
+                                                        <span class="font-semibold text-gray-800 tabular-nums flex-shrink-0">
+                                                            {{ formatAmount(invoice.grand_total) }}
+                                                        </span>
+                                                    </div>
+                                                    <div class="flex items-center justify-between gap-2">
+                                                        <span class="text-amber-800 bg-amber-100 px-1.5 py-0.5 rounded">
+                                                            {{ invoice.status_formatted }}
+                                                        </span>
+                                                        <button
+                                                            type="button"
+                                                            class="text-[11px] font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 px-2 py-0.5 rounded"
+                                                            @click="copyInvoiceLink(invoice)"
+                                                        >
+                                                            {{ copiedInvoiceId === invoice.id ? $t('words.link-copied') : $t('words.copy-link') }}
+                                                        </button>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div v-else class="text-xs text-gray-500">
+                                            {{ $t('words.no-pending-invoices') }}
+                                        </div>
+                                    </div>
+                                </template>
+                                <div v-else class="text-xs text-red-600">
+                                    {{ $t('words.could-not-load-trainee-details') }}
+                                </div>
+                            </div>
+                        </aside>
                     </template>
                 </div>
 
@@ -784,6 +908,10 @@ export default {
             pausingBot: false,
             windowNowMs: Date.now(),
             messagingWindowTimer: null,
+            traineeContext: null,
+            loadingTraineeContext: false,
+            copiedInvoiceId: null,
+            copyLinkTimer: null,
         };
     },
     computed: {
@@ -895,6 +1023,32 @@ export default {
                 return this.botStatus.can_resume;
             }
             return !!((this.botStatus.workflow_assigned || this.botStatus.ai_enabled) && this.botStatus.is_paused);
+        },
+        accountStatusLabel() {
+            const status = this.traineeContext && this.traineeContext.account_status;
+            if (!status) {
+                return '';
+            }
+            if (status.is_suspended) {
+                return this.$t('words.account-suspended');
+            }
+            if (status.is_blocked) {
+                return this.$t('words.account-blocked');
+            }
+            return this.$t('words.account-active');
+        },
+        accountStatusBadgeClass() {
+            const status = this.traineeContext && this.traineeContext.account_status;
+            if (!status) {
+                return 'bg-gray-100 border-gray-200 text-gray-600';
+            }
+            if (status.is_suspended) {
+                return 'bg-red-100 border-red-200 text-red-800';
+            }
+            if (status.is_blocked) {
+                return 'bg-orange-100 border-orange-200 text-orange-900';
+            }
+            return 'bg-emerald-100 border-emerald-200 text-emerald-800';
         },
         manualTemplateVariables() {
             if (!this.selectedTemplate) {
@@ -1302,15 +1456,72 @@ export default {
             this.successMessage = '';
             this.tagToAttach = '';
             this.botStatus = null;
+            this.traineeContext = null;
+            this.copiedInvoiceId = null;
             await Promise.all([
                 this.loadMessages(),
                 this.loadBotStatus(),
+                this.loadTraineeContext(),
             ]);
             // Live updates come from Echo. Poll only if realtime is unavailable.
             if (!window.Echo) {
                 this.startPollingFallback();
             } else {
                 this.stopPolling();
+            }
+        },
+        async loadTraineeContext() {
+            if (!this.selectedConversation || !this.selectedConversation.trainee || !this.selectedConversation.trainee.id) {
+                this.traineeContext = null;
+                this.loadingTraineeContext = false;
+                return;
+            }
+
+            this.loadingTraineeContext = true;
+            try {
+                const { data } = await axios.get(
+                    route('back.chat.trainees.context', this.selectedConversation.trainee.id)
+                );
+                this.traineeContext = data;
+            } catch (error) {
+                this.traineeContext = null;
+            } finally {
+                this.loadingTraineeContext = false;
+            }
+        },
+        formatAmount(amount) {
+            const value = Number(amount) || 0;
+            return value.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+            });
+        },
+        async copyInvoiceLink(invoice) {
+            if (!invoice || !invoice.show_url) {
+                return;
+            }
+
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(invoice.show_url);
+                } else {
+                    const input = document.createElement('input');
+                    input.value = invoice.show_url;
+                    document.body.appendChild(input);
+                    input.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(input);
+                }
+                this.copiedInvoiceId = invoice.id;
+                if (this.copyLinkTimer) {
+                    clearTimeout(this.copyLinkTimer);
+                }
+                this.copyLinkTimer = setTimeout(() => {
+                    this.copiedInvoiceId = null;
+                    this.copyLinkTimer = null;
+                }, 2000);
+            } catch (e) {
+                this.errorMessage = this.$t('words.could-not-copy-link');
             }
         },
         formatPausedUntil(iso) {

@@ -76,7 +76,7 @@ export default {
     
     data() {
         return {
-            countdown: 30,
+            countdown: 300,
             countdownInterval: null,
             isRefreshing: false,
         }
@@ -94,6 +94,7 @@ export default {
     
     methods: {
         startCountdown() {
+            this.countdown = 300;
             this.countdownInterval = setInterval(() => {
                 this.countdown--;
                 
@@ -106,12 +107,26 @@ export default {
         refreshPage() {
             this.isRefreshing = true;
             
-            // Clear the interval to prevent multiple refreshes
             if (this.countdownInterval) {
                 clearInterval(this.countdownInterval);
             }
             
-            // Refresh the page
+            // Soft reload via Inertia when possible (avoids full browser reload storm)
+            if (this.$inertia && this.$inertia.reload) {
+                this.$inertia.reload({
+                    preserveScroll: true,
+                    onFinish: () => {
+                        this.isRefreshing = false;
+                        this.startCountdown();
+                    },
+                    onError: () => {
+                        this.isRefreshing = false;
+                        this.startCountdown();
+                    },
+                });
+                return;
+            }
+
             window.location.reload();
         }
     }
