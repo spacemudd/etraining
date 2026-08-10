@@ -435,7 +435,7 @@
                         </div>
 
                         <!-- Composer -->
-                        <div class="border-t p-3 bg-white flex-1 min-h-0 overflow-y-auto">
+                        <div class="border-t p-3 bg-white flex-1 min-h-0 flex flex-col overflow-visible">
                             <div class="flex gap-0.5 p-0.5 bg-gray-100 rounded-md mb-3 w-fit flex-wrap">
                                 <button
                                     type="button"
@@ -612,7 +612,7 @@
                                 >
                                     {{ $t('words.whatsapp-window-locked-hint') }}
                                 </div>
-                                <div class="relative">
+                                <div class="relative z-50">
                                     <textarea
                                         ref="messageTextarea"
                                         v-model="messageBody"
@@ -622,7 +622,7 @@
                                         :placeholder="composerMode === 'note' ? $t('words.internal-note-hint') : $t('words.message') + '...'"
                                         :disabled="composerMode === 'freeform' && messagingWindowIsOpen === false"
                                     ></textarea>
-                                    <div class="absolute top-2 right-2" v-if="composerMode === 'freeform' || composerMode === 'note'">
+                                    <div class="absolute top-2 right-2 z-50" v-if="composerMode === 'freeform' || composerMode === 'note'">
                                         <button
                                             type="button"
                                             class="text-gray-400 hover:text-gray-700 p-1"
@@ -633,7 +633,8 @@
                                         </button>
                                         <div
                                             v-if="showEmojiPicker"
-                                            class="absolute bottom-8 right-0 z-20 w-56 max-h-40 overflow-y-auto bg-white border border-gray-200 rounded-md shadow-lg p-2 grid grid-cols-8 gap-1"
+                                            class="absolute top-full mt-1 right-0 z-50 w-56 max-h-40 overflow-y-auto bg-white border border-gray-200 rounded-md shadow-lg p-2 grid grid-cols-8 gap-1"
+                                            style="z-index: 100;"
                                             @click.stop
                                         >
                                             <button
