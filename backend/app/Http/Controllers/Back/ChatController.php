@@ -65,7 +65,7 @@ class ChatController extends Controller
                 'agents:id,name',
                 'tags:id,name,color',
                 'trainee:id,name,phone,identity_number,company_id',
-                'trainee.company:id,name_ar',
+                'trainee.company' => $this->companyRelationConstraint(),
             ])
             ->where('status', $status)
             ->orderByDesc('last_message_at')
@@ -132,7 +132,7 @@ class ChatController extends Controller
         $conversation->load([
             'agents:id,name',
             'tags:id,name,color',
-            'trainee.company:id,name_ar',
+            'trainee.company' => $this->companyRelationConstraint(),
         ]);
 
         WhatsAppConversationSync::broadcast($conversation);
@@ -150,7 +150,7 @@ class ChatController extends Controller
         $conversation->load([
             'agents:id,name',
             'tags:id,name,color',
-            'trainee.company:id,name_ar',
+            'trainee.company' => $this->companyRelationConstraint(),
         ]);
 
         WhatsAppConversationSync::broadcast($conversation);
@@ -173,7 +173,7 @@ class ChatController extends Controller
         $conversation->load([
             'agents:id,name',
             'tags:id,name,color',
-            'trainee.company:id,name_ar',
+            'trainee.company' => $this->companyRelationConstraint(),
         ]);
 
         WhatsAppConversationSync::broadcast($conversation);
@@ -257,7 +257,7 @@ class ChatController extends Controller
         $conversation->load([
             'agents:id,name',
             'tags:id,name,color',
-            'trainee.company:id,name_ar',
+            'trainee.company' => $this->companyRelationConstraint(),
         ]);
 
         WhatsAppConversationSync::broadcast($conversation);
@@ -280,7 +280,7 @@ class ChatController extends Controller
         $conversation->load([
             'agents:id,name',
             'tags:id,name,color',
-            'trainee.company:id,name_ar',
+            'trainee.company' => $this->companyRelationConstraint(),
         ]);
 
         WhatsAppConversationSync::broadcast($conversation);
@@ -416,7 +416,7 @@ class ChatController extends Controller
             })
             ->whereNotNull('phone')
             ->where('phone', '!=', '')
-            ->with('company:id,name_ar');
+            ->with(['company' => $this->companyRelationConstraint()]);
 
         if (! empty($validated['company_id'])) {
             $query->where('company_id', $validated['company_id']);
@@ -435,7 +435,9 @@ class ChatController extends Controller
                 'name' => $trainee->name,
                 'phone' => $trainee->phone,
                 'identity_number' => $trainee->identity_number,
-                'company_name' => $trainee->company?->name_ar,
+                'company_name' => $this->companyDisplayName(
+                    $trainee->company ?: $this->resolveCompanyForTrainee($trainee)
+                ),
                 'show_url' => route('back.trainees.show', $trainee->id),
             ])->values(),
             'page' => $page,
@@ -511,7 +513,7 @@ class ChatController extends Controller
             ->where('company_id', $companyModel->id)
             ->whereNotNull('phone')
             ->where('phone', '!=', '')
-            ->with('company:id,name_ar');
+            ->with(['company' => $this->companyRelationConstraint()]);
 
         if (! empty($validated['search'])) {
             $search = $validated['search'];
@@ -539,7 +541,9 @@ class ChatController extends Controller
                 'name' => $trainee->name,
                 'phone' => $trainee->phone,
                 'identity_number' => $trainee->identity_number,
-                'company_name' => $trainee->company?->name_ar,
+                'company_name' => $this->companyDisplayName(
+                    $trainee->company ?: $this->resolveCompanyForTrainee($trainee)
+                ),
                 'show_url' => route('back.trainees.show', $trainee->id),
             ])->values(),
             'page' => $page,
@@ -601,9 +605,8 @@ class ChatController extends Controller
 
     public function traineeContext(string $trainee): JsonResponse
     {
-        $model = Trainee::withTrashed()
-            ->with(['company:id,name_ar'])
-            ->findOrFail($trainee);
+        $model = Trainee::withTrashed()->findOrFail($trainee);
+        $company = $this->resolveCompanyForTrainee($model);
 
         $attributes = array_filter([
             'phone' => $model->phone,
@@ -629,7 +632,7 @@ class ChatController extends Controller
             : ($isBlocked ? (string) ($blockList->reason ?? '') : null);
 
         $invoices = $model->invoices()
-            ->with('company:id,name_ar')
+            ->with(['company' => $this->companyRelationConstraint()])
             ->notPaid()
             ->where('status', '!=', Invoice::STATUS_ARCHIVED)
             ->orderByDesc('from_date')
@@ -648,7 +651,7 @@ class ChatController extends Controller
             'trainee' => [
                 'id' => $model->id,
                 'name' => $model->name,
-                'company_name' => $model->company?->name_ar,
+                'company_name' => $this->companyDisplayName($company),
                 'company_show_url' => $model->company_id
                     ? route('back.companies.show', $model->company_id)
                     : null,
@@ -667,10 +670,10 @@ class ChatController extends Controller
                     'reason' => $blockList->reason,
                 ] : null,
             ],
-            'invoices' => $invoices->map(static fn (Invoice $invoice) => [
+            'invoices' => $invoices->map(fn (Invoice $invoice) => [
                 'id' => $invoice->id,
                 'number_formatted' => $invoice->number_formatted,
-                'company_name' => $invoice->company?->name_ar,
+                'company_name' => $this->companyDisplayName($invoice->company),
                 'grand_total' => round((float) $invoice->grand_total, 2),
                 'status' => $invoice->status,
                 'status_formatted' => $invoice->status_formatted,
@@ -1007,8 +1010,12 @@ class ChatController extends Controller
         WhatsAppTraineeLinker::attachTraineeIfMissing($conversation);
         $conversation->loadMissing([
             'trainee:id,name,phone,identity_number,company_id',
-            'trainee.company:id,name_ar',
+            'trainee.company' => $this->companyRelationConstraint(),
         ]);
+
+        $company = $conversation->trainee
+            ? $this->resolveCompanyForTrainee($conversation->trainee)
+            : null;
 
         return [
             'id' => $conversation->id,
@@ -1019,7 +1026,7 @@ class ChatController extends Controller
                 'name' => $conversation->trainee->name,
                 'phone' => $conversation->trainee->phone,
                 'identity_number' => $conversation->trainee->identity_number,
-                'company_name' => $conversation->trainee->company?->name_ar,
+                'company_name' => $this->companyDisplayName($company),
                 'show_url' => route('back.trainees.show', $conversation->trainee->id),
             ] : null,
             'last_message' => [
@@ -1095,5 +1102,41 @@ class ChatController extends Controller
         if (! $this->whatsAppService->canManageTemplates()) {
             abort(503, __('words.whatsapp-templates-manage-not-configured'));
         }
+    }
+
+    /**
+     * Bypass Company global scopes (e.g. ptc-ksa.com/.net filters) for chat display.
+     */
+    private function companyRelationConstraint(): \Closure
+    {
+        return static function ($query): void {
+            $query->withoutGlobalScopes()->select(['id', 'name_ar', 'name_en']);
+        };
+    }
+
+    private function resolveCompanyForTrainee(?Trainee $trainee): ?Company
+    {
+        if (! $trainee || ! $trainee->company_id) {
+            return null;
+        }
+
+        if ($trainee->relationLoaded('company') && $trainee->getRelation('company')) {
+            return $trainee->getRelation('company');
+        }
+
+        return Company::withoutGlobalScopes()
+            ->select(['id', 'name_ar', 'name_en'])
+            ->find($trainee->company_id);
+    }
+
+    private function companyDisplayName(?Company $company): ?string
+    {
+        if (! $company) {
+            return null;
+        }
+
+        $name = trim((string) ($company->name_ar ?: $company->name_en ?: ''));
+
+        return $name !== '' ? $name : null;
     }
 }
