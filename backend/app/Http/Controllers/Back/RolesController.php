@@ -96,6 +96,54 @@ class RolesController extends Controller
     }
 
     /**
+     * Look up which role(s) a user belongs to by email.
+     */
+    public function findByEmail(Request $request)
+    {
+        $this->authorize('view-permissions');
+
+        $validated = $request->validate([
+            'email' => 'required|string|max:255',
+        ]);
+
+        $email = trim($validated['email']);
+
+        $user = User::query()
+            ->whereRaw('LOWER(email) = ?', [mb_strtolower($email)])
+            ->first();
+
+        if (! $user) {
+            return response()->json([
+                'user' => null,
+                'roles' => [],
+                'message' => __('words.user-email-not-found'),
+            ]);
+        }
+
+        $user->setAppends([]);
+
+        $roles = $user->roles()
+            ->get()
+            ->map(static function (Role $role) {
+                return [
+                    'id' => $role->id,
+                    'name' => $role->name,
+                    'display_name' => $role->display_name,
+                ];
+            })
+            ->values();
+
+        return response()->json([
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+            ],
+            'roles' => $roles,
+        ]);
+    }
+
+    /**
      * Show role.
      *
      * @param $id

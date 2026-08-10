@@ -25,6 +25,44 @@
                     <div class="px-4 py-3 border-b bg-gray-50">
                         <h2 class="font-bold text-gray-800">{{ $t('words.roles') }}</h2>
                         <p class="text-xs text-gray-500 mt-1">{{ $t('words.roles-pick-hint') }}</p>
+                        <form class="mt-3" @submit.prevent="searchByEmail">
+                            <div class="flex gap-2">
+                                <input
+                                    v-model="emailSearch"
+                                    type="search"
+                                    dir="ltr"
+                                    class="form-input text-sm rounded-lg border-gray-300 flex-1 min-w-0"
+                                    :placeholder="$t('words.search-user-email')"
+                                />
+                                <button
+                                    type="submit"
+                                    class="px-3 py-1.5 text-xs font-semibold rounded bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-40 shrink-0"
+                                    :disabled="!emailSearch.trim() || searchingEmail"
+                                >
+                                    {{ searchingEmail ? ($t('words.loading') + '...') : $t('words.search') }}
+                                </button>
+                            </div>
+                        </form>
+                        <div v-if="emailSearchResult" class="mt-3 text-xs border rounded-lg bg-white p-3 space-y-2">
+                            <div>
+                                <p class="font-semibold text-gray-900">{{ emailSearchResult.user.name }}</p>
+                                <p class="text-gray-500" dir="ltr">{{ emailSearchResult.user.email }}</p>
+                            </div>
+                            <p class="text-gray-600 font-medium">{{ $t('words.user-roles-label') }}:</p>
+                            <div v-if="emailSearchResult.roles.length" class="flex flex-wrap gap-1.5">
+                                <button
+                                    v-for="role in emailSearchResult.roles"
+                                    :key="role.id"
+                                    type="button"
+                                    @click="selectRoleFromSearch(role.id)"
+                                    class="px-2 py-1 rounded bg-blue-50 text-blue-800 hover:bg-blue-100 font-semibold"
+                                >
+                                    {{ role.display_name }}
+                                </button>
+                            </div>
+                            <p v-else class="text-amber-700">{{ $t('words.user-has-no-roles') }}</p>
+                        </div>
+                        <p v-else-if="emailSearchError" class="mt-2 text-xs text-red-600">{{ emailSearchError }}</p>
                     </div>
                     <div class="overflow-y-auto flex-1 divide-y">
                         <button
@@ -33,7 +71,7 @@
                             type="button"
                             @click="selectRole(role.id)"
                             class="w-full text-left px-4 py-3 hover:bg-gray-50 transition"
-                            :class="selectedRoleId === role.id ? 'bg-blue-50 border-l-4 border-blue-600' : ''"
+                            :class="localSelectedRoleId === role.id ? 'bg-blue-50 border-l-4 border-blue-600' : ''"
                         >
                             <div class="flex items-start justify-between gap-2">
                                 <div class="min-w-0">
@@ -311,6 +349,10 @@ export default {
             usersError: '',
             usersPage: 1,
             usersLastPage: 1,
+            emailSearch: '',
+            searchingEmail: false,
+            emailSearchResult: null,
+            emailSearchError: '',
         };
     },
     computed: {
@@ -391,6 +433,41 @@ export default {
             if (window.history && window.history.replaceState) {
                 const url = route('back.settings.roles.index', { role: roleId });
                 window.history.replaceState({}, '', url);
+            }
+        },
+        selectRoleFromSearch(roleId) {
+            this.selectRole(roleId);
+            this.openUsersTab();
+        },
+        async searchByEmail() {
+            const email = (this.emailSearch || '').trim();
+            if (!email) {
+                return;
+            }
+
+            this.searchingEmail = true;
+            this.emailSearchResult = null;
+            this.emailSearchError = '';
+
+            try {
+                const { data } = await axios.get(route('back.settings.roles.find-by-email'), {
+                    params: { email },
+                });
+
+                if (!data.user) {
+                    this.emailSearchError = data.message || this.$t('words.user-email-not-found');
+                    return;
+                }
+
+                this.emailSearchResult = {
+                    user: data.user,
+                    roles: data.roles || [],
+                };
+            } catch (error) {
+                this.emailSearchError = (error.response && error.response.data && error.response.data.message)
+                    || this.$t('words.user-email-not-found');
+            } finally {
+                this.searchingEmail = false;
             }
         },
         openUsersTab() {

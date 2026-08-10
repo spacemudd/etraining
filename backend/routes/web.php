@@ -737,6 +737,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::put('/settings/whatsapp-bots/{id}/graph', [\App\Http\Controllers\Back\WhatsAppBotWorkflowController::class, 'updateGraph'])->name('settings.whatsapp-bots.graph');
         Route::delete('/settings/whatsapp-bots/{id}', [\App\Http\Controllers\Back\WhatsAppBotWorkflowController::class, 'destroy'])->name('settings.whatsapp-bots.destroy');
         Route::put('/settings/whatsapp-bots/senders/{senderId}', [\App\Http\Controllers\Back\WhatsAppBotWorkflowController::class, 'assignSender'])->name('settings.whatsapp-bots.senders.assign');
+        Route::get('/settings/roles/find-by-email', [\App\Http\Controllers\Back\RolesController::class, 'findByEmail'])->name('settings.roles.find-by-email');
         Route::get('/settings/roles/{id}/users', [\App\Http\Controllers\Back\RolesController::class, 'users'])->name('settings.roles.users');
         Route::delete('/settings/roles/{role_id}/users/{user_id}', [\App\Http\Controllers\Back\RolesController::class, 'deleteUser'])->name('settings.roles.users.delete');
         Route::post('/settings/roles/{id}/users/invite', [\App\Http\Controllers\Back\RolesController::class, 'sendInvite'])->name('settings.roles.users.invite.send');

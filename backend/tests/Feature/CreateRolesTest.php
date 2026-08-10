@@ -63,4 +63,33 @@ class CreateRolesTest extends TestCase
             ->get(route('back.settings.roles.show', $adminRole->id))
             ->assertSuccessful();
     }
+
+    public function test_admin_can_find_user_roles_by_email()
+    {
+        $adminRole = Role::whereName($this->admin->currentTeam->id.'_admins')->first();
+
+        $response = $this->actingAs($this->admin)
+            ->getJson(route('back.settings.roles.find-by-email', [
+                'email' => $this->admin->email,
+            ]));
+
+        $response->assertSuccessful()
+            ->assertJsonPath('user.email', $this->admin->email)
+            ->assertJsonPath('user.id', $this->admin->id)
+            ->assertJsonFragment([
+                'id' => $adminRole->id,
+                'name' => $adminRole->name,
+            ]);
+    }
+
+    public function test_find_by_email_returns_not_found_for_unknown_email()
+    {
+        $this->actingAs($this->admin)
+            ->getJson(route('back.settings.roles.find-by-email', [
+                'email' => 'nobody@example.com',
+            ]))
+            ->assertSuccessful()
+            ->assertJsonPath('user', null)
+            ->assertJsonPath('roles', []);
+    }
 }
