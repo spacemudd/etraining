@@ -110,7 +110,7 @@ class CompaniesController extends Controller
         'contact_number' => 'nullable|string|max:255',
         'company_rep' => 'nullable|string|max:255',
         'company_rep_mobile' => 'nullable|string|max:255',
-        'email' => 'nullable|email:rfc,dns|max:255',
+        'email' => 'nullable|string',
         'address' => 'nullable|string|max:255',
         'monthly_subscription_per_trainee' => 'nullable|numeric|min:0|max:100000',
         'shelf_number' => 'nullable|string|max:255',
@@ -122,6 +122,7 @@ class CompaniesController extends Controller
         'recruitment_company_id' => 'nullable|exists:recruitment_companies,id',
     ]);
 
+    $validated['email'] = $this->normalizeEmailList($validated['email'] ?? null);
 
     $company = Company::create($validated);
 
@@ -251,7 +252,7 @@ class CompaniesController extends Controller
             'contact_number' => 'nullable|string|max:255',
             'company_rep' => 'nullable|string|max:255',
             'company_rep_mobile' => 'nullable|string|max:255',
-            'email' => 'nullable|email:rfc,dns|max:255',
+            'email' => 'nullable|string',
             'address' => 'nullable|string|max:255',
             'monthly_subscription_per_trainee' => 'nullable|numeric|min:0|max:100000',
             'shelf_number' => 'nullable|string|max:255',
@@ -262,7 +263,9 @@ class CompaniesController extends Controller
             'recruitment_company_id' => 'nullable|exists:recruitment_companies,id',
         ]);
 
-
+        $request->merge([
+            'email' => $this->normalizeEmailList($request->email),
+        ]);
 
         $company = Company::findOrFail($id);
         $company->update($request->except(['_token']));
@@ -357,7 +360,25 @@ class CompaniesController extends Controller
         return redirect()->route('back.companies.show', $id);
     }
 
+    /**
+     * Normalize email input into a comma-separated string for storage.
+     */
+    private function normalizeEmailList($emails): ?string
+    {
+        if (is_array($emails)) {
+            $list = $emails;
+        } elseif (is_string($emails) && $emails !== '') {
+            $list = preg_split('/[,;\n]+/', $emails) ?: [];
+        } else {
+            return null;
+        }
 
+        $normalized = array_values(array_unique(array_filter(array_map(function ($email) {
+            $email = strtolower(trim((string) $email));
 
+            return filter_var($email, FILTER_VALIDATE_EMAIL) ? $email : null;
+        }, $list))));
 
+        return empty($normalized) ? null : implode(', ', $normalized);
+    }
 }

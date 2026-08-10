@@ -189,7 +189,14 @@ class CompanyAttendanceReportController extends Controller
             })->toArray());
         } else {
             if ($company->email) {
-                $report->emails()->create(['type' => 'to', 'email' => $company->email]);
+                $companyEmails = preg_split('/[,;\n]+/', $company->email) ?: [];
+                foreach ($companyEmails as $email) {
+                    $email = strtolower(trim((string) $email));
+                    if (! $email || ! filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                        continue;
+                    }
+                    $report->emails()->create(['type' => 'to', 'email' => $email]);
+                }
             }
             $report->emails()->create(['type' => 'cc', 'email' => auth()->user()->email]);
         }

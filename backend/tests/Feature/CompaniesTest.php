@@ -95,4 +95,44 @@ class CompaniesTest extends TestCase
                 $this->assertCount(1, $company['trainees']);
             });
     }
+
+    public function test_user_can_save_multiple_company_emails()
+    {
+        $payload = [
+            'name_ar' => 'شركة متعددة الإيميلات',
+            'name_en' => 'Multi Email Company',
+            'cr_number' => $this->faker->randomNumber(),
+            'contact_number' => $this->faker->phoneNumber,
+            'company_rep' => $this->faker->name,
+            'company_rep_mobile' => $this->faker->phoneNumber,
+            'address' => $this->faker->address,
+            'email' => 'First@Example.com, second@example.com; third@example.com',
+        ];
+
+        $this->actingAs($this->user)
+            ->post('/back/companies', $payload)
+            ->assertSessionHasNoErrors()
+            ->assertRedirect();
+
+        $company = Company::where('name_en', 'Multi Email Company')->firstOrFail();
+
+        $this->assertEquals(
+            'first@example.com, second@example.com, third@example.com',
+            $company->email
+        );
+
+        $this->actingAs($this->user)
+            ->put('/back/companies/'.$company->id, [
+                'name_ar' => $company->name_ar,
+                'name_en' => $company->name_en,
+                'email' => 'updated@example.com, another@example.com',
+            ])
+            ->assertSessionHasNoErrors()
+            ->assertRedirect();
+
+        $this->assertEquals(
+            'updated@example.com, another@example.com',
+            $company->fresh()->email
+        );
+    }
 }

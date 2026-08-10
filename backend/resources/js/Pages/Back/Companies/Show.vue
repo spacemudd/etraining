@@ -153,7 +153,6 @@
             'company_rep',
             'company_rep_mobile',
             'address',
-            'email',
             'monthly_subscription_per_trainee',
             'shelf_number',
             'nature_of_work',
@@ -187,6 +186,33 @@
             </div>
           </div>
         </template>
+
+        <div class="col-span-4 sm:col-span-1">
+          <jet-label for="email" :value="$t('words.email')" />
+          <div
+            v-if="splitResignationEmails(company.email).length"
+            class="mt-1 rounded-md border border-gray-300 bg-gray-100 p-2"
+            dir="ltr"
+          >
+            <ul class="flex flex-wrap gap-2">
+              <li
+                v-for="(email, index) in splitResignationEmails(company.email)"
+                :key="'company-email-' + index"
+                class="inline-flex items-center max-w-full rounded-md bg-white px-2 py-1 text-sm text-gray-800 border border-gray-200"
+              >
+                <span class="truncate" :title="email">{{ email }}</span>
+              </li>
+            </ul>
+          </div>
+          <jet-input
+            v-else
+            id="email"
+            type="text"
+            class="mt-1 block w-full bg-gray-200"
+            value=""
+            disabled
+          />
+        </div>
         <div class="col-span-4 sm:col-span-1">
           <jet-label for="region_id" :value="$t('words.region')" />
           <div class="relative mt-2">

@@ -101,7 +101,6 @@
                 'company_rep',
                 'company_rep_mobile',
                 'address',
-                'email',
                 'monthly_subscription_per_trainee',
                 'shelf_number',
                 'nature_of_work',
@@ -125,6 +124,17 @@
                 />
               </div>
             </template>
+
+            <div class="col-span-2 sm:col-span-2">
+              <email-list-input
+                v-model="form.email"
+                :label="$t('words.email')"
+              />
+              <jet-input-error
+                :message="form.error('email')"
+                class="mt-2"
+              />
+            </div>
             <div class="col-span-4 sm:col-span-1">
               <jet-label for="region_id" :value="$t('words.region')" />
               <div class="relative mt-2">
@@ -186,6 +196,7 @@ import JetButton from "@/Jetstream/Button";
 import JetFormSection from "@/Jetstream/FormSection";
 import JetLabel from "@/Jetstream/Label";
 import BreadcrumbContainer from "@/Components/BreadcrumbContainer";
+import EmailListInput from "@/Components/EmailListInput";
 
 export default {
   props: ["sessions", "company", "regions", "centers", "recruitmentCompanies"],
@@ -202,6 +213,7 @@ export default {
     JetFormSection,
     JetLabel,
     BreadcrumbContainer,
+    EmailListInput,
   },
   mounted() {
     this.form.name_ar = this.company.name_ar;
