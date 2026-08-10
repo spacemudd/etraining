@@ -10,6 +10,7 @@ use App\Models\Back\Trainee;
 use App\Models\Back\TraineeBlockList;
 use App\Models\Back\WhatsAppConversation;
 use App\Models\Back\WhatsAppMessage;
+use App\Models\Back\WhatsAppQuickReply;
 use App\Models\Back\WhatsAppTag;
 use App\Services\TelnyxWhatsAppService;
 use App\Support\WhatsAppBroadcast;
@@ -422,6 +423,56 @@ class ChatController extends Controller
                 'company_name' => $trainee->company?->name_ar,
                 'show_url' => route('back.trainees.show', $trainee->id),
             ]),
+        ]);
+    }
+
+    public function quickReplies(): JsonResponse
+    {
+        $replies = WhatsAppQuickReply::query()
+            ->orderByDesc('created_at')
+            ->get(['id', 'title', 'body', 'user_id', 'created_at']);
+
+        return response()->json([
+            'quick_replies' => $replies->map(static fn (WhatsAppQuickReply $reply) => [
+                'id' => $reply->id,
+                'title' => $reply->title,
+                'body' => $reply->body,
+                'user_id' => $reply->user_id,
+                'created_at' => optional($reply->created_at)->toIso8601String(),
+            ])->values(),
+        ]);
+    }
+
+    public function storeQuickReply(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:120',
+            'body' => 'required|string|max:4000',
+        ]);
+
+        $reply = WhatsAppQuickReply::query()->create([
+            'title' => $validated['title'],
+            'body' => $validated['body'],
+            'user_id' => auth()->id(),
+        ]);
+
+        return response()->json([
+            'quick_reply' => [
+                'id' => $reply->id,
+                'title' => $reply->title,
+                'body' => $reply->body,
+                'user_id' => $reply->user_id,
+                'created_at' => optional($reply->created_at)->toIso8601String(),
+            ],
+        ], 201);
+    }
+
+    public function destroyQuickReply(WhatsAppQuickReply $quickReply): JsonResponse
+    {
+        $quickReply->delete();
+
+        return response()->json([
+            'ok' => true,
         ]);
     }
 

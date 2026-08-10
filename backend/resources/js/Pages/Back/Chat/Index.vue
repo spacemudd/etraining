@@ -316,13 +316,19 @@
                         </div>
 
                         <!-- Messages Container -->
-                        <div ref="messagesContainer" @scroll="onMessagesScroll" class="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50 min-h-0">
+                        <div class="relative flex-shrink-0 bg-gray-50" :style="{ height: threadHeight + 'px' }">
+                            <div
+                                ref="messagesContainer"
+                                @scroll="onMessagesScroll"
+                                class="h-full overflow-y-auto p-4 space-y-3"
+                            >
                             <div v-if="hasMoreMessages" class="text-center mb-1">
                                 <button
                                     type="button"
                                     @click="loadOlderMessages"
                                     :disabled="loadingOlderMessages"
-                                    class="text-xs text-gray-500 hover:text-gray-800 disabled:opacity-50"
+                                    class="text-xs border border-gray-300 px-3 py-1.5 bg-white hover:bg-gray-50 disabled:opacity-50"
+                                    style="border-radius: 2px;"
                                 >
                                     {{ loadingOlderMessages ? ($t('words.loading') + '...') : $t('words.chat-load-older') }}
                                 </button>
@@ -418,11 +424,19 @@
                                     </div>
                                 </div>
                             </div>
+                            </div>
+                            <div
+                                class="absolute bottom-0 left-0 right-0 h-2 cursor-ns-resize flex items-end justify-end pr-1 pb-0.5 select-none"
+                                title="Resize"
+                                @mousedown.prevent="startThreadResize"
+                            >
+                                <span class="w-3 h-3 border-r-2 border-b-2 border-gray-400 opacity-60"></span>
+                            </div>
                         </div>
 
                         <!-- Composer -->
-                        <div class="border-t p-3 bg-white">
-                            <div class="flex gap-0.5 p-0.5 bg-gray-100 rounded-md mb-3 w-fit">
+                        <div class="border-t p-3 bg-white flex-1 min-h-0 overflow-y-auto">
+                            <div class="flex gap-0.5 p-0.5 bg-gray-100 rounded-md mb-3 w-fit flex-wrap">
                                 <button
                                     type="button"
                                     @click="setComposerMode('freeform')"
@@ -438,6 +452,14 @@
                                     :class="composerMode === 'template' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
                                 >
                                     {{ $t('words.whatsapp-templates') }}
+                                </button>
+                                <button
+                                    type="button"
+                                    @click="setComposerMode('quick')"
+                                    class="px-3 py-1.5 rounded text-xs font-medium transition"
+                                    :class="composerMode === 'quick' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                                >
+                                    {{ $t('words.quick-replies') }}
                                 </button>
                                 <button
                                     type="button"
@@ -502,6 +524,87 @@
                                 </button>
                             </div>
 
+                            <div v-else-if="composerMode === 'quick'" class="space-y-3">
+                                <div class="flex items-center gap-2">
+                                    <input
+                                        v-model="quickReplySearch"
+                                        type="text"
+                                        class="flex-1 form-input text-xs rounded-md border-gray-200"
+                                        :placeholder="$t('words.search') + '...'"
+                                    />
+                                    <button
+                                        type="button"
+                                        class="text-xs border border-gray-200 px-2.5 py-1.5 rounded-md hover:bg-gray-50"
+                                        @click="showNewQuickReply = !showNewQuickReply"
+                                    >
+                                        {{ $t('words.new-quick-reply') }}
+                                    </button>
+                                </div>
+
+                                <div v-if="showNewQuickReply" class="border border-gray-200 rounded-md p-3 space-y-2 bg-gray-50">
+                                    <input
+                                        v-model="newQuickReplyTitle"
+                                        type="text"
+                                        class="w-full form-input text-xs rounded-md border-gray-200"
+                                        :placeholder="$t('words.quick-reply-title')"
+                                    />
+                                    <textarea
+                                        v-model="newQuickReplyBody"
+                                        rows="3"
+                                        class="w-full form-input text-xs rounded-md border-gray-200"
+                                        :placeholder="$t('words.quick-reply-body')"
+                                    ></textarea>
+                                    <div class="flex justify-end gap-2">
+                                        <button
+                                            type="button"
+                                            class="text-xs text-gray-500 hover:text-gray-800"
+                                            @click="showNewQuickReply = false"
+                                        >
+                                            {{ $t('words.cancel') }}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="text-xs bg-gray-800 text-white px-3 py-1.5 rounded-md disabled:opacity-50"
+                                            :disabled="savingQuickReply || !newQuickReplyTitle.trim() || !newQuickReplyBody.trim()"
+                                            @click="saveQuickReply"
+                                        >
+                                            {{ savingQuickReply ? $t('words.saving') : $t('words.save') }}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div v-if="loadingQuickReplies" class="text-xs text-gray-500">
+                                    {{ $t('words.loading') }}...
+                                </div>
+                                <div v-else-if="filteredQuickReplies.length === 0" class="text-xs text-gray-400">
+                                    {{ $t('words.no-quick-replies') }}
+                                </div>
+                                <ul v-else class="divide-y divide-gray-100 border border-gray-200 rounded-md max-h-56 overflow-y-auto">
+                                    <li
+                                        v-for="reply in filteredQuickReplies"
+                                        :key="reply.id"
+                                        class="px-3 py-2 hover:bg-gray-50 flex items-start justify-between gap-2"
+                                    >
+                                        <button
+                                            type="button"
+                                            class="text-left min-w-0 flex-1"
+                                            @click="useQuickReply(reply)"
+                                        >
+                                            <div class="text-xs font-medium text-gray-900 truncate">{{ reply.title }}</div>
+                                            <div class="text-[11px] text-gray-500 mt-0.5 whitespace-pre-wrap" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ reply.body }}</div>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="text-[11px] text-red-500 hover:text-red-700 flex-shrink-0"
+                                            :disabled="deletingQuickReplyId === reply.id"
+                                            @click.stop="deleteQuickReply(reply)"
+                                        >
+                                            {{ $t('words.delete') }}
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+
                             <div v-else>
                                 <div
                                     v-if="composerMode === 'freeform' && messagingWindowIsOpen === false"
@@ -509,14 +612,42 @@
                                 >
                                     {{ $t('words.whatsapp-window-locked-hint') }}
                                 </div>
-                                <textarea
-                                    v-model="messageBody"
-                                    rows="3"
-                                    class="w-full text-sm rounded-md p-2.5 border border-gray-200 focus:border-gray-400 focus:ring-0"
-                                    :class="composerMode === 'note' ? 'bg-amber-50/50' : 'bg-white'"
-                                    :placeholder="composerMode === 'note' ? $t('words.internal-note-hint') : $t('words.message') + '...'"
-                                    :disabled="composerMode === 'freeform' && messagingWindowIsOpen === false"
-                                ></textarea>
+                                <div class="relative">
+                                    <textarea
+                                        ref="messageTextarea"
+                                        v-model="messageBody"
+                                        rows="3"
+                                        class="w-full text-sm rounded-md p-2.5 pr-10 border border-gray-200 focus:border-gray-400 focus:ring-0"
+                                        :class="composerMode === 'note' ? 'bg-amber-50/50' : 'bg-white'"
+                                        :placeholder="composerMode === 'note' ? $t('words.internal-note-hint') : $t('words.message') + '...'"
+                                        :disabled="composerMode === 'freeform' && messagingWindowIsOpen === false"
+                                    ></textarea>
+                                    <div class="absolute top-2 right-2" v-if="composerMode === 'freeform' || composerMode === 'note'">
+                                        <button
+                                            type="button"
+                                            class="text-gray-400 hover:text-gray-700 p-1"
+                                            :disabled="composerMode === 'freeform' && messagingWindowIsOpen === false"
+                                            @click.stop="toggleEmojiPicker"
+                                        >
+                                            <ion-icon name="happy-outline" class="w-5 h-5"></ion-icon>
+                                        </button>
+                                        <div
+                                            v-if="showEmojiPicker"
+                                            class="absolute bottom-8 right-0 z-20 w-56 max-h-40 overflow-y-auto bg-white border border-gray-200 rounded-md shadow-lg p-2 grid grid-cols-8 gap-1"
+                                            @click.stop
+                                        >
+                                            <button
+                                                v-for="emoji in emojiList"
+                                                :key="emoji"
+                                                type="button"
+                                                class="text-base hover:bg-gray-100 rounded p-0.5"
+                                                @click="insertEmoji(emoji)"
+                                            >
+                                                {{ emoji }}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="flex items-center justify-end mt-2">
                                     <button
                                         @click="sendMessageOrNote"
@@ -565,8 +696,8 @@
 
                                     <div>
                                         <div class="text-xs text-gray-500 mb-0.5">{{ $t('words.registration-date') }}</div>
-                                        <div class="text-sm text-gray-900" dir="ltr">
-                                            {{ traineeContext.trainee.registration_date || '—' }}
+                                        <div class="text-sm text-gray-900 text-right">
+                                            <span dir="ltr">{{ traineeContext.trainee.registration_date || '—' }}</span>
                                         </div>
                                     </div>
 
@@ -786,6 +917,28 @@ export default {
             isNoteMode: false,
             composerMode: 'freeform',
             messageBody: '',
+            threadHeight: 360,
+            threadResizing: false,
+            threadResizeStartY: 0,
+            threadResizeStartHeight: 0,
+            showEmojiPicker: false,
+            quickReplies: [],
+            loadingQuickReplies: false,
+            quickReplySearch: '',
+            showNewQuickReply: false,
+            newQuickReplyTitle: '',
+            newQuickReplyBody: '',
+            savingQuickReply: false,
+            deletingQuickReplyId: null,
+            emojiList: [
+                '😀','😁','😂','🤣','😊','😍','😘','😎','🤔','😅',
+                '😢','😭','😤','😡','👍','👎','👏','🙏','👌','✌️',
+                '🤝','💪','🔥','✨','🎉','❤️','💔','✅','❌','⭐',
+                '📌','📎','📞','💬','📱','🏠','🏢','💰','🧾','📅',
+                '⏰','👋','🙂','😉','🤗','😴','🤒','😷','🙌','🫡',
+                '💯','❗','❓','📝','🗂️','🔗','🟢','🔴','🟡','⚪',
+                '🇸🇦','🤝','💼','📊','📈','🧾','🔑','🛡️','📬','🛠️',
+            ],
             templates: [],
             loadingTemplates: false,
             selectedTemplateSid: '',
@@ -1003,12 +1156,26 @@ export default {
             });
             return body;
         },
+        filteredQuickReplies() {
+            const q = String(this.quickReplySearch || '').trim().toLowerCase();
+            if (!q) {
+                return this.quickReplies;
+            }
+            return this.quickReplies.filter((reply) => {
+                return String(reply.title || '').toLowerCase().includes(q)
+                    || String(reply.body || '').toLowerCase().includes(q);
+            });
+        },
     },
     mounted() {
+        this.initThreadHeight();
         this.loadTags();
         this.loadConversations();
+        this.loadQuickReplies();
         this.subscribeEcho();
         this.startMessagingWindowTicker();
+        document.addEventListener('click', this.handleGlobalClick);
+        document.addEventListener('keydown', this.handleGlobalKeydown);
         if (this.configured) {
             this.loadTemplates();
         }
@@ -1017,6 +1184,9 @@ export default {
         this.unsubscribeEcho();
         this.stopPolling();
         this.stopMessagingWindowTicker();
+        this.stopThreadResize();
+        document.removeEventListener('click', this.handleGlobalClick);
+        document.removeEventListener('keydown', this.handleGlobalKeydown);
         if (this.messagesRefreshTimer) {
             clearTimeout(this.messagesRefreshTimer);
             this.messagesRefreshTimer = null;
@@ -1535,7 +1705,7 @@ export default {
                 const { data } = await axios.get(route('back.chat.messages'), {
                     params: {
                         phone: this.selectedConversation.phone,
-                        limit: 50,
+                        limit: 5,
                     },
                 });
                 this.messages = data.messages || [];
@@ -1560,7 +1730,7 @@ export default {
                 const { data } = await axios.get(route('back.chat.messages'), {
                     params: {
                         phone: this.selectedConversation.phone,
-                        limit: 50,
+                        limit: 20,
                         before: this.nextBefore,
                         before_id: this.nextBeforeId,
                     },
@@ -1830,8 +2000,142 @@ export default {
             this.composerMode = mode;
             this.sendMode = mode === 'template' ? 'template' : 'freeform';
             this.isNoteMode = mode === 'note';
+            this.showEmojiPicker = false;
             this.errorMessage = '';
             this.successMessage = '';
+            if (mode === 'quick') {
+                this.loadQuickReplies();
+            }
+        },
+        initThreadHeight() {
+            const stored = Number(localStorage.getItem('chat.threadHeight'));
+            const viewportCap = Math.floor(window.innerHeight * 0.5);
+            const fallback = Math.min(420, Math.max(200, viewportCap || 360));
+            if (Number.isFinite(stored) && stored >= 200) {
+                this.threadHeight = Math.min(stored, Math.max(420, viewportCap + 120));
+            } else {
+                this.threadHeight = fallback;
+            }
+        },
+        startThreadResize(event) {
+            this.threadResizing = true;
+            this.threadResizeStartY = event.clientY;
+            this.threadResizeStartHeight = this.threadHeight;
+            document.addEventListener('mousemove', this.onThreadResize);
+            document.addEventListener('mouseup', this.stopThreadResize);
+        },
+        onThreadResize(event) {
+            if (!this.threadResizing) {
+                return;
+            }
+            const delta = event.clientY - this.threadResizeStartY;
+            const maxHeight = Math.max(280, window.innerHeight - 280);
+            this.threadHeight = Math.min(maxHeight, Math.max(200, this.threadResizeStartHeight + delta));
+        },
+        stopThreadResize() {
+            if (!this.threadResizing) {
+                document.removeEventListener('mousemove', this.onThreadResize);
+                document.removeEventListener('mouseup', this.stopThreadResize);
+                return;
+            }
+            this.threadResizing = false;
+            document.removeEventListener('mousemove', this.onThreadResize);
+            document.removeEventListener('mouseup', this.stopThreadResize);
+            try {
+                localStorage.setItem('chat.threadHeight', String(this.threadHeight));
+            } catch (e) {}
+        },
+        handleGlobalClick() {
+            this.showEmojiPicker = false;
+        },
+        handleGlobalKeydown(event) {
+            if (event.key === 'Escape') {
+                this.showEmojiPicker = false;
+            }
+        },
+        toggleEmojiPicker() {
+            this.showEmojiPicker = !this.showEmojiPicker;
+        },
+        insertEmoji(emoji) {
+            const textarea = this.$refs.messageTextarea;
+            const value = this.messageBody || '';
+            if (textarea && typeof textarea.selectionStart === 'number') {
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+                this.messageBody = value.slice(0, start) + emoji + value.slice(end);
+                this.$nextTick(() => {
+                    const pos = start + emoji.length;
+                    textarea.focus();
+                    textarea.setSelectionRange(pos, pos);
+                });
+            } else {
+                this.messageBody = value + emoji;
+            }
+            this.showEmojiPicker = false;
+        },
+        async loadQuickReplies() {
+            this.loadingQuickReplies = true;
+            try {
+                const { data } = await axios.get(route('back.chat.quick-replies'));
+                this.quickReplies = data.quick_replies || [];
+            } catch (e) {
+                this.quickReplies = [];
+            } finally {
+                this.loadingQuickReplies = false;
+            }
+        },
+        async saveQuickReply() {
+            if (!this.newQuickReplyTitle.trim() || !this.newQuickReplyBody.trim() || this.savingQuickReply) {
+                return;
+            }
+            this.savingQuickReply = true;
+            try {
+                const { data } = await axios.post(route('back.chat.quick-replies.store'), {
+                    title: this.newQuickReplyTitle.trim(),
+                    body: this.newQuickReplyBody.trim(),
+                });
+                if (data.quick_reply) {
+                    this.quickReplies = [data.quick_reply, ...this.quickReplies];
+                }
+                this.newQuickReplyTitle = '';
+                this.newQuickReplyBody = '';
+                this.showNewQuickReply = false;
+            } catch (error) {
+                this.errorMessage = (error.response && error.response.data && error.response.data.message)
+                    || this.$t('words.could-not-load-trainee-details');
+            } finally {
+                this.savingQuickReply = false;
+            }
+        },
+        async deleteQuickReply(reply) {
+            if (!reply || !reply.id) {
+                return;
+            }
+            if (!window.confirm(this.$t('words.delete') + '?')) {
+                return;
+            }
+            this.deletingQuickReplyId = reply.id;
+            try {
+                await axios.delete(route('back.chat.quick-replies.destroy', reply.id));
+                this.quickReplies = this.quickReplies.filter((item) => item.id !== reply.id);
+            } catch (error) {
+                this.errorMessage = (error.response && error.response.data && error.response.data.message)
+                    || this.$t('words.could-not-load-trainee-details');
+            } finally {
+                this.deletingQuickReplyId = null;
+            }
+        },
+        useQuickReply(reply) {
+            if (!reply) {
+                return;
+            }
+            this.messageBody = reply.body || '';
+            this.setComposerMode('freeform');
+            this.$nextTick(() => {
+                if (this.$refs.messageTextarea) {
+                    this.$refs.messageTextarea.focus();
+                }
+            });
         },
         async sendMessageOrNote() {
             if (!this.selectedConversation || !this.messageBody.trim()) return;
@@ -1928,7 +2232,7 @@ export default {
                 const { data } = await axios.get(route('back.chat.messages'), {
                     params: {
                         phone: this.selectedConversation.phone,
-                        limit: 50,
+                        limit: Math.max(5, this.messages.length || 5),
                     },
                 });
                 const incoming = data.messages || [];

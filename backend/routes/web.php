@@ -825,6 +825,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::post('bot-resume', [\App\Http\Controllers\Back\ChatController::class, 'resumeBot'])->name('bot-resume');
             Route::get('trainees', [\App\Http\Controllers\Back\ChatController::class, 'searchTrainees'])->name('trainees');
             Route::get('trainees/{trainee}/context', [\App\Http\Controllers\Back\ChatController::class, 'traineeContext'])->name('trainees.context');
+            Route::get('quick-replies', [\App\Http\Controllers\Back\ChatController::class, 'quickReplies'])->name('quick-replies');
+            Route::post('quick-replies', [\App\Http\Controllers\Back\ChatController::class, 'storeQuickReply'])->name('quick-replies.store');
+            Route::delete('quick-replies/{quickReply}', [\App\Http\Controllers\Back\ChatController::class, 'destroyQuickReply'])->name('quick-replies.destroy');
             Route::get('templates', [\App\Http\Controllers\Back\ChatController::class, 'templates'])->name('templates');
             Route::post('templates', [\App\Http\Controllers\Back\ChatController::class, 'storeTemplate'])->name('templates.store');
             Route::get('templates/{contentSid}', [\App\Http\Controllers\Back\ChatController::class, 'showTemplate'])->name('templates.show');
