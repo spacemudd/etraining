@@ -67,7 +67,7 @@ class DashboardController extends Controller
             })
             ->available()
             ->latest()
-            ->get(['id', 'body', 'company_id', 'starts_at', 'ends_at', 'created_at']);
+            ->get(['id', 'body', 'company_id', 'starts_at', 'expires_at', 'created_at']);
 
         $resignationRequest = TraineeResignationRequest::where('trainee_id', $trainee->id)->first();
 
@@ -89,6 +89,10 @@ class DashboardController extends Controller
             });
         }
         // Page `user` overrides Inertia shared user — keep inbox badge available.
+        // Middleware may have loaded trainee/instructor; drop them so toArray()
+        // does not serialize 20+ media/invoice appends.
+        $user->unsetRelation('trainee');
+        $user->unsetRelation('instructor');
         $user->append('inbox_messages_count');
         $userPayload = $user->toArray();
         $userPayload['trainee'] = $slimTrainee;

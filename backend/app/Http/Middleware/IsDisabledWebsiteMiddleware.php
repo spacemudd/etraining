@@ -17,7 +17,7 @@ class IsDisabledWebsiteMiddleware
     public function handle(Request $request, Closure $next)
     {
         if (optional(auth()->user())->trainee || optional(auth()->user())->instructor) {
-            if (auth()->user()->team->website_disabled) {
+            if (optional(auth()->user()->team)->website_disabled) {
                 if (!\Route::is('disabled')) {
                     return redirect()->route('disabled');
                 }

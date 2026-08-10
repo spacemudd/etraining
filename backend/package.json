@@ -42,7 +42,7 @@
         "font-awesome": "^4.7.0",
         "intl-tel-input": "^17.0.12",
         "jquery": "^3.5.1",
-        "laravel-echo": "^1.16.1",
+        "laravel-echo": "^1.19.0",
         "logrocket": "^1.0.14",
         "logrocket-vuex": "0.0.3",
         "lottie-vuejs": "^0.4.0",

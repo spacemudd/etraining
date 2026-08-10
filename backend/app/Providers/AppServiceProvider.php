@@ -28,6 +28,9 @@ class AppServiceProvider extends ServiceProvider
                             $role->makeVisible(['id']);
                         });
                     }
+                    // Middleware may load trainee/instructor; don't serialize their appends globally.
+                    $user->unsetRelation('trainee');
+                    $user->unsetRelation('instructor');
                     // Opt-in only for shared auth user (not every User serialization / N+1)
                     $user->append('inbox_messages_count');
                 }
