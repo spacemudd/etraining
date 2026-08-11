@@ -221,17 +221,61 @@
                                         <option value="pending">{{ $t('words.chat-status-pending') }}</option>
                                         <option value="closed">{{ $t('words.chat-status-closed') }}</option>
                                     </select>
-                                    <button
-                                        type="button"
-                                        @click="toggleAssignMe"
-                                        :disabled="assigningAgent"
-                                        class="text-xs px-2.5 py-1.5 rounded-md font-medium border border-gray-200 transition disabled:opacity-50"
-                                        :class="selectedConversation.is_assigned_to_me
-                                            ? 'bg-gray-800 text-white border-gray-800'
-                                            : 'bg-white text-gray-700 hover:bg-gray-50'"
-                                    >
-                                        {{ selectedConversation.is_assigned_to_me ? $t('words.chat-unassign-me') : $t('words.chat-assign-me') }}
-                                    </button>
+                                    <div class="relative inline-flex" @click.stop>
+                                        <button
+                                            type="button"
+                                            @click="toggleAssignMe"
+                                            :disabled="assigningAgent"
+                                            class="text-xs px-2.5 py-1.5 rounded-l-md font-medium border border-gray-200 transition disabled:opacity-50"
+                                            :class="selectedConversation.is_assigned_to_me
+                                                ? 'bg-gray-800 text-white border-gray-800'
+                                                : 'bg-white text-gray-700 hover:bg-gray-50'"
+                                        >
+                                            {{ selectedConversation.is_assigned_to_me ? $t('words.chat-unassign-me') : $t('words.chat-assign-me') }}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            @click="toggleAssignDropdown"
+                                            :disabled="assigningAgent"
+                                            class="text-xs px-1.5 py-1.5 rounded-r-md font-medium border border-l-0 border-gray-200 transition disabled:opacity-50"
+                                            :class="selectedConversation.is_assigned_to_me
+                                                ? 'bg-gray-800 text-white border-gray-800'
+                                                : 'bg-white text-gray-700 hover:bg-gray-50'"
+                                            :title="$t('words.chat-assign-colleague')"
+                                            :aria-expanded="showAssignDropdown ? 'true' : 'false'"
+                                        >
+                                            <svg class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd" />
+                                            </svg>
+                                        </button>
+                                        <div
+                                            v-if="showAssignDropdown"
+                                            class="absolute top-full left-0 z-30 mt-1 w-56 max-h-56 overflow-y-auto rounded-md border border-gray-200 bg-white shadow-lg py-1"
+                                        >
+                                            <div class="px-3 py-1.5 text-[11px] font-medium text-gray-400 uppercase tracking-wide">
+                                                {{ $t('words.chat-assign-colleague') }}
+                                            </div>
+                                            <div v-if="loadingAssignableAgents" class="px-3 py-2 text-xs text-gray-500">
+                                                {{ $t('words.loading') }}
+                                            </div>
+                                            <div v-else-if="!assignableAgents.length" class="px-3 py-2 text-xs text-gray-500">
+                                                {{ $t('words.chat-assign-no-colleagues') }}
+                                            </div>
+                                            <button
+                                                v-for="agent in assignableAgents"
+                                                :key="'assign-' + agent.id"
+                                                type="button"
+                                                class="w-full text-left px-3 py-2 text-xs text-gray-700 hover:bg-gray-50 flex items-center justify-between gap-2 disabled:opacity-50"
+                                                :disabled="assigningAgent || isAgentAssigned(agent.id)"
+                                                @click="assignColleague(agent)"
+                                            >
+                                                <span class="truncate">{{ agent.name }}</span>
+                                                <span v-if="isAgentAssigned(agent.id)" class="shrink-0 text-[10px] text-gray-400">
+                                                    {{ $t('words.chat-assigned') }}
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
                                     <a
                                         v-if="selectedConversation.trainee"
                                         :href="selectedConversation.trainee.show_url"
@@ -1160,6 +1204,10 @@ export default {
             availableTags: [],
             tagToAttach: '',
             assigningAgent: false,
+            showAssignDropdown: false,
+            assignableAgents: [],
+            loadingAssignableAgents: false,
+            assignableAgentsLoaded: false,
             attachingTag: false,
             updatingStatus: false,
             pollInterval: null,
@@ -1956,6 +2004,7 @@ export default {
             if (!this.selectedConversation || !this.selectedConversation.id) {
                 return;
             }
+            this.showAssignDropdown = false;
             this.assigningAgent = true;
             try {
                 const routeName = this.selectedConversation.is_assigned_to_me
@@ -1964,6 +2013,55 @@ export default {
                 const method = this.selectedConversation.is_assigned_to_me ? 'delete' : 'post';
                 const { data } = await axios[method](route(routeName, this.selectedConversation.id));
                 this.patchConversation(data.conversation);
+                await this.refreshConversationCounts();
+            } catch (error) {
+                this.errorMessage = error.response?.data?.message || this.$t('words.chat-assign-failed');
+            } finally {
+                this.assigningAgent = false;
+            }
+        },
+        async toggleAssignDropdown() {
+            if (this.showAssignDropdown) {
+                this.showAssignDropdown = false;
+                return;
+            }
+            this.showAssignDropdown = true;
+            if (!this.assignableAgentsLoaded) {
+                await this.loadAssignableAgents();
+            }
+        },
+        async loadAssignableAgents() {
+            this.loadingAssignableAgents = true;
+            try {
+                const { data } = await axios.get(route('back.chat.assignable-agents'));
+                this.assignableAgents = data.agents || [];
+                this.assignableAgentsLoaded = true;
+            } catch (error) {
+                this.assignableAgents = [];
+                this.errorMessage = error.response?.data?.message || this.$t('words.chat-assign-failed');
+            } finally {
+                this.loadingAssignableAgents = false;
+            }
+        },
+        isAgentAssigned(userId) {
+            const agents = (this.selectedConversation && this.selectedConversation.agents) || [];
+            return agents.some((agent) => agent.id === userId);
+        },
+        async assignColleague(agent) {
+            if (!this.selectedConversation || !this.selectedConversation.id || !agent || !agent.id) {
+                return;
+            }
+            if (this.isAgentAssigned(agent.id)) {
+                return;
+            }
+            this.assigningAgent = true;
+            try {
+                const { data } = await axios.post(
+                    route('back.chat.conversations.agents.assign', this.selectedConversation.id),
+                    { user_id: agent.id }
+                );
+                this.patchConversation(data.conversation);
+                this.showAssignDropdown = false;
                 await this.refreshConversationCounts();
             } catch (error) {
                 this.errorMessage = error.response?.data?.message || this.$t('words.chat-assign-failed');
@@ -2458,10 +2556,12 @@ export default {
         },
         handleGlobalClick() {
             this.showEmojiPicker = false;
+            this.showAssignDropdown = false;
         },
         handleGlobalKeydown(event) {
             if (event.key === 'Escape') {
                 this.showEmojiPicker = false;
+                this.showAssignDropdown = false;
             }
         },
         positionEmojiPicker() {

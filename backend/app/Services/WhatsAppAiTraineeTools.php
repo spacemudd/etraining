@@ -50,7 +50,7 @@ final class WhatsAppAiTraineeTools
                 'type' => 'function',
                 'function' => [
                     'name' => 'get_account_status',
-                    'description' => 'Check whether the trainee account is suspended or blocked.',
+                    'description' => 'Check whether the trainee account is suspended or blocked. When is_suspended or requires_human_handoff is true, a human agent handoff is required.',
                     'parameters' => [
                         'type' => 'object',
                         'properties' => (object) [],
@@ -89,7 +89,7 @@ final class WhatsAppAiTraineeTools
                 'type' => 'function',
                 'function' => [
                     'name' => 'request_human_agent',
-                    'description' => 'Call this when the trainee needs a human agent (out of scope, unclear, escalation, or handoff rules apply). Tags the chat need_human_agent and pauses the bot.',
+                    'description' => 'Required before telling the trainee you transferred them. Call when the account is suspended/blocked, the question is out of scope, unclear, or handoff rules apply. Tags the chat need_human_agent and pauses the bot. Never claim a transfer without calling this tool.',
                     'parameters' => [
                         'type' => 'object',
                         'properties' => [
@@ -195,6 +195,7 @@ final class WhatsAppAiTraineeTools
             'ok' => true,
             'found' => true,
             'is_suspended' => $suspended,
+            'requires_human_handoff' => $suspended,
             'suspended_at' => optional($trainee->suspended_at)->toIso8601String(),
             'deleted_at' => optional($trainee->deleted_at)->toIso8601String(),
             'reason' => $suspended ? (string) ($trainee->deleted_remark ?? '') : null,

@@ -812,6 +812,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::get('chat', [\App\Http\Controllers\Back\ChatController::class, 'index'])->name('chat.index');
         Route::prefix('chat')->name('chat.')->group(function () {
             Route::get('conversations', [\App\Http\Controllers\Back\ChatController::class, 'conversations'])->name('conversations');
+            Route::get('assignable-agents', [\App\Http\Controllers\Back\ChatController::class, 'assignableAgents'])->name('assignable-agents');
             Route::post('conversations/{conversation}/agents', [\App\Http\Controllers\Back\ChatController::class, 'assignAgent'])->name('conversations.agents.assign');
             Route::delete('conversations/{conversation}/agents', [\App\Http\Controllers\Back\ChatController::class, 'unassignAgent'])->name('conversations.agents.unassign');
             Route::patch('conversations/{conversation}/status', [\App\Http\Controllers\Back\ChatController::class, 'updateStatus'])->name('conversations.status');

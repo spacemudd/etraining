@@ -9,14 +9,18 @@ use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
 use App\Models\Back\WhatsAppBotSender;
 use App\Models\Back\WhatsAppBotWorkflow;
+use App\Models\Back\WhatsAppConversation;
 use App\Models\Back\WhatsAppMessage;
+use App\Models\Back\WhatsAppTag;
 use App\Services\NoonService;
 use App\Services\WhatsAppAiBotService;
 use App\Services\WhatsAppAiTraineeTools;
 use App\Services\WhatsAppBotEngine;
 use App\Support\WhatsAppAiSettings;
+use App\Support\WhatsAppConversationHandoff;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Mockery;
@@ -54,6 +58,9 @@ class WhatsAppAiBotTest extends BaseTestCase
         Schema::dropIfExists('whatsapp_bot_sessions');
         Schema::dropIfExists('whatsapp_bot_senders');
         Schema::dropIfExists('whatsapp_bot_workflows');
+        Schema::dropIfExists('whatsapp_conversation_agents');
+        Schema::dropIfExists('whatsapp_conversation_tag');
+        Schema::dropIfExists('whatsapp_tags');
         Schema::dropIfExists('whatsapp_conversations');
         Schema::dropIfExists('whatsapp_messages');
 
@@ -173,6 +180,7 @@ class WhatsAppAiBotTest extends BaseTestCase
 
         $this->assertTrue($account['found']);
         $this->assertTrue($account['is_suspended']);
+        $this->assertTrue($account['requires_human_handoff']);
         $this->assertSame('عدم السداد', $account['reason']);
     }
 
@@ -326,6 +334,171 @@ class WhatsAppAiBotTest extends BaseTestCase
         $this->assertFalse($profile['found']);
     }
 
+    public function test_suspended_account_auto_handoffs_without_second_openai_round(): void
+    {
+        $this->createTrainee([
+            'phone' => '966511111111',
+            'name' => 'Suspended',
+            'suspended_at' => now(),
+            'deleted_remark' => 'عدم السداد',
+            'deleted_at' => now(),
+        ]);
+
+        $this->enableAiSettings();
+
+        Http::fake([
+            'api.openai.com/v1/chat/completions' => Http::response([
+                'choices' => [[
+                    'message' => [
+                        'content' => null,
+                        'tool_calls' => [[
+                            'id' => 'call_account_status',
+                            'type' => 'function',
+                            'function' => [
+                                'name' => 'get_account_status',
+                                'arguments' => '{}',
+                            ],
+                        ]],
+                    ],
+                ]],
+            ], 200),
+        ]);
+
+        $inbound = $this->makeInbound('حسابي موقوف؟');
+        app(WhatsAppAiBotService::class)->handleInbound($inbound);
+
+        Http::assertSentCount(1);
+
+        $outbound = WhatsAppMessage::query()
+            ->where('direction', WhatsAppMessage::DIRECTION_OUTBOUND)
+            ->where('phone', $this->customerPhone)
+            ->latest('created_at')
+            ->first();
+
+        $this->assertNotNull($outbound);
+        $this->assertSame(WhatsAppAiBotService::SUSPENDED_HANDOFF_REPLY, $outbound->body);
+
+        $conversation = WhatsAppConversation::query()->where('phone', $this->customerPhone)->first();
+        $this->assertNotNull($conversation);
+        $this->assertNotNull($conversation->bot_paused_until);
+        $this->assertTrue(
+            $conversation->tags()
+                ->where('whatsapp_tags.name', WhatsAppConversationHandoff::NEED_HUMAN_AGENT_TAG)
+                ->exists()
+        );
+    }
+
+    public function test_handoff_phrase_in_reply_triggers_request_human_agent(): void
+    {
+        $this->enableAiSettings();
+
+        Http::fake([
+            'api.openai.com/v1/chat/completions' => Http::response([
+                'choices' => [[
+                    'message' => [
+                        'content' => 'حوّلت موضوعك لزميلي عشان يساعدك',
+                    ],
+                ]],
+            ], 200),
+        ]);
+
+        $inbound = $this->makeInbound('أبغى خدمة العملاء');
+        app(WhatsAppAiBotService::class)->handleInbound($inbound);
+
+        $conversation = WhatsAppConversation::query()->where('phone', $this->customerPhone)->first();
+        $this->assertNotNull($conversation);
+        $this->assertNotNull($conversation->bot_paused_until);
+        $this->assertTrue(
+            $conversation->tags()
+                ->where('whatsapp_tags.name', WhatsAppConversationHandoff::NEED_HUMAN_AGENT_TAG)
+                ->exists()
+        );
+
+        $outbound = WhatsAppMessage::query()
+            ->where('direction', WhatsAppMessage::DIRECTION_OUTBOUND)
+            ->where('phone', $this->customerPhone)
+            ->latest('created_at')
+            ->first();
+
+        $this->assertNotNull($outbound);
+        $this->assertSame('حوّلت موضوعك لزميلي عشان يساعدك', $outbound->body);
+    }
+
+    public function test_active_account_status_does_not_auto_handoff(): void
+    {
+        $this->createTrainee([
+            'phone' => '966511111111',
+            'name' => 'Active',
+            'suspended_at' => null,
+        ]);
+
+        $this->enableAiSettings();
+
+        Http::fake([
+            'api.openai.com/v1/chat/completions' => Http::sequence()
+                ->push([
+                    'choices' => [[
+                        'message' => [
+                            'content' => null,
+                            'tool_calls' => [[
+                                'id' => 'call_account_status',
+                                'type' => 'function',
+                                'function' => [
+                                    'name' => 'get_account_status',
+                                    'arguments' => '{}',
+                                ],
+                            ]],
+                        ],
+                    ]],
+                ])
+                ->push([
+                    'choices' => [[
+                        'message' => [
+                            'content' => 'حسابك نشط حالياً.',
+                        ],
+                    ]],
+                ]),
+        ]);
+
+        $inbound = $this->makeInbound('وش حالة حسابي؟');
+        app(WhatsAppAiBotService::class)->handleInbound($inbound);
+
+        Http::assertSentCount(2);
+
+        $conversation = WhatsAppConversation::query()->where('phone', $this->customerPhone)->first();
+        $this->assertNotNull($conversation);
+        $this->assertNull($conversation->bot_paused_until);
+        $this->assertFalse(
+            $conversation->tags()
+                ->where('whatsapp_tags.name', WhatsAppConversationHandoff::NEED_HUMAN_AGENT_TAG)
+                ->exists()
+        );
+
+        $outbound = WhatsAppMessage::query()
+            ->where('direction', WhatsAppMessage::DIRECTION_OUTBOUND)
+            ->where('phone', $this->customerPhone)
+            ->latest('created_at')
+            ->first();
+
+        $this->assertNotNull($outbound);
+        $this->assertSame('حسابك نشط حالياً.', $outbound->body);
+        $this->assertSame(0, WhatsAppTag::query()->where('name', WhatsAppConversationHandoff::NEED_HUMAN_AGENT_TAG)->count());
+    }
+
+    private function enableAiSettings(): void
+    {
+        WhatsAppAiSettings::save([
+            'enabled' => true,
+            'openai_key' => 'sk-test-key-for-handoff',
+            'model' => 'gpt-4o-mini',
+            'system_prompt' => 'sys',
+            'purpose' => 'purpose',
+            'tone' => 'tone',
+            'handoff_rules' => 'handoff',
+            'max_reply_chars' => 800,
+        ]);
+    }
+
     private function createMinimalSchema(): void
     {
         Schema::dropIfExists('invoices');
@@ -335,6 +508,9 @@ class WhatsAppAiBotTest extends BaseTestCase
         Schema::dropIfExists('whatsapp_bot_sessions');
         Schema::dropIfExists('whatsapp_bot_senders');
         Schema::dropIfExists('whatsapp_bot_workflows');
+        Schema::dropIfExists('whatsapp_conversation_agents');
+        Schema::dropIfExists('whatsapp_conversation_tag');
+        Schema::dropIfExists('whatsapp_tags');
         Schema::dropIfExists('whatsapp_conversations');
         Schema::dropIfExists('whatsapp_messages');
 
@@ -412,6 +588,26 @@ class WhatsAppAiBotTest extends BaseTestCase
             $table->boolean('last_message_is_note')->default(false);
             $table->timestamp('last_message_at')->nullable();
             $table->timestamps();
+        });
+
+        Schema::create('whatsapp_tags', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('name')->unique();
+            $table->string('color', 32)->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('whatsapp_conversation_tag', function (Blueprint $table) {
+            $table->uuid('conversation_id');
+            $table->uuid('tag_id');
+            $table->primary(['conversation_id', 'tag_id']);
+        });
+
+        Schema::create('whatsapp_conversation_agents', function (Blueprint $table) {
+            $table->uuid('conversation_id');
+            $table->uuid('user_id');
+            $table->timestamp('assigned_at')->nullable();
+            $table->primary(['conversation_id', 'user_id']);
         });
 
         Schema::create('whatsapp_bot_workflows', function (Blueprint $table) {

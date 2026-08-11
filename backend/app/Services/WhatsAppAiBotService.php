@@ -8,6 +8,7 @@ use App\Models\Back\WhatsAppConversation;
 use App\Models\Back\WhatsAppMessage;
 use App\Support\WhatsAppAiSettings;
 use App\Support\WhatsAppBotPause;
+use App\Support\WhatsAppConversationHandoff;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -17,6 +18,24 @@ class WhatsAppAiBotService
     private const MAX_TOOL_ROUNDS = 4;
 
     private const HISTORY_LIMIT = 12;
+
+    /**
+     * Fixed reply when account status is suspended (not invented by the model).
+     */
+    public const SUSPENDED_HANDOFF_REPLY = 'حسابك موقوف حالياً، حوّلت موضوعك لزميلي عشان يكمّل معك.';
+
+    /**
+     * Phrases that claim a human handoff already happened.
+     *
+     * @var list<string>
+     */
+    private const HANDOFF_CLAIM_PHRASES = [
+        'حوّلت موضوعك',
+        'حولت موضوعك',
+        'حوّلت طلبك',
+        'حولت طلبك',
+        'زميلي',
+    ];
 
     public function __construct(
         private readonly TelnyxWhatsAppService $whatsAppService,
@@ -70,6 +89,7 @@ class WhatsAppAiBotService
             }
 
             $reply = $this->truncate($reply, WhatsAppAiSettings::getMaxReplyChars());
+            $this->maybeHandoffFromReplyPhrase($phone, $reply);
             $this->sendReply($phone, $reply, $message->trainee_id ? (string) $message->trainee_id : null);
         } catch (Throwable $exception) {
             Log::error('WhatsApp AI bot failed', [
@@ -160,6 +180,16 @@ class WhatsAppAiBotService
                     'tool_call_id' => (string) ($toolCall['id'] ?? ''),
                     'content' => json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
                 ];
+
+                if ($this->shouldAutoHandoffForSuspended($name, $result)) {
+                    $this->tools->call(
+                        'request_human_agent',
+                        ['reason' => 'account_suspended'],
+                        $phone
+                    );
+
+                    return self::SUSPENDED_HANDOFF_REPLY;
+                }
             }
         }
 
@@ -180,6 +210,60 @@ class WhatsAppAiBotService
         $content = trim((string) $response->json('choices.0.message.content'));
 
         return $content !== '' ? $content : null;
+    }
+
+    /**
+     * @param  array<string, mixed>  $result
+     */
+    private function shouldAutoHandoffForSuspended(string $toolName, array $result): bool
+    {
+        if ($toolName !== 'get_account_status') {
+            return false;
+        }
+
+        return ! empty($result['ok'])
+            && ! empty($result['found'])
+            && ! empty($result['is_suspended']);
+    }
+
+    private function maybeHandoffFromReplyPhrase(string $phone, string $reply): void
+    {
+        if (! $this->replyClaimsHandoff($reply)) {
+            return;
+        }
+
+        if ($this->conversationAlreadyNeedsHumanAgent($phone)) {
+            return;
+        }
+
+        $this->tools->call(
+            'request_human_agent',
+            ['reason' => 'handoff_phrase_detected'],
+            $phone
+        );
+    }
+
+    private function replyClaimsHandoff(string $reply): bool
+    {
+        foreach (self::HANDOFF_CLAIM_PHRASES as $phrase) {
+            if (mb_stripos($reply, $phrase) !== false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function conversationAlreadyNeedsHumanAgent(string $phone): bool
+    {
+        $conversation = WhatsAppConversation::query()->where('phone', $phone)->first();
+        if (! $conversation) {
+            return false;
+        }
+
+        return $conversation->tags()
+            ->where('whatsapp_tags.name', WhatsAppConversationHandoff::NEED_HUMAN_AGENT_TAG)
+            ->exists();
     }
 
     /**

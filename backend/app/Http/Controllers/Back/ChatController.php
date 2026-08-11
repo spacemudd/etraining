@@ -13,6 +13,7 @@ use App\Models\Back\WhatsAppConversation;
 use App\Models\Back\WhatsAppMessage;
 use App\Models\Back\WhatsAppQuickReply;
 use App\Models\Back\WhatsAppTag;
+use App\Models\User;
 use App\Services\TelnyxWhatsAppService;
 use App\Support\WhatsAppBroadcast;
 use App\Support\WhatsAppBotPause;
@@ -26,6 +27,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use RuntimeException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class ChatController extends Controller
 {
@@ -119,9 +121,45 @@ class ChatController extends Controller
         return response()->json($payload);
     }
 
-    public function assignAgent(WhatsAppConversation $conversation): JsonResponse
+    public function assignableAgents(): JsonResponse
     {
-        $userId = auth()->id();
+        $auth = auth()->user();
+        $roleIds = $auth->roles()->pluck('id');
+
+        if ($roleIds->isEmpty()) {
+            return response()->json(['agents' => []]);
+        }
+
+        $agents = User::query()
+            ->permission('access-whatsapp-chats')
+            ->where('id', '!=', $auth->id)
+            ->whereHas('roles', function ($query) use ($roleIds) {
+                $query->whereIn('roles.id', $roleIds);
+            })
+            ->orderBy('name')
+            ->get(['id', 'name'])
+            ->map(fn (User $user) => [
+                'id' => $user->id,
+                'name' => $user->name,
+            ])
+            ->values()
+            ->all();
+
+        return response()->json(['agents' => $agents]);
+    }
+
+    public function assignAgent(Request $request, WhatsAppConversation $conversation): JsonResponse
+    {
+        $validated = $request->validate([
+            'user_id' => ['nullable', 'uuid', 'exists:users,id'],
+        ]);
+
+        $authId = auth()->id();
+        $userId = $validated['user_id'] ?? $authId;
+
+        if ($userId !== $authId) {
+            $this->assertAssignablePeer((string) $userId);
+        }
 
         if (! $conversation->agents()->where('users.id', $userId)->exists()) {
             $conversation->agents()->attach($userId, [
@@ -138,7 +176,7 @@ class ChatController extends Controller
         WhatsAppConversationSync::broadcast($conversation);
 
         return response()->json([
-            'conversation' => $this->formatConversation($conversation, $userId),
+            'conversation' => $this->formatConversation($conversation, $authId),
         ]);
     }
 
@@ -1086,6 +1124,28 @@ class ChatController extends Controller
         ]);
 
         return $formatted;
+    }
+
+    private function assertAssignablePeer(string $userId): void
+    {
+        $auth = auth()->user();
+        $roleIds = $auth->roles()->pluck('id');
+
+        if ($roleIds->isEmpty()) {
+            throw new AccessDeniedHttpException(__('words.chat-assign-peer-denied'));
+        }
+
+        $isPeer = User::query()
+            ->permission('access-whatsapp-chats')
+            ->where('id', $userId)
+            ->whereHas('roles', function ($query) use ($roleIds) {
+                $query->whereIn('roles.id', $roleIds);
+            })
+            ->exists();
+
+        if (! $isPeer) {
+            throw new AccessDeniedHttpException(__('words.chat-assign-peer-denied'));
+        }
     }
 
     private function ensureConfigured(): void

@@ -36,7 +36,7 @@ final class WhatsAppAiSettings
 
     public const DEFAULT_TONE = 'Professional Arabic; short WhatsApp-friendly replies.';
 
-    public const DEFAULT_HANDOFF_RULES = 'If the question is outside contract/account/invoices, or tools return not found / error, tell the trainee a human agent will follow up and stop inventing answers.';
+    public const DEFAULT_HANDOFF_RULES = 'If the account is suspended or blocked, call request_human_agent immediately (do not only describe the status). If the question is outside contract/account/invoices, or tools return not found / error, call request_human_agent, briefly tell the trainee a colleague will follow up, and stop inventing answers. Never claim you transferred them without calling request_human_agent.';
 
     public static function isEnabled(): bool
     {
@@ -183,7 +183,7 @@ final class WhatsAppAiSettings
             '- Never expose or discuss another trainee\'s data.',
             '- Never ask for card numbers or payment credentials; only share payment links from tools.',
             '- The caller phone is already known; do not ask the model to supply a different identity phone.',
-            '- When handoff rules apply or you cannot help, you MUST call the request_human_agent tool, then briefly tell the trainee a human agent will follow up.',
+            '- When handoff rules apply, the account is suspended/blocked, or you cannot help, you MUST call the request_human_agent tool before any handoff wording. Never write that you transferred the trainee without calling that tool.',
         ];
 
         return implode("\n\n", array_filter($parts));
