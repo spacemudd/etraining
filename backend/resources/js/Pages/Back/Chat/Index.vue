@@ -817,6 +817,45 @@
                                             {{ $t('words.no-pending-invoices') }}
                                         </div>
                                     </div>
+
+                                    <div>
+                                        <div class="text-xs text-gray-500 mb-1.5">{{ $t('words.paid-invoices-history') }}</div>
+                                        <ul
+                                            v-if="traineeContext.paid_invoices && traineeContext.paid_invoices.length"
+                                            class="divide-y divide-gray-100 border border-emerald-100 rounded-md bg-emerald-50/40 overflow-hidden"
+                                        >
+                                            <li
+                                                v-for="invoice in traineeContext.paid_invoices"
+                                                :key="'paid-' + invoice.id"
+                                                class="px-3 py-2 space-y-1 text-xs"
+                                            >
+                                                <div class="flex items-start justify-between gap-2">
+                                                    <div class="min-w-0">
+                                                        <a
+                                                            :href="invoice.show_url"
+                                                            target="_blank"
+                                                            class="font-medium text-gray-900 hover:underline truncate block"
+                                                        >
+                                                            {{ invoice.number_formatted }}
+                                                        </a>
+                                                        <div class="text-gray-500 mt-0.5 truncate">
+                                                            {{ invoice.company_name || traineeContext.trainee.company_name || '—' }}
+                                                        </div>
+                                                    </div>
+                                                    <span class="font-medium text-gray-800 tabular-nums flex-shrink-0">
+                                                        {{ formatAmount(invoice.grand_total) }}
+                                                    </span>
+                                                </div>
+                                                <div class="flex items-center justify-between gap-2 text-gray-500">
+                                                    <span>{{ invoice.status_formatted }}</span>
+                                                    <span v-if="invoice.paid_at" dir="ltr">{{ invoice.paid_at }}</span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <div v-else class="text-xs text-gray-400">
+                                            {{ $t('words.no-paid-invoices') }}
+                                        </div>
+                                    </div>
                                 </template>
                                 <div v-else class="text-xs text-red-600">
                                     {{ $t('words.could-not-load-trainee-details') }}
@@ -1078,8 +1117,20 @@
                                     <div class="text-sm font-medium text-gray-900 truncate">{{ newChatBulkCompany.name }}</div>
                                 </div>
                                 <p class="text-xs text-gray-500">{{ $t('words.whatsapp-company-bulk-hint') }}</p>
+                                <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer select-none">
+                                    <input
+                                        v-model="newChatBulkOnlyPendingInvoices"
+                                        type="checkbox"
+                                        class="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                        @change="loadNewChatBulkActiveTrainees"
+                                    />
+                                    <span>{{ $t('words.whatsapp-only-trainees-with-pending-invoices') }}</span>
+                                </label>
                                 <div class="text-sm text-gray-700">
                                     <span v-if="newChatBulkLoadingTrainees">{{ $t('words.loading') }}...</span>
+                                    <span v-else-if="newChatBulkOnlyPendingInvoices">
+                                        {{ $t('words.whatsapp-trainees-with-pending-count', { count: newChatBulkActiveCount }) }}
+                                    </span>
                                     <span v-else>
                                         {{ $t('words.whatsapp-active-trainees-count', { count: newChatBulkActiveCount }) }}
                                     </span>
@@ -1101,7 +1152,9 @@
                                     v-else-if="!newChatBulkLoadingTrainees"
                                     class="text-xs text-gray-400 px-1 py-2"
                                 >
-                                    {{ $t('words.whatsapp-company-no-active-trainees') }}
+                                    {{ newChatBulkOnlyPendingInvoices
+                                        ? $t('words.whatsapp-company-no-pending-invoice-trainees')
+                                        : $t('words.whatsapp-company-no-active-trainees') }}
                                 </div>
                             </div>
                         </div>
@@ -1310,6 +1363,7 @@ export default {
             newChatBulkActiveTrainees: [],
             newChatBulkActiveCount: 0,
             newChatBulkLoadingTrainees: false,
+            newChatBulkOnlyPendingInvoices: false,
             conversationPage: 1,
             totalPages: 1,
             totalConversations: 0,
@@ -2337,6 +2391,7 @@ export default {
             this.newChatBulkActiveTrainees = [];
             this.newChatBulkActiveCount = 0;
             this.newChatBulkLoadingTrainees = false;
+            this.newChatBulkOnlyPendingInvoices = false;
             this.newChatSuccess = '';
             if (this.newChatSearchDebounce) {
                 clearTimeout(this.newChatSearchDebounce);
@@ -2695,7 +2750,12 @@ export default {
             this.newChatBulkLoadingTrainees = true;
             try {
                 const { data } = await axios.get(
-                    route('back.chat.companies.active-trainees', this.newChatBulkCompany.id)
+                    route('back.chat.companies.active-trainees', this.newChatBulkCompany.id),
+                    {
+                        params: {
+                            only_pending_invoices: this.newChatBulkOnlyPendingInvoices ? 1 : 0,
+                        },
+                    }
                 );
                 this.newChatBulkActiveTrainees = data.trainees || [];
                 this.newChatBulkActiveCount = data.count || this.newChatBulkActiveTrainees.length;
@@ -2732,6 +2792,7 @@ export default {
                     company_id: this.newChatBulkCompany.id,
                     content_sid: this.newChatTemplateSid,
                     content_variables: this.newChatTemplateVariables,
+                    only_pending_invoices: this.newChatBulkOnlyPendingInvoices ? 1 : 0,
                 });
 
                 this.newChatSuccess = data.message

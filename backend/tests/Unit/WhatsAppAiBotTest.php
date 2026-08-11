@@ -89,6 +89,27 @@ class WhatsAppAiBotTest extends BaseTestCase
         $this->assertStringNotContainsString('abcdefghijklmnopqrst', json_encode($payload));
     }
 
+    public function test_compose_system_message_includes_lower_salary_case(): void
+    {
+        WhatsAppAiSettings::save([
+            'enabled' => true,
+            'openai_key' => 'sk-test-key',
+            'model' => 'gpt-4o-mini',
+            'system_prompt' => 'sys',
+            'purpose' => 'purpose',
+            'tone' => 'tone',
+            'handoff_rules' => 'handoff',
+            'max_reply_chars' => 800,
+        ]);
+
+        $composed = WhatsAppAiSettings::composeSystemMessage();
+
+        $this->assertStringContainsString('LOWER SALARY', $composed);
+        $this->assertStringContainsString('صورة من الحوالة', $composed);
+        $this->assertStringContainsString('GOSI', $composed);
+        $this->assertStringContainsString('request_human_agent', $composed);
+    }
+
     public function test_empty_api_key_keeps_existing(): void
     {
         WhatsAppAiSettings::save([

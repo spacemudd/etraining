@@ -116,7 +116,7 @@ class WhatsAppAiBotService
 
         $messages[] = [
             'role' => 'user',
-            'content' => trim((string) ($inbound->body ?? '')),
+            'content' => $this->formatUserMessageContent($inbound),
         ];
 
         $tools = $this->tools->openAiToolDefinitions();
@@ -283,24 +283,44 @@ class WhatsAppAiBotService
 
         $history = [];
         foreach ($rows as $row) {
-            $body = trim((string) ($row->body ?? ''));
-            if ($body === '') {
-                continue;
-            }
-
             $meta = is_array($row->metadata) ? $row->metadata : [];
             $isBot = ! empty($meta['is_bot']);
             $isOutbound = $row->direction === WhatsAppMessage::DIRECTION_OUTBOUND;
 
             if ($isOutbound && $isBot) {
-                $history[] = ['role' => 'assistant', 'content' => $body];
+                $body = trim((string) ($row->body ?? ''));
+                if ($body !== '') {
+                    $history[] = ['role' => 'assistant', 'content' => $body];
+                }
             } elseif (! $isOutbound) {
-                $history[] = ['role' => 'user', 'content' => $body];
+                $content = $this->formatUserMessageContent($row);
+                if ($content !== '') {
+                    $history[] = ['role' => 'user', 'content' => $content];
+                }
             }
             // Skip human-agent outbound from the model history to avoid confusing roles.
         }
 
         return $history;
+    }
+
+    private function formatUserMessageContent(WhatsAppMessage $message): string
+    {
+        $body = trim((string) ($message->body ?? ''));
+        $meta = is_array($message->metadata) ? $message->metadata : [];
+        $media = is_array($meta['media'] ?? null) ? $meta['media'] : [];
+        $mediaCount = count($media);
+
+        if ($mediaCount > 0) {
+            $label = sprintf('[Trainee sent %d image/attachment(s)]', $mediaCount);
+            if ($body === '' || $body === '[Media Attachment]') {
+                return $label;
+            }
+
+            return $body . "\n" . $label;
+        }
+
+        return $body;
     }
 
     private function sendReply(string $phone, string $body, ?string $traineeId): void

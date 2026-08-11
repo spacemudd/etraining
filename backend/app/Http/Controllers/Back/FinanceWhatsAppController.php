@@ -215,12 +215,20 @@ class FinanceWhatsAppController extends Controller
         ]);
     }
 
-    public function companyActiveTrainees(string $company): JsonResponse
+    public function companyActiveTrainees(Request $request, string $company): JsonResponse
     {
         $companyModel = Company::withoutGlobalScopes()->findOrFail($company);
 
-        $trainees = $this->activeTraineesWithPhoneQuery()
-            ->where('company_id', $companyModel->id)
+        $request->validate([
+            'only_pending_invoices' => 'nullable|boolean',
+        ]);
+        $onlyPendingInvoices = $request->boolean('only_pending_invoices');
+
+        $query = $this->activeTraineesWithPhoneQuery()
+            ->where('company_id', $companyModel->id);
+        $this->applyPendingInvoicesTraineeFilter($query, $onlyPendingInvoices);
+
+        $trainees = $query
             ->orderBy('name')
             ->get(['id', 'name', 'phone', 'identity_number', 'company_id']);
 
@@ -229,6 +237,7 @@ class FinanceWhatsAppController extends Controller
                 'id' => $companyModel->id,
                 'name' => $companyModel->name_ar ?: $companyModel->name_en,
             ],
+            'only_pending_invoices' => $onlyPendingInvoices,
             'count' => $trainees->count(),
             'trainees' => $trainees->map(static fn (Trainee $trainee) => [
                 'id' => $trainee->id,
@@ -241,30 +250,43 @@ class FinanceWhatsAppController extends Controller
 
     public function pendingInvoices(Trainee $trainee): JsonResponse
     {
+        $invoiceColumns = [
+            'id',
+            'number',
+            'grand_total',
+            'status',
+            'from_date',
+            'to_date',
+            'paid_at',
+            'created_at',
+        ];
+
         $invoices = $trainee->invoices()
             ->notPaid()
             ->where('status', '!=', Invoice::STATUS_ARCHIVED)
             ->orderByDesc('from_date')
-            ->get([
-                'id',
-                'number',
-                'grand_total',
-                'status',
-                'from_date',
-                'to_date',
-                'created_at',
-            ]);
+            ->get($invoiceColumns);
+
+        $paidInvoices = $trainee->invoices()
+            ->paid()
+            ->orderByDesc('paid_at')
+            ->limit(3)
+            ->get($invoiceColumns);
+
+        $mapInvoice = static fn (Invoice $invoice) => [
+            'id' => $invoice->id,
+            'number_formatted' => $invoice->number_formatted,
+            'grand_total' => round((float) $invoice->grand_total, 2),
+            'status' => $invoice->status,
+            'status_formatted' => $invoice->status_formatted,
+            'month_of' => $invoice->month_of,
+            'paid_at' => optional($invoice->paid_at)->toDateString(),
+            'show_url' => route('back.finance.invoices.show', $invoice->id),
+        ];
 
         return response()->json([
-            'invoices' => $invoices->map(static fn (Invoice $invoice) => [
-                'id' => $invoice->id,
-                'number_formatted' => $invoice->number_formatted,
-                'grand_total' => round((float) $invoice->grand_total, 2),
-                'status' => $invoice->status,
-                'status_formatted' => $invoice->status_formatted,
-                'month_of' => $invoice->month_of,
-                'show_url' => route('back.finance.invoices.show', $invoice->id),
-            ])->values(),
+            'invoices' => $invoices->map($mapInvoice)->values(),
+            'paid_invoices' => $paidInvoices->map($mapInvoice)->values(),
             'total_owed' => round((float) $invoices->sum('grand_total'), 2),
             'count' => $invoices->count(),
         ]);
@@ -390,21 +412,28 @@ class FinanceWhatsAppController extends Controller
             'content_sid' => 'required|string|max:64',
             'content_variables' => 'nullable|array',
             'content_variables.*' => 'nullable|string|max:1000',
+            'only_pending_invoices' => 'nullable|boolean',
         ]);
 
         $company = Company::withoutGlobalScopes()->findOrFail($validated['company_id']);
+        $onlyPendingInvoices = $request->boolean('only_pending_invoices');
 
-        $trainees = $this->activeTraineesWithPhoneQuery()
+        $query = $this->activeTraineesWithPhoneQuery()
             ->where('company_id', $company->id)
-            ->with(['company' => static function ($query): void {
-                $query->withoutGlobalScopes()->select(['id', 'name_ar', 'name_en']);
-            }])
+            ->with(['company' => static function ($companyQuery): void {
+                $companyQuery->withoutGlobalScopes()->select(['id', 'name_ar', 'name_en']);
+            }]);
+        $this->applyPendingInvoicesTraineeFilter($query, $onlyPendingInvoices);
+
+        $trainees = $query
             ->orderBy('name')
             ->get(['id', 'name', 'phone', 'company_id', 'english_name', 'identity_number']);
 
         if ($trainees->isEmpty()) {
             return response()->json([
-                'message' => __('words.whatsapp-company-no-active-trainees'),
+                'message' => $onlyPendingInvoices
+                    ? __('words.whatsapp-company-no-pending-invoice-trainees')
+                    : __('words.whatsapp-company-no-active-trainees'),
             ], 422);
         }
 
@@ -485,6 +514,18 @@ class FinanceWhatsAppController extends Controller
             ->whereNull('suspended_at')
             ->whereNotNull('phone')
             ->where('phone', '!=', '');
+    }
+
+    private function applyPendingInvoicesTraineeFilter($query, bool $onlyPendingInvoices): void
+    {
+        if (! $onlyPendingInvoices) {
+            return;
+        }
+
+        $query->whereHas('invoices', static function ($invoiceQuery): void {
+            $invoiceQuery->whereNull('paid_at')
+                ->where('status', '!=', Invoice::STATUS_ARCHIVED);
+        });
     }
 
     private function attachAgentAndPauseBot(string $phone): void
