@@ -156,12 +156,24 @@
                                             </span>
                                             <span class="inline-flex items-center gap-1 flex-shrink-0">
                                                 <ion-icon
+                                                    v-if="botConfigured && isConversationBotPaused(conv)"
+                                                    name="pause-circle-outline"
+                                                    class="w-3.5 h-3.5 text-orange-500"
+                                                    :title="$t('words.bot-paused')"
+                                                ></ion-icon>
+                                                <ion-icon
+                                                    v-else-if="botConfigured"
+                                                    name="hardware-chip-outline"
+                                                    class="w-3.5 h-3.5 text-green-600"
+                                                    :title="$t('words.bot-active')"
+                                                ></ion-icon>
+                                                <ion-icon
                                                     v-if="isConversationMessagingWindowLocked(conv)"
                                                     name="lock-closed-outline"
                                                     class="w-3.5 h-3.5 text-red-500"
                                                     :title="$t('words.whatsapp-window-locked')"
                                                 ></ion-icon>
-                                                <span class="text-[11px] text-gray-400">
+                                                <span class="text-xs text-gray-400">
                                                     {{ formatTimeShort(conv.last_message && conv.last_message.sent_at) }}
                                                 </span>
                                             </span>
@@ -758,11 +770,18 @@
 
                                     <div>
                                         <div class="text-xs text-gray-500 mb-0.5">{{ $t('words.gosi-status') }}</div>
-                                        <div class="text-sm text-gray-900 text-right">
-                                            <span dir="ltr">
-                                                {{ (traineeContext.gosi_status && traineeContext.gosi_status.fetched_at) || '—' }}
-                                            </span>
+                                        <div
+                                            v-if="traineeContext.gosi_status && traineeContext.gosi_status.fetched_at"
+                                            class="text-sm text-gray-900 space-y-0.5"
+                                        >
+                                            <div v-if="traineeContext.gosi_status.employer_name" class="break-words">
+                                                {{ traineeContext.gosi_status.employer_name }}
+                                            </div>
+                                            <div class="text-xs text-gray-500" dir="ltr">
+                                                {{ traineeContext.gosi_status.fetched_at }}
+                                            </div>
                                         </div>
+                                        <div v-else class="text-sm text-gray-900">—</div>
                                     </div>
 
                                     <div>
@@ -1486,6 +1505,7 @@ export default {
             messagesRefreshTimer: null,
             searchDebounce: null,
             botStatus: null,
+            botConfigured: false,
             pausingBot: false,
             windowNowMs: Date.now(),
             messagingWindowTimer: null,
@@ -2092,6 +2112,7 @@ export default {
                 this.conversationPage = data.current_page || 1;
                 this.totalPages = data.last_page || 1;
                 this.totalConversations = data.total || 0;
+                this.botConfigured = !!data.bot_configured;
                 this.applyConversationCounts(data.counts);
                 this.applyTagCounts(data.tag_counts);
             } catch (e) {
@@ -2271,6 +2292,10 @@ export default {
                     params: { phone: this.selectedConversation.phone },
                 });
                 this.botStatus = data;
+                if (data && (data.workflow_assigned || data.ai_enabled)) {
+                    this.botConfigured = true;
+                }
+                this.patchSelectedConversationBotState(!!(data && data.is_paused), data && data.paused_until);
             } catch (error) {
                 this.botStatus = {
                     workflow_assigned: false,
@@ -2300,6 +2325,7 @@ export default {
                 });
                 this.botStatus = data.bot || null;
                 this.successMessage = data.message || this.$t('words.whatsapp-bot-paused');
+                this.patchSelectedConversationBotState(true, data.bot && data.bot.paused_until);
             } catch (error) {
                 this.errorMessage = (error.response && error.response.data && error.response.data.message)
                     || this.$t('words.whatsapp-bot-pause-failed');
@@ -2322,6 +2348,7 @@ export default {
                 });
                 this.botStatus = data.bot || null;
                 this.successMessage = data.message || this.$t('words.whatsapp-bot-resumed');
+                this.patchSelectedConversationBotState(false, null);
             } catch (error) {
                 this.errorMessage = (error.response && error.response.data && error.response.data.message)
                     || this.$t('words.whatsapp-bot-resume-failed');
@@ -3542,6 +3569,40 @@ export default {
             }
 
             return expiresMs <= this.windowNowMs;
+        },
+        isConversationBotPaused(conv) {
+            void this.windowNowMs;
+            if (!conv) {
+                return false;
+            }
+
+            if (conv.bot_paused_until) {
+                const untilMs = Date.parse(conv.bot_paused_until);
+                if (!Number.isNaN(untilMs)) {
+                    return untilMs > this.windowNowMs;
+                }
+            }
+
+            return !!conv.bot_is_paused;
+        },
+        patchSelectedConversationBotState(isPaused, pausedUntil) {
+            if (!this.selectedConversation) {
+                return;
+            }
+
+            const patch = {
+                bot_is_paused: !!isPaused,
+                bot_paused_until: isPaused ? (pausedUntil || null) : null,
+            };
+
+            this.selectedConversation = { ...this.selectedConversation, ...patch };
+
+            const index = this.conversations.findIndex((c) => (
+                c.id === this.selectedConversation.id || c.phone === this.selectedConversation.phone
+            ));
+            if (index !== -1) {
+                this.$set(this.conversations, index, { ...this.conversations[index], ...patch });
+            }
         },
         translateStatus(status) {
             if (!status) return '';

@@ -9,6 +9,7 @@ use App\Models\Back\Company;
 use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
 use App\Models\Back\TraineeBlockList;
+use App\Models\Back\WhatsAppBotSender;
 use App\Models\Back\WhatsAppConversation;
 use App\Models\Back\WhatsAppMessage;
 use App\Models\Back\WhatsAppQuickReply;
@@ -17,6 +18,7 @@ use App\Models\GosiEmployeeData;
 use App\Models\User;
 use App\Services\TelnyxWhatsAppService;
 use App\Support\WhatsAppBroadcast;
+use App\Support\WhatsAppAiSettings;
 use App\Support\WhatsAppBotPause;
 use App\Support\WhatsAppBotStatus;
 use App\Support\WhatsAppConversationHandoff;
@@ -118,6 +120,7 @@ class ChatController extends Controller
         $payload = $paginator->toArray();
         $payload['counts'] = $this->conversationCounts();
         $payload['tag_counts'] = $this->tagConversationCounts();
+        $payload['bot_configured'] = $this->isWhatsAppBotConfigured();
 
         return response()->json($payload);
     }
@@ -774,11 +777,30 @@ class ChatController extends Controller
         ];
 
         $gosiRecord = null;
+        $gosiEmployerName = null;
         if (filled($model->identity_number)) {
             $gosiRecord = GosiEmployeeData::query()
                 ->where('nin_or_iqama', $model->identity_number)
                 ->orderByDesc('updated_at')
-                ->first(['id', 'updated_at']);
+                ->first(['id', 'updated_at', 'data']);
+
+            if ($gosiRecord) {
+                $gosiPayload = $gosiRecord->data;
+                if (is_string($gosiPayload)) {
+                    $decoded = json_decode($gosiPayload, true);
+                    $gosiPayload = is_array($decoded) ? $decoded : [];
+                }
+                if (! is_array($gosiPayload)) {
+                    $gosiPayload = [];
+                }
+
+                $gosiEmployerName = collect($gosiPayload['employmentStatusInfo'] ?? [])
+                    ->pluck('employerName')
+                    ->filter(static fn ($name) => filled($name))
+                    ->unique()
+                    ->values()
+                    ->implode(' · ') ?: null;
+            }
         }
 
         return response()->json([
@@ -806,6 +828,7 @@ class ChatController extends Controller
             ],
             'gosi_status' => [
                 'fetched_at' => optional(optional($gosiRecord)->updated_at)->toDateString(),
+                'employer_name' => $gosiEmployerName,
             ],
             'invoices' => $invoices->map($mapInvoice)->values(),
             'paid_invoices' => $paidInvoices->map($mapInvoice)->values(),
@@ -1283,7 +1306,23 @@ class ChatController extends Controller
                 : false,
             'is_unassigned' => $conversation->agents->isEmpty(),
             'has_unread' => (bool) $conversation->has_unread,
+            'bot_is_paused' => WhatsAppBotPause::isPaused($conversation),
+            'bot_paused_until' => optional($conversation->bot_paused_until)->toIso8601String(),
         ];
+    }
+
+    private function isWhatsAppBotConfigured(): bool
+    {
+        if (WhatsAppAiSettings::isReady()) {
+            return true;
+        }
+
+        return WhatsAppBotSender::query()
+            ->whereNotNull('workflow_id')
+            ->whereHas('workflow', static function ($query): void {
+                $query->where('is_active', true);
+            })
+            ->exists();
     }
 
     /**
