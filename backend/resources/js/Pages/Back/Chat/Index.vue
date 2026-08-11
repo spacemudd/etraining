@@ -479,8 +479,8 @@
                         </div>
 
                         <!-- Composer -->
-                        <div class="border-t p-3 bg-white flex-1 min-h-0 flex flex-col overflow-visible">
-                            <div class="flex gap-0.5 p-0.5 bg-gray-100 rounded-md mb-3 w-fit flex-wrap">
+                        <div class="border-t p-3 bg-white flex-1 min-h-0 flex flex-col overflow-hidden">
+                            <div class="flex gap-0.5 p-0.5 bg-gray-100 rounded-md mb-3 w-fit flex-wrap flex-shrink-0">
                                 <button
                                     type="button"
                                     @click="setComposerMode('freeform')"
@@ -515,6 +515,7 @@
                                 </button>
                             </div>
 
+                            <div class="flex-1 min-h-0 overflow-y-auto">
                             <div v-if="composerMode === 'template'">
                                 <div v-if="loadingTemplates" class="text-xs text-gray-500 mb-2">
                                     {{ $t('words.loading') }}...
@@ -656,6 +657,12 @@
                                 >
                                     {{ $t('words.whatsapp-window-locked-hint') }}
                                 </div>
+                                <p
+                                    v-if="composerMode === 'note'"
+                                    class="mb-2 text-xs text-amber-800 bg-amber-50 px-3 py-2 rounded-md"
+                                >
+                                    {{ $t('words.internal-note-hint') }}
+                                </p>
                                 <div class="relative z-50">
                                     <textarea
                                         ref="messageTextarea"
@@ -663,7 +670,7 @@
                                         rows="3"
                                         class="w-full text-sm rounded-md p-2.5 pr-10 border border-gray-200 focus:border-gray-400 focus:ring-0"
                                         :class="composerMode === 'note' ? 'bg-amber-50/50' : 'bg-white'"
-                                        :placeholder="composerMode === 'note' ? $t('words.internal-note-hint') : $t('words.message') + '...'"
+                                        :placeholder="$t('words.message') + '...'"
                                         :disabled="composerMode === 'freeform' && messagingWindowIsOpen === false"
                                     ></textarea>
                                     <div class="absolute top-2 right-2 z-50" v-if="composerMode === 'freeform' || composerMode === 'note'">
@@ -678,21 +685,26 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="flex items-center justify-end mt-2">
-                                    <button
-                                        @click="sendMessageOrNote"
-                                        type="button"
-                                        :disabled="sending || !messageBody.trim() || (composerMode === 'freeform' && messagingWindowIsOpen === false)"
-                                        class="px-4 py-2 rounded-md text-sm font-medium text-white disabled:opacity-50 transition"
-                                        :class="composerMode === 'note' ? 'bg-amber-600 hover:bg-amber-700' : 'bg-green-600 hover:bg-green-700'"
-                                    >
-                                        {{ composerMode === 'note' ? $t('words.internal-note') : $t('words.send') }}
-                                    </button>
-                                </div>
+                            </div>
                             </div>
 
-                            <p v-if="errorMessage" class="mt-2 text-xs text-red-600">{{ errorMessage }}</p>
-                            <p v-if="successMessage" class="mt-2 text-xs text-green-600">{{ successMessage }}</p>
+                            <div
+                                v-if="composerMode === 'freeform' || composerMode === 'note'"
+                                class="flex items-center justify-end mt-2 flex-shrink-0"
+                            >
+                                <button
+                                    @click="sendMessageOrNote"
+                                    type="button"
+                                    :disabled="sending || !messageBody.trim() || (composerMode === 'freeform' && messagingWindowIsOpen === false)"
+                                    class="px-4 py-2 rounded-md text-sm font-medium text-white disabled:opacity-50 transition"
+                                    :class="composerMode === 'note' ? 'bg-amber-600 hover:bg-amber-700' : 'bg-green-600 hover:bg-green-700'"
+                                >
+                                    {{ composerMode === 'note' ? $t('words.whatsapp-add-note') : $t('words.send') }}
+                                </button>
+                            </div>
+
+                            <p v-if="errorMessage" class="mt-2 text-xs text-red-600 flex-shrink-0">{{ errorMessage }}</p>
+                            <p v-if="successMessage" class="mt-2 text-xs text-green-600 flex-shrink-0">{{ successMessage }}</p>
                         </div>
                         </div>
 
