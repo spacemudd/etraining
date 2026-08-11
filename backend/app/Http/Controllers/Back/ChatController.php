@@ -497,7 +497,7 @@ class ChatController extends Controller
         $page = (int) ($validated['page'] ?? 1);
         $limit = (int) ($validated['limit'] ?? 10);
 
-        $query = Company::query()
+        $query = Company::withoutGlobalScopes()
             ->where(function ($builder) use ($search) {
                 $builder->where('name_ar', 'LIKE', '%' . $search . '%')
                     ->orWhere('name_en', 'LIKE', '%' . $search . '%');
@@ -519,6 +519,12 @@ class ChatController extends Controller
             ->groupBy('company_id')
             ->pluck('aggregate', 'company_id');
 
+        $activeCounts = $this->activeTraineesWithPhoneQuery()
+            ->whereIn('company_id', $companyIds)
+            ->selectRaw('company_id, COUNT(*) as aggregate')
+            ->groupBy('company_id')
+            ->pluck('aggregate', 'company_id');
+
         return response()->json([
             'companies' => $companies->map(static fn (Company $company) => [
                 'id' => $company->id,
@@ -526,11 +532,36 @@ class ChatController extends Controller
                 'name_ar' => $company->name_ar,
                 'name_en' => $company->name_en,
                 'trainees_with_phone_count' => (int) ($traineeCounts[$company->id] ?? 0),
+                'active_trainees_count' => (int) ($activeCounts[$company->id] ?? 0),
             ])->values(),
             'page' => $page,
             'limit' => $limit,
             'total' => $total,
             'has_more' => ($page * $limit) < $total,
+        ]);
+    }
+
+    public function companyActiveTrainees(string $company): JsonResponse
+    {
+        $companyModel = Company::withoutGlobalScopes()->findOrFail($company);
+
+        $trainees = $this->activeTraineesWithPhoneQuery()
+            ->where('company_id', $companyModel->id)
+            ->orderBy('name')
+            ->get(['id', 'name', 'phone', 'identity_number', 'company_id']);
+
+        return response()->json([
+            'company' => [
+                'id' => $companyModel->id,
+                'name' => $companyModel->name_ar ?: $companyModel->name_en,
+            ],
+            'count' => $trainees->count(),
+            'trainees' => $trainees->map(static fn (Trainee $trainee) => [
+                'id' => $trainee->id,
+                'name' => $trainee->name,
+                'phone' => $trainee->phone,
+                'identity_number' => $trainee->identity_number,
+            ])->values(),
         ]);
     }
 
@@ -822,6 +853,82 @@ class ChatController extends Controller
 
         return response()->json([
             'message' => $formatted,
+        ]);
+    }
+
+    public function sendTemplateToCompany(Request $request): JsonResponse
+    {
+        $this->ensureConfigured();
+
+        $validated = $request->validate([
+            'company_id' => 'required|uuid',
+            'content_sid' => 'required|string|max:64',
+            'content_variables' => 'nullable|array',
+            'content_variables.*' => 'nullable|string|max:1000',
+        ]);
+
+        $company = Company::withoutGlobalScopes()->findOrFail($validated['company_id']);
+
+        $trainees = $this->activeTraineesWithPhoneQuery()
+            ->where('company_id', $company->id)
+            ->with(['company' => $this->companyRelationConstraint()])
+            ->orderBy('name')
+            ->get(['id', 'name', 'phone', 'company_id', 'english_name', 'identity_number']);
+
+        if ($trainees->isEmpty()) {
+            return response()->json([
+                'message' => __('words.whatsapp-company-no-active-trainees'),
+            ], 422);
+        }
+
+        $sent = 0;
+        $failed = [];
+
+        foreach ($trainees as $trainee) {
+            try {
+                $this->whatsAppService->sendTemplate(
+                    (string) $trainee->phone,
+                    $validated['content_sid'],
+                    $validated['content_variables'] ?? [],
+                    (string) $trainee->id
+                );
+
+                $normalized = $this->whatsAppService->normalizePhoneDigits((string) $trainee->phone);
+                $stored = WhatsAppMessage::query()
+                    ->where('phone', $normalized)
+                    ->where('direction', WhatsAppMessage::DIRECTION_OUTBOUND)
+                    ->orderByDesc('created_at')
+                    ->first();
+
+                if ($stored && auth()->id()) {
+                    $stored->update(['user_id' => auth()->id()]);
+                }
+
+                WhatsAppBotPause::pauseForAgent($normalized);
+                $sent++;
+            } catch (RuntimeException $exception) {
+                $failed[] = [
+                    'id' => $trainee->id,
+                    'name' => $trainee->name,
+                    'phone' => $trainee->phone,
+                    'error' => $exception->getMessage(),
+                ];
+            }
+        }
+
+        return response()->json([
+            'company' => [
+                'id' => $company->id,
+                'name' => $company->name_ar ?: $company->name_en,
+            ],
+            'total' => $trainees->count(),
+            'sent' => $sent,
+            'failed_count' => count($failed),
+            'failed' => $failed,
+            'message' => __('words.whatsapp-company-template-sent', [
+                'sent' => $sent,
+                'total' => $trainees->count(),
+            ]),
         ]);
     }
 
@@ -1167,6 +1274,17 @@ class ChatController extends Controller
     /**
      * Bypass Company global scopes (e.g. ptc-ksa.com/.net filters) for chat display.
      */
+    /**
+     * Active trainees: not soft-deleted, not suspended, and have a phone number.
+     */
+    private function activeTraineesWithPhoneQuery()
+    {
+        return Trainee::query()
+            ->whereNull('suspended_at')
+            ->whereNotNull('phone')
+            ->where('phone', '!=', '');
+    }
+
     private function companyRelationConstraint(): \Closure
     {
         return static function ($query): void {

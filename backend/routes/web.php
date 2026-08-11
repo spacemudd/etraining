@@ -828,6 +828,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('trainees/{trainee}/context', [\App\Http\Controllers\Back\ChatController::class, 'traineeContext'])->name('trainees.context');
             Route::get('companies', [\App\Http\Controllers\Back\ChatController::class, 'searchCompanies'])->name('companies');
             Route::get('companies/{company}/trainees', [\App\Http\Controllers\Back\ChatController::class, 'companyTrainees'])->name('companies.trainees');
+            Route::get('companies/{company}/active-trainees', [\App\Http\Controllers\Back\ChatController::class, 'companyActiveTrainees'])->name('companies.active-trainees');
             Route::get('quick-replies', [\App\Http\Controllers\Back\ChatController::class, 'quickReplies'])->name('quick-replies');
             Route::post('quick-replies', [\App\Http\Controllers\Back\ChatController::class, 'storeQuickReply'])->name('quick-replies.store');
             Route::delete('quick-replies/{quickReply}', [\App\Http\Controllers\Back\ChatController::class, 'destroyQuickReply'])->name('quick-replies.destroy');
@@ -838,6 +839,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::delete('templates/{contentSid}', [\App\Http\Controllers\Back\ChatController::class, 'destroyTemplate'])->name('templates.destroy');
             Route::post('send-message', [\App\Http\Controllers\Back\ChatController::class, 'sendMessage'])->name('send-message');
             Route::post('send-template', [\App\Http\Controllers\Back\ChatController::class, 'sendTemplate'])->name('send-template');
+            Route::post('send-template-to-company', [\App\Http\Controllers\Back\ChatController::class, 'sendTemplateToCompany'])->name('send-template-to-company');
             Route::post('send-note', [\App\Http\Controllers\Back\ChatController::class, 'sendNote'])->name('send-note');
             Route::post('messages/{id}/save-to-s3', [\App\Http\Controllers\Back\ChatController::class, 'saveToS3'])->name('messages.save-to-s3');
         });
