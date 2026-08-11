@@ -108,7 +108,7 @@
                                     :key="'company-group-' + group.key"
                                 >
                                     <div class="sticky top-0 z-10 px-3 py-1.5 bg-gray-100 border-y border-gray-200">
-                                        <div class="text-[11px] font-semibold text-gray-600 truncate tracking-wide">
+                                        <div class="text-sm font-semibold text-gray-600 truncate">
                                             {{ group.label }}
                                         </div>
                                     </div>
@@ -116,10 +116,10 @@
                                         v-for="conv in group.conversations"
                                         :key="conv.id || conv.phone"
                                         @click="selectConversation(conv)"
-                                        class="px-3 py-2.5 cursor-pointer hover:bg-gray-100 transition-colors border-l-2"
+                                        class="px-3 py-2.5 cursor-pointer transition-colors border-l-2"
                                         :class="selectedConversation && selectedConversation.phone === conv.phone
-                                            ? 'bg-gray-100 border-gray-800'
-                                            : 'border-transparent'"
+                                            ? 'bg-green-50 border-green-600 hover:bg-green-50'
+                                            : 'border-transparent hover:bg-gray-100'"
                                     >
                                         <div class="flex items-center justify-between gap-2">
                                             <span class="font-medium text-sm text-gray-900 truncate inline-flex items-center gap-1.5 min-w-0">
@@ -540,7 +540,7 @@
                                         v-for="action in composerStatusActions"
                                         :key="'status-action-' + action.status"
                                         type="button"
-                                        class="px-2 py-1 rounded text-[11px] font-medium border transition disabled:opacity-50"
+                                        class="px-3 py-1.5 rounded text-xs font-medium border transition disabled:opacity-50"
                                         :class="action.buttonClass"
                                         :disabled="updatingStatus"
                                         @click="setConversationStatus(action.status)"
@@ -707,6 +707,7 @@
                                         :class="composerMode === 'note' ? 'bg-amber-50/50' : 'bg-white'"
                                         :placeholder="$t('words.message') + '...'"
                                         :disabled="composerMode === 'freeform' && messagingWindowIsOpen === false"
+                                        @keydown="onMessageKeydown"
                                     ></textarea>
                                     <div class="absolute top-2 right-2 z-50" v-if="composerMode === 'freeform' || composerMode === 'note'">
                                         <button
@@ -725,8 +726,17 @@
 
                             <div
                                 v-if="composerMode === 'freeform' || composerMode === 'note'"
-                                class="flex items-center justify-end mt-2 flex-shrink-0"
+                                class="flex items-center justify-between gap-3 mt-2 flex-shrink-0"
                             >
+                                <label class="inline-flex items-center gap-2 text-xs text-gray-600 cursor-pointer select-none">
+                                    <input
+                                        v-model="pressEnterToSend"
+                                        type="checkbox"
+                                        class="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                        @change="persistPressEnterToSend"
+                                    />
+                                    <span>{{ $t('words.press-enter-to-send') }}</span>
+                                </label>
                                 <button
                                     @click="sendMessageOrNote"
                                     type="button"
@@ -1335,6 +1345,7 @@ export default {
             isNoteMode: false,
             composerMode: 'freeform',
             messageBody: '',
+            pressEnterToSend: false,
             threadHeight: 360,
             threadResizing: false,
             threadResizeStartY: 0,
@@ -1692,6 +1703,7 @@ export default {
     },
     mounted() {
         this.initThreadHeight();
+        this.loadPressEnterToSendPreference();
         this.loadTags();
         this.loadConversations();
         this.loadQuickReplies();
@@ -3149,6 +3161,39 @@ export default {
                     this.$refs.messageTextarea.focus();
                 }
             });
+        },
+        loadPressEnterToSendPreference() {
+            try {
+                this.pressEnterToSend = window.localStorage.getItem('chat.pressEnterToSend') === '1';
+            } catch (error) {
+                this.pressEnterToSend = false;
+            }
+        },
+        persistPressEnterToSend() {
+            try {
+                window.localStorage.setItem('chat.pressEnterToSend', this.pressEnterToSend ? '1' : '0');
+            } catch (error) {
+                // Ignore storage failures (private mode, quota, etc).
+            }
+        },
+        onMessageKeydown(event) {
+            if (!this.pressEnterToSend) {
+                return;
+            }
+            if (event.key !== 'Enter' || event.shiftKey || event.ctrlKey || event.altKey || event.metaKey) {
+                return;
+            }
+            if (event.isComposing) {
+                return;
+            }
+            event.preventDefault();
+            if (this.sending || !this.messageBody.trim()) {
+                return;
+            }
+            if (this.composerMode === 'freeform' && this.messagingWindowIsOpen === false) {
+                return;
+            }
+            this.sendMessageOrNote();
         },
         async sendMessageOrNote() {
             if (!this.selectedConversation || !this.messageBody.trim()) return;

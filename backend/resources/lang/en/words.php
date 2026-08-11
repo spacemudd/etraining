@@ -575,6 +575,7 @@ return [
     'chat-action-close' => 'Close conversation',
     'chat-status-failed' => 'Failed to update conversation status',
     'chat-unread' => 'New message',
+    'press-enter-to-send' => 'Press Enter to send',
     'instructor-start-time' => 'Instructor start time',
     'system-requirements' => 'System requirements',
     'edit-survey-links' => 'Edit survey links',

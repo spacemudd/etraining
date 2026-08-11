@@ -584,6 +584,7 @@ return [
     'chat-action-close' => 'اغلاق المحادثة',
     'chat-status-failed' => 'فشل تحديث حالة المحادثة',
     'chat-unread' => 'رسالة جديدة',
+    'press-enter-to-send' => 'اضغط Enter للإرسال',
     'instructor-start-time' => 'وقت دخول المدربة',
     'system-requirements' => 'متطلبات التقنية للمنصة',
     'edit-survey-links' => 'تعديل روابط الإستبيان',
