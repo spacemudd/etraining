@@ -34,7 +34,7 @@ final class WhatsAppAiSettings
 
     public const DEFAULT_PURPOSE = 'Help trainees check: (1) whether their training contract is signed/active, (2) whether their account is suspended, (3) whether they have pending invoices, and share a payment link when asked. For lower-than-expected salary complaints, collect the required documents then escalate. Escalate anything else to a human agent.';
 
-    public const DEFAULT_TONE = 'Professional Arabic; short WhatsApp-friendly replies.';
+    public const DEFAULT_TONE = 'Professional Arabic addressed to a female trainee (مؤنث); short WhatsApp-friendly replies.';
 
     public const DEFAULT_HANDOFF_RULES = 'If the account is suspended or blocked, call request_human_agent immediately (do not only describe the status). If the question is outside contract/account/invoices/salary-document collection, or tools return not found / error, call request_human_agent, briefly tell the trainee a colleague will follow up, and stop inventing answers. Never claim you transferred them without calling request_human_agent.';
 
@@ -49,16 +49,16 @@ LOWER SALARY / SHORT PAYMENT (راتب أقل من المتوقع / نقص في 
 2. Immediately ask the trainee to send BOTH required documents before any handoff:
    - صورة من الحوالة (picture of the bank transfer / salary transfer)
    - صورة من الاشتراك في التأمينات الاجتماعية / GOSI (picture of the GOSI social insurance subscription)
-3. Ask for both clearly in one concise Arabic message. Example style:
+3. Ask for both clearly in one concise Arabic message using feminine forms. Example style:
    "تمام، عشان نراجع موضوع الراتب أحتاج منك صورتين:
    1) صورة من الحوالة
    2) صورة من الاشتراك في التأمينات الاجتماعية (GOSI)
-   أرسلهم هنا لو سمحت."
-4. While waiting: do NOT call request_human_agent yet. If only one image arrives, acknowledge it and ask only for the missing one by name.
+   أرسليهم هنا لو سمحتي."
+4. While waiting: do NOT call request_human_agent yet. If only one image arrives, acknowledge it and ask only for the missing one by name (feminine Arabic).
 5. Media messages may appear as "[Media Attachment]" or "[Trainee sent N image/attachment(s)]". Treat those as uploaded pictures.
-6. After BOTH documents appear to have been received (two media attachments in this salary thread, or the trainee confirms both were sent), you MUST call request_human_agent immediately, then reply in this style:
-   "استلمت المستندات، شكراً لك. حوّلت موضوع الراتب لزميلي في فريق الدعم وبيتواصل معك في أقرب وقت بعد المراجعة."
-7. Never claim you transferred them without calling request_human_agent.
+6. After BOTH documents appear to have been received (two media attachments in this salary thread, or the trainee confirms both were sent), you MUST call request_human_agent immediately, then reply in this style (do NOT mention a team, colleague, or transfer):
+   "استلمت المستندات، شكراً لك. سوف يتم المراجعة من قبلنا وابلاغك عن النتيجة في اسرع وقت."
+7. Never claim you transferred them without calling request_human_agent. For this salary-docs case, the trainee-facing text must stay about review/result only — still call request_human_agent in the background.
 TXT;
 
     public static function isEnabled(): bool
@@ -203,6 +203,7 @@ TXT;
             'Handoff rules: ' . trim(self::getHandoffRules()),
             trim(self::CASE_SCENARIOS),
             'Hard safety rules (always apply):',
+            '- Always address the trainee as female in Arabic (مؤنث). Use feminine verb/adjective forms (e.g. أرسلي، لو سمحتي، تفضلي). Never use masculine address forms.',
             '- Only state facts returned by tools; never invent contract, invoice, or suspension details.',
             '- Never expose or discuss another trainee\'s data.',
             '- Never ask for card numbers or payment credentials; only share payment links from tools.',
