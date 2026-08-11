@@ -92,6 +92,24 @@
                                 </option>
                             </select>
                         </div>
+                        <div class="flex gap-0.5 p-0.5 bg-gray-100 rounded-md">
+                            <button
+                                type="button"
+                                class="flex-1 px-2 py-1.5 rounded text-[11px] font-medium transition"
+                                :class="groupConversationsByCompany ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                                @click="setGroupConversationsByCompany(true)"
+                            >
+                                {{ $t('words.chat-group-by-company') }}
+                            </button>
+                            <button
+                                type="button"
+                                class="flex-1 px-2 py-1.5 rounded text-[11px] font-medium transition"
+                                :class="!groupConversationsByCompany ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                                @click="setGroupConversationsByCompany(false)"
+                            >
+                                {{ $t('words.chat-group-latest') }}
+                            </button>
+                        </div>
                     </div>
 
                     <div class="overflow-y-auto flex-1 flex flex-col justify-between bg-gray-50/40">
@@ -104,10 +122,13 @@
                             </div>
                             <template v-else>
                                 <div
-                                    v-for="group in conversationsGroupedByCompany"
+                                    v-for="group in conversationSidebarGroups"
                                     :key="'company-group-' + group.key"
                                 >
-                                    <div class="sticky top-0 z-10 px-3 py-1.5 bg-gray-100 border-y border-gray-200">
+                                    <div
+                                        v-if="group.label"
+                                        class="sticky top-0 z-10 px-3 py-1.5 bg-gray-100 border-y border-gray-200"
+                                    >
                                         <div class="text-sm font-semibold text-gray-600 truncate">
                                             {{ group.label }}
                                         </div>
@@ -133,8 +154,16 @@
                                                     <span v-else dir="ltr">{{ conv.phone }}</span>
                                                 </span>
                                             </span>
-                                            <span class="text-[11px] text-gray-400 flex-shrink-0" dir="ltr">
-                                                {{ formatTimeShort(conv.last_message && conv.last_message.sent_at) }}
+                                            <span class="inline-flex items-center gap-1 flex-shrink-0">
+                                                <ion-icon
+                                                    v-if="isConversationMessagingWindowLocked(conv)"
+                                                    name="lock-closed-outline"
+                                                    class="w-3.5 h-3.5 text-red-500"
+                                                    :title="$t('words.whatsapp-window-locked')"
+                                                ></ion-icon>
+                                                <span class="text-[11px] text-gray-400">
+                                                    {{ formatTimeShort(conv.last_message && conv.last_message.sent_at) }}
+                                                </span>
                                             </span>
                                         </div>
                                         <div class="flex items-center justify-between gap-2 mt-0.5">
@@ -520,14 +549,6 @@
                                     </button>
                                     <button
                                         type="button"
-                                        @click="setComposerMode('quick')"
-                                        class="px-3 py-1.5 rounded text-xs font-medium transition"
-                                        :class="composerMode === 'quick' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
-                                    >
-                                        {{ $t('words.quick-replies') }}
-                                    </button>
-                                    <button
-                                        type="button"
                                         @click="setComposerMode('note')"
                                         class="px-3 py-1.5 rounded text-xs font-medium transition"
                                         :class="composerMode === 'note' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
@@ -604,87 +625,6 @@
                                 </button>
                             </div>
 
-                            <div v-else-if="composerMode === 'quick'" class="space-y-3">
-                                <div class="flex items-center gap-2">
-                                    <input
-                                        v-model="quickReplySearch"
-                                        type="text"
-                                        class="flex-1 form-input text-xs rounded-md border-gray-200"
-                                        :placeholder="$t('words.search') + '...'"
-                                    />
-                                    <button
-                                        type="button"
-                                        class="text-xs border border-gray-200 px-2.5 py-1.5 rounded-md hover:bg-gray-50"
-                                        @click="showNewQuickReply = !showNewQuickReply"
-                                    >
-                                        {{ $t('words.new-quick-reply') }}
-                                    </button>
-                                </div>
-
-                                <div v-if="showNewQuickReply" class="border border-gray-200 rounded-md p-3 space-y-2 bg-gray-50">
-                                    <input
-                                        v-model="newQuickReplyTitle"
-                                        type="text"
-                                        class="w-full form-input text-xs rounded-md border-gray-200"
-                                        :placeholder="$t('words.quick-reply-title')"
-                                    />
-                                    <textarea
-                                        v-model="newQuickReplyBody"
-                                        rows="3"
-                                        class="w-full form-input text-xs rounded-md border-gray-200"
-                                        :placeholder="$t('words.quick-reply-body')"
-                                    ></textarea>
-                                    <div class="flex justify-end gap-2">
-                                        <button
-                                            type="button"
-                                            class="text-xs text-gray-500 hover:text-gray-800"
-                                            @click="showNewQuickReply = false"
-                                        >
-                                            {{ $t('words.cancel') }}
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="text-xs bg-gray-800 text-white px-3 py-1.5 rounded-md disabled:opacity-50"
-                                            :disabled="savingQuickReply || !newQuickReplyTitle.trim() || !newQuickReplyBody.trim()"
-                                            @click="saveQuickReply"
-                                        >
-                                            {{ savingQuickReply ? $t('words.saving') : $t('words.save') }}
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div v-if="loadingQuickReplies" class="text-xs text-gray-500">
-                                    {{ $t('words.loading') }}...
-                                </div>
-                                <div v-else-if="filteredQuickReplies.length === 0" class="text-xs text-gray-400">
-                                    {{ $t('words.no-quick-replies') }}
-                                </div>
-                                <ul v-else class="divide-y divide-gray-100 border border-gray-200 rounded-md max-h-56 overflow-y-auto">
-                                    <li
-                                        v-for="reply in filteredQuickReplies"
-                                        :key="reply.id"
-                                        class="px-3 py-2 hover:bg-gray-50 flex items-start justify-between gap-2"
-                                    >
-                                        <button
-                                            type="button"
-                                            class="text-left min-w-0 flex-1"
-                                            @click="useQuickReply(reply)"
-                                        >
-                                            <div class="text-xs font-medium text-gray-900 truncate">{{ reply.title }}</div>
-                                            <div class="text-[11px] text-gray-500 mt-0.5 whitespace-pre-wrap" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ reply.body }}</div>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="text-[11px] text-red-500 hover:text-red-700 flex-shrink-0"
-                                            :disabled="deletingQuickReplyId === reply.id"
-                                            @click.stop="deleteQuickReply(reply)"
-                                        >
-                                            {{ $t('words.delete') }}
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
-
                             <div v-else>
                                 <div
                                     v-if="composerMode === 'freeform' && messagingWindowIsOpen === false"
@@ -737,14 +677,23 @@
                                     />
                                     <span>{{ $t('words.press-enter-to-send') }}</span>
                                 </label>
-                                <button
-                                    @click="sendMessageOrNote"
-                                    type="button"
-                                    :disabled="sending || !messageBody.trim() || (composerMode === 'freeform' && messagingWindowIsOpen === false)"
-                                    class="px-4 py-2 rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700 disabled:opacity-50 transition"
-                                >
-                                    {{ composerMode === 'note' ? $t('words.whatsapp-add-note') : $t('words.send') }}
-                                </button>
+                                <div class="flex items-center gap-2 flex-shrink-0">
+                                    <button
+                                        type="button"
+                                        class="px-3 py-2 rounded-md text-sm font-medium border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 transition"
+                                        @click="openQuickRepliesModal"
+                                    >
+                                        {{ $t('words.quick-reply') }}
+                                    </button>
+                                    <button
+                                        @click="sendMessageOrNote"
+                                        type="button"
+                                        :disabled="sending || !messageBody.trim() || (composerMode === 'freeform' && messagingWindowIsOpen === false)"
+                                        class="px-4 py-2 rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700 disabled:opacity-50 transition"
+                                    >
+                                        {{ composerMode === 'note' ? $t('words.whatsapp-add-note') : $t('words.send') }}
+                                    </button>
+                                </div>
                             </div>
 
                             <p v-if="errorMessage" class="mt-2 text-xs text-red-600 flex-shrink-0">{{ errorMessage }}</p>
@@ -1304,6 +1253,96 @@
                     <p v-if="newChatSuccess" class="mt-2 text-xs text-green-600">{{ newChatSuccess }}</p>
                 </div>
             </modal>
+
+            <modal name="quickRepliesModal" :width="560" :height="'auto'" :scrollable="true">
+                <div class="p-5">
+                    <div class="flex items-center justify-between pb-4 border-b mb-4">
+                        <h3 class="text-lg font-bold text-gray-800">{{ $t('words.quick-replies') }}</h3>
+                        <button type="button" @click="closeQuickRepliesModal" class="text-gray-400 hover:text-gray-600">
+                            <ion-icon name="close-outline" class="w-6 h-6"></ion-icon>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center gap-2 mb-3">
+                        <input
+                            v-model="quickReplySearch"
+                            type="text"
+                            class="flex-1 form-input text-sm rounded-md border-gray-200"
+                            :placeholder="$t('words.search') + '...'"
+                        />
+                        <button
+                            type="button"
+                            class="text-sm border border-gray-200 px-3 py-2 rounded-md hover:bg-gray-50 whitespace-nowrap"
+                            @click="showNewQuickReply = !showNewQuickReply"
+                        >
+                            {{ $t('words.new-quick-reply') }}
+                        </button>
+                    </div>
+
+                    <div v-if="showNewQuickReply" class="border border-gray-200 rounded-md p-3 space-y-2 bg-gray-50 mb-3">
+                        <input
+                            v-model="newQuickReplyTitle"
+                            type="text"
+                            class="w-full form-input text-sm rounded-md border-gray-200"
+                            :placeholder="$t('words.quick-reply-title')"
+                        />
+                        <textarea
+                            v-model="newQuickReplyBody"
+                            rows="3"
+                            class="w-full form-input text-sm rounded-md border-gray-200"
+                            :placeholder="$t('words.quick-reply-body')"
+                        ></textarea>
+                        <div class="flex justify-end gap-2">
+                            <button
+                                type="button"
+                                class="text-sm text-gray-500 hover:text-gray-800"
+                                @click="showNewQuickReply = false"
+                            >
+                                {{ $t('words.cancel') }}
+                            </button>
+                            <button
+                                type="button"
+                                class="text-sm bg-gray-800 text-white px-3 py-1.5 rounded-md disabled:opacity-50"
+                                :disabled="savingQuickReply || !newQuickReplyTitle.trim() || !newQuickReplyBody.trim()"
+                                @click="saveQuickReply"
+                            >
+                                {{ savingQuickReply ? $t('words.saving') : $t('words.save') }}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div v-if="loadingQuickReplies" class="text-sm text-gray-500 py-6 text-center">
+                        {{ $t('words.loading') }}...
+                    </div>
+                    <div v-else-if="filteredQuickReplies.length === 0" class="text-sm text-gray-400 py-6 text-center">
+                        {{ $t('words.no-quick-replies') }}
+                    </div>
+                    <ul v-else class="divide-y divide-gray-100 border border-gray-200 rounded-md max-h-80 overflow-y-auto">
+                        <li
+                            v-for="reply in filteredQuickReplies"
+                            :key="'qr-modal-' + reply.id"
+                            class="px-3 py-2.5 hover:bg-gray-50 flex items-start justify-between gap-2"
+                        >
+                            <button
+                                type="button"
+                                class="text-left min-w-0 flex-1"
+                                @click="useQuickReply(reply)"
+                            >
+                                <div class="text-sm font-medium text-gray-900 truncate">{{ reply.title }}</div>
+                                <div class="text-xs text-gray-500 mt-0.5 whitespace-pre-wrap" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">{{ reply.body }}</div>
+                            </button>
+                            <button
+                                type="button"
+                                class="text-xs text-red-500 hover:text-red-700 flex-shrink-0"
+                                :disabled="deletingQuickReplyId === reply.id"
+                                @click.stop="deleteQuickReply(reply)"
+                            >
+                                {{ $t('words.delete') }}
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </modal>
         </portal>
     </app-layout>
 </template>
@@ -1313,6 +1352,8 @@ import AppLayout from '@/Layouts/AppLayout';
 import WhatsAppTemplatesManager from '@/Components/WhatsAppTemplatesManager';
 import axios from 'axios';
 import throttle from 'lodash/throttle';
+import moment from 'moment';
+import 'moment/locale/ar';
 
 export default {
     components: {
@@ -1346,6 +1387,7 @@ export default {
             composerMode: 'freeform',
             messageBody: '',
             pressEnterToSend: false,
+            groupConversationsByCompany: true,
             threadHeight: 360,
             threadResizing: false,
             threadResizeStartY: 0,
@@ -1570,6 +1612,17 @@ export default {
                 })
                 .map((key) => groupsMap[key]);
         },
+        conversationSidebarGroups() {
+            if (this.groupConversationsByCompany) {
+                return this.conversationsGroupedByCompany;
+            }
+
+            return [{
+                key: 'latest',
+                label: null,
+                conversations: this.conversations || [],
+            }];
+        },
         botStatusLabel() {
             if (!this.botStatus) {
                 return this.$t('words.loading') + '...';
@@ -1704,6 +1757,7 @@ export default {
     mounted() {
         this.initThreadHeight();
         this.loadPressEnterToSendPreference();
+        this.loadGroupConversationsPreference();
         this.loadTags();
         this.loadConversations();
         this.loadQuickReplies();
@@ -2992,9 +3046,18 @@ export default {
             this.showEmojiPicker = false;
             this.errorMessage = '';
             this.successMessage = '';
-            if (mode === 'quick') {
-                this.loadQuickReplies();
-            }
+        },
+        openQuickRepliesModal() {
+            this.quickReplySearch = '';
+            this.showNewQuickReply = false;
+            this.newQuickReplyTitle = '';
+            this.newQuickReplyBody = '';
+            this.loadQuickReplies();
+            this.$modal.show('quickRepliesModal');
+        },
+        closeQuickRepliesModal() {
+            this.$modal.hide('quickRepliesModal');
+            this.showNewQuickReply = false;
         },
         initThreadHeight() {
             const stored = Number(localStorage.getItem('chat.threadHeight'));
@@ -3155,7 +3218,12 @@ export default {
                 return;
             }
             this.messageBody = reply.body || '';
-            this.setComposerMode('freeform');
+            if (this.composerMode === 'template') {
+                this.setComposerMode('freeform');
+            } else if (this.composerMode !== 'note' && this.composerMode !== 'freeform') {
+                this.setComposerMode('freeform');
+            }
+            this.closeQuickRepliesModal();
             this.$nextTick(() => {
                 if (this.$refs.messageTextarea) {
                     this.$refs.messageTextarea.focus();
@@ -3172,6 +3240,29 @@ export default {
         persistPressEnterToSend() {
             try {
                 window.localStorage.setItem('chat.pressEnterToSend', this.pressEnterToSend ? '1' : '0');
+            } catch (error) {
+                // Ignore storage failures (private mode, quota, etc).
+            }
+        },
+        loadGroupConversationsPreference() {
+            try {
+                const stored = window.localStorage.getItem('chat.groupConversationsByCompany');
+                if (stored === null) {
+                    this.groupConversationsByCompany = true;
+                    return;
+                }
+                this.groupConversationsByCompany = stored === '1';
+            } catch (error) {
+                this.groupConversationsByCompany = true;
+            }
+        },
+        setGroupConversationsByCompany(enabled) {
+            this.groupConversationsByCompany = !!enabled;
+            try {
+                window.localStorage.setItem(
+                    'chat.groupConversationsByCompany',
+                    this.groupConversationsByCompany ? '1' : '0'
+                );
             } catch (error) {
                 // Ignore storage failures (private mode, quota, etc).
             }
@@ -3415,8 +3506,42 @@ export default {
         },
         formatTimeShort(dateString) {
             if (!dateString) return '';
-            const date = new Date(dateString);
-            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            // Keep labels fresh while the messaging-window ticker runs.
+            void this.windowNowMs;
+            const locale = (this.$page && this.$page.props && this.$page.props.locale === 'ar')
+                ? 'ar'
+                : 'en';
+            return moment(dateString).locale(locale).fromNow();
+        },
+        isConversationMessagingWindowLocked(conv) {
+            void this.windowNowMs;
+            if (!conv) {
+                return true;
+            }
+
+            const window = conv.messaging_window;
+            if (!window) {
+                return true;
+            }
+
+            let expiresMs = null;
+            if (window.expires_at) {
+                const parsed = Date.parse(window.expires_at);
+                if (!Number.isNaN(parsed)) {
+                    expiresMs = parsed;
+                }
+            }
+            if (expiresMs === null && window.last_inbound_at) {
+                const lastMs = Date.parse(window.last_inbound_at);
+                if (!Number.isNaN(lastMs)) {
+                    expiresMs = lastMs + (24 * 60 * 60 * 1000);
+                }
+            }
+            if (expiresMs === null) {
+                return true;
+            }
+
+            return expiresMs <= this.windowNowMs;
         },
         translateStatus(status) {
             if (!status) return '';
