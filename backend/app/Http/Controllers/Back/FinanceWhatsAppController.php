@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
+use App\Models\Back\Company;
 use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
 use App\Models\Back\WhatsAppConversation;
@@ -167,6 +168,77 @@ class FinanceWhatsAppController extends Controller
         ]);
     }
 
+    public function searchCompanies(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'search' => 'required|string|max:200',
+            'page' => 'nullable|integer|min:1',
+            'limit' => 'nullable|integer|min:1|max:50',
+        ]);
+
+        $search = $validated['search'];
+        $page = (int) ($validated['page'] ?? 1);
+        $limit = (int) ($validated['limit'] ?? 15);
+
+        $query = Company::withoutGlobalScopes()
+            ->where(function ($builder) use ($search) {
+                $builder->where('name_ar', 'LIKE', '%' . $search . '%')
+                    ->orWhere('name_en', 'LIKE', '%' . $search . '%');
+            });
+
+        $total = (clone $query)->count();
+        $companies = $query
+            ->orderBy('name_ar')
+            ->skip(($page - 1) * $limit)
+            ->take($limit)
+            ->get(['id', 'name_ar', 'name_en']);
+
+        $companyIds = $companies->pluck('id');
+        $activeCounts = $this->activeTraineesWithPhoneQuery()
+            ->whereIn('company_id', $companyIds)
+            ->selectRaw('company_id, COUNT(*) as aggregate')
+            ->groupBy('company_id')
+            ->pluck('aggregate', 'company_id');
+
+        return response()->json([
+            'companies' => $companies->map(static fn (Company $company) => [
+                'id' => $company->id,
+                'name' => $company->name_ar ?: $company->name_en,
+                'name_ar' => $company->name_ar,
+                'name_en' => $company->name_en,
+                'active_trainees_count' => (int) ($activeCounts[$company->id] ?? 0),
+            ])->values(),
+            'page' => $page,
+            'limit' => $limit,
+            'total' => $total,
+            'has_more' => ($page * $limit) < $total,
+        ]);
+    }
+
+    public function companyActiveTrainees(string $company): JsonResponse
+    {
+        $companyModel = Company::withoutGlobalScopes()->findOrFail($company);
+
+        $trainees = $this->activeTraineesWithPhoneQuery()
+            ->where('company_id', $companyModel->id)
+            ->orderBy('name')
+            ->get(['id', 'name', 'phone', 'identity_number', 'company_id']);
+
+        return response()->json([
+            'company' => [
+                'id' => $companyModel->id,
+                'name' => $companyModel->name_ar ?: $companyModel->name_en,
+            ],
+            'count' => $trainees->count(),
+            'trainees' => $trainees->map(static fn (Trainee $trainee) => [
+                'id' => $trainee->id,
+                'name' => $trainee->name,
+                'phone' => $trainee->phone,
+                'identity_number' => $trainee->identity_number,
+            ])->values(),
+        ]);
+    }
+
     public function pendingInvoices(Trainee $trainee): JsonResponse
     {
         $invoices = $trainee->invoices()
@@ -309,6 +381,72 @@ class FinanceWhatsAppController extends Controller
         ]);
     }
 
+    public function sendTemplateToCompany(Request $request): JsonResponse
+    {
+        $this->ensureConfigured();
+
+        $validated = $request->validate([
+            'company_id' => 'required|uuid',
+            'content_sid' => 'required|string|max:64',
+            'content_variables' => 'nullable|array',
+            'content_variables.*' => 'nullable|string|max:1000',
+        ]);
+
+        $company = Company::withoutGlobalScopes()->findOrFail($validated['company_id']);
+
+        $trainees = $this->activeTraineesWithPhoneQuery()
+            ->where('company_id', $company->id)
+            ->with(['company' => static function ($query): void {
+                $query->withoutGlobalScopes()->select(['id', 'name_ar', 'name_en']);
+            }])
+            ->orderBy('name')
+            ->get(['id', 'name', 'phone', 'company_id', 'english_name', 'identity_number']);
+
+        if ($trainees->isEmpty()) {
+            return response()->json([
+                'message' => __('words.whatsapp-company-no-active-trainees'),
+            ], 422);
+        }
+
+        $sent = 0;
+        $failed = [];
+
+        foreach ($trainees as $trainee) {
+            try {
+                $this->whatsAppService->sendTemplate(
+                    (string) $trainee->phone,
+                    $validated['content_sid'],
+                    $validated['content_variables'] ?? [],
+                    (string) $trainee->id
+                );
+                $this->attachAgentAndPauseBot((string) $trainee->phone);
+                $sent++;
+            } catch (RuntimeException $exception) {
+                $failed[] = [
+                    'id' => $trainee->id,
+                    'name' => $trainee->name,
+                    'phone' => $trainee->phone,
+                    'error' => $exception->getMessage(),
+                ];
+            }
+        }
+
+        return response()->json([
+            'company' => [
+                'id' => $company->id,
+                'name' => $company->name_ar ?: $company->name_en,
+            ],
+            'total' => $trainees->count(),
+            'sent' => $sent,
+            'failed_count' => count($failed),
+            'failed' => $failed,
+            'message' => __('words.whatsapp-company-template-sent', [
+                'sent' => $sent,
+                'total' => $trainees->count(),
+            ]),
+        ]);
+    }
+
     public function sendMessage(Request $request): JsonResponse
     {
         $this->ensureConfigured();
@@ -336,6 +474,17 @@ class FinanceWhatsAppController extends Controller
         return response()->json([
             'message' => $message,
         ]);
+    }
+
+    /**
+     * Active trainees: not soft-deleted, not suspended, and have a phone number.
+     */
+    private function activeTraineesWithPhoneQuery()
+    {
+        return Trainee::query()
+            ->whereNull('suspended_at')
+            ->whereNotNull('phone')
+            ->where('phone', '!=', '');
     }
 
     private function attachAgentAndPauseBot(string $phone): void

@@ -42,34 +42,84 @@
                             v-if="!lockTrainee"
                             class="md:w-1/3 border-b md:border-b-0 md:border-r flex flex-col overflow-y-auto"
                         >
-                            <div class="p-4 border-b">
+                            <div class="p-3 border-b space-y-2">
+                                <div class="flex rounded-lg bg-gray-100 p-0.5 text-xs font-medium">
+                                    <button
+                                        type="button"
+                                        class="flex-1 px-2 py-1.5 rounded-md transition"
+                                        :class="recipientMode === 'trainee' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                                        @click="setRecipientMode('trainee')"
+                                    >
+                                        {{ $t('words.trainee') }}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="flex-1 px-2 py-1.5 rounded-md transition"
+                                        :class="recipientMode === 'company' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                                        @click="setRecipientMode('company')"
+                                    >
+                                        {{ $t('words.company') }}
+                                    </button>
+                                </div>
                                 <input
+                                    v-if="recipientMode === 'trainee'"
                                     v-model="searchQuery"
                                     @input="searchTrainees"
                                     type="text"
                                     class="w-full form-input text-sm"
                                     :placeholder="$t('words.search-trainee')"
                                 />
+                                <input
+                                    v-else
+                                    v-model="companySearchQuery"
+                                    @input="searchCompanies"
+                                    type="text"
+                                    class="w-full form-input text-sm"
+                                    :placeholder="$t('words.search-company')"
+                                />
                             </div>
 
                             <div class="overflow-y-auto flex-1">
-                                <div
-                                    v-for="trainee in searchResults"
-                                    :key="trainee.id"
-                                    @click="selectTrainee(trainee)"
-                                    class="p-3 border-b cursor-pointer hover:bg-green-50 transition-colors"
-                                    :class="{ 'bg-green-100': selectedTrainee && selectedTrainee.id === trainee.id }"
-                                >
-                                    <div class="font-medium text-sm truncate">
-                                        {{ trainee.name }}
-                                        <span v-if="trainee.company_name" class="font-normal text-gray-500"> · {{ trainee.company_name }}</span>
+                                <template v-if="recipientMode === 'trainee'">
+                                    <div
+                                        v-for="trainee in searchResults"
+                                        :key="trainee.id"
+                                        @click="selectTrainee(trainee)"
+                                        class="p-3 border-b cursor-pointer hover:bg-green-50 transition-colors"
+                                        :class="{ 'bg-green-100': selectedTrainee && selectedTrainee.id === trainee.id }"
+                                    >
+                                        <div class="font-medium text-sm truncate">
+                                            {{ trainee.name }}
+                                            <span v-if="trainee.company_name" class="font-normal text-gray-500"> · {{ trainee.company_name }}</span>
+                                        </div>
+                                        <div class="text-xs text-gray-500">{{ trainee.phone }}</div>
                                     </div>
-                                    <div class="text-xs text-gray-500">{{ trainee.phone }}</div>
-                                </div>
 
-                                <div v-if="searchQuery && !searching && searchResults.length === 0" class="p-4 text-sm text-gray-500 text-center">
-                                    {{ $t('words.no-results') }}
-                                </div>
+                                    <div v-if="searchQuery && !searching && searchResults.length === 0" class="p-4 text-sm text-gray-500 text-center">
+                                        {{ $t('words.no-results') }}
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <div
+                                        v-for="company in companySearchResults"
+                                        :key="company.id"
+                                        @click="selectCompany(company)"
+                                        class="p-3 border-b cursor-pointer hover:bg-green-50 transition-colors"
+                                        :class="{ 'bg-green-100': selectedCompany && selectedCompany.id === company.id }"
+                                    >
+                                        <div class="font-medium text-sm truncate">{{ company.name }}</div>
+                                        <div class="text-xs text-gray-500">
+                                            {{ $t('words.whatsapp-active-trainees-count', { count: company.active_trainees_count || 0 }) }}
+                                        </div>
+                                    </div>
+
+                                    <div v-if="companySearchQuery && !searchingCompanies && companySearchResults.length === 0" class="p-4 text-sm text-gray-500 text-center">
+                                        {{ $t('words.no-results') }}
+                                    </div>
+                                    <div v-if="searchingCompanies" class="p-4 text-sm text-gray-500 text-center">
+                                        {{ $t('words.loading') }}
+                                    </div>
+                                </template>
                             </div>
                         </div>
 
@@ -77,9 +127,103 @@
                             class="flex flex-col h-full overflow-hidden"
                             :class="lockTrainee ? 'w-full' : 'md:w-2/3'"
                         >
-                            <div v-if="!selectedTrainee" class="flex-1 flex items-center justify-center text-gray-400 p-8 text-center">
-                                {{ $t('words.select-trainee') }}
+                            <div
+                                v-if="!selectedTrainee && !selectedCompany"
+                                class="flex-1 flex items-center justify-center text-gray-400 p-8 text-center"
+                            >
+                                {{ recipientMode === 'company' ? $t('words.select-company') : $t('words.select-trainee') }}
                             </div>
+
+                            <template v-else-if="selectedCompany && !selectedTrainee">
+                                <div class="p-4 border-b bg-gray-50 space-y-2">
+                                    <div class="font-semibold truncate">{{ selectedCompany.name }}</div>
+                                    <div class="text-sm text-gray-600">
+                                        <span v-if="loadingCompanyTrainees">{{ $t('words.loading') }}</span>
+                                        <span v-else>
+                                            {{ $t('words.whatsapp-active-trainees-count', { count: companyActiveCount }) }}
+                                        </span>
+                                    </div>
+                                    <p class="text-xs text-gray-500">{{ $t('words.whatsapp-company-bulk-hint') }}</p>
+                                </div>
+
+                                <div class="flex-1 overflow-y-auto p-4 space-y-3">
+                                    <div v-if="!loadingCompanyTrainees && companyActiveTrainees.length" class="border rounded-lg overflow-hidden">
+                                        <div class="px-3 py-2 bg-gray-50 text-xs font-medium text-gray-600 border-b">
+                                            {{ $t('words.whatsapp-recipients-preview') }}
+                                        </div>
+                                        <ul class="max-h-48 overflow-y-auto divide-y">
+                                            <li
+                                                v-for="trainee in companyActiveTrainees"
+                                                :key="'bulk-' + trainee.id"
+                                                class="px-3 py-2 text-sm flex items-center justify-between gap-2"
+                                            >
+                                                <span class="truncate font-medium text-gray-800">{{ trainee.name }}</span>
+                                                <span class="text-xs text-gray-500 shrink-0" dir="ltr">{{ trainee.phone }}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div v-else-if="!loadingCompanyTrainees" class="text-sm text-gray-500 text-center py-6">
+                                        {{ $t('words.whatsapp-company-no-active-trainees') }}
+                                    </div>
+                                </div>
+
+                                <div class="border-t p-4 space-y-3 bg-white">
+                                    <div v-if="errorMessage" class="text-sm text-red-600 bg-red-50 p-2 rounded">{{ errorMessage }}</div>
+                                    <div v-if="successMessage" class="text-sm text-green-700 bg-green-50 p-2 rounded">{{ successMessage }}</div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('words.whatsapp-templates') }}</label>
+                                        <select
+                                            v-model="selectedTemplateSid"
+                                            @change="loadTemplateDetails"
+                                            class="w-full form-select text-sm"
+                                            :disabled="loadingTemplates || sending"
+                                        >
+                                            <option value="">{{ $t('words.select-template') }}</option>
+                                            <option
+                                                v-for="template in templates"
+                                                :key="template.sid"
+                                                :value="template.sid"
+                                            >
+                                                {{ template.friendly_name }} ({{ template.language }})
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <div v-if="selectedTemplate" class="p-3 bg-gray-50 rounded text-sm whitespace-pre-wrap">
+                                        {{ previewTemplateBody }}
+                                    </div>
+
+                                    <div v-if="manualTemplateVariables.length" class="space-y-2">
+                                        <div class="text-sm font-medium text-gray-700">{{ $t('words.template-variables') }}</div>
+                                        <div
+                                            v-for="variableKey in manualTemplateVariables"
+                                            :key="'company-var-' + variableKey"
+                                            class="space-y-1"
+                                        >
+                                            <label class="block text-xs text-gray-600">
+                                                {{ templateVariableLabel(variableKey) }}
+                                            </label>
+                                            <input
+                                                v-model="templateVariables[variableKey]"
+                                                type="text"
+                                                class="w-full form-input text-sm"
+                                                :placeholder="variableSample(variableKey)"
+                                            />
+                                        </div>
+                                        <p class="text-[11px] text-gray-400">{{ $t('words.whatsapp-company-auto-vars-hint') }}</p>
+                                    </div>
+
+                                    <jet-button
+                                        type="button"
+                                        @click.native="sendTemplateToCompany"
+                                        :disabled="sending || !selectedTemplateSid || !companyActiveCount || loadingCompanyTrainees"
+                                        class="w-full justify-center bg-green-600 hover:bg-green-500"
+                                    >
+                                        {{ sending ? $t('words.sending') : $t('words.whatsapp-send-template-to-company') }}
+                                    </jet-button>
+                                </div>
+                            </template>
 
                             <template v-else>
                                 <div class="p-4 border-b bg-gray-50 space-y-3">
@@ -392,9 +536,17 @@ export default {
     data() {
         return {
             configured: false,
+            recipientMode: 'trainee',
             searchQuery: '',
             searchResults: [],
             searching: false,
+            companySearchQuery: '',
+            companySearchResults: [],
+            searchingCompanies: false,
+            selectedCompany: null,
+            companyActiveTrainees: [],
+            companyActiveCount: 0,
+            loadingCompanyTrainees: false,
             selectedTrainee: null,
             lockTrainee: false,
             pendingInvoices: [],
@@ -757,8 +909,16 @@ export default {
             }
         },
         resetState() {
+            this.recipientMode = 'trainee';
             this.searchQuery = '';
             this.searchResults = [];
+            this.companySearchQuery = '';
+            this.companySearchResults = [];
+            this.searchingCompanies = false;
+            this.selectedCompany = null;
+            this.companyActiveTrainees = [];
+            this.companyActiveCount = 0;
+            this.loadingCompanyTrainees = false;
             this.selectedTrainee = null;
             this.pendingInvoices = [];
             this.pendingTotalOwed = 0;
@@ -774,6 +934,35 @@ export default {
             this.botStatus = null;
             this.pausingBot = false;
             this.messagingWindow = null;
+        },
+        setRecipientMode(mode) {
+            if (this.recipientMode === mode) {
+                return;
+            }
+            this.recipientMode = mode;
+            this.errorMessage = '';
+            this.successMessage = '';
+            if (mode === 'trainee') {
+                this.selectedCompany = null;
+                this.companyActiveTrainees = [];
+                this.companyActiveCount = 0;
+                this.companySearchQuery = '';
+                this.companySearchResults = [];
+            } else {
+                this.selectedTrainee = null;
+                this.messages = [];
+                this.pendingInvoices = [];
+                this.pendingTotalOwed = 0;
+                this.botStatus = null;
+                this.messagingWindow = null;
+                this.searchQuery = '';
+                this.searchResults = [];
+                this.stopPolling();
+            }
+            this.selectedTemplateSid = '';
+            this.selectedTemplate = null;
+            this.templateVariables = {};
+            this.sendMode = 'template';
         },
         formatPausedUntil(iso) {
             if (!iso) {
@@ -875,8 +1064,30 @@ export default {
                 this.searching = false;
             }
         }, 300),
+        searchCompanies: throttle(async function () {
+            if (!this.companySearchQuery || this.companySearchQuery.length < 2) {
+                this.companySearchResults = [];
+                return;
+            }
+
+            this.searchingCompanies = true;
+
+            try {
+                const { data } = await axios.get(route('back.finance.whatsapp.companies'), {
+                    params: { search: this.companySearchQuery, limit: 20 },
+                });
+                this.companySearchResults = data.companies || [];
+            } catch (error) {
+                this.companySearchResults = [];
+            } finally {
+                this.searchingCompanies = false;
+            }
+        }, 300),
         async selectTrainee(trainee) {
             this.stopPolling();
+            this.selectedCompany = null;
+            this.companyActiveTrainees = [];
+            this.companyActiveCount = 0;
             this.selectedTrainee = trainee;
             this.errorMessage = '';
             this.successMessage = '';
@@ -894,6 +1105,48 @@ export default {
                 this.startPollingFallback();
             } else {
                 this.stopPolling();
+            }
+        },
+        async selectCompany(company) {
+            this.stopPolling();
+            this.selectedTrainee = null;
+            this.messages = [];
+            this.pendingInvoices = [];
+            this.pendingTotalOwed = 0;
+            this.botStatus = null;
+            this.messagingWindow = null;
+            this.selectedCompany = company;
+            this.errorMessage = '';
+            this.successMessage = '';
+            this.selectedTemplateSid = '';
+            this.selectedTemplate = null;
+            this.templateVariables = {};
+            this.sendMode = 'template';
+            await this.loadCompanyActiveTrainees();
+        },
+        async loadCompanyActiveTrainees() {
+            if (!this.selectedCompany || !this.selectedCompany.id) {
+                this.companyActiveTrainees = [];
+                this.companyActiveCount = 0;
+                return;
+            }
+
+            this.loadingCompanyTrainees = true;
+            try {
+                const { data } = await axios.get(
+                    route('back.finance.whatsapp.companies.active-trainees', this.selectedCompany.id)
+                );
+                this.companyActiveTrainees = data.trainees || [];
+                this.companyActiveCount = data.count || this.companyActiveTrainees.length;
+                if (this.selectedCompany) {
+                    this.$set(this.selectedCompany, 'active_trainees_count', this.companyActiveCount);
+                }
+            } catch (error) {
+                this.companyActiveTrainees = [];
+                this.companyActiveCount = 0;
+                this.errorMessage = error.response?.data?.message || this.$t('words.whatsapp-send-failed');
+            } finally {
+                this.loadingCompanyTrainees = false;
             }
         },
         scheduleMessagesRefresh() {
@@ -970,6 +1223,9 @@ export default {
             return bindings[variableKey] || (this.$t('words.template-variable') + ' ' + variableKey);
         },
         autoValueForTag(tag) {
+            if (tag === 'company_name' && this.selectedCompany && !this.selectedTrainee) {
+                return this.selectedCompany.name || '';
+            }
             if (!this.selectedTrainee) {
                 return '';
             }
@@ -1116,6 +1372,51 @@ export default {
                 this.successMessage = this.$t('words.whatsapp-sent-successfully');
                 this.$nextTick(() => this.scrollToBottom());
                 await this.loadBotStatus();
+            } catch (error) {
+                this.errorMessage = error.response?.data?.message || this.$t('words.whatsapp-send-failed');
+            } finally {
+                this.sending = false;
+            }
+        },
+        async sendTemplateToCompany() {
+            if (!this.selectedCompany || !this.selectedTemplateSid || !this.companyActiveCount) {
+                return;
+            }
+
+            const confirmed = window.confirm(
+                this.$t('words.whatsapp-company-send-confirm', {
+                    count: this.companyActiveCount,
+                    company: this.selectedCompany.name,
+                })
+            );
+            if (!confirmed) {
+                return;
+            }
+
+            this.sending = true;
+            this.errorMessage = '';
+            this.successMessage = '';
+
+            try {
+                const { data } = await axios.post(route('back.finance.whatsapp.send-template-to-company'), {
+                    company_id: this.selectedCompany.id,
+                    content_sid: this.selectedTemplateSid,
+                    content_variables: this.templateVariables,
+                });
+
+                this.successMessage = data.message
+                    || this.$t('words.whatsapp-company-template-sent', {
+                        sent: data.sent,
+                        total: data.total,
+                    });
+
+                if (data.failed_count > 0) {
+                    const failedNames = (data.failed || []).slice(0, 5).map((row) => row.name).join(', ');
+                    this.errorMessage = this.$t('words.whatsapp-company-template-partial-fail', {
+                        failed: data.failed_count,
+                        names: failedNames,
+                    });
+                }
             } catch (error) {
                 this.errorMessage = error.response?.data?.message || this.$t('words.whatsapp-send-failed');
             } finally {
