@@ -155,18 +155,16 @@
                                                 </span>
                                             </span>
                                             <span class="inline-flex items-center gap-1 flex-shrink-0">
-                                                <ion-icon
-                                                    v-if="botConfigured && isConversationBotPaused(conv)"
-                                                    name="pause-circle-outline"
-                                                    class="w-3.5 h-3.5 text-orange-500"
-                                                    :title="$t('words.bot-paused')"
-                                                ></ion-icon>
-                                                <ion-icon
-                                                    v-else-if="botConfigured"
-                                                    name="hardware-chip-outline"
-                                                    class="w-3.5 h-3.5 text-green-600"
-                                                    :title="$t('words.bot-active')"
-                                                ></ion-icon>
+                                                <span
+                                                    class="inline-flex items-center justify-center w-4 h-4 rounded-full flex-shrink-0"
+                                                    :class="isConversationBotPaused(conv) ? 'bg-orange-500 text-white' : 'bg-green-600 text-white'"
+                                                    :title="isConversationBotPaused(conv) ? $t('words.bot-paused') : $t('words.bot-active')"
+                                                >
+                                                    <ion-icon
+                                                        :name="isConversationBotPaused(conv) ? 'pause' : 'flash'"
+                                                        class="w-3 h-3"
+                                                    ></ion-icon>
+                                                </span>
                                                 <ion-icon
                                                     v-if="isConversationMessagingWindowLocked(conv)"
                                                     name="lock-closed-outline"
@@ -777,8 +775,8 @@
                                             <div v-if="traineeContext.gosi_status.employer_name" class="break-words">
                                                 {{ traineeContext.gosi_status.employer_name }}
                                             </div>
-                                            <div class="text-xs text-gray-500" dir="ltr">
-                                                {{ traineeContext.gosi_status.fetched_at }}
+                                            <div class="text-xs text-gray-500">
+                                                <span dir="ltr">{{ traineeContext.gosi_status.fetched_at }}</span>
                                             </div>
                                         </div>
                                         <div v-else class="text-sm text-gray-900">—</div>
@@ -1406,7 +1404,7 @@ export default {
             composerMode: 'freeform',
             messageBody: '',
             pressEnterToSend: false,
-            groupConversationsByCompany: true,
+            groupConversationsByCompany: false,
             threadHeight: 360,
             threadResizing: false,
             threadResizeStartY: 0,
@@ -3275,12 +3273,12 @@ export default {
             try {
                 const stored = window.localStorage.getItem('chat.groupConversationsByCompany');
                 if (stored === null) {
-                    this.groupConversationsByCompany = true;
+                    this.groupConversationsByCompany = false;
                     return;
                 }
                 this.groupConversationsByCompany = stored === '1';
             } catch (error) {
-                this.groupConversationsByCompany = true;
+                this.groupConversationsByCompany = false;
             }
         },
         setGroupConversationsByCompany(enabled) {
