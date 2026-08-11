@@ -155,6 +155,9 @@
                                                 </span>
                                             </span>
                                             <span class="inline-flex items-center gap-1 flex-shrink-0">
+                                                <span class="text-xs text-gray-400">
+                                                    {{ formatTimeShort(conv.last_message && conv.last_message.sent_at) }}
+                                                </span>
                                                 <span
                                                     class="inline-flex items-center justify-center w-4 h-4 rounded-full flex-shrink-0"
                                                     :class="isConversationBotPaused(conv) ? 'bg-orange-500 text-white' : 'bg-green-600 text-white'"
@@ -171,9 +174,6 @@
                                                     class="w-3.5 h-3.5 text-red-500"
                                                     :title="$t('words.whatsapp-window-locked')"
                                                 ></ion-icon>
-                                                <span class="text-xs text-gray-400">
-                                                    {{ formatTimeShort(conv.last_message && conv.last_message.sent_at) }}
-                                                </span>
                                             </span>
                                         </div>
                                         <div class="flex items-center justify-between gap-2 mt-0.5">
