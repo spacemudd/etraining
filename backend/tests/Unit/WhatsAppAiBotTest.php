@@ -111,6 +111,10 @@ class WhatsAppAiBotTest extends BaseTestCase
         $this->assertStringContainsString('سوف يتم المراجعة من قبلنا', $composed);
         $this->assertStringContainsString('Always address the trainee as female', $composed);
         $this->assertStringNotContainsString('لزميلي في فريق الدعم', $composed);
+        $this->assertStringContainsString('CERTIFICATES', $composed);
+        $this->assertStringContainsString('920031449', $composed);
+        $this->assertStringContainsString('0553139979', $composed);
+        $this->assertStringContainsString('شؤون المتدربات', $composed);
     }
 
     public function test_empty_api_key_keeps_existing(): void
