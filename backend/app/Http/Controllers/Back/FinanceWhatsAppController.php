@@ -13,6 +13,7 @@ use App\Models\Back\WhatsAppMessage;
 use App\Services\TelnyxWhatsAppService;
 use App\Support\WhatsAppBotPause;
 use App\Support\WhatsAppBotStatus;
+use App\Support\WhatsAppConversationSync;
 use App\Support\WhatsAppMessagingWindow;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -523,8 +524,13 @@ class FinanceWhatsAppController extends Controller
         }
 
         $query->whereHas('invoices', static function ($invoiceQuery): void {
+            $monthStart = now()->startOfMonth()->toDateString();
+            $monthEnd = now()->endOfMonth()->toDateString();
+
             $invoiceQuery->whereNull('paid_at')
-                ->where('status', '!=', Invoice::STATUS_ARCHIVED);
+                ->where('status', '!=', Invoice::STATUS_ARCHIVED)
+                ->whereDate('from_date', '>=', $monthStart)
+                ->whereDate('from_date', '<=', $monthEnd);
         });
     }
 
@@ -546,6 +552,7 @@ class FinanceWhatsAppController extends Controller
         }
 
         WhatsAppBotPause::pauseForAgent($normalized);
+        WhatsAppConversationSync::assignCurrentUser($normalized);
     }
 
     private function ensureConfigured(): void

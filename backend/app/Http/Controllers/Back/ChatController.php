@@ -13,6 +13,7 @@ use App\Models\Back\WhatsAppConversation;
 use App\Models\Back\WhatsAppMessage;
 use App\Models\Back\WhatsAppQuickReply;
 use App\Models\Back\WhatsAppTag;
+use App\Models\GosiEmployeeData;
 use App\Models\User;
 use App\Services\TelnyxWhatsAppService;
 use App\Support\WhatsAppBroadcast;
@@ -215,6 +216,31 @@ class ChatController extends Controller
         ]);
 
         WhatsAppConversationSync::broadcast($conversation);
+
+        return response()->json([
+            'conversation' => $this->formatConversation($conversation, auth()->id()),
+        ]);
+    }
+
+    public function markConversationRead(WhatsAppConversation $conversation): JsonResponse
+    {
+        if ($conversation->has_unread) {
+            $conversation->update(['has_unread' => false]);
+
+            $conversation->load([
+                'agents:id,name',
+                'tags:id,name,color',
+                'trainee.company' => $this->companyRelationConstraint(),
+            ]);
+
+            WhatsAppConversationSync::broadcast($conversation);
+        } else {
+            $conversation->load([
+                'agents:id,name',
+                'tags:id,name,color',
+                'trainee.company' => $this->companyRelationConstraint(),
+            ]);
+        }
 
         return response()->json([
             'conversation' => $this->formatConversation($conversation, auth()->id()),
@@ -747,6 +773,14 @@ class ChatController extends Controller
             'show_url' => route('back.finance.invoices.show', $invoice->id),
         ];
 
+        $gosiRecord = null;
+        if (filled($model->identity_number)) {
+            $gosiRecord = GosiEmployeeData::query()
+                ->where('nin_or_iqama', $model->identity_number)
+                ->orderByDesc('updated_at')
+                ->first(['id', 'updated_at']);
+        }
+
         return response()->json([
             'trainee' => [
                 'id' => $model->id,
@@ -770,6 +804,9 @@ class ChatController extends Controller
                     'reason' => $blockList->reason,
                 ] : null,
             ],
+            'gosi_status' => [
+                'fetched_at' => optional(optional($gosiRecord)->updated_at)->toDateString(),
+            ],
             'invoices' => $invoices->map($mapInvoice)->values(),
             'paid_invoices' => $paidInvoices->map($mapInvoice)->values(),
             'total_owed' => round((float) $invoices->sum('grand_total'), 2),
@@ -786,6 +823,9 @@ class ChatController extends Controller
             'body' => 'required|string|max:1600',
             'trainee_id' => 'nullable|uuid|exists:trainees,id',
         ]);
+
+        $conversation = null;
+        $formatted = null;
 
         try {
             $response = $this->whatsAppService->sendFreeformMessage(
@@ -808,6 +848,9 @@ class ChatController extends Controller
             }
 
             WhatsAppBotPause::pauseForAgent($validated['phone']);
+            $conversation = WhatsAppConversationSync::assignCurrentUser(
+                $this->whatsAppService->normalizePhoneDigits($validated['phone'])
+            );
 
             $stored?->load('user:id,name');
             $formatted = $stored ? $this->formatMessage($stored) : $response;
@@ -824,6 +867,9 @@ class ChatController extends Controller
 
         return response()->json([
             'message' => $formatted,
+            'conversation' => $conversation
+                ? $this->formatConversation($conversation, auth()->id())
+                : null,
         ]);
     }
 
@@ -838,6 +884,9 @@ class ChatController extends Controller
             'content_variables.*' => 'nullable|string|max:1000',
             'trainee_id' => 'nullable|uuid|exists:trainees,id',
         ]);
+
+        $conversation = null;
+        $formatted = null;
 
         try {
             $response = $this->whatsAppService->sendTemplate(
@@ -860,6 +909,9 @@ class ChatController extends Controller
             }
 
             WhatsAppBotPause::pauseForAgent($validated['phone']);
+            $conversation = WhatsAppConversationSync::assignCurrentUser(
+                $this->whatsAppService->normalizePhoneDigits($validated['phone'])
+            );
 
             $stored?->load('user:id,name');
             $formatted = $stored ? $this->formatMessage($stored) : $response;
@@ -876,6 +928,9 @@ class ChatController extends Controller
 
         return response()->json([
             'message' => $formatted,
+            'conversation' => $conversation
+                ? $this->formatConversation($conversation, auth()->id())
+                : null,
         ]);
     }
 
@@ -1227,6 +1282,7 @@ class ChatController extends Controller
                 ? $conversation->agents->contains('id', $authId)
                 : false,
             'is_unassigned' => $conversation->agents->isEmpty(),
+            'has_unread' => (bool) $conversation->has_unread,
         ];
     }
 
@@ -1322,8 +1378,13 @@ class ChatController extends Controller
         }
 
         $query->whereHas('invoices', static function ($invoiceQuery): void {
+            $monthStart = now()->startOfMonth()->toDateString();
+            $monthEnd = now()->endOfMonth()->toDateString();
+
             $invoiceQuery->whereNull('paid_at')
-                ->where('status', '!=', Invoice::STATUS_ARCHIVED);
+                ->where('status', '!=', Invoice::STATUS_ARCHIVED)
+                ->whereDate('from_date', '>=', $monthStart)
+                ->whereDate('from_date', '<=', $monthEnd);
         });
     }
 

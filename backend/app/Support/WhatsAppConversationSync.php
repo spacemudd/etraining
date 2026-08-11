@@ -7,6 +7,7 @@ namespace App\Support;
 use App\Events\WhatsAppConversationUpdated;
 use App\Models\Back\WhatsAppConversation;
 use App\Models\Back\WhatsAppMessage;
+use App\Services\TelnyxWhatsAppService;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -46,6 +47,7 @@ final class WhatsAppConversationSync
             && ! $message->is_note
         ) {
             $conversation->status = WhatsAppConversation::STATUS_OPEN;
+            $conversation->has_unread = true;
             if (
                 $conversation->last_inbound_at === null
                 || $sentAt->greaterThan($conversation->last_inbound_at)
@@ -89,5 +91,45 @@ final class WhatsAppConversationSync
                 'error' => $exception->getMessage(),
             ]);
         }
+    }
+
+    /**
+     * Attach the authenticated user as an agent on the conversation for this phone.
+     */
+    public static function assignCurrentUser(string $phone, ?string $userId = null): ?WhatsAppConversation
+    {
+        $normalizedPhone = app(TelnyxWhatsAppService::class)->normalizePhoneDigits($phone);
+        $agentId = $userId ?: auth()->id();
+
+        if ($normalizedPhone === '' || ! $agentId) {
+            return null;
+        }
+
+        $conversation = WhatsAppConversation::query()->firstOrCreate(
+            ['phone' => $normalizedPhone],
+            ['status' => WhatsAppConversation::STATUS_OPEN]
+        );
+
+        if ($conversation->agents()->where('users.id', $agentId)->exists()) {
+            return $conversation->loadMissing([
+                'agents:id,name',
+                'tags:id,name,color',
+                'trainee.company:id,name_ar',
+            ]);
+        }
+
+        $conversation->agents()->attach($agentId, [
+            'assigned_at' => now(),
+        ]);
+
+        $conversation->load([
+            'agents:id,name',
+            'tags:id,name,color',
+            'trainee.company:id,name_ar',
+        ]);
+
+        self::broadcast($conversation);
+
+        return $conversation;
     }
 }

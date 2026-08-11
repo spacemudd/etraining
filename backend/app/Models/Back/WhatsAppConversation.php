@@ -35,6 +35,7 @@ class WhatsAppConversation extends Model
         'last_message_is_note',
         'last_message_at',
         'last_inbound_at',
+        'has_unread',
     ];
 
     protected $casts = [
@@ -42,6 +43,7 @@ class WhatsAppConversation extends Model
         'last_inbound_at' => 'datetime',
         'bot_paused_until' => 'datetime',
         'last_message_is_note' => 'boolean',
+        'has_unread' => 'boolean',
     ];
 
     protected static function boot(): void

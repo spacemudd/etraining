@@ -80,6 +80,7 @@ class WhatsAppConversationUpdated implements ShouldBroadcastNow
                 ? $conversation->agents->contains('id', $authId)
                 : false,
             'is_unassigned' => $conversation->agents->isEmpty(),
+            'has_unread' => (bool) $conversation->has_unread,
         ]);
     }
 

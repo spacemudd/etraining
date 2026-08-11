@@ -102,51 +102,70 @@
                             <div v-else-if="conversations.length === 0" class="p-6 text-center text-sm text-gray-500">
                                 {{ $t('words.no-results') }}
                             </div>
-                            <div
-                                v-for="conv in conversations"
-                                :key="conv.id || conv.phone"
-                                @click="selectConversation(conv)"
-                                class="px-3 py-2.5 cursor-pointer hover:bg-gray-100 transition-colors border-l-2"
-                                :class="selectedConversation && selectedConversation.phone === conv.phone
-                                    ? 'bg-gray-100 border-gray-800'
-                                    : 'border-transparent'"
-                            >
-                                <div class="flex items-center justify-between gap-2">
-                                    <span class="font-medium text-sm text-gray-900 truncate">
-                                        <template v-if="conv.trainee">{{ conv.trainee.name }}</template>
-                                        <span v-else dir="ltr">{{ conv.phone }}</span>
-                                    </span>
-                                    <span class="text-[11px] text-gray-400 flex-shrink-0" dir="ltr">
-                                        {{ formatTimeShort(conv.last_message && conv.last_message.sent_at) }}
-                                    </span>
-                                </div>
-                                <div class="flex items-center justify-between gap-2 mt-0.5">
-                                    <span class="text-xs text-gray-500 truncate">
-                                        <span v-if="conv.last_message && conv.last_message.is_note" class="text-amber-700">[{{ $t('words.internal-note') }}] </span>
-                                        {{ conv.last_message && conv.last_message.body }}
-                                    </span>
+                            <template v-else>
+                                <div
+                                    v-for="group in conversationsGroupedByCompany"
+                                    :key="'company-group-' + group.key"
+                                >
+                                    <div class="sticky top-0 z-10 px-3 py-1.5 bg-gray-100 border-y border-gray-200">
+                                        <div class="text-[11px] font-semibold text-gray-600 truncate tracking-wide">
+                                            {{ group.label }}
+                                        </div>
+                                    </div>
                                     <div
-                                        v-if="(conv.agents && conv.agents.length) || (conv.tags && conv.tags.length)"
-                                        class="flex items-center gap-1 flex-shrink-0"
+                                        v-for="conv in group.conversations"
+                                        :key="conv.id || conv.phone"
+                                        @click="selectConversation(conv)"
+                                        class="px-3 py-2.5 cursor-pointer hover:bg-gray-100 transition-colors border-l-2"
+                                        :class="selectedConversation && selectedConversation.phone === conv.phone
+                                            ? 'bg-gray-100 border-gray-800'
+                                            : 'border-transparent'"
                                     >
-                                        <span
-                                            v-if="conv.agents && conv.agents[0]"
-                                            class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 text-gray-700 text-[9px] font-semibold"
-                                            :title="conv.agents[0].name"
-                                        >
-                                            {{ agentInitials(conv.agents[0].name) }}
-                                        </span>
-                                        <span
-                                            v-if="conv.tags && conv.tags[0]"
-                                            class="inline-flex max-w-[72px] truncate px-1.5 py-0.5 rounded text-[10px] font-medium bg-gray-200 text-gray-600"
-                                            :style="conv.tags[0].color ? { backgroundColor: conv.tags[0].color, color: '#fff' } : null"
-                                            :title="conv.tags[0].name"
-                                        >
-                                            {{ conv.tags[0].name }}
-                                        </span>
+                                        <div class="flex items-center justify-between gap-2">
+                                            <span class="font-medium text-sm text-gray-900 truncate inline-flex items-center gap-1.5 min-w-0">
+                                                <span
+                                                    v-if="conv.has_unread"
+                                                    class="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full bg-red-600 text-white text-[9px] font-bold flex-shrink-0 leading-none"
+                                                    :title="$t('words.chat-unread')"
+                                                >!</span>
+                                                <span class="truncate">
+                                                    <template v-if="conv.trainee">{{ conv.trainee.name }}</template>
+                                                    <span v-else dir="ltr">{{ conv.phone }}</span>
+                                                </span>
+                                            </span>
+                                            <span class="text-[11px] text-gray-400 flex-shrink-0" dir="ltr">
+                                                {{ formatTimeShort(conv.last_message && conv.last_message.sent_at) }}
+                                            </span>
+                                        </div>
+                                        <div class="flex items-center justify-between gap-2 mt-0.5">
+                                            <span class="text-xs text-gray-500 truncate">
+                                                <span v-if="conv.last_message && conv.last_message.is_note" class="text-amber-700">[{{ $t('words.internal-note') }}] </span>
+                                                {{ conv.last_message && conv.last_message.body }}
+                                            </span>
+                                            <div
+                                                v-if="(conv.agents && conv.agents.length) || (conv.tags && conv.tags.length)"
+                                                class="flex items-center gap-1 flex-shrink-0"
+                                            >
+                                                <span
+                                                    v-if="conv.agents && conv.agents[0]"
+                                                    class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 text-gray-700 text-[9px] font-semibold"
+                                                    :title="conv.agents[0].name"
+                                                >
+                                                    {{ agentInitials(conv.agents[0].name) }}
+                                                </span>
+                                                <span
+                                                    v-if="conv.tags && conv.tags[0]"
+                                                    class="inline-flex max-w-[72px] truncate px-1.5 py-0.5 rounded text-[10px] font-medium bg-gray-200 text-gray-600"
+                                                    :style="conv.tags[0].color ? { backgroundColor: conv.tags[0].color, color: '#fff' } : null"
+                                                    :title="conv.tags[0].name"
+                                                >
+                                                    {{ conv.tags[0].name }}
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </template>
                         </div>
 
                         <!-- Pagination Controls -->
@@ -221,7 +240,7 @@
                                         <option value="pending">{{ $t('words.chat-status-pending') }}</option>
                                         <option value="closed">{{ $t('words.chat-status-closed') }}</option>
                                     </select>
-                                    <div class="relative inline-flex" @click.stop>
+                                    <div class="relative inline-flex" dir="ltr" @click.stop>
                                         <button
                                             type="button"
                                             @click="toggleAssignMe"
@@ -250,7 +269,8 @@
                                         </button>
                                         <div
                                             v-if="showAssignDropdown"
-                                            class="absolute top-full left-0 z-30 mt-1 w-56 max-h-56 overflow-y-auto rounded-md border border-gray-200 bg-white shadow-lg py-1"
+                                            class="absolute top-full right-0 z-30 mt-1 w-56 max-h-56 overflow-y-auto rounded-md border border-gray-200 bg-white shadow-lg py-1"
+                                            dir="auto"
                                         >
                                             <div class="px-3 py-1.5 text-[11px] font-medium text-gray-400 uppercase tracking-wide">
                                                 {{ $t('words.chat-assign-colleague') }}
@@ -480,39 +500,54 @@
 
                         <!-- Composer -->
                         <div class="border-t p-3 bg-white flex-1 min-h-0 flex flex-col overflow-hidden">
-                            <div class="flex gap-0.5 p-0.5 bg-gray-100 rounded-md mb-3 w-fit flex-wrap flex-shrink-0">
-                                <button
-                                    type="button"
-                                    @click="setComposerMode('freeform')"
-                                    class="px-3 py-1.5 rounded text-xs font-medium transition"
-                                    :class="composerMode === 'freeform' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
-                                >
-                                    {{ $t('words.message') }}
-                                </button>
-                                <button
-                                    type="button"
-                                    @click="setComposerMode('template')"
-                                    class="px-3 py-1.5 rounded text-xs font-medium transition"
-                                    :class="composerMode === 'template' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
-                                >
-                                    {{ $t('words.whatsapp-templates') }}
-                                </button>
-                                <button
-                                    type="button"
-                                    @click="setComposerMode('quick')"
-                                    class="px-3 py-1.5 rounded text-xs font-medium transition"
-                                    :class="composerMode === 'quick' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
-                                >
-                                    {{ $t('words.quick-replies') }}
-                                </button>
-                                <button
-                                    type="button"
-                                    @click="setComposerMode('note')"
-                                    class="px-3 py-1.5 rounded text-xs font-medium transition"
-                                    :class="composerMode === 'note' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
-                                >
-                                    {{ $t('words.internal-note') }}
-                                </button>
+                            <div class="flex items-center justify-between gap-2 mb-3 flex-shrink-0">
+                                <div class="flex gap-0.5 p-0.5 bg-gray-100 rounded-md w-fit flex-wrap">
+                                    <button
+                                        type="button"
+                                        @click="setComposerMode('freeform')"
+                                        class="px-3 py-1.5 rounded text-xs font-medium transition"
+                                        :class="composerMode === 'freeform' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                                    >
+                                        {{ $t('words.message') }}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="setComposerMode('template')"
+                                        class="px-3 py-1.5 rounded text-xs font-medium transition"
+                                        :class="composerMode === 'template' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                                    >
+                                        {{ $t('words.whatsapp-templates') }}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="setComposerMode('quick')"
+                                        class="px-3 py-1.5 rounded text-xs font-medium transition"
+                                        :class="composerMode === 'quick' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                                    >
+                                        {{ $t('words.quick-replies') }}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="setComposerMode('note')"
+                                        class="px-3 py-1.5 rounded text-xs font-medium transition"
+                                        :class="composerMode === 'note' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                                    >
+                                        {{ $t('words.internal-note') }}
+                                    </button>
+                                </div>
+                                <div class="flex items-center gap-1.5 flex-shrink-0">
+                                    <button
+                                        v-for="action in composerStatusActions"
+                                        :key="'status-action-' + action.status"
+                                        type="button"
+                                        class="px-2 py-1 rounded text-[11px] font-medium border transition disabled:opacity-50"
+                                        :class="action.buttonClass"
+                                        :disabled="updatingStatus"
+                                        @click="setConversationStatus(action.status)"
+                                    >
+                                        {{ action.label }}
+                                    </button>
+                                </div>
                             </div>
 
                             <div class="flex-1 min-h-0 overflow-y-auto">
@@ -696,8 +731,7 @@
                                     @click="sendMessageOrNote"
                                     type="button"
                                     :disabled="sending || !messageBody.trim() || (composerMode === 'freeform' && messagingWindowIsOpen === false)"
-                                    class="px-4 py-2 rounded-md text-sm font-medium text-white disabled:opacity-50 transition"
-                                    :class="composerMode === 'note' ? 'bg-amber-600 hover:bg-amber-700' : 'bg-green-600 hover:bg-green-700'"
+                                    class="px-4 py-2 rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700 disabled:opacity-50 transition"
                                 >
                                     {{ composerMode === 'note' ? $t('words.whatsapp-add-note') : $t('words.send') }}
                                 </button>
@@ -761,6 +795,15 @@
                                         >
                                             {{ traineeContext.account_status.reason }}
                                         </p>
+                                    </div>
+
+                                    <div>
+                                        <div class="text-xs text-gray-500 mb-0.5">{{ $t('words.gosi-status') }}</div>
+                                        <div class="text-sm text-gray-900 text-right">
+                                            <span dir="ltr">
+                                                {{ (traineeContext.gosi_status && traineeContext.gosi_status.fetched_at) || '—' }}
+                                            </span>
+                                        </div>
                                     </div>
 
                                     <div>
@@ -1451,6 +1494,71 @@ export default {
             }
             return 'bg-emerald-50 border-emerald-200 text-emerald-800';
         },
+        composerStatusActions() {
+            const status = (this.selectedConversation && this.selectedConversation.status) || 'open';
+            const actions = {
+                open: {
+                    status: 'open',
+                    label: this.$t('words.chat-action-open'),
+                    buttonClass: 'bg-white text-green-700 border-green-300 hover:bg-green-50',
+                },
+                pending: {
+                    status: 'pending',
+                    label: this.$t('words.chat-action-pending'),
+                    buttonClass: 'bg-white text-orange-700 border-orange-300 hover:bg-orange-50',
+                },
+                closed: {
+                    status: 'closed',
+                    label: this.$t('words.chat-action-close'),
+                    buttonClass: 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50',
+                },
+            };
+
+            if (status === 'closed') {
+                return [actions.open, actions.pending];
+            }
+            if (status === 'pending') {
+                return [actions.closed, actions.open];
+            }
+            return [actions.closed, actions.pending];
+        },
+        conversationsGroupedByCompany() {
+            const groupsMap = {};
+            const order = [];
+            const unassignedKey = '__unassigned__';
+            const unassignedLabel = this.$t('words.not-assigned-to-a-company');
+
+            (this.conversations || []).forEach((conv) => {
+                const companyName = conv && conv.trainee && conv.trainee.company_name
+                    ? String(conv.trainee.company_name).trim()
+                    : '';
+                const key = companyName || unassignedKey;
+                const label = companyName || unassignedLabel;
+
+                if (!groupsMap[key]) {
+                    groupsMap[key] = {
+                        key,
+                        label,
+                        conversations: [],
+                    };
+                    order.push(key);
+                }
+
+                groupsMap[key].conversations.push(conv);
+            });
+
+            return order
+                .sort((a, b) => {
+                    if (a === unassignedKey) {
+                        return 1;
+                    }
+                    if (b === unassignedKey) {
+                        return -1;
+                    }
+                    return groupsMap[a].label.localeCompare(groupsMap[b].label, undefined, { sensitivity: 'base' });
+                })
+                .map((key) => groupsMap[key]);
+        },
         botStatusLabel() {
             if (!this.botStatus) {
                 return this.$t('words.loading') + '...';
@@ -1779,10 +1887,17 @@ export default {
             }
         },
         async onStatusChange(event) {
+            const status = event.target.value;
+            try {
+                await this.setConversationStatus(status);
+            } catch (error) {
+                event.target.value = (this.selectedConversation && this.selectedConversation.status) || 'open';
+            }
+        },
+        async setConversationStatus(status) {
             if (!this.selectedConversation || !this.selectedConversation.id) {
                 return;
             }
-            const status = event.target.value;
             if (!status || status === this.selectedConversation.status) {
                 return;
             }
@@ -1802,7 +1917,7 @@ export default {
                 }
             } catch (error) {
                 this.errorMessage = error.response?.data?.message || this.$t('words.chat-status-failed');
-                event.target.value = this.selectedConversation.status || 'open';
+                throw error;
             } finally {
                 this.updatingStatus = false;
             }
@@ -1830,6 +1945,9 @@ export default {
                     ) {
                         console.log('[Chat] Appending message to open conversation');
                         this.mergeIncomingMessage(message);
+                        if (!this.isOutboundMessage(message) && !message.is_note) {
+                            this.markSelectedConversationRead();
+                        }
                         // One delayed catch-up for bot replies that race the first event.
                         if (!this.isOutboundMessage(message) || this.isBotMessage(message)) {
                             this.scheduleOpenConversationRefresh();
@@ -1953,7 +2071,10 @@ export default {
             }
         },
         async selectConversation(conv) {
-            this.selectedConversation = conv;
+            this.selectedConversation = {
+                ...conv,
+                has_unread: false,
+            };
             this.errorMessage = '';
             this.successMessage = '';
             this.tagToAttach = '';
@@ -1961,6 +2082,7 @@ export default {
             this.traineeContext = null;
             this.copiedInvoiceId = null;
             this.setComposerMode('freeform');
+            this.markSelectedConversationRead();
             await Promise.all([
                 this.loadMessages(),
                 this.loadBotStatus(),
@@ -1971,6 +2093,37 @@ export default {
                 this.startPollingFallback();
             } else {
                 this.stopPolling();
+            }
+        },
+        async markSelectedConversationRead() {
+            if (!this.selectedConversation || !this.selectedConversation.id) {
+                return;
+            }
+
+            if (this.selectedConversation.has_unread) {
+                this.patchConversation({
+                    ...this.selectedConversation,
+                    has_unread: false,
+                });
+            } else {
+                const listed = this.conversations.find((item) => item.id === this.selectedConversation.id);
+                if (listed && listed.has_unread) {
+                    this.patchConversation({
+                        ...listed,
+                        has_unread: false,
+                    });
+                }
+            }
+
+            try {
+                const { data } = await axios.post(
+                    route('back.chat.conversations.read', this.selectedConversation.id)
+                );
+                if (data.conversation) {
+                    this.patchConversation(data.conversation);
+                }
+            } catch (error) {
+                // Keep local clear; unread will resync on next conversation reload if needed.
             }
         },
         async loadTraineeContext() {
@@ -3019,6 +3172,10 @@ export default {
 
                 const { data } = await axios.post(endpoint, payload);
                 this.mergeIncomingMessage(data.message);
+                if (data.conversation) {
+                    this.patchConversation(data.conversation);
+                    await this.refreshConversationCounts();
+                }
                 this.messageBody = '';
                 this.successMessage = isNote
                     ? this.$t('words.whatsapp-note-added')
@@ -3048,6 +3205,10 @@ export default {
                     trainee_id: this.selectedConversation.trainee?.id || null,
                 });
                 this.mergeIncomingMessage(data.message);
+                if (data.conversation) {
+                    this.patchConversation(data.conversation);
+                    await this.refreshConversationCounts();
+                }
                 this.successMessage = this.$t('words.whatsapp-sent-successfully');
                 this.$nextTick(() => this.scrollToBottom());
                 this.loadConversations();
