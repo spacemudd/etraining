@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Events;
 
 use App\Models\Back\WhatsAppConversation;
+use App\Models\Back\Invoice;
 use App\Support\WhatsAppBotPause;
 use App\Support\WhatsAppMessagingWindow;
 use App\Support\WhatsAppTraineeLinker;
@@ -84,6 +85,9 @@ class WhatsAppConversationUpdated implements ShouldBroadcastNow
             'has_unread' => (bool) $conversation->has_unread,
             'bot_is_paused' => WhatsAppBotPause::isPaused($conversation),
             'bot_paused_until' => optional($conversation->bot_paused_until)->toIso8601String(),
+            'unpaid_invoice_count' => Invoice::currentMonthUnpaidCountForTrainee(
+                $conversation->trainee_id ? (string) $conversation->trainee_id : null
+            ),
         ]);
     }
 

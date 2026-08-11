@@ -92,23 +92,29 @@
                                 </option>
                             </select>
                         </div>
-                        <div class="flex gap-0.5 p-0.5 bg-gray-100 rounded-md">
-                            <button
-                                type="button"
-                                class="flex-1 px-2 py-1.5 rounded text-[11px] font-medium transition"
-                                :class="groupConversationsByCompany ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
-                                @click="setGroupConversationsByCompany(true)"
-                            >
-                                {{ $t('words.chat-group-by-company') }}
-                            </button>
-                            <button
-                                type="button"
-                                class="flex-1 px-2 py-1.5 rounded text-[11px] font-medium transition"
-                                :class="!groupConversationsByCompany ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
-                                @click="setGroupConversationsByCompany(false)"
-                            >
-                                {{ $t('words.chat-group-latest') }}
-                            </button>
+                        <div class="flex items-center gap-1.5">
+                            <ion-icon
+                                name="swap-vertical-outline"
+                                class="w-4 h-4 text-gray-400 flex-shrink-0"
+                            ></ion-icon>
+                            <div class="flex flex-1 gap-0.5 p-0.5 bg-gray-100 rounded-md min-w-0">
+                                <button
+                                    type="button"
+                                    class="flex-1 px-2 py-1.5 rounded text-[11px] font-medium transition"
+                                    :class="!groupConversationsByCompany ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                                    @click="setGroupConversationsByCompany(false)"
+                                >
+                                    {{ $t('words.chat-group-latest') }}
+                                </button>
+                                <button
+                                    type="button"
+                                    class="flex-1 px-2 py-1.5 rounded text-[11px] font-medium transition"
+                                    :class="groupConversationsByCompany ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                                    @click="setGroupConversationsByCompany(true)"
+                                >
+                                    {{ $t('words.chat-group-by-company') }}
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -153,6 +159,12 @@
                                                     <template v-if="conv.trainee">{{ conv.trainee.name }}</template>
                                                     <span v-else dir="ltr">{{ conv.phone }}</span>
                                                 </span>
+                                                <span
+                                                    v-if="conv.trainee && conv.unpaid_invoice_count > 0"
+                                                    class="inline-flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-red-600 text-white text-xs font-semibold flex-shrink-0 leading-none"
+                                                    :title="$t('words.unpaid-invoices')"
+                                                    dir="ltr"
+                                                >{{ conv.unpaid_invoice_count }}</span>
                                             </span>
                                             <span class="inline-flex items-center gap-1 flex-shrink-0">
                                                 <span class="text-xs text-gray-400">
@@ -724,6 +736,22 @@
                                     {{ $t('words.loading') }}...
                                 </div>
                                 <template v-else-if="traineeContext">
+                                    <div class="space-y-1.5">
+                                        <button
+                                            v-for="doc in traineeDocumentButtons"
+                                            :key="doc.key"
+                                            type="button"
+                                            class="w-full text-xs px-2.5 py-1.5 rounded-md border transition text-right"
+                                            :class="doc.available
+                                                ? 'border-gray-200 bg-white text-gray-800 hover:bg-gray-50'
+                                                : 'border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed'"
+                                            :disabled="!doc.available"
+                                            @click="openTraineeDocument(doc)"
+                                        >
+                                            {{ doc.label }}
+                                        </button>
+                                    </div>
+
                                     <div>
                                         <div class="text-xs text-gray-500 mb-0.5">{{ $t('words.company') }}</div>
                                         <a
@@ -1360,6 +1388,45 @@
                     </ul>
                 </div>
             </modal>
+
+            <modal name="traineeDocumentModal" :width="860" :height="720" :scrollable="false">
+                <div class="h-full flex flex-col">
+                    <div class="flex items-center justify-between px-5 py-3 border-b flex-shrink-0">
+                        <h3 class="text-base font-bold text-gray-800 truncate">
+                            {{ traineeDocumentModalTitle }}
+                        </h3>
+                        <div class="flex items-center gap-2 flex-shrink-0">
+                            <a
+                                v-if="traineeDocumentModal && traineeDocumentModal.url"
+                                :href="traineeDocumentModal.url"
+                                target="_blank"
+                                class="text-xs text-gray-600 hover:text-gray-900 underline"
+                            >
+                                {{ $t('words.download') }}
+                            </a>
+                            <button type="button" @click="closeTraineeDocumentModal" class="text-gray-400 hover:text-gray-600">
+                                <ion-icon name="close-outline" class="w-6 h-6"></ion-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex-1 min-h-0 bg-gray-100 p-3" style="height: 620px;">
+                        <img
+                            v-if="traineeDocumentModalIsImage"
+                            :src="traineeDocumentModal.url"
+                            :alt="traineeDocumentModalTitle"
+                            class="max-w-full max-h-full mx-auto object-contain"
+                            style="max-height: 600px;"
+                        />
+                        <iframe
+                            v-else-if="traineeDocumentModal && traineeDocumentModal.url"
+                            :src="traineeDocumentModal.url"
+                            class="w-full h-full rounded-md bg-white border border-gray-200"
+                            style="height: 600px;"
+                            title="trainee-document"
+                        ></iframe>
+                    </div>
+                </div>
+            </modal>
         </portal>
     </app-layout>
 </template>
@@ -1509,11 +1576,49 @@ export default {
             messagingWindowTimer: null,
             traineeContext: null,
             loadingTraineeContext: false,
+            traineeDocumentModal: null,
             copiedInvoiceId: null,
             copyLinkTimer: null,
         };
     },
     computed: {
+        traineeDocumentButtons() {
+            const docs = (this.traineeContext && this.traineeContext.documents) || {};
+            return [
+                {
+                    key: 'non_registration_proof',
+                    label: this.$t('words.non-registration-proof'),
+                    available: !!(docs.non_registration_proof && docs.non_registration_proof.url),
+                    document: docs.non_registration_proof || null,
+                },
+                {
+                    key: 'gosi_certificate',
+                    label: this.$t('words.gosi-certificate'),
+                    available: !!(docs.gosi_certificate && docs.gosi_certificate.url),
+                    document: docs.gosi_certificate || null,
+                },
+                {
+                    key: 'qiwa_contract',
+                    label: this.$t('words.qiwa-contract'),
+                    available: !!(docs.qiwa_contract && docs.qiwa_contract.url),
+                    document: docs.qiwa_contract || null,
+                },
+            ];
+        },
+        traineeDocumentModalTitle() {
+            return (this.traineeDocumentModal && this.traineeDocumentModal.label) || '';
+        },
+        traineeDocumentModalIsImage() {
+            const doc = this.traineeDocumentModal;
+            if (!doc || !doc.url) {
+                return false;
+            }
+            const mime = (doc.mime_type || '').toLowerCase();
+            if (mime.startsWith('image/')) {
+                return true;
+            }
+            return this.guessMediaType(doc.url || doc.name).startsWith('image/');
+        },
         messagingWindow() {
             return (this.selectedConversation && this.selectedConversation.messaging_window) || null;
         },
@@ -2229,6 +2334,21 @@ export default {
             } finally {
                 this.loadingTraineeContext = false;
             }
+        },
+        openTraineeDocument(doc) {
+            if (!doc || !doc.available || !doc.document || !doc.document.url) {
+                return;
+            }
+
+            this.traineeDocumentModal = {
+                ...doc.document,
+                label: doc.label,
+            };
+            this.$modal.show('traineeDocumentModal');
+        },
+        closeTraineeDocumentModal() {
+            this.$modal.hide('traineeDocumentModal');
+            this.traineeDocumentModal = null;
         },
         formatAmount(amount) {
             const value = Number(amount) || 0;

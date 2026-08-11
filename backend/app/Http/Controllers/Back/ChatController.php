@@ -113,8 +113,20 @@ class ChatController extends Controller
         $paginator = $query->paginate(self::CONVERSATIONS_PER_PAGE);
         $authId = auth()->id();
 
-        $paginator->getCollection()->transform(function (WhatsAppConversation $conversation) use ($authId) {
-            return $this->formatConversation($conversation, $authId);
+        $traineeIds = $paginator->getCollection()
+            ->pluck('trainee_id')
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+        $unpaidCounts = Invoice::currentMonthUnpaidCountsByTraineeIds($traineeIds);
+
+        $paginator->getCollection()->transform(function (WhatsAppConversation $conversation) use ($authId, $unpaidCounts) {
+            $unpaidCount = $conversation->trainee_id
+                ? (int) ($unpaidCounts[$conversation->trainee_id] ?? 0)
+                : 0;
+
+            return $this->formatConversation($conversation, $authId, $unpaidCount);
         });
 
         $payload = $paginator->toArray();
@@ -816,6 +828,7 @@ class ChatController extends Controller
                     ? $model->created_at->toDateString()
                     : null,
             ],
+            'documents' => $this->formatTraineeDocuments($model),
             'account_status' => [
                 'is_active' => ! $isSuspended && ! $isBlocked,
                 'is_suspended' => $isSuspended,
@@ -931,10 +944,11 @@ class ChatController extends Controller
                 ]);
             }
 
-            WhatsAppBotPause::pauseForAgent($validated['phone']);
-            $conversation = WhatsAppConversationSync::assignCurrentUser(
-                $this->whatsAppService->normalizePhoneDigits($validated['phone'])
-            );
+            $normalized = $this->whatsAppService->normalizePhoneDigits($validated['phone']);
+            $conversation = WhatsAppConversation::query()
+                ->with(['agents:id,name', 'tags:id,name,color', 'trainee.company:id,name_ar'])
+                ->where('phone', $normalized)
+                ->first();
 
             $stored?->load('user:id,name');
             $formatted = $stored ? $this->formatMessage($stored) : $response;
@@ -1012,7 +1026,6 @@ class ChatController extends Controller
                     $stored->update(['user_id' => auth()->id()]);
                 }
 
-                WhatsAppBotPause::pauseForAgent($normalized);
                 $sent++;
             } catch (RuntimeException $exception) {
                 $failed[] = [
@@ -1258,7 +1271,7 @@ class ChatController extends Controller
     /**
      * @return array<string, mixed>
      */
-    private function formatConversation(WhatsAppConversation $conversation, $authId = null): array
+    private function formatConversation(WhatsAppConversation $conversation, $authId = null, ?int $unpaidInvoiceCount = null): array
     {
         WhatsAppTraineeLinker::attachTraineeIfMissing($conversation);
         $conversation->loadMissing([
@@ -1269,6 +1282,12 @@ class ChatController extends Controller
         $company = $conversation->trainee
             ? $this->resolveCompanyForTrainee($conversation->trainee)
             : null;
+
+        if ($unpaidInvoiceCount === null) {
+            $unpaidInvoiceCount = Invoice::currentMonthUnpaidCountForTrainee(
+                $conversation->trainee_id ? (string) $conversation->trainee_id : null
+            );
+        }
 
         return [
             'id' => $conversation->id,
@@ -1308,6 +1327,7 @@ class ChatController extends Controller
             'has_unread' => (bool) $conversation->has_unread,
             'bot_is_paused' => WhatsAppBotPause::isPaused($conversation),
             'bot_paused_until' => optional($conversation->bot_paused_until)->toIso8601String(),
+            'unpaid_invoice_count' => $unpaidInvoiceCount,
         ];
     }
 
@@ -1447,6 +1467,37 @@ class ChatController extends Controller
         return Company::withoutGlobalScopes()
             ->select(['id', 'name_ar', 'name_en'])
             ->find($trainee->company_id);
+    }
+
+    /**
+     * @return array<string, array{url: string, mime_type: string|null, name: string|null}|null>
+     */
+    private function formatTraineeDocuments(Trainee $trainee): array
+    {
+        $collections = [
+            'non_registration_proof' => 'non-registration-proof',
+            'gosi_certificate' => 'gosi-certificate',
+            'qiwa_contract' => 'qiwa-contract',
+        ];
+
+        $mediaByCollection = $trainee->media()
+            ->whereIn('collection_name', array_values($collections))
+            ->orderByDesc('id')
+            ->get()
+            ->unique('collection_name')
+            ->keyBy('collection_name');
+
+        $documents = [];
+        foreach ($collections as $key => $collectionName) {
+            $media = $mediaByCollection->get($collectionName);
+            $documents[$key] = $media ? [
+                'url' => route('back.media.download', ['media_id' => $media->id]),
+                'mime_type' => $media->mime_type,
+                'name' => $media->file_name,
+            ] : null;
+        }
+
+        return $documents;
     }
 
     private function companyDisplayName(?Company $company): ?string

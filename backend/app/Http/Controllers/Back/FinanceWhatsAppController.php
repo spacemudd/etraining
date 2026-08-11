@@ -391,8 +391,6 @@ class FinanceWhatsAppController extends Controller
                 $validated['content_variables'] ?? [],
                 $validated['trainee_id'] ?? null
             );
-
-            $this->attachAgentAndPauseBot($validated['phone']);
         } catch (RuntimeException $exception) {
             return response()->json([
                 'message' => $exception->getMessage(),
@@ -449,7 +447,6 @@ class FinanceWhatsAppController extends Controller
                     $validated['content_variables'] ?? [],
                     (string) $trainee->id
                 );
-                $this->attachAgentAndPauseBot((string) $trainee->phone);
                 $sent++;
             } catch (RuntimeException $exception) {
                 $failed[] = [

@@ -575,6 +575,7 @@ return [
     'chat-action-close' => 'Close conversation',
     'chat-status-failed' => 'Failed to update conversation status',
     'chat-unread' => 'New message',
+    'unpaid-invoices' => 'Unpaid invoices',
     'press-enter-to-send' => 'Press Enter to send',
     'chat-group-by-company' => 'By company',
     'chat-group-latest' => 'Latest',

@@ -255,6 +255,45 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
         return $this->scopeIsPaid($query, false);
     }
 
+    /**
+     * Unpaid (not archived) invoices whose from_date falls in the current calendar month,
+     * keyed by trainee_id.
+     *
+     * @param  array<int, string>  $traineeIds
+     * @return array<string, int>
+     */
+    public static function currentMonthUnpaidCountsByTraineeIds(array $traineeIds): array
+    {
+        $traineeIds = array_values(array_filter($traineeIds));
+        if ($traineeIds === []) {
+            return [];
+        }
+
+        $monthStart = now()->startOfMonth()->toDateString();
+        $monthEnd = now()->endOfMonth()->toDateString();
+
+        return static::query()
+            ->whereIn('trainee_id', $traineeIds)
+            ->whereNull('paid_at')
+            ->where('status', '!=', self::STATUS_ARCHIVED)
+            ->whereDate('from_date', '>=', $monthStart)
+            ->whereDate('from_date', '<=', $monthEnd)
+            ->selectRaw('trainee_id, COUNT(*) as aggregate')
+            ->groupBy('trainee_id')
+            ->pluck('aggregate', 'trainee_id')
+            ->map(static fn ($total) => (int) $total)
+            ->all();
+    }
+
+    public static function currentMonthUnpaidCountForTrainee(?string $traineeId): int
+    {
+        if (! $traineeId) {
+            return 0;
+        }
+
+        return (int) (self::currentMonthUnpaidCountsByTraineeIds([$traineeId])[$traineeId] ?? 0);
+    }
+
     public function getPaymentMethodFormattedAttribute()
     {
         if ($this->payment_method ===  Invoice::PAYMENT_METHOD_CREDIT_CARD) return __('words.credit-card-method');

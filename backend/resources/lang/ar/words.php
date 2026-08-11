@@ -584,6 +584,7 @@ return [
     'chat-action-close' => 'اغلاق المحادثة',
     'chat-status-failed' => 'فشل تحديث حالة المحادثة',
     'chat-unread' => 'رسالة جديدة',
+    'unpaid-invoices' => 'فواتير غير مدفوعة',
     'press-enter-to-send' => 'اضغط Enter للإرسال',
     'chat-group-by-company' => 'حسب الشركة',
     'chat-group-latest' => 'الأحدث',
