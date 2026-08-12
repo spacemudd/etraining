@@ -60,7 +60,7 @@ final class WhatsAppBotStatus
             'paused_until' => $isPaused
                 ? optional($conversation?->bot_paused_until)->toIso8601String()
                 : null,
-            'pause_minutes' => (int) config('whatsapp.bot_pause_minutes', 30),
+            'pause_minutes' => (int) config('whatsapp.bot_pause_minutes', 720),
             'can_pause' => $botConfigured && ! $isPaused,
             'can_resume' => $botConfigured && $isPaused,
         ];

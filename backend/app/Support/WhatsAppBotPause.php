@@ -14,7 +14,7 @@ final class WhatsAppBotPause
 {
     public static function pauseForAgent(string $phone, ?int $minutes = null): void
     {
-        $minutes = $minutes ?? (int) config('whatsapp.bot_pause_minutes', 30);
+        $minutes = $minutes ?? (int) config('whatsapp.bot_pause_minutes', 720);
         $service = app(TelnyxWhatsAppService::class);
         $normalizedPhone = $service->normalizePhoneDigits($phone);
 

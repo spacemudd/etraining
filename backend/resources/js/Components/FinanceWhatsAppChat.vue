@@ -145,7 +145,7 @@
                                                     :disabled="pausingBot"
                                                     @click="pauseBot"
                                                 >
-                                                    {{ pausingBot ? $t('words.saving') : $t('words.pause-bot-30m') }}
+                                                    {{ pausingBot ? $t('words.saving') : pauseBotButtonLabel }}
                                                 </button>
                                                 <button
                                                     v-if="canResumeBot"
@@ -864,6 +864,12 @@ export default {
                 return this.botStatus.can_resume;
             }
             return !!((this.botStatus.workflow_assigned || this.botStatus.ai_enabled) && this.botStatus.is_paused);
+        },
+        pauseBotButtonLabel() {
+            const minutes = (this.botStatus && this.botStatus.pause_minutes) || 720;
+            const hours = Math.round(minutes / 60);
+
+            return this.$t('words.pause-bot-30m', { hours });
         },
         lastMessageAt() {
             if (!this.messages.length) {

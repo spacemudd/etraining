@@ -451,11 +451,11 @@ class ChatController extends Controller
             'minutes' => 'nullable|integer|min:1|max:1440',
         ]);
 
-        $minutes = (int) ($validated['minutes'] ?? config('whatsapp.bot_pause_minutes', 30));
+        $minutes = (int) ($validated['minutes'] ?? config('whatsapp.bot_pause_minutes', 720));
         WhatsAppBotPause::pauseForAgent($validated['phone'], $minutes);
 
         return response()->json([
-            'message' => __('words.whatsapp-bot-paused'),
+            'message' => __('words.whatsapp-bot-paused', ['hours' => (int) round($minutes / 60)]),
             'bot' => WhatsAppBotStatus::forPhone($validated['phone']),
         ]);
     }

@@ -106,7 +106,7 @@
                             <div class="flex flex-1 gap-0.5 p-0.5 bg-gray-100 rounded-md min-w-0">
                                 <button
                                     type="button"
-                                    class="flex-1 px-1.5 py-1.5 rounded text-[11px] font-medium transition"
+                                    class="flex-1 px-1 py-1 rounded text-xs leading-tight font-medium transition"
                                     :class="conversationGroupMode === 'latest' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
                                     @click="setConversationGroupMode('latest')"
                                 >
@@ -114,7 +114,7 @@
                                 </button>
                                 <button
                                     type="button"
-                                    class="flex-1 px-1.5 py-1.5 rounded text-[11px] font-medium transition"
+                                    class="flex-1 px-1 py-1 rounded text-xs leading-tight font-medium transition"
                                     :class="conversationGroupMode === 'company' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
                                     @click="setConversationGroupMode('company')"
                                 >
@@ -122,7 +122,7 @@
                                 </button>
                                 <button
                                     type="button"
-                                    class="flex-1 px-1.5 py-1.5 rounded text-[11px] font-medium transition"
+                                    class="flex-1 px-1 py-1 rounded text-xs leading-tight font-medium transition"
                                     :class="conversationGroupMode === 'agent' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
                                     @click="setConversationGroupMode('agent')"
                                 >
@@ -132,7 +132,28 @@
                         </div>
                     </div>
 
-                    <div class="overflow-y-auto flex-1 flex flex-col justify-between bg-gray-50/40">
+                    <div
+                        v-if="totalPages > 1"
+                        class="px-3 py-2 border-b bg-white flex items-center justify-between text-xs text-gray-500 flex-shrink-0"
+                    >
+                        <button
+                            @click="goToPage(conversationPage - 1)"
+                            :disabled="conversationPage === 1 || loadingConversations"
+                            class="px-2.5 py-1 bg-gray-50 hover:bg-gray-100 rounded disabled:opacity-40"
+                        >
+                            {{ $t('words.previous') }}
+                        </button>
+                        <span dir="ltr">{{ conversationPage }} / {{ totalPages }}</span>
+                        <button
+                            @click="goToPage(conversationPage + 1)"
+                            :disabled="conversationPage >= totalPages || loadingConversations"
+                            class="px-2.5 py-1 bg-gray-50 hover:bg-gray-100 rounded disabled:opacity-40"
+                        >
+                            {{ $t('words.next') }}
+                        </button>
+                    </div>
+
+                    <div class="overflow-y-auto flex-1 bg-gray-50/40">
                         <div class="divide-y divide-gray-100">
                             <div v-if="loadingConversations" class="p-4 text-center text-sm text-gray-500">
                                 {{ $t('words.loading') }}...
@@ -231,25 +252,6 @@
                                     </div>
                                 </div>
                             </template>
-                        </div>
-
-                        <!-- Pagination Controls -->
-                        <div v-if="totalPages > 1" class="p-3 border-t bg-white flex items-center justify-between text-xs text-gray-500">
-                            <button
-                                @click="goToPage(conversationPage - 1)"
-                                :disabled="conversationPage === 1 || loadingConversations"
-                                class="px-2.5 py-1 bg-gray-50 hover:bg-gray-100 rounded disabled:opacity-40"
-                            >
-                                {{ $t('words.previous') }}
-                            </button>
-                            <span dir="ltr">{{ conversationPage }} / {{ totalPages }}</span>
-                            <button
-                                @click="goToPage(conversationPage + 1)"
-                                :disabled="conversationPage >= totalPages || loadingConversations"
-                                class="px-2.5 py-1 bg-gray-50 hover:bg-gray-100 rounded disabled:opacity-40"
-                            >
-                                {{ $t('words.next') }}
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -382,7 +384,7 @@
                                     :disabled="pausingBot"
                                     @click="pauseBot"
                                 >
-                                    {{ pausingBot ? $t('words.saving') : $t('words.pause-bot-30m') }}
+                                    {{ pausingBot ? $t('words.saving') : pauseBotButtonLabel }}
                                 </button>
                                 <button
                                     v-if="canResumeBot"
@@ -785,21 +787,12 @@
                                         <div class="text-xs text-gray-500 mb-0.5">{{ $t('words.registration-date') }}</div>
                                         <div class="text-sm text-gray-900 text-right">
                                             <span dir="ltr">{{ traineeContext.trainee.registration_date || '—' }}</span>
+                                            <span v-if="accountStatusLabel" class="text-gray-400 mx-1">·</span>
+                                            <span
+                                                v-if="accountStatusLabel"
+                                                :class="accountStatusInlineClass"
+                                            >{{ accountStatusLabel }}</span>
                                         </div>
-                                    </div>
-
-                                    <div>
-                                        <div class="text-xs text-gray-500 mb-0.5">{{ $t('words.account-status') }}</div>
-                                        <span
-                                            v-if="traineeContext.account_status && (traineeContext.account_status.is_suspended || traineeContext.account_status.is_blocked)"
-                                            class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
-                                            :class="accountStatusBadgeClass"
-                                        >
-                                            {{ accountStatusLabel }}
-                                        </span>
-                                        <span v-else class="text-sm text-gray-700">
-                                            {{ accountStatusLabel }}
-                                        </span>
                                         <p
                                             v-if="traineeContext.account_status && traineeContext.account_status.reason"
                                             class="text-xs text-gray-500 mt-1 break-words"
@@ -1863,6 +1856,12 @@ export default {
             }
             return !!((this.botStatus.workflow_assigned || this.botStatus.ai_enabled) && this.botStatus.is_paused);
         },
+        pauseBotButtonLabel() {
+            const minutes = (this.botStatus && this.botStatus.pause_minutes) || 720;
+            const hours = Math.round(minutes / 60);
+
+            return this.$t('words.pause-bot-30m', { hours });
+        },
         accountStatusLabel() {
             const status = this.traineeContext && this.traineeContext.account_status;
             if (!status) {
@@ -1876,18 +1875,18 @@ export default {
             }
             return this.$t('words.account-active');
         },
-        accountStatusBadgeClass() {
+        accountStatusInlineClass() {
             const status = this.traineeContext && this.traineeContext.account_status;
             if (!status) {
-                return 'bg-gray-100 text-gray-600';
+                return 'text-gray-700';
             }
             if (status.is_suspended) {
-                return 'bg-red-50 text-red-700';
+                return 'text-red-700 font-medium';
             }
             if (status.is_blocked) {
-                return 'bg-orange-50 text-orange-800';
+                return 'text-orange-800 font-medium';
             }
-            return 'bg-gray-100 text-gray-600';
+            return 'text-green-700';
         },
         manualTemplateVariables() {
             if (!this.selectedTemplate) {
@@ -2481,7 +2480,7 @@ export default {
                     is_paused: false,
                     is_active: false,
                     paused_until: null,
-                    pause_minutes: 30,
+                    pause_minutes: 720,
                     can_pause: false,
                     can_resume: false,
                 };
