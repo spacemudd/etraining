@@ -279,18 +279,58 @@
                                             >
                                                 🤖 {{ $t('words.whatsapp-bot-label') }}
                                             </div>
-                                            <p class="whitespace-pre-wrap break-words" dir="auto">{{ message.body }}</p>
-                                            <div v-if="message.metadata && message.metadata.media && message.metadata.media.length" class="mt-2 space-y-1">
-                                                <a
+                                            <p
+                                                v-if="message.body && !['[Media Attachment]', '[Sticker]'].includes(String(message.body).trim())"
+                                                class="whitespace-pre-wrap break-words"
+                                                dir="auto"
+                                            >{{ message.body }}</p>
+                                            <div v-if="message.metadata && message.metadata.media && message.metadata.media.length" class="mt-2 space-y-2">
+                                                <div
                                                     v-for="(media, mediaIndex) in message.metadata.media"
-                                                    :key="mediaIndex"
-                                                    :href="media.url"
-                                                    target="_blank"
-                                                    class="block text-xs underline"
-                                                    :class="isOutboundMessage(message) ? 'text-green-100' : 'text-blue-600'"
+                                                    :key="'media-' + mediaIndex"
                                                 >
-                                                    {{ media.content_type || $t('words.attachment') }}
-                                                </a>
+                                                    <a
+                                                        v-if="media.kind === 'sticker' && media.url"
+                                                        :href="media.url"
+                                                        target="_blank"
+                                                        class="inline-block"
+                                                    >
+                                                        <img
+                                                            :src="media.url"
+                                                            :alt="$t('words.whatsapp-sticker')"
+                                                            class="w-28 h-28 object-contain"
+                                                            loading="lazy"
+                                                        />
+                                                    </a>
+                                                    <a
+                                                        v-else-if="media.url && String(media.content_type || '').startsWith('image/')"
+                                                        :href="media.url"
+                                                        target="_blank"
+                                                        class="block"
+                                                    >
+                                                        <img
+                                                            :src="media.url"
+                                                            :alt="$t('words.attachment')"
+                                                            class="max-w-full max-h-48 rounded-md object-contain"
+                                                            loading="lazy"
+                                                        />
+                                                    </a>
+                                                    <a
+                                                        v-else-if="media.url"
+                                                        :href="media.url"
+                                                        target="_blank"
+                                                        class="block text-xs underline"
+                                                        :class="isOutboundMessage(message) ? 'text-green-100' : 'text-blue-600'"
+                                                    >
+                                                        {{ media.kind === 'sticker' ? $t('words.whatsapp-sticker') : (media.content_type || $t('words.attachment')) }}
+                                                    </a>
+                                                    <div
+                                                        v-else-if="media.kind === 'sticker'"
+                                                        class="text-xs italic opacity-80"
+                                                    >
+                                                        {{ $t('words.whatsapp-sticker') }}
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="text-[11px] mt-1.5 flex items-center gap-1.5 opacity-75" :class="isOutboundMessage(message) ? 'justify-end text-green-100' : 'justify-start text-gray-500'" dir="ltr">
                                                 <span>{{ formatMessageTime(message.date_sent) }}</span>
@@ -1068,6 +1108,9 @@ export default {
 
                     if (selectedPhone && messagePhone && selectedPhone === messagePhone) {
                         console.log('[FinanceWhatsAppChat] Merging message for selected trainee');
+                        if (!this.isOutboundMessage(message) && !message.is_note) {
+                            this.playNewMessageSound();
+                        }
                         this.mergeMessages([message]);
                         if (!this.isOutboundMessage(message) || this.isBotMessage(message)) {
                             this.scheduleMessagesRefresh();
@@ -1630,6 +1673,23 @@ export default {
         },
         isOutboundMessage(message) {
             return ['outbound-api', 'outbound-reply', 'outbound'].includes(message.direction);
+        },
+        playNewMessageSound() {
+            try {
+                if (!this._newMessageAudio) {
+                    this._newMessageAudio = new Audio('/notification_sound_whatsapp.mp3');
+                    this._newMessageAudio.preload = 'auto';
+                }
+                this._newMessageAudio.currentTime = 0;
+                const playPromise = this._newMessageAudio.play();
+                if (playPromise && typeof playPromise.catch === 'function') {
+                    playPromise.catch(() => {
+                        // Browsers may block autoplay until the user interacts with the page.
+                    });
+                }
+            } catch (e) {
+                // Ignore audio failures so chat updates still work.
+            }
         },
         isBotMessage(message) {
             if (!message) {

@@ -119,11 +119,12 @@ class ChatController extends Controller
             ->unique()
             ->values()
             ->all();
-        $unpaidCounts = Invoice::currentMonthUnpaidCountsByTraineeIds($traineeIds);
+        $unpaidCounts = Invoice::unpaidCountsByTraineeIds($traineeIds);
 
         $paginator->getCollection()->transform(function (WhatsAppConversation $conversation) use ($authId, $unpaidCounts) {
-            $unpaidCount = $conversation->trainee_id
-                ? (int) ($unpaidCounts[$conversation->trainee_id] ?? 0)
+            $traineeId = $conversation->trainee_id ? (string) $conversation->trainee_id : null;
+            $unpaidCount = $traineeId
+                ? (int) ($unpaidCounts[$traineeId] ?? 0)
                 : 0;
 
             return $this->formatConversation($conversation, $authId, $unpaidCount);
@@ -1284,7 +1285,7 @@ class ChatController extends Controller
             : null;
 
         if ($unpaidInvoiceCount === null) {
-            $unpaidInvoiceCount = Invoice::currentMonthUnpaidCountForTrainee(
+            $unpaidInvoiceCount = Invoice::unpaidCountForTrainee(
                 $conversation->trainee_id ? (string) $conversation->trainee_id : null
             );
         }

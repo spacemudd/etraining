@@ -184,24 +184,22 @@
                                             : 'border-transparent hover:bg-gray-100'"
                                     >
                                         <div class="flex items-center justify-between gap-2">
-                                            <span class="font-medium text-xs text-gray-900 truncate inline-flex items-center gap-1.5 min-w-0">
+                                            <span class="font-medium text-xs text-gray-900 inline-flex items-center gap-1 min-w-0 flex-1">
                                                 <span
                                                     v-if="conv.has_unread"
                                                     class="inline-flex items-center justify-center w-3 h-3 rounded-full bg-red-600 text-white text-xs font-bold flex-shrink-0 leading-none"
                                                     :title="$t('words.chat-unread')"
                                                 >!</span>
-                                                <span class="truncate inline-flex items-baseline min-w-0">
-                                                    <template v-if="conv.trainee">
-                                                        <span class="truncate">{{ conv.trainee.name }}</span>
-                                                        <span
-                                                            v-if="conv.unpaid_invoice_count > 0"
-                                                            class="text-red-600 text-xs font-semibold flex-shrink-0 ml-0.5"
-                                                            :title="$t('words.unpaid-invoices')"
-                                                            dir="ltr"
-                                                        >({{ conv.unpaid_invoice_count }})</span>
-                                                    </template>
+                                                <span class="truncate min-w-0">
+                                                    <template v-if="conv.trainee">{{ conv.trainee.name }}</template>
                                                     <span v-else dir="ltr">{{ conv.phone }}</span>
                                                 </span>
+                                                <span
+                                                    v-if="conv.trainee && Number(conv.unpaid_invoice_count) > 0"
+                                                    class="text-red-600 text-xs font-semibold flex-shrink-0"
+                                                    :title="$t('words.unpaid-invoices')"
+                                                    dir="ltr"
+                                                >({{ conv.unpaid_invoice_count }})</span>
                                             </span>
                                             <span class="inline-flex items-center gap-1 flex-shrink-0">
                                                 <span class="text-xs text-gray-400">
@@ -501,7 +499,7 @@
                                             : 'bg-white text-gray-900 shadow-sm'))"
                                 >
                                     <p
-                                        v-if="message.body && message.body !== '[Media Attachment]'"
+                                        v-if="messageBodyVisible(message)"
                                         class="whitespace-pre-wrap break-words leading-relaxed"
                                         dir="auto"
                                     >{{ message.body }}</p>
@@ -512,7 +510,27 @@
                                             :key="media.id || media.url || mediaIndex"
                                         >
                                             <a
-                                                v-if="isImageAttachment(media)"
+                                                v-if="isStickerAttachment(media) && media.url"
+                                                :href="media.url"
+                                                target="_blank"
+                                                class="inline-block"
+                                                :title="$t('words.whatsapp-sticker')"
+                                            >
+                                                <img
+                                                    :src="media.url"
+                                                    :alt="$t('words.whatsapp-sticker')"
+                                                    class="w-32 h-32 object-contain"
+                                                    loading="lazy"
+                                                />
+                                            </a>
+                                            <div
+                                                v-else-if="isStickerAttachment(media)"
+                                                class="text-xs text-gray-500 italic"
+                                            >
+                                                {{ $t('words.whatsapp-sticker') }}
+                                            </div>
+                                            <a
+                                                v-else-if="isImageAttachment(media) && media.url"
                                                 :href="media.url"
                                                 target="_blank"
                                                 class="block"
@@ -537,7 +555,7 @@
                                                 class="w-full"
                                             ></audio>
                                             <a
-                                                v-else
+                                                v-else-if="media.url"
                                                 :href="media.url"
                                                 target="_blank"
                                                 class="inline-flex items-center gap-1.5 text-sm font-medium text-blue-700 hover:underline"
@@ -858,7 +876,12 @@
                                                     </span>
                                                 </div>
                                                 <div class="flex items-center justify-between gap-2">
-                                                    <span class="text-gray-500">{{ invoice.status_formatted }}</span>
+                                                    <span
+                                                        :class="Number(invoice.status) === 0
+                                                            ? 'inline-block bg-red-600 text-white px-1.5 py-0.5'
+                                                            : 'text-gray-500'"
+                                                        :style="Number(invoice.status) === 0 ? { borderRadius: '2px' } : null"
+                                                    >{{ invoice.status_formatted }}</span>
                                                     <button
                                                         type="button"
                                                         class="text-xs text-gray-600 hover:text-gray-900"
@@ -1447,8 +1470,20 @@ import axios from 'axios';
 import throttle from 'lodash/throttle';
 import moment from 'moment';
 import 'moment/locale/ar';
+import Vue from 'vue';
+import VueConfetti from 'vue-confetti';
+
+Vue.use(VueConfetti);
 
 export default {
+    metaInfo() {
+        const base = this.$t('words.chat');
+        const count = this.unreadConversationCount;
+
+        return {
+            title: count > 0 ? `(${count}) ${base}` : base,
+        };
+    },
     components: {
         ChatLayout,
         WhatsAppTemplatesManager,
@@ -1942,6 +1977,9 @@ export default {
                     || String(reply.body || '').toLowerCase().includes(q);
             });
         },
+        unreadConversationCount() {
+            return (this.conversations || []).filter((conv) => !!conv.has_unread).length;
+        },
     },
     mounted() {
         this.initThreadHeight();
@@ -2127,7 +2165,11 @@ export default {
             }
 
             if (index !== -1) {
-                this.$set(this.conversations, index, { ...this.conversations[index], ...merged });
+                const existing = this.conversations[index] || {};
+                if (merged.unpaid_invoice_count == null && existing.unpaid_invoice_count != null) {
+                    merged.unpaid_invoice_count = existing.unpaid_invoice_count;
+                }
+                this.$set(this.conversations, index, { ...existing, ...merged });
             } else {
                 this.conversations.unshift(merged);
             }
@@ -2158,6 +2200,9 @@ export default {
                     { status }
                 );
                 this.patchConversation(data.conversation);
+                if (status === 'closed' || status === 'pending') {
+                    this.celebrateStatusChange();
+                }
                 if ((data.conversation.status || 'open') !== this.statusTab) {
                     this.selectedConversation = null;
                     this.messages = [];
@@ -2171,6 +2216,17 @@ export default {
             } finally {
                 this.updatingStatus = false;
             }
+        },
+        celebrateStatusChange() {
+            if (!this.$confetti) {
+                return;
+            }
+            this.$confetti.start();
+            setTimeout(() => {
+                if (this.$confetti) {
+                    this.$confetti.stop();
+                }
+            }, 2000);
         },
         subscribeEcho() {
             this.stopPolling();
@@ -2186,13 +2242,21 @@ export default {
             window.Echo.channel('whatsapp-chat')
                 .listen('.WhatsAppMessageReceived', (event) => {
                     console.log('[Chat] WhatsAppMessageReceived', event && event.message);
-                    this.scheduleConversationsReload();
                     const message = event.message;
-                    if (
+                    const isForSelected = !!(
                         this.selectedConversation
                         && message
                         && this.normalizePhone(message.phone) === this.normalizePhone(this.selectedConversation.phone)
-                    ) {
+                    );
+
+                    if (message && !this.isOutboundMessage(message) && !message.is_note) {
+                        this.playNewMessageSound();
+                        if (!isForSelected) {
+                            this.markConversationUnreadByPhone(message.phone);
+                        }
+                    }
+                    this.scheduleConversationsReload();
+                    if (isForSelected) {
                         console.log('[Chat] Appending message to open conversation');
                         this.mergeIncomingMessage(message);
                         if (!this.isOutboundMessage(message) && !message.is_note) {
@@ -2231,6 +2295,29 @@ export default {
         },
         normalizePhone(phone) {
             return String(phone || '').replace(/\D+/g, '');
+        },
+        markConversationUnreadByPhone(phone) {
+            const normalized = this.normalizePhone(phone);
+            if (!normalized) {
+                return;
+            }
+
+            const index = this.conversations.findIndex(
+                (conv) => this.normalizePhone(conv.phone) === normalized
+            );
+            if (index === -1) {
+                return;
+            }
+
+            const conversation = this.conversations[index];
+            if (conversation.has_unread) {
+                return;
+            }
+
+            this.$set(this.conversations, index, {
+                ...conversation,
+                has_unread: true,
+            });
         },
         mergeIncomingMessage(message) {
             if (!message) {
@@ -3630,6 +3717,23 @@ export default {
         isOutboundMessage(message) {
             return ['outbound-api', 'outbound-reply', 'outbound'].includes(message.direction);
         },
+        playNewMessageSound() {
+            try {
+                if (!this._newMessageAudio) {
+                    this._newMessageAudio = new Audio('/notification_sound_whatsapp.mp3');
+                    this._newMessageAudio.preload = 'auto';
+                }
+                this._newMessageAudio.currentTime = 0;
+                const playPromise = this._newMessageAudio.play();
+                if (playPromise && typeof playPromise.catch === 'function') {
+                    playPromise.catch(() => {
+                        // Browsers may block autoplay until the user interacts with the page.
+                    });
+                }
+            } catch (e) {
+                // Ignore audio failures so chat updates still work.
+            }
+        },
         isBotMessage(message) {
             if (!message) {
                 return false;
@@ -3653,18 +3757,38 @@ export default {
                     url: media.url,
                     name: media.name,
                     content_type: this.guessMediaType(media.name || media.url),
+                    kind: this.guessAttachmentKind(media.name || media.url, null),
                 }));
             }
 
             const raw = (message.metadata && message.metadata.media) || [];
             return raw
-                .filter((media) => media && media.url)
+                .filter((media) => media && (media.url || media.kind === 'sticker' || media.id))
                 .map((media, index) => ({
                     id: media.id || `meta-${index}`,
-                    url: media.url,
+                    url: media.url || null,
                     name: media.name || null,
                     content_type: media.content_type || media.mime_type || this.guessMediaType(media.url),
+                    kind: media.kind || this.guessAttachmentKind(media.url, media.content_type || media.mime_type),
+                    animated: !!media.animated,
                 }));
+        },
+        messageBodyVisible(message) {
+            if (!message || !message.body) {
+                return false;
+            }
+
+            return !['[Media Attachment]', '[Sticker]'].includes(String(message.body).trim());
+        },
+        guessAttachmentKind(value, contentType) {
+            if (String(contentType || '').toLowerCase().includes('sticker')) {
+                return 'sticker';
+            }
+            const source = String(value || '').toLowerCase();
+            if (source.includes('sticker')) {
+                return 'sticker';
+            }
+            return null;
         },
         guessMediaType(value) {
             const source = String(value || '').toLowerCase();
@@ -3679,7 +3803,20 @@ export default {
             }
             return '';
         },
+        isStickerAttachment(media) {
+            if (!media) {
+                return false;
+            }
+            if (media.kind === 'sticker') {
+                return true;
+            }
+            const type = String(media.content_type || '').toLowerCase();
+            return type.includes('sticker');
+        },
         isImageAttachment(media) {
+            if (this.isStickerAttachment(media)) {
+                return false;
+            }
             const type = String((media && media.content_type) || '').toLowerCase();
             return type.startsWith('image/') || this.guessMediaType(media && (media.url || media.name)).startsWith('image/');
         },

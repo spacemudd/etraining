@@ -256,6 +256,34 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
     }
 
     /**
+     * Unpaid (not archived) invoices keyed by trainee_id.
+     *
+     * @param  array<int, string>  $traineeIds
+     * @return array<string, int>
+     */
+    public static function unpaidCountsByTraineeIds(array $traineeIds): array
+    {
+        $traineeIds = array_values(array_unique(array_filter(array_map(
+            static fn ($id) => $id !== null && $id !== '' ? (string) $id : null,
+            $traineeIds
+        ))));
+
+        if ($traineeIds === []) {
+            return [];
+        }
+
+        return static::query()
+            ->whereIn('trainee_id', $traineeIds)
+            ->whereNull('paid_at')
+            ->where('status', '!=', self::STATUS_ARCHIVED)
+            ->selectRaw('trainee_id, COUNT(*) as aggregate')
+            ->groupBy('trainee_id')
+            ->pluck('aggregate', 'trainee_id')
+            ->mapWithKeys(static fn ($total, $traineeId) => [(string) $traineeId => (int) $total])
+            ->all();
+    }
+
+    /**
      * Unpaid (not archived) invoices whose from_date falls in the current calendar month,
      * keyed by trainee_id.
      *
@@ -264,7 +292,11 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
      */
     public static function currentMonthUnpaidCountsByTraineeIds(array $traineeIds): array
     {
-        $traineeIds = array_values(array_filter($traineeIds));
+        $traineeIds = array_values(array_unique(array_filter(array_map(
+            static fn ($id) => $id !== null && $id !== '' ? (string) $id : null,
+            $traineeIds
+        ))));
+
         if ($traineeIds === []) {
             return [];
         }
@@ -281,8 +313,19 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
             ->selectRaw('trainee_id, COUNT(*) as aggregate')
             ->groupBy('trainee_id')
             ->pluck('aggregate', 'trainee_id')
-            ->map(static fn ($total) => (int) $total)
+            ->mapWithKeys(static fn ($total, $traineeId) => [(string) $traineeId => (int) $total])
             ->all();
+    }
+
+    public static function unpaidCountForTrainee(?string $traineeId): int
+    {
+        if (! $traineeId) {
+            return 0;
+        }
+
+        $traineeId = (string) $traineeId;
+
+        return (int) (self::unpaidCountsByTraineeIds([$traineeId])[$traineeId] ?? 0);
     }
 
     public static function currentMonthUnpaidCountForTrainee(?string $traineeId): int
@@ -290,6 +333,8 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
         if (! $traineeId) {
             return 0;
         }
+
+        $traineeId = (string) $traineeId;
 
         return (int) (self::currentMonthUnpaidCountsByTraineeIds([$traineeId])[$traineeId] ?? 0);
     }

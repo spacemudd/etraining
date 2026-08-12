@@ -94,6 +94,44 @@ class TelnyxWhatsAppBodyExtractionTest extends TestCase
         $this->assertSame('التحدث مع خدمة العملاء', $body);
     }
 
+    public function test_sticker_with_url_is_extracted_and_labeled(): void
+    {
+        [$media, $body] = $this->extractMediaAndBody([
+            'type' => 'sticker',
+            'sticker' => [
+                'url' => 'https://example.com/sticker.webp',
+                'mime_type' => 'image/webp',
+                'animated' => false,
+            ],
+        ]);
+
+        $this->assertCount(1, $media);
+        $this->assertSame('https://example.com/sticker.webp', $media[0]['url']);
+        $this->assertSame('image/webp', $media[0]['content_type']);
+        $this->assertSame('sticker', $media[0]['kind']);
+        $this->assertFalse($media[0]['animated']);
+        $this->assertSame('[Sticker]', $body);
+    }
+
+    public function test_sticker_without_url_keeps_media_id_metadata(): void
+    {
+        [$media, $body] = $this->extractMediaAndBody([
+            'type' => 'sticker',
+            'sticker' => [
+                'id' => 'media-sticker-123',
+                'mime_type' => 'image/webp',
+                'animated' => true,
+            ],
+        ]);
+
+        $this->assertCount(1, $media);
+        $this->assertSame('media-sticker-123', $media[0]['id']);
+        $this->assertArrayNotHasKey('url', $media[0]);
+        $this->assertSame('sticker', $media[0]['kind']);
+        $this->assertTrue($media[0]['animated']);
+        $this->assertSame('[Sticker]', $body);
+    }
+
     public function test_interactive_list_reply_uses_title(): void
     {
         [$media, $body] = $this->extractMediaAndBody([

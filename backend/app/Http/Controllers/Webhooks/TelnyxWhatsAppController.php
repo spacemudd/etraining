@@ -172,33 +172,129 @@ class TelnyxWhatsAppController extends Controller
     {
         $media = [];
         $body = $this->extractMessageBody($source);
+        $hasSticker = false;
 
         foreach ($source['media'] ?? [] as $item) {
-            if (is_array($item) && isset($item['url'])) {
-                $media[] = [
-                    'url' => $item['url'],
-                    'content_type' => $item['content_type'] ?? $item['mime_type'] ?? null,
-                ];
+            if (! is_array($item)) {
+                continue;
+            }
+
+            $normalized = $this->normalizeInboundMediaItem($item, null);
+            if ($normalized !== null) {
+                if (($normalized['kind'] ?? null) === 'sticker') {
+                    $hasSticker = true;
+                }
+                $media[] = $normalized;
             }
         }
 
-        foreach (['image', 'document', 'audio', 'video'] as $mediaType) {
-            if (isset($source[$mediaType]) && is_array($source[$mediaType])) {
-                $m = $source[$mediaType];
-                if (isset($m['url'])) {
-                    $media[] = [
-                        'url' => $m['url'],
-                        'content_type' => $m['content_type'] ?? $m['mime_type'] ?? null,
-                    ];
+        foreach (['image', 'document', 'audio', 'video', 'sticker'] as $mediaType) {
+            if (! isset($source[$mediaType]) || ! is_array($source[$mediaType])) {
+                continue;
+            }
+
+            $normalized = $this->normalizeInboundMediaItem($source[$mediaType], $mediaType);
+            if ($normalized !== null) {
+                if ($mediaType === 'sticker' || ($normalized['kind'] ?? null) === 'sticker') {
+                    $hasSticker = true;
+                }
+                $media[] = $normalized;
+            }
+        }
+
+        // WhatsApp Cloud / Telnyx may nest sticker under whatsapp_message when type=sticker.
+        $type = strtolower((string) ($source['type'] ?? data_get($source, 'whatsapp_message.type', '')));
+        if ($type === 'sticker') {
+            $hasSticker = true;
+            if ($media === []) {
+                $nested = data_get($source, 'whatsapp_message.sticker');
+                if (is_array($nested)) {
+                    $normalized = $this->normalizeInboundMediaItem($nested, 'sticker');
+                    if ($normalized !== null) {
+                        $media[] = $normalized;
+                    }
                 }
             }
         }
 
-        if ($body === '' && count($media) > 0) {
-            $body = '[Media Attachment]';
+        if ($body === '' && ($media !== [] || $hasSticker)) {
+            $body = $hasSticker && $this->mediaItemsAreOnlyStickers($media)
+                ? '[Sticker]'
+                : '[Media Attachment]';
         }
 
         return [$media, $body];
+    }
+
+    /**
+     * @param  array<string, mixed>  $item
+     * @return array<string, mixed>|null
+     */
+    private function normalizeInboundMediaItem(array $item, ?string $mediaType): ?array
+    {
+        $url = (string) ($item['url'] ?? $item['link'] ?? $item['href'] ?? '');
+        $contentType = $item['content_type'] ?? $item['mime_type'] ?? null;
+        if (! is_string($contentType) || $contentType === '') {
+            $contentType = null;
+        }
+
+        $isSticker = $mediaType === 'sticker'
+            || strtolower((string) ($item['kind'] ?? '')) === 'sticker';
+
+        if ($isSticker && $contentType === null) {
+            $contentType = 'image/webp';
+        }
+
+        if ($url === '') {
+            if (! $isSticker) {
+                return null;
+            }
+
+            $mediaId = (string) ($item['id'] ?? $item['media_id'] ?? '');
+            if ($mediaId === '') {
+                return null;
+            }
+
+            return [
+                'id' => $mediaId,
+                'content_type' => $contentType ?? 'image/webp',
+                'kind' => 'sticker',
+                'animated' => (bool) ($item['animated'] ?? false),
+            ];
+        }
+
+        $normalized = [
+            'url' => $url,
+            'content_type' => $contentType,
+        ];
+
+        if ($isSticker) {
+            $normalized['kind'] = 'sticker';
+            $normalized['animated'] = (bool) ($item['animated'] ?? false);
+            if ($normalized['content_type'] === null) {
+                $normalized['content_type'] = 'image/webp';
+            }
+        }
+
+        return $normalized;
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $media
+     */
+    private function mediaItemsAreOnlyStickers(array $media): bool
+    {
+        if ($media === []) {
+            return true;
+        }
+
+        foreach ($media as $item) {
+            if (($item['kind'] ?? null) !== 'sticker') {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

@@ -85,7 +85,7 @@ class WhatsAppConversationUpdated implements ShouldBroadcastNow
             'has_unread' => (bool) $conversation->has_unread,
             'bot_is_paused' => WhatsAppBotPause::isPaused($conversation),
             'bot_paused_until' => optional($conversation->bot_paused_until)->toIso8601String(),
-            'unpaid_invoice_count' => Invoice::currentMonthUnpaidCountForTrainee(
+            'unpaid_invoice_count' => Invoice::unpaidCountForTrainee(
                 $conversation->trainee_id ? (string) $conversation->trainee_id : null
             ),
         ]);

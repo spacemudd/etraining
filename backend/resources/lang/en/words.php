@@ -1196,6 +1196,7 @@ return [
     'load-more' => 'Load more',
     'back' => 'Back',
     'attachment' => 'Attachment',
+    'whatsapp-sticker' => 'Sticker',
     'no-results' => 'No results found',
     'detected-english-name-title' => 'English name detected',
     'detected-english-name-message' => 'We detected this English name:',

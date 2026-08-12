@@ -1193,6 +1193,7 @@ return [
     'load-more' => 'تحميل المزيد',
     'back' => 'رجوع',
     'attachment' => 'مرفق',
+    'whatsapp-sticker' => 'ملصق',
     'no-results' => 'لا توجد نتائج',
     'detected-english-name-title' => 'تم اكتشاف الاسم الإنجليزي',
     'detected-english-name-message' => 'تم اكتشاف الاسم الإنجليزي التالي:',
