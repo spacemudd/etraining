@@ -40,7 +40,7 @@
                             <button
                                 type="button"
                                 @click="setStatusTab('open')"
-                                class="flex-1 px-2 py-1.5 rounded text-[11px] font-medium transition"
+                                class="flex-1 px-1 py-1 rounded text-xs leading-tight font-medium transition"
                                 :class="statusTab === 'open' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
                             >
                                 {{ $t('words.chat-status-open') }}
@@ -49,7 +49,7 @@
                             <button
                                 type="button"
                                 @click="setStatusTab('pending')"
-                                class="flex-1 px-2 py-1.5 rounded text-[11px] font-medium transition"
+                                class="flex-1 px-1 py-1 rounded text-xs leading-tight font-medium transition"
                                 :class="statusTab === 'pending' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
                             >
                                 {{ $t('words.chat-status-pending') }}
@@ -58,7 +58,7 @@
                             <button
                                 type="button"
                                 @click="setStatusTab('closed')"
-                                class="flex-1 px-2 py-1.5 rounded text-[11px] font-medium transition"
+                                class="flex-1 px-1 py-1 rounded text-xs leading-tight font-medium transition"
                                 :class="statusTab === 'closed' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
                             >
                                 {{ $t('words.chat-status-closed') }}
@@ -718,7 +718,7 @@
                                 <div class="flex items-center gap-2 flex-shrink-0">
                                     <button
                                         type="button"
-                                        class="px-3 py-2 rounded-md text-sm font-medium border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 transition"
+                                        class="px-2 py-1 rounded-md text-xs leading-tight font-medium border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 transition"
                                         @click="openQuickRepliesModal"
                                     >
                                         {{ $t('words.quick-reply') }}
@@ -727,7 +727,7 @@
                                         @click="sendMessageOrNote"
                                         type="button"
                                         :disabled="sending || !messageBody.trim() || (composerMode === 'freeform' && messagingWindowIsOpen === false)"
-                                        class="px-4 py-2 rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700 disabled:opacity-50 transition"
+                                        class="px-2.5 py-1 rounded-md text-xs leading-tight font-medium text-white bg-green-600 hover:bg-green-700 disabled:opacity-50 transition"
                                     >
                                         {{ composerMode === 'note' ? $t('words.whatsapp-add-note') : $t('words.send') }}
                                     </button>
