@@ -34,7 +34,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class ChatController extends Controller
 {
-    private const CONVERSATIONS_PER_PAGE = 7;
+    private const CONVERSATIONS_PER_PAGE = 20;
 
     private const MESSAGES_PER_PAGE = 50;
 
