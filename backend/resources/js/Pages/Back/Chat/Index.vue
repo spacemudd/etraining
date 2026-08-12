@@ -2262,7 +2262,7 @@ export default {
             });
 
             // Let the burst play out before the pane clears (~ticks/60fps + small beat).
-            const settleMs = 1300;
+            const settleMs = 1000;
             return new Promise((resolve) => setTimeout(resolve, settleMs));
         },
         subscribeEcho() {
