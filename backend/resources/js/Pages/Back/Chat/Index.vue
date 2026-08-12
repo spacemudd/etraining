@@ -622,7 +622,7 @@
                                         class="px-3 py-1.5 rounded text-xs font-medium border transition disabled:opacity-50"
                                         :class="action.buttonClass"
                                         :disabled="updatingStatus"
-                                        @click="setConversationStatus(action.status)"
+                                        @click="setConversationStatus(action.status, $event)"
                                     >
                                         {{ action.label }}
                                     </button>
@@ -634,20 +634,35 @@
                                 <div v-if="loadingTemplates" class="text-xs text-gray-500 mb-2">
                                     {{ $t('words.loading') }}...
                                 </div>
-                                <select
-                                    v-model="selectedTemplateSid"
-                                    @change="onTemplateChange"
-                                    class="w-full form-select text-sm mb-2 rounded-md border-gray-200"
+                                <div
+                                    v-else-if="!templates.length"
+                                    class="text-xs text-gray-500 mb-2"
                                 >
-                                    <option value="">{{ $t('words.select-template') }}</option>
-                                    <option
+                                    {{ $t('words.no-results') }}
+                                </div>
+                                <div
+                                    v-else
+                                    class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2 max-h-48 overflow-y-auto"
+                                >
+                                    <button
                                         v-for="template in templates"
                                         :key="template.sid"
-                                        :value="template.sid"
+                                        type="button"
+                                        class="px-2.5 py-2 rounded-md border transition text-xs"
+                                        :class="selectedTemplateSid === template.sid
+                                            ? 'border-green-600 bg-green-50 text-gray-900 shadow-sm'
+                                            : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50'"
+                                        @click="selectComposerTemplate(template.sid)"
                                     >
-                                        {{ template.friendly_name }} ({{ template.language }})
-                                    </option>
-                                </select>
+                                        <div class="font-semibold truncate">{{ template.friendly_name }}</div>
+                                        <div class="text-gray-500 mt-0.5 truncate" dir="ltr">{{ template.language }}</div>
+                                        <div
+                                            v-if="template.body || template.body_display"
+                                            class="mt-1 text-gray-600 whitespace-pre-wrap"
+                                            style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;"
+                                        >{{ template.body_display || template.body }}</div>
+                                    </button>
+                                </div>
 
                                 <div v-if="selectedTemplate" class="mb-2 p-2.5 bg-gray-50 rounded-md text-sm whitespace-pre-wrap text-gray-800">
                                     {{ previewTemplateBody }}
@@ -1470,10 +1485,7 @@ import axios from 'axios';
 import throttle from 'lodash/throttle';
 import moment from 'moment';
 import 'moment/locale/ar';
-import Vue from 'vue';
-import VueConfetti from 'vue-confetti';
-
-Vue.use(VueConfetti);
+import confetti from 'canvas-confetti';
 
 export default {
     metaInfo() {
@@ -2181,18 +2193,21 @@ export default {
         async onStatusChange(event) {
             const status = event.target.value;
             try {
-                await this.setConversationStatus(status);
+                await this.setConversationStatus(status, event);
             } catch (error) {
                 event.target.value = (this.selectedConversation && this.selectedConversation.status) || 'open';
             }
         },
-        async setConversationStatus(status) {
+        async setConversationStatus(status, event = null) {
             if (!this.selectedConversation || !this.selectedConversation.id) {
                 return;
             }
             if (!status || status === this.selectedConversation.status) {
                 return;
             }
+            const originElement = event && event.currentTarget
+                ? event.currentTarget
+                : (event && event.target ? event.target : null);
             this.updatingStatus = true;
             try {
                 const { data } = await axios.patch(
@@ -2201,7 +2216,7 @@ export default {
                 );
                 this.patchConversation(data.conversation);
                 if (status === 'closed' || status === 'pending') {
-                    this.celebrateStatusChange();
+                    this.celebrateStatusChange(originElement);
                 }
                 if ((data.conversation.status || 'open') !== this.statusTab) {
                     this.selectedConversation = null;
@@ -2217,16 +2232,28 @@ export default {
                 this.updatingStatus = false;
             }
         },
-        celebrateStatusChange() {
-            if (!this.$confetti) {
-                return;
-            }
-            this.$confetti.start();
-            setTimeout(() => {
-                if (this.$confetti) {
-                    this.$confetti.stop();
+        celebrateStatusChange(originElement = null) {
+            const rect = originElement && typeof originElement.getBoundingClientRect === 'function'
+                ? originElement.getBoundingClientRect()
+                : null;
+
+            const origin = rect
+                ? {
+                    x: (rect.left + rect.width / 2) / window.innerWidth,
+                    y: (rect.top + rect.height / 2) / window.innerHeight,
                 }
-            }, 2000);
+                : { x: 0.5, y: 0.65 };
+
+            confetti({
+                particleCount: 90,
+                spread: 75,
+                startVelocity: 38,
+                gravity: 0.9,
+                ticks: 180,
+                origin,
+                zIndex: 9999,
+                disableForReducedMotion: true,
+            });
         },
         subscribeEcho() {
             this.stopPolling();
@@ -2863,6 +2890,13 @@ export default {
             } catch (e) {
                 this.errorMessage = 'Failed to load template details.';
             }
+        },
+        selectComposerTemplate(sid) {
+            if (!sid || sid === this.selectedTemplateSid) {
+                return;
+            }
+            this.selectedTemplateSid = sid;
+            this.onTemplateChange();
         },
         openNewChatModal() {
             this.resetNewChatRecipientState();
