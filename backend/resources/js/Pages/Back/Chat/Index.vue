@@ -155,10 +155,13 @@
 
                     <div class="overflow-y-auto flex-1 bg-gray-50/40">
                         <div class="divide-y divide-gray-100">
-                            <div v-if="loadingConversations" class="p-4 text-center text-xs text-gray-500">
+                            <div
+                                v-if="loadingConversations && conversations.length === 0"
+                                class="p-4 text-center text-xs text-gray-500"
+                            >
                                 {{ $t('words.loading') }}...
                             </div>
-                            <div v-else-if="conversations.length === 0" class="p-6 text-center text-xs text-gray-500">
+                            <div v-else-if="!loadingConversations && conversations.length === 0" class="p-6 text-center text-xs text-gray-500">
                                 {{ $t('words.no-results') }}
                             </div>
                             <template v-else>
@@ -174,6 +177,7 @@
                                             {{ group.label }}
                                         </div>
                                     </div>
+                                    <transition-group name="conv-sidebar" tag="div" class="divide-y divide-gray-100">
                                     <div
                                         v-for="conv in group.conversations"
                                         :key="conv.id || conv.phone"
@@ -250,6 +254,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    </transition-group>
                                 </div>
                             </template>
                         </div>
@@ -2215,10 +2220,11 @@ export default {
                     { status }
                 );
                 this.patchConversation(data.conversation);
+                const leavingTab = (data.conversation.status || 'open') !== this.statusTab;
                 if (status === 'closed' || status === 'pending') {
-                    this.celebrateStatusChange(originElement);
+                    await this.celebrateStatusChange(originElement);
                 }
-                if ((data.conversation.status || 'open') !== this.statusTab) {
+                if (leavingTab) {
                     this.selectedConversation = null;
                     this.messages = [];
                     await this.loadConversations();
@@ -2254,6 +2260,10 @@ export default {
                 zIndex: 9999,
                 disableForReducedMotion: true,
             });
+
+            // Let the burst play out before the pane clears (~ticks/60fps + small beat).
+            const settleMs = 1600;
+            return new Promise((resolve) => setTimeout(resolve, settleMs));
         },
         subscribeEcho() {
             this.stopPolling();
@@ -2317,7 +2327,7 @@ export default {
             }
             this.conversationsReloadTimer = setTimeout(() => {
                 this.conversationsReloadTimer = null;
-                this.loadConversations();
+                this.loadConversations({ silent: true });
             }, 400);
         },
         normalizePhone(phone) {
@@ -2380,8 +2390,10 @@ export default {
                 this.availableTags = [];
             }
         },
-        async loadConversations() {
-            this.loadingConversations = true;
+        async loadConversations({ silent = false } = {}) {
+            if (!silent) {
+                this.loadingConversations = true;
+            }
             try {
                 const { data } = await axios.get(route('back.chat.conversations'), {
                     params: this.conversationParams(),
@@ -2394,11 +2406,15 @@ export default {
                 this.applyConversationCounts(data.counts);
                 this.applyTagCounts(data.tag_counts);
             } catch (e) {
-                this.conversations = [];
-                this.totalPages = 1;
-                this.totalConversations = 0;
+                if (!silent) {
+                    this.conversations = [];
+                    this.totalPages = 1;
+                    this.totalConversations = 0;
+                }
             } finally {
-                this.loadingConversations = false;
+                if (!silent) {
+                    this.loadingConversations = false;
+                }
             }
         },
         applyConversationCounts(counts) {
@@ -3994,5 +4010,20 @@ export default {
 [dir="rtl"] .trainee-sidebar-accent {
     border-left: none;
     border-right: 2px solid #16a34a;
+}
+.conv-sidebar-enter-active,
+.conv-sidebar-leave-active {
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.conv-sidebar-enter {
+    opacity: 0;
+    transform: translateY(-8px);
+}
+.conv-sidebar-leave-to {
+    opacity: 0;
+    transform: translateY(-4px);
+}
+.conv-sidebar-move {
+    transition: transform 0.3s ease;
 }
 </style>
