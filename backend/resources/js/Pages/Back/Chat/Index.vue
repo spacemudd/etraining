@@ -153,7 +153,7 @@
                         </button>
                     </div>
 
-                    <div class="overflow-y-auto flex-1 bg-gray-50/40">
+                    <div class="conversation-list-scroll overflow-y-auto flex-1 bg-gray-50/40">
                         <div class="divide-y divide-gray-100">
                             <div
                                 v-if="loadingConversations && conversations.length === 0"
@@ -2262,7 +2262,7 @@ export default {
             });
 
             // Let the burst play out before the pane clears (~ticks/60fps + small beat).
-            const settleMs = 1600;
+            const settleMs = 1300;
             return new Promise((resolve) => setTimeout(resolve, settleMs));
         },
         subscribeEcho() {
@@ -4011,17 +4011,27 @@ export default {
     border-left: none;
     border-right: 2px solid #16a34a;
 }
-.conv-sidebar-enter-active,
+.conversation-list-scroll {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+}
+.conversation-list-scroll::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+    width: 0;
+    height: 0;
+}
+.conv-sidebar-enter-active {
+    transition: opacity 0.35s ease;
+}
 .conv-sidebar-leave-active {
-    transition: opacity 0.35s ease, transform 0.35s ease;
+    transition: opacity 0.2s ease;
+    position: absolute;
+    width: 100%;
+    pointer-events: none;
 }
-.conv-sidebar-enter {
-    opacity: 0;
-    transform: translateY(-8px);
-}
+.conv-sidebar-enter,
 .conv-sidebar-leave-to {
     opacity: 0;
-    transform: translateY(-4px);
 }
 .conv-sidebar-move {
     transition: transform 0.3s ease;
