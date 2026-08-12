@@ -61,7 +61,7 @@ final class WhatsAppAiTraineeTools
                 'type' => 'function',
                 'function' => [
                     'name' => 'get_pending_invoices',
-                    'description' => 'List unpaid (pending) invoices for the trainee on this conversation.',
+                    'description' => 'List unpaid invoices and the most recently paid invoice. Call immediately when the trainee says she already paid (سددت / دفعت / تم السداد) or asks about invoice/payment status. Do not ask clarifying questions first.',
                     'parameters' => [
                         'type' => 'object',
                         'properties' => (object) [],
@@ -72,7 +72,7 @@ final class WhatsAppAiTraineeTools
                 'type' => 'function',
                 'function' => [
                     'name' => 'create_payment_link',
-                    'description' => 'Create a Noon payment link for one unpaid invoice owned by this trainee.',
+                    'description' => 'Create a Noon payment link for one unpaid invoice owned by this trainee. Do not call this when the trainee claims she already paid.',
                     'parameters' => [
                         'type' => 'object',
                         'properties' => [
@@ -209,7 +209,7 @@ final class WhatsAppAiTraineeTools
     {
         $trainee = $this->findTrainee($normalizedPhone);
         if (! $trainee) {
-            return ['ok' => true, 'found' => false, 'invoices' => []];
+            return ['ok' => true, 'found' => false, 'invoices' => [], 'last_paid_invoice' => null];
         }
 
         $invoices = $trainee->invoices()
@@ -217,6 +217,12 @@ final class WhatsAppAiTraineeTools
             ->where('status', '!=', Invoice::STATUS_ARCHIVED)
             ->orderByDesc('from_date')
             ->get(['id', 'number', 'from_date', 'to_date', 'grand_total', 'status']);
+
+        $lastPaid = $trainee->invoices()
+            ->paid()
+            ->where('status', '!=', Invoice::STATUS_ARCHIVED)
+            ->orderByDesc('paid_at')
+            ->first(['id', 'number', 'from_date', 'to_date', 'grand_total', 'status', 'paid_at']);
 
         return [
             'ok' => true,
@@ -230,6 +236,15 @@ final class WhatsAppAiTraineeTools
                 'grand_total' => (float) $invoice->grand_total,
                 'currency' => 'SAR',
             ])->values()->all(),
+            'last_paid_invoice' => $lastPaid ? [
+                'id' => (string) $lastPaid->id,
+                'number' => $lastPaid->number,
+                'from_date' => optional($lastPaid->from_date)->toDateString(),
+                'to_date' => optional($lastPaid->to_date)->toDateString(),
+                'grand_total' => (float) $lastPaid->grand_total,
+                'paid_at' => optional($lastPaid->paid_at)->toDateString(),
+                'currency' => 'SAR',
+            ] : null,
         ];
     }
 

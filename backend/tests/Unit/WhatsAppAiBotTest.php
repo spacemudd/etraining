@@ -115,6 +115,11 @@ class WhatsAppAiBotTest extends BaseTestCase
         $this->assertStringContainsString('920031449', $composed);
         $this->assertStringContainsString('0553139979', $composed);
         $this->assertStringContainsString('شؤون المتدربات', $composed);
+        $this->assertStringContainsString('ALREADY PAID', $composed);
+        $this->assertStringContainsString('سددت', $composed);
+        $this->assertStringContainsString('get_pending_invoices', $composed);
+        $this->assertStringContainsString('create_payment_link', $composed);
+        $this->assertStringContainsString('كيف أقدر أساعدك بخصوص السداد', $composed);
     }
 
     public function test_empty_api_key_keeps_existing(): void
@@ -192,6 +197,54 @@ class WhatsAppAiBotTest extends BaseTestCase
         $pending = $tools->getPendingInvoices($this->customerPhone);
         $this->assertSame(1, $pending['count']);
         $this->assertSame($invoiceId, $pending['invoices'][0]['id']);
+        $this->assertArrayHasKey('last_paid_invoice', $pending);
+        $this->assertNull($pending['last_paid_invoice']);
+    }
+
+    public function test_tools_return_last_paid_invoice_on_payment_claim_lookup(): void
+    {
+        $trainee = $this->createTrainee([
+            'phone' => '966511111111',
+            'name' => 'Paid Trainee',
+        ]);
+
+        $paidId = (string) Str::uuid();
+        $unpaidId = (string) Str::uuid();
+        \DB::table('invoices')->insert([
+            [
+                'id' => $paidId,
+                'trainee_id' => $trainee->id,
+                'company_id' => $trainee->company_id,
+                'number' => 2001,
+                'status' => Invoice::STATUS_PAID,
+                'grand_total' => 900,
+                'from_date' => now()->subMonths(2)->toDateString(),
+                'to_date' => now()->subMonth()->toDateString(),
+                'paid_at' => now()->subDays(3),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => $unpaidId,
+                'trainee_id' => $trainee->id,
+                'company_id' => $trainee->company_id,
+                'number' => 2002,
+                'status' => Invoice::STATUS_UNPAID,
+                'grand_total' => 1100,
+                'from_date' => now()->subMonth()->toDateString(),
+                'to_date' => now()->toDateString(),
+                'paid_at' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
+
+        $pending = app(WhatsAppAiTraineeTools::class)->getPendingInvoices($this->customerPhone);
+
+        $this->assertSame(1, $pending['count']);
+        $this->assertSame($unpaidId, $pending['invoices'][0]['id']);
+        $this->assertSame($paidId, $pending['last_paid_invoice']['id']);
+        $this->assertSame(now()->subDays(3)->toDateString(), $pending['last_paid_invoice']['paid_at']);
     }
 
     public function test_tools_detect_suspended_trainee(): void

@@ -70,6 +70,18 @@ CERTIFICATES / الشهادات (asks about certificates, شهادة التخر�
 📱 0553139979 واتساب 💬"
 4. Do NOT call request_human_agent for this certificates redirect unless a different handoff rule also applies (e.g. account suspended).
 5. After sending the contacts, stop — do not add extra promises about issuance timelines.
+
+ALREADY PAID / سددت / دفعت / تم السداد / دفعت الفاتورة (trainee claims she already paid):
+1. This is a payment-claim, NOT a request for payment methods, invoice info, or a payment link.
+2. Immediately call get_pending_invoices. Do NOT ask clarifying questions first (never: "كيف أقدر أساعدك بخصوص السداد؟" / "هل تحتاجين معلومات عن الفواتير أو طريقة الدفع؟").
+3. Do NOT call create_payment_link for this intent.
+4. If unpaid count is 0: thank her in feminine Arabic and confirm nothing is pending. If last_paid_invoice is present, you may mention its date/amount. Example:
+   "تمام، ما عندك فواتير معلقة حالياً. شكراً لك."
+5. If unpaid invoices still exist: do NOT contradict her or insist she must pay now. Ask for a receipt/transfer screenshot in one concise feminine Arabic message. Example:
+   "تمام، عشان نتأكد من السداد أرسلي صورة إيصال التحويل أو عملية الدفع لو سمحتي."
+6. If she already sent media with this claim, or after a receipt image arrives in this thread: you MUST call request_human_agent (reason like payment_claim_needs_finance_review), then reply in this style (do NOT mention a team, colleague, or transfer):
+   "استلمت الإيصال، شكراً لك. سوف يتم المراجعة من قبلنا وابلاغك عن النتيجة في اسرع وقت."
+7. Never claim you transferred them without calling request_human_agent.
 TXT;
 
     public static function isEnabled(): bool
