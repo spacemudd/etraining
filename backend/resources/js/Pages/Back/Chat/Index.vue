@@ -69,7 +69,7 @@
                             v-model="conversationSearch"
                             @input="onSearchInput"
                             type="text"
-                            class="w-full form-input text-sm rounded-md border-gray-200"
+                            class="w-full form-input text-xs rounded-md border-gray-200"
                             :placeholder="$t('words.search') + '...'"
                         />
                         <div class="grid grid-cols-2 gap-2">
@@ -155,10 +155,10 @@
 
                     <div class="overflow-y-auto flex-1 bg-gray-50/40">
                         <div class="divide-y divide-gray-100">
-                            <div v-if="loadingConversations" class="p-4 text-center text-sm text-gray-500">
+                            <div v-if="loadingConversations" class="p-4 text-center text-xs text-gray-500">
                                 {{ $t('words.loading') }}...
                             </div>
-                            <div v-else-if="conversations.length === 0" class="p-6 text-center text-sm text-gray-500">
+                            <div v-else-if="conversations.length === 0" class="p-6 text-center text-xs text-gray-500">
                                 {{ $t('words.no-results') }}
                             </div>
                             <template v-else>
@@ -170,7 +170,7 @@
                                         v-if="group.label"
                                         class="sticky top-0 z-10 px-3 py-1.5 bg-gray-100 border-y border-gray-200"
                                     >
-                                        <div class="text-sm font-semibold text-gray-600 truncate">
+                                        <div class="text-xs font-semibold text-gray-600 truncate">
                                             {{ group.label }}
                                         </div>
                                     </div>
@@ -184,10 +184,10 @@
                                             : 'border-transparent hover:bg-gray-100'"
                                     >
                                         <div class="flex items-center justify-between gap-2">
-                                            <span class="font-medium text-sm text-gray-900 truncate inline-flex items-center gap-1.5 min-w-0">
+                                            <span class="font-medium text-xs text-gray-900 truncate inline-flex items-center gap-1.5 min-w-0">
                                                 <span
                                                     v-if="conv.has_unread"
-                                                    class="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full bg-red-600 text-white text-[9px] font-bold flex-shrink-0 leading-none"
+                                                    class="inline-flex items-center justify-center w-3 h-3 rounded-full bg-red-600 text-white text-xs font-bold flex-shrink-0 leading-none"
                                                     :title="$t('words.chat-unread')"
                                                 >!</span>
                                                 <span class="truncate inline-flex items-baseline min-w-0">
@@ -236,14 +236,14 @@
                                             >
                                                 <span
                                                     v-if="conv.agents && conv.agents[0]"
-                                                    class="inline-flex items-center max-w-[72px] truncate px-1 py-0.5 rounded-sm bg-gray-200 text-gray-700 text-[10px] font-medium leading-tight"
+                                                    class="inline-flex items-center max-w-[72px] truncate px-1 py-0.5 rounded-sm bg-gray-200 text-gray-700 text-xs font-medium leading-tight"
                                                     :title="conv.agents[0].name"
                                                 >
                                                     {{ agentFirstName(conv.agents[0].name) }}
                                                 </span>
                                                 <span
                                                     v-if="conv.tags && conv.tags[0]"
-                                                    class="inline-flex max-w-[72px] truncate px-1.5 py-0.5 rounded text-[10px] font-medium bg-gray-200 text-gray-600"
+                                                    class="inline-flex max-w-[72px] truncate px-1.5 py-0.5 rounded text-xs font-medium bg-gray-200 text-gray-600"
                                                     :style="conv.tags[0].color ? { backgroundColor: conv.tags[0].color, color: '#fff' } : null"
                                                     :title="conv.tags[0].name"
                                                 >
@@ -742,7 +742,7 @@
                         </div>
 
                         <!-- Trainee Details Sidebar -->
-                        <aside class="hidden md:flex w-64 lg:w-72 border-l border-gray-200 bg-white flex-col overflow-hidden flex-shrink-0 text-xs">
+                        <aside class="trainee-sidebar-accent hidden md:flex w-64 lg:w-72 bg-white flex-col overflow-hidden flex-shrink-0 text-xs">
                             <div class="px-3 py-2 border-b">
                                 <h3 class="text-xs font-medium text-gray-700">{{ $t('words.trainee-details') }}</h3>
                             </div>
@@ -3816,5 +3816,12 @@ export default {
 }
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
+}
+.trainee-sidebar-accent {
+    border-left: 2px solid #16a34a;
+}
+[dir="rtl"] .trainee-sidebar-accent {
+    border-left: none;
+    border-right: 2px solid #16a34a;
 }
 </style>
