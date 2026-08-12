@@ -1,14 +1,14 @@
 <template>
     <chat-layout>
         <div class="flex flex-col h-screen w-full overflow-hidden">
-            <div class="flex items-center justify-between gap-3 flex-wrap px-4 py-2 border-b bg-white flex-shrink-0">
-                <h2 class="font-semibold text-lg text-gray-800 leading-tight">
+            <div class="flex items-center justify-between gap-3 flex-wrap px-4 py-1.5 border-b bg-white flex-shrink-0">
+                <h2 class="font-semibold text-sm text-gray-800 leading-tight">
                     {{ $t('words.chat') }}
                 </h2>
                 <div class="flex items-center gap-2 flex-wrap">
                     <inertia-link
                         :href="route('dashboard')"
-                        class="text-sm text-gray-600 hover:text-gray-900 border border-gray-300 bg-white hover:bg-gray-50 px-3 py-2 rounded-lg font-medium transition whitespace-nowrap"
+                        class="text-xs leading-tight text-gray-600 hover:text-gray-900 border border-gray-300 bg-white hover:bg-gray-50 px-2 py-1 rounded-md font-medium transition whitespace-nowrap"
                     >
                         {{ $t('words.go-back-to-dashboard') }}
                     </inertia-link>
@@ -23,9 +23,9 @@
                     />
                     <button
                         @click="openNewChatModal"
-                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors"
+                        class="bg-green-600 hover:bg-green-700 text-white px-2.5 py-1 rounded-md text-xs leading-tight font-semibold flex items-center gap-1.5 transition-colors"
                     >
-                        <ion-icon name="add-outline" class="w-5 h-5"></ion-icon>
+                        <ion-icon name="add-outline" class="w-4 h-4"></ion-icon>
                         {{ $t('words.new-chat') }}
                     </button>
                 </div>
@@ -190,16 +190,18 @@
                                                     class="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full bg-red-600 text-white text-[9px] font-bold flex-shrink-0 leading-none"
                                                     :title="$t('words.chat-unread')"
                                                 >!</span>
-                                                <span class="truncate">
-                                                    <template v-if="conv.trainee">{{ conv.trainee.name }}</template>
+                                                <span class="truncate inline-flex items-baseline min-w-0">
+                                                    <template v-if="conv.trainee">
+                                                        <span class="truncate">{{ conv.trainee.name }}</span>
+                                                        <span
+                                                            v-if="conv.unpaid_invoice_count > 0"
+                                                            class="text-red-600 text-xs font-semibold flex-shrink-0 ml-0.5"
+                                                            :title="$t('words.unpaid-invoices')"
+                                                            dir="ltr"
+                                                        >({{ conv.unpaid_invoice_count }})</span>
+                                                    </template>
                                                     <span v-else dir="ltr">{{ conv.phone }}</span>
                                                 </span>
-                                                <span
-                                                    v-if="conv.trainee && conv.unpaid_invoice_count > 0"
-                                                    class="inline-flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-red-600 text-white text-xs font-semibold flex-shrink-0 leading-none"
-                                                    :title="$t('words.unpaid-invoices')"
-                                                    dir="ltr"
-                                                >{{ conv.unpaid_invoice_count }}</span>
                                             </span>
                                             <span class="inline-flex items-center gap-1 flex-shrink-0">
                                                 <span class="text-xs text-gray-400">
@@ -234,10 +236,10 @@
                                             >
                                                 <span
                                                     v-if="conv.agents && conv.agents[0]"
-                                                    class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 text-gray-700 text-[9px] font-semibold"
+                                                    class="inline-flex items-center max-w-[72px] truncate px-1 py-0.5 rounded-sm bg-gray-200 text-gray-700 text-[10px] font-medium leading-tight"
                                                     :title="conv.agents[0].name"
                                                 >
-                                                    {{ agentInitials(conv.agents[0].name) }}
+                                                    {{ agentFirstName(conv.agents[0].name) }}
                                                 </span>
                                                 <span
                                                     v-if="conv.tags && conv.tags[0]"
@@ -740,11 +742,11 @@
                         </div>
 
                         <!-- Trainee Details Sidebar -->
-                        <aside class="hidden md:flex w-64 lg:w-72 border-l border-gray-200 bg-white flex-col overflow-hidden flex-shrink-0">
-                            <div class="px-4 py-3 border-b">
-                                <h3 class="text-sm font-medium text-gray-700">{{ $t('words.trainee-details') }}</h3>
+                        <aside class="hidden md:flex w-64 lg:w-72 border-l border-gray-200 bg-white flex-col overflow-hidden flex-shrink-0 text-xs">
+                            <div class="px-3 py-2 border-b">
+                                <h3 class="text-xs font-medium text-gray-700">{{ $t('words.trainee-details') }}</h3>
                             </div>
-                            <div class="flex-1 overflow-y-auto p-4 space-y-5">
+                            <div class="flex-1 overflow-y-auto p-3 space-y-4">
                                 <div v-if="!selectedConversation.trainee" class="text-xs text-gray-500">
                                     {{ $t('words.no-trainee-linked') }}
                                 </div>
@@ -752,12 +754,12 @@
                                     {{ $t('words.loading') }}...
                                 </div>
                                 <template v-else-if="traineeContext">
-                                    <div class="space-y-1.5">
+                                    <div class="space-y-1">
                                         <button
                                             v-for="doc in traineeDocumentButtons"
                                             :key="doc.key"
                                             type="button"
-                                            class="w-full text-xs px-2.5 py-1.5 rounded-md border transition text-right"
+                                            class="w-full text-xs leading-tight px-2 py-1 rounded-md border transition text-right"
                                             :class="doc.available
                                                 ? 'border-gray-200 bg-white text-gray-800 hover:bg-gray-50'
                                                 : 'border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed'"
@@ -774,18 +776,18 @@
                                             v-if="traineeContext.trainee.company_show_url && traineeContext.trainee.company_name"
                                             :href="traineeContext.trainee.company_show_url"
                                             target="_blank"
-                                            class="text-sm text-gray-900 hover:underline break-words"
+                                            class="text-xs text-gray-900 hover:underline break-words"
                                         >
                                             {{ traineeContext.trainee.company_name }}
                                         </a>
-                                        <div v-else class="text-sm text-gray-900">
+                                        <div v-else class="text-xs text-gray-900">
                                             {{ traineeContext.trainee.company_name || '—' }}
                                         </div>
                                     </div>
 
                                     <div>
                                         <div class="text-xs text-gray-500 mb-0.5">{{ $t('words.registration-date') }}</div>
-                                        <div class="text-sm text-gray-900 text-right">
+                                        <div class="text-xs text-gray-900 text-right">
                                             <span dir="ltr">{{ traineeContext.trainee.registration_date || '—' }}</span>
                                             <span v-if="accountStatusLabel" class="text-gray-400 mx-1">·</span>
                                             <span
@@ -805,7 +807,7 @@
                                         <div class="text-xs text-gray-500 mb-0.5">{{ $t('words.gosi-status') }}</div>
                                         <div
                                             v-if="traineeContext.gosi_status && traineeContext.gosi_status.fetched_at"
-                                            class="text-sm text-gray-900 space-y-0.5"
+                                            class="text-xs text-gray-900 space-y-0.5"
                                         >
                                             <div v-if="traineeContext.gosi_status.employer_name" class="break-words">
                                                 {{ traineeContext.gosi_status.employer_name }}
@@ -814,15 +816,15 @@
                                                 <span dir="ltr">{{ traineeContext.gosi_status.fetched_at }}</span>
                                             </div>
                                         </div>
-                                        <div v-else class="text-sm text-gray-900">—</div>
+                                        <div v-else class="text-xs text-gray-900">—</div>
                                     </div>
 
                                     <div>
-                                        <div class="flex items-center justify-between gap-2 mb-1.5">
+                                        <div class="flex items-center justify-between gap-2 mb-1">
                                             <div class="text-xs text-gray-500">{{ $t('words.pending-invoices') }}</div>
                                             <span
                                                 v-if="traineeContext.count"
-                                                class="text-[11px] text-gray-600"
+                                                class="text-xs text-gray-600"
                                                 dir="ltr"
                                             >
                                                 {{ traineeContext.count }} · {{ formatAmount(traineeContext.total_owed) }}
@@ -836,7 +838,7 @@
                                             <li
                                                 v-for="invoice in traineeContext.invoices"
                                                 :key="invoice.id"
-                                                class="px-3 py-2 space-y-1 text-xs"
+                                                class="px-2.5 py-1.5 space-y-0.5 text-xs"
                                             >
                                                 <div class="flex items-start justify-between gap-2">
                                                     <div class="min-w-0">
@@ -859,7 +861,7 @@
                                                     <span class="text-gray-500">{{ invoice.status_formatted }}</span>
                                                     <button
                                                         type="button"
-                                                        class="text-[11px] text-gray-600 hover:text-gray-900"
+                                                        class="text-xs text-gray-600 hover:text-gray-900"
                                                         @click="copyInvoiceLink(invoice)"
                                                     >
                                                         {{ copiedInvoiceId === invoice.id ? $t('words.link-copied') : $t('words.copy-link') }}
@@ -873,7 +875,7 @@
                                     </div>
 
                                     <div>
-                                        <div class="text-xs text-gray-500 mb-1.5">{{ $t('words.paid-invoices-history') }}</div>
+                                        <div class="text-xs text-gray-500 mb-1">{{ $t('words.paid-invoices-history') }}</div>
                                         <ul
                                             v-if="traineeContext.paid_invoices && traineeContext.paid_invoices.length"
                                             class="divide-y divide-gray-100 border border-emerald-100 rounded-md bg-emerald-50/40 overflow-hidden"
@@ -881,7 +883,7 @@
                                             <li
                                                 v-for="invoice in traineeContext.paid_invoices"
                                                 :key="'paid-' + invoice.id"
-                                                class="px-3 py-2 space-y-1 text-xs"
+                                                class="px-2.5 py-1.5 space-y-0.5 text-xs"
                                             >
                                                 <div class="flex items-start justify-between gap-2">
                                                     <div class="min-w-0">
@@ -2090,15 +2092,10 @@ export default {
             this.conversationPage = page;
             this.loadConversations();
         },
-        agentInitials(name) {
+        agentFirstName(name) {
             const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
-            if (!parts.length) {
-                return '?';
-            }
-            if (parts.length === 1) {
-                return parts[0].slice(0, 2).toUpperCase();
-            }
-            return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+
+            return parts[0] || '?';
         },
         patchConversation(updated) {
             if (!updated || !updated.id) {

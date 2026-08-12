@@ -3,9 +3,9 @@
         <button
             type="button"
             @click="open"
-            class="bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 border border-gray-300 shadow-sm transition"
+            class="bg-white hover:bg-gray-50 text-gray-700 px-2 py-1 rounded-md text-xs leading-tight font-semibold flex items-center gap-1.5 border border-gray-300 shadow-sm transition"
         >
-            <ion-icon name="document-text-outline" class="w-5 h-5"></ion-icon>
+            <ion-icon name="document-text-outline" class="w-4 h-4"></ion-icon>
             {{ $t('words.manage-whatsapp-templates') }}
         </button>
 
