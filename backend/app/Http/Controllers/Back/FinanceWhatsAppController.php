@@ -347,11 +347,11 @@ class FinanceWhatsAppController extends Controller
             'minutes' => 'nullable|integer|min:1|max:1440',
         ]);
 
-        $minutes = (int) ($validated['minutes'] ?? config('whatsapp.bot_pause_minutes', 720));
+        $minutes = (int) ($validated['minutes'] ?? WhatsAppBotStatus::configuredPauseMinutes());
         WhatsAppBotPause::pauseForAgent($validated['phone'], $minutes);
 
         return response()->json([
-            'message' => __('words.whatsapp-bot-paused', ['hours' => (int) round($minutes / 60)]),
+            'message' => WhatsAppBotStatus::pauseSuccessMessage($minutes),
             'bot' => WhatsAppBotStatus::forPhone($validated['phone']),
         ]);
     }

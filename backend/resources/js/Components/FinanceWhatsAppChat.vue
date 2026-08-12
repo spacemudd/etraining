@@ -866,10 +866,16 @@ export default {
             return !!((this.botStatus.workflow_assigned || this.botStatus.ai_enabled) && this.botStatus.is_paused);
         },
         pauseBotButtonLabel() {
-            const minutes = (this.botStatus && this.botStatus.pause_minutes) || 720;
-            const hours = Math.round(minutes / 60);
+            const minutes = Number(this.botStatus?.pause_minutes) || 720;
+            const hours = this.botStatus?.pause_hours != null
+                ? Number(this.botStatus.pause_hours)
+                : (minutes >= 60 && minutes % 60 === 0 ? minutes / 60 : null);
 
-            return this.$t('words.pause-bot-30m', { hours });
+            if (hours) {
+                return this.$t('words.pause-bot-hours', { hours });
+            }
+
+            return this.$t('words.pause-bot-minutes', { minutes });
         },
         lastMessageAt() {
             if (!this.messages.length) {
@@ -1201,7 +1207,7 @@ export default {
                     phone: this.selectedTrainee.phone,
                 });
                 this.botStatus = data.bot || null;
-                this.successMessage = data.message || this.$t('words.whatsapp-bot-paused');
+                this.successMessage = data.message || this.$t('words.whatsapp-bot-paused-hours', { hours: this.botStatus?.pause_hours || 12 });
             } catch (error) {
                 this.errorMessage = (error.response && error.response.data && error.response.data.message)
                     || this.$t('words.whatsapp-bot-pause-failed');

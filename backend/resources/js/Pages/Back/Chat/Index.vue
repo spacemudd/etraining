@@ -1857,10 +1857,16 @@ export default {
             return !!((this.botStatus.workflow_assigned || this.botStatus.ai_enabled) && this.botStatus.is_paused);
         },
         pauseBotButtonLabel() {
-            const minutes = (this.botStatus && this.botStatus.pause_minutes) || 720;
-            const hours = Math.round(minutes / 60);
+            const minutes = Number(this.botStatus?.pause_minutes) || 720;
+            const hours = this.botStatus?.pause_hours != null
+                ? Number(this.botStatus.pause_hours)
+                : (minutes >= 60 && minutes % 60 === 0 ? minutes / 60 : null);
 
-            return this.$t('words.pause-bot-30m', { hours });
+            if (hours) {
+                return this.$t('words.pause-bot-hours', { hours });
+            }
+
+            return this.$t('words.pause-bot-minutes', { minutes });
         },
         accountStatusLabel() {
             const status = this.traineeContext && this.traineeContext.account_status;
@@ -2481,6 +2487,7 @@ export default {
                     is_active: false,
                     paused_until: null,
                     pause_minutes: 720,
+                    pause_hours: 12,
                     can_pause: false,
                     can_resume: false,
                 };
@@ -2500,7 +2507,7 @@ export default {
                     phone: this.selectedConversation.phone,
                 });
                 this.botStatus = data.bot || null;
-                this.successMessage = data.message || this.$t('words.whatsapp-bot-paused');
+                this.successMessage = data.message || this.$t('words.whatsapp-bot-paused-hours', { hours: this.botStatus?.pause_hours || 12 });
                 this.patchSelectedConversationBotState(true, data.bot && data.bot.paused_until);
             } catch (error) {
                 this.errorMessage = (error.response && error.response.data && error.response.data.message)

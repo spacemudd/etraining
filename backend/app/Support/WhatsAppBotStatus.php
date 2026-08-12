@@ -19,6 +19,7 @@ final class WhatsAppBotStatus
      *     is_active: bool,
      *     paused_until: string|null,
      *     pause_minutes: int,
+     *     pause_hours: int|null,
      *     can_pause: bool,
      *     can_resume: bool
      * }
@@ -50,6 +51,7 @@ final class WhatsAppBotStatus
 
         $conversation = self::findConversation($normalizedPhone);
         $isPaused = $conversation ? WhatsAppBotPause::isPaused($conversation) : false;
+        $pauseMinutes = self::configuredPauseMinutes();
 
         return [
             'workflow_assigned' => $workflowAssigned,
@@ -60,10 +62,36 @@ final class WhatsAppBotStatus
             'paused_until' => $isPaused
                 ? optional($conversation?->bot_paused_until)->toIso8601String()
                 : null,
-            'pause_minutes' => (int) config('whatsapp.bot_pause_minutes', 720),
+            'pause_minutes' => $pauseMinutes,
+            'pause_hours' => self::wholePauseHours($pauseMinutes),
             'can_pause' => $botConfigured && ! $isPaused,
             'can_resume' => $botConfigured && $isPaused,
         ];
+    }
+
+    public static function configuredPauseMinutes(): int
+    {
+        return max(1, (int) config('whatsapp.bot_pause_minutes', 720));
+    }
+
+    public static function wholePauseHours(int $minutes): ?int
+    {
+        if ($minutes < 60 || $minutes % 60 !== 0) {
+            return null;
+        }
+
+        return intdiv($minutes, 60);
+    }
+
+    public static function pauseSuccessMessage(int $minutes): string
+    {
+        $hours = self::wholePauseHours($minutes);
+
+        if ($hours !== null) {
+            return __('words.whatsapp-bot-paused-hours', ['hours' => $hours]);
+        }
+
+        return __('words.whatsapp-bot-paused-minutes', ['minutes' => $minutes]);
     }
 
     private static function findSender(string $configuredFrom): ?WhatsAppBotSender
