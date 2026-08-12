@@ -1,11 +1,17 @@
 <template>
-    <app-layout>
-        <div class="py-6 max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between mb-4 gap-3 flex-wrap">
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+    <chat-layout>
+        <div class="flex flex-col h-screen w-full overflow-hidden">
+            <div class="flex items-center justify-between gap-3 flex-wrap px-4 py-2 border-b bg-white flex-shrink-0">
+                <h2 class="font-semibold text-lg text-gray-800 leading-tight">
                     {{ $t('words.chat') }}
                 </h2>
-                <div class="flex items-center gap-3 flex-wrap">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <inertia-link
+                        :href="route('dashboard')"
+                        class="text-sm text-gray-600 hover:text-gray-900 border border-gray-300 bg-white hover:bg-gray-50 px-3 py-2 rounded-lg font-medium transition whitespace-nowrap"
+                    >
+                        {{ $t('words.go-back-to-dashboard') }}
+                    </inertia-link>
                     <whats-app-templates-manager
                         v-if="configured"
                         :can-manage="canManageTemplates"
@@ -25,7 +31,7 @@
                 </div>
             </div>
 
-            <div class="bg-white overflow-hidden sm:rounded-lg flex h-[calc(100vh-250px)] min-h-[600px] border border-gray-200">
+            <div class="flex flex-1 min-h-0 overflow-hidden bg-white border-t border-gray-200">
                 
                 <!-- Left Sidebar: Conversations List -->
                 <div class="w-full md:w-80 lg:w-96 border-r flex flex-col bg-white">
@@ -100,19 +106,27 @@
                             <div class="flex flex-1 gap-0.5 p-0.5 bg-gray-100 rounded-md min-w-0">
                                 <button
                                     type="button"
-                                    class="flex-1 px-2 py-1.5 rounded text-[11px] font-medium transition"
-                                    :class="!groupConversationsByCompany ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
-                                    @click="setGroupConversationsByCompany(false)"
+                                    class="flex-1 px-1.5 py-1.5 rounded text-[11px] font-medium transition"
+                                    :class="conversationGroupMode === 'latest' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                                    @click="setConversationGroupMode('latest')"
                                 >
                                     {{ $t('words.chat-group-latest') }}
                                 </button>
                                 <button
                                     type="button"
-                                    class="flex-1 px-2 py-1.5 rounded text-[11px] font-medium transition"
-                                    :class="groupConversationsByCompany ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
-                                    @click="setGroupConversationsByCompany(true)"
+                                    class="flex-1 px-1.5 py-1.5 rounded text-[11px] font-medium transition"
+                                    :class="conversationGroupMode === 'company' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                                    @click="setConversationGroupMode('company')"
                                 >
                                     {{ $t('words.chat-group-by-company') }}
+                                </button>
+                                <button
+                                    type="button"
+                                    class="flex-1 px-1.5 py-1.5 rounded text-[11px] font-medium transition"
+                                    :class="conversationGroupMode === 'agent' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                                    @click="setConversationGroupMode('agent')"
+                                >
+                                    {{ $t('words.chat-group-by-agent') }}
                                 </button>
                             </div>
                         </div>
@@ -129,7 +143,7 @@
                             <template v-else>
                                 <div
                                     v-for="group in conversationSidebarGroups"
-                                    :key="'company-group-' + group.key"
+                                    :key="'sidebar-group-' + group.key"
                                 >
                                     <div
                                         v-if="group.label"
@@ -1428,11 +1442,11 @@
                 </div>
             </modal>
         </portal>
-    </app-layout>
+    </chat-layout>
 </template>
 
 <script>
-import AppLayout from '@/Layouts/AppLayout';
+import ChatLayout from '@/Layouts/ChatLayout';
 import WhatsAppTemplatesManager from '@/Components/WhatsAppTemplatesManager';
 import axios from 'axios';
 import throttle from 'lodash/throttle';
@@ -1441,7 +1455,7 @@ import 'moment/locale/ar';
 
 export default {
     components: {
-        AppLayout,
+        ChatLayout,
         WhatsAppTemplatesManager,
     },
     props: {
@@ -1471,7 +1485,7 @@ export default {
             composerMode: 'freeform',
             messageBody: '',
             pressEnterToSend: false,
-            groupConversationsByCompany: false,
+            conversationGroupMode: 'latest',
             threadHeight: 360,
             threadResizing: false,
             threadResizeStartY: 0,
@@ -1735,9 +1749,54 @@ export default {
                 })
                 .map((key) => groupsMap[key]);
         },
+        conversationsGroupedByAgent() {
+            const groupsMap = {};
+            const order = [];
+            const unassignedKey = '__unassigned__';
+            const unassignedLabel = this.$t('words.chat-filter-unassigned');
+
+            (this.conversations || []).forEach((conv) => {
+                const primaryAgent = conv && conv.agents && conv.agents[0];
+                const key = primaryAgent ? String(primaryAgent.id) : unassignedKey;
+                const name = primaryAgent ? String(primaryAgent.name).trim() : unassignedLabel;
+
+                if (!groupsMap[key]) {
+                    groupsMap[key] = {
+                        key,
+                        label: name,
+                        conversations: [],
+                    };
+                    order.push(key);
+                }
+
+                groupsMap[key].conversations.push(conv);
+            });
+
+            return order
+                .sort((a, b) => {
+                    if (a === unassignedKey) {
+                        return 1;
+                    }
+                    if (b === unassignedKey) {
+                        return -1;
+                    }
+                    return groupsMap[a].label.localeCompare(groupsMap[b].label, undefined, { sensitivity: 'base' });
+                })
+                .map((key) => {
+                    const group = groupsMap[key];
+
+                    return {
+                        ...group,
+                        label: `${group.label} (${group.conversations.length})`,
+                    };
+                });
+        },
         conversationSidebarGroups() {
-            if (this.groupConversationsByCompany) {
+            if (this.conversationGroupMode === 'company') {
                 return this.conversationsGroupedByCompany;
+            }
+            if (this.conversationGroupMode === 'agent') {
+                return this.conversationsGroupedByAgent;
             }
 
             return [{
@@ -3391,23 +3450,28 @@ export default {
         },
         loadGroupConversationsPreference() {
             try {
-                const stored = window.localStorage.getItem('chat.groupConversationsByCompany');
-                if (stored === null) {
-                    this.groupConversationsByCompany = false;
+                const storedMode = window.localStorage.getItem('chat.conversationGroupMode');
+                if (storedMode === 'latest' || storedMode === 'company' || storedMode === 'agent') {
+                    this.conversationGroupMode = storedMode;
                     return;
                 }
-                this.groupConversationsByCompany = stored === '1';
+
+                const legacyStored = window.localStorage.getItem('chat.groupConversationsByCompany');
+                if (legacyStored === null) {
+                    this.conversationGroupMode = 'latest';
+                    return;
+                }
+
+                this.conversationGroupMode = legacyStored === '1' ? 'company' : 'latest';
             } catch (error) {
-                this.groupConversationsByCompany = false;
+                this.conversationGroupMode = 'latest';
             }
         },
-        setGroupConversationsByCompany(enabled) {
-            this.groupConversationsByCompany = !!enabled;
+        setConversationGroupMode(mode) {
+            const allowed = ['latest', 'company', 'agent'];
+            this.conversationGroupMode = allowed.includes(mode) ? mode : 'latest';
             try {
-                window.localStorage.setItem(
-                    'chat.groupConversationsByCompany',
-                    this.groupConversationsByCompany ? '1' : '0'
-                );
+                window.localStorage.setItem('chat.conversationGroupMode', this.conversationGroupMode);
             } catch (error) {
                 // Ignore storage failures (private mode, quota, etc).
             }
