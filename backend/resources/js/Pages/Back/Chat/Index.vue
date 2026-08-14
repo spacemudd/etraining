@@ -1531,10 +1531,9 @@
                         </h3>
                         <div class="flex items-center gap-2 flex-shrink-0">
                             <a
-                                v-if="traineeDocumentModal && traineeDocumentModal.url"
-                                :href="traineeDocumentModal.url"
-                                target="_blank"
-                                rel="noopener"
+                                v-if="traineeDocumentPreviewUrl"
+                                :href="traineeDocumentPreviewUrl"
+                                :download="traineeDocumentDownloadName"
                                 class="text-xs text-gray-600 hover:text-gray-900 underline whitespace-nowrap"
                             >
                                 {{ $t('words.download') }}
@@ -1550,58 +1549,45 @@
                         </div>
                     </div>
                     <div class="flex-1 min-h-0 bg-gray-100 p-2 sm:p-3 overflow-auto">
+                        <div
+                            v-if="traineeDocumentLoading"
+                            class="h-full flex items-center justify-center text-xs text-gray-500 py-10"
+                        >
+                            {{ $t('words.loading') }}...
+                        </div>
+                        <div
+                            v-else-if="traineeDocumentError"
+                            class="h-full flex flex-col items-center justify-center text-center px-4 py-8 space-y-3"
+                        >
+                            <p class="text-sm text-red-600">{{ traineeDocumentError }}</p>
+                        </div>
                         <img
-                            v-if="traineeDocumentModalIsImage"
-                            :src="traineeDocumentModal.url"
+                            v-else-if="traineeDocumentModalIsImage && traineeDocumentPreviewUrl"
+                            :src="traineeDocumentPreviewUrl"
                             :alt="traineeDocumentModalTitle"
                             class="max-w-full mx-auto object-contain"
                             style="max-height: calc(100vh - 140px);"
                         />
+                        <iframe
+                            v-else-if="traineeDocumentModalIsPdf && traineeDocumentPreviewUrl"
+                            :src="traineeDocumentPreviewUrl"
+                            class="w-full rounded-md bg-white border border-gray-200"
+                            style="min-height: 420px; height: calc(100vh - 160px);"
+                            title="trainee-document"
+                        ></iframe>
                         <div
-                            v-else-if="traineeDocumentModalIsPdf"
-                            class="h-full flex flex-col"
-                        >
-                            <iframe
-                                v-if="!isNarrowViewport"
-                                :src="traineeDocumentModal.url"
-                                class="w-full flex-1 rounded-md bg-white border border-gray-200"
-                                style="min-height: 480px; height: calc(100vh - 160px);"
-                                title="trainee-document"
-                            ></iframe>
-                            <div
-                                v-else
-                                class="flex-1 flex flex-col items-center justify-center text-center px-4 py-8 space-y-4"
-                            >
-                                <p class="text-sm text-gray-700 break-words">
-                                    {{ traineeDocumentModal.name || traineeDocumentModalTitle }}
-                                </p>
-                                <p class="text-xs text-gray-500">
-                                    {{ $t('words.chat-open-pdf-hint') }}
-                                </p>
-                                <a
-                                    :href="traineeDocumentModal.url"
-                                    target="_blank"
-                                    rel="noopener"
-                                    class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700"
-                                >
-                                    {{ $t('words.chat-open-file') }}
-                                </a>
-                            </div>
-                        </div>
-                        <div
-                            v-else-if="traineeDocumentModal && traineeDocumentModal.url"
+                            v-else-if="traineeDocumentPreviewUrl"
                             class="flex-1 flex flex-col items-center justify-center text-center px-4 py-8 space-y-4"
                         >
                             <p class="text-sm text-gray-700 break-words">
                                 {{ traineeDocumentModal.name || traineeDocumentModalTitle }}
                             </p>
                             <a
-                                :href="traineeDocumentModal.url"
-                                target="_blank"
-                                rel="noopener"
+                                :href="traineeDocumentPreviewUrl"
+                                :download="traineeDocumentDownloadName"
                                 class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700"
                             >
-                                {{ $t('words.chat-open-file') }}
+                                {{ $t('words.download') }}
                             </a>
                         </div>
                     </div>
@@ -1782,6 +1768,9 @@ export default {
             traineeContext: null,
             loadingTraineeContext: false,
             traineeDocumentModal: null,
+            traineeDocumentPreviewUrl: null,
+            traineeDocumentLoading: false,
+            traineeDocumentError: null,
             copiedInvoiceId: null,
             copyLinkTimer: null,
             viewportWidth: typeof window !== 'undefined' ? window.innerWidth : 1024,
@@ -1828,6 +1817,13 @@ export default {
         },
         traineeDocumentModalTitle() {
             return (this.traineeDocumentModal && this.traineeDocumentModal.label) || '';
+        },
+        traineeDocumentDownloadName() {
+            const doc = this.traineeDocumentModal;
+            if (!doc) {
+                return 'file';
+            }
+            return doc.name || doc.label || 'file';
         },
         traineeDocumentModalIsImage() {
             const doc = this.traineeDocumentModal;
@@ -2300,6 +2296,7 @@ export default {
             this.successMessage = '';
             this.showAssignDropdown = false;
             this.showTraineeDetailsMobile = false;
+            this.closeTraineeDocumentModal();
             this.stopPolling();
         },
         setFilter(filter) {
@@ -2798,21 +2795,57 @@ export default {
                 this.loadingTraineeContext = false;
             }
         },
-        openTraineeDocument(doc) {
+        async openTraineeDocument(doc) {
             if (!doc || !doc.available || !doc.document || !doc.document.url) {
                 return;
             }
 
+            this.revokeTraineeDocumentPreview();
             this.traineeDocumentModal = {
                 ...doc.document,
                 label: doc.label,
             };
+            this.traineeDocumentLoading = true;
+            this.traineeDocumentError = null;
             this.updateViewportWidth();
             this.$modal.show('traineeDocumentModal');
+
+            try {
+                const streamUrl = this.withStreamParam(doc.document.url);
+                const response = await axios.get(streamUrl, {
+                    responseType: 'blob',
+                });
+                const mime = doc.document.mime_type || (response.data && response.data.type) || 'application/octet-stream';
+                const blob = response.data instanceof Blob
+                    ? response.data
+                    : new Blob([response.data], { type: mime });
+                const typedBlob = blob.type ? blob : new Blob([blob], { type: mime });
+                this.traineeDocumentPreviewUrl = URL.createObjectURL(typedBlob);
+            } catch (error) {
+                this.traineeDocumentError = this.$t('words.could-not-load-trainee-details');
+            } finally {
+                this.traineeDocumentLoading = false;
+            }
         },
         closeTraineeDocumentModal() {
             this.$modal.hide('traineeDocumentModal');
+            this.revokeTraineeDocumentPreview();
             this.traineeDocumentModal = null;
+            this.traineeDocumentLoading = false;
+            this.traineeDocumentError = null;
+        },
+        revokeTraineeDocumentPreview() {
+            if (this.traineeDocumentPreviewUrl) {
+                URL.revokeObjectURL(this.traineeDocumentPreviewUrl);
+                this.traineeDocumentPreviewUrl = null;
+            }
+        },
+        withStreamParam(url) {
+            const raw = String(url || '');
+            if (!raw) {
+                return raw;
+            }
+            return raw + (raw.indexOf('?') === -1 ? '?' : '&') + 'stream=1';
         },
         updateViewportWidth() {
             if (typeof window !== 'undefined') {
