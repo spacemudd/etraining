@@ -4,22 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\Media;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Throwable;
 
 class MediaController extends Controller
 {
     /**
      * @param  mixed  $media_id
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse|StreamedResponse|\Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse|\Illuminate\Http\Response
      */
     public function download(Request $request, $media_id)
     {
         $media = Media::findOrFail($media_id);
 
         // Check if user has limited view permission (identity only)
-        if (auth()->user()->can('view-trainee-identity-only')) {
+        if (auth()->user() && auth()->user()->can('view-trainee-identity-only')) {
             // Only allow downloading identity files
             if ($media->collection_name !== 'identity') {
                 abort(403, 'You are only authorized to view identity files.');
@@ -59,7 +61,7 @@ class MediaController extends Controller
     }
 
     /**
-     * @return StreamedResponse|\Illuminate\Http\Response
+     * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\StreamedResponse
      */
     private function streamMedia(Media $media, string $filename, string $contentType)
     {
@@ -74,23 +76,46 @@ class MediaController extends Controller
             return response()->file($media->getPath(), $headers);
         }
 
-        $path = $media->getPathRelativeToRoot();
-        $disk = Storage::disk($media->disk);
+        try {
+            $path = method_exists($media, 'getPathRelativeToRoot')
+                ? $media->getPathRelativeToRoot()
+                : $media->getPath();
 
-        if (! $disk->exists($path)) {
-            abort(404);
-        }
+            $disk = Storage::disk($media->disk);
+            if ($path && $disk->exists($path)) {
+                $contents = $disk->get($path);
 
-        $stream = $disk->readStream($path);
-        if ($stream === false) {
-            abort(404);
-        }
-
-        return response()->stream(function () use ($stream) {
-            fpassthru($stream);
-            if (is_resource($stream)) {
-                fclose($stream);
+                return response($contents, 200, $headers);
             }
-        }, 200, $headers);
+        } catch (Throwable $exception) {
+            Log::warning('Media stream via disk failed; falling back to temporary URL', [
+                'media_id' => $media->id,
+                'error' => $exception->getMessage(),
+            ]);
+        }
+
+        try {
+            $temporaryUrl = $media->getTemporaryUrl(now()->addMinutes(5), '', [
+                'ResponseContentType' => $contentType,
+                'ResponseContentDisposition' => 'inline; filename="'.$filename.'"',
+            ]);
+
+            $remote = Http::timeout(60)->get($temporaryUrl);
+            if ($remote->successful()) {
+                return response($remote->body(), 200, $headers);
+            }
+
+            Log::warning('Media stream temporary URL fetch failed', [
+                'media_id' => $media->id,
+                'status' => $remote->status(),
+            ]);
+        } catch (Throwable $exception) {
+            Log::error('Media stream temporary URL exception', [
+                'media_id' => $media->id,
+                'error' => $exception->getMessage(),
+            ]);
+        }
+
+        abort(404);
     }
 }

@@ -323,7 +323,7 @@
                                 <button
                                     type="button"
                                     class="md:hidden flex-shrink-0 px-2 py-1.5 rounded-md text-xs font-medium text-gray-700 hover:bg-gray-100 border border-gray-200"
-                                    @click="closeConversation"
+                                    @click="navigateChatBack"
                                 >
                                     {{ $t('words.back') }}
                                 </button>
@@ -353,7 +353,7 @@
                                 <button
                                     type="button"
                                     class="md:hidden flex-shrink-0 px-2 py-1.5 rounded-md text-xs font-medium text-blue-700 hover:bg-blue-50 border border-blue-200"
-                                    @click="showTraineeDetailsMobile = true"
+                                    @click="openTraineeDetailsMobile"
                                 >
                                     {{ $t('words.chat-view-details') }}
                                 </button>
@@ -841,7 +841,7 @@
                         <div
                             v-if="showTraineeDetailsMobile"
                             class="md:hidden fixed top-0 right-0 bottom-0 left-0 z-40 bg-black bg-opacity-40"
-                            @click="showTraineeDetailsMobile = false"
+                            @click="navigateChatBack"
                         ></div>
                         <aside
                             class="trainee-sidebar-accent bg-white flex-col overflow-hidden flex-shrink-0 text-xs"
@@ -854,7 +854,7 @@
                                 <button
                                     type="button"
                                     class="md:hidden text-xs text-gray-600 hover:text-gray-900 px-2 py-1 rounded border border-gray-200"
-                                    @click="showTraineeDetailsMobile = false"
+                                    @click="navigateChatBack"
                                 >
                                     {{ $t('words.back') }}
                                 </button>
@@ -1540,7 +1540,7 @@
                             </a>
                             <button
                                 type="button"
-                                @click="closeTraineeDocumentModal"
+                                @click="navigateChatBack"
                                 class="text-gray-500 hover:text-gray-800 p-1 rounded border border-gray-200 bg-white"
                                 :aria-label="$t('words.cancel')"
                             >
@@ -1762,6 +1762,7 @@ export default {
             deferredInstallPrompt: null,
             pwaErrorMessage: '',
             showTraineeDetailsMobile: false,
+            chatNavStack: [],
             pausingBot: false,
             windowNowMs: Date.now(),
             messagingWindowTimer: null,
@@ -2189,6 +2190,7 @@ export default {
         document.addEventListener('keydown', this.handleGlobalKeydown);
         window.addEventListener('beforeinstallprompt', this.onBeforeInstallPrompt);
         window.addEventListener('resize', this.updateViewportWidth);
+        window.addEventListener('popstate', this.handleChatPopState);
         if (this.configured) {
             this.loadTemplates();
         }
@@ -2202,6 +2204,7 @@ export default {
         document.removeEventListener('keydown', this.handleGlobalKeydown);
         window.removeEventListener('beforeinstallprompt', this.onBeforeInstallPrompt);
         window.removeEventListener('resize', this.updateViewportWidth);
+        window.removeEventListener('popstate', this.handleChatPopState);
         if (this.messagesRefreshTimer) {
             clearTimeout(this.messagesRefreshTimer);
             this.messagesRefreshTimer = null;
@@ -2281,10 +2284,65 @@ export default {
         },
         setStatusTab(status) {
             this.statusTab = status;
-            this.closeConversation();
+            this.resetConversationState();
+            this.chatNavStack = [];
             this.reloadConversationsFromStart();
         },
-        closeConversation() {
+        pushChatLayer(layer) {
+            if (typeof window === 'undefined' || !window.history || !window.history.pushState) {
+                return;
+            }
+            this.chatNavStack.push(layer);
+            try {
+                window.history.pushState({ chatLayer: layer }, '');
+            } catch (e) {}
+        },
+        navigateChatBack() {
+            if (this.chatNavStack.length > 0 && typeof window !== 'undefined' && window.history) {
+                window.history.back();
+                return;
+            }
+            this.handleChatPopState();
+        },
+        handleChatPopState() {
+            const layer = this.chatNavStack.length ? this.chatNavStack.pop() : null;
+
+            if (layer === 'document') {
+                this.closeTraineeDocumentModal({ skipHistory: true });
+                return;
+            }
+
+            if (layer === 'details') {
+                this.showTraineeDetailsMobile = false;
+                return;
+            }
+
+            if (layer === 'conversation') {
+                this.resetConversationState();
+                return;
+            }
+
+            // Fallback if stack drifted: close topmost UI.
+            if (this.traineeDocumentModal || this.traineeDocumentLoading) {
+                this.closeTraineeDocumentModal({ skipHistory: true });
+                return;
+            }
+            if (this.showTraineeDetailsMobile) {
+                this.showTraineeDetailsMobile = false;
+                return;
+            }
+            if (this.selectedConversation) {
+                this.resetConversationState();
+            }
+        },
+        openTraineeDetailsMobile() {
+            if (this.showTraineeDetailsMobile) {
+                return;
+            }
+            this.showTraineeDetailsMobile = true;
+            this.pushChatLayer('details');
+        },
+        resetConversationState() {
             this.selectedConversation = null;
             this.messages = [];
             this.hasMoreMessages = false;
@@ -2296,8 +2354,11 @@ export default {
             this.successMessage = '';
             this.showAssignDropdown = false;
             this.showTraineeDetailsMobile = false;
-            this.closeTraineeDocumentModal();
+            this.closeTraineeDocumentModal({ skipHistory: true });
             this.stopPolling();
+        },
+        closeConversation() {
+            this.navigateChatBack();
         },
         setFilter(filter) {
             this.listFilter = filter;
@@ -2421,7 +2482,8 @@ export default {
                     await this.celebrateStatusChange(originElement);
                 }
                 if (leavingTab) {
-                    this.closeConversation();
+                    this.resetConversationState();
+                    this.chatNavStack = [];
                     await this.loadConversations();
                 } else {
                     await this.refreshConversationCounts();
@@ -2721,6 +2783,17 @@ export default {
             }
         },
         async selectConversation(conv) {
+            if (this.showTraineeDetailsMobile) {
+                this.showTraineeDetailsMobile = false;
+            }
+            this.closeTraineeDocumentModal({ skipHistory: true });
+            while (
+                this.chatNavStack.length
+                && this.chatNavStack[this.chatNavStack.length - 1] !== 'conversation'
+            ) {
+                this.chatNavStack.pop();
+            }
+
             this.selectedConversation = {
                 ...conv,
                 has_unread: false,
@@ -2733,6 +2806,9 @@ export default {
             this.copiedInvoiceId = null;
             this.setComposerMode('freeform');
             this.markSelectedConversationRead();
+            if (!this.chatNavStack.includes('conversation')) {
+                this.pushChatLayer('conversation');
+            }
             await Promise.all([
                 this.loadMessages(),
                 this.loadBotStatus(),
@@ -2809,20 +2885,31 @@ export default {
             this.traineeDocumentError = null;
             this.updateViewportWidth();
             this.$modal.show('traineeDocumentModal');
+            this.pushChatLayer('document');
 
             try {
                 const streamUrl = this.withStreamParam(doc.document.url);
                 const response = await axios.get(streamUrl, {
                     responseType: 'blob',
+                    validateStatus: (status) => status >= 200 && status < 300,
                 });
-                const mime = doc.document.mime_type || (response.data && response.data.type) || 'application/octet-stream';
+                const headerType = String((response.headers && (response.headers['content-type'] || response.headers['Content-Type'])) || '');
+                if (headerType.includes('application/json') || headerType.includes('text/html')) {
+                    throw new Error('unexpected-content-type');
+                }
+                const mime = doc.document.mime_type || (response.data && response.data.type) || headerType || 'application/octet-stream';
                 const blob = response.data instanceof Blob
                     ? response.data
                     : new Blob([response.data], { type: mime });
-                const typedBlob = blob.type ? blob : new Blob([blob], { type: mime });
+                if (!blob || blob.size < 1) {
+                    throw new Error('empty-file');
+                }
+                const typedBlob = (blob.type && blob.type !== 'application/octet-stream')
+                    ? blob
+                    : new Blob([blob], { type: mime });
                 this.traineeDocumentPreviewUrl = URL.createObjectURL(typedBlob);
             } catch (error) {
-                this.traineeDocumentError = this.$t('words.could-not-load-trainee-details');
+                this.traineeDocumentError = this.$t('words.chat-document-load-failed');
             } finally {
                 this.traineeDocumentLoading = false;
             }

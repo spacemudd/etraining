@@ -594,6 +594,7 @@ return [
     'chat-view-details' => 'عرض التفاصيل',
     'chat-open-file' => 'فتح الملف',
     'chat-open-pdf-hint' => 'معاينة PDF محدودة على الجوال. افتح الملف لعرضه.',
+    'chat-document-load-failed' => 'تعذر تحميل المستند.',
     'unpaid-invoices' => 'فواتير غير مدفوعة',
     'press-enter-to-send' => 'اضغط Enter للإرسال',
     'chat-group-by-company' => 'حسب الشركة',
