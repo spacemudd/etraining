@@ -614,6 +614,7 @@ export default {
             "chat-notifications-failed": "تعذر تحديث إعدادات الإشعارات.",
             "chat-notifications-unavailable": "إشعارات الدفع غير مُعدّة على الخادم.",
             "chat-install-app": "تثبيت التطبيق",
+            "chat-view-details": "عرض التفاصيل",
             "unpaid-invoices": "فواتير غير مدفوعة",
             "press-enter-to-send": "اضغط Enter للإرسال",
             "chat-group-by-company": "حسب الشركة",

@@ -336,8 +336,8 @@
                                     </div>
                                     <div
                                         v-if="selectedConversation.trainee"
-                                        class="text-[11px] sm:text-xs text-gray-500 mt-0.5 truncate"
-                                        dir="ltr"
+                                        class="text-xs text-gray-500 mt-0.5 truncate text-right"
+                                        dir="rtl"
                                     >
                                         {{ selectedConversation.phone }}
                                     </div>
