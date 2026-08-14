@@ -107,3 +107,33 @@ export async function unsubscribeChatPush({ destroyUrl }) {
 
     return true;
 }
+
+/**
+ * Sync the installed PWA home-screen badge with an unread count.
+ * Unsupported browsers are a no-op.
+ *
+ * @param {number} count
+ * @returns {Promise<void>}
+ */
+export async function syncChatAppBadge(count) {
+    const n = Math.max(0, Number(count) || 0);
+
+    try {
+        if (n > 0) {
+            if (typeof navigator !== 'undefined' && typeof navigator.setAppBadge === 'function') {
+                await navigator.setAppBadge(n);
+            }
+        } else if (typeof navigator !== 'undefined' && typeof navigator.clearAppBadge === 'function') {
+            await navigator.clearAppBadge();
+        }
+    } catch (error) {
+        // Badging can fail outside installed PWAs — ignore.
+    }
+
+    if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({
+            type: 'CHAT_APP_BADGE',
+            count: n,
+        });
+    }
+}

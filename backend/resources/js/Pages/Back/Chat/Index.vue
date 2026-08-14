@@ -1,7 +1,10 @@
 <template>
     <chat-layout>
-        <div class="flex flex-col h-screen w-full overflow-hidden">
-            <div class="flex items-center justify-between gap-3 flex-wrap px-4 py-1.5 border-b bg-white flex-shrink-0">
+        <div class="flex flex-col h-full w-full overflow-hidden">
+            <div
+                class="items-center justify-between gap-3 flex-wrap px-4 py-1.5 border-b bg-white flex-shrink-0"
+                :class="selectedConversation ? 'hidden md:flex' : 'flex'"
+            >
                 <h2 class="font-semibold text-sm text-gray-800 leading-tight">
                     {{ $t('words.chat') }}
                 </h2>
@@ -55,14 +58,21 @@
                     </button>
                 </div>
             </div>
-            <p v-if="pwaErrorMessage" class="px-4 py-1 text-xs text-red-600 bg-red-50 border-b border-red-100 flex-shrink-0">
+            <p
+                v-if="pwaErrorMessage"
+                class="px-4 py-1 text-xs text-red-600 bg-red-50 border-b border-red-100 flex-shrink-0"
+                :class="{ 'hidden md:block': !!selectedConversation }"
+            >
                 {{ pwaErrorMessage }}
             </p>
 
             <div class="flex flex-1 min-h-0 overflow-hidden bg-white border-t border-gray-200">
                 
-                <!-- Left Sidebar: Conversations List -->
-                <div class="w-full md:w-80 lg:w-96 border-r flex flex-col bg-white">
+                <!-- Left Sidebar: Conversations List (full-screen on mobile until a chat is open) -->
+                <div
+                    class="w-full md:w-80 lg:w-96 border-r flex-col bg-white min-h-0"
+                    :class="selectedConversation ? 'hidden md:flex' : 'flex'"
+                >
                     <div class="p-3 border-b space-y-2">
                         <div class="flex gap-0.5 p-0.5 bg-gray-100 rounded-md">
                             <button
@@ -290,7 +300,10 @@
                 </div>
 
                 <!-- Right Panel: Active Chat View + Trainee Details -->
-                <div class="flex-1 flex overflow-hidden bg-white">
+                <div
+                    class="flex-1 overflow-hidden bg-white min-w-0 min-h-0"
+                    :class="selectedConversation ? 'flex' : 'hidden md:flex'"
+                >
                     <div v-if="!selectedConversation" class="flex-1 flex flex-col items-center justify-center text-gray-400 p-8 text-center space-y-3">
                         <p class="text-sm text-gray-500">{{ $t('words.select-trainee') }}</p>
                         <button
@@ -304,10 +317,17 @@
                     <template v-else>
                         <div class="flex-1 flex flex-col overflow-hidden min-w-0">
                         <!-- Chat Header -->
-                        <div class="px-4 py-3 border-b bg-white space-y-2">
+                        <div class="px-3 sm:px-4 py-3 border-b bg-white space-y-2">
                             <!-- Row 1: identity + primary actions -->
-                            <div class="flex items-start justify-between gap-3 min-w-0">
-                                <div class="flex items-start gap-3 min-w-0">
+                            <div class="flex items-start justify-between gap-2 sm:gap-3 min-w-0">
+                                <div class="flex items-start gap-2 sm:gap-3 min-w-0">
+                                    <button
+                                        type="button"
+                                        class="md:hidden flex-shrink-0 mt-0.5 px-2 py-1.5 rounded-md text-xs font-medium text-gray-700 hover:bg-gray-100 border border-gray-200"
+                                        @click="closeConversation"
+                                    >
+                                        {{ $t('words.back') }}
+                                    </button>
                                     <div class="w-9 h-9 rounded-full bg-gray-700 text-white flex items-center justify-center font-semibold text-sm flex-shrink-0">
                                         {{ selectedConversation.trainee ? selectedConversation.trainee.name.charAt(0) : 'W' }}
                                     </div>
@@ -1524,6 +1544,7 @@ import {
     isChatPwaStandalone,
     registerChatServiceWorker,
     subscribeChatPush,
+    syncChatAppBadge,
     unsubscribeChatPush,
 } from '@/chat-pwa';
 
@@ -2040,6 +2061,14 @@ export default {
             return (this.conversations || []).filter((conv) => !!conv.has_unread).length;
         },
     },
+    watch: {
+        unreadConversationCount: {
+            immediate: true,
+            handler(count) {
+                syncChatAppBadge(count);
+            },
+        },
+    },
     mounted() {
         this.initThreadHeight();
         this.loadPressEnterToSendPreference();
@@ -2144,9 +2173,21 @@ export default {
         },
         setStatusTab(status) {
             this.statusTab = status;
+            this.closeConversation();
+            this.reloadConversationsFromStart();
+        },
+        closeConversation() {
             this.selectedConversation = null;
             this.messages = [];
-            this.reloadConversationsFromStart();
+            this.hasMoreMessages = false;
+            this.nextBefore = null;
+            this.nextBeforeId = null;
+            this.botStatus = null;
+            this.traineeContext = null;
+            this.errorMessage = '';
+            this.successMessage = '';
+            this.showAssignDropdown = false;
+            this.stopPolling();
         },
         setFilter(filter) {
             this.listFilter = filter;
@@ -2270,8 +2311,7 @@ export default {
                     await this.celebrateStatusChange(originElement);
                 }
                 if (leavingTab) {
-                    this.selectedConversation = null;
-                    this.messages = [];
+                    this.closeConversation();
                     await this.loadConversations();
                 } else {
                     await this.refreshConversationCounts();
