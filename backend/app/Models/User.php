@@ -6,6 +6,7 @@ use App\Models\Back\Instructor;
 use App\Models\Back\Trainee;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Cache;
@@ -142,6 +143,11 @@ class User extends Authenticatable implements Auditable
     public function inbox_messages_for_me()
     {
         return $this->hasMany(InboxMessage::class, 'to_id', 'id');
+    }
+
+    public function pushSubscriptions(): HasMany
+    {
+        return $this->hasMany(PushSubscription::class);
     }
 
     public function scopeFindByEmail($query, $email)

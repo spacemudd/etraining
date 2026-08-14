@@ -40,6 +40,7 @@
         "maatwebsite/excel": "^3.1",
         "macsidigital/laravel-zoom": "dev-master",
         "milon/barcode": "^9.0",
+        "minishlink/web-push": "^8.0",
         "moemengaballah/msegat": "dev-main",
         "owen-it/laravel-auditing": "^12.0",
         "predis/predis": "^1.1",

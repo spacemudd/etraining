@@ -6,7 +6,32 @@
                     {{ $t('words.chat') }}
                 </h2>
                 <div class="flex items-center gap-2 flex-wrap">
+                    <button
+                        v-if="deferredInstallPrompt"
+                        type="button"
+                        @click="installChatPwa"
+                        class="text-xs leading-tight text-green-700 hover:text-green-900 border border-green-300 bg-green-50 hover:bg-green-100 px-2 py-1 rounded-md font-medium transition whitespace-nowrap"
+                    >
+                        {{ $t('words.chat-install-app') }}
+                    </button>
+                    <button
+                        v-if="pushSupported"
+                        type="button"
+                        @click="togglePushNotifications"
+                        :disabled="pushBusy"
+                        class="text-xs leading-tight border px-2 py-1 rounded-md font-medium transition whitespace-nowrap disabled:opacity-50"
+                        :class="pushEnabled
+                            ? 'text-gray-700 border-gray-300 bg-white hover:bg-gray-50'
+                            : 'text-blue-700 border-blue-300 bg-blue-50 hover:bg-blue-100'"
+                    >
+                        {{ pushBusy
+                            ? $t('words.chat-notifications-working')
+                            : (pushEnabled
+                                ? $t('words.chat-disable-notifications')
+                                : $t('words.chat-enable-notifications')) }}
+                    </button>
                     <inertia-link
+                        v-if="!isStandalonePwa"
                         :href="route('dashboard')"
                         class="text-xs leading-tight text-gray-600 hover:text-gray-900 border border-gray-300 bg-white hover:bg-gray-50 px-2 py-1 rounded-md font-medium transition whitespace-nowrap"
                     >
@@ -30,6 +55,9 @@
                     </button>
                 </div>
             </div>
+            <p v-if="pwaErrorMessage" class="px-4 py-1 text-xs text-red-600 bg-red-50 border-b border-red-100 flex-shrink-0">
+                {{ pwaErrorMessage }}
+            </p>
 
             <div class="flex flex-1 min-h-0 overflow-hidden bg-white border-t border-gray-200">
                 
@@ -1491,6 +1519,13 @@ import throttle from 'lodash/throttle';
 import moment from 'moment';
 import 'moment/locale/ar';
 import confetti from 'canvas-confetti';
+import {
+    getExistingPushSubscription,
+    isChatPwaStandalone,
+    registerChatServiceWorker,
+    subscribeChatPush,
+    unsubscribeChatPush,
+} from '@/chat-pwa';
 
 export default {
     metaInfo() {
@@ -1632,6 +1667,13 @@ export default {
             searchDebounce: null,
             botStatus: null,
             botConfigured: false,
+            isStandalonePwa: false,
+            pushSupported: false,
+            pushEnabled: false,
+            pushBusy: false,
+            pushConfigured: false,
+            deferredInstallPrompt: null,
+            pwaErrorMessage: '',
             pausingBot: false,
             windowNowMs: Date.now(),
             messagingWindowTimer: null,
@@ -2007,8 +2049,10 @@ export default {
         this.loadQuickReplies();
         this.subscribeEcho();
         this.startMessagingWindowTicker();
+        this.initChatPwa();
         document.addEventListener('click', this.handleGlobalClick);
         document.addEventListener('keydown', this.handleGlobalKeydown);
+        window.addEventListener('beforeinstallprompt', this.onBeforeInstallPrompt);
         if (this.configured) {
             this.loadTemplates();
         }
@@ -2020,6 +2064,7 @@ export default {
         this.stopThreadResize();
         document.removeEventListener('click', this.handleGlobalClick);
         document.removeEventListener('keydown', this.handleGlobalKeydown);
+        window.removeEventListener('beforeinstallprompt', this.onBeforeInstallPrompt);
         if (this.messagesRefreshTimer) {
             clearTimeout(this.messagesRefreshTimer);
             this.messagesRefreshTimer = null;
@@ -2314,6 +2359,80 @@ export default {
                         this.scheduleConversationsReload();
                     }
                 });
+        },
+        async initChatPwa() {
+            this.isStandalonePwa = isChatPwaStandalone();
+            this.pushSupported = typeof window !== 'undefined'
+                && 'serviceWorker' in navigator
+                && 'PushManager' in window
+                && typeof Notification !== 'undefined';
+
+            await registerChatServiceWorker();
+
+            if (!this.pushSupported) {
+                return;
+            }
+
+            try {
+                const { data } = await axios.get(route('back.chat.push-vapid-public-key'));
+                this.pushConfigured = !!(data && data.configured && data.public_key);
+            } catch (error) {
+                this.pushConfigured = false;
+            }
+
+            if (!this.pushConfigured) {
+                this.pushSupported = false;
+                return;
+            }
+
+            const existing = await getExistingPushSubscription();
+            this.pushEnabled = !!existing;
+        },
+        onBeforeInstallPrompt(event) {
+            event.preventDefault();
+            this.deferredInstallPrompt = event;
+        },
+        async installChatPwa() {
+            if (!this.deferredInstallPrompt) {
+                return;
+            }
+            const promptEvent = this.deferredInstallPrompt;
+            this.deferredInstallPrompt = null;
+            await promptEvent.prompt();
+        },
+        async togglePushNotifications() {
+            if (this.pushBusy || !this.pushSupported) {
+                return;
+            }
+            this.pushBusy = true;
+            this.pwaErrorMessage = '';
+            try {
+                if (this.pushEnabled) {
+                    await unsubscribeChatPush({
+                        destroyUrl: route('back.chat.push-subscriptions.destroy'),
+                    });
+                    this.pushEnabled = false;
+                } else {
+                    const { data } = await axios.get(route('back.chat.push-vapid-public-key'));
+                    if (!data || !data.public_key) {
+                        this.pwaErrorMessage = this.$t('words.chat-notifications-unavailable');
+                        return;
+                    }
+                    await subscribeChatPush({
+                        vapidPublicKey: data.public_key,
+                        storeUrl: route('back.chat.push-subscriptions.store'),
+                    });
+                    this.pushEnabled = true;
+                }
+            } catch (error) {
+                if (error && error.code === 'permission-denied') {
+                    this.pwaErrorMessage = this.$t('words.chat-notifications-denied');
+                } else {
+                    this.pwaErrorMessage = this.$t('words.chat-notifications-failed');
+                }
+            } finally {
+                this.pushBusy = false;
+            }
         },
         unsubscribeEcho() {
             if (window.Echo) {

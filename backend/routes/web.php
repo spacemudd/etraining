@@ -843,6 +843,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::post('send-template-to-company', [\App\Http\Controllers\Back\ChatController::class, 'sendTemplateToCompany'])->name('send-template-to-company');
             Route::post('send-note', [\App\Http\Controllers\Back\ChatController::class, 'sendNote'])->name('send-note');
             Route::post('messages/{id}/save-to-s3', [\App\Http\Controllers\Back\ChatController::class, 'saveToS3'])->name('messages.save-to-s3');
+            Route::get('push-vapid-public-key', [\App\Http\Controllers\Back\ChatPushSubscriptionController::class, 'vapidPublicKey'])->name('push-vapid-public-key');
+            Route::post('push-subscriptions', [\App\Http\Controllers\Back\ChatPushSubscriptionController::class, 'store'])->name('push-subscriptions.store');
+            Route::delete('push-subscriptions', [\App\Http\Controllers\Back\ChatPushSubscriptionController::class, 'destroy'])->name('push-subscriptions.destroy');
         });
 
         Route::get('trainee-groups', [\App\Http\Controllers\Back\TraineesController::class, 'withGroups'])->name('trainee-groups.index');

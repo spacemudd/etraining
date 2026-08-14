@@ -6,6 +6,7 @@ namespace App\Support;
 
 use App\Events\WhatsAppMessageReceived;
 use App\Jobs\ProcessWhatsAppBotReply;
+use App\Jobs\SendWhatsAppChatPushNotification;
 use App\Models\Back\WhatsAppMessage;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -26,6 +27,8 @@ final class WhatsAppBroadcast
                 // then the bot reply is stored/broadcast as a separate event.
                 ProcessWhatsAppBotReply::dispatch($message->id)->afterResponse();
             }
+
+            SendWhatsAppChatPushNotification::dispatch($message->id)->afterResponse();
         }
 
         $driver = (string) config('broadcasting.default');

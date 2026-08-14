@@ -1,0 +1,22 @@
+{
+  "name": "eTraining Chat",
+  "short_name": "Chat",
+  "description": "WhatsApp chat for eTraining agents",
+  "start_url": "/back/chat?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#16a34a",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
