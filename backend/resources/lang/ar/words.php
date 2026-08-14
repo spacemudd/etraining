@@ -593,7 +593,7 @@ return [
     'chat-install-app' => 'تثبيت التطبيق',
     'chat-view-details' => 'عرض التفاصيل',
     'chat-open-file' => 'فتح الملف',
-    'chat-open-pdf-hint' => 'معاينة PDF محدودة على الجوال. افتح الملف لعرضه.',
+    'chat-open-pdf-hint' => 'معاينة PDF محدودة على الجوال. استخدم فتح الملف لعرضه أو مشاركته.',
     'chat-document-load-failed' => 'تعذر تحميل المستند.',
     'unpaid-invoices' => 'فواتير غير مدفوعة',
     'press-enter-to-send' => 'اضغط Enter للإرسال',

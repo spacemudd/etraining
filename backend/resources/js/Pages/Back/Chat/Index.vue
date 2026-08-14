@@ -1532,9 +1532,9 @@
                         <div class="flex items-center gap-2 flex-shrink-0">
                             <a
                                 v-if="traineeDocumentPreviewUrl"
-                                :href="traineeDocumentPreviewUrl"
-                                :download="traineeDocumentDownloadName"
+                                href="#"
                                 class="text-xs text-gray-600 hover:text-gray-900 underline whitespace-nowrap"
+                                @click.prevent="downloadTraineeDocument"
                             >
                                 {{ $t('words.download') }}
                             </a>
@@ -1569,12 +1569,37 @@
                             style="max-height: calc(100vh - 140px);"
                         />
                         <iframe
-                            v-else-if="traineeDocumentModalIsPdf && traineeDocumentPreviewUrl"
+                            v-else-if="traineeDocumentModalIsPdf && traineeDocumentPreviewUrl && !isNarrowViewport"
                             :src="traineeDocumentPreviewUrl"
                             class="w-full rounded-md bg-white border border-gray-200"
                             style="min-height: 420px; height: calc(100vh - 160px);"
                             title="trainee-document"
                         ></iframe>
+                        <div
+                            v-else-if="traineeDocumentModalIsPdf && traineeDocumentPreviewUrl"
+                            class="h-full flex flex-col items-center justify-center text-center px-4 py-8 space-y-4"
+                        >
+                            <p class="text-sm font-medium text-gray-800 break-words">
+                                {{ traineeDocumentModalTitle }}
+                            </p>
+                            <p class="text-xs text-gray-500">
+                                {{ $t('words.chat-open-pdf-hint') }}
+                            </p>
+                            <button
+                                type="button"
+                                class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700"
+                                @click="shareOrDownloadTraineeDocument"
+                            >
+                                {{ $t('words.chat-open-file') }}
+                            </button>
+                            <button
+                                type="button"
+                                class="text-xs text-gray-600 underline"
+                                @click="downloadTraineeDocument"
+                            >
+                                {{ $t('words.download') }}
+                            </button>
+                        </div>
                         <div
                             v-else-if="traineeDocumentPreviewUrl"
                             class="flex-1 flex flex-col items-center justify-center text-center px-4 py-8 space-y-4"
@@ -1582,13 +1607,13 @@
                             <p class="text-sm text-gray-700 break-words">
                                 {{ traineeDocumentModal.name || traineeDocumentModalTitle }}
                             </p>
-                            <a
-                                :href="traineeDocumentPreviewUrl"
-                                :download="traineeDocumentDownloadName"
+                            <button
+                                type="button"
                                 class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700"
+                                @click="shareOrDownloadTraineeDocument"
                             >
-                                {{ $t('words.download') }}
-                            </a>
+                                {{ $t('words.chat-open-file') }}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -1822,9 +1847,13 @@ export default {
         traineeDocumentDownloadName() {
             const doc = this.traineeDocumentModal;
             if (!doc) {
-                return 'file';
+                return 'document.pdf';
             }
-            return doc.name || doc.label || 'file';
+            let name = String(doc.name || doc.label || 'document').trim() || 'document';
+            if (this.traineeDocumentModalIsPdf && !/\.pdf$/i.test(name)) {
+                name += '.pdf';
+            }
+            return name;
         },
         traineeDocumentModalIsImage() {
             const doc = this.traineeDocumentModal;
@@ -2920,6 +2949,42 @@ export default {
             this.traineeDocumentModal = null;
             this.traineeDocumentLoading = false;
             this.traineeDocumentError = null;
+        },
+        downloadTraineeDocument() {
+            if (!this.traineeDocumentPreviewUrl) {
+                return;
+            }
+            const link = document.createElement('a');
+            link.href = this.traineeDocumentPreviewUrl;
+            link.download = this.traineeDocumentDownloadName;
+            link.rel = 'noopener';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        },
+        async shareOrDownloadTraineeDocument() {
+            if (!this.traineeDocumentPreviewUrl) {
+                return;
+            }
+
+            try {
+                const response = await fetch(this.traineeDocumentPreviewUrl);
+                const blob = await response.blob();
+                const type = blob.type || (this.traineeDocumentModalIsPdf ? 'application/pdf' : 'application/octet-stream');
+                const file = new File([blob], this.traineeDocumentDownloadName, { type });
+
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                        files: [file],
+                        title: this.traineeDocumentModalTitle || this.traineeDocumentDownloadName,
+                    });
+                    return;
+                }
+            } catch (error) {
+                // Fall through to download.
+            }
+
+            this.downloadTraineeDocument();
         },
         revokeTraineeDocumentPreview() {
             if (this.traineeDocumentPreviewUrl) {

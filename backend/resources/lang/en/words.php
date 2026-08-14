@@ -584,7 +584,7 @@ return [
     'chat-install-app' => 'Install app',
     'chat-view-details' => 'View details',
     'chat-open-file' => 'Open file',
-    'chat-open-pdf-hint' => 'PDF preview is limited on phones. Open the file to view it.',
+    'chat-open-pdf-hint' => 'PDF preview is limited on phones. Use Open file to view or share it.',
     'chat-document-load-failed' => 'Could not load the document.',
     'unpaid-invoices' => 'Unpaid invoices',
     'press-enter-to-send' => 'Press Enter to send',
