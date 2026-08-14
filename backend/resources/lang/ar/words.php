@@ -592,6 +592,8 @@ return [
     'chat-notifications-unavailable' => 'إشعارات الدفع غير مُعدّة على الخادم.',
     'chat-install-app' => 'تثبيت التطبيق',
     'chat-view-details' => 'عرض التفاصيل',
+    'chat-open-file' => 'فتح الملف',
+    'chat-open-pdf-hint' => 'معاينة PDF محدودة على الجوال. افتح الملف لعرضه.',
     'unpaid-invoices' => 'فواتير غير مدفوعة',
     'press-enter-to-send' => 'اضغط Enter للإرسال',
     'chat-group-by-company' => 'حسب الشركة',

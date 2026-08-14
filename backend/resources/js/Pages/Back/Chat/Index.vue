@@ -1516,10 +1516,17 @@
                 </div>
             </modal>
 
-            <modal name="traineeDocumentModal" :width="860" :height="720" :scrollable="false">
-                <div class="h-full flex flex-col">
-                    <div class="flex items-center justify-between px-5 py-3 border-b flex-shrink-0">
-                        <h3 class="text-base font-bold text-gray-800 truncate">
+            <modal
+                name="traineeDocumentModal"
+                :width="traineeDocumentModalWidth"
+                :height="traineeDocumentModalHeight"
+                :scrollable="false"
+                :click-to-close="true"
+                :adaptive="true"
+            >
+                <div class="h-full flex flex-col max-w-full overflow-hidden">
+                    <div class="flex items-center justify-between gap-2 px-3 sm:px-5 py-3 border-b flex-shrink-0 bg-white sticky top-0 z-10">
+                        <h3 class="text-sm sm:text-base font-bold text-gray-800 truncate min-w-0">
                             {{ traineeDocumentModalTitle }}
                         </h3>
                         <div class="flex items-center gap-2 flex-shrink-0">
@@ -1527,30 +1534,76 @@
                                 v-if="traineeDocumentModal && traineeDocumentModal.url"
                                 :href="traineeDocumentModal.url"
                                 target="_blank"
-                                class="text-xs text-gray-600 hover:text-gray-900 underline"
+                                rel="noopener"
+                                class="text-xs text-gray-600 hover:text-gray-900 underline whitespace-nowrap"
                             >
                                 {{ $t('words.download') }}
                             </a>
-                            <button type="button" @click="closeTraineeDocumentModal" class="text-gray-400 hover:text-gray-600">
+                            <button
+                                type="button"
+                                @click="closeTraineeDocumentModal"
+                                class="text-gray-500 hover:text-gray-800 p-1 rounded border border-gray-200 bg-white"
+                                :aria-label="$t('words.cancel')"
+                            >
                                 <ion-icon name="close-outline" class="w-6 h-6"></ion-icon>
                             </button>
                         </div>
                     </div>
-                    <div class="flex-1 min-h-0 bg-gray-100 p-3" style="height: 620px;">
+                    <div class="flex-1 min-h-0 bg-gray-100 p-2 sm:p-3 overflow-auto">
                         <img
                             v-if="traineeDocumentModalIsImage"
                             :src="traineeDocumentModal.url"
                             :alt="traineeDocumentModalTitle"
-                            class="max-w-full max-h-full mx-auto object-contain"
-                            style="max-height: 600px;"
+                            class="max-w-full mx-auto object-contain"
+                            style="max-height: calc(100vh - 140px);"
                         />
-                        <iframe
+                        <div
+                            v-else-if="traineeDocumentModalIsPdf"
+                            class="h-full flex flex-col"
+                        >
+                            <iframe
+                                v-if="!isNarrowViewport"
+                                :src="traineeDocumentModal.url"
+                                class="w-full flex-1 rounded-md bg-white border border-gray-200"
+                                style="min-height: 480px; height: calc(100vh - 160px);"
+                                title="trainee-document"
+                            ></iframe>
+                            <div
+                                v-else
+                                class="flex-1 flex flex-col items-center justify-center text-center px-4 py-8 space-y-4"
+                            >
+                                <p class="text-sm text-gray-700 break-words">
+                                    {{ traineeDocumentModal.name || traineeDocumentModalTitle }}
+                                </p>
+                                <p class="text-xs text-gray-500">
+                                    {{ $t('words.chat-open-pdf-hint') }}
+                                </p>
+                                <a
+                                    :href="traineeDocumentModal.url"
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700"
+                                >
+                                    {{ $t('words.chat-open-file') }}
+                                </a>
+                            </div>
+                        </div>
+                        <div
                             v-else-if="traineeDocumentModal && traineeDocumentModal.url"
-                            :src="traineeDocumentModal.url"
-                            class="w-full h-full rounded-md bg-white border border-gray-200"
-                            style="height: 600px;"
-                            title="trainee-document"
-                        ></iframe>
+                            class="flex-1 flex flex-col items-center justify-center text-center px-4 py-8 space-y-4"
+                        >
+                            <p class="text-sm text-gray-700 break-words">
+                                {{ traineeDocumentModal.name || traineeDocumentModalTitle }}
+                            </p>
+                            <a
+                                :href="traineeDocumentModal.url"
+                                target="_blank"
+                                rel="noopener"
+                                class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700"
+                            >
+                                {{ $t('words.chat-open-file') }}
+                            </a>
+                        </div>
                     </div>
                 </div>
             </modal>
@@ -1731,9 +1784,25 @@ export default {
             traineeDocumentModal: null,
             copiedInvoiceId: null,
             copyLinkTimer: null,
+            viewportWidth: typeof window !== 'undefined' ? window.innerWidth : 1024,
         };
     },
     computed: {
+        isNarrowViewport() {
+            return this.viewportWidth < 768;
+        },
+        traineeDocumentModalWidth() {
+            if (typeof window === 'undefined') {
+                return 860;
+            }
+            return Math.max(280, Math.min(860, window.innerWidth - 24));
+        },
+        traineeDocumentModalHeight() {
+            if (typeof window === 'undefined') {
+                return 720;
+            }
+            return Math.max(320, Math.min(720, window.innerHeight - 32));
+        },
         traineeDocumentButtons() {
             const docs = (this.traineeContext && this.traineeContext.documents) || {};
             return [
@@ -1770,6 +1839,18 @@ export default {
                 return true;
             }
             return this.guessMediaType(doc.url || doc.name).startsWith('image/');
+        },
+        traineeDocumentModalIsPdf() {
+            const doc = this.traineeDocumentModal;
+            if (!doc || !doc.url) {
+                return false;
+            }
+            const mime = (doc.mime_type || '').toLowerCase();
+            if (mime === 'application/pdf' || mime.includes('pdf')) {
+                return true;
+            }
+            const source = String(doc.url || doc.name || '').toLowerCase();
+            return /\.pdf(\?|$)/.test(source);
         },
         messagingWindow() {
             return (this.selectedConversation && this.selectedConversation.messaging_window) || null;
@@ -2107,9 +2188,11 @@ export default {
         this.subscribeEcho();
         this.startMessagingWindowTicker();
         this.initChatPwa();
+        this.updateViewportWidth();
         document.addEventListener('click', this.handleGlobalClick);
         document.addEventListener('keydown', this.handleGlobalKeydown);
         window.addEventListener('beforeinstallprompt', this.onBeforeInstallPrompt);
+        window.addEventListener('resize', this.updateViewportWidth);
         if (this.configured) {
             this.loadTemplates();
         }
@@ -2122,6 +2205,7 @@ export default {
         document.removeEventListener('click', this.handleGlobalClick);
         document.removeEventListener('keydown', this.handleGlobalKeydown);
         window.removeEventListener('beforeinstallprompt', this.onBeforeInstallPrompt);
+        window.removeEventListener('resize', this.updateViewportWidth);
         if (this.messagesRefreshTimer) {
             clearTimeout(this.messagesRefreshTimer);
             this.messagesRefreshTimer = null;
@@ -2723,11 +2807,17 @@ export default {
                 ...doc.document,
                 label: doc.label,
             };
+            this.updateViewportWidth();
             this.$modal.show('traineeDocumentModal');
         },
         closeTraineeDocumentModal() {
             this.$modal.hide('traineeDocumentModal');
             this.traineeDocumentModal = null;
+        },
+        updateViewportWidth() {
+            if (typeof window !== 'undefined') {
+                this.viewportWidth = window.innerWidth;
+            }
         },
         formatAmount(amount) {
             const value = Number(amount) || 0;
