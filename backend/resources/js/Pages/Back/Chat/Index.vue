@@ -317,39 +317,50 @@
                     <template v-else>
                         <div class="flex-1 flex flex-col overflow-hidden min-w-0">
                         <!-- Chat Header -->
-                        <div class="px-3 sm:px-4 py-3 border-b bg-white space-y-2">
-                            <!-- Row 1: identity + primary actions -->
-                            <div class="flex items-start justify-between gap-2 sm:gap-3 min-w-0">
-                                <div class="flex items-start gap-2 sm:gap-3 min-w-0">
-                                    <button
-                                        type="button"
-                                        class="md:hidden flex-shrink-0 mt-0.5 px-2 py-1.5 rounded-md text-xs font-medium text-gray-700 hover:bg-gray-100 border border-gray-200"
-                                        @click="closeConversation"
-                                    >
-                                        {{ $t('words.back') }}
-                                    </button>
-                                    <div class="w-9 h-9 rounded-full bg-gray-700 text-white flex items-center justify-center font-semibold text-sm flex-shrink-0">
-                                        {{ selectedConversation.trainee ? selectedConversation.trainee.name.charAt(0) : 'W' }}
+                        <div class="px-3 sm:px-4 py-2 sm:py-3 border-b bg-white space-y-2">
+                            <!-- Row 1: back + identity + view details (mobile) -->
+                            <div class="flex items-center gap-2 min-w-0">
+                                <button
+                                    type="button"
+                                    class="md:hidden flex-shrink-0 px-2 py-1.5 rounded-md text-xs font-medium text-gray-700 hover:bg-gray-100 border border-gray-200"
+                                    @click="closeConversation"
+                                >
+                                    {{ $t('words.back') }}
+                                </button>
+                                <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gray-700 text-white flex items-center justify-center font-semibold text-xs sm:text-sm flex-shrink-0">
+                                    {{ selectedConversation.trainee ? selectedConversation.trainee.name.charAt(0) : 'W' }}
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                    <div class="font-semibold text-gray-900 text-xs sm:text-sm truncate">
+                                        {{ selectedConversation.trainee ? selectedConversation.trainee.name : selectedConversation.phone }}
                                     </div>
-                                    <div class="min-w-0">
-                                        <div class="font-semibold text-gray-900 text-sm truncate">
-                                            {{ selectedConversation.trainee ? selectedConversation.trainee.name : selectedConversation.phone }}
-                                        </div>
-                                        <div class="text-xs text-gray-500 mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                                            <span
-                                                v-if="selectedConversation.trainee"
-                                                dir="ltr"
-                                            >{{ selectedConversation.phone }}</span>
-                                            <span
-                                                v-if="messagingWindowLabel"
-                                                class="text-gray-400"
-                                                :title="$t('words.whatsapp-freeform-hint')"
-                                                dir="ltr"
-                                            >{{ messagingWindowLabel }}</span>
-                                        </div>
+                                    <div
+                                        v-if="selectedConversation.trainee"
+                                        class="text-[11px] sm:text-xs text-gray-500 mt-0.5 truncate"
+                                        dir="ltr"
+                                    >
+                                        {{ selectedConversation.phone }}
+                                    </div>
+                                    <div
+                                        v-if="messagingWindowLabel"
+                                        class="text-xs text-gray-400 mt-0.5 truncate"
+                                        :title="$t('words.whatsapp-freeform-hint')"
+                                        dir="auto"
+                                    >
+                                        {{ messagingWindowLabel }}
                                     </div>
                                 </div>
-                                <div class="flex flex-wrap items-center gap-1.5 flex-shrink-0 justify-end">
+                                <button
+                                    type="button"
+                                    class="md:hidden flex-shrink-0 px-2 py-1.5 rounded-md text-xs font-medium text-blue-700 hover:bg-blue-50 border border-blue-200"
+                                    @click="showTraineeDetailsMobile = true"
+                                >
+                                    {{ $t('words.chat-view-details') }}
+                                </button>
+                            </div>
+
+                            <!-- Row 2: status / assign / profile -->
+                            <div class="flex flex-wrap items-center gap-1.5">
                                     <select
                                         :value="selectedConversation.status || 'open'"
                                         @change="onStatusChange($event)"
@@ -424,10 +435,9 @@
                                     >
                                         {{ $t('words.profile') }}
                                     </a>
-                                </div>
                             </div>
 
-                            <!-- Row 2: secondary — bot + tags -->
+                            <!-- Row 3: secondary — bot + tags -->
                             <div class="flex flex-wrap items-center gap-2 text-xs text-gray-500">
                                 <span :title="botStatusTitle">{{ botStatusLabel }}</span>
                                 <button
@@ -504,7 +514,7 @@
                             <div
                                 ref="messagesContainer"
                                 @scroll="onMessagesScroll"
-                                class="h-full overflow-y-auto p-4 space-y-3"
+                                class="h-full overflow-y-auto p-2 sm:p-4 space-y-2 sm:space-y-3"
                             >
                             <div v-if="hasMoreMessages" class="text-center mb-1">
                                 <button
@@ -517,7 +527,7 @@
                                     {{ loadingOlderMessages ? ($t('words.loading') + '...') : $t('words.chat-load-older') }}
                                 </button>
                             </div>
-                            <div v-if="loadingMessages" class="text-center text-sm text-gray-500 py-4">
+                            <div v-if="loadingMessages" class="text-center text-xs sm:text-sm text-gray-500 py-4">
                                 {{ $t('words.loading') }}...
                             </div>
 
@@ -530,19 +540,19 @@
                                 <!-- Internal Note -->
                                 <div
                                     v-if="message.is_note"
-                                    class="max-w-[85%] w-full bg-amber-50 rounded-lg px-3.5 py-2.5 text-sm text-amber-950"
+                                    class="max-w-[85%] w-full bg-amber-50 rounded-lg px-2.5 py-1.5 sm:px-3.5 sm:py-2.5 text-xs sm:text-sm text-amber-950"
                                 >
-                                    <div class="flex items-center justify-between text-[11px] text-amber-800/80 mb-1">
+                                    <div class="flex items-center justify-between text-[10px] sm:text-[11px] text-amber-800/80 mb-1">
                                         <span>{{ $t('words.internal-note') }}<span v-if="message.author"> · {{ message.author.name }}</span></span>
                                         <span dir="ltr">{{ formatMessageTime(message.date_sent) }}</span>
                                     </div>
-                                    <p class="whitespace-pre-wrap break-words leading-relaxed" dir="auto">{{ message.body }}</p>
+                                    <p class="whitespace-pre-wrap break-words leading-snug sm:leading-relaxed" dir="auto">{{ message.body }}</p>
                                 </div>
 
                                 <!-- Standard message bubble -->
                                 <div
                                     v-else
-                                    class="max-w-[80%] md:max-w-[70%] rounded-lg px-3.5 py-2.5 text-sm"
+                                    class="max-w-[80%] md:max-w-[70%] rounded-lg px-2.5 py-1.5 sm:px-3.5 sm:py-2.5 text-xs sm:text-sm"
                                     :class="message.status === 'delivery_failed' || message.status === 'failed'
                                         ? 'bg-red-50 text-red-950'
                                         : (isBotMessage(message)
@@ -553,7 +563,7 @@
                                 >
                                     <p
                                         v-if="messageBodyVisible(message)"
-                                        class="whitespace-pre-wrap break-words leading-relaxed"
+                                        class="whitespace-pre-wrap break-words leading-snug sm:leading-relaxed"
                                         dir="auto"
                                     >{{ message.body }}</p>
 
@@ -619,7 +629,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="text-[11px] mt-1.5 text-gray-400 flex items-center gap-1 flex-wrap" dir="auto">
+                                    <div class="text-[10px] sm:text-[11px] mt-1 text-gray-400 flex items-center gap-1 flex-wrap" dir="auto">
                                         <span v-if="isBotMessage(message)">{{ $t('words.whatsapp-bot-label') }}</span>
                                         <span v-else-if="isOutboundMessage(message) && message.author">{{ message.author.name }}</span>
                                         <span v-else-if="!isOutboundMessage(message)">{{ $t('words.trainee') }}</span>
@@ -827,10 +837,27 @@
                         </div>
                         </div>
 
-                        <!-- Trainee Details Sidebar -->
-                        <aside class="trainee-sidebar-accent hidden md:flex w-64 lg:w-72 bg-white flex-col overflow-hidden flex-shrink-0 text-xs">
-                            <div class="px-3 py-2 border-b">
+                        <!-- Trainee Details Sidebar (desktop) / drawer (mobile) -->
+                        <div
+                            v-if="showTraineeDetailsMobile"
+                            class="md:hidden fixed top-0 right-0 bottom-0 left-0 z-40 bg-black bg-opacity-40"
+                            @click="showTraineeDetailsMobile = false"
+                        ></div>
+                        <aside
+                            class="trainee-sidebar-accent bg-white flex-col overflow-hidden flex-shrink-0 text-xs"
+                            :class="showTraineeDetailsMobile
+                                ? 'trainee-details-drawer fixed top-0 bottom-0 z-50 flex shadow-xl'
+                                : 'hidden md:flex w-64 lg:w-72'"
+                        >
+                            <div class="px-3 py-2 border-b flex items-center justify-between gap-2">
                                 <h3 class="text-xs font-medium text-gray-700">{{ $t('words.trainee-details') }}</h3>
+                                <button
+                                    type="button"
+                                    class="md:hidden text-xs text-gray-600 hover:text-gray-900 px-2 py-1 rounded border border-gray-200"
+                                    @click="showTraineeDetailsMobile = false"
+                                >
+                                    {{ $t('words.back') }}
+                                </button>
                             </div>
                             <div class="flex-1 overflow-y-auto p-3 space-y-4">
                                 <div v-if="!selectedConversation.trainee" class="text-xs text-gray-500">
@@ -1589,7 +1616,7 @@ export default {
             messageBody: '',
             pressEnterToSend: false,
             conversationGroupMode: 'latest',
-            threadHeight: 360,
+            threadHeight: 220,
             threadResizing: false,
             threadResizeStartY: 0,
             threadResizeStartHeight: 0,
@@ -1695,6 +1722,7 @@ export default {
             pushConfigured: false,
             deferredInstallPrompt: null,
             pwaErrorMessage: '',
+            showTraineeDetailsMobile: false,
             pausingBot: false,
             windowNowMs: Date.now(),
             messagingWindowTimer: null,
@@ -2187,6 +2215,7 @@ export default {
             this.errorMessage = '';
             this.successMessage = '';
             this.showAssignDropdown = false;
+            this.showTraineeDetailsMobile = false;
             this.stopPolling();
         },
         setFilter(filter) {
@@ -3563,11 +3592,16 @@ export default {
             this.showNewQuickReply = false;
         },
         initThreadHeight() {
+            const isMobile = window.innerWidth < 768;
             const stored = Number(localStorage.getItem('chat.threadHeight'));
-            const viewportCap = Math.floor(window.innerHeight * 0.5);
-            const fallback = Math.min(420, Math.max(200, viewportCap || 360));
-            if (Number.isFinite(stored) && stored >= 200) {
-                this.threadHeight = Math.min(stored, Math.max(420, viewportCap + 120));
+            const viewportCap = Math.floor(window.innerHeight * (isMobile ? 0.28 : 0.5));
+            const fallback = isMobile
+                ? Math.min(220, Math.max(160, viewportCap || 200))
+                : Math.min(420, Math.max(200, viewportCap || 360));
+            if (Number.isFinite(stored) && stored >= 160) {
+                const mobileCap = Math.max(220, viewportCap + 40);
+                const desktopCap = Math.max(420, viewportCap + 120);
+                this.threadHeight = Math.min(stored, isMobile ? mobileCap : desktopCap);
             } else {
                 this.threadHeight = fallback;
             }
@@ -4169,6 +4203,16 @@ export default {
 [dir="rtl"] .trainee-sidebar-accent {
     border-left: none;
     border-right: 2px solid #16a34a;
+}
+.trainee-details-drawer {
+    width: 85vw;
+    max-width: 24rem;
+    right: 0;
+    left: auto;
+}
+[dir="rtl"] .trainee-details-drawer {
+    right: auto;
+    left: 0;
 }
 .conversation-list-scroll {
     scrollbar-width: none; /* Firefox */

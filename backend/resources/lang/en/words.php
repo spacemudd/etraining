@@ -582,6 +582,7 @@ return [
     'chat-notifications-failed' => 'Could not update notification settings.',
     'chat-notifications-unavailable' => 'Push notifications are not configured on the server.',
     'chat-install-app' => 'Install app',
+    'chat-view-details' => 'View details',
     'unpaid-invoices' => 'Unpaid invoices',
     'press-enter-to-send' => 'Press Enter to send',
     'chat-group-by-company' => 'By company',
