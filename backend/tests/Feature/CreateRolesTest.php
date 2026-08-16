@@ -124,4 +124,71 @@ class CreateRolesTest extends TestCase
         $this->assertNull(User::find($staff->id));
         $this->assertDatabaseMissing('verifications', ['user_id' => $staff->id]);
     }
+
+    public function test_admin_can_move_user_to_another_role()
+    {
+        $adminRole = Role::whereName($this->admin->currentTeam->id.'_admins')->first();
+        $financeRole = Role::whereName($this->admin->currentTeam->id.'_finance')->first();
+
+        $staff = User::create([
+            'name' => 'Staff Member',
+            'email' => 'staff-move@example.com',
+            'password' => bcrypt('password'),
+            'current_team_id' => $this->admin->currentTeam->id,
+        ]);
+        $staff->assignRole($adminRole);
+
+        $response = $this->actingAs($this->admin)
+            ->postJson(route('back.settings.roles.users.move'), [
+                'user_id' => $staff->id,
+                'from_role_id' => $adminRole->id,
+                'to_role_id' => $financeRole->id,
+            ]);
+
+        $response->assertSuccessful()
+            ->assertJsonPath('to_role_id', $financeRole->id)
+            ->assertJsonPath('from_role_id', $adminRole->id);
+
+        $staff->refresh();
+        $this->assertFalse($staff->hasRole($adminRole));
+        $this->assertTrue($staff->hasRole($financeRole));
+        $this->assertSame(1, $staff->roles()->count());
+    }
+
+    public function test_admin_cannot_move_themselves_to_another_role()
+    {
+        $adminRole = Role::whereName($this->admin->currentTeam->id.'_admins')->first();
+        $financeRole = Role::whereName($this->admin->currentTeam->id.'_finance')->first();
+
+        $this->actingAs($this->admin)
+            ->postJson(route('back.settings.roles.users.move'), [
+                'user_id' => $this->admin->id,
+                'from_role_id' => $adminRole->id,
+                'to_role_id' => $financeRole->id,
+            ])
+            ->assertForbidden();
+
+        $this->assertTrue($this->admin->fresh()->hasRole($adminRole));
+    }
+
+    public function test_admin_cannot_move_user_to_the_same_role()
+    {
+        $adminRole = Role::whereName($this->admin->currentTeam->id.'_admins')->first();
+
+        $staff = User::create([
+            'name' => 'Same Role Staff',
+            'email' => 'same-role@example.com',
+            'password' => bcrypt('password'),
+            'current_team_id' => $this->admin->currentTeam->id,
+        ]);
+        $staff->assignRole($adminRole);
+
+        $this->actingAs($this->admin)
+            ->postJson(route('back.settings.roles.users.move'), [
+                'user_id' => $staff->id,
+                'from_role_id' => $adminRole->id,
+                'to_role_id' => $adminRole->id,
+            ])
+            ->assertStatus(422);
+    }
 }

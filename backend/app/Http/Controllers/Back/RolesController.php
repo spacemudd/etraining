@@ -144,6 +144,90 @@ class RolesController extends Controller
     }
 
     /**
+     * Move a user so they belong only to the given role.
+     */
+    public function moveUser(Request $request)
+    {
+        $this->authorize('view-permissions');
+
+        $validated = $request->validate([
+            'user_id' => 'required|string|exists:users,id',
+            'to_role_id' => 'required|string|exists:roles,id',
+            'from_role_id' => 'nullable|string|exists:roles,id',
+        ]);
+
+        abort_if($validated['user_id'] === auth()->id(), 403);
+
+        $user = User::query()->findOrFail($validated['user_id']);
+        $toRole = Role::query()->findOrFail($validated['to_role_id']);
+        $fromRole = ! empty($validated['from_role_id'])
+            ? Role::query()->findOrFail($validated['from_role_id'])
+            : null;
+
+        if ($fromRole && $fromRole->id === $toRole->id) {
+            return response()->json([
+                'message' => __('words.user-move-same-role'),
+            ], 422);
+        }
+
+        if ($fromRole && ! $user->roles()->where('roles.id', $fromRole->id)->exists()) {
+            return response()->json([
+                'message' => __('words.user-not-in-role'),
+            ], 422);
+        }
+
+        $alreadyOnlyTarget = $user->roles()->where('roles.id', $toRole->id)->exists()
+            && $user->roles()->count() === 1;
+
+        if ($alreadyOnlyTarget) {
+            return response()->json([
+                'message' => __('words.user-move-same-role'),
+            ], 422);
+        }
+
+        $previousRoles = $user->roles()->get();
+
+        DB::transaction(static function () use ($user, $toRole): void {
+            $user->syncRoles([$toRole]);
+        });
+
+        $user->unsetRelation('roles');
+
+        $affectedRoles = $previousRoles
+            ->push($toRole)
+            ->unique('id')
+            ->values();
+
+        $roleCounts = $affectedRoles->mapWithKeys(static function (Role $role) {
+            return [$role->id => (int) $role->users()->count()];
+        });
+
+        return response()->json([
+            'message' => __('words.user-moved'),
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+            ],
+            'from_role_id' => $fromRole ? $fromRole->id : null,
+            'to_role_id' => $toRole->id,
+            'from_users_count' => $fromRole ? (int) ($roleCounts[$fromRole->id] ?? $fromRole->users()->count()) : null,
+            'to_users_count' => (int) ($roleCounts[$toRole->id] ?? $toRole->users()->count()),
+            'role_counts' => $roleCounts->all(),
+            'roles' => $user->roles()
+                ->get()
+                ->map(static function (Role $role) {
+                    return [
+                        'id' => $role->id,
+                        'name' => $role->name,
+                        'display_name' => $role->display_name,
+                    ];
+                })
+                ->values(),
+        ]);
+    }
+
+    /**
      * Show role.
      *
      * @param $id
