@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use App\Actions\Fortify\CreateNewUser;
 use App\Models\Role;
+use App\Models\User;
+use App\Models\Verification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -91,5 +93,33 @@ class CreateRolesTest extends TestCase
             ->assertSuccessful()
             ->assertJsonPath('user', null)
             ->assertJsonPath('roles', []);
+    }
+
+    public function test_admin_can_delete_user_who_has_verification_codes()
+    {
+        $adminRole = Role::whereName($this->admin->currentTeam->id.'_admins')->first();
+
+        $staff = User::create([
+            'name' => 'Staff Member',
+            'email' => 'staff@example.com',
+            'password' => bcrypt('password'),
+            'current_team_id' => $this->admin->currentTeam->id,
+        ]);
+        $staff->assignRole($adminRole);
+
+        Verification::create([
+            'user_id' => $staff->id,
+            'code' => '1234',
+        ]);
+
+        $this->actingAs($this->admin)
+            ->delete(route('back.settings.roles.users.delete', [
+                'role_id' => $adminRole->id,
+                'user_id' => $staff->id,
+            ]))
+            ->assertRedirect(route('back.settings.roles.index', ['role' => $adminRole->id]));
+
+        $this->assertDatabaseMissing('users', ['id' => $staff->id]);
+        $this->assertDatabaseMissing('verifications', ['user_id' => $staff->id]);
     }
 }

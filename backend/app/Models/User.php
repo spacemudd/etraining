@@ -150,6 +150,20 @@ class User extends Authenticatable implements Auditable
         return $this->hasMany(PushSubscription::class);
     }
 
+    public function verifications(): HasMany
+    {
+        return $this->hasMany(Verification::class);
+    }
+
+    protected static function booted(): void
+    {
+        static::deleting(static function (User $user): void {
+            $user->verifications()->delete();
+            $user->roles()->detach();
+            CompanyAllowedUser::query()->where('user_id', $user->id)->delete();
+        });
+    }
+
     public function scopeFindByEmail($query, $email)
     {
         return $query->where('email', $email);

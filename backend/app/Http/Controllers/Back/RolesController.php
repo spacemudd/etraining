@@ -200,7 +200,13 @@ class RolesController extends Controller
      */
     public function deleteUser($role_id, $user_id)
     {
-        User::findOrFail($user_id)->delete();
+        $this->authorize('view-permissions');
+
+        $user = User::findOrFail($user_id);
+
+        DB::transaction(static function () use ($user): void {
+            $user->delete();
+        });
 
         return redirect()->route('back.settings.roles.index', ['role' => $role_id]);
     }
