@@ -101,7 +101,7 @@ class Instructor extends Model implements HasMedia, SearchableLabels, Auditable
      */
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     public function inbox_message_from()

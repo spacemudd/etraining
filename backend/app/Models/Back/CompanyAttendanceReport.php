@@ -91,7 +91,7 @@ class CompanyAttendanceReport extends Model implements Auditable
 
     public function approved_by()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     public function getPeriodAttribute()
@@ -253,7 +253,7 @@ class CompanyAttendanceReport extends Model implements Auditable
 
     public function created_by()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     public function emails()

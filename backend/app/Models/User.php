@@ -7,6 +7,7 @@ use App\Models\Back\Trainee;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Cache;
@@ -33,6 +34,7 @@ class User extends Authenticatable implements Auditable
     use HasUuid;
     use HasRoles;
     use Impersonate;
+    use SoftDeletes;
     use \OwenIt\Auditing\Auditable;
 
     public $incrementing = false;
@@ -159,8 +161,11 @@ class User extends Authenticatable implements Auditable
     {
         static::deleting(static function (User $user): void {
             $user->verifications()->delete();
-            $user->roles()->detach();
-            CompanyAllowedUser::query()->where('user_id', $user->id)->delete();
+
+            if ($user->isForceDeleting()) {
+                $user->roles()->detach();
+                CompanyAllowedUser::query()->where('user_id', $user->id)->delete();
+            }
         });
     }
 

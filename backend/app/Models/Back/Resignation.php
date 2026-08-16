@@ -81,7 +81,7 @@ class Resignation extends Model implements Auditable, HasMedia
 
     public function created_by()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     /**

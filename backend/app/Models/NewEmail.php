@@ -53,7 +53,7 @@ class NewEmail extends Model
 
     public function created_by(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'created_by_id');
+        return $this->belongsTo(User::class, 'created_by_id')->withTrashed();
     }
 
     public function getNumberFormattedAttribute(): string

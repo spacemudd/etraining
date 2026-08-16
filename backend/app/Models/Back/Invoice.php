@@ -128,17 +128,17 @@ class Invoice extends Model implements \OwenIt\Auditing\Contracts\Auditable
 
     public function created_by(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'created_by_id');
+        return $this->belongsTo(User::class, 'created_by_id')->withTrashed();
     }
 
     public function verified_by()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     public function chased_by()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     public function trainee_bank_payment_receipt()

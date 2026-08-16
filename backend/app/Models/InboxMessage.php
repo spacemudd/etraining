@@ -62,12 +62,12 @@ class InboxMessage extends Model implements Auditable
 
     public function from()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     public function to()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     public function scopeUnread($q)

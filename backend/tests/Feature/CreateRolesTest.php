@@ -119,7 +119,9 @@ class CreateRolesTest extends TestCase
             ]))
             ->assertRedirect(route('back.settings.roles.index', ['role' => $adminRole->id]));
 
-        $this->assertDatabaseMissing('users', ['id' => $staff->id]);
+        $this->assertSoftDeleted('users', ['id' => $staff->id]);
+        $this->assertSame('Staff Member', User::withTrashed()->find($staff->id)->name);
+        $this->assertNull(User::find($staff->id));
         $this->assertDatabaseMissing('verifications', ['user_id' => $staff->id]);
     }
 }

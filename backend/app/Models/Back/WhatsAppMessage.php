@@ -62,6 +62,6 @@ class WhatsAppMessage extends Model implements HasMedia
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\User::class);
+        return $this->belongsTo(\App\Models\User::class)->withTrashed();
     }
 }

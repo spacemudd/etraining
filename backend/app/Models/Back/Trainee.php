@@ -297,12 +297,12 @@ class Trainee extends Model implements HasMedia, SearchableLabels, Auditable
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     public function deleted_by()
     {
-        return $this->belongsTo(User::class, 'deleted_by_id');
+        return $this->belongsTo(User::class, 'deleted_by_id')->withTrashed();
     }
 
     public function team()

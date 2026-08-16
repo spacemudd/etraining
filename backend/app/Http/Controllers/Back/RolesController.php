@@ -202,6 +202,8 @@ class RolesController extends Controller
     {
         $this->authorize('view-permissions');
 
+        abort_if($user_id === auth()->id(), 403);
+
         $user = User::findOrFail($user_id);
 
         DB::transaction(static function () use ($user): void {
