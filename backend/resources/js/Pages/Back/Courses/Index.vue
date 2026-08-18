@@ -23,6 +23,13 @@
                         <span>{{ $t('words.new') }}</span>
                     </inertia-link>
 
+                    <a
+                        class="btn-gray ml-2"
+                        :href="route('back.courses.excel.download')"
+                    >
+                        <span>{{ $t('words.excel') }}</span>
+                    </a>
+
                     <inertia-link class="btn-gray ml-2" :href="route('back.uk-certificates.index')">
                         <span>{{ $t('words.send-certificates-by-id') }}</span>
                     </inertia-link>

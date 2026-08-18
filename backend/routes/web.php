@@ -1080,6 +1080,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::post('courses/{course_id}/training-package', [\App\Http\Controllers\Back\CoursesController::class, 'storeTrainingPackage'])->name('courses.training-package');
         Route::delete('courses/{course_id}/training-package', [\App\Http\Controllers\Back\CoursesController::class, 'deleteTrainingPackage'])->name('courses.training-package.destroy');
         Route::get('courses/today', [\App\Http\Controllers\Back\CoursesController::class, 'indexToday'])->name('courses.today');
+        Route::get('courses/excel/download', [\App\Http\Controllers\Back\CoursesController::class, 'excelDownload'])->name('courses.excel.download');
         Route::resource('courses', \App\Http\Controllers\Back\CoursesController::class);
 
         Route::prefix('reports')->group(function() {

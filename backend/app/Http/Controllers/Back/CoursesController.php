@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
+use App\Exports\CoursesExport;
 use App\Models\Back\Course;
 use App\Models\Back\Instructor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Excel;
 
 class CoursesController extends Controller
 {
@@ -33,6 +35,17 @@ class CoursesController extends Controller
             'courses' => $course,
         ]);
 
+    }
+
+    /**
+     * Download courses data as XLSX.
+     */
+    public function excelDownload()
+    {
+        return Excel::download(
+            CoursesExport::fromQuery(),
+            'courses.xlsx'
+        );
     }
 
     /**
