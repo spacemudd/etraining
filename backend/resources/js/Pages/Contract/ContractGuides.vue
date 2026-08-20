@@ -107,8 +107,6 @@
             <div class="my-3">   
                 <button @click="redirectToHome"  class="btn-custom">العودة الى الصفحة الرئيسية</button>
             </div>
-
-        <p class="footer-text mt-3">إذا واجهك أي مشكلة، يرجى التواصل معنا على الرقم المسؤول عن هذا العقد: <strong>3268 133 055</strong></p>
     </div>
   </div>
 
@@ -275,10 +273,5 @@ h1 {
 .btn-custom:hover {
   background-color: #d4af37;
   color: black;
-}
-
-.footer-text {
-  color: #555;
-  font-size: 14px;
 }
 </style>
