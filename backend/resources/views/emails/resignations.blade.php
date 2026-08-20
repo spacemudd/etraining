@@ -2,23 +2,22 @@
 
 {{-- السادة الكرام / {{ $resignation->company->name_ar }} --}}
 
-@if ($resignation->trainees()->count() > 1)
-بالإشارة إلى عقد التدريب نفيدكم بأنه تم تقديم طلب إيقاف البرنامج الخاص بالمتدربات أدناه:
+@php
+    $traineeNames = $resignation->trainees->pluck('name')->filter()->implode('، ');
+    $traineesCount = $resignation->trainees->count();
+@endphp
 
-@foreach ($resignation->trainees as $trainee)
-- {{ $trainee->name }}
-@endforeach
+@if ($traineesCount > 1)
+نفيدكم بأنه تم تقديم طلب إيقاف البرنامج الخاص بالسيدات/ **{{ $traineeNames }}**
 
 وذلك بناءً على رغبتهن وطلبهن.
-
-مرفق لسيادتكم المستندات الخاصة بذلك.
 @else
-نفيدكم بأنه تم تقديم طلب إيقاف البرنامج الخاص بالسيدة/ **{{ $resignation->trainees()->first()->name }}**
+نفيدكم بأنه تم تقديم طلب إيقاف البرنامج الخاص بالسيدة/ **{{ $traineeNames }}**
 
 وذلك بناءً على رغبتها وطلبها.
+@endif
 
 مرفق لسيادتكم المستندات الخاصة بذلك.
-@endif
 
 {{-- زر التأكيد اختياري إذا أردت إضافته --}}
 {{-- 
