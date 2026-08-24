@@ -3,16 +3,20 @@
 {{-- السادة الكرام / {{ $resignation->company->name_ar }} --}}
 
 @php
-    $traineeNames = $resignation->trainees->pluck('name')->filter()->implode('، ');
-    $traineesCount = $resignation->trainees->count();
+    $trainees = $resignation->trainees->filter(fn ($trainee) => filled($trainee->name));
+    $traineesCount = $trainees->count();
 @endphp
 
 @if ($traineesCount > 1)
-نفيدكم بأنه تم تقديم طلب إيقاف البرنامج الخاص بالسيدات/ **{{ $traineeNames }}**
+نفيدكم بأنه تم تقديم طلب إيقاف البرنامج الخاص بالسيدات/
+
+@foreach ($trainees as $trainee)
+<div style="margin: 6px 0;"><strong>{{ $trainee->name }}</strong></div>
+@endforeach
 
 وذلك بناءً على رغبتهن وطلبهن.
 @else
-نفيدكم بأنه تم تقديم طلب إيقاف البرنامج الخاص بالسيدة/ **{{ $traineeNames }}**
+نفيدكم بأنه تم تقديم طلب إيقاف البرنامج الخاص بالسيدة/ **{{ $trainees->first()->name }}**
 
 وذلك بناءً على رغبتها وطلبها.
 @endif
