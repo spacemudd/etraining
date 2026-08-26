@@ -25,7 +25,7 @@
 
                     <a
                         class="btn-gray ml-2"
-                        :href="route('back.courses.excel.download')"
+                        href="/back/courses/excel/download"
                     >
                         <span>{{ $t('words.excel') }}</span>
                     </a>
