@@ -129,6 +129,20 @@ import JetLabel from '@/Jetstream/Label'
 import JetButton from '@/Jetstream/Button'
 import BreadcrumbContainer from '@/Components/BreadcrumbContainer'
 
+let dialerPopup = null;
+
+function liveDialerPopup() {
+    try {
+        if (dialerPopup && !dialerPopup.closed) {
+            return dialerPopup;
+        }
+    } catch (error) {
+        // ignore
+    }
+
+    return null;
+}
+
 export default {
     props: {
         configured: {
@@ -157,17 +171,20 @@ export default {
             dialing: false,
             errorMessage: '',
             successMessage: '',
-            dialerWindow: null,
         }
     },
 
     methods: {
         isPopupAlreadyOnMaqsam(popup) {
-            if (!popup || popup.closed) {
+            if (!popup) {
                 return false;
             }
 
             try {
+                if (popup.closed) {
+                    return false;
+                }
+
                 const href = popup.location.href || '';
 
                 return href !== '' && href !== 'about:blank';
@@ -176,17 +193,20 @@ export default {
             }
         },
         async connectDialer() {
-            const existing = this.dialerWindow && !this.dialerWindow.closed
-                ? this.dialerWindow
-                : window.open('', 'maqsam-dialer', 'toolbar=no,menubar=no,width=420,height=720');
+            const existing = liveDialerPopup() || window.open('', 'maqsam-dialer', 'toolbar=no,menubar=no,width=420,height=720');
 
             if (!existing) {
                 this.errorMessage = this.$t('words.caller-popup-blocked');
                 return false;
             }
 
-            this.dialerWindow = existing;
-            existing.focus();
+            dialerPopup = existing;
+
+            try {
+                existing.focus();
+            } catch (error) {
+                // ignore
+            }
 
             if (this.isPopupAlreadyOnMaqsam(existing)) {
                 this.errorMessage = '';
@@ -202,12 +222,18 @@ export default {
                     email: this.agentEmail,
                 });
 
-                if (existing.closed) {
+                try {
+                    if (existing.closed) {
+                        this.errorMessage = this.$t('words.caller-popup-blocked');
+                        return false;
+                    }
+
+                    existing.location.href = response.data.url;
+                } catch (error) {
                     this.errorMessage = this.$t('words.caller-popup-blocked');
                     return false;
                 }
 
-                existing.location.href = response.data.url;
                 return true;
             } catch (error) {
                 this.errorMessage = error.response?.data?.message || this.$t('words.caller-maqsam-login-failed');

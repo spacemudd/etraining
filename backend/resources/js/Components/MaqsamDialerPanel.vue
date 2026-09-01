@@ -89,6 +89,20 @@
 const DIALER_WINDOW_NAME = 'maqsam-dialer';
 const DIALER_WINDOW_FEATURES = 'toolbar=no,menubar=no,width=420,height=720';
 
+let dialerPopup = null;
+
+function liveDialerPopup() {
+    try {
+        if (dialerPopup && !dialerPopup.closed) {
+            return dialerPopup;
+        }
+    } catch (error) {
+        // ignore cross-origin access on closed checks
+    }
+
+    return null;
+}
+
 export default {
     name: 'MaqsamDialerPanel',
     props: {
@@ -112,7 +126,6 @@ export default {
             connected: false,
             errorMessage: '',
             successMessage: '',
-            dialerWindow: null,
             viewportWidth: typeof window !== 'undefined' ? window.innerWidth : 1024,
         };
     },
@@ -121,7 +134,7 @@ export default {
             return this.viewportWidth < 768;
         },
         isDialerWindowOpen() {
-            return !!(this.dialerWindow && !this.dialerWindow.closed);
+            return this.connected;
         },
         statusLabel() {
             if (!this.configured) {
@@ -130,7 +143,7 @@ export default {
             if (this.connecting) {
                 return this.$t('words.caller-connecting');
             }
-            if (this.isDialerWindowOpen) {
+            if (this.connected) {
                 return this.$t('words.caller-dialer-connected');
             }
             return this.$t('words.caller-dialer-offline');
@@ -138,6 +151,7 @@ export default {
     },
     mounted() {
         window.addEventListener('resize', this.updateViewportWidth);
+        this.connected = !!liveDialerPopup();
     },
     beforeDestroy() {
         window.removeEventListener('resize', this.updateViewportWidth);
@@ -146,19 +160,16 @@ export default {
         updateViewportWidth() {
             this.viewportWidth = window.innerWidth;
         },
-        hasLiveDialerWindow() {
-            if (this.dialerWindow && !this.dialerWindow.closed) {
-                return true;
-            }
-
-            return false;
-        },
         isPopupAlreadyOnMaqsam(popup) {
-            if (!popup || popup.closed) {
+            if (!popup) {
                 return false;
             }
 
             try {
+                if (popup.closed) {
+                    return false;
+                }
+
                 const href = popup.location.href || '';
 
                 return href !== '' && href !== 'about:blank';
@@ -176,12 +187,10 @@ export default {
                     await new Promise((resolve) => setTimeout(resolve, 100));
                 }
 
-                return this.hasLiveDialerWindow();
+                return !!liveDialerPopup();
             }
 
-            const existing = this.dialerWindow && !this.dialerWindow.closed
-                ? this.dialerWindow
-                : window.open('', DIALER_WINDOW_NAME, DIALER_WINDOW_FEATURES);
+            const existing = liveDialerPopup() || window.open('', DIALER_WINDOW_NAME, DIALER_WINDOW_FEATURES);
 
             if (!existing) {
                 this.errorMessage = this.$t('words.caller-popup-blocked');
@@ -189,8 +198,13 @@ export default {
                 return false;
             }
 
-            this.dialerWindow = existing;
-            existing.focus();
+            dialerPopup = existing;
+
+            try {
+                existing.focus();
+            } catch (error) {
+                // ignore
+            }
 
             if (this.isPopupAlreadyOnMaqsam(existing)) {
                 this.connected = true;
@@ -208,12 +222,19 @@ export default {
                     email: this.agentEmail,
                 });
 
-                if (existing.closed) {
+                try {
+                    if (existing.closed) {
+                        this.errorMessage = this.$t('words.caller-popup-blocked');
+                        return false;
+                    }
+
+                    existing.location.href = response.data.url;
+                } catch (error) {
                     this.errorMessage = this.$t('words.caller-popup-blocked');
+                    this.connected = false;
                     return false;
                 }
 
-                existing.location.href = response.data.url;
                 this.connected = true;
                 return true;
             } catch (error) {
