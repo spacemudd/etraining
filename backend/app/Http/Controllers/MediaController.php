@@ -9,13 +9,14 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Throwable;
 
 class MediaController extends Controller
 {
     /**
      * @param  mixed  $media_id
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse|\Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse|\Illuminate\Http\Response|\Symfony\Component\HttpFoundation\StreamedResponse
      */
     public function download(Request $request, $media_id)
     {
@@ -41,18 +42,8 @@ class MediaController extends Controller
 
         $contentType = $media->mime_type ?: 'application/octet-stream';
 
-        // Same-origin stream for in-app PWA preview (avoids leaving the app via S3 redirect).
-        if ($request->boolean('stream')) {
+        if ($media->disk === 's3' || $request->boolean('stream')) {
             return $this->streamMedia($media, $filename, $contentType);
-        }
-
-        if ($media->disk === 's3') {
-            $file_url = $media->getTemporaryUrl(now()->addMinutes(5), '', [
-                'ResponseContentType' => $contentType,
-                'ResponseContentDisposition' => 'inline; filename="'.$filename.'"',
-            ]);
-
-            return redirect()->to($file_url);
         }
 
         return response()->file($media->getPath(), [
@@ -62,31 +53,36 @@ class MediaController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\StreamedResponse
+     * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\StreamedResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     private function streamMedia(Media $media, string $filename, string $contentType)
     {
         $headers = [
             'Content-Type' => $contentType,
             'Content-Disposition' => 'inline; filename="'.$filename.'"',
-            'Cache-Control' => 'private, max-age=60',
+            'Cache-Control' => 'private, max-age=300',
             'X-Content-Type-Options' => 'nosniff',
         ];
+
+        if ($media->size) {
+            $headers['Content-Length'] = (string) $media->size;
+        }
 
         if ($media->disk !== 's3') {
             return response()->file($media->getPath(), $headers);
         }
 
-        try {
-            $path = method_exists($media, 'getPathRelativeToRoot')
-                ? $media->getPathRelativeToRoot()
-                : $media->getPath();
+        $path = method_exists($media, 'getPathRelativeToRoot')
+            ? $media->getPathRelativeToRoot()
+            : $media->getPath();
 
+        try {
             $disk = Storage::disk($media->disk);
             if ($path && $disk->exists($path)) {
-                $contents = $disk->get($path);
-
-                return response($contents, 200, $headers);
+                $stream = $disk->readStream($path);
+                if (is_resource($stream)) {
+                    return $this->streamResource($stream, $headers);
+                }
             }
         } catch (Throwable $exception) {
             Log::warning('Media stream via disk failed; falling back to temporary URL', [
@@ -118,5 +114,21 @@ class MediaController extends Controller
         }
 
         abort(404);
+    }
+
+    /**
+     * @param  resource  $stream
+     */
+    private function streamResource($stream, array $headers): StreamedResponse
+    {
+        return response()->stream(static function () use ($stream): void {
+            try {
+                fpassthru($stream);
+            } finally {
+                if (is_resource($stream)) {
+                    fclose($stream);
+                }
+            }
+        }, 200, $headers);
     }
 }
