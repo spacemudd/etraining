@@ -27,7 +27,7 @@ class WhatsAppMessageReceived implements ShouldBroadcastNow
         $metadata = is_array($message->metadata) ? $message->metadata : [];
         $isBot = ! empty($metadata['is_bot']);
 
-        $this->message = [
+        $this->message = $message->withPersistedMedia([
             'id' => $message->id,
             'sid' => $message->twilio_sid ?: $message->id,
             'phone' => $message->phone,
@@ -51,7 +51,7 @@ class WhatsAppMessageReceived implements ShouldBroadcastNow
                     'is_bot' => true,
                 ]
                 : null,
-        ];
+        ]);
     }
 
     public function broadcastOn(): Channel

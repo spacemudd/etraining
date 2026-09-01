@@ -169,6 +169,7 @@ class TwilioWhatsAppService
     {
         $normalizedPhone = $this->normalizePhoneDigits($phone);
         $query = WhatsAppMessage::query()
+            ->with('media')
             ->where('phone', $normalizedPhone)
             ->orderBy('sent_at')
             ->orderBy('created_at');
@@ -386,7 +387,7 @@ class TwilioWhatsAppService
      */
     private function formatStoredMessage(WhatsAppMessage $message): array
     {
-        return [
+        return $message->withPersistedMedia([
             'id' => $message->id,
             'sid' => $message->twilio_sid ?: $message->id,
             'phone' => $message->phone,
@@ -398,8 +399,8 @@ class TwilioWhatsAppService
             'to' => $message->to_address,
             'date_sent' => optional($message->sent_at)->toIso8601String(),
             'error_message' => $message->metadata['error_message'] ?? null,
-            'metadata' => $message->metadata,
-        ];
+            'metadata' => is_array($message->metadata) ? $message->metadata : [],
+        ]);
     }
 
     public function toE164(string $phone): string

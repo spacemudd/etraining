@@ -581,6 +581,7 @@ class TelnyxWhatsAppService
         $suffix = substr($phoneDigits, -9);
 
         $query = WhatsAppMessage::query()
+            ->with('media')
             ->where(function ($builder) use ($normalizedPhone, $phoneDigits, $suffix) {
                 $builder->where('phone', $normalizedPhone);
 
@@ -1109,7 +1110,7 @@ class TelnyxWhatsAppService
         $metadata = is_array($message->metadata) ? $message->metadata : [];
         $isBot = ! empty($metadata['is_bot']);
 
-        return [
+        return $message->withPersistedMedia([
             'id' => $message->id,
             'sid' => $message->twilio_sid ?: $message->id,
             'phone' => $message->phone,
@@ -1123,6 +1124,6 @@ class TelnyxWhatsAppService
             'date_sent' => optional($message->sent_at)->toIso8601String(),
             'error_message' => $metadata['error_message'] ?? null,
             'metadata' => $metadata,
-        ];
+        ]);
     }
 }

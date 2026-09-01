@@ -4301,8 +4301,8 @@ export default {
                     id: media.id,
                     url: media.url,
                     name: media.name,
-                    content_type: this.guessMediaType(media.name || media.url),
-                    kind: this.guessAttachmentKind(media.name || media.url, null),
+                    content_type: media.content_type || this.guessMediaType(media.name || media.url),
+                    kind: this.guessAttachmentKind(media.name || media.url, media.content_type),
                 }));
             }
 

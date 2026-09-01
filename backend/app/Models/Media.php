@@ -37,8 +37,18 @@ class Media extends \Spatie\MediaLibrary\MediaCollections\Models\Media
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = (string) Str::uuid();
             if (auth()->user()) {
-                $model->team_id = auth()->user()->currentTeam()->first()->id;
-                $model->user_id = auth()->user()->id;
+                if (empty($model->team_id)) {
+                    $team = auth()->user()->currentTeam()->first();
+                    if ($team) {
+                        $model->team_id = $team->id;
+                    }
+                }
+                if (empty($model->user_id)) {
+                    $model->user_id = auth()->user()->id;
+                }
+            }
+            if (empty($model->team_id)) {
+                $model->team_id = \Illuminate\Support\Facades\DB::table('teams')->value('id');
             }
         });
     }

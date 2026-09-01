@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Support;
 
 use App\Events\WhatsAppMessageReceived;
+use App\Jobs\PersistWhatsAppInboundMedia;
 use App\Jobs\ProcessWhatsAppBotReply;
 use App\Jobs\SendWhatsAppChatPushNotification;
 use App\Models\Back\WhatsAppMessage;
@@ -29,6 +30,10 @@ final class WhatsAppBroadcast
             }
 
             SendWhatsAppChatPushNotification::dispatch($message->id)->afterResponse();
+
+            if ($message->inboundMediaItems() !== []) {
+                PersistWhatsAppInboundMedia::dispatch($message->id)->afterResponse();
+            }
         }
 
         $driver = (string) config('broadcasting.default');

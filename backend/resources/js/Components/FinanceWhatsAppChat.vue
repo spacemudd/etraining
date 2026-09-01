@@ -284,10 +284,10 @@
                                                 class="whitespace-pre-wrap break-words"
                                                 dir="auto"
                                             >{{ message.body }}</p>
-                                            <div v-if="message.metadata && message.metadata.media && message.metadata.media.length" class="mt-2 space-y-2">
+                                            <div v-if="messageAttachments(message).length" class="mt-2 space-y-2">
                                                 <div
-                                                    v-for="(media, mediaIndex) in message.metadata.media"
-                                                    :key="'media-' + mediaIndex"
+                                                    v-for="(media, mediaIndex) in messageAttachments(message)"
+                                                    :key="'media-' + (media.id || mediaIndex)"
                                                 >
                                                     <a
                                                         v-if="media.kind === 'sticker' && media.url"
@@ -1704,6 +1704,15 @@ export default {
         },
         isOutboundMessage(message) {
             return ['outbound-api', 'outbound-reply', 'outbound'].includes(message.direction);
+        },
+        messageAttachments(message) {
+            if (!message) {
+                return [];
+            }
+            if (message.saved_media && message.saved_media.length) {
+                return message.saved_media;
+            }
+            return (message.metadata && message.metadata.media) || [];
         },
         playNewMessageSound() {
             try {
