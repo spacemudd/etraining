@@ -631,6 +631,10 @@ Route::get('/back/media/{media_id}', [\App\Http\Controllers\MediaController::cla
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
+    Route::get('/caller', [\App\Http\Controllers\CallerController::class, 'index'])->name('caller.index');
+    Route::post('/caller/connect', [\App\Http\Controllers\CallerController::class, 'connect'])->name('caller.connect');
+    Route::post('/caller/dial', [\App\Http\Controllers\CallerController::class, 'dial'])->name('caller.dial');
+
     Route::get('/lookup/masdr/request-counter', function () {
         $requestCounter = optional(RequestCounter::where('month', now()->format('Y-m')))->first();
         return response()->json(['requestCounter' => $requestCounter]);
@@ -722,6 +726,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
         Route::put('/settings/payment/update', [\App\Http\Controllers\Back\PaymentController::class, 'update'])->name('settings.payment.update');
         Route::get('/settings/payment', [\App\Http\Controllers\Back\PaymentController::class, 'index'])->name('settings.payment.index');
+
+        Route::get('/settings/maqsam-system', [\App\Http\Controllers\Back\MaqsamSystemSettingsController::class, 'index'])->name('settings.maqsam-system.index');
+        Route::put('/settings/maqsam-system', [\App\Http\Controllers\Back\MaqsamSystemSettingsController::class, 'update'])->name('settings.maqsam-system.update');
 
         Route::get('/settings/survey-links', [\App\Http\Controllers\Back\SurveyLinksController::class, 'index'])->name('settings.survey-links.index');
         Route::post('/settings/survey-links/store', [\App\Http\Controllers\Back\SurveyLinksController::class, 'store'])->name('settings.survey-links.store');

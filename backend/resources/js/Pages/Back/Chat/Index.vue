@@ -40,6 +40,17 @@
                     >
                         {{ $t('words.go-back-to-dashboard') }}
                     </inertia-link>
+                    <button
+                        v-if="maqsamConfigured"
+                        type="button"
+                        @click="toggleMaqsamDialer"
+                        class="text-xs leading-tight border px-2 py-1 rounded-md font-medium transition whitespace-nowrap"
+                        :class="showMaqsamDialer
+                            ? 'text-green-800 border-green-300 bg-green-50 hover:bg-green-100'
+                            : 'text-gray-700 border-gray-300 bg-white hover:bg-gray-50'"
+                    >
+                        {{ $t('words.caller-dialer') }}
+                    </button>
                     <whats-app-templates-manager
                         v-if="configured"
                         :can-manage="canManageTemplates"
@@ -341,7 +352,7 @@
                                         class="text-xs text-gray-500 mt-0.5 truncate text-right"
                                         dir="rtl"
                                     >
-                                        {{ selectedConversation.phone }}
+                                        <span dir="ltr">{{ selectedConversation.phone }}</span>
                                     </div>
                                     <div
                                         v-if="messagingWindowLabel"
@@ -437,6 +448,16 @@
                                     >
                                         {{ $t('words.profile') }}
                                     </a>
+                                    <button
+                                        v-if="maqsamConfigured && selectedConversation.phone"
+                                        type="button"
+                                        class="text-xs bg-white border border-green-200 hover:bg-green-50 px-2.5 py-1.5 rounded-md font-medium text-green-700 transition inline-flex items-center gap-1 disabled:opacity-50"
+                                        :disabled="maqsamDialing"
+                                        @click="callSelectedConversation"
+                                    >
+                                        <ion-icon name="call-outline" class="w-3.5 h-3.5"></ion-icon>
+                                        {{ maqsamDialing ? $t('words.caller-connecting') : $t('words.caller-call') }}
+                                    </button>
                             </div>
 
                             <!-- Row 3: secondary — bot + tags -->
@@ -1633,6 +1654,13 @@
                 </div>
             </modal>
         </portal>
+        <maqsam-dialer-panel
+            ref="maqsamDialer"
+            :open="showMaqsamDialer"
+            :configured="maqsamConfigured"
+            :agent-email="maqsamAgentEmail"
+            @close="showMaqsamDialer = false"
+        />
     </chat-layout>
 </template>
 
@@ -1640,6 +1668,7 @@
 import ChatLayout from '@/Layouts/ChatLayout';
 import WhatsAppTemplatesManager from '@/Components/WhatsAppTemplatesManager';
 import FinanceWhatsAppCsvWizard from '@/Components/FinanceWhatsAppCsvWizard';
+import MaqsamDialerPanel from '@/Components/MaqsamDialerPanel';
 import axios from 'axios';
 import throttle from 'lodash/throttle';
 import moment from 'moment';
@@ -1667,6 +1696,7 @@ export default {
         ChatLayout,
         WhatsAppTemplatesManager,
         FinanceWhatsAppCsvWizard,
+        MaqsamDialerPanel,
     },
     props: {
         configured: {
@@ -1676,6 +1706,14 @@ export default {
         canManageTemplates: {
             type: Boolean,
             default: false,
+        },
+        maqsamConfigured: {
+            type: Boolean,
+            default: false,
+        },
+        maqsamAgentEmail: {
+            type: String,
+            default: '',
         },
     },
         data() {
@@ -1816,6 +1854,8 @@ export default {
             copiedInvoiceId: null,
             copyLinkTimer: null,
             viewportWidth: typeof window !== 'undefined' ? window.innerWidth : 1024,
+            showMaqsamDialer: false,
+            maqsamDialing: false,
         };
     },
     computed: {
@@ -2266,6 +2306,27 @@ export default {
         }
     },
     methods: {
+        toggleMaqsamDialer() {
+            this.showMaqsamDialer = !this.showMaqsamDialer;
+        },
+        async callSelectedConversation() {
+            const phone = this.selectedConversation && this.selectedConversation.phone;
+            if (!phone || this.maqsamDialing) {
+                return;
+            }
+
+            this.showMaqsamDialer = true;
+            this.maqsamDialing = true;
+            try {
+                await this.$nextTick();
+                const dialer = this.$refs.maqsamDialer;
+                if (dialer && typeof dialer.dial === 'function') {
+                    await dialer.dial(phone);
+                }
+            } finally {
+                this.maqsamDialing = false;
+            }
+        },
         formatCountdown(totalSeconds) {
             const seconds = Math.max(0, Math.floor(Number(totalSeconds) || 0));
             const hours = Math.floor(seconds / 3600);

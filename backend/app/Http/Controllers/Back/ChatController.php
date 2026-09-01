@@ -16,6 +16,7 @@ use App\Models\Back\WhatsAppQuickReply;
 use App\Models\Back\WhatsAppTag;
 use App\Models\GosiEmployeeData;
 use App\Models\User;
+use App\Services\MaqsamService;
 use App\Services\TelnyxWhatsAppService;
 use App\Support\WhatsAppBroadcast;
 use App\Support\WhatsAppAiSettings;
@@ -38,8 +39,10 @@ class ChatController extends Controller
 
     private const MESSAGES_PER_PAGE = 50;
 
-    public function __construct(private readonly TelnyxWhatsAppService $whatsAppService)
-    {
+    public function __construct(
+        private readonly TelnyxWhatsAppService $whatsAppService,
+        private readonly MaqsamService $maqsamService,
+    ) {
         $this->middleware('can:access-whatsapp-chats');
     }
 
@@ -48,6 +51,8 @@ class ChatController extends Controller
         return Inertia::render('Back/Chat/Index', [
             'configured' => $this->whatsAppService->isConfigured(),
             'canManageTemplates' => $this->whatsAppService->canManageTemplates(),
+            'maqsamConfigured' => $this->maqsamService->isConfigured(),
+            'maqsamAgentEmail' => auth()->user()->email,
         ]);
     }
 
