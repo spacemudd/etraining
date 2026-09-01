@@ -26,7 +26,6 @@ use App\Support\WhatsAppConversationSync;
 use App\Support\WhatsAppMessagingWindow;
 use App\Support\WhatsAppTraineeLinker;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -1106,35 +1105,13 @@ class ChatController extends Controller
                 'success' => true,
                 'message' => __('words.saved-to-s3'),
                 'media_id' => $media->id,
-                'url' => $media->getUrl(),
+                'url' => route('back.media.download', ['media_id' => $media->id]),
             ]);
         } catch (\Exception $exception) {
             return response()->json([
                 'message' => 'Failed to save media to S3: ' . $exception->getMessage(),
             ], 422);
         }
-    }
-
-    public function media(string $id, string $media): RedirectResponse
-    {
-        $message = WhatsAppMessage::query()->findOrFail($id);
-        $file = $message->getMedia('whatsapp_media')->firstWhere('id', $media);
-
-        if (! $file) {
-            abort(404);
-        }
-
-        $contentType = $file->mime_type ?: 'application/octet-stream';
-        $filename = $file->file_name ?: 'whatsapp-media';
-
-        if ($file->disk === 's3') {
-            return redirect()->to($file->getTemporaryUrl(now()->addMinutes(60), '', [
-                'ResponseContentType' => $contentType,
-                'ResponseContentDisposition' => 'inline; filename="'.$filename.'"',
-            ]));
-        }
-
-        return redirect()->to($file->getUrl());
     }
 
     public function templates(): JsonResponse

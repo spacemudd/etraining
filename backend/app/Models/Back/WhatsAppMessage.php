@@ -113,15 +113,10 @@ class WhatsAppMessage extends Model implements HasMedia
      */
     public function persistedMediaPayload(): array
     {
-        $messageId = (string) $this->id;
-
-        return $this->getMedia('whatsapp_media')->map(static function ($media) use ($messageId): array {
+        return $this->getMedia('whatsapp_media')->map(static function ($media): array {
             return [
                 'id' => (string) $media->id,
-                'url' => route('back.chat.messages.media', [
-                    'id' => $messageId,
-                    'media' => $media->id,
-                ]),
+                'url' => route('back.media.download', ['media_id' => $media->id]),
                 'name' => $media->file_name,
                 'content_type' => $media->mime_type,
             ];

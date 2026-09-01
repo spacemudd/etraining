@@ -846,7 +846,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::post('send-bulk', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'sendBulk'])->name('send-bulk');
             Route::post('send-note', [\App\Http\Controllers\Back\ChatController::class, 'sendNote'])->name('send-note');
             Route::post('messages/{id}/save-to-s3', [\App\Http\Controllers\Back\ChatController::class, 'saveToS3'])->name('messages.save-to-s3');
-            Route::get('messages/{id}/media/{media}', [\App\Http\Controllers\Back\ChatController::class, 'media'])->name('messages.media');
             Route::get('push-vapid-public-key', [\App\Http\Controllers\Back\ChatPushSubscriptionController::class, 'vapidPublicKey'])->name('push-vapid-public-key');
             Route::post('push-subscriptions', [\App\Http\Controllers\Back\ChatPushSubscriptionController::class, 'store'])->name('push-subscriptions.store');
             Route::delete('push-subscriptions', [\App\Http\Controllers\Back\ChatPushSubscriptionController::class, 'destroy'])->name('push-subscriptions.destroy');

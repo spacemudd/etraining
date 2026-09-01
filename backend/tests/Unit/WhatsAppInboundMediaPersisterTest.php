@@ -214,8 +214,7 @@ class WhatsAppInboundMediaPersisterTest extends BaseTestCase
         $this->assertCount(1, $payload);
         $this->assertSame($mediaId, $payload[0]['id']);
         $this->assertSame('photo.jpg', $payload[0]['name']);
-        $this->assertStringContainsString($messageId, $payload[0]['url']);
-        $this->assertStringContainsString($mediaId, $payload[0]['url']);
+        $this->assertStringContainsString('/back/media/'.$mediaId, $payload[0]['url']);
     }
 
     public function test_persist_skips_expired_urls_when_fail_on_item_error_is_false(): void

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Media;
+use App\Scope\TeamScope;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -18,7 +19,7 @@ class MediaController extends Controller
      */
     public function download(Request $request, $media_id)
     {
-        $media = Media::findOrFail($media_id);
+        $media = Media::withoutGlobalScope(TeamScope::class)->findOrFail($media_id);
 
         // Check if user has limited view permission (identity only)
         if (auth()->user() && auth()->user()->can('view-trainee-identity-only')) {
