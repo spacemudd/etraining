@@ -2307,7 +2307,15 @@ export default {
     },
     methods: {
         toggleMaqsamDialer() {
-            this.showMaqsamDialer = !this.showMaqsamDialer;
+            if (this.showMaqsamDialer) {
+                this.showMaqsamDialer = false;
+                return;
+            }
+
+            this.showMaqsamDialer = true;
+            if (this.$refs.maqsamDialer && typeof this.$refs.maqsamDialer.connectDialer === 'function') {
+                this.$refs.maqsamDialer.connectDialer();
+            }
         },
         async callSelectedConversation() {
             const phone = this.selectedConversation && this.selectedConversation.phone;
@@ -2318,7 +2326,6 @@ export default {
             this.showMaqsamDialer = true;
             this.maqsamDialing = true;
             try {
-                await this.$nextTick();
                 const dialer = this.$refs.maqsamDialer;
                 if (dialer && typeof dialer.dial === 'function') {
                     await dialer.dial(phone);

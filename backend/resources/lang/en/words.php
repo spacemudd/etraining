@@ -1331,4 +1331,7 @@ return [
     'caller-must-be-online' => 'Keep this dialer open. Maqsam only places API calls while the agent is online on the dialer.',
     'caller-dialer-connected' => 'Dialer connected',
     'caller-dialer-offline' => 'Dialer disconnected',
+    'caller-popup-help' => 'The dialer opens in a separate window so Maqsam can save login cookies. Keep that window open while calling. Closing this panel does not log you out.',
+    'caller-popup-blocked' => 'Allow popups for this site, then open the dialer again.',
+    'caller-focus-window' => 'Show dialer window',
 ];

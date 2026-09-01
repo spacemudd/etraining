@@ -1321,7 +1321,10 @@ export default {
             "caller-open-in-window": "فتح لوحة الاتصال في نافذة",
             "caller-must-be-online": "أبقِ لوحة الاتصال مفتوحة. مقسم لا يجري مكالمات عبر API إلا إذا كان الوكيل متصلاً على اللوحة.",
             "caller-dialer-connected": "لوحة الاتصال متصلة",
-            "caller-dialer-offline": "لوحة الاتصال غير متصلة"
+            "caller-dialer-offline": "لوحة الاتصال غير متصلة",
+            "caller-popup-help": "تُفتح لوحة الاتصال في نافذة مستقلة حتى يتمكن مقسم من حفظ ملفات تعريف الارتباط. أبقِ تلك النافذة مفتوحة أثناء الاتصال. إغلاق هذه اللوحة لا يسجّل خروجك.",
+            "caller-popup-blocked": "اسمح بالنوافذ المنبثقة لهذا الموقع ثم افتح لوحة الاتصال مرة أخرى.",
+            "caller-focus-window": "إظهار نافذة الاتصال"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -2801,7 +2804,10 @@ export default {
             "caller-open-in-window": "Open dialer in window",
             "caller-must-be-online": "Keep this dialer open. Maqsam only places API calls while the agent is online on the dialer.",
             "caller-dialer-connected": "Dialer connected",
-            "caller-dialer-offline": "Dialer disconnected"
+            "caller-dialer-offline": "Dialer disconnected",
+            "caller-popup-help": "The dialer opens in a separate window so Maqsam can save login cookies. Keep that window open while calling. Closing this panel does not log you out.",
+            "caller-popup-blocked": "Allow popups for this site, then open the dialer again.",
+            "caller-focus-window": "Show dialer window"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

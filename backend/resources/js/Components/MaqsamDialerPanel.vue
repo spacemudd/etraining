@@ -22,32 +22,14 @@
                         {{ statusLabel }}
                     </p>
                 </div>
-                <div class="flex items-center gap-1 flex-shrink-0">
-                    <button
-                        type="button"
-                        class="text-xs px-2 py-1 rounded-md border border-gray-200 text-gray-700 hover:bg-gray-50 disabled:opacity-50"
-                        :disabled="connecting || !configured"
-                        @click="connectDialer"
-                    >
-                        {{ connecting ? $t('words.caller-connecting') : $t('words.caller-reconnect') }}
-                    </button>
-                    <button
-                        type="button"
-                        class="text-xs px-2 py-1 rounded-md border border-gray-200 text-gray-700 hover:bg-gray-50 disabled:opacity-50"
-                        :disabled="!dialerUrl"
-                        @click="openDialerWindow"
-                    >
-                        {{ $t('words.caller-open-in-window') }}
-                    </button>
-                    <button
-                        type="button"
-                        class="text-gray-500 hover:text-gray-800 p-1 rounded border border-gray-200 bg-white"
-                        @click="$emit('close')"
-                        :aria-label="$t('words.cancel')"
-                    >
-                        <ion-icon name="close-outline" class="w-5 h-5"></ion-icon>
-                    </button>
-                </div>
+                <button
+                    type="button"
+                    class="text-gray-500 hover:text-gray-800 p-1 rounded border border-gray-200 bg-white flex-shrink-0"
+                    @click="$emit('close')"
+                    :aria-label="$t('words.cancel')"
+                >
+                    <ion-icon name="close-outline" class="w-5 h-5"></ion-icon>
+                </button>
             </div>
 
             <p
@@ -78,30 +60,35 @@
                 v-else
                 class="px-3 py-1.5 text-[11px] text-gray-500 bg-gray-50 border-b"
             >
-                {{ $t('words.caller-must-be-online') }}
+                {{ $t('words.caller-popup-help') }}
             </p>
 
-            <div class="flex-1 min-h-0 bg-gray-50 relative">
-                <div
-                    v-if="connecting && !dialerUrl"
-                    class="absolute inset-0 flex items-center justify-center text-xs text-gray-500"
+            <div class="flex-1 min-h-0 bg-gray-50 p-4 flex flex-col items-center justify-center text-center space-y-3">
+                <ion-icon name="call-outline" class="w-10 h-10 text-green-700"></ion-icon>
+                <p class="text-sm text-gray-700">
+                    {{ $t('words.caller-popup-help') }}
+                </p>
+                <button
+                    type="button"
+                    class="text-sm px-3 py-2 rounded-md bg-green-600 hover:bg-green-700 text-white font-medium disabled:opacity-50"
+                    :disabled="connecting || !configured"
+                    @click="connectDialer"
                 >
-                    {{ $t('words.caller-connecting') }}
-                </div>
-                <iframe
-                    v-if="dialerUrl"
-                    :key="iframeKey"
-                    :src="dialerUrl"
-                    class="h-full w-full border-0"
-                    allow="microphone"
-                    title="Maqsam Dialer"
-                ></iframe>
+                    {{ connecting
+                        ? $t('words.caller-connecting')
+                        : (isDialerWindowOpen
+                            ? $t('words.caller-focus-window')
+                            : $t('words.caller-open-in-window')) }}
+                </button>
             </div>
         </aside>
     </div>
 </template>
 
 <script>
+const DIALER_WINDOW_NAME = 'maqsam-dialer';
+const DIALER_WINDOW_FEATURES = 'toolbar=no,menubar=no,width=420,height=720';
+
 export default {
     name: 'MaqsamDialerPanel',
     props: {
@@ -120,19 +107,21 @@ export default {
     },
     data() {
         return {
-            dialerUrl: '',
-            iframeKey: 0,
             connecting: false,
             dialing: false,
             connected: false,
             errorMessage: '',
             successMessage: '',
+            dialerWindow: null,
             viewportWidth: typeof window !== 'undefined' ? window.innerWidth : 1024,
         };
     },
     computed: {
         isMobile() {
             return this.viewportWidth < 768;
+        },
+        isDialerWindowOpen() {
+            return !!(this.dialerWindow && !this.dialerWindow.closed);
         },
         statusLabel() {
             if (!this.configured) {
@@ -141,24 +130,14 @@ export default {
             if (this.connecting) {
                 return this.$t('words.caller-connecting');
             }
-            if (this.connected) {
+            if (this.isDialerWindowOpen) {
                 return this.$t('words.caller-dialer-connected');
             }
             return this.$t('words.caller-dialer-offline');
         },
     },
-    watch: {
-        open(isOpen) {
-            if (isOpen && this.configured && !this.dialerUrl && !this.connecting) {
-                this.connectDialer();
-            }
-        },
-    },
     mounted() {
         window.addEventListener('resize', this.updateViewportWidth);
-        if (this.open && this.configured) {
-            this.connectDialer();
-        }
     },
     beforeDestroy() {
         window.removeEventListener('resize', this.updateViewportWidth);
@@ -166,6 +145,26 @@ export default {
     methods: {
         updateViewportWidth() {
             this.viewportWidth = window.innerWidth;
+        },
+        hasLiveDialerWindow() {
+            if (this.dialerWindow && !this.dialerWindow.closed) {
+                return true;
+            }
+
+            return false;
+        },
+        isPopupAlreadyOnMaqsam(popup) {
+            if (!popup || popup.closed) {
+                return false;
+            }
+
+            try {
+                const href = popup.location.href || '';
+
+                return href !== '' && href !== 'about:blank';
+            } catch (error) {
+                return true;
+            }
         },
         async connectDialer() {
             if (!this.configured) {
@@ -177,10 +176,25 @@ export default {
                     await new Promise((resolve) => setTimeout(resolve, 100));
                 }
 
-                return this.connected;
+                return this.hasLiveDialerWindow();
             }
 
-            if (this.connected && this.dialerUrl) {
+            const existing = this.dialerWindow && !this.dialerWindow.closed
+                ? this.dialerWindow
+                : window.open('', DIALER_WINDOW_NAME, DIALER_WINDOW_FEATURES);
+
+            if (!existing) {
+                this.errorMessage = this.$t('words.caller-popup-blocked');
+                this.connected = false;
+                return false;
+            }
+
+            this.dialerWindow = existing;
+            existing.focus();
+
+            if (this.isPopupAlreadyOnMaqsam(existing)) {
+                this.connected = true;
+                this.errorMessage = '';
                 return true;
             }
 
@@ -194,25 +208,21 @@ export default {
                     email: this.agentEmail,
                 });
 
-                this.dialerUrl = response.data.url;
-                this.iframeKey += 1;
+                if (existing.closed) {
+                    this.errorMessage = this.$t('words.caller-popup-blocked');
+                    return false;
+                }
+
+                existing.location.href = response.data.url;
                 this.connected = true;
                 return true;
             } catch (error) {
                 this.errorMessage = error.response?.data?.message || this.$t('words.caller-maqsam-login-failed');
-                this.dialerUrl = '';
                 this.connected = false;
                 return false;
             } finally {
                 this.connecting = false;
             }
-        },
-        openDialerWindow() {
-            if (!this.dialerUrl) {
-                return;
-            }
-
-            window.open(this.dialerUrl, 'maqsam-dialer', 'toolbar=no,menubar=no,width=420,height=720');
         },
         async dial(phone) {
             if (!phone || this.dialing) {
