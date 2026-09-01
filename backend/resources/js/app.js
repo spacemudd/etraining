@@ -18,6 +18,7 @@ import Locale from './vue-i18n-locales.generated';
 import VModal from 'vue-js-modal';
 import { InertiaProgress } from '@inertiajs/progress';
 import DateMixin from "./Mixins/DateMixin";
+import FinanceWhatsAppCsvWizard from './Components/FinanceWhatsAppCsvWizard';
 InertiaProgress.init({
     // The delay after which the progress bar will
     // appear during navigation, in milliseconds.
@@ -40,6 +41,10 @@ Vue.use(Skeleton);
 Vue.use(VModal);
 Vue.use(LottieAnimation);
 Vue.use(VueInternationalization);
+// Register both names: Vue's kebab conversion turns WhatsApp into whats-app,
+// but templates use finance-whatsapp-csv-wizard (whatsapp as one word).
+Vue.component('FinanceWhatsAppCsvWizard', FinanceWhatsAppCsvWizard);
+Vue.component('finance-whatsapp-csv-wizard', FinanceWhatsAppCsvWizard);
 Vue.mixin({ 
     methods: { 
         route: function(name, params = {}) {

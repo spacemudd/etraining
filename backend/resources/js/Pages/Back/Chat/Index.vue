@@ -1109,7 +1109,7 @@
                     </div>
 
                     <div v-if="newChatRecipientMode === 'csv'">
-                        <finance-whatsapp-csv-wizard :templates="templates" />
+                        <component :is="csvWizardComponent" :templates="templates" />
                     </div>
 
                     <div v-else class="space-y-4 mb-4 overflow-y-auto">
@@ -1817,6 +1817,9 @@ export default {
         };
     },
     computed: {
+        csvWizardComponent() {
+            return FinanceWhatsAppCsvWizard;
+        },
         isNarrowViewport() {
             return this.viewportWidth < 768;
         },

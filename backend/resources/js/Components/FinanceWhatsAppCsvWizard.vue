@@ -221,6 +221,7 @@
 import axios from 'axios';
 
 export default {
+    name: 'FinanceWhatsAppCsvWizard',
     props: {
         templates: {
             type: Array,

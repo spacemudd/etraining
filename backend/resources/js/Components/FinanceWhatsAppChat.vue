@@ -494,7 +494,8 @@
                     </div>
 
                     <div v-if="newChatMode === 'csv'">
-                        <finance-whatsapp-csv-wizard
+                        <component
+                            :is="csvWizardComponent"
                             ref="csvWizard"
                             :templates="templates"
                         />
@@ -786,6 +787,9 @@ export default {
         };
     },
     computed: {
+        csvWizardComponent() {
+            return FinanceWhatsAppCsvWizard;
+        },
         modalName() {
             return 'financeWhatsAppChatModal-' + this.instanceId;
         },
