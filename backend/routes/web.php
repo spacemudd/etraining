@@ -24,6 +24,23 @@ Route::get('/apple-touch-icon-precomposed.png', fn() => response('', 204));
 Route::get('/apple-touch-icon-152x152.png', fn() => response('', 204));
 Route::get('/apple-touch-icon-152x152-precomposed.png', fn() => response('', 204));
 
+// Password-gated uploaded courses (standalone Jasarah-style viewer)
+Route::prefix('ar/uploaded-courses')->name('uploaded-courses.')->group(function () {
+    Route::get('{id}', [\App\Http\Controllers\UploadedCoursesController::class, 'show'])
+        ->whereNumber('id')
+        ->name('show');
+    Route::post('{id}/unlock', [\App\Http\Controllers\UploadedCoursesController::class, 'unlock'])
+        ->whereNumber('id')
+        ->name('unlock');
+    Route::post('{id}/lock', [\App\Http\Controllers\UploadedCoursesController::class, 'lock'])
+        ->whereNumber('id')
+        ->name('lock');
+    Route::get('{id}/stream/{path}', [\App\Http\Controllers\UploadedCoursesController::class, 'stream'])
+        ->whereNumber('id')
+        ->where('path', '.*')
+        ->name('stream');
+});
+
 Route::get('/qr1', function() {
     return redirect('https://forms.gle/t9nhZgKqz5za9xmp9');
 });
