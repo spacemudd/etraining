@@ -71,11 +71,6 @@
         <script src="{{ mix('js/app.js') }}" defer></script>
     </head>
     <body class="font-sans antialiased">
-        @if (env('APP_URL') === 'https://prod.jasarah-ksa.com')
-            <div class="w-full bg-blue-600 text-center p-5 text-white">
-                النظام في البيئة الإختبارية
-            </div>
-        @endif
         @if (app('impersonate')->isImpersonating())
             <div class="w-full bg-blue-600 text-center p-5 text-white relative" style="z-index: 9999;">
                 {{ __('words.you-are-currently-logged-in-as') }}: {{ optional(\App\Models\User::find(app('impersonate')->getImpersonatorId()))->name }}
