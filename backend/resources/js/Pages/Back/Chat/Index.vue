@@ -1108,7 +1108,7 @@
                         </button>
                     </div>
 
-                    <div v-if="newChatRecipientMode === 'csv'" class="flex-1 min-h-0 flex flex-col">
+                    <div v-if="newChatRecipientMode === 'csv'">
                         <finance-whatsapp-csv-wizard :templates="templates" />
                     </div>
 
@@ -3661,6 +3661,14 @@ export default {
         currentTraineeContext() {
             return (this.selectedConversation && this.selectedConversation.trainee) || null;
         },
+        traineeFirstName(name) {
+            const full = String(name || '').trim();
+            if (!full) {
+                return '';
+            }
+            const space = full.indexOf(' ');
+            return space === -1 ? full : full.slice(0, space).trim();
+        },
         autoValueForTag(tag, trainee = null) {
             const person = trainee || this.currentTraineeContext();
             if (!person) {
@@ -3669,6 +3677,8 @@ export default {
             switch (tag) {
                 case 'trainee_name':
                     return person.name || '';
+                case 'trainee_first_name':
+                    return this.traineeFirstName(person.name);
                 case 'trainee_english_name':
                     return person.english_name || '';
                 case 'trainee_phone':

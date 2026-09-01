@@ -69,6 +69,26 @@ class WhatsAppTemplateTags
         return (string) ($meta['example'] ?? $meta['example_en'] ?? $tag);
     }
 
+    /**
+     * Text before the first space in a full name. The whole name if there is no space.
+     */
+    public static function firstName(?string $fullName): ?string
+    {
+        $fullName = trim((string) $fullName);
+        if ($fullName === '') {
+            return null;
+        }
+
+        $space = strpos($fullName, ' ');
+        if ($space === false) {
+            return $fullName;
+        }
+
+        $first = trim(substr($fullName, 0, $space));
+
+        return $first !== '' ? $first : null;
+    }
+
     public static function resolve(string $tag, ?Trainee $trainee): ?string
     {
         if (! $trainee || ! self::isAutoTag($tag)) {
@@ -77,6 +97,7 @@ class WhatsAppTemplateTags
 
         return match ($tag) {
             'trainee_name' => filled($trainee->name) ? (string) $trainee->name : null,
+            'trainee_first_name' => self::firstName($trainee->name),
             'trainee_english_name' => filled($trainee->english_name) ? (string) $trainee->english_name : null,
             'trainee_phone' => filled($trainee->phone) ? (string) $trainee->phone : null,
             'trainee_identity' => filled($trainee->identity_number) ? (string) $trainee->identity_number : null,

@@ -19,6 +19,11 @@ class WhatsAppTemplateTagsTest extends TestCase
                 'example' => 'أحمد',
                 'example_en' => 'Ahmed',
             ],
+            'trainee_first_name' => [
+                'label' => 'Trainee first name',
+                'example' => 'أحمد',
+                'example_en' => 'Ahmed',
+            ],
         ]);
     }
 
@@ -52,6 +57,18 @@ class WhatsAppTemplateTagsTest extends TestCase
     public function test_trainee_name_is_auto_tag(): void
     {
         $this->assertTrue(WhatsAppTemplateTags::isAutoTag('trainee_name'));
+        $this->assertTrue(WhatsAppTemplateTags::isAutoTag('trainee_first_name'));
         $this->assertFalse(WhatsAppTemplateTags::isAutoTag('custom_field'));
+    }
+
+    public function test_first_name_takes_text_before_the_first_space_only(): void
+    {
+        $this->assertSame('أحمد', WhatsAppTemplateTags::firstName('أحمد محمد علي'));
+        $this->assertSame('Ahmed', WhatsAppTemplateTags::firstName('Ahmed Ali Hassan'));
+        $this->assertSame('سارة', WhatsAppTemplateTags::firstName('سارة'));
+        $this->assertSame('محمد', WhatsAppTemplateTags::firstName('  محمد عبد الله'));
+        $this->assertNull(WhatsAppTemplateTags::firstName(''));
+        $this->assertNull(WhatsAppTemplateTags::firstName('   '));
+        $this->assertNull(WhatsAppTemplateTags::firstName(null));
     }
 }

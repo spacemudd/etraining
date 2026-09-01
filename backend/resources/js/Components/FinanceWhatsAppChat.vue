@@ -493,7 +493,7 @@
                         </button>
                     </div>
 
-                    <div v-if="newChatMode === 'csv'" class="flex-1 min-h-0 flex flex-col">
+                    <div v-if="newChatMode === 'csv'">
                         <finance-whatsapp-csv-wizard
                             ref="csvWizard"
                             :templates="templates"
@@ -1599,6 +1599,14 @@ export default {
             const bindings = (this.selectedTemplate && this.selectedTemplate.variable_bindings) || {};
             return bindings[variableKey] || (this.$t('words.template-variable') + ' ' + variableKey);
         },
+        traineeFirstName(name) {
+            const full = String(name || '').trim();
+            if (!full) {
+                return '';
+            }
+            const space = full.indexOf(' ');
+            return space === -1 ? full : full.slice(0, space).trim();
+        },
         autoValueForTag(tag) {
             if (!this.selectedTrainee) {
                 return '';
@@ -1606,6 +1614,8 @@ export default {
             switch (tag) {
                 case 'trainee_name':
                     return this.selectedTrainee.name || '';
+                case 'trainee_first_name':
+                    return this.traineeFirstName(this.selectedTrainee.name);
                 case 'trainee_english_name':
                     return this.selectedTrainee.english_name || '';
                 case 'trainee_phone':

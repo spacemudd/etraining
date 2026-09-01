@@ -12,6 +12,7 @@ use App\Models\Back\WhatsAppConversation;
 use App\Models\Back\WhatsAppMessage;
 use App\Support\WhatsAppBotPause;
 use App\Support\WhatsAppConversationHandoff;
+use App\Support\WhatsAppTemplateTags;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -516,6 +517,7 @@ class WhatsAppBotEngine
 
         $replacements = [
             '{{trainee_name}}' => $trainee?->name ?? '',
+            '{{trainee_first_name}}' => WhatsAppTemplateTags::firstName($trainee?->name) ?? '',
             '{{trainee_english_name}}' => $trainee?->english_name ?? $trainee?->name ?? '',
             '{{trainee_phone}}' => $trainee?->phone ?? $inbound->phone ?? '',
             '{{trainee_identity}}' => $trainee?->identity_number ?? '',

@@ -1,6 +1,6 @@
 <template>
-    <div class="flex flex-col min-h-0 flex-1">
-        <ol class="flex items-center gap-2 mb-4 text-xs">
+    <div class="flex flex-col">
+        <ol class="flex items-center gap-2 mb-4 text-xs flex-shrink-0">
             <li
                 v-for="step in steps"
                 :key="step.id"
@@ -17,14 +17,26 @@
             </li>
         </ol>
 
-        <div class="overflow-y-auto flex-1 min-h-0 space-y-4">
+        <div class="overflow-y-auto space-y-4">
             <div v-if="csvStep === 1" class="space-y-3">
                 <p class="text-sm text-gray-600">{{ $t('words.whatsapp-csv-upload-hint') }}</p>
-                <label class="block border-2 border-dashed border-gray-200 rounded-lg px-4 py-8 text-center cursor-pointer hover:border-green-400 hover:bg-green-50/40 transition">
-                    <input ref="csvFileInput" type="file" accept=".csv,text/csv,text/plain" class="hidden" @change="onCsvFile">
-                    <div class="text-sm font-medium text-gray-800">{{ $t('words.whatsapp-csv-choose-file') }}</div>
-                    <div v-if="csvFileName" class="text-xs text-gray-500 mt-1">{{ csvFileName }}</div>
-                </label>
+                <div class="border-2 border-dashed border-gray-300 rounded-lg px-4 py-8 text-center bg-gray-50">
+                    <input
+                        ref="csvFileInput"
+                        type="file"
+                        accept=".csv,text/csv,text/plain"
+                        class="sr-only"
+                        @change="onCsvFile"
+                    >
+                    <button
+                        type="button"
+                        class="inline-flex items-center px-4 py-2 rounded-md text-sm font-medium bg-green-600 hover:bg-green-700 text-white"
+                        @click="$refs.csvFileInput && $refs.csvFileInput.click()"
+                    >
+                        {{ $t('words.whatsapp-csv-choose-file') }}
+                    </button>
+                    <div v-if="csvFileName" class="text-xs text-gray-500 mt-2">{{ csvFileName }}</div>
+                </div>
                 <div v-if="csvLoading" class="text-xs text-gray-500">{{ $t('words.loading') }}</div>
             </div>
 
@@ -174,7 +186,7 @@
 
         <p v-if="csvError" class="mt-2 text-xs text-red-600">{{ csvError }}</p>
 
-        <div class="flex justify-end gap-2 pt-3 border-t mt-4">
+        <div class="flex justify-end gap-2 pt-3 border-t mt-4 flex-shrink-0">
             <button
                 v-if="csvStep > 1 && !csvSending"
                 type="button"

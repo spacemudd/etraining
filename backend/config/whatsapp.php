@@ -30,6 +30,11 @@ return [
     'template_auto_tags' => [
         'trainee_name' => [
             'label' => 'Trainee name',
+            'example' => 'أحمد محمد',
+            'example_en' => 'Ahmed Mohammed',
+        ],
+        'trainee_first_name' => [
+            'label' => 'Trainee first name',
             'example' => 'أحمد',
             'example_en' => 'Ahmed',
         ],
