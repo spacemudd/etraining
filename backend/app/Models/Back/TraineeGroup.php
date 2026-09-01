@@ -76,7 +76,6 @@ class TraineeGroup extends Model implements Auditable
         switch ($this->name) {
                 case 'شعبة 1':
                 case 'شعبة 7':
-                case 'شعبة 4':
                 case 'شعبة 5':
                 case 'شعبة 15':
                 case 'شعبة 13':
@@ -95,6 +94,7 @@ class TraineeGroup extends Model implements Auditable
             case 'شعبة 14':
             case 'شعبة 16':
             case 'شعبة 17':
+            case 'شعبة 4':
                 return 'من الأحد الى الأربعاء الساعة  08:00 صباحا الى 10:00 صباحا';
         }
         return;
