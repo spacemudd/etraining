@@ -8,6 +8,7 @@ use App\Models\Back\Trainee;
 use App\Models\Back\WhatsAppMessage;
 use App\Models\Back\WhatsAppTemplateBinding;
 use App\Support\WhatsAppBroadcast;
+use App\Support\WhatsAppCsvPhoneParser;
 use App\Support\WhatsAppTemplateTags;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
@@ -697,7 +698,8 @@ class TelnyxWhatsAppService
 
     public function normalizePhoneDigits(string $phone): string
     {
-        $digits = preg_replace('/\D+/', '', str_replace('whatsapp:', '', $phone)) ?? '';
+        $phone = WhatsAppCsvPhoneParser::toAsciiDigits(str_replace('whatsapp:', '', $phone));
+        $digits = preg_replace('/\D+/', '', $phone) ?? '';
 
         if (str_starts_with($digits, '00')) {
             $digits = substr($digits, 2);

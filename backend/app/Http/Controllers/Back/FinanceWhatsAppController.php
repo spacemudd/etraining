@@ -10,10 +10,12 @@ use App\Models\Back\Invoice;
 use App\Models\Back\Trainee;
 use App\Models\Back\WhatsAppConversation;
 use App\Models\Back\WhatsAppMessage;
+use App\Models\Back\WhatsAppQuickReply;
 use App\Services\TelnyxWhatsAppService;
 use App\Support\WhatsAppBotPause;
 use App\Support\WhatsAppBotStatus;
 use App\Support\WhatsAppConversationSync;
+use App\Support\WhatsAppCsvPhoneParser;
 use App\Support\WhatsAppMessagingWindow;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -474,6 +476,124 @@ class FinanceWhatsAppController extends Controller
         ]);
     }
 
+    public function previewCsv(Request $request): JsonResponse
+    {
+        $this->ensureConfigured();
+
+        $validated = $request->validate([
+            'csv' => 'required_without:phones|string|max:512000',
+            'phones' => 'required_without:csv|array|min:1|max:'.WhatsAppCsvPhoneParser::MAX_PHONES,
+            'phones.*' => 'string|max:40',
+        ]);
+
+        $phones = isset($validated['phones'])
+            ? array_values(array_filter($validated['phones'], static fn ($phone): bool => trim((string) $phone) !== ''))
+            : WhatsAppCsvPhoneParser::extractPhones((string) $validated['csv']);
+
+        if ($phones === []) {
+            return response()->json([
+                'message' => __('words.whatsapp-csv-no-phones'),
+            ], 422);
+        }
+
+        $rows = $this->previewPhoneRows($phones);
+
+        return response()->json([
+            'count' => count($rows),
+            'open_count' => collect($rows)->where('window_open', true)->count(),
+            'closed_count' => collect($rows)->where('window_open', false)->count(),
+            'rows' => $rows,
+        ]);
+    }
+
+    public function sendBulk(Request $request): JsonResponse
+    {
+        $this->ensureConfigured();
+
+        $validated = $request->validate([
+            'type' => 'required|string|in:message,quick_reply,template',
+            'phones' => 'required|array|min:1|max:'.WhatsAppCsvPhoneParser::MAX_PHONES,
+            'phones.*' => 'required|string|max:40',
+            'body' => 'required_if:type,message|nullable|string|max:1600',
+            'quick_reply_id' => 'required_if:type,quick_reply|nullable|uuid|exists:whatsapp_quick_replies,id',
+            'content_sid' => 'required_if:type,template|nullable|string|max:64',
+            'content_variables' => 'nullable|array',
+            'content_variables.*' => 'nullable|string|max:1000',
+        ]);
+
+        $type = $validated['type'];
+        $body = trim((string) ($validated['body'] ?? ''));
+
+        if ($type === 'quick_reply') {
+            $reply = WhatsAppQuickReply::query()->findOrFail($validated['quick_reply_id']);
+            $body = trim((string) $reply->body);
+        }
+
+        if (in_array($type, ['message', 'quick_reply'], true) && $body === '') {
+            return response()->json([
+                'message' => __('words.whatsapp-csv-empty-message'),
+            ], 422);
+        }
+
+        $rows = $this->previewPhoneRows($validated['phones']);
+        $sent = 0;
+        $skipped = [];
+        $failed = [];
+
+        foreach ($rows as $row) {
+            $phone = $row['normalized_phone'];
+            $requiresOpenWindow = in_array($type, ['message', 'quick_reply'], true);
+
+            if ($requiresOpenWindow && ! $row['window_open']) {
+                $skipped[] = [
+                    'phone' => $row['phone'],
+                    'name' => $row['name'],
+                    'reason' => __('words.whatsapp-csv-skipped-closed'),
+                ];
+                continue;
+            }
+
+            try {
+                if ($type === 'template') {
+                    $this->whatsAppService->sendTemplate(
+                        $phone,
+                        (string) $validated['content_sid'],
+                        $validated['content_variables'] ?? [],
+                        $row['trainee_id']
+                    );
+                } else {
+                    $this->whatsAppService->sendFreeformMessage(
+                        $phone,
+                        $body,
+                        $row['trainee_id']
+                    );
+                }
+
+                $this->attachAgentAndPauseBot($phone);
+                $sent++;
+            } catch (RuntimeException $exception) {
+                $failed[] = [
+                    'phone' => $row['phone'],
+                    'name' => $row['name'],
+                    'error' => $exception->getMessage(),
+                ];
+            }
+        }
+
+        return response()->json([
+            'total' => count($rows),
+            'sent' => $sent,
+            'skipped_count' => count($skipped),
+            'failed_count' => count($failed),
+            'skipped' => $skipped,
+            'failed' => $failed,
+            'message' => __('words.whatsapp-csv-sent-summary', [
+                'sent' => $sent,
+                'total' => count($rows),
+            ]),
+        ]);
+    }
+
     public function sendMessage(Request $request): JsonResponse
     {
         $this->ensureConfigured();
@@ -512,6 +632,101 @@ class FinanceWhatsAppController extends Controller
             ->whereNull('suspended_at')
             ->whereNotNull('phone')
             ->where('phone', '!=', '');
+    }
+
+    /**
+     * @param  list<string>  $rawPhones
+     * @return list<array{
+     *     phone: string,
+     *     normalized_phone: string,
+     *     trainee_id: string|null,
+     *     name: string|null,
+     *     company_name: string|null,
+     *     window_open: bool,
+     *     remaining_seconds: int
+     * }>
+     */
+    private function previewPhoneRows(array $rawPhones): array
+    {
+        $entries = [];
+        $normalizedList = [];
+
+        foreach ($rawPhones as $raw) {
+            $raw = trim((string) $raw);
+            if ($raw === '') {
+                continue;
+            }
+
+            $normalized = $this->whatsAppService->normalizePhoneDigits($raw);
+            $digits = preg_replace('/\D+/', '', $normalized) ?? '';
+            $suffix = strlen($digits) >= 9 ? substr($digits, -9) : $digits;
+
+            if ($suffix === '') {
+                continue;
+            }
+
+            $entries[] = [
+                'raw' => $raw,
+                'normalized' => $normalized,
+                'suffix' => $suffix,
+            ];
+            $normalizedList[] = $normalized;
+        }
+
+        if ($entries === []) {
+            return [];
+        }
+
+        $conversations = WhatsAppConversation::query()
+            ->whereIn('phone', array_values(array_unique($normalizedList)))
+            ->get()
+            ->keyBy('phone');
+
+        $suffixes = array_values(array_unique(array_column($entries, 'suffix')));
+        $trainees = Trainee::query()
+            ->with(['company' => static function ($query): void {
+                $query->withoutGlobalScopes()->select(['id', 'name_ar', 'name_en']);
+            }])
+            ->whereNotNull('phone')
+            ->where('phone', '!=', '')
+            ->where(function ($query) use ($suffixes): void {
+                foreach ($suffixes as $suffix) {
+                    if (preg_match('/^\d{8,9}$/', $suffix) === 1) {
+                        $query->orWhere('phone', 'like', '%'.$suffix);
+                    }
+                }
+            })
+            ->get(['id', 'name', 'phone', 'company_id']);
+
+        $traineesBySuffix = [];
+        foreach ($trainees as $trainee) {
+            $traineeDigits = preg_replace('/\D+/', '', WhatsAppCsvPhoneParser::toAsciiDigits((string) $trainee->phone)) ?? '';
+            $traineeSuffix = strlen($traineeDigits) >= 9 ? substr($traineeDigits, -9) : $traineeDigits;
+            if ($traineeSuffix !== '' && ! isset($traineesBySuffix[$traineeSuffix])) {
+                $traineesBySuffix[$traineeSuffix] = $trainee;
+            }
+        }
+
+        $rows = [];
+        foreach ($entries as $entry) {
+            $trainee = $traineesBySuffix[$entry['suffix']] ?? null;
+            $conversation = $conversations->get($entry['normalized']);
+            $window = $conversation
+                ? WhatsAppMessagingWindow::forConversation($conversation)
+                : WhatsAppMessagingWindow::forLastInbound(null);
+
+            $rows[] = [
+                'phone' => $entry['raw'],
+                'normalized_phone' => $entry['normalized'],
+                'trainee_id' => $trainee?->id,
+                'name' => $trainee?->name,
+                'company_name' => $trainee?->company?->name_ar ?: $trainee?->company?->name_en,
+                'window_open' => $window['is_open'],
+                'remaining_seconds' => $window['remaining_seconds'],
+            ];
+        }
+
+        return $rows;
     }
 
     private function applyPendingInvoicesTraineeFilter($query, bool $onlyPendingInvoices): void

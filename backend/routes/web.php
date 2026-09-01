@@ -872,6 +872,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
                 Route::post('send-template', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'sendTemplate'])->name('send-template');
                 Route::post('send-template-to-company', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'sendTemplateToCompany'])->name('send-template-to-company');
                 Route::post('send-message', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'sendMessage'])->name('send-message');
+                Route::post('preview-csv', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'previewCsv'])->name('preview-csv');
+                Route::post('send-bulk', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'sendBulk'])->name('send-bulk');
             });
 
             Route::get('account-statements/excel', [\App\Http\Controllers\Back\AccountStatementsController::class, 'excel'])->name('account-statements.excel');
