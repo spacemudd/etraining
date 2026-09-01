@@ -1279,4 +1279,6 @@ return [
     'type' => 'النوع',
     'label' => 'التسمية',
     'number' => 'الرقم',
+    'payment-gateway-unavailable-title' => 'عطل مؤقت في بوابة الدفع',
+    'payment-gateway-unavailable-body' => 'نواجه حالياً مشكلة في بوابة الدفع الإلكتروني. سنقوم بإشعاركم عبر واتساب فور عودة الخدمة.',
 ];

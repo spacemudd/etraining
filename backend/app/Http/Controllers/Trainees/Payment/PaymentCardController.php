@@ -10,7 +10,7 @@ use App\Mail\RejectNewEmailMail;
 use App\Models\Back\AccountingLedgerBook;
 use App\Models\Back\Audit;
 use App\Models\Back\Invoice;
-use App\Models\Back\Trainee;
+use App\Models\PaymentOutageInterest;
 use App\Models\TraineeBankPaymentReceipt;
 use App\Services\InvoiceService;
 use App\Services\NoonService;
@@ -32,18 +32,39 @@ class PaymentCardController extends Controller
     }
 
     /**
-     * Redirect user to payment form.
+     * Redirect user to payment form, or show the outage notice when Noon is unavailable.
      *
      * @param Request $request
-     *
-     * @return RedirectResponse
-     * @throws \Exception
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      */
     public function showPaymentForm(Request $request)
     {
+        $trainee = optional(auth()->user())->trainee;
         $invoice = Invoice::notPaid()->find($request->invoice_id);
-        $url = $this->paymentService->createPaymentUrlForInvoice($invoice);
-        return redirect($url);
+
+        if ($this->isCardPaymentUnavailable()) {
+            PaymentOutageInterest::remember($trainee, $invoice);
+
+            return $this->paymentGatewayUnavailableView();
+        }
+
+        if (! $invoice) {
+            abort(404);
+        }
+
+        try {
+            $url = $this->paymentService->createPaymentUrlForInvoice($invoice);
+
+            return redirect($url);
+        } catch (Throwable $e) {
+            PaymentOutageInterest::remember($trainee, $invoice);
+            Log::error('Noon payment URL failed', [
+                'message' => $e->getMessage(),
+                'invoice_id' => $invoice->id,
+            ]);
+
+            return $this->paymentGatewayUnavailableView();
+        }
     }
 
     /**
@@ -275,6 +296,12 @@ class PaymentCardController extends Controller
     {
         $trainee = auth()->user()->trainee;
 
+        if ($this->isCardPaymentUnavailable()) {
+            PaymentOutageInterest::remember($trainee);
+
+            return $this->paymentGatewayUnavailableView();
+        }
+
         $pending_amount = number_format($trainee->total_amount_owed, 2);
 
         return Inertia::render('Trainees/Payment/IndexTap', [
@@ -282,6 +309,16 @@ class PaymentCardController extends Controller
             'online_payment' => $trainee->team->online_payment,
             'invoices' => $trainee->invoices()->notPaid()->get(),
         ]);
+    }
+
+    private function isCardPaymentUnavailable(): bool
+    {
+        return (bool) config('payment.gateway_unavailable');
+    }
+
+    private function paymentGatewayUnavailableView()
+    {
+        return response()->view('trainees.payment.gateway-unavailable');
     }
 
     public function objectionOfAmount(Request $request)

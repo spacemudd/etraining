@@ -1282,4 +1282,6 @@ return [
     'type' => 'Type',
     'label' => 'Label',
     'number' => 'Number',
+    'payment-gateway-unavailable-title' => 'Temporary payment gateway issue',
+    'payment-gateway-unavailable-body' => 'We are currently experiencing issues with the payment gateway. We will notify you on WhatsApp when it is fixed.',
 ];

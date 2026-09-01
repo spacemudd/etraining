@@ -1272,7 +1272,9 @@ export default {
             "contains": "يحتوي",
             "equals": "يساوي",
             "type": "النوع",
-            "label": "التسمية"
+            "label": "التسمية",
+            "payment-gateway-unavailable-title": "عطل مؤقت في بوابة الدفع",
+            "payment-gateway-unavailable-body": "نواجه حالياً مشكلة في بوابة الدفع الإلكتروني. سنقوم بإشعاركم عبر واتساب فور عودة الخدمة."
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -2703,7 +2705,9 @@ export default {
             "contains": "Contains",
             "equals": "Equals",
             "type": "Type",
-            "label": "Label"
+            "label": "Label",
+            "payment-gateway-unavailable-title": "Temporary payment gateway issue",
+            "payment-gateway-unavailable-body": "We are currently experiencing issues with the payment gateway. We will notify you on WhatsApp when it is fixed."
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",
