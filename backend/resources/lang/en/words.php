@@ -1334,4 +1334,6 @@ return [
     'caller-popup-help' => 'The dialer opens in a separate window so Maqsam can save login cookies. Keep that window open while calling. Closing this panel does not log you out.',
     'caller-popup-blocked' => 'Allow popups for this site, then open the dialer again.',
     'caller-focus-window' => 'Show dialer window',
+    'caller-call-active' => 'Call active',
+    'caller-call-login' => 'Call — sign in to Maqsam',
 ];

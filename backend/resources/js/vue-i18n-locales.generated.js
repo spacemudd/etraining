@@ -1324,7 +1324,9 @@ export default {
             "caller-dialer-offline": "لوحة الاتصال غير متصلة",
             "caller-popup-help": "تُفتح لوحة الاتصال في نافذة مستقلة حتى يتمكن مقسم من حفظ ملفات تعريف الارتباط. أبقِ تلك النافذة مفتوحة أثناء الاتصال. إغلاق هذه اللوحة لا يسجّل خروجك.",
             "caller-popup-blocked": "اسمح بالنوافذ المنبثقة لهذا الموقع ثم افتح لوحة الاتصال مرة أخرى.",
-            "caller-focus-window": "إظهار نافذة الاتصال"
+            "caller-focus-window": "إظهار نافذة الاتصال",
+            "caller-call-active": "الاتصال فعال",
+            "caller-call-login": "الاتصال - الدخول على مقسم"
         },
         "validation": {
             "accepted": "يجب قبول {attribute}.",
@@ -2807,7 +2809,9 @@ export default {
             "caller-dialer-offline": "Dialer disconnected",
             "caller-popup-help": "The dialer opens in a separate window so Maqsam can save login cookies. Keep that window open while calling. Closing this panel does not log you out.",
             "caller-popup-blocked": "Allow popups for this site, then open the dialer again.",
-            "caller-focus-window": "Show dialer window"
+            "caller-focus-window": "Show dialer window",
+            "caller-call-active": "Call active",
+            "caller-call-login": "Call — sign in to Maqsam"
         },
         "validation": {
             "accepted": "The {attribute} must be accepted.",

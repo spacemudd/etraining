@@ -40,17 +40,6 @@
                     >
                         {{ $t('words.go-back-to-dashboard') }}
                     </inertia-link>
-                    <button
-                        v-if="maqsamConfigured"
-                        type="button"
-                        @click="toggleMaqsamDialer"
-                        class="text-xs leading-tight border px-2 py-1 rounded-md font-medium transition whitespace-nowrap"
-                        :class="showMaqsamDialer
-                            ? 'text-green-800 border-green-300 bg-green-50 hover:bg-green-100'
-                            : 'text-gray-700 border-gray-300 bg-white hover:bg-gray-50'"
-                    >
-                        {{ $t('words.caller-dialer') }}
-                    </button>
                     <whats-app-templates-manager
                         v-if="configured"
                         :can-manage="canManageTemplates"
@@ -451,12 +440,15 @@
                                     <button
                                         v-if="maqsamConfigured && selectedConversation.phone"
                                         type="button"
-                                        class="text-xs bg-white border border-green-200 hover:bg-green-50 px-2.5 py-1.5 rounded-md font-medium text-green-700 transition inline-flex items-center gap-1 disabled:opacity-50"
+                                        class="text-xs px-2.5 py-1.5 rounded-md font-medium transition inline-flex items-center gap-1 disabled:opacity-50"
+                                        :class="maqsamWindowOpen
+                                            ? 'bg-green-600 hover:bg-green-700 text-white border border-green-600'
+                                            : 'bg-white border border-green-200 hover:bg-green-50 text-green-700'"
                                         :disabled="maqsamDialing"
                                         @click="callSelectedConversation"
                                     >
                                         <ion-icon name="call-outline" class="w-3.5 h-3.5"></ion-icon>
-                                        {{ maqsamDialing ? $t('words.caller-connecting') : $t('words.caller-call') }}
+                                        {{ maqsamCallButtonLabel }}
                                     </button>
                             </div>
 
@@ -1656,10 +1648,8 @@
         </portal>
         <maqsam-dialer-panel
             ref="maqsamDialer"
-            :open="showMaqsamDialer"
             :configured="maqsamConfigured"
             :agent-email="maqsamAgentEmail"
-            @close="showMaqsamDialer = false"
         />
     </chat-layout>
 </template>
@@ -1854,13 +1844,23 @@ export default {
             copiedInvoiceId: null,
             copyLinkTimer: null,
             viewportWidth: typeof window !== 'undefined' ? window.innerWidth : 1024,
-            showMaqsamDialer: false,
             maqsamDialing: false,
+            maqsamWindowOpen: false,
+            maqsamWindowTimer: null,
         };
     },
     computed: {
         csvWizardComponent() {
             return FinanceWhatsAppCsvWizard;
+        },
+        maqsamCallButtonLabel() {
+            if (this.maqsamDialing) {
+                return this.$t('words.caller-connecting');
+            }
+            if (this.maqsamWindowOpen) {
+                return this.$t('words.caller-call-active');
+            }
+            return this.$t('words.caller-call-login');
         },
         isNarrowViewport() {
             return this.viewportWidth < 768;
@@ -2282,11 +2282,15 @@ export default {
         if (this.configured) {
             this.loadTemplates();
         }
+        if (this.maqsamConfigured) {
+            this.startMaqsamWindowWatcher();
+        }
     },
     beforeDestroy() {
         this.unsubscribeEcho();
         this.stopPolling();
         this.stopMessagingWindowTicker();
+        this.stopMaqsamWindowWatcher();
         this.stopThreadResize();
         document.removeEventListener('click', this.handleGlobalClick);
         document.removeEventListener('keydown', this.handleGlobalKeydown);
@@ -2306,16 +2310,20 @@ export default {
         }
     },
     methods: {
-        toggleMaqsamDialer() {
-            if (this.showMaqsamDialer) {
-                this.showMaqsamDialer = false;
-                return;
+        startMaqsamWindowWatcher() {
+            this.stopMaqsamWindowWatcher();
+            this.syncMaqsamWindow();
+            this.maqsamWindowTimer = setInterval(this.syncMaqsamWindow, 1000);
+        },
+        stopMaqsamWindowWatcher() {
+            if (this.maqsamWindowTimer) {
+                clearInterval(this.maqsamWindowTimer);
+                this.maqsamWindowTimer = null;
             }
-
-            this.showMaqsamDialer = true;
-            if (this.$refs.maqsamDialer && typeof this.$refs.maqsamDialer.connectDialer === 'function') {
-                this.$refs.maqsamDialer.connectDialer();
-            }
+        },
+        syncMaqsamWindow() {
+            const dialer = this.$refs.maqsamDialer;
+            this.maqsamWindowOpen = !!(dialer && typeof dialer.isWindowOpen === 'function' && dialer.isWindowOpen());
         },
         async callSelectedConversation() {
             const phone = this.selectedConversation && this.selectedConversation.phone;
@@ -2323,12 +2331,28 @@ export default {
                 return;
             }
 
-            this.showMaqsamDialer = true;
+            const dialer = this.$refs.maqsamDialer;
+            if (!dialer) {
+                return;
+            }
+
             this.maqsamDialing = true;
+            this.errorMessage = '';
             try {
-                const dialer = this.$refs.maqsamDialer;
-                if (dialer && typeof dialer.dial === 'function') {
-                    await dialer.dial(phone);
+                this.syncMaqsamWindow();
+                if (!this.maqsamWindowOpen) {
+                    await dialer.connectDialer();
+                    this.syncMaqsamWindow();
+                    if (dialer.errorMessage) {
+                        this.errorMessage = dialer.errorMessage;
+                    }
+                    return;
+                }
+
+                await dialer.dial(phone);
+                this.syncMaqsamWindow();
+                if (dialer.errorMessage) {
+                    this.errorMessage = dialer.errorMessage;
                 }
             } finally {
                 this.maqsamDialing = false;
