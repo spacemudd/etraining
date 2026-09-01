@@ -189,6 +189,35 @@ class WhatsAppInboundMediaPersisterTest extends BaseTestCase
         $this->assertSame('https://app.test/back/media/media-1', $payload['saved_media'][0]['url']);
     }
 
+    public function test_persisted_media_payload_builds_urls_when_media_exists(): void
+    {
+        $messageId = (string) Str::uuid();
+        $mediaId = (string) Str::uuid();
+
+        $message = new class extends WhatsAppMessage {
+            public $fakeMedia;
+
+            public function getMedia(string $collectionName = 'default', $filters = []): \Illuminate\Support\Collection
+            {
+                return collect([$this->fakeMedia]);
+            }
+        };
+        $message->id = $messageId;
+        $message->fakeMedia = (object) [
+            'id' => $mediaId,
+            'file_name' => 'photo.jpg',
+            'mime_type' => 'image/jpeg',
+        ];
+
+        $payload = $message->persistedMediaPayload();
+
+        $this->assertCount(1, $payload);
+        $this->assertSame($mediaId, $payload[0]['id']);
+        $this->assertSame('photo.jpg', $payload[0]['name']);
+        $this->assertStringContainsString($messageId, $payload[0]['url']);
+        $this->assertStringContainsString($mediaId, $payload[0]['url']);
+    }
+
     public function test_persist_skips_expired_urls_when_fail_on_item_error_is_false(): void
     {
         Http::fake([
