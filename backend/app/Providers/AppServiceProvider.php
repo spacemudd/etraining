@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Listeners\UpdateUsersTimezoneSafely;
 use App\Notifications\MsegatChannel;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
+use JamesMills\LaravelTimezone\Listeners\Auth\UpdateUsersTimezone;
 use URL;
 
 class AppServiceProvider extends ServiceProvider
@@ -17,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->bind(UpdateUsersTimezone::class, UpdateUsersTimezoneSafely::class);
+
         Inertia::share([
             'user' => function () {
                 $user = optional(auth())->user();

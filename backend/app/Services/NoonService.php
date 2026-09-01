@@ -63,12 +63,28 @@ class NoonService implements PaymentServiceInterface
             ]
         ]);
 
+        return $this->checkoutUrlFromResponse($url);
+    }
 
-        if ($url->resultCode === 0) {
-            return $url->result->checkoutData->postUrl;
+    /**
+     * @param  mixed  $url
+     */
+    public function checkoutUrlFromResponse($url): string
+    {
+        if (! is_object($url) || ! isset($url->resultCode)) {
+            throw new RuntimeException('Noon payment returned an empty response');
         }
 
-        throw new RuntimeException('Noon payment fatal error: '.$url->resultCode.' - '.$url->message);
+        if ((int) $url->resultCode === 0) {
+            $checkoutUrl = $url->result->checkoutData->postUrl ?? null;
+            if (! is_string($checkoutUrl) || $checkoutUrl === '') {
+                throw new RuntimeException('Noon payment returned no checkout URL');
+            }
+
+            return $checkoutUrl;
+        }
+
+        throw new RuntimeException('Noon payment fatal error: '.$url->resultCode.' - '.($url->message ?? ''));
     }
 
     /**
