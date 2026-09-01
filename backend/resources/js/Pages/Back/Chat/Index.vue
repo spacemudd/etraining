@@ -270,26 +270,28 @@
                                                 <span v-if="conv.last_message && conv.last_message.is_note" class="text-amber-700">[{{ $t('words.internal-note') }}] </span>
                                                 {{ conv.last_message && conv.last_message.body }}
                                             </span>
-                                            <div
-                                                v-if="(conv.agents && conv.agents.length) || (conv.tags && conv.tags.length)"
-                                                class="flex items-center gap-1 flex-shrink-0"
+                                        </div>
+                                        <div
+                                            v-if="(conv.agents && conv.agents.length) || (conv.tags && conv.tags.length)"
+                                            class="flex items-center flex-wrap gap-1 mt-1"
+                                        >
+                                            <span
+                                                v-for="agent in (conv.agents || [])"
+                                                :key="'la-' + conv.id + '-' + agent.id"
+                                                class="inline-flex items-center max-w-[72px] truncate px-1 py-0.5 rounded-sm bg-gray-200 text-gray-700 text-xs font-medium leading-tight"
+                                                :title="agent.name"
                                             >
-                                                <span
-                                                    v-if="conv.agents && conv.agents[0]"
-                                                    class="inline-flex items-center max-w-[72px] truncate px-1 py-0.5 rounded-sm bg-gray-200 text-gray-700 text-xs font-medium leading-tight"
-                                                    :title="conv.agents[0].name"
-                                                >
-                                                    {{ agentFirstName(conv.agents[0].name) }}
-                                                </span>
-                                                <span
-                                                    v-if="conv.tags && conv.tags[0]"
-                                                    class="inline-flex max-w-[72px] truncate px-1.5 py-0.5 rounded text-xs font-medium bg-gray-200 text-gray-600"
-                                                    :style="conv.tags[0].color ? { backgroundColor: conv.tags[0].color, color: '#fff' } : null"
-                                                    :title="conv.tags[0].name"
-                                                >
-                                                    {{ conv.tags[0].name }}
-                                                </span>
-                                            </div>
+                                                {{ agentFirstName(agent.name) }}
+                                            </span>
+                                            <span
+                                                v-for="tag in (conv.tags || [])"
+                                                :key="'lt-' + conv.id + '-' + tag.id"
+                                                class="inline-flex max-w-[72px] truncate px-1.5 py-0.5 rounded text-xs font-medium bg-gray-200 text-gray-600"
+                                                :style="tag.color ? { backgroundColor: tag.color, color: '#fff' } : null"
+                                                :title="tag.name"
+                                            >
+                                                {{ tag.name }}
+                                            </span>
                                         </div>
                                     </div>
                                     </transition-group>
