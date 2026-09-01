@@ -358,7 +358,7 @@ export default {
                 reader.onerror = () => reject(reader.error || new Error('read failed'));
                 reader.readAsText(file);
             });
-                const { data } = await axios.post(route('back.finance.whatsapp.preview-csv'), { csv });
+                const { data } = await axios.post(route('back.chat.preview-csv'), { csv });
                 this.csvRows = (data.rows || []).map((row) => ({
                     ...row,
                     selected: !!row.window_open,
@@ -421,7 +421,7 @@ export default {
                 return;
             }
             try {
-                const { data } = await axios.get(route('back.finance.whatsapp.templates.show', this.csvTemplateSid));
+                const { data } = await axios.get(route('back.chat.templates.show', this.csvTemplateSid));
                 this.csvTemplate = data.template;
                 const manual = this.csvTemplate.manual_variables || this.csvTemplate.variables || [];
                 const samples = this.csvTemplate.variable_samples || {};
@@ -467,7 +467,7 @@ export default {
             }
 
             try {
-                const { data } = await axios.post(route('back.finance.whatsapp.send-bulk'), payload);
+                const { data } = await axios.post(route('back.chat.send-bulk'), payload);
                 this.csvResult = data;
             } catch (error) {
                 this.csvError = (error.response && error.response.data && error.response.data.message)

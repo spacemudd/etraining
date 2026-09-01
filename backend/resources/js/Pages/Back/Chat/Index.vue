@@ -1064,7 +1064,7 @@
         </portal>
         <portal-target name="emoji-picker-portal"></portal-target>
         <portal to="new-chat-modal">
-            <modal name="newChatModal" :width="620" :height="'auto'" :scrollable="true">
+            <modal name="newChatModal" :width="720" :height="'auto'" :scrollable="true">
                 <div class="bg-white rounded-xl shadow-2xl p-6 flex flex-col max-h-[85vh]">
                     <div class="flex items-center justify-between pb-4 border-b mb-4">
                         <h3 class="text-lg font-bold text-gray-800">{{ $t('words.new-chat') }}</h3>
@@ -1073,7 +1073,7 @@
                         </button>
                     </div>
 
-                    <div class="flex gap-0.5 p-0.5 bg-gray-100 rounded-md mb-4 w-fit">
+                    <div class="flex flex-wrap gap-0.5 p-0.5 bg-gray-100 rounded-md mb-4 w-fit">
                         <button
                             type="button"
                             class="px-3 py-1.5 rounded text-xs font-medium transition"
@@ -1098,9 +1098,21 @@
                         >
                             {{ $t('words.custom-phone-number') }}
                         </button>
+                        <button
+                            type="button"
+                            class="px-3 py-1.5 rounded text-xs font-medium transition"
+                            :class="newChatRecipientMode === 'csv' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                            @click="setNewChatRecipientMode('csv')"
+                        >
+                            {{ $t('words.whatsapp-csv-list') }}
+                        </button>
                     </div>
 
-                    <div class="space-y-4 mb-4 overflow-y-auto">
+                    <div v-if="newChatRecipientMode === 'csv'" class="flex-1 min-h-0 flex flex-col">
+                        <finance-whatsapp-csv-wizard :templates="templates" />
+                    </div>
+
+                    <div v-else class="space-y-4 mb-4 overflow-y-auto">
                         <div v-if="newChatRecipientMode === 'search'" class="space-y-3">
                             <div v-if="!newChatSelectedCompany">
                                 <label class="block text-xs font-medium text-gray-600 mb-1">{{ $t('words.new-chat-search-hint') }}</label>
@@ -1396,7 +1408,7 @@
                         </p>
                     </div>
 
-                    <div class="flex justify-end gap-2 pt-3 border-t">
+                    <div v-if="newChatRecipientMode !== 'csv'" class="flex justify-end gap-2 pt-3 border-t">
                         <button
                             @click="$modal.hide('newChatModal')"
                             class="px-4 py-2 rounded-md text-sm font-medium bg-gray-100 hover:bg-gray-200 text-gray-700 transition"
@@ -1421,8 +1433,8 @@
                         </button>
                     </div>
 
-                    <p v-if="newChatError" class="mt-2 text-xs text-red-600">{{ newChatError }}</p>
-                    <p v-if="newChatSuccess" class="mt-2 text-xs text-green-600">{{ newChatSuccess }}</p>
+                    <p v-if="newChatRecipientMode !== 'csv' && newChatError" class="mt-2 text-xs text-red-600">{{ newChatError }}</p>
+                    <p v-if="newChatRecipientMode !== 'csv' && newChatSuccess" class="mt-2 text-xs text-green-600">{{ newChatSuccess }}</p>
                 </div>
             </modal>
 
@@ -1625,6 +1637,7 @@
 <script>
 import ChatLayout from '@/Layouts/ChatLayout';
 import WhatsAppTemplatesManager from '@/Components/WhatsAppTemplatesManager';
+import FinanceWhatsAppCsvWizard from '@/Components/FinanceWhatsAppCsvWizard';
 import axios from 'axios';
 import throttle from 'lodash/throttle';
 import moment from 'moment';
@@ -1651,6 +1664,7 @@ export default {
     components: {
         ChatLayout,
         WhatsAppTemplatesManager,
+        FinanceWhatsAppCsvWizard,
     },
     props: {
         configured: {
