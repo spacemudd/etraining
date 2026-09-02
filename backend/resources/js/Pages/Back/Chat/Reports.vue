@@ -195,7 +195,7 @@ export default {
         applyDates() {
             this.processing = true;
             this.$inertia.get(
-                this.route('back.chat.reports'),
+                '/back/chat/reports',
                 {
                     date_from: this.form.date_from,
                     date_to: this.form.date_to,

@@ -35,7 +35,7 @@
                     </button>
                     <inertia-link
                         v-can="'view-whatsapp-reports'"
-                        :href="route('back.chat.reports')"
+                        href="/back/chat/reports"
                         class="text-xs leading-tight text-indigo-700 border border-indigo-300 bg-indigo-50 hover:bg-indigo-100 px-2 py-1 rounded-md font-medium transition whitespace-nowrap"
                     >
                         {{ $t('words.reports') }}

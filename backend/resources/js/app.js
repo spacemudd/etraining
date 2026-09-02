@@ -49,7 +49,15 @@ Vue.mixin({
     methods: { 
         route: function(name, params = {}) {
             if (typeof window.route === 'function') {
-                return window.route(name, params);
+                try {
+                    return window.route(name, params);
+                } catch (error) {
+                    if (Object.prototype.hasOwnProperty.call(routeFallbacks, name)) {
+                        return routeFallbacks[name];
+                    }
+
+                    throw error;
+                }
             }
             return '#';
         }
@@ -90,6 +98,9 @@ Vue.directive('can', function (el, binding) {
 
 const app = document.getElementById('app');
 
+const initialPage = JSON.parse(app.dataset.page);
+mergeZiggyRoutes(initialPage.props.ziggy);
+
 const lang = document.documentElement.lang.substr(0, 2);
 const i18n = new VueInternationalization({
     locale: lang,
@@ -111,6 +122,31 @@ const appName = lang === 'ar' ? 'منصة التدريب' : 'eTraining';
 // });
 
 import Store from './Store/index';
+
+const routeFallbacks = {
+    'back.chat.reports': '/back/chat/reports',
+};
+
+function mergeZiggyRoutes(ziggy) {
+    if (!ziggy || !ziggy.namedRoutes || typeof window.Ziggy === 'undefined') {
+        return;
+    }
+
+    window.Ziggy.namedRoutes = {
+        ...window.Ziggy.namedRoutes,
+        ...ziggy.namedRoutes,
+    };
+
+    if (ziggy.url) {
+        window.Ziggy.url = ziggy.url;
+    }
+}
+
+import { Inertia } from '@inertiajs/inertia';
+
+Inertia.on('success', (event) => {
+    mergeZiggyRoutes(event.detail.page.props.ziggy);
+});
 
 new Vue({
     i18n,

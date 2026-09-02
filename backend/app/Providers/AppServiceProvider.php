@@ -52,6 +52,9 @@ class AppServiceProvider extends ServiceProvider
                     'error' => session('error'),
                 ];
             },
+            'ziggy' => function () {
+                return \Tightenco\Ziggy\RoutePayload::compile(app('router'));
+            },
         ]);
     }
 
