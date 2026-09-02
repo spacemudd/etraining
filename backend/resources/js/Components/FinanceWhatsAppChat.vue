@@ -585,18 +585,41 @@
                                     <div class="text-sm font-medium text-gray-900 truncate">{{ newChatSelectedCompany.name }}</div>
                                 </div>
                                 <p class="text-xs text-gray-500">{{ $t('words.whatsapp-company-bulk-hint') }}</p>
-                                <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer select-none">
-                                    <input
-                                        v-model="newChatOnlyPendingInvoices"
-                                        type="checkbox"
-                                        class="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-600 mb-1">
+                                        {{ $t('words.whatsapp-pending-invoice-month') }}
+                                    </label>
+                                    <select
+                                        v-model="newChatPendingInvoiceMonth"
+                                        class="w-full form-select text-sm rounded-md border-gray-200"
+                                        :disabled="newChatLoadingPendingMonths"
                                         @change="loadNewChatCompanyTrainees"
-                                    />
-                                    <span>{{ $t('words.whatsapp-only-trainees-with-pending-invoices') }}</span>
-                                </label>
+                                    >
+                                        <option value="">{{ $t('words.whatsapp-all-active-trainees') }}</option>
+                                        <option
+                                            v-for="monthOption in newChatPendingMonths"
+                                            :key="'fnpm-' + monthOption.month"
+                                            :value="monthOption.month"
+                                        >
+                                            {{ monthOption.label }} {{ monthOption.year }} ({{ monthOption.invoice_count }})
+                                        </option>
+                                    </select>
+                                    <p
+                                        v-if="newChatLoadingPendingMonths"
+                                        class="text-[11px] text-gray-400 mt-1"
+                                    >
+                                        {{ $t('words.loading') }}...
+                                    </p>
+                                    <p
+                                        v-else-if="!newChatPendingMonths.length"
+                                        class="text-[11px] text-gray-400 mt-1"
+                                    >
+                                        {{ $t('words.whatsapp-no-pending-invoice-months') }}
+                                    </p>
+                                </div>
                                 <div class="text-sm text-gray-700">
                                     <span v-if="newChatLoadingCompanyTrainees">{{ $t('words.loading') }}</span>
-                                    <span v-else-if="newChatOnlyPendingInvoices">
+                                    <span v-else-if="newChatPendingInvoiceMonth">
                                         {{ $t('words.whatsapp-trainees-with-pending-count', { count: newChatCompanyActiveCount }) }}
                                     </span>
                                     <span v-else>
@@ -620,7 +643,7 @@
                                     v-else-if="!newChatLoadingCompanyTrainees"
                                     class="text-xs text-gray-400 px-1 py-2"
                                 >
-                                    {{ newChatOnlyPendingInvoices
+                                    {{ newChatPendingInvoiceMonth
                                         ? $t('words.whatsapp-company-no-pending-invoice-trainees')
                                         : $t('words.whatsapp-company-no-active-trainees') }}
                                 </div>
@@ -776,7 +799,9 @@ export default {
             newChatSelectedCompany: null,
             newChatCompanyTrainees: [],
             newChatCompanyActiveCount: 0,
-            newChatOnlyPendingInvoices: false,
+            newChatPendingInvoiceMonth: '',
+            newChatPendingMonths: [],
+            newChatLoadingPendingMonths: false,
             newChatLoadingCompanyTrainees: false,
             newChatTemplateSid: '',
             newChatTemplate: null,
@@ -1196,7 +1221,9 @@ export default {
             this.newChatSelectedCompany = null;
             this.newChatCompanyTrainees = [];
             this.newChatCompanyActiveCount = 0;
-            this.newChatOnlyPendingInvoices = false;
+            this.newChatPendingInvoiceMonth = '';
+            this.newChatPendingMonths = [];
+            this.newChatLoadingPendingMonths = false;
             this.newChatLoadingCompanyTrainees = false;
             this.newChatTemplateSid = '';
             this.newChatTemplate = null;
@@ -1370,22 +1397,48 @@ export default {
         },
         async pickNewChatCompany(company) {
             this.newChatSelectedCompany = company;
+            this.newChatPendingInvoiceMonth = '';
+            this.newChatPendingMonths = [];
             this.newChatError = '';
             this.newChatSuccess = '';
             this.newChatTemplateSid = '';
             this.newChatTemplate = null;
             this.newChatTemplateVariables = {};
-            await this.loadNewChatCompanyTrainees();
+            await Promise.all([
+                this.loadNewChatPendingMonths(),
+                this.loadNewChatCompanyTrainees(),
+            ]);
         },
         clearNewChatCompany() {
             this.newChatSelectedCompany = null;
             this.newChatCompanyTrainees = [];
             this.newChatCompanyActiveCount = 0;
+            this.newChatPendingInvoiceMonth = '';
+            this.newChatPendingMonths = [];
+            this.newChatLoadingPendingMonths = false;
             this.newChatTemplateSid = '';
             this.newChatTemplate = null;
             this.newChatTemplateVariables = {};
             this.newChatError = '';
             this.newChatSuccess = '';
+        },
+        async loadNewChatPendingMonths() {
+            if (!this.newChatSelectedCompany || !this.newChatSelectedCompany.id) {
+                this.newChatPendingMonths = [];
+                return;
+            }
+
+            this.newChatLoadingPendingMonths = true;
+            try {
+                const { data } = await axios.get(
+                    route('back.finance.whatsapp.companies.pending-invoice-months', this.newChatSelectedCompany.id)
+                );
+                this.newChatPendingMonths = data.months || [];
+            } catch (error) {
+                this.newChatPendingMonths = [];
+            } finally {
+                this.newChatLoadingPendingMonths = false;
+            }
         },
         async loadNewChatCompanyTrainees() {
             if (!this.newChatSelectedCompany || !this.newChatSelectedCompany.id) {
@@ -1396,13 +1449,14 @@ export default {
 
             this.newChatLoadingCompanyTrainees = true;
             try {
+                const params = {};
+                if (this.newChatPendingInvoiceMonth) {
+                    params.pending_invoice_month = this.newChatPendingInvoiceMonth;
+                }
+
                 const { data } = await axios.get(
                     route('back.finance.whatsapp.companies.active-trainees', this.newChatSelectedCompany.id),
-                    {
-                        params: {
-                            only_pending_invoices: this.newChatOnlyPendingInvoices ? 1 : 0,
-                        },
-                    }
+                    { params }
                 );
                 this.newChatCompanyTrainees = data.trainees || [];
                 this.newChatCompanyActiveCount = data.count || this.newChatCompanyTrainees.length;
@@ -1479,12 +1533,16 @@ export default {
             this.newChatSuccess = '';
 
             try {
-                const { data } = await axios.post(route('back.finance.whatsapp.send-template-to-company'), {
+                const payload = {
                     company_id: this.newChatSelectedCompany.id,
                     content_sid: this.newChatTemplateSid,
                     content_variables: this.newChatTemplateVariables,
-                    only_pending_invoices: this.newChatOnlyPendingInvoices ? 1 : 0,
-                });
+                };
+                if (this.newChatPendingInvoiceMonth) {
+                    payload.pending_invoice_month = this.newChatPendingInvoiceMonth;
+                }
+
+                const { data } = await axios.post(route('back.finance.whatsapp.send-template-to-company'), payload);
 
                 this.newChatSuccess = data.message
                     || this.$t('words.whatsapp-company-template-sent', {

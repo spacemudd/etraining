@@ -645,6 +645,7 @@ class ChatController extends Controller
         }
 
         $invoices = Invoice::query()
+            ->withoutGlobalScope('RiyadhBankAccounts')
             ->whereIn('trainee_id', $traineeIds)
             ->whereNull('paid_at')
             ->where('status', '!=', Invoice::STATUS_ARCHIVED)
@@ -1536,7 +1537,8 @@ class ChatController extends Controller
         $monthEnd = $month->copy()->endOfMonth()->toDateString();
 
         $query->whereHas('invoices', static function ($invoiceQuery) use ($monthStart, $monthEnd): void {
-            $invoiceQuery->whereNull('paid_at')
+            $invoiceQuery->withoutGlobalScope('RiyadhBankAccounts')
+                ->whereNull('paid_at')
                 ->where('status', '!=', Invoice::STATUS_ARCHIVED)
                 ->whereDate('from_date', '>=', $monthStart)
                 ->whereDate('from_date', '<=', $monthEnd);

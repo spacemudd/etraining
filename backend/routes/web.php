@@ -892,6 +892,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
                 Route::get('trainees/{trainee}/pending-invoices', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'pendingInvoices'])->name('trainees.pending-invoices');
                 Route::get('companies', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'searchCompanies'])->name('companies');
                 Route::get('companies/{company}/active-trainees', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'companyActiveTrainees'])->name('companies.active-trainees');
+                Route::get('companies/{company}/pending-invoice-months', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'companyPendingInvoiceMonths'])->name('companies.pending-invoice-months');
                 Route::get('messages', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'messages'])->name('messages');
                 Route::get('bot-status', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'botStatus'])->name('bot-status');
                 Route::post('bot-pause', [\App\Http\Controllers\Back\FinanceWhatsAppController::class, 'pauseBot'])->name('bot-pause');

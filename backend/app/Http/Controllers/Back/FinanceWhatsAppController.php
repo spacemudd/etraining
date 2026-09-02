@@ -17,8 +17,10 @@ use App\Support\WhatsAppBotStatus;
 use App\Support\WhatsAppConversationSync;
 use App\Support\WhatsAppCsvPhoneParser;
 use App\Support\WhatsAppMessagingWindow;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use RuntimeException;
 
 class FinanceWhatsAppController extends Controller
@@ -223,13 +225,15 @@ class FinanceWhatsAppController extends Controller
         $companyModel = Company::withoutGlobalScopes()->findOrFail($company);
 
         $request->validate([
-            'only_pending_invoices' => 'nullable|boolean',
+            'pending_invoice_month' => 'nullable|string|regex:/^\d{4}-\d{2}$/',
         ]);
-        $onlyPendingInvoices = $request->boolean('only_pending_invoices');
+        $pendingInvoiceMonth = $this->normalizePendingInvoiceMonth(
+            $request->input('pending_invoice_month')
+        );
 
         $query = $this->activeTraineesWithPhoneQuery()
             ->where('company_id', $companyModel->id);
-        $this->applyPendingInvoicesTraineeFilter($query, $onlyPendingInvoices);
+        $this->applyPendingInvoicesTraineeFilter($query, $pendingInvoiceMonth);
 
         $trainees = $query
             ->orderBy('name')
@@ -240,7 +244,7 @@ class FinanceWhatsAppController extends Controller
                 'id' => $companyModel->id,
                 'name' => $companyModel->name_ar ?: $companyModel->name_en,
             ],
-            'only_pending_invoices' => $onlyPendingInvoices,
+            'pending_invoice_month' => $pendingInvoiceMonth,
             'count' => $trainees->count(),
             'trainees' => $trainees->map(static fn (Trainee $trainee) => [
                 'id' => $trainee->id,
@@ -248,6 +252,76 @@ class FinanceWhatsAppController extends Controller
                 'phone' => $trainee->phone,
                 'identity_number' => $trainee->identity_number,
             ])->values(),
+        ]);
+    }
+
+    public function companyPendingInvoiceMonths(string $company): JsonResponse
+    {
+        $companyModel = Company::withoutGlobalScopes()->findOrFail($company);
+
+        $traineeIds = $this->activeTraineesWithPhoneQuery()
+            ->where('company_id', $companyModel->id)
+            ->pluck('id')
+            ->all();
+
+        if ($traineeIds === []) {
+            return response()->json([
+                'company' => [
+                    'id' => $companyModel->id,
+                    'name' => $companyModel->name_ar ?: $companyModel->name_en,
+                ],
+                'months' => [],
+            ]);
+        }
+
+        $invoices = Invoice::query()
+            ->withoutGlobalScope('RiyadhBankAccounts')
+            ->whereIn('trainee_id', $traineeIds)
+            ->whereNull('paid_at')
+            ->where('status', '!=', Invoice::STATUS_ARCHIVED)
+            ->whereNotNull('from_date')
+            ->get(['trainee_id', 'from_date']);
+
+        $monthNames = [
+            1 => 'january',
+            2 => 'february',
+            3 => 'march',
+            4 => 'april',
+            5 => 'may',
+            6 => 'june',
+            7 => 'july',
+            8 => 'august',
+            9 => 'september',
+            10 => 'october',
+            11 => 'november',
+            12 => 'december',
+        ];
+
+        $months = $invoices
+            ->groupBy(static function (Invoice $invoice): string {
+                return Carbon::parse($invoice->from_date)->format('Y-m');
+            })
+            ->map(static function ($group, string $monthKey) use ($monthNames) {
+                $month = Carbon::createFromFormat('!Y-m', $monthKey)->startOfMonth();
+                $monthNameKey = $monthNames[(int) $month->month] ?? 'january';
+
+                return [
+                    'month' => $monthKey,
+                    'label' => __('words.' . $monthNameKey),
+                    'year' => (int) $month->year,
+                    'invoice_count' => $group->count(),
+                    'trainee_count' => $group->pluck('trainee_id')->unique()->count(),
+                ];
+            })
+            ->sortByDesc('month')
+            ->values();
+
+        return response()->json([
+            'company' => [
+                'id' => $companyModel->id,
+                'name' => $companyModel->name_ar ?: $companyModel->name_en,
+            ],
+            'months' => $months,
         ]);
     }
 
@@ -413,18 +487,20 @@ class FinanceWhatsAppController extends Controller
             'content_sid' => 'required|string|max:64',
             'content_variables' => 'nullable|array',
             'content_variables.*' => 'nullable|string|max:1000',
-            'only_pending_invoices' => 'nullable|boolean',
+            'pending_invoice_month' => 'nullable|string|regex:/^\d{4}-\d{2}$/',
         ]);
 
         $company = Company::withoutGlobalScopes()->findOrFail($validated['company_id']);
-        $onlyPendingInvoices = $request->boolean('only_pending_invoices');
+        $pendingInvoiceMonth = $this->normalizePendingInvoiceMonth(
+            $validated['pending_invoice_month'] ?? null
+        );
 
         $query = $this->activeTraineesWithPhoneQuery()
             ->where('company_id', $company->id)
             ->with(['company' => static function ($companyQuery): void {
                 $companyQuery->withoutGlobalScopes()->select(['id', 'name_ar', 'name_en']);
             }]);
-        $this->applyPendingInvoicesTraineeFilter($query, $onlyPendingInvoices);
+        $this->applyPendingInvoicesTraineeFilter($query, $pendingInvoiceMonth);
 
         $trainees = $query
             ->orderBy('name')
@@ -432,7 +508,7 @@ class FinanceWhatsAppController extends Controller
 
         if ($trainees->isEmpty()) {
             return response()->json([
-                'message' => $onlyPendingInvoices
+                'message' => $pendingInvoiceMonth
                     ? __('words.whatsapp-company-no-pending-invoice-trainees')
                     : __('words.whatsapp-company-no-active-trainees'),
             ], 422);
@@ -729,17 +805,34 @@ class FinanceWhatsAppController extends Controller
         return $rows;
     }
 
-    private function applyPendingInvoicesTraineeFilter($query, bool $onlyPendingInvoices): void
+    private function normalizePendingInvoiceMonth(?string $month): ?string
     {
-        if (! $onlyPendingInvoices) {
+        if ($month === null || $month === '') {
+            return null;
+        }
+
+        try {
+            return Carbon::createFromFormat('!Y-m', $month)->format('Y-m');
+        } catch (\Throwable $exception) {
+            throw ValidationException::withMessages([
+                'pending_invoice_month' => __('validation.regex', ['attribute' => 'pending_invoice_month']),
+            ]);
+        }
+    }
+
+    private function applyPendingInvoicesTraineeFilter($query, ?string $pendingInvoiceMonth): void
+    {
+        if ($pendingInvoiceMonth === null || $pendingInvoiceMonth === '') {
             return;
         }
 
-        $query->whereHas('invoices', static function ($invoiceQuery): void {
-            $monthStart = now()->startOfMonth()->toDateString();
-            $monthEnd = now()->endOfMonth()->toDateString();
+        $month = Carbon::createFromFormat('!Y-m', $pendingInvoiceMonth)->startOfMonth();
+        $monthStart = $month->toDateString();
+        $monthEnd = $month->copy()->endOfMonth()->toDateString();
 
-            $invoiceQuery->whereNull('paid_at')
+        $query->whereHas('invoices', static function ($invoiceQuery) use ($monthStart, $monthEnd): void {
+            $invoiceQuery->withoutGlobalScope('RiyadhBankAccounts')
+                ->whereNull('paid_at')
                 ->where('status', '!=', Invoice::STATUS_ARCHIVED)
                 ->whereDate('from_date', '>=', $monthStart)
                 ->whereDate('from_date', '<=', $monthEnd);
