@@ -4492,7 +4492,7 @@ export default {
         },
         async loadAgentCompanyFilters() {
             try {
-                const { data } = await axios.get(route('back.chat.company-filters'));
+                const { data } = await axios.get('/back/chat/company-filters');
                 this.agentCompanyFilters = data.companies || [];
             } catch (error) {
                 this.agentCompanyFilters = [];
@@ -4564,8 +4564,9 @@ export default {
                 return;
             }
             this.savingCompanyFilters = true;
+            this.errorMessage = '';
             try {
-                const { data } = await axios.put(route('back.chat.company-filters.update'), {
+                const { data } = await axios.put('/back/chat/company-filters', {
                     company_ids: (this.companyFilterDraft || []).map((company) => company.id),
                 });
                 this.agentCompanyFilters = data.companies || [];
@@ -4573,7 +4574,8 @@ export default {
                 this.closeCompanyFilterModal();
                 this.reloadConversationsFromStart();
             } catch (error) {
-                // Keep modal open so the agent can retry.
+                this.errorMessage = (error.response && error.response.data && error.response.data.message)
+                    || (error.message || this.$t('words.error'));
             } finally {
                 this.savingCompanyFilters = false;
             }
@@ -4583,13 +4585,15 @@ export default {
                 return;
             }
             this.savingCompanyFilters = true;
+            this.errorMessage = '';
             try {
-                await axios.delete(route('back.chat.company-filters.clear'));
+                await axios.delete('/back/chat/company-filters');
                 this.agentCompanyFilters = [];
                 this.companyFilterPaused = false;
                 this.reloadConversationsFromStart();
             } catch (error) {
-                // Ignore; list stays as-is.
+                this.errorMessage = (error.response && error.response.data && error.response.data.message)
+                    || (error.message || this.$t('words.error'));
             } finally {
                 this.savingCompanyFilters = false;
             }

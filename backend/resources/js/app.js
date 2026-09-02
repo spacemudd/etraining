@@ -125,6 +125,9 @@ import Store from './Store/index';
 
 const routeFallbacks = {
     'back.chat.reports': '/back/chat/reports',
+    'back.chat.company-filters': '/back/chat/company-filters',
+    'back.chat.company-filters.update': '/back/chat/company-filters',
+    'back.chat.company-filters.clear': '/back/chat/company-filters',
 };
 
 function mergeZiggyRoutes(ziggy) {
