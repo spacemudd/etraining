@@ -855,6 +855,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('companies', [\App\Http\Controllers\Back\ChatController::class, 'searchCompanies'])->name('companies');
             Route::get('companies/{company}/trainees', [\App\Http\Controllers\Back\ChatController::class, 'companyTrainees'])->name('companies.trainees');
             Route::get('companies/{company}/active-trainees', [\App\Http\Controllers\Back\ChatController::class, 'companyActiveTrainees'])->name('companies.active-trainees');
+            Route::get('companies/{company}/pending-invoice-months', [\App\Http\Controllers\Back\ChatController::class, 'companyPendingInvoiceMonths'])->name('companies.pending-invoice-months');
             Route::get('quick-replies', [\App\Http\Controllers\Back\ChatController::class, 'quickReplies'])->name('quick-replies');
             Route::post('quick-replies', [\App\Http\Controllers\Back\ChatController::class, 'storeQuickReply'])->name('quick-replies.store');
             Route::delete('quick-replies/{quickReply}', [\App\Http\Controllers\Back\ChatController::class, 'destroyQuickReply'])->name('quick-replies.destroy');

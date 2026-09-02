@@ -664,7 +664,24 @@
                         </div>
 
                         <!-- Composer -->
-                        <div class="border-t p-3 bg-white flex-1 min-h-0 flex flex-col overflow-hidden">
+                        <div class="border-t bg-white flex-1 min-h-0 flex flex-col overflow-hidden">
+                            <a
+                                v-if="composerCompanyUrl"
+                                :href="composerCompanyUrl"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="flex-shrink-0 block px-3 py-1 border-b bg-gray-50 text-gray-500 hover:text-gray-800 hover:bg-gray-100 hover:underline truncate"
+                                style="font-size: 10px; line-height: 1.3;"
+                                dir="auto"
+                                :title="composerCompanyName"
+                            >{{ composerCompanyName }}</a>
+                            <div
+                                v-else-if="composerCompanyName"
+                                class="flex-shrink-0 px-3 py-1 border-b bg-gray-50 text-gray-400 truncate"
+                                style="font-size: 10px; line-height: 1.3;"
+                                dir="auto"
+                            >{{ composerCompanyName }}</div>
+                            <div class="p-3 flex-1 min-h-0 flex flex-col overflow-hidden">
                             <div class="flex items-center justify-between gap-2 mb-3 flex-shrink-0">
                                 <div class="flex gap-0.5 p-0.5 bg-gray-100 rounded-md w-fit flex-wrap">
                                     <button
@@ -849,6 +866,7 @@
 
                             <p v-if="errorMessage" class="mt-2 text-xs text-red-600 flex-shrink-0">{{ errorMessage }}</p>
                             <p v-if="successMessage" class="mt-2 text-xs text-green-600 flex-shrink-0">{{ successMessage }}</p>
+                            </div>
                         </div>
                         </div>
 
@@ -1318,18 +1336,41 @@
                                     <div class="text-sm font-medium text-gray-900 truncate">{{ newChatBulkCompany.name }}</div>
                                 </div>
                                 <p class="text-xs text-gray-500">{{ $t('words.whatsapp-company-bulk-hint') }}</p>
-                                <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer select-none">
-                                    <input
-                                        v-model="newChatBulkOnlyPendingInvoices"
-                                        type="checkbox"
-                                        class="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-600 mb-1">
+                                        {{ $t('words.whatsapp-pending-invoice-month') }}
+                                    </label>
+                                    <select
+                                        v-model="newChatBulkPendingInvoiceMonth"
+                                        class="w-full form-select text-sm rounded-md border-gray-200"
+                                        :disabled="newChatBulkLoadingPendingMonths"
                                         @change="loadNewChatBulkActiveTrainees"
-                                    />
-                                    <span>{{ $t('words.whatsapp-only-trainees-with-pending-invoices') }}</span>
-                                </label>
+                                    >
+                                        <option value="">{{ $t('words.whatsapp-all-active-trainees') }}</option>
+                                        <option
+                                            v-for="monthOption in newChatBulkPendingMonths"
+                                            :key="'npm-' + monthOption.month"
+                                            :value="monthOption.month"
+                                        >
+                                            {{ monthOption.label }} {{ monthOption.year }} ({{ monthOption.invoice_count }})
+                                        </option>
+                                    </select>
+                                    <p
+                                        v-if="newChatBulkLoadingPendingMonths"
+                                        class="text-[11px] text-gray-400 mt-1"
+                                    >
+                                        {{ $t('words.loading') }}...
+                                    </p>
+                                    <p
+                                        v-else-if="!newChatBulkPendingMonths.length"
+                                        class="text-[11px] text-gray-400 mt-1"
+                                    >
+                                        {{ $t('words.whatsapp-no-pending-invoice-months') }}
+                                    </p>
+                                </div>
                                 <div class="text-sm text-gray-700">
                                     <span v-if="newChatBulkLoadingTrainees">{{ $t('words.loading') }}...</span>
-                                    <span v-else-if="newChatBulkOnlyPendingInvoices">
+                                    <span v-else-if="newChatBulkPendingInvoiceMonth">
                                         {{ $t('words.whatsapp-trainees-with-pending-count', { count: newChatBulkActiveCount }) }}
                                     </span>
                                     <span v-else>
@@ -1353,7 +1394,7 @@
                                     v-else-if="!newChatBulkLoadingTrainees"
                                     class="text-xs text-gray-400 px-1 py-2"
                                 >
-                                    {{ newChatBulkOnlyPendingInvoices
+                                    {{ newChatBulkPendingInvoiceMonth
                                         ? $t('words.whatsapp-company-no-pending-invoice-trainees')
                                         : $t('words.whatsapp-company-no-active-trainees') }}
                                 </div>
@@ -1795,7 +1836,9 @@ export default {
             newChatBulkActiveTrainees: [],
             newChatBulkActiveCount: 0,
             newChatBulkLoadingTrainees: false,
-            newChatBulkOnlyPendingInvoices: false,
+            newChatBulkPendingInvoiceMonth: '',
+            newChatBulkPendingMonths: [],
+            newChatBulkLoadingPendingMonths: false,
             conversationPage: 1,
             totalPages: 1,
             totalConversations: 0,
@@ -1861,6 +1904,26 @@ export default {
                 return this.$t('words.caller-call-active');
             }
             return this.$t('words.caller-call-login');
+        },
+        composerCompanyName() {
+            const fromContext = this.traineeContext && this.traineeContext.trainee
+                ? String(this.traineeContext.trainee.company_name || '').trim()
+                : '';
+            if (fromContext) {
+                return fromContext;
+            }
+            const trainee = this.selectedConversation && this.selectedConversation.trainee;
+            return trainee ? String(trainee.company_name || '').trim() : '';
+        },
+        composerCompanyUrl() {
+            const fromContext = this.traineeContext && this.traineeContext.trainee
+                ? this.traineeContext.trainee.company_show_url
+                : null;
+            if (fromContext) {
+                return fromContext;
+            }
+            const trainee = this.selectedConversation && this.selectedConversation.trainee;
+            return (trainee && trainee.company_show_url) || null;
         },
         isNarrowViewport() {
             return this.viewportWidth < 768;
@@ -3528,7 +3591,9 @@ export default {
             this.newChatBulkActiveTrainees = [];
             this.newChatBulkActiveCount = 0;
             this.newChatBulkLoadingTrainees = false;
-            this.newChatBulkOnlyPendingInvoices = false;
+            this.newChatBulkPendingInvoiceMonth = '';
+            this.newChatBulkPendingMonths = [];
+            this.newChatBulkLoadingPendingMonths = false;
             this.newChatSuccess = '';
             if (this.newChatSearchDebounce) {
                 clearTimeout(this.newChatSearchDebounce);
@@ -3876,16 +3941,42 @@ export default {
         },
         async selectNewChatBulkCompany(company) {
             this.newChatBulkCompany = company;
+            this.newChatBulkPendingInvoiceMonth = '';
+            this.newChatBulkPendingMonths = [];
             this.newChatError = '';
             this.newChatSuccess = '';
-            await this.loadNewChatBulkActiveTrainees();
+            await Promise.all([
+                this.loadNewChatBulkPendingMonths(),
+                this.loadNewChatBulkActiveTrainees(),
+            ]);
         },
         clearNewChatBulkCompany() {
             this.newChatBulkCompany = null;
             this.newChatBulkActiveTrainees = [];
             this.newChatBulkActiveCount = 0;
+            this.newChatBulkPendingInvoiceMonth = '';
+            this.newChatBulkPendingMonths = [];
+            this.newChatBulkLoadingPendingMonths = false;
             this.newChatError = '';
             this.newChatSuccess = '';
+        },
+        async loadNewChatBulkPendingMonths() {
+            if (!this.newChatBulkCompany || !this.newChatBulkCompany.id) {
+                this.newChatBulkPendingMonths = [];
+                return;
+            }
+
+            this.newChatBulkLoadingPendingMonths = true;
+            try {
+                const { data } = await axios.get(
+                    route('back.chat.companies.pending-invoice-months', this.newChatBulkCompany.id)
+                );
+                this.newChatBulkPendingMonths = data.months || [];
+            } catch (error) {
+                this.newChatBulkPendingMonths = [];
+            } finally {
+                this.newChatBulkLoadingPendingMonths = false;
+            }
         },
         async loadNewChatBulkActiveTrainees() {
             if (!this.newChatBulkCompany || !this.newChatBulkCompany.id) {
@@ -3896,13 +3987,14 @@ export default {
 
             this.newChatBulkLoadingTrainees = true;
             try {
+                const params = {};
+                if (this.newChatBulkPendingInvoiceMonth) {
+                    params.pending_invoice_month = this.newChatBulkPendingInvoiceMonth;
+                }
+
                 const { data } = await axios.get(
                     route('back.chat.companies.active-trainees', this.newChatBulkCompany.id),
-                    {
-                        params: {
-                            only_pending_invoices: this.newChatBulkOnlyPendingInvoices ? 1 : 0,
-                        },
-                    }
+                    { params }
                 );
                 this.newChatBulkActiveTrainees = data.trainees || [];
                 this.newChatBulkActiveCount = data.count || this.newChatBulkActiveTrainees.length;
@@ -3935,12 +4027,16 @@ export default {
             this.newChatSuccess = '';
 
             try {
-                const { data } = await axios.post(route('back.chat.send-template-to-company'), {
+                const payload = {
                     company_id: this.newChatBulkCompany.id,
                     content_sid: this.newChatTemplateSid,
                     content_variables: this.newChatTemplateVariables,
-                    only_pending_invoices: this.newChatBulkOnlyPendingInvoices ? 1 : 0,
-                });
+                };
+                if (this.newChatBulkPendingInvoiceMonth) {
+                    payload.pending_invoice_month = this.newChatBulkPendingInvoiceMonth;
+                }
+
+                const { data } = await axios.post(route('back.chat.send-template-to-company'), payload);
 
                 this.newChatSuccess = data.message
                     || this.$t('words.whatsapp-company-template-sent', {
