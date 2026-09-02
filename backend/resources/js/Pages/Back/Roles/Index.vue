@@ -61,7 +61,7 @@
                                 </button>
                             </div>
                             <p v-else class="text-amber-700">{{ $t('words.user-has-no-roles') }}</p>
-                            <div v-if="emailSearchMoveRoles.length" class="flex gap-2 items-center pt-1">
+                            <div v-if="emailSearchMoveRoles.length" class="flex flex-wrap gap-2 items-center pt-1">
                                 <select
                                     v-model="emailSearchMoveToRoleId"
                                     class="form-select text-xs rounded-lg border-gray-300 flex-1 min-w-0 py-1"
@@ -75,6 +75,14 @@
                                         {{ role.display_name }}
                                     </option>
                                 </select>
+                                <button
+                                    type="button"
+                                    class="px-2 py-1 text-xs font-semibold rounded bg-green-600 hover:bg-green-700 text-white disabled:opacity-40 shrink-0"
+                                    :disabled="!emailSearchMoveToRoleId || movingUserId"
+                                    @click="assignUserFromSearch"
+                                >
+                                    {{ $t('words.add-role') }}
+                                </button>
                                 <button
                                     type="button"
                                     class="px-2 py-1 text-xs font-semibold rounded bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-40 shrink-0"
@@ -290,6 +298,29 @@
                                                     class="flex flex-wrap items-center justify-end gap-2"
                                                 >
                                                     <select
+                                                        :value="addTarget[user.id] || ''"
+                                                        class="form-select text-xs rounded border-gray-300 py-1 max-w-[180px]"
+                                                        :disabled="movingUserId === user.id"
+                                                        @change="setAddTarget(user.id, $event.target.value)"
+                                                    >
+                                                        <option value="">{{ $t('words.add-user-to-role') }}</option>
+                                                        <option
+                                                            v-for="role in addableRolesForUser(user)"
+                                                            :key="role.id"
+                                                            :value="role.id"
+                                                        >
+                                                            {{ role.display_name }}
+                                                        </option>
+                                                    </select>
+                                                    <button
+                                                        type="button"
+                                                        class="bg-green-600 hover:bg-green-700 text-white text-xs font-semibold px-2 py-1 rounded disabled:opacity-40"
+                                                        :disabled="!addTarget[user.id] || movingUserId === user.id"
+                                                        @click="assignUser(user)"
+                                                    >
+                                                        {{ $t('words.add-role') }}
+                                                    </button>
+                                                    <select
                                                         :value="moveTarget[user.id] || ''"
                                                         class="form-select text-xs rounded border-gray-300 py-1 max-w-[180px]"
                                                         :disabled="movingUserId === user.id"
@@ -311,6 +342,15 @@
                                                         @click="moveUser(user)"
                                                     >
                                                         {{ $t('words.move-user') }}
+                                                    </button>
+                                                    <button
+                                                        v-if="(user.role_ids || []).length > 1"
+                                                        type="button"
+                                                        class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold px-2 py-1 rounded disabled:opacity-40"
+                                                        :disabled="movingUserId === user.id"
+                                                        @click="removeUserFromRole(user)"
+                                                    >
+                                                        {{ $t('words.remove-from-role') }}
                                                     </button>
                                                     <button
                                                         v-if="selectedRole.can_manage_users"
@@ -418,6 +458,7 @@ export default {
             emailSearchMoveMessage: '',
             emailSearchMoveError: false,
             moveTarget: {},
+            addTarget: {},
             movingUserId: null,
             usersMoveMessage: '',
             usersMoveError: false,
@@ -682,6 +723,13 @@ export default {
         setMoveTarget(userId, roleId) {
             this.$set(this.moveTarget, userId, roleId || '');
         },
+        setAddTarget(userId, roleId) {
+            this.$set(this.addTarget, userId, roleId || '');
+        },
+        addableRolesForUser(user) {
+            const assignedIds = user.role_ids || [];
+            return this.rolesOrdered.filter((role) => assignedIds.indexOf(role.id) === -1);
+        },
         setRoleUsersCount(roleId, count) {
             if (typeof count !== 'number') {
                 return;
@@ -725,6 +773,29 @@ export default {
             }
 
             this.$set(this.moveTarget, user.id, '');
+            this.$set(this.addTarget, user.id, '');
+        },
+        applyRoleMembershipChange(data, user) {
+            const roleCounts = data.role_counts || {};
+            Object.keys(roleCounts).forEach((roleId) => {
+                this.setRoleUsersCount(roleId, roleCounts[roleId]);
+                this.invalidateRoleUsersCache(roleId);
+            });
+
+            if (data.role_id) {
+                this.invalidateRoleUsersCache(data.role_id);
+            }
+
+            if (this.emailSearchResult && this.emailSearchResult.user && this.emailSearchResult.user.id === user.id) {
+                this.emailSearchResult = {
+                    user: data.user || this.emailSearchResult.user,
+                    roles: data.roles || [],
+                };
+                this.emailSearchMoveToRoleId = '';
+            }
+
+            this.$set(this.moveTarget, user.id, '');
+            this.$set(this.addTarget, user.id, '');
         },
         async submitMoveUser(user, toRoleId, fromRoleId) {
             const toRole = this.rolesOrdered.find((role) => role.id === toRoleId);
@@ -752,6 +823,58 @@ export default {
 
                 const { data } = await axios.post(route('back.settings.roles.users.move'), payload);
                 this.applyMovedUser(data, user);
+                return data;
+            } finally {
+                this.movingUserId = null;
+            }
+        },
+        async submitAssignUser(user, roleId) {
+            const role = this.rolesOrdered.find((item) => item.id === roleId);
+            if (!role) {
+                return null;
+            }
+
+            if (!window.confirm(this.$t('words.add-role-confirm', {
+                name: user.name,
+                role: role.display_name,
+            }))) {
+                return null;
+            }
+
+            this.movingUserId = user.id;
+
+            try {
+                const { data } = await axios.post(route('back.settings.roles.users.assign'), {
+                    user_id: user.id,
+                    role_id: roleId,
+                });
+                this.applyRoleMembershipChange(data, user);
+                return data;
+            } finally {
+                this.movingUserId = null;
+            }
+        },
+        async submitRemoveUserRole(user, roleId) {
+            const role = this.rolesOrdered.find((item) => item.id === roleId);
+            if (!role) {
+                return null;
+            }
+
+            if (!window.confirm(this.$t('words.remove-role-confirm', {
+                name: user.name,
+                role: role.display_name,
+            }))) {
+                return null;
+            }
+
+            this.movingUserId = user.id;
+
+            try {
+                const { data } = await axios.post(route('back.settings.roles.users.remove-role'), {
+                    user_id: user.id,
+                    role_id: roleId,
+                });
+                this.applyRoleMembershipChange(data, user);
                 return data;
             } finally {
                 this.movingUserId = null;
@@ -791,6 +914,62 @@ export default {
                     || this.$t('words.user-move-failed');
             }
         },
+        async assignUser(user) {
+            const roleId = this.addTarget[user.id];
+            if (!roleId) {
+                return;
+            }
+
+            this.usersMoveMessage = '';
+            this.usersMoveError = false;
+
+            try {
+                const data = await this.submitAssignUser(user, roleId);
+                if (!data) {
+                    return;
+                }
+
+                this.usersMoveMessage = data.message || this.$t('words.user-role-added');
+
+                if (this.selectedRole) {
+                    this.invalidateRoleUsersCache(this.selectedRole.id);
+                    await this.loadRoleUsers(this.selectedRole.id, this.usersPage);
+                }
+            } catch (error) {
+                this.usersMoveError = true;
+                this.usersMoveMessage = (error.response && error.response.data && error.response.data.message)
+                    || this.$t('words.user-role-add-failed');
+            }
+        },
+        async removeUserFromRole(user) {
+            if (!this.selectedRole) {
+                return;
+            }
+
+            this.usersMoveMessage = '';
+            this.usersMoveError = false;
+
+            try {
+                const remainingOnPage = this.selectedRoleUsers.length;
+                const data = await this.submitRemoveUserRole(user, this.selectedRole.id);
+                if (!data) {
+                    return;
+                }
+
+                this.usersMoveMessage = data.message || this.$t('words.user-role-removed');
+
+                if (this.selectedRole) {
+                    const pageToLoad = remainingOnPage === 1 && this.usersPage > 1
+                        ? this.usersPage - 1
+                        : this.usersPage;
+                    await this.loadRoleUsers(this.selectedRole.id, pageToLoad);
+                }
+            } catch (error) {
+                this.usersMoveError = true;
+                this.usersMoveMessage = (error.response && error.response.data && error.response.data.message)
+                    || this.$t('words.user-role-remove-failed');
+            }
+        },
         async moveUserFromSearch() {
             if (!this.emailSearchResult || !this.emailSearchResult.user || !this.emailSearchMoveToRoleId) {
                 return;
@@ -820,6 +999,33 @@ export default {
                 this.emailSearchMoveError = true;
                 this.emailSearchMoveMessage = (error.response && error.response.data && error.response.data.message)
                     || this.$t('words.user-move-failed');
+            }
+        },
+        async assignUserFromSearch() {
+            if (!this.emailSearchResult || !this.emailSearchResult.user || !this.emailSearchMoveToRoleId) {
+                return;
+            }
+
+            this.emailSearchMoveMessage = '';
+            this.emailSearchMoveError = false;
+
+            const toRoleId = this.emailSearchMoveToRoleId;
+
+            try {
+                const data = await this.submitAssignUser(this.emailSearchResult.user, toRoleId);
+                if (!data) {
+                    return;
+                }
+
+                this.emailSearchMoveMessage = data.message || this.$t('words.user-role-added');
+
+                if (this.selectedRole && this.selectedRole.id === toRoleId) {
+                    await this.loadRoleUsers(this.selectedRole.id, this.usersPage);
+                }
+            } catch (error) {
+                this.emailSearchMoveError = true;
+                this.emailSearchMoveMessage = (error.response && error.response.data && error.response.data.message)
+                    || this.$t('words.user-role-add-failed');
             }
         },
         groupKeyFor(name) {

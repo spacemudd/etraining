@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Back\Company;
 use App\Models\Back\Instructor;
 use App\Models\Back\Trainee;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -152,6 +154,16 @@ class User extends Authenticatable implements Auditable
         return $this->hasMany(PushSubscription::class);
     }
 
+    public function chatCompanyFilters(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Company::class,
+            'whatsapp_agent_company_filters',
+            'user_id',
+            'company_id'
+        )->withTimestamps();
+    }
+
     public function verifications(): HasMany
     {
         return $this->hasMany(Verification::class);
@@ -176,7 +188,9 @@ class User extends Authenticatable implements Auditable
 
     public function isTrainee()
     {
-        return Str::contains(optional($this->roles()->first())->name, '_trainees');
+        return $this->roles->contains(static function ($role) {
+            return Str::contains($role->name ?? '', '_trainees');
+        });
     }
 
     public function instructor()

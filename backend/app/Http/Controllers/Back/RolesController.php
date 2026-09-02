@@ -74,6 +74,7 @@ class RolesController extends Controller
 
         $paginator = $role->users()
             ->select(['users.id', 'users.name', 'users.email'])
+            ->with('roles')
             ->orderBy('users.name')
             ->paginate($perPage);
 
@@ -84,6 +85,7 @@ class RolesController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+                'role_ids' => $user->roles->pluck('id')->values()->all(),
             ];
         })->values();
 
@@ -221,6 +223,118 @@ class RolesController extends Controller
                         'id' => $role->id,
                         'name' => $role->name,
                         'display_name' => $role->display_name,
+                    ];
+                })
+                ->values(),
+        ]);
+    }
+
+    /**
+     * Add a role to a user without removing their existing roles.
+     */
+    public function assignRole(Request $request)
+    {
+        $this->authorize('view-permissions');
+
+        $validated = $request->validate([
+            'user_id' => 'required|string|exists:users,id',
+            'role_id' => 'required|string|exists:roles,id',
+        ]);
+
+        abort_if($validated['user_id'] === auth()->id(), 403);
+
+        $user = User::query()->findOrFail($validated['user_id']);
+        $role = Role::query()->findOrFail($validated['role_id']);
+
+        if ($user->roles()->where('roles.id', $role->id)->exists()) {
+            return response()->json([
+                'message' => __('words.user-already-has-role'),
+            ], 422);
+        }
+
+        DB::transaction(static function () use ($user, $role): void {
+            $user->assignRole($role);
+        });
+
+        $user->unsetRelation('roles');
+
+        return response()->json([
+            'message' => __('words.user-role-added'),
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+            ],
+            'role_id' => $role->id,
+            'role_counts' => [
+                $role->id => (int) $role->users()->count(),
+            ],
+            'roles' => $user->roles()
+                ->get()
+                ->map(static function (Role $assignedRole) {
+                    return [
+                        'id' => $assignedRole->id,
+                        'name' => $assignedRole->name,
+                        'display_name' => $assignedRole->display_name,
+                    ];
+                })
+                ->values(),
+        ]);
+    }
+
+    /**
+     * Remove one role from a user while keeping their other roles.
+     */
+    public function removeRole(Request $request)
+    {
+        $this->authorize('view-permissions');
+
+        $validated = $request->validate([
+            'user_id' => 'required|string|exists:users,id',
+            'role_id' => 'required|string|exists:roles,id',
+        ]);
+
+        abort_if($validated['user_id'] === auth()->id(), 403);
+
+        $user = User::query()->findOrFail($validated['user_id']);
+        $role = Role::query()->findOrFail($validated['role_id']);
+
+        if (! $user->roles()->where('roles.id', $role->id)->exists()) {
+            return response()->json([
+                'message' => __('words.user-not-in-role'),
+            ], 422);
+        }
+
+        if ($user->roles()->count() <= 1) {
+            return response()->json([
+                'message' => __('words.user-must-keep-one-role'),
+            ], 422);
+        }
+
+        DB::transaction(static function () use ($user, $role): void {
+            $user->removeRole($role);
+        });
+
+        $user->unsetRelation('roles');
+
+        return response()->json([
+            'message' => __('words.user-role-removed'),
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+            ],
+            'role_id' => $role->id,
+            'role_counts' => [
+                $role->id => (int) $role->users()->count(),
+            ],
+            'roles' => $user->roles()
+                ->get()
+                ->map(static function (Role $assignedRole) {
+                    return [
+                        'id' => $assignedRole->id,
+                        'name' => $assignedRole->name,
+                        'display_name' => $assignedRole->display_name,
                     ];
                 })
                 ->values(),

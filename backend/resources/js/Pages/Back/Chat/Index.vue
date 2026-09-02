@@ -34,6 +34,13 @@
                                 : $t('words.chat-enable-notifications')) }}
                     </button>
                     <inertia-link
+                        v-can="'view-whatsapp-reports'"
+                        :href="route('back.chat.reports')"
+                        class="text-xs leading-tight text-indigo-700 border border-indigo-300 bg-indigo-50 hover:bg-indigo-100 px-2 py-1 rounded-md font-medium transition whitespace-nowrap"
+                    >
+                        {{ $t('words.reports') }}
+                    </inertia-link>
+                    <inertia-link
                         v-if="!isStandalonePwa"
                         :href="route('dashboard')"
                         class="text-xs leading-tight text-gray-600 hover:text-gray-900 border border-gray-300 bg-white hover:bg-gray-50 px-2 py-1 rounded-md font-medium transition whitespace-nowrap"
@@ -165,6 +172,47 @@
                                     @click="setConversationGroupMode('agent')"
                                 >
                                     {{ $t('words.chat-group-by-agent') }}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div
+                            v-if="conversationGroupMode === 'company'"
+                            class="rounded-md bg-amber-50 px-2.5 py-2 text-xs text-amber-900"
+                        >
+                            <button
+                                v-if="!agentCompanyFilters.length"
+                                type="button"
+                                class="underline hover:text-amber-700 w-full text-start"
+                                @click="openCompanyFilterModal()"
+                            >
+                                {{ $t('words.chat-company-filter-prompt') }}
+                            </button>
+                            <div v-else class="flex flex-wrap items-center gap-x-1 gap-y-1">
+                                <button
+                                    type="button"
+                                    class="underline hover:text-amber-700"
+                                    @click="openCompanyFilterModal()"
+                                >
+                                    {{ $t('words.chat-company-filter-edit') }} ({{ formatCompanyFilterCount(agentCompanyFilters.length) }})
+                                </button>
+                                <span>/</span>
+                                <button
+                                    type="button"
+                                    class="underline hover:text-amber-700"
+                                    :disabled="savingCompanyFilters"
+                                    @click="clearCompanyFilters()"
+                                >
+                                    {{ $t('words.chat-company-filter-clear') }}
+                                </button>
+                                <span>/</span>
+                                <button
+                                    type="button"
+                                    class="underline hover:text-amber-700"
+                                    :class="companyFilterPaused ? 'font-semibold text-amber-700' : ''"
+                                    @click="showAllCompanies()"
+                                >
+                                    {{ $t('words.chat-company-filter-show-all') }}
                                 </button>
                             </div>
                         </div>
@@ -1077,6 +1125,7 @@
 
         <!-- New Chat Search Modal -->
         <portal-target name="new-chat-modal"></portal-target>
+        <portal-target name="company-filter-modal"></portal-target>
         <portal to="emoji-picker-portal">
             <div
                 v-if="showEmojiPicker"
@@ -1360,6 +1409,12 @@
                                         class="text-[11px] text-gray-400 mt-1"
                                     >
                                         {{ $t('words.loading') }}...
+                                    </p>
+                                    <p
+                                        v-else-if="newChatBulkPendingMonthsError"
+                                        class="text-[11px] text-red-500 mt-1"
+                                    >
+                                        {{ newChatBulkPendingMonthsError }}
                                     </p>
                                     <p
                                         v-else-if="!newChatBulkPendingMonths.length"
@@ -1687,6 +1742,100 @@
                 </div>
             </modal>
         </portal>
+        <portal to="company-filter-modal">
+            <modal name="companyFilterModal" :width="560" :height="'auto'" :scrollable="true">
+                <div class="bg-white rounded-xl shadow-2xl p-5 flex flex-col max-h-[85vh]">
+                    <div class="flex items-center justify-between pb-4 border-b mb-4">
+                        <h3 class="text-lg font-bold text-gray-800">{{ $t('words.chat-company-filter-modal-title') }}</h3>
+                        <button type="button" @click="closeCompanyFilterModal()" class="text-gray-400 hover:text-gray-600">
+                            <ion-icon name="close-outline" class="w-6 h-6"></ion-icon>
+                        </button>
+                    </div>
+
+                    <div class="space-y-3 overflow-y-auto flex-1">
+                        <div>
+                            <input
+                                v-model="companyFilterSearch"
+                                type="text"
+                                class="w-full form-input text-sm rounded-md border-gray-200"
+                                :placeholder="$t('words.chat-company-filter-search-placeholder')"
+                                @input="onCompanyFilterSearchInput"
+                            />
+                            <div v-if="companyFilterSearching" class="text-xs text-gray-500 mt-2">{{ $t('words.loading') }}...</div>
+                            <ul
+                                v-else-if="companyFilterSearch.trim().length >= 2"
+                                class="mt-2 max-h-40 overflow-y-auto border border-gray-200 rounded-md divide-y divide-gray-100"
+                            >
+                                <li v-if="companyFilterResults.length === 0" class="px-3 py-2 text-xs text-gray-400">
+                                    {{ $t('words.no-results') }}
+                                </li>
+                                <li
+                                    v-for="company in companyFilterResults"
+                                    :key="'company-filter-result-' + company.id"
+                                >
+                                    <button
+                                        type="button"
+                                        class="w-full text-start px-3 py-2 text-sm hover:bg-gray-50"
+                                        :disabled="isCompanyInFilterDraft(company.id)"
+                                        :class="isCompanyInFilterDraft(company.id) ? 'opacity-50 cursor-default' : ''"
+                                        @click="addCompanyToFilterDraft(company)"
+                                    >
+                                        {{ company.name }}
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <p class="text-xs font-medium text-gray-600 mb-2">
+                                {{ $t('words.chat-company-filter-edit') }}
+                                <span v-if="companyFilterDraft.length">({{ formatCompanyFilterCount(companyFilterDraft.length) }})</span>
+                            </p>
+                            <ul
+                                v-if="companyFilterDraft.length"
+                                class="border border-gray-200 rounded-md divide-y divide-gray-100 max-h-48 overflow-y-auto"
+                            >
+                                <li
+                                    v-for="company in companyFilterDraft"
+                                    :key="'company-filter-draft-' + company.id"
+                                    class="flex items-center justify-between gap-2 px-3 py-2 text-sm"
+                                >
+                                    <span class="truncate">{{ company.name }}</span>
+                                    <button
+                                        type="button"
+                                        class="text-xs text-red-600 hover:underline flex-shrink-0"
+                                        @click="removeCompanyFromFilterDraft(company.id)"
+                                    >
+                                        {{ $t('words.chat-company-filter-remove') }}
+                                    </button>
+                                </li>
+                            </ul>
+                            <p v-else class="text-xs text-gray-400">{{ $t('words.chat-company-filter-empty-selection') }}</p>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-2 pt-4 border-t mt-4">
+                        <button
+                            type="button"
+                            class="px-4 py-2 text-sm rounded-md border border-gray-200 hover:bg-gray-50"
+                            :disabled="savingCompanyFilters"
+                            @click="closeCompanyFilterModal()"
+                        >
+                            {{ $t('words.cancel') }}
+                        </button>
+                        <button
+                            type="button"
+                            class="px-4 py-2 text-sm rounded-md text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50"
+                            :disabled="savingCompanyFilters"
+                            @click="confirmCompanyFilterModal()"
+                        >
+                            <span v-if="savingCompanyFilters">{{ $t('words.chat-company-filter-saving') }}</span>
+                            <span v-else>{{ $t('words.chat-company-filter-confirm') }}</span>
+                        </button>
+                    </div>
+                </div>
+            </modal>
+        </portal>
         <maqsam-dialer-panel
             ref="maqsamDialer"
             :configured="maqsamConfigured"
@@ -1765,6 +1914,14 @@ export default {
             messageBody: '',
             pressEnterToSend: false,
             conversationGroupMode: 'latest',
+            agentCompanyFilters: [],
+            companyFilterPaused: false,
+            companyFilterDraft: [],
+            companyFilterSearch: '',
+            companyFilterSearchDebounce: null,
+            companyFilterSearching: false,
+            companyFilterResults: [],
+            savingCompanyFilters: false,
             threadHeight: 220,
             threadResizing: false,
             threadResizeStartY: 0,
@@ -1838,6 +1995,7 @@ export default {
             newChatBulkLoadingTrainees: false,
             newChatBulkPendingInvoiceMonth: '',
             newChatBulkPendingMonths: [],
+            newChatBulkPendingMonthsError: '',
             newChatBulkLoadingPendingMonths: false,
             conversationPage: 1,
             totalPages: 1,
@@ -2317,6 +2475,11 @@ export default {
         unreadConversationCount() {
             return (this.conversations || []).filter((conv) => !!conv.has_unread).length;
         },
+        companyFilterIsActive() {
+            return this.conversationGroupMode === 'company'
+                && !this.companyFilterPaused
+                && this.agentCompanyFilters.length > 0;
+        },
     },
     watch: {
         unreadConversationCount: {
@@ -2331,7 +2494,9 @@ export default {
         this.loadPressEnterToSendPreference();
         this.loadGroupConversationsPreference();
         this.loadTags();
-        this.loadConversations();
+        this.loadAgentCompanyFilters().finally(() => {
+            this.loadConversations();
+        });
         this.loadQuickReplies();
         this.subscribeEcho();
         this.startMessagingWindowTicker();
@@ -2482,6 +2647,9 @@ export default {
             }
             if (this.selectedTagFilter) {
                 params.tag_id = this.selectedTagFilter;
+            }
+            if (this.companyFilterIsActive) {
+                params.company_ids = this.agentCompanyFilters.map((company) => company.id);
             }
             return params;
         },
@@ -3593,6 +3761,7 @@ export default {
             this.newChatBulkLoadingTrainees = false;
             this.newChatBulkPendingInvoiceMonth = '';
             this.newChatBulkPendingMonths = [];
+            this.newChatBulkPendingMonthsError = '';
             this.newChatBulkLoadingPendingMonths = false;
             this.newChatSuccess = '';
             if (this.newChatSearchDebounce) {
@@ -3943,6 +4112,7 @@ export default {
             this.newChatBulkCompany = company;
             this.newChatBulkPendingInvoiceMonth = '';
             this.newChatBulkPendingMonths = [];
+            this.newChatBulkPendingMonthsError = '';
             this.newChatError = '';
             this.newChatSuccess = '';
             await Promise.all([
@@ -3956,6 +4126,7 @@ export default {
             this.newChatBulkActiveCount = 0;
             this.newChatBulkPendingInvoiceMonth = '';
             this.newChatBulkPendingMonths = [];
+            this.newChatBulkPendingMonthsError = '';
             this.newChatBulkLoadingPendingMonths = false;
             this.newChatError = '';
             this.newChatSuccess = '';
@@ -3963,10 +4134,12 @@ export default {
         async loadNewChatBulkPendingMonths() {
             if (!this.newChatBulkCompany || !this.newChatBulkCompany.id) {
                 this.newChatBulkPendingMonths = [];
+                this.newChatBulkPendingMonthsError = '';
                 return;
             }
 
             this.newChatBulkLoadingPendingMonths = true;
+            this.newChatBulkPendingMonthsError = '';
             try {
                 const { data } = await axios.get(
                     route('back.chat.companies.pending-invoice-months', this.newChatBulkCompany.id)
@@ -3974,6 +4147,8 @@ export default {
                 this.newChatBulkPendingMonths = data.months || [];
             } catch (error) {
                 this.newChatBulkPendingMonths = [];
+                this.newChatBulkPendingMonthsError = error.response?.data?.message
+                    || this.$t('words.whatsapp-pending-invoice-months-load-failed');
             } finally {
                 this.newChatBulkLoadingPendingMonths = false;
             }
@@ -4294,12 +4469,137 @@ export default {
         },
         setConversationGroupMode(mode) {
             const allowed = ['latest', 'company', 'agent'];
+            const previousMode = this.conversationGroupMode;
+            const previousActive = this.companyFilterIsActive;
             this.conversationGroupMode = allowed.includes(mode) ? mode : 'latest';
             try {
                 window.localStorage.setItem('chat.conversationGroupMode', this.conversationGroupMode);
             } catch (error) {
                 // Ignore storage failures (private mode, quota, etc).
             }
+            if (previousActive !== this.companyFilterIsActive || previousMode !== this.conversationGroupMode) {
+                // Company filter is server-side; reload when membership of the filtered set may change.
+                if (previousActive || this.companyFilterIsActive) {
+                    this.reloadConversationsFromStart();
+                }
+            }
+        },
+        formatCompanyFilterCount(count) {
+            const locale = (this.$page && this.$page.props && this.$page.props.locale === 'ar')
+                ? 'ar-EG'
+                : undefined;
+            return Number(count || 0).toLocaleString(locale);
+        },
+        async loadAgentCompanyFilters() {
+            try {
+                const { data } = await axios.get(route('back.chat.company-filters'));
+                this.agentCompanyFilters = data.companies || [];
+            } catch (error) {
+                this.agentCompanyFilters = [];
+            }
+        },
+        openCompanyFilterModal() {
+            this.companyFilterDraft = (this.agentCompanyFilters || []).map((company) => ({
+                id: company.id,
+                name: company.name,
+            }));
+            this.companyFilterSearch = '';
+            this.companyFilterResults = [];
+            this.companyFilterSearching = false;
+            this.$modal.show('companyFilterModal');
+        },
+        closeCompanyFilterModal() {
+            this.$modal.hide('companyFilterModal');
+            this.companyFilterSearch = '';
+            this.companyFilterResults = [];
+            this.companyFilterSearching = false;
+        },
+        onCompanyFilterSearchInput() {
+            if (this.companyFilterSearchDebounce) {
+                clearTimeout(this.companyFilterSearchDebounce);
+            }
+            this.companyFilterSearchDebounce = setTimeout(() => {
+                this.runCompanyFilterSearch();
+            }, 300);
+        },
+        async runCompanyFilterSearch() {
+            const q = String(this.companyFilterSearch || '').trim();
+            if (q.length < 2) {
+                this.companyFilterResults = [];
+                this.companyFilterSearching = false;
+                return;
+            }
+
+            this.companyFilterSearching = true;
+            try {
+                const { data } = await axios.get(route('back.chat.companies'), {
+                    params: { search: q, page: 1, limit: 20 },
+                });
+                this.companyFilterResults = data.companies || [];
+            } catch (error) {
+                this.companyFilterResults = [];
+            } finally {
+                this.companyFilterSearching = false;
+            }
+        },
+        isCompanyInFilterDraft(companyId) {
+            return (this.companyFilterDraft || []).some((company) => String(company.id) === String(companyId));
+        },
+        addCompanyToFilterDraft(company) {
+            if (!company || !company.id || this.isCompanyInFilterDraft(company.id)) {
+                return;
+            }
+            this.companyFilterDraft.push({
+                id: company.id,
+                name: company.name || company.name_ar || company.name_en || company.id,
+            });
+        },
+        removeCompanyFromFilterDraft(companyId) {
+            this.companyFilterDraft = (this.companyFilterDraft || []).filter(
+                (company) => String(company.id) !== String(companyId)
+            );
+        },
+        async confirmCompanyFilterModal() {
+            if (this.savingCompanyFilters) {
+                return;
+            }
+            this.savingCompanyFilters = true;
+            try {
+                const { data } = await axios.put(route('back.chat.company-filters.update'), {
+                    company_ids: (this.companyFilterDraft || []).map((company) => company.id),
+                });
+                this.agentCompanyFilters = data.companies || [];
+                this.companyFilterPaused = false;
+                this.closeCompanyFilterModal();
+                this.reloadConversationsFromStart();
+            } catch (error) {
+                // Keep modal open so the agent can retry.
+            } finally {
+                this.savingCompanyFilters = false;
+            }
+        },
+        async clearCompanyFilters() {
+            if (this.savingCompanyFilters) {
+                return;
+            }
+            this.savingCompanyFilters = true;
+            try {
+                await axios.delete(route('back.chat.company-filters.clear'));
+                this.agentCompanyFilters = [];
+                this.companyFilterPaused = false;
+                this.reloadConversationsFromStart();
+            } catch (error) {
+                // Ignore; list stays as-is.
+            } finally {
+                this.savingCompanyFilters = false;
+            }
+        },
+        showAllCompanies() {
+            if (this.companyFilterPaused) {
+                return;
+            }
+            this.companyFilterPaused = true;
+            this.reloadConversationsFromStart();
         },
         onMessageKeydown(event) {
             if (!this.pressEnterToSend) {

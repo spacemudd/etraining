@@ -73,6 +73,7 @@ class RolesService
         'view-trainee-identity-only',
         'manage-recorded-courses',
         'access-whatsapp-chats',
+        'view-whatsapp-reports',
     ];
 
     public $instructorPermissions = [

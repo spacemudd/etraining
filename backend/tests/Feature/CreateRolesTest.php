@@ -191,4 +191,106 @@ class CreateRolesTest extends TestCase
             ])
             ->assertStatus(422);
     }
+
+    public function test_admin_can_assign_additional_role_to_user()
+    {
+        $adminRole = Role::whereName($this->admin->currentTeam->id.'_admins')->first();
+        $financeRole = Role::whereName($this->admin->currentTeam->id.'_finance')->first();
+
+        $staff = User::create([
+            'name' => 'Multi Role Staff',
+            'email' => 'staff-assign@example.com',
+            'password' => bcrypt('password'),
+            'current_team_id' => $this->admin->currentTeam->id,
+        ]);
+        $staff->assignRole($adminRole);
+
+        $response = $this->actingAs($this->admin)
+            ->postJson(route('back.settings.roles.users.assign'), [
+                'user_id' => $staff->id,
+                'role_id' => $financeRole->id,
+            ]);
+
+        $response->assertSuccessful()
+            ->assertJsonPath('role_id', $financeRole->id);
+
+        $staff->refresh();
+        $this->assertTrue($staff->hasRole($adminRole));
+        $this->assertTrue($staff->hasRole($financeRole));
+        $this->assertSame(2, $staff->roles()->count());
+    }
+
+    public function test_admin_cannot_assign_role_user_already_has()
+    {
+        $adminRole = Role::whereName($this->admin->currentTeam->id.'_admins')->first();
+
+        $staff = User::create([
+            'name' => 'Already Has Role',
+            'email' => 'staff-already@example.com',
+            'password' => bcrypt('password'),
+            'current_team_id' => $this->admin->currentTeam->id,
+        ]);
+        $staff->assignRole($adminRole);
+
+        $this->actingAs($this->admin)
+            ->postJson(route('back.settings.roles.users.assign'), [
+                'user_id' => $staff->id,
+                'role_id' => $adminRole->id,
+            ])
+            ->assertStatus(422);
+
+        $this->assertSame(1, $staff->fresh()->roles()->count());
+    }
+
+    public function test_admin_can_remove_one_of_multiple_roles()
+    {
+        $adminRole = Role::whereName($this->admin->currentTeam->id.'_admins')->first();
+        $financeRole = Role::whereName($this->admin->currentTeam->id.'_finance')->first();
+
+        $staff = User::create([
+            'name' => 'Remove Role Staff',
+            'email' => 'staff-remove@example.com',
+            'password' => bcrypt('password'),
+            'current_team_id' => $this->admin->currentTeam->id,
+        ]);
+        $staff->assignRole($adminRole);
+        $staff->assignRole($financeRole);
+
+        $response = $this->actingAs($this->admin)
+            ->postJson(route('back.settings.roles.users.remove-role'), [
+                'user_id' => $staff->id,
+                'role_id' => $financeRole->id,
+            ]);
+
+        $response->assertSuccessful()
+            ->assertJsonPath('role_id', $financeRole->id);
+
+        $staff->refresh();
+        $this->assertTrue($staff->hasRole($adminRole));
+        $this->assertFalse($staff->hasRole($financeRole));
+        $this->assertSame(1, $staff->roles()->count());
+    }
+
+    public function test_admin_cannot_remove_last_role_from_user()
+    {
+        $adminRole = Role::whereName($this->admin->currentTeam->id.'_admins')->first();
+
+        $staff = User::create([
+            'name' => 'Last Role Staff',
+            'email' => 'staff-last-role@example.com',
+            'password' => bcrypt('password'),
+            'current_team_id' => $this->admin->currentTeam->id,
+        ]);
+        $staff->assignRole($adminRole);
+
+        $this->actingAs($this->admin)
+            ->postJson(route('back.settings.roles.users.remove-role'), [
+                'user_id' => $staff->id,
+                'role_id' => $adminRole->id,
+            ])
+            ->assertStatus(422);
+
+        $this->assertTrue($staff->fresh()->hasRole($adminRole));
+        $this->assertSame(1, $staff->fresh()->roles()->count());
+    }
 }

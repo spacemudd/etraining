@@ -763,6 +763,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::put('/settings/whatsapp-bots/senders/{senderId}', [\App\Http\Controllers\Back\WhatsAppBotWorkflowController::class, 'assignSender'])->name('settings.whatsapp-bots.senders.assign');
         Route::get('/settings/roles/find-by-email', [\App\Http\Controllers\Back\RolesController::class, 'findByEmail'])->name('settings.roles.find-by-email');
         Route::post('/settings/roles/move-user', [\App\Http\Controllers\Back\RolesController::class, 'moveUser'])->name('settings.roles.users.move');
+        Route::post('/settings/roles/assign-user', [\App\Http\Controllers\Back\RolesController::class, 'assignRole'])->name('settings.roles.users.assign');
+        Route::post('/settings/roles/remove-user-role', [\App\Http\Controllers\Back\RolesController::class, 'removeRole'])->name('settings.roles.users.remove-role');
         Route::get('/settings/roles/{id}/users', [\App\Http\Controllers\Back\RolesController::class, 'users'])->name('settings.roles.users');
         Route::delete('/settings/roles/{role_id}/users/{user_id}', [\App\Http\Controllers\Back\RolesController::class, 'deleteUser'])->name('settings.roles.users.delete');
         Route::post('/settings/roles/{id}/users/invite', [\App\Http\Controllers\Back\RolesController::class, 'sendInvite'])->name('settings.roles.users.invite.send');
@@ -836,6 +838,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
         Route::get('chat', [\App\Http\Controllers\Back\ChatController::class, 'index'])->name('chat.index');
         Route::prefix('chat')->name('chat.')->group(function () {
+            Route::get('reports', [\App\Http\Controllers\Back\WhatsAppReportsController::class, 'index'])->name('reports');
             Route::get('conversations', [\App\Http\Controllers\Back\ChatController::class, 'conversations'])->name('conversations');
             Route::get('assignable-agents', [\App\Http\Controllers\Back\ChatController::class, 'assignableAgents'])->name('assignable-agents');
             Route::post('conversations/{conversation}/agents', [\App\Http\Controllers\Back\ChatController::class, 'assignAgent'])->name('conversations.agents.assign');
@@ -856,6 +859,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
             Route::get('companies/{company}/trainees', [\App\Http\Controllers\Back\ChatController::class, 'companyTrainees'])->name('companies.trainees');
             Route::get('companies/{company}/active-trainees', [\App\Http\Controllers\Back\ChatController::class, 'companyActiveTrainees'])->name('companies.active-trainees');
             Route::get('companies/{company}/pending-invoice-months', [\App\Http\Controllers\Back\ChatController::class, 'companyPendingInvoiceMonths'])->name('companies.pending-invoice-months');
+            Route::get('company-filters', [\App\Http\Controllers\Back\ChatController::class, 'companyFilters'])->name('company-filters');
+            Route::put('company-filters', [\App\Http\Controllers\Back\ChatController::class, 'updateCompanyFilters'])->name('company-filters.update');
+            Route::delete('company-filters', [\App\Http\Controllers\Back\ChatController::class, 'clearCompanyFilters'])->name('company-filters.clear');
             Route::get('quick-replies', [\App\Http\Controllers\Back\ChatController::class, 'quickReplies'])->name('quick-replies');
             Route::post('quick-replies', [\App\Http\Controllers\Back\ChatController::class, 'storeQuickReply'])->name('quick-replies.store');
             Route::delete('quick-replies/{quickReply}', [\App\Http\Controllers\Back\ChatController::class, 'destroyQuickReply'])->name('quick-replies.destroy');

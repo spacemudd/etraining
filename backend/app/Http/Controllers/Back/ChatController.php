@@ -68,6 +68,8 @@ class ChatController extends Controller
             'tag_id' => 'nullable|uuid|exists:whatsapp_tags,id',
             'agent_id' => 'nullable|uuid|exists:users,id',
             'status' => 'nullable|string|in:open,pending,closed',
+            'company_ids' => 'nullable|array',
+            'company_ids.*' => 'uuid',
         ]);
 
         $status = $validated['status'] ?? WhatsAppConversation::STATUS_OPEN;
@@ -114,6 +116,13 @@ class ChatController extends Controller
         if (! empty($validated['agent_id'])) {
             $query->whereHas('agents', function ($agentsQuery) use ($validated) {
                 $agentsQuery->where('users.id', $validated['agent_id']);
+            });
+        }
+
+        if (! empty($validated['company_ids'])) {
+            $companyIds = array_values(array_unique($validated['company_ids']));
+            $query->whereHas('trainee', function ($traineeQuery) use ($companyIds) {
+                $traineeQuery->whereIn('company_id', $companyIds);
             });
         }
 
@@ -534,6 +543,65 @@ class ChatController extends Controller
         ]);
     }
 
+    public function companyFilters(): JsonResponse
+    {
+        $companyIds = auth()->user()
+            ->chatCompanyFilters()
+            ->allRelatedIds()
+            ->all();
+
+        $companies = Company::withoutGlobalScopes()
+            ->whereIn('id', $companyIds)
+            ->orderBy('name_ar')
+            ->get(['id', 'name_ar', 'name_en'])
+            ->map(fn (Company $company) => [
+                'id' => $company->id,
+                'name' => $this->companyDisplayName($company),
+            ])
+            ->values()
+            ->all();
+
+        return response()->json(['companies' => $companies]);
+    }
+
+    public function updateCompanyFilters(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'company_ids' => 'nullable|array',
+            'company_ids.*' => 'uuid',
+        ]);
+
+        $requestedIds = array_values(array_unique($validated['company_ids'] ?? []));
+
+        if ($requestedIds !== []) {
+            $existingIds = Company::withoutGlobalScopes()
+                ->whereIn('id', $requestedIds)
+                ->pluck('id')
+                ->map(static fn ($id) => (string) $id)
+                ->all();
+
+            $missing = array_diff($requestedIds, $existingIds);
+            if ($missing !== []) {
+                throw ValidationException::withMessages([
+                    'company_ids' => [__('validation.exists', ['attribute' => 'company_ids'])],
+                ]);
+            }
+
+            $requestedIds = $existingIds;
+        }
+
+        auth()->user()->chatCompanyFilters()->sync($requestedIds);
+
+        return $this->companyFilters();
+    }
+
+    public function clearCompanyFilters(): JsonResponse
+    {
+        auth()->user()->chatCompanyFilters()->detach();
+
+        return response()->json(['companies' => []]);
+    }
+
     public function searchCompanies(Request $request): JsonResponse
     {
         $validated = $request->validate([
@@ -603,7 +671,7 @@ class ChatController extends Controller
 
         $query = $this->activeTraineesWithPhoneQuery()
             ->where('company_id', $companyModel->id);
-        $this->applyPendingInvoicesTraineeFilter($query, $pendingInvoiceMonth);
+        $this->applyPendingInvoicesTraineeFilter($query, $pendingInvoiceMonth, $companyModel->id);
 
         $trainees = $query
             ->orderBy('name')
@@ -644,8 +712,9 @@ class ChatController extends Controller
             ]);
         }
 
-        $invoices = Invoice::query()
-            ->withoutGlobalScope('RiyadhBankAccounts')
+        $invoices = Invoice::withoutGlobalScopes()
+            ->whereNull('deleted_at')
+            ->where('company_id', $companyModel->id)
             ->whereIn('trainee_id', $traineeIds)
             ->whereNull('paid_at')
             ->where('status', '!=', Invoice::STATUS_ARCHIVED)
@@ -1071,7 +1140,7 @@ class ChatController extends Controller
         $query = $this->activeTraineesWithPhoneQuery()
             ->where('company_id', $company->id)
             ->with(['company' => $this->companyRelationConstraint()]);
-        $this->applyPendingInvoicesTraineeFilter($query, $pendingInvoiceMonth);
+        $this->applyPendingInvoicesTraineeFilter($query, $pendingInvoiceMonth, $company->id);
 
         $trainees = $query
             ->orderBy('name')
@@ -1526,7 +1595,7 @@ class ChatController extends Controller
         }
     }
 
-    private function applyPendingInvoicesTraineeFilter($query, ?string $pendingInvoiceMonth): void
+    private function applyPendingInvoicesTraineeFilter($query, ?string $pendingInvoiceMonth, ?string $companyId = null): void
     {
         if ($pendingInvoiceMonth === null || $pendingInvoiceMonth === '') {
             return;
@@ -1536,12 +1605,17 @@ class ChatController extends Controller
         $monthStart = $month->toDateString();
         $monthEnd = $month->copy()->endOfMonth()->toDateString();
 
-        $query->whereHas('invoices', static function ($invoiceQuery) use ($monthStart, $monthEnd): void {
-            $invoiceQuery->withoutGlobalScope('RiyadhBankAccounts')
+        $query->whereHas('invoices', static function ($invoiceQuery) use ($monthStart, $monthEnd, $companyId): void {
+            $invoiceQuery->withoutGlobalScopes()
+                ->whereNull('deleted_at')
                 ->whereNull('paid_at')
                 ->where('status', '!=', Invoice::STATUS_ARCHIVED)
                 ->whereDate('from_date', '>=', $monthStart)
                 ->whereDate('from_date', '<=', $monthEnd);
+
+            if ($companyId) {
+                $invoiceQuery->where('company_id', $companyId);
+            }
         });
     }
 

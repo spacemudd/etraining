@@ -18,13 +18,21 @@ class DashboardController extends Controller
             return redirect()->to('/login');
         }
 
-        // Get the first role safely
-        $firstRole = $user->roles()->first();
-        
-        if ($firstRole) {
-            $roleName = $firstRole->name ?? '';
-            
-            if (Str::contains($roleName, 'instructors')) {
+        // Prefer staff dashboard when the user also has non-trainee / non-instructor roles.
+        $roles = $user->roles;
+        $hasStaffRole = $roles->contains(static function ($role) {
+            $roleName = $role->name ?? '';
+
+            return ! Str::contains($roleName, 'instructors')
+                && ! Str::contains($roleName, 'trainees');
+        });
+
+        if (! $hasStaffRole) {
+            $instructorRole = $roles->first(static function ($role) {
+                return Str::contains($role->name ?? '', 'instructors');
+            });
+
+            if ($instructorRole) {
                 if (!$user->instructor) {
                     auth('web')->logout();
                     return redirect()->to('/');
@@ -32,7 +40,11 @@ class DashboardController extends Controller
                 return app()->make(TeachingController::class)->dashboard();
             }
 
-            if (Str::contains($roleName, 'trainees')) {
+            $traineeRole = $roles->first(static function ($role) {
+                return Str::contains($role->name ?? '', 'trainees');
+            });
+
+            if ($traineeRole) {
                 return app()->make(Trainees\DashboardController::class)->dashboard();
             }
         }
