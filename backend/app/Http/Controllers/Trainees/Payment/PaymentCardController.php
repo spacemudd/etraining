@@ -78,7 +78,13 @@ class PaymentCardController extends Controller
     {
         sleep(2);
 
-        $success = $this->paymentService->isOrderSuccessful($request->orderId, $request->centerId);
+        // Noon return URLs often omit centerId; default to Jasarah (all payments since 2024-12-22).
+        $centerId = $request->centerId;
+        if ($centerId === null || $centerId === '') {
+            $centerId = 5676;
+        }
+
+        $success = $this->paymentService->isOrderSuccessful($request->orderId, $centerId);
 
         if ($success) {
             session()->put('success_payment', true);

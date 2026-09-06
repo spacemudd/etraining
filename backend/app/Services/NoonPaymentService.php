@@ -24,7 +24,7 @@ class NoonPaymentService
         $paymentInfo['order']['category'] = config("noon_payment.order_category");
         $paymentInfo['configuration']['tokenizeCc'] = false;
 
-        if ($centerId === 5676) {
+        if ($this->isJasarahCenter($centerId)) {
             $paymentInfo['configuration']['returnUrl'] = (!empty($paymentInfo['configuration']['returnUrl'])) ? $paymentInfo['configuration']['returnUrl'] : config('noon_payment.jasarah.return_url');
             $paymentInfo['configuration']['paymentAction'] = (!empty($paymentInfo['configuration']['paymentAction'])) ? $paymentInfo['configuration']['paymentAction'] : "SALE";
             return json_decode(CurlHelper::post(config("noon_payment.jasarah.payment_api") . "order", $paymentInfo, $this->getHeaders($centerId)));
@@ -37,19 +37,37 @@ class NoonPaymentService
 
     public function getOrder($orderId, $center_id)
     {
-        return json_decode(CurlHelper::get(config("noon_payment." . ($center_id == 5676 ? 'jasarah' : 'jisr') . ".payment_api") . "order/" . $orderId, $this->getHeaders($center_id)));
+        $account = $this->isJasarahCenter($center_id) ? 'jasarah' : 'jisr';
+
+        return json_decode(CurlHelper::get(config("noon_payment." . $account . ".payment_api") . "order/" . $orderId, $this->getHeaders($center_id)));
     }
 
     public function getOrderByReference($reference, $center_id)
     {
-        return json_decode(CurlHelper::get(config("noon_payment." . ($center_id == 5676 ? 'jasarah' : 'jisr') . ".payment_api") . "order/reference/" . $reference, $this->getHeaders($center_id)));
+        $account = $this->isJasarahCenter($center_id) ? 'jasarah' : 'jisr';
+
+        return json_decode(CurlHelper::get(config("noon_payment." . $account . ".payment_api") . "order/reference/" . $reference, $this->getHeaders($center_id)));
     }
 
     private function getHeaders($centerId)
     {
+        $account = $this->isJasarahCenter($centerId) ? 'jasarah' : 'jisr';
+
         return [
             "Content-type: application/json",
-            "Authorization: Key_" . ($centerId == 5676 ? config("noon_payment.jasarah.mode") : config("noon_payment.jisr.mode")) . " " . ($centerId == 5676 ? config("noon_payment.jasarah.auth_key") : config("noon_payment.jisr.auth_key")),
+            "Authorization: Key_" . config("noon_payment.{$account}.mode") . " " . config("noon_payment.{$account}.auth_key"),
         ];
+    }
+
+    /**
+     * Jasarah (5676) is the default merchant. Missing centerId must not fall through to Jisr.
+     */
+    private function isJasarahCenter($centerId): bool
+    {
+        if ($centerId === null || $centerId === '') {
+            return true;
+        }
+
+        return (int) $centerId === 5676;
     }
 }
